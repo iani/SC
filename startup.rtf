@@ -1,11 +1,12 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf290
 {\fonttbl\f0\fnil\fcharset0 Monaco;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red191\green0\blue0;\red0\green0\blue191;
-\red96\green96\blue96;\red0\green115\blue0;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green115\blue0;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
 
-\f0\fs18 \cf2 \
-\cf3 /* \
+\f0\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 /* \
 A startup that builds some useful menus and keyboard shortcuts.\
 IZ 100116\
 \
@@ -13,172 +14,143 @@ Instructions: Put this file in the following folder: \
 \
 /Users/YourAccountName/Library/Application Support/SuperCollider/\
 \
-*/\cf2 \
+*/\cf0 \
 \
-\cf3 // =======================================================================\cf2 \
+\cf2 // =======================================================================\cf0 \
 \{\
-\cf3 /* building my menu of useful stuff\
+\cf2 /* building my menu of useful stuff\
 This here is a function because we want to keep all its variables inside its local scope. \
 We don't want to mess with any variables in the interpreter, because these are for the user. \
-*/\cf2 \
-	\cf4 var\cf2  g, a, midiResponders, file, filePath, workspacePath;\
-	workspacePath = \cf5 "/Users/iani/Library/Application Support/SuperCollider/01Workspaces/Daily/WorkspaceBackups/"\cf2 ;\
+*/\cf0 \
+	\cf3 var\cf0  g, a, midiResponders, file, filePath, workspacePath;\
+	workspacePath = \cf4 "/Users/iani/Library/Application Support/SuperCollider/01Workspaces/Daily/WorkspaceBackups/"\cf0 ;\
 \
-	g = \cf4 SCMenuGroup\cf2 (\cf4 nil\cf2 , \cf5 "User Menu"\cf2 , 10);\
+	g = \cf3 SCMenuGroup\cf0 (\cf3 nil\cf0 , \cf4 "User Menu"\cf0 , 10);\
 \pard\pardeftab560\ql\qnatural
-\cf3 /*	a = SCMenuItem(g, "RUN DIADROMI");\
+\cf2 /*	a = SCMenuItem(g, "RUN DIADROMI");\
 	a.action = \{ DiadromiMain.run \};\
-	a.setShortCut("r"); // Cmd-r */\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "open startup file"\cf2 );\
-	a.action = \{ (\cf4 Platform\cf2 .userAppSupportDir ++ \cf5 "/startup.rtf"\cf2 ).openTextFile; \};\
-	a.setShortCut(\cf5 "s"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-s\cf2 \
+	a.setShortCut("r"); // Cmd-r */\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "open startup file"\cf0 );\
+	a.action = \{ (\cf3 Platform\cf0 .userAppSupportDir ++ \cf4 "/startup.rtf"\cf0 ).openTextFile; \};\
+	a.setShortCut(\cf4 "s"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-s\cf0 \
 	\
-	f = \{ \cf4 | server, name, startcolor, donecolor |\cf2 \
-		\cf4 var\cf2  w;\
-		w = \cf4 Window\cf2 (name ++ \cf5 " server booting!"\cf2 , \cf4 Rect\cf2 (0, 0, 300, 400));\
+	f = \{ \cf3 | server, name, startcolor, donecolor |\cf0 \
+		\cf3 var\cf0  w;\
+		w = \cf3 Window\cf0 (name ++ \cf4 " server booting!"\cf0 , \cf3 Rect\cf0 (0, 0, 300, 400));\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf2 		w.front.view.background = startcolor;\
+\cf0 		w.front.view.background = startcolor;\
 		server.doWhenBooted(\{\
 \pard\pardeftab560\ql\qnatural
-\cf2 			w.name = name ++ \cf5 " server booted"\cf2 ;\
+\cf0 			w.name = name ++ \cf4 " server booted"\cf0 ;\
 			w.view.background = donecolor;\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf2 			\{ w.close \}.defer(1.5);\
+\cf0 			\{ w.close \}.defer(1.5);\
 		\});\
 		if (server.serverRunning.not) \{ server.boot \}\
 \pard\pardeftab560\ql\qnatural
-\cf2 	\};\
+\cf0 	\};\
 	\
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "boot local server"\cf2 );\
-	a.action = \{ f.(\cf4 Server\cf2 .local, \cf5 "Local"\cf2 , \cf4 Color\cf2 .white, \cf4 Color\cf2 .red) \};\
-	a.setShortCut(\cf5 "l"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-l\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "quit local server"\cf2 );\
-	a.action = \{ \cf4 Server\cf2 .local.quit \};\
-	a.setShortCut(\cf5 "l"\cf2 , \cf4 true\cf2 ); \cf3 //////  // Cmd-alt-l\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "boot internal server"\cf2 );\
-	a.action = \{ f.(\cf4 Server\cf2 .internal, \cf5 "Internal"\cf2 , \cf4 Color\cf2 .black, \cf4 Color\cf2 .green) \};\
-	a.setShortCut(\cf5 "i"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-i\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "quit internal server"\cf2 );\
-	a.action = \{ \cf4 Server\cf2 .internal.quit \};\
-	a.setShortCut(\cf5 "i"\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-alt-i\cf2 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "boot local server"\cf0 );\
+	a.action = \{ f.(\cf3 Server\cf0 .local, \cf4 "Local"\cf0 , \cf3 Color\cf0 .white, \cf3 Color\cf0 .red) \};\
+	a.setShortCut(\cf4 "l"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-l\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "quit local server"\cf0 );\
+	a.action = \{ \cf3 Server\cf0 .local.quit \};\
+	a.setShortCut(\cf4 "l"\cf0 , \cf3 true\cf0 ); \cf2 //////  // Cmd-alt-l\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "boot internal server"\cf0 );\
+	a.action = \{ f.(\cf3 Server\cf0 .internal, \cf4 "Internal"\cf0 , \cf3 Color\cf0 .black, \cf3 Color\cf0 .green) \};\
+	a.setShortCut(\cf4 "i"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-i\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "quit internal server"\cf0 );\
+	a.action = \{ \cf3 Server\cf0 .internal.quit \};\
+	a.setShortCut(\cf4 "i"\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-alt-i\cf0 \
 	\
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "reread help directory from disk"\cf2 );\
-	a.action = \{ \cf4 Help\cf2 .updateTree; \};\
-	a.setShortCut(\cf5 "r"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-r\cf2 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "reread help directory from disk"\cf0 );\
+	a.action = \{ \cf3 Help\cf0 .updateTree; \};\
+	a.setShortCut(\cf4 "r"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-r\cf0 \
 	\
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "post work sound root directory"\cf2 );\
-	a.action = \{ (\cf4 Platform\cf2 .userAppSupportDir ++ \cf5 "/sounds/"\cf2 ).asCompileString.postln; \};\
-	a.setShortCut(\cf5 "S"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-S\cf2 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "post work sound root directory"\cf0 );\
+	a.action = \{ (\cf3 Platform\cf0 .userAppSupportDir ++ \cf4 "/sounds/"\cf0 ).asCompileString.postln; \};\
+	a.setShortCut(\cf4 "S"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-S\cf0 \
 	\
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "'load buffers by code' dialog"\cf2 );\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "'load buffers by code' dialog"\cf0 );\
 	a.action = \{\
-		\cf4 CocoaDialog\cf2 .getPaths(\{ \cf4 | paths |\cf2 \
-			\cf5 "(\
-	b = ["\cf2 .postln;\
-			paths do: \{ \cf4 | p |\cf2 \
-				postf(\cf5 "\\t \\"%\\",\\n"\cf2 , p);\
+		\cf3 CocoaDialog\cf0 .getPaths(\{ \cf3 | paths |\cf0 \
+			\cf4 "(\
+	b = ["\cf0 .postln;\
+			paths do: \{ \cf3 | p |\cf0 \
+				postf(\cf4 "\\t \\"%\\",\\n"\cf0 , p);\
 			\};\
-			\cf5 "] collect: Buffer.readChannel(Server.default, _, channels: [0], action: _.updateInfo);\
-	)"\cf2 .postln;\
-		\}, \{ \}, \cf4 true\cf2 );\
+			\cf4 "] collect: Buffer.readChannel(Server.default, _, channels: [0], action: _.updateInfo);\
+	)"\cf0 .postln;\
+		\}, \{ \}, \cf3 true\cf0 );\
 	\};\
-	a.setShortCut(\cf5 "b"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-b\cf2 \
+	a.setShortCut(\cf4 "b"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-b\cf0 \
 	\
-	\cf3 //------------------------- OSC -------------------------\cf2 \
+	\cf2 //------------------------- OSC -------------------------\cf0 \
 	\
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "post all incoming OSC messages"\cf2 );\
-	a.action = \{  \cf4 thisProcess\cf2 .recvOSCfunc = \{ \cf4 | ... args |\cf2  args.postln \}; \};\
-	a.setShortCut(\cf5 "o"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-o\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "stop posting incoming OSC messages"\cf2 );\
-	a.action = \{  \cf4 thisProcess\cf2 .recvOSCfunc = \cf4 nil\cf2  \};\
-	a.setShortCut(\cf5 "O"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-shift-o\cf2 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "post all incoming OSC messages"\cf0 );\
+	a.action = \{  \cf3 thisProcess\cf0 .recvOSCfunc = \{ \cf3 | ... args |\cf0  args.postln \}; \};\
+	a.setShortCut(\cf4 "o"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-o\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "stop posting incoming OSC messages"\cf0 );\
+	a.action = \{  \cf3 thisProcess\cf0 .recvOSCfunc = \cf3 nil\cf0  \};\
+	a.setShortCut(\cf4 "O"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-shift-o\cf0 \
 	\
-	\cf3 //------------------------- MIDI -------------------------\cf2 \
+	\cf2 //------------------------- MIDI -------------------------\cf0 \
 	\
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "post all incoming MIDI messages"\cf2 );\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "post all incoming MIDI messages"\cf0 );\
 	a.action = \{\
-		\cf4 var\cf2  window, list;\
-		\cf4 MIDIClient\cf2 .init;	\cf3 // scan all midi sources\cf2 \
-		\cf4 MIDIClient\cf2 .sources do: \{ \cf4 | s, i |\cf2  \cf4 MIDIIn\cf2 .connect(i, s) \}; \cf3 // connect all midi sources\cf2 \
-		window = \cf4 Window\cf2 (\cf5 "MIDI sources"\cf2 , \cf4 Rect\cf2 (100, 100, 400, 200));\
-		list = \cf4 ListView\cf2 (window, window.view.bounds.insetBy(5, 5));\
-		list.font = \cf4 Font\cf2 (\cf5 "Arial"\cf2 , 10);\
-		list.items = \cf4 MIDIClient\cf2 .sources collect: \{ \cf4 | s |\cf2  format(\cf5 "%:% (%)"\cf2 , s.device, s.name, s.uid) \};\
+		\cf3 var\cf0  window, list;\
+		\cf3 MIDIClient\cf0 .init;	\cf2 // scan all midi sources\cf0 \
+		\cf3 MIDIClient\cf0 .sources do: \{ \cf3 | s, i |\cf0  \cf3 MIDIIn\cf0 .connect(i, s) \}; \cf2 // connect all midi sources\cf0 \
+		window = \cf3 Window\cf0 (\cf4 "MIDI sources"\cf0 , \cf3 Rect\cf0 (100, 100, 400, 200));\
+		list = \cf3 ListView\cf0 (window, window.view.bounds.insetBy(5, 5));\
+		list.font = \cf3 Font\cf0 (\cf4 "Arial"\cf0 , 10);\
+		list.items = \cf3 MIDIClient\cf0 .sources collect: \{ \cf3 | s |\cf0  format(\cf4 "%:% (%)"\cf0 , s.device, s.name, s.uid) \};\
 		window.front;\
-\cf3 //		\{ window.close \}.defer(5);\cf2 \
+\pard\pardeftab560\ql\qnatural
+\cf2 //		\{ window.close \}.defer(5);\cf0 \
 		if (midiResponders.isNil) \{\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
-\cf2 			midiResponders = [\cf4 CCResponder\cf2 , \cf4 NoteOnResponder\cf2 , \cf4 NoteOffResponder\cf2 , \cf4 BendResponder\cf2 , \cf4 TouchResponder\cf2 ] collect: \
+\cf0 			midiResponders = [\cf3 CCResponder\cf0 , \cf3 NoteOnResponder\cf0 , \cf3 NoteOffResponder\cf0 , \cf3 BendResponder\cf0 , \cf3 TouchResponder\cf0 ] collect: \
 \pard\pardeftab560\ql\qnatural
-\cf2 				\{ \cf4 | r |\cf2  r.new(\{ \cf4 | ... args |\cf2  [r.name, args].postln \}, install: \cf4 false\cf2 ) \};\
+\cf0 				\{ \cf3 | r |\cf0  r.new(\{ \cf3 | ... args |\cf0  [r.name, args].postln \}, install: \cf3 false\cf0 ) \};\
 		\};\
-		midiResponders do: \{ \cf4 | r |\cf2  r.class.add(r) \};\
-		\cf5 "MIDI posting activated"\cf2 .postln;\
+		midiResponders do: \{ \cf3 | r |\cf0  r.class.add(r) \};\
+		\cf4 "MIDI posting activated"\cf0 .postln;\
 	\};\
-	a.setShortCut(\cf5 "m"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-m\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "stop posting incoming MIDI messages"\cf2 );\
+	a.setShortCut(\cf4 "m"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-m\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "stop posting incoming MIDI messages"\cf0 );\
 	a.action = \{\
-		midiResponders do: \cf4 _\cf2 .remove;\
-		\cf5 "MIDI posting deactivated"\cf2 .postln;\
+		midiResponders do: \cf3 _\cf0 .remove;\
+		\cf4 "MIDI posting deactivated"\cf0 .postln;\
 	\};\
-	a.setShortCut(\cf5 "M"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-shift-m\cf2 \
+	a.setShortCut(\cf4 "M"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-shift-m\cf0 \
 \
-	\cf3 // ---------------------- SynthDescs -------------------------\cf2 \
+	\cf2 // ---------------------- SynthDescs -------------------------\cf0 \
 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Browse SynthDescs"\cf2 );\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Browse SynthDescs"\cf0 );\
 	a.action = \{\
-		if (\cf4 SynthDescLib\cf2 .global.synthDescs.size <= 1) \{\
-			\cf5 "Reading SynthDescs from synthdef directory"\cf2 .postln;\
-			\cf4 SynthDescLib\cf2 .read;\
+		if (\cf3 SynthDescLib\cf0 .global.synthDescs.size <= 1) \{\
+			\cf4 "Reading SynthDescs from synthdef directory"\cf0 .postln;\
+			\cf3 SynthDescLib\cf0 .read;\
 		\};\
-		\cf4 SynthDescLib\cf2 .global.browse\
+		\cf3 SynthDescLib\cf0 .global.browse\
 	\};\
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Load SynthDescs from synthdef directory"\cf2 );\
-	a.action = \{ \cf4 SynthDescLib\cf2 .read \};\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Load SynthDescs from synthdef directory"\cf0 );\
+	a.action = \{ \cf3 SynthDescLib\cf0 .read \};\
 \
-	\cf3 // ------------------------- Quarks -------------------------\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Open Quarks Browser"\cf2 );\
-	a.action = \{ \cf4 Quarks\cf2 .gui; \};\
-	a.setShortCut(\cf5 "q"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-q\cf2 \
+	\cf2 // ------------------------- Quarks -------------------------\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Open Quarks Browser"\cf0 );\
+	a.action = \{ \cf3 Quarks\cf0 .gui; \};\
+	a.setShortCut(\cf4 "q"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-q\cf0 \
 \
-	\cf3 // ------------------------- LILT -------------------------\cf2 \
-	if (\cf6 \\ScriptBrowser\cf2 .asClass.notNil) \{\
-		a = \cf4 SCMenuItem\cf2 (g, \cf5 "Open Lilt Browser"\cf2 );\
-		a.action = \{ \cf6 \\ScriptBrowser\cf2 .asClass.startup; \};\
-		a.setShortCut(\cf5 "l"\cf2 , \cf4 false\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-l\cf2 \
-	\};\
-	\cf3 // ------------------------- GIT -------------------------\cf2 \
-	\cf3 /* This command updates the state of the online project http://github.com/iani/Lilt\
-	by sending it the current state of the Lilt folder from the present computer. */\cf2 \
-\cf3 /*	a = SCMenuItem(g, "Update Lilt Project on GitHub");\
+	\cf2 // ------------------------- SAVE ALL DOCUMENT POSITIONS AND WORKSPACE CONTENTS -----------------------\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Save documents and workspaces"\cf0 );\
 	a.action = \{\
-		TextDialog("Enter password:", "???????????", \{ | ok, answer |\
-			var userdir, liltdir;\
-			userdir = Platform.userAppSupportDir.replace(" ", "\\\\ "); /* " */\
-			liltdir = userdir ++ "/Extensions/Lilt";\
-			if (ok) \{\
-				if (answer == Archive.global[\\passwd]) \{					(\
-				"cp " ++ userdir ++ "/startup.rtf " ++ liltdir ++ "/\
-				cd " ++ liltdir ++ "\
-				git add .\
-				git commit -a\
-				git push").runInTerminal;\
-				\}\{\
-					"Sorry, wrong password".postln;\
-				\}\
-			\}\
-		\});\
-	\};\
-	a.setShortCut("g", true, true); // cmd-alt-ctrl-g\
-*/\cf2 \
-	\cf3 // ------------------------- SAVE ALL DOCUMENT POSITIONS AND WORKSPACE CONTENTS -----------------------\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Save documents and workspaces"\cf2 );\
-	a.action = \{\
-		\cf4 Archive\cf2 .global.put(\cf6 \\myDocuments\cf2 , \
+		\cf3 Archive\cf0 .global.put(\cf5 \\myDocuments\cf0 , \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf2 			\cf4 Document\cf2 .allDocuments.reject(\{ \cf4 | d |\cf2  d.name == \cf5 " post "\cf2 \}) collect: \{ \cf4 | d |\cf2 \
+\cf0 			\cf3 Document\cf0 .allDocuments.reject(\{ \cf3 | d |\cf0  d.name == \cf4 " post "\cf0 \}) collect: \{ \cf3 | d |\cf0 \
 			if (d.path.size < 1) \{\
-				file = \cf4 File\cf2 (filePath = format(\cf5 "%%.scd"\cf2 , workspacePath, d.name), \cf5 "w"\cf2 );\
+				file = \cf3 File\cf0 (filePath = format(\cf4 "%%.scd"\cf0 , workspacePath, d.name), \cf4 "w"\cf0 );\
 				file.putString(d.string);\
 				file.close;\
 				(name: d.name, bounds: d.bounds, path: filePath, string: d.string);\
@@ -186,63 +158,53 @@ We don't want to mess with any variables in the interpreter, because these are f
 				(name: d.name, bounds: d.bounds, path: d.path)\
 			\}\
 		\});\
-		runInTerminal(\cf5 "\
+		runInTerminal(\cf4 "\
 			cd ~/Library/Application\\\\ Support/SuperCollider/01Workspaces/\
 			git add ./Daily/WorkspaceBackups/\\*\
-			git commit -am "\cf2  ++ format(\cf5 "\\"Workspace Backup %\\"\\n"\cf2 , \cf4 Date\cf2 .localtime)\
+			git commit -am "\cf0  ++ format(\cf4 "\\"Workspace Backup %\\"\\n"\cf0 , \cf3 Date\cf0 .localtime)\
 		);\
-		\cf5 "Document positions and paths saved"\cf2 .postln;\
+		\cf4 "Document positions and paths saved"\cf0 .postln;\
 	\};\
 \pard\pardeftab560\ql\qnatural
-\cf2 	a.setShortCut(\cf5 "w"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-alt-w\cf2 \
-	\cf3 // ------------------------- LOAD SAVED DOCUMENTS  -----------------------\cf2 \
-	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Load documents and workspaces"\cf2 );\
+\cf0 	a.setShortCut(\cf4 "w"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-w\cf0 \
+	\cf2 // ------------------------- LOAD SAVED DOCUMENTS  -----------------------\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Load documents and workspaces"\cf0 );\
 	a.action = \{\
-		\cf4 var\cf2  session;\
-		session = \cf4 Archive\cf2 .global.at(\cf6 \\myDocuments\cf2 );\
+		\cf3 var\cf0  session;\
+		session = \cf3 Archive\cf0 .global.at(\cf5 \\myDocuments\cf0 );\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf2 		session do: \{ \cf4 | d |\cf2 \
+\cf0 		session do: \{ \cf3 | d |\cf0 \
 			if (d.path.size > 0) \{\
-				if (\cf4 File\cf2 .exists(d.path)) \{\
-					\cf4 Document\cf2 .open(d.path).bounds_(d.bounds).name_(d.name);\
+				if (\cf3 File\cf0 .exists(d.path)) \{\
+					\cf3 Document\cf0 .open(d.path).bounds_(d.bounds).name_(d.name);\
 				\}\{\
-					\cf4 Document\cf2 (d.name, d.string).bounds_(d.bounds)\
+					\cf3 Document\cf0 (d.name, d.string).bounds_(d.bounds)\
 				\}\
 			\}\{\
-				if (d.name != \cf5 " post "\cf2 ) \{\
-					\cf4 Document\cf2 (d.name, d.string).bounds_(d.bounds)\
+				if (d.name != \cf4 " post "\cf0 ) \{\
+					\cf3 Document\cf0 (d.name, d.string).bounds_(d.bounds)\
 				\}\{\
-					\cf4 Document\cf2 .allDocuments.detect(\{ \cf4 | d |\cf2  d.name == \cf5 " post "\cf2  \}).bounds_(d.bounds);\
+					\cf3 Document\cf0 .allDocuments.detect(\{ \cf3 | d |\cf0  d.name == \cf4 " post "\cf0  \}).bounds_(d.bounds);\
 				\}\
 			\}\
 		\};\
 	\};\
 \pard\pardeftab560\ql\qnatural
-\cf2 	a.setShortCut(\cf5 "W"\cf2 , \cf4 true\cf2 , \cf4 false\cf2 ); \cf3 // Cmd-ctrl-W\cf2 \
-\
-\
-	\cf3 // ------------------------- TESTING -------------------------\cf2 \
-	if (\cf6 \\Turtle\cf2 .asClass.notNil) \{\
-		a = \cf4 SCMenuItem\cf2 (g, \cf5 "Test Turtle"\cf2 );\
-		a.action = \{\
-			\cf6 \\Turtle\cf2 .asClass.draw(\{ \cf4 | t |\cf2  \cf4 Pfuncn\cf2 (\{ t.turn(pi * (~count / 4)); t.move(70) \}, 50)	\},\
-				x: 200, y: 200, rate: 0.01);\
-		\};\
-		a.setShortCut(\cf5 "t"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // cmd-alt-ctrl-t\cf2 \
-	\};\
+\cf0 	a.setShortCut(\cf4 "W"\cf0 , \cf3 true\cf0 , \cf3 false\cf0 ); \cf2 // Cmd-ctrl-W\cf0 \
 	\
 \}.value;\
 \
-\cf3 //  =======================================================================\cf2 \
+\pard\pardeftab560\ql\qnatural
+\cf2 //  =======================================================================\cf0 \
 \
-\cf3 // If DocTop class is present, then start DocTop\cf2 \
-if (\cf4 Class\cf2 .allClasses.collect(\cf4 _\cf2 .name) includes: \cf6 \\DocTop\cf2 ) \{ \cf4 DocTop\cf2 .start \};\
+\cf2 // If DocTop class is present, then start DocTop\cf0 \
+if (\cf3 Class\cf0 .allClasses.collect(\cf3 _\cf0 .name) includes: \cf5 \\DocTop\cf0 ) \{ \cf3 DocTop\cf0 .start \};\
 \
-\cf3 // Boot local server\cf2 \
-\cf4 Server\cf2 .local.boot;\
+\cf2 // Boot local server\cf0 \
+\cf3 Server\cf0 .local.boot;\
 \
 \
-\cf3 /*\
+\cf2 /*\
 \
 CocoaDialog.getPaths(\{ | paths |\
 	"(\
