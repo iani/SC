@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+span.s1 {font: 9.0px Monaco}
+span.s2 {font: 12.0px Helvetica}
+span.s3 {color: #0429b8}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b><span class="Apple-tab-span">	</span>DocTop<span class="Apple-tab-span">	</span></b></p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="s1"><span class="Apple-tab-span">	</span></span>DocTop organizes Documents, providing a list of all open Documents and placing them in one of two "slots".</p>
+<p class="p3"><span class="Apple-tab-span">	</span>It does this by polling Document.allDocuments (in the manner of SkipJack).</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>DocTop is displayed as a window with a listview of all open Documents and a control for the default Server at the bottom.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Documents can be moved between slots using the horizontal arrow keys;<span class="Apple-converted-space">  </span>option-arrow gives the Document the focus. <span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>DocTop constrains the height of its Documents, so vertically resizing its window resizes all of its documents.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Resize or moving a Document frees it from DocTop, it can be recaptures using<span class="Apple-converted-space">  </span>the arrow keys in the DocTop window.</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>DocTop supports SwingOSC and SwingDocument as well.<span class="Apple-converted-space">  </span>Most of the command keys found in the OSX version are<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>implemented by SwingDocument, with the exception of the enter key (implemented as shift-return), cmd-. (shift-delete). <span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>DocTop and SwingDocument can be used with sclang (instead of the Supercollider application) to provide an approximation</p>
+<p class="p3"><span class="Apple-tab-span">	</span>of the standard OSX look and feel.<span class="Apple-converted-space">  </span>(At the moment there are no pull-down menus, eventually this will be implemented either<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>within DocTop or as Swing menus.)</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="s2"><span class="Apple-tab-span">	</span></span><b>This is currently under development and is in a pre-alpha state.</b></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="s2"><span class="Apple-tab-span">	</span></span><b>Creation / Class Methods</b></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span></span><b>*start(restore)</b></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts DocTop using the current Document implementation</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>restore </b>- if true, window positions are looked up from the archive.<span class="Apple-converted-space">  </span>This is implemented but has not been tested recently.</p>
+<p class="p8"><br></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="s3">DocTop</span>.start;</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span></span><b>*swing</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><b><span class="Apple-tab-span">	</span></b>Starts SwingOSC, makes SwingDocument the Document implementation and starts DocTop.</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>To run within sclang, open a terminal window, move to the SC directory and type:</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>./sclang</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>DocTop.swing^[<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// ctrl-[ is needed to get line interpreted</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>*stop</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><b><span class="Apple-tab-span">	</span></b>Stops DocTop.<span class="Apple-converted-space">  </span>Restores CocoaDcument if available.</p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+</body>
+</html>
