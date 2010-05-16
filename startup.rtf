@@ -142,35 +142,33 @@ We don't want to mess with any variables in the interpreter, because these are f
 	a.setShortCut(\cf5 "q"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-q\cf2 \
 \
 	\cf3 // ------------------------- LILT -------------------------\cf2 \
-	if (\cf6 \\ScriptBrowser\cf2 .asClass.notNil) \{\
-		a = \cf4 SCMenuItem\cf2 (g, \cf5 "Open Lilt Browser"\cf2 );\
-		a.action = \{ \cf6 \\ScriptBrowser\cf2 .asClass.startup; \};\
-		a.setShortCut(\cf5 "l"\cf2 , \cf4 false\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-l\cf2 \
-	\};\
+	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Open Lilt Browser"\cf2 );\
+	a.action = \{ \cf4 ScriptBrowser\cf2 .startup; \};\
+	a.setShortCut(\cf5 "l"\cf2 , \cf4 false\cf2 , \cf4 true\cf2 ); \cf3 // Cmd-ctrl-l\cf2 \
 	\cf3 // ------------------------- GIT -------------------------\cf2 \
 	\cf3 /* This command updates the state of the online project http://github.com/iani/Lilt\
 	by sending it the current state of the Lilt folder from the present computer. */\cf2 \
-\cf3 /*	a = SCMenuItem(g, "Update Lilt Project on GitHub");\
+	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Update Lilt Project on GitHub"\cf2 );\
 	a.action = \{\
-		TextDialog("Enter password:", "???????????", \{ | ok, answer |\
-			var userdir, liltdir;\
-			userdir = Platform.userAppSupportDir.replace(" ", "\\\\ "); /* " */\
-			liltdir = userdir ++ "/Extensions/Lilt";\
+		\cf4 TextDialog\cf2 (\cf5 "Enter password:"\cf2 , \cf5 "???????????"\cf2 , \{ \cf4 | ok, answer |\cf2 \
+			\cf4 var\cf2  userdir, liltdir;\
+			userdir = \cf4 Platform\cf2 .userAppSupportDir.replace(\cf5 " "\cf2 , \cf5 "\\\\ "); /* "\cf2  */\
+			liltdir = userdir ++ \cf5 "/Extensions/Lilt"\cf2 ;\
 			if (ok) \{\
-				if (answer == Archive.global[\\passwd]) \{					(\
-				"cp " ++ userdir ++ "/startup.rtf " ++ liltdir ++ "/\
-				cd " ++ liltdir ++ "\
+				if (answer == \cf4 Archive\cf2 .global[\cf6 \\passwd\cf2 ]) \{					(\
+				\cf5 "cp "\cf2  ++ userdir ++ \cf5 "/startup.rtf "\cf2  ++ liltdir ++ \cf5 "/\
+				cd "\cf2  ++ liltdir ++ \cf5 "\
 				git add .\
 				git commit -a\
-				git push").runInTerminal;\
+				git push"\cf2 ).runInTerminal;\
 				\}\{\
-					"Sorry, wrong password".postln;\
+					\cf5 "Sorry, wrong password"\cf2 .postln;\
 				\}\
 			\}\
 		\});\
 	\};\
-	a.setShortCut("g", true, true); // cmd-alt-ctrl-g\
-*/\cf2 \
+	a.setShortCut(\cf5 "g"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // cmd-alt-ctrl-g\cf2 \
+\
 	\cf3 // ------------------------- SAVE ALL DOCUMENT POSITIONS AND WORKSPACE CONTENTS -----------------------\cf2 \
 	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Save documents and workspaces"\cf2 );\
 	a.action = \{\
@@ -222,14 +220,12 @@ We don't want to mess with any variables in the interpreter, because these are f
 \
 \
 	\cf3 // ------------------------- TESTING -------------------------\cf2 \
-	if (\cf6 \\Turtle\cf2 .asClass.notNil) \{\
-		a = \cf4 SCMenuItem\cf2 (g, \cf5 "Test Turtle"\cf2 );\
-		a.action = \{\
-			\cf6 \\Turtle\cf2 .asClass.draw(\{ \cf4 | t |\cf2  \cf4 Pfuncn\cf2 (\{ t.turn(pi * (~count / 4)); t.move(70) \}, 50)	\},\
-				x: 200, y: 200, rate: 0.01);\
-		\};\
-		a.setShortCut(\cf5 "t"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // cmd-alt-ctrl-t\cf2 \
+	a = \cf4 SCMenuItem\cf2 (g, \cf5 "Test Turtle"\cf2 );\
+	a.action = \{\
+		\cf4 Turtle\cf2 .draw(\{ \cf4 | t |\cf2  \cf4 Pfuncn\cf2 (\{ t.turn(pi * (~count / 4)); t.move(70) \}, 50)	\},\
+			x: 200, y: 200, rate: 0.01);\
 	\};\
+	a.setShortCut(\cf5 "t"\cf2 , \cf4 true\cf2 , \cf4 true\cf2 ); \cf3 // cmd-alt-ctrl-t\cf2 \
 	\
 \}.value;\
 \
