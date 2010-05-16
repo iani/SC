@@ -1,0 +1,52 @@
+// (SC3) Script for session 'My First Session'
+// Generated on Fri Jun 29 12:52:07 2007
+
+~sessionName = "My First Session";
+~server = Server.named['localhost'] ? { Server.default };
+~serverAddressDetails = [ "127.0.0.1", 57110 ];	// Servers address saved for reference
+
+//List of paths of samples to be loaded for this session:
+~samplePaths = [
+	"/Users/iani/scwork/sounds/converted/swallows10b.wav",
+	"./sounds/a11wlk01.wav",
+	"./sounds/a11wlk01-44_1.aiff",
+	"./sounds/break",
+	"./sounds/break2",
+	"./sounds/SinedPink.aiff",
+];
+
+// Specs for creating scripts: names of Groups, Folders, Files, Scripts
+~scriptGroups = [
+	["Scripts",
+		[ 'About Scripts', '04 synth+controls', '04 synth+controls', 0.0, 325.0, true ],
+		[ 'About Scripts', '04 synth+controls', '04 synth+controls[2]', 300.0, 325.0, true ],
+		[ 'Spectral Synths', 'PV_MagAbove', 'PV_MagAbove', 902.0, 530.0, true ],
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)', 902.0, 682.0, true ],
+	],
+];
+
+// Specs for creating links between scripts:
+~linkSpecs = [
+	[ 'Scripts', 'playbuf (looping)', 'out', 'Scripts', 'PV_MagAbove', 'in' ],
+];
+
+// Specs to create MIDIResponders for each Script:
+~midiBindings = [
+];
+
+// Specs for the parameter snapshots of the scripts:
+~snapshots = [
+['Scripts', '04 synth+controls',	[ "0", [ 0.0, 455.16918521496, 2.9919952380952, 0.1 ] ],
+	[ "1", [ 0.0, 7057.4700416935, 2.9919952380952, 0.1 ] ],
+	[ "2", [ 0.0, 98.063228246065, 2.9919952380952, 0.1 ] ],
+
+],
+];
+
+// -------------- SCRIPT-SPECIFIC DATA: --------------
+~scriptData = [
+];
+// -------------- END SCRIPT-SPECIFIC DATA --------------
+
+// the common part of the script for starting and stopping is included as template:
+~script.include('Includes', 'SessionLoad');

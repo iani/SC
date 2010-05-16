@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/quarks/!svn/ver/371/Conductor/classes/GUI
+END
+ConductorGUI.sc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/quarks/!svn/ver/371/Conductor/classes/GUI/ConductorGUI.sc
+END
+ConductorSettingsGUI.sc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/quarks/!svn/ver/371/Conductor/classes/GUI/ConductorSettingsGUI.sc
+END
+GUIEvent.sc
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/quarks/!svn/ver/371/Conductor/classes/GUI/GUIEvent.sc
+END

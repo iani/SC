@@ -1,0 +1,52 @@
+8
+
+dir
+562
+https://quarks.svn.sourceforge.net/svnroot/quarks/Conductor/classes/player
+https://quarks.svn.sourceforge.net/svnroot/quarks
+
+
+
+2008-04-17T18:51:13.163471Z
+539
+rkuivila
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fa718440-f913-0410-aee0-f13028b3a0f0
+
+ConductorPlayer.sc
+file
+
+
+
+
+2008-05-10T20:31:05.000000Z
+e70fa22ab0606283e6b1ce934196d429
+2008-02-03T15:13:26.025262Z
+371
+rkuivila
+
+Players.sc
+file
+
+
+
+
+2008-05-10T20:31:05.000000Z
+3b5a3b9ca3650a4cd5849bbbed2a0ea1
+2008-04-17T18:51:13.163471Z
+539
+rkuivila
+

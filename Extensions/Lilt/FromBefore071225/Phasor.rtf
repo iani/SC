@@ -1,0 +1,409 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf420
+{\fonttbl\f0\fnil\fcharset77 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green36\blue171;\red96\green96\blue96;\red144\green38\blue30;
+}
+\deftab560
+\pard\pardeftab560\ql\qnatural
+
+\f0\fs18 \cf0 \
+/// =====\
+\{ WhiteNoise.ar(Decay2.kr(Impulse.kr(3, 0, 0.1))) \}.play;\
+\{ 0.1 * WhiteNoise.ar(Decay2.kr(Trig.kr(0.5 > MouseX.kr(0, 1)))) \}.play;\
+\{ SinOsc.ar(Stepper.kr(0.5 > MouseX.kr(0, 1), 0, 400, 1000, 100), 0, 0.1) \}.play;\
+\
+(\
+SynthDef("bufrd05", \{ | bufnum = 0, rate = 1, begin = 0, end = 1 |\
+	var frames_in_buffer, phasor, bufrd;\
+	var begin_value_generator, begin_value_demand, trig;\
+	var check;\
+	frames_in_buffer = \cf2 BufFrames\cf0 .kr(bufnum);\
+	phasor = Phasor.ar(1, \cf2 BufRateScale\cf0 .kr(bufnum) * rate,\
+		begin * frames_in_buffer,\
+		end * frames_in_buffer,\
+		begin * frames_in_buffer\
+	);\
+	bufrd = BufRd.ar(1, bufnum, phasor);\
+	trig = phasor >= (end * frames_in_buffer - 1);\
+	begin_value_generator = Dxrand([4, 5, 6] * 100, 1000);\
+	begin_value_demand = Demand.ar(trig, 0, begin_value_generator);\
+	check = SinOsc.ar(begin_value_demand, 0, 0.1);\
+	Out.ar(0, [bufrd, check]);\
+\}).send(Server.local);\
+)\
+b = \cf2 Buffer\cf0 .read(Server.local, \cf3 "sounds/sine_sweep.aiff"\cf0 );\
+p = Synth("bufrd05", [\\bufnum, b.bufnum]);\
+p.set(\\begin, 0.14);\
+p.set(\\end, 0.85);\
+p.set(\\end, 0.25);\
+p.set(\\rate, -2.4);\
+\
+/// =====\
+\{ WhiteNoise.ar(Decay2.kr(Impulse.kr(3, 0, 0.1))) \}.play;\
+\{ 0.1 * WhiteNoise.ar(Decay2.kr(Trig.kr(0.5 > MouseX.kr(0, 1)))) \}.play;\
+\{ SinOsc.ar(Stepper.kr(0.5 > MouseX.kr(0, 1), 0, 400, 1000, 100), 0, 0.1) \}.play;\
+\
+(\
+SynthDef("bufrd04", \{ | bufnum = 0, rate = 1, begin = 0, end = 1 |\
+	var frames_in_buffer, phasor, bufrd;\
+	var begin_value_generator, begin_value_demand, trig;\
+	var check;\
+	frames_in_buffer = \cf2 BufFrames\cf0 .kr(bufnum);\
+	phasor = Phasor.ar(1, \cf2 BufRateScale\cf0 .kr(bufnum) * rate,\
+		begin * frames_in_buffer,\
+		end * frames_in_buffer,\
+		begin * frames_in_buffer\
+	);\
+	bufrd = BufRd.ar(1, bufnum, phasor);\
+	trig = phasor >= (end * frames_in_buffer - 1);\
+	begin_value_generator = Dxrand([4, 5, 6] * 100, 1000);\
+	begin_value_demand = Demand.ar(trig, 0, begin_value_generator);\
+	check = SinOsc.ar(begin_value_demand, 0, 0.1);\
+	Out.ar(0, [bufrd, check]);\
+\}).send(Server.local);\
+)\
+b = \cf2 Buffer\cf0 .read(Server.local, \cf3 "sounds/sine_sweep.aiff"\cf0 );\
+p = Synth("bufrd04", [\\bufnum, b.bufnum]);\
+p.set(\\begin, 0.14);\
+p.set(\\end, 0.85);\
+p.set(\\end, 0.25);\
+p.set(\\rate, -2.4);\
+\
+/////////////////////////////////////////////////\
+/// =====\
+\{ WhiteNoise.ar(Decay2.kr(Impulse.kr(3, 0, 0.1))) \}.play;\
+\{ 0.1 * WhiteNoise.ar(Decay2.kr(Trig.kr(0.5 > MouseX.kr(0, 1)))) \}.play;\
+\{ SinOsc.ar(Stepper.kr(0.5 > MouseX.kr(0, 1), 0, 400, 1000, 100), 0, 0.1) \}.play;\
+\
+(\
+SynthDef("bufrd03", \{ | bufnum = 0, rate = 1, begin = 0, end = 1 |\
+	var frames_in_buffer, phasor, bufrd;\
+	var check;\
+	frames_in_buffer = \cf2 BufFrames\cf0 .kr(bufnum);\
+	phasor = Phasor.ar(1, \cf2 BufRateScale\cf0 .kr(bufnum) * rate,\
+		begin * frames_in_buffer,\
+		end * frames_in_buffer,\
+		begin * frames_in_buffer\
+	);\
+	bufrd = BufRd.ar(1, bufnum, phasor);\
+	check = SinOsc.ar(Stepper.ar((phasor >= (end * frames_in_buffer - 1)), 0, 400, 1000, 100), 0, 0.1);\
+	Out.ar(0, [bufrd, check]);\
+\}).send(Server.local);\
+)\
+b = \cf2 Buffer\cf0 .read(Server.local, \cf3 "sounds/sine_sweep.aiff"\cf0 );\
+p = Synth("bufrd03", [\\bufnum, b.bufnum]);\
+p.set(\\begin, 0.14);\
+p.set(\\end, 0.85);\
+p.set(\\end, 0.25);\
+p.set(\\rate, -2.4);\
+\
+/////////////////////////////////////////////////\
+b = \cf2 Buffer\cf0 .read(Server.local, \cf3 "sounds/sine_sweep.aiff"\cf0 );\
+\
+(\
+SynthDef("bufrd", \{ | bufnum = 0, rate = 1, begin = 0, end = 1 |\
+	var frames_in_buffer, phasor, bufrd;\
+	frames_in_buffer = \cf2 BufFrames\cf0 .kr(bufnum);\
+	phasor = Phasor.ar(1, \cf2 BufRateScale\cf0 .kr(bufnum) * rate,\
+		begin * frames_in_buffer,\
+		end * frames_in_buffer,\
+		begin * frames_in_buffer\
+	);\
+	bufrd = BufRd.ar(1, bufnum, phasor);\
+	Out.ar(0, bufrd);\
+\}).send(Server.local);\
+)\
+\
+b = \cf2 Buffer\cf0 .read(Server.local, \cf3 "sounds/sine_sweep.aiff"\cf0 );\
+p = Synth("bufrd", [\\bufnum, b.bufnum]);\
+p.set(\\begin, 0.14);\
+p.set(\\end, 0.85);\
+p.set(\\end, 0.25);\
+p.set(\\rate, -2.4);\
+//////////////////\
+\{ WhiteNoise.ar(Decay2.kr(Impulse.kr(3, 0, 0.1))) \}.play;\
+\{ 0.1 * WhiteNoise.ar(Decay2.kr(Trig.kr(0.5 > MouseX.kr(0, 1)))) \}.play;\
+\{ SinOsc.ar(Stepper.kr(0.5 > MouseX.kr(0, 1), 0, 400, 1000, 100), 0, 0.1) \}.play;\
+\
+(\
+SynthDef("bufrd03", \{ | bufnum = 0, rate = 1, begin = 0, end = 1 |\
+	var frames_in_buffer, phasor, bufrd;\
+	var check;\
+	frames_in_buffer = \cf2 BufFrames\cf0 .kr(bufnum);\
+	phasor = Phasor.ar(1, \cf2 BufRateScale\cf0 .kr(bufnum) * rate,\
+		begin * frames_in_buffer,\
+		end * frames_in_buffer,\
+		begin * frames_in_buffer\
+	);\
+	bufrd = BufRd.ar(1, bufnum, phasor);\
+	check = SinOsc.ar(Stepper.ar((phasor >= (end * frames_in_buffer - 1)), 0, 400, 1000, 100), 0, 0.1);\
+	Out.ar(0, [bufrd, check]);\
+\}).send(Server.local);\
+)\
+b = \cf2 Buffer\cf0 .read(Server.local, \cf3 "sounds/sine_sweep.aiff"\cf0 );\
+p = Synth("bufrd03", [\\bufnum, b.bufnum]);\
+p.set(\\begin, 0.14);\
+p.set(\\end, 0.85);\
+p.set(\\end, 0.25);\
+p.set(\\rate, -2.4);\
+\
+\
+\
+\
+\
+\
+\
+////////////////////////////////////////////////\
+\
+(\
+SynthDef("bufrd_02", \{ | bufnum = 0, rate = 1, begin = 0, end = 1 |\
+	var frames_in_buffer, phasor, bufrd;\
+	frames_in_buffer = \cf2 BufFrames\cf0 .kr(bufnum);\
+	phasor = Phasor.ar(1, \cf2 BufRateScale\cf0 .kr(bufnum) * rate,\
+		In.kr(begin) * frames_in_buffer,\
+		In.kr(end) * frames_in_buffer,\
+		In.kr(begin) * frames_in_buffer\
+	);\
+	bufrd = BufRd.ar(1, bufnum, phasor);\
+	Out.ar(0, bufrd);\
+\}).send(Server.local);\
+)\
+\
+b = \cf2 Buffer\cf0 .read(Server.local, \cf3 "sounds/sine_sweep.aiff"\cf0 );\
+~begin = Bus.control(Server.local, 1);\
+~end = Bus.control(Server.local, 1);\
+\
+~begin.set(0);\
+~begin.get(\{ | ... args | args.postln; \});\
+~end.set(1);\
+\
+p = Synth("bufrd_02", [\\bufnum, b.bufnum, \\begin, ~begin.index, \\end, ~end.index]);\
+~end.set(0.14);\
+~begin.set(0.1);\
+~begin.set(0.2);\
+~end.set(0.934);\
+~end.set(0.7934);\
+~end.set(0.47934);\
+\
+\
+~begin.set(0.751);\
+~end.set(0.934);\
+\
+\
+\
+\
+//////////////////////////////////////////////////////////////////\
+\
+(\
+SynthDef("bufrd", \{ | bufnum = 0, rate = 1, begin = 0, end = 1 |\
+	var frames_in_buffer, phasor, bufrd;\
+	frames_in_buffer = \cf2 BufFrames\cf0 .kr(bufnum);\
+	phasor = Phasor.ar(1, \cf2 BufRateScale\cf0 .kr(bufnum) * rate,\
+		begin * frames_in_buffer,\
+		end * frames_in_buffer,\
+		begin * frames_in_buffer\
+	);\
+	bufrd = BufRd.ar(1, bufnum, phasor);\
+	Out.ar(0, bufrd);\
+\}).send(Server.local);\
+)\
+\
+p = Synth("bufrd", [\\bufnum, b.bufnum]);\
+\
+\pard\pardeftab560\ql\qnatural
+
+\fs24 \cf0 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+\pard\pardeftab560\ql\qnatural
+
+\fs18 \cf0 (\
+p = \{ | rate = 1 |\
+\
+	\cf2 var\cf0  trig, interval, framesInBuffer;\
+	interval = \cf2 MouseX\cf0 .kr(BufDur.kr(b.bufnum).reciprocal, 100, 1);\
+	trig = \cf2 Impulse\cf0 .ar(interval * rate.abs);\
+	framesInBuffer = \cf2 BufFrames\cf0 .kr(b.bufnum);\
+	x = \cf2 Phasor\cf0 .ar(trig, \cf2 BufRateScale\cf0 .kr(b.bufnum) * rate, 0, framesInBuffer, \
+//		[\
+//			0\
+			// , \
+			\cf2 MouseY\cf0 .kr(0, framesInBuffer)\
+//		]\
+		);\
+	\cf2 BufRd\cf0 .ar(1, b.bufnum, x);\
+\}.play;\
+)\
+\
+\
+=================\
+t = \{ | trig = 0, rate = 1, rpos = 300, begin = 400, end = 800 |\
+	var phasor, sine;\
+	phasor = Phasor.ar(trig, rate / SampleRate.ir, begin, end, rpos);\
+\cf2 	sine = SinOsc.ar(phasor, 0, 0.1);\
+\cf0 \}.play;\
+\
+\
+t.set(\\trig, 0); \{ t.set(\\begin,  0.95.rand, \\trig, 1) \}.defer(0.01);\
+\
+(\
+\{ \cf2 var\cf0  trig, rate, x, sr;\
+	rate = \cf2 MouseX\cf0 .kr(0.2, 2, 1);\
+	trig = \cf2 Impulse\cf0 .ar(rate);\
+	sr = \cf2 SampleRate\cf0 .ir;\
+	x = \cf2 Phasor\cf0 .ar(trig, rate / sr);\
+	\cf2 SinOsc\cf0 .ar(\cf2 \
+\cf0 		[\
+			\cf2 LinLin\cf0 .kr(x, 0, 1, 600, 1000), \cf4 // convert range from 0..1 to 600..1000\
+\cf0 			1000 \cf4 // constant second frequency\
+\cf0 		], 0, 0.2)\
+\
+\}.play;\
+)\
+\
+(\
+\{ \cf2 |\cf0  trig = 0, rate = 1, from = 400, to = 1000 |\
+	var x, sr;\
+	trig = \cf2 Impulse\cf0 .ar(rate);\
+	sr = \cf2 SampleRate\cf0 .ir;\
+	x = \cf2 Phasor\cf0 .ar(trig, rate / 600, from, to);\
+	\cf2 SinOsc\cf0 .ar(\
+		x,\cf2 \
+\cf0 //		\cf2 LinLin\cf0 .kr(x, 0, 1, 600, 1000), \cf4 // convert range from 0..1 to 600..1000\
+\cf0 		0, 0.2\
+	);\
+\}.play;\
+)\
+\
+/////////////\
+(\
+\pard\pardeftab560\ql\qnatural
+\cf4 // read a whole sound into memory\
+\pard\pardeftab560\ql\qnatural
+\cf0 s = \cf2 Server\cf0 .local;\
+\pard\pardeftab560\ql\qnatural
+\cf4 // note: not *that* columbia, the first one\
+\pard\pardeftab560\ql\qnatural
+\cf0 s.waitForBoot\{\
+	s.sendMsg(\cf3 "/b_allocRead"\cf0 , 0, \cf3 "sounds/seagull.wav"\cf0 );\cf3 \
+\cf0 \}\
+)\
+\
+(\
+x = \{ \cf2 arg\cf0  trig = 0, rate = 1, first = 0, last = 1, rpoint = 0; \
+	var num_frames = \cf2 BufFrames\cf0 .kr(0);\
+	\cf2 BufRd\cf0 .ar(1, 0, \cf2 Phasor\cf0 .ar(trig, \cf2 BufRateScale\cf0 .kr(0) * rate,\
+		first * num_frames, last * \cf2 num_frames,\
+		rpoint * num_frames\
+	\cf0 )) \
+\}.play;\
+)\
+\
+x.set(\\rpoint, 0.5); x.set(\\trig, 0); \{ x.set(\\trig, 1) \}.defer(0.1);\
+\
+(\
+x = \{ \cf2 arg\cf0  rate = 1, first = 0, last = 1, rpoint = 0; \
+	var num_frames = \cf2 BufFrames\cf0 .kr(0);\
+	var trig = Impulse.ar((last - first * BufDur.kr(0)).reciprocal);\
+	\cf2 BufRd\cf0 .ar(1, 0, \cf2 Phasor\cf0 .ar(trig, \cf2 BufRateScale\cf0 .kr(0) * rate,\
+		first * num_frames, last * \cf2 num_frames,\
+		first * num_frames\
+	\cf0 )) \
+\}.play;\
+)\
+\
+x.set(\\first, 0.4);\
+\
+\
+// s.sendMsg(\cf3 "/b_allocRead"\cf0 , 0, \cf3 "sounds/seagull.wav"\cf0 );\cf3 \
+\cf0 b = \cf2 Buffer\cf0 .read(s, \cf3 "sounds/flit.wav"\cf0 );\cf3 \
+\cf0 b = \cf2 Buffer\cf0 .read(s, \cf3 "sounds/sine_sweep.aiff"\cf0 );\cf3 \
+\cf0 \
+\pard\pardeftab560\ql\qnatural
+
+\fs24 \cf0 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\
+\pard\pardeftab560\ql\qnatural
+
+\fs18 \cf0 (\
+p = \{ | rate = 1 |\
+\
+	\cf2 var\cf0  trig, interval, framesInBuffer;\
+	interval = \cf2 MouseX\cf0 .kr(BufDur.kr(b.bufnum).reciprocal, 100, 1);\
+	trig = \cf2 Impulse\cf0 .ar(interval * rate.abs);\
+	framesInBuffer = \cf2 BufFrames\cf0 .kr(b.bufnum);\
+	x = \cf2 Phasor\cf0 .ar(trig, \cf2 BufRateScale\cf0 .kr(b.bufnum) * rate, 0, framesInBuffer, \
+//		[\
+//			0\
+			// , \
+			\cf2 MouseY\cf0 .kr(0, framesInBuffer)\
+//		]\
+		);\
+	\cf2 BufRd\cf0 .ar(1, b.bufnum, x);\
+\}.play;\
+)\
+\
+\pard\pardeftab560\ql\qnatural
+
+\fs24 \cf0 (\
+p = \{ | rate = 1, end = 0.1 |\
+\
+	\cf2 var\cf0  trig, interval, framesInBuffer;\
+	trig = \cf2 Impulse\cf0 .ar(interval * rate.abs);\
+	framesInBuffer = \cf2 BufFrames\cf0 .kr(b.bufnum);\
+	interval = framesInBuffer * 0.1;\
+	trig = \
+	x = \cf2 Phasor\cf0 .ar(\
+			trig, \
+			\cf2 BufRateScale\cf0 .kr(b.bufnum) * rate, \
+			0, \
+			framesInBuffer, \
+			\cf2 MouseY\cf0 .kr(0, framesInBuffer)\
+		);\
+	\cf2 BufRd\cf0 .ar(1, b.bufnum, x);\
+\}.play;\
+)\
+\pard\pardeftab560\ql\qnatural
+
+\fs18 \cf0 \
+p.set(\\rate, 1.6);\
+p.set(\\rate, 0);\
+p.set(\\rate, -0.6);\
+p.set(\\rate, -0.3);\
+Line\
+\
+\
+\
+\pard\pardeftab560\ql\qnatural
+
+\fs24 \cf0 (\
+p = \{ | rate = 1 |\
+	\cf2 var\cf0  trig, itvlseries, interval, framesInBuffer;\
+	// Dser\
+	itvlseries = Dser([0.5, 0.2, 0.6, 0.4], inf);\
+//	interval = Dser([0.5, 0.2, 0.6, 0.4], inf);\
+	\cf2 MouseX\cf0 .kr(BufDur.kr(b.bufnum).reciprocal, 100, 1);\
+	trig = \cf2 Impulse\cf0 .ar(interval * rate.abs);\
+	framesInBuffer = \cf2 BufFrames\cf0 .kr(b.bufnum);\
+	x = \cf2 Phasor\cf0 .ar(\
+			trig, \
+			\cf2 BufRateScale\cf0 .kr(b.bufnum) * rate, \
+			0, \
+			framesInBuffer, \
+			\cf2 MouseY\cf0 .kr(0, framesInBuffer)\
+		);\
+	\cf2 BufRd\cf0 .ar(1, b.bufnum, x);\
+\}.play;\
+)\
+\pard\pardeftab560\ql\qnatural
+
+\fs18 \cf0 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}

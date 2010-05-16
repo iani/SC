@@ -1,0 +1,166 @@
+// (SC3) Script for session 'Corfu Swallows v02'
+// Generated on Thu Jun 14 06:41:04 2007
+
+~sessionName = "Corfu Swallows v02";
+~server = Server.named['localhost'] ? { Server.default };
+~serverAddressDetails = [ "127.0.0.1", 57110 ];	// Servers address saved for reference
+
+//List of paths of samples to be loaded for this session:
+~samplePaths = [
+	"./sounds/a11wlk01.wav",
+	"./sounds/a11wlk01-44_1.aiff",
+	"./sounds/break",
+	"./sounds/break2",
+	"./sounds/SinedPink.aiff",
+];
+
+// Specs for creating scripts: names of Groups, Folders, Files, Scripts
+~scriptGroups = [
+	["Session Control",
+		[ 'cs', '00 Startup', '00 Startup', 202.0, 0.0, true ],
+		[ 'cs', '01 StartShow', '01 StartShow', 402.0, 0.0, true ],
+	],
+	["Multichannel",
+		[ 'mixing+multichannel', 'PAN8', 'PAN8', 2.0, 75.0, true ],
+		[ 'mixing+multichannel', 'PAN8', 'PAN8[2]', 303.0, 76.0, true ],
+		[ 'mixing+multichannel', 'PAN8', 'PAN8[3]', 604.0, 76.0, true ],
+		[ 'mixing+multichannel', 'PAN8', 'PAN8[4]', 904.0, 78.0, true ],
+	],
+	["Processing",
+		[ 'Spectral Synths', 'PV_RectComb', 'PV_RectComb', 1.0, 487.0, true ],
+		[ 'Spectral Synths', 'PV_BinShift', 'PV_BinShift', 303.0, 508.0, true ],
+		[ 'Spectral Synths', 'PV_MagAbove', 'PV_MagAbove', 604.0, 529.0, true ],
+		[ 'Spectral Synths', 'PV_LocalMax', 'PV_LocalMax', 904.0, 530.0, true ],
+	],
+	["Samples",
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)', 2.0, 682.0, true ],
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)[2]', 303.0, 682.0, true ],
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)[3]', 605.0, 682.0, true ],
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)[4]', 905.0, 682.0, true ],
+	],
+];
+
+// Specs for creating links between scripts:
+~linkSpecs = [
+	[ 'Processing', 'PV_RectComb', 'out', 'Multichannel', 'PAN8', 'in' ],
+	[ 'Processing', 'PV_BinShift', 'out', 'Multichannel', 'PAN8[2]', 'in' ],
+	[ 'Processing', 'PV_MagAbove', 'out', 'Multichannel', 'PAN8[3]', 'in' ],
+	[ 'Processing', 'PV_LocalMax', 'out', 'Multichannel', 'PAN8[4]', 'in' ],
+	[ 'Samples', 'playbuf (looping)', 'out', 'Processing', 'PV_RectComb', 'in' ],
+	[ 'Samples', 'playbuf (looping)[2]', 'out', 'Processing', 'PV_BinShift', 'in' ],
+	[ 'Samples', 'playbuf (looping)[3]', 'out', 'Processing', 'PV_MagAbove', 'in' ],
+	[ 'Samples', 'playbuf (looping)[4]', 'out', 'Processing', 'PV_LocalMax', 'in' ],
+];
+
+// Specs to create MIDIResponders for each Script:
+~midiBindings = [
+['Session Control', '01 StartShow',
+	['script', CCResponder(nil, nil, 0, 19, nil, false)],
+],
+['Multichannel', 'PAN8',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['pos', CCResponder(nil, nil, 4, 13, nil, false)],
+	['level', CCResponder(nil, nil, 4, 7, nil, false)],
+	['width', CCResponder(nil, nil, 4, 12, nil, false)],
+	['orientation', CCResponder(nil, nil, 4, 10, nil, false)],
+],
+['Multichannel', 'PAN8[2]',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['pos', CCResponder(nil, nil, 5, 13, nil, false)],
+	['level', CCResponder(nil, nil, 5, 7, nil, false)],
+	['width', CCResponder(nil, nil, 5, 12, nil, false)],
+	['orientation', CCResponder(nil, nil, 5, 10, nil, false)],
+],
+['Multichannel', 'PAN8[3]',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['pos', CCResponder(nil, nil, 6, 13, nil, false)],
+	['level', CCResponder(nil, nil, 6, 7, nil, false)],
+	['width', CCResponder(nil, nil, 6, 12, nil, false)],
+	['orientation', CCResponder(nil, nil, 6, 10, nil, false)],
+],
+['Multichannel', 'PAN8[4]',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['pos', CCResponder(nil, nil, 7, 13, nil, false)],
+	['level', CCResponder(nil, nil, 7, 7, nil, false)],
+	['width', CCResponder(nil, nil, 7, 12, nil, false)],
+	['orientation', CCResponder(nil, nil, 7, 10, nil, false)],
+],
+['Processing', 'PV_RectComb',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['numTeeth', CCResponder(nil, nil, 0, 13, nil, false)],
+	['phase', CCResponder(nil, nil, 0, 14, nil, false)],
+	['width', CCResponder(nil, nil, 0, 12, nil, false)],
+	['source_level', CCResponder(nil, nil, 0, 10, nil, false)],
+	['fx_level', CCResponder(nil, nil, 0, 7, nil, false)],
+],
+['Processing', 'PV_BinShift',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['stretch', CCResponder(nil, nil, 1, 13, nil, false)],
+	['shift', CCResponder(nil, nil, 1, 12, nil, false)],
+	['source_level', CCResponder(nil, nil, 1, 10, nil, false)],
+	['fx_level', CCResponder(nil, nil, 1, 7, nil, false)],
+],
+['Processing', 'PV_MagAbove',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['threshold', CCResponder(nil, nil, 2, 13, nil, false)],
+	['source_level', CCResponder(nil, nil, 2, 10, nil, false)],
+	['fx_level', CCResponder(nil, nil, 2, 7, nil, false)],
+],
+['Processing', 'PV_LocalMax',
+	['script', CCResponder(nil, nil, 0, 14, nil, false)],
+	['threshold', CCResponder(nil, nil, 3, 13, nil, false)],
+	['source_level', CCResponder(nil, nil, 3, 10, nil, false)],
+	['fx_level', CCResponder(nil, nil, 3, 7, nil, false)],
+],
+['Samples', 'playbuf (looping)',
+	['script', CCResponder(nil, nil, 0, 65, nil, false)],
+	['bufnum', NoteOnOffResponder(nil, nil, 0, 3, nil, false)],
+	['rate', CCResponder(nil, nil, 0, 81, nil, false)],
+	['trigger', CCResponder(nil, nil, 0, 73, nil, false)],
+	['startPos', CCResponder(nil, nil, 0, 89, nil, false)],
+	['loop', CCResponder(nil, nil, 0, 69, nil, false)],
+	['amp', NoteOnOffResponder(nil, nil, 0, 3, nil, false)],
+],
+['Samples', 'playbuf (looping)[2]',
+	['script', CCResponder(nil, nil, 0, 66, nil, false)],
+	['bufnum', CCResponder(nil, nil, 0, 25, nil, false)],
+	['rate', CCResponder(nil, nil, 0, 82, nil, false)],
+	['trigger', CCResponder(nil, nil, 0, 74, nil, false)],
+	['startPos', CCResponder(nil, nil, 0, 90, nil, false)],
+	['loop', CCResponder(nil, nil, 0, 70, nil, false)],
+	['amp', CCResponder(nil, nil, 0, 25, nil, false)],
+],
+['Samples', 'playbuf (looping)[3]',
+	['script', CCResponder(nil, nil, 0, 67, nil, false)],
+	['bufnum', CCResponder(nil, nil, 0, 27, nil, false)],
+	['rate', CCResponder(nil, nil, 0, 83, nil, false)],
+	['trigger', CCResponder(nil, nil, 0, 75, nil, false)],
+	['startPos', CCResponder(nil, nil, 0, 91, nil, false)],
+	['loop', CCResponder(nil, nil, 0, 71, nil, false)],
+	['amp', CCResponder(nil, nil, 0, 27, nil, false)],
+],
+['Samples', 'playbuf (looping)[4]',
+	['script', CCResponder(nil, nil, 0, 68, nil, false)],
+	['bufnum', CCResponder(nil, nil, 0, 25, nil, false)],
+	['rate', CCResponder(nil, nil, 0, 84, nil, false)],
+	['trigger', CCResponder(nil, nil, 0, 76, nil, false)],
+	['startPos', CCResponder(nil, nil, 0, 92, nil, false)],
+	['loop', CCResponder(nil, nil, 0, 72, nil, false)],
+	['amp', CCResponder(nil, nil, 0, 27, nil, false)],
+],
+];
+
+// Specs for the parameter snapshots of the scripts:
+~snapshots = [
+['Samples', 'playbuf (looping)',	[ "0", [ 20, 'break', 1, 1, 0, 1, 1 ] ],
+
+],
+];
+
+// -------------- SCRIPT-SPECIFIC DATA: --------------
+~scriptData = [
+];
+// -------------- END SCRIPT-SPECIFIC DATA --------------
+
+// the common part of the script for starting and stopping is included as template:
+~script.include('Includes', 'SessionLoad');

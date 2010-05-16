@@ -1,0 +1,180 @@
+/* iz Saturday; December 26, 2009: 4:26 PM
+Examples of scores for Sand pieces.
+*/
+
+/* 	Following voice-stream variables hold streams of actions that can be played in parallel 
+	as rules in the ~conductor. 
+*/
+var voice1, voice2, voice3, voice4; 
+/*  To use streams of actions we have to store envir here.
+	Note: I am looking into ways for making this unnecessary. 
+*/
+var envir;			
+envir = ~envir;		// copy environment in local variable to access from Patterns and Streams
+
+// Loading some synthdefs to play with: 
+
+SynthDef("ping", { | freq = 400, amp = 0.1, dur = 0.1 |
+	Out.ar(0, SinOsc.ar(freq, 0, 
+			EnvGen.kr(
+				Env.perc(0.01, ((dur - 0.01) max: 0.05), amp),
+				doneAction: 2
+			)
+	))
+}).load(Server.local);
+
+// Just renaming old "nohihat" to "maybehihat" here, making sure we have it loaded ... 
+SynthDef("maybehihat", { arg out = 0, freq = 3000, dur = 0.125, amp = 1, noiseLev=0.6;
+	var env, src;
+	env = Env.perc(dur * 0.001, dur * 0.999, amp, -4);
+	src = Resonz.ar(WhiteNoise.ar(noiseLev), freq, XLine.kr(0.2, 0.001, dur));
+	Out.ar(out, src * EnvGen.ar(env, doneAction: 2));
+}, [\ir, \kr, \ir, \ir]).load(Server.local);
+
+// Note: To play any one of the examples, comment out the examples following it. 
+
+// Simplest case: play a sound each time you receive a vertex 
+// (Also print the data to the post window)
+
+~conductor = { | ... data |	// collect all arguments in an array
+	data.postln;			// post the array of collected arguments
+	Synth("ping", [\dur, 0.5]);
+};
+
+// Variation: Control the frequency of the synth by vector parameter 'aa'
+~conductor = { | envir |	// get envir as single argument
+	Synth("ping", [\dur, 0.5, \freq, 
+			envir[\aa] * 100 + 300	// access parameter 'aa' from envir
+	]);
+};
+
+/* 	Combining different rules or "actions" in sequence. 
+   	Sequence of two types of actions: 
+   	Action 1. Play a sound of fixed frequency 
+	Action 2. Play a sound whose frequency depends on parameter 'aa'
+	Using Pactions to create a sequence of the two actions, where each
+	one is repeated a specific number of times:
+	Action 1 repeats for 7 times, 
+	then there are 5 vertices without any action
+	then action 2 repeats for 10 times. 
+	The piece ends when Action 2 completes its 10 repetitions.  
+*/
+
+// Define the two actions
+~action1 = { Synth("ping", [\dur, 0.5]) };
+
+~action2 = {		// using envir variable declared in this script
+	Synth("ping", [\dur, 0.5, \freq, envir[\aa] * 100 + 300]);
+};
+
+// Make a pattern that uses the two actions
+voice1 = Pactions([		// pattern of actions (can create many stream instances)
+	[~action1, 7], 		// repeat action1 7 times
+	5, 					// let 5 vertices pass without any action
+	[~action2, 10]		// repeat action2 10 times
+], 1			// repeat the entire sequence of actions one time
+);		
+
+// Define the conductor. It has just one stream (one "voice").
+~conductor = voice1.asStream;
+
+/* Now define one more action-voice: 
+This one waits for 10 counts, then plays "maybehihat" for 15 counts with frequency from ai parameter. 
+The whole sequence therefore has a lenght of 10 + 15 = 25 counts. 
+This sequence of 25 actions is repeated infinitely. 
+*/
+
+voice2 = Pactions([
+	10,					// wait for 10 counts doing nothing
+	[					// define the function that will be repeated: 
+		{ Synth("maybehihat", [\dur, 0.5, \noiseLev, 1.5, \freq, envir[\ai] * 100 + 700])},
+		15				// specify for the function to be repeated 15 times
+	], 
+], inf					// repeat the whole sequence infinitely
+);
+
+/* The conductor is an array with two streams. Both streams will be played in parallel.
+The first stream ends after 7 + 5 + 10 = 22 counts. 
+The second stream repeats for ever.
+*/
+
+~conductor = [
+	voice1.asStream,
+	voice2.asStream
+];
+
+/* A variation of the above, with the "maybehihat" sounds starting always 0.2 seconds after receiving 
+the 'vertex' message. */
+
+// The code of voice2, modified:
+voice2 = Pactions([
+	10,					// wait for 10 counts doing nothing
+	[					// define the function that will be repeated: 
+		{ 	// the action now contains a function that is deferred by 0.1 seconds. This creates the delay
+			{ Synth("maybehihat", [\dur, 0.5, \noiseLev, 1.5, \freq, envir[\ai] * 100 + 700])
+			}.defer(0.1)
+		},
+		15				// specify for the function to be repeated 15 times
+	], 
+], inf					// repeat the whole sequence infinitely
+);
+
+// same conductor
+~conductor = [
+	voice1.asStream,
+	voice2.asStream
+];
+
+
+/* Variant repeating the first voice 2 times, using Pn. 
+We can nest a pattern in another pattern. Pn repeats the pattern or other element nested in it. 
+*/
+
+~conductor = [
+	Pn(voice1, 2).asStream,
+	voice2.asStream
+];
+
+/* Variant combining the patterns of the two voices in one sequence, using Pseq. 
+Pseq builds sequences of elements, including patterns. 
+*/
+
+~conductor = Pseq([voice1, voice2], 1).asStream;
+
+/* Variant combining the same pattern both in sequence and in parallel, with other patterns. 
+*/
+
+/* The code of voice2, modified to introduce variations so as to make two voice2 streams
+distinguisheable when played in parallel */
+
+voice3 = Pactions([
+	10,					// wait for 10 counts doing nothing
+	[					// define the function that will be repeated: 
+		{
+			{ Synth("maybehihat", [\dur, 0.5, \freq, envir[\ai] * 
+				(100 + 100.rand) + 700]		// introducing variations in pitch
+				)
+			}.defer(0.1.rand + 0.05)		// introducing variation in timing
+		},
+		15				// specify for the function to be repeated 15 times
+	], 
+], inf					// repeat the whole sequence infinitely
+);
+
+/* Here the first "stream / voice" is a sequence consisting of the patterns of voice1 followed by voice3, 
+while the second "stream / voice" is just the pattern of voice3. After voice1 ends, then the pattern of 
+voice3 is played in a kind of "canon" on both streams / voices. */
+~conductor = [
+	Pseq([voice1, voice3], 1).asStream,
+	voice3.asStream
+];
+
+// Simple case of playing two sounds concurrently at each vertex. 
+// The last set of rules is disabled as an example. The previous ~conductor rule set is therefore active
+/*
+~conductor = [
+	{ Synth("ping", [\freq, envir['ai'] * 100 + 400]) },
+	// second rule plays the tone with 0.15 seconds delay
+	{ { Synth("nohihat", [\freq, envir['aa'] * 100 + 400]) }.defer(0.15) },
+];
+*/

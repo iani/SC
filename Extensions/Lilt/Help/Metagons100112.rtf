@@ -1,0 +1,63 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf540
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue0;\red0\green0\blue191;
+}
+\deftab560
+\pard\pardeftab560\ql\qnatural
+
+\f0\fs18 \cf2 /* iz Tuesday; January 12, 2010: 11:51 AM\
+\
+\
+Basic metagon and strange variations\
+\
+*/\cf3 \
+\
+\
+\cf2 // basic metagon\cf3 \
+(\
+t = \cf4 Turtle\cf3 .draw(\{ \cf4 | t |\cf3 \
+	\cf4 var\cf3  metagonSide = 64;\
+	\cf4 Pseq\cf3 (\{ \cf4 | i |\cf3 \
+		\cf4 Pfuncn\cf3 (\{ t.turn(2 * pi / (i + 3)); t.move(metagonSide, 1) \}, i + 2)\
+	\} ! 50\
+	, 1) \
+	\},  x: 400, y: 400,rate: 0);\
+)	\
+\
+\cf2 // Strange ???metagon???\cf3 \
+\
+\
+(\
+t = \cf4 Turtle\cf3 .draw(\{ \cf4 | t |\cf3 \
+	\cf4 var\cf3  metagonSide = 64;\
+	\cf4 Pseq\cf3 (\{ \cf4 | i |\cf3 \
+		\cf4 Pfuncn\cf3 (\{ t.turn(2 ** (i ** 1.1) * pi / (i + 1 ** 1.1)); t.move(metagonSide, 1) \}, i + 2)\
+	\} ! 50\
+	, 1) \
+	\},  x: 400, y: 400,rate: 0);\
+)	\
+\
+\cf2 // Strange ???metagon??? 2\cf3 \
+\
+\
+(\
+t = \cf4 Turtle\cf3 .draw(\{ \cf4 | t |\cf3 \
+	\cf4 var\cf3  metagonSide = 64;\
+	\cf4 Pseq\cf3 (\{ \cf4 | i |\cf3 \
+		\cf4 Pfuncn\cf3 (\{ t.turn(2 ** (i * 1.01) * pi / (i + 1 ** 1.1)); t.move(metagonSide, 1) \}, i + 2)\
+	\} ! 50\
+	, 1) \
+	\},  x: 400, y: 400,rate: 0);\
+)	\
+\
+\cf2 // varying the length of line segments\cf3 \
+(\
+t = \cf4 Turtle\cf3 .draw(\{ \cf4 | t |\cf3 \
+	\cf4 var\cf3  metagonSide = 64;\
+	\cf4 Pseq\cf3 (\{ \cf4 | i |\cf3 \
+		\cf4 Pfuncn\cf3 (\{ t.turn(2 * pi / (i + 3)); t.move(metagonSide * (i % 20 + 1) ** 1.1, 1) \}, i + 2)\
+	\} ! 50\
+	, 1) \
+	\},  x: 400, y: 400,rate: 0);\
+)	\
+}

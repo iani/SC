@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/quarks/!svn/ver/534/Conductor/classes/CV
+END
+CVInterpolator.sc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/quarks/!svn/ver/371/Conductor/classes/CV/CVInterpolator.sc
+END
+CVPreset.sc
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/quarks/!svn/ver/371/Conductor/classes/CV/CVPreset.sc
+END
+ConnectCVToNodes.sc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/quarks/!svn/ver/371/Conductor/classes/CV/ConnectCVToNodes.sc
+END
+Touch.sc
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/quarks/!svn/ver/371/Conductor/classes/CV/Touch.sc
+END
+ConnectCVToViews.sc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/quarks/!svn/ver/371/Conductor/classes/CV/ConnectCVToViews.sc
+END
+extCVForTouch.sc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/quarks/!svn/ver/371/Conductor/classes/CV/extCVForTouch.sc
+END
+CV.sc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/quarks/!svn/ver/392/Conductor/classes/CV/CV.sc
+END
+SV.sc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/quarks/!svn/ver/371/Conductor/classes/CV/SV.sc
+END
+CVEvent.sc
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/quarks/!svn/ver/534/Conductor/classes/CV/CVEvent.sc
+END

@@ -1,0 +1,36 @@
+/* IZ 2007-06-07 { SC3
+
+} */
+
+var script, session;
+script = ~script;
+session = ~script.session;
+
+~start = {
+	var window, text;
+	Post << ~script << " started\n";
+	session.getScript('Samples', 'playbuf (looping)').start;
+	Routine({
+		10 do: { | i |
+			{ window = GUI.window.new("Time", Rect(0, 300, 200, 154));
+			text = GUI.textView.new(window, Rect(2, 2, 196, 150));
+			text.font = Font("Helvetica", 72);
+			text.stringColor = Color.red;
+			text.string = (10 - i).asString;
+			window.front; }.defer(0.1);
+			58.wait;
+			{ window.close; }.defer(0.1);
+			2.wait;
+		};
+	}).play;
+};
+
+
+~stop = {
+	Post << ~script << " stopped\n";
+};
+
+
+~controlSpecs = [
+
+];

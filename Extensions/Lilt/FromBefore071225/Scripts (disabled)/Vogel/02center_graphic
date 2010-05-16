@@ -1,0 +1,38 @@
+/* IZ 2007-05-13 { SC3
+
+} */
+
+var window, script;
+
+script = ~script;
+
+~start = {
+	var pane;
+	var allpoints, tones, center;
+	if (window.isNil) {
+		window = GUI.window.new("Mean of Vector Sum").front;
+		window.onClose = {
+			window = nil;
+			script.stopped;
+		};
+		pane = SCEnvelopeView(window, window.view.bounds.insetBy(3, 3));
+		pane.value_([[0.1, 0.4, 0.5, 0.3], [0.1, 0.2, 0.9, 0.7]]);
+		3 do: { | p | 
+			pane.setFillColor(p, Color.red);
+		};
+		pane.selectionColor = Color.yellow;
+		pane.action = { | me |
+			if (me.index < 3) {
+				tones = me.value.slice(nil, (0..2));
+				center = tones.flop.sum / tones.first.size;
+				me.value = tones +++ center;
+			};
+		}
+	};
+};
+
+
+~stop = {
+	window.close;
+	window = nil;
+};

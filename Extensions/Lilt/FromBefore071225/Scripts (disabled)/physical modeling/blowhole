@@ -1,0 +1,48 @@
+/* IZ 050711
+Test for the StkBlowhole physical modeling UGen.
+See stkblowhole for script generated from the SynthDef
+
+This script also demonstrates use of a custom stopMessage to release the synth instead of freeing it. Here this is needed to avoid the click caused by DC offset in the StkBlowhole UGen. Compare with stkblowhole script. 
+
+*/
+
+~start = { 
+	~addAction.postln;
+	Synth("stkblowhole", addAction:#[\h, \t, \addBefore, \addAfter, \addReplace][~addAction]) 
+	
+};
+
+// using env with gate release obligatory because otherwise stk ugen causes click:
+~stopMessage = [\set, \gate, 0];
+
+/* // Not this: The code works, but the click is still there:
+~stop = { var synth; (synth = ~process).set(\trig, 0); ~process.run(false); { 
+	[\freeing, synth, \now].postln;
+	synth.free;
+	}.defer(0.5) 
+};
+*/
+
+~controlSpecs = [
+	[\freq, 20, 20000, \exponential, 0, 440],
+	[\reedstiffness, 0, 128, \linear, 0, 64],
+	[\noisegain, 0, 40, \linear, 0, 20],
+	[\tonehole, 0, 128, \linear, 0, 64],
+	[\register, 0, 128, \linear, 0, 11],
+	[\breathpressure, 0, 128, \linear, 0, 64],
+	[\trig, 0, 1, \linear, 1, 1],
+	[\mul, 0, 1, \linear, 0, 1]
+];
+
+
+/*
+freq, 20, 20000, \exponential, 0, 440],
+	[\reedstiffness, 0, 128, \linear, 0, 0.1],
+	[\noisegain, 0, 40, \linear, 0, 20],
+	[\tonehole, 0, 128, \linear, 0, 128],
+	[\register, 0, 128, \linear, 0, 11],
+	[\breathpressure, 0, 64, \linear, 0, 128],
+	[\trig, 0, 1, \linear, 1, 1],
+	[\mul, 0, 1, \linear, 0, 1]
+
+*/

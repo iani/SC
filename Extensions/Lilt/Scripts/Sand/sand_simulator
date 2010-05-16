@@ -1,0 +1,15 @@
+
+
+var address;
+
+address = NetAddr.localAddr;
+
+~script.routine {
+
+	inf do: { | i |
+		[0.5, 0.25, 0.25, 0.25, 1.0].choose.wait;
+		i.postln;
+		address.sendMsg(\vertex, i, *Array.rand(19, 0.1, 15.0));
+	}
+};
+

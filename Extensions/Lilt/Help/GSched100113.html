@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+span.s1 {color: #000000}
+span.s2 {color: #0000bf}
+span.s3 {color: #606060}
+span.s4 {color: #007300}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">/* iz Wednesday; January 13, 2010: 12:35 PM</p>
+<p class="p1">Examples for GSched / GraphicsProxy SCPen</p>
+<p class="p1">*/</p>
+<p class="p2"><br></p>
+<p class="p1">// run this once to create the player and its window</p>
+<p class="p3">(</p>
+<p class="p4"><span class="s1">a = </span>GraphicsProxy<span class="s1">.show(</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">Window</span>(<span class="s3">"graphics"</span>, <span class="s2">Rect</span>(969, 68, 459, 784)).front,</p>
+<p class="p3"><span class="Apple-tab-span">	</span>animation: <span class="s2">false</span>);</p>
+<p class="p3">a.window.view.background = <span class="s2">Color</span>.white;</p>
+<p class="p1"><span class="s1">a.run; </span>// start rendering</p>
+<p class="p3">)</p>
+<p class="p3">// Note: If you have installed the wslib quark, you can also write:<span class="Apple-converted-space"> </span></p>
+<p class="p3">/*<span class="Apple-converted-space"> </span></p>
+<p class="p3">(</p>
+<p class="p4"><span class="s1">a = </span>GraphicsProxy<span class="s1">.show(</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">Window</span>(<span class="s3">"graphics"</span>, <span class="s2">Rect</span>(969, 68, 459, 784)).background_(<span class="s2">Color</span>.white).front,<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>animation: <span class="s2">false</span>);</p>
+<p class="p1"><span class="s1">a.run; <span class="Apple-tab-span">	</span></span>// start rendering</p>
+<p class="p3">)</p>
+<p class="p3">*/</p>
+<p class="p2"><br></p>
+<p class="p1">// now try out various patterns and functions to play in the window with the GraphicsProxy"</p>
+<p class="p3">(</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p3"><span class="Apple-tab-span">	</span>drawFunc: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = <span class="s2">Color</span>(*<span class="s2">Array</span>.rand(4, 0.0, 1.0));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.line(* { (459.rand)@(784.rand) } ! 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.stroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Colors change at the rate of update of the graphics rendering. Default: 0.01 sec.</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p3"><span class="Apple-tab-span">	</span>drawFunc: { <span class="s2">| x, y |</span></p>
+<p class="p1"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Colors change at the rate of update. Default: 0.01 sec.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = <span class="s2">Color</span>(*<span class="s2">Array</span>.rand(4, 0.0, 1.0));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.line(<span class="s2">Point</span>(x, y), y@x);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.stroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: <span class="s2">Pwhite</span>(0.100, 1.200, <span class="s2">inf</span>)</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1"><span class="s1"><span class="Apple-tab-span">	</span></span>// Colors change at each update of the pattern, determined by parameter dur</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x, y, color |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = color;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.line(<span class="s2">Point</span>(x, y), y@x);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.stroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p1"><span class="s1"><span class="Apple-tab-span">	</span></span>// Colors change at each update of the pattern, determined by parameter dur</p>
+<p class="p3"><span class="Apple-tab-span">	</span>color: <span class="s2">Prand</span>([<span class="s2">Color</span>.blue, <span class="s2">Color</span>.green, <span class="s2">Color</span>.black, <span class="s2">Color</span>.red], <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: <span class="s2">Pwhite</span>(0.100, 1.200, <span class="s2">inf</span>)</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1">// Drawing two different patterns with the same draw function</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x, y, color, dx, dy |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(100, 100);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>5.do{</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.color = <span class="s2">Color</span>.red(rrand(0.0, 1), rrand(0.0, 0.5));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.addArc(x@y, rrand(10, 100), 2pi.rand, pi);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.perform([<span class="s4">\stroke</span>, <span class="s4">\fill</span>].choose);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(color);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillRect(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(dx + x, dy + y), 200/2, 200/2));</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dx:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dy:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>color: <span class="s2">Prand</span>([<span class="s2">Color</span>.blue(1, 0.3), <span class="s2">Color</span>.green(1, 0.3), <span class="s2">Color</span>.gray(0.5, 0.3), <span class="s2">Color</span>.red(1, 0.3)], <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: <span class="s2">Pwhite</span>(0.100, 1.200, <span class="s2">inf</span>)</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1">// making the arc rotate instead of randomly varying</p>
+<p class="p1">// here we need a variable that gets updated at framerate.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="s2">var</span> rotation = 0;</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x, y, color, dx, dy |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(100, 100);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>rotation = rotation + 0.01;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>5.do{ <span class="s2">| i |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = i / pi;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.color = <span class="s2">Color</span>.red(1, i / 10);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.addArc(x@y, 100, i + rotation, i + (pi / 2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fill;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(color);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillRect(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(dx + x, dy + y), 200/2, 200/2));</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dx:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dy:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>color: <span class="s2">Prand</span>([<span class="s2">Color</span>.blue(1, 0.3), <span class="s2">Color</span>.green(1, 0.3), <span class="s2">Color</span>.gray(0.5, 0.3), <span class="s2">Color</span>.red(1, 0.3)], <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: <span class="s2">Pwhite</span>(0.100, 1.200, <span class="s2">inf</span>);</p>
+<p class="p3">]);</p>
+<p class="p3"><span class="Apple-converted-space"> </span>)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1">// And a third pattern: a line</p>
+<p class="p3"><span class="s2">var</span> rotation = 0;</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x, y, color, dx, dy |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(100, 100);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>rotation = rotation + 0.01;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>5.do{ <span class="s2">| i |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = i / pi;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.color = <span class="s2">Color</span>.red(1, i / 10);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.addArc(x@y, 100, i + rotation, i + (pi / 2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fill;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(color);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillRect(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(dx + x, dy + y), 200/2, 200/2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = <span class="s2">Color</span>.black;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.line(<span class="s2">Point</span>(x + dx, y + dy), 100@100);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.lineTo(<span class="s2">Point</span>(x, y));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.stroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dx:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dy:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>color: <span class="s2">Prand</span>([<span class="s2">Color</span>.blue(1, 0.3), <span class="s2">Color</span>.green(1, 0.3), <span class="s2">Color</span>.gray(0.5, 0.3), <span class="s2">Color</span>.red(1, 0.3)], <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: <span class="s2">Pwhite</span>(0.100, 1.200, <span class="s2">inf</span>)</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1">// Drawing the two segments of the line with different colors and thicknesses</p>
+<p class="p3"><span class="s2">var</span> rotation = 0;</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x, y, color, dx, dy |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(100, 100);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>rotation = rotation + 0.01;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>5.do{ <span class="s2">| i |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = i / pi;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.color = <span class="s2">Color</span>.red(1, i / 10);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.addArc(x@y, 100, i + rotation, i + (pi / 2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fill;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(color);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillRect(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(dx + x, dy + y), 200/2, 200/2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = <span class="s2">Color</span>.red;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.line(<span class="s2">Point</span>(x + dx, y + dy), 100@100);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.width = 0.2;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.stroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = <span class="s2">Color</span>.blue;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.width = 3;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.line(100@100, <span class="s2">Point</span>(x, y));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.stroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dx:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dy:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-200, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>color: <span class="s2">Prand</span>([<span class="s2">Color</span>.blue(1, 0.3), <span class="s2">Color</span>.green(1, 0.3), <span class="s2">Color</span>.gray(0.5, 0.3), <span class="s2">Color</span>.red(1, 0.3)], <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: <span class="s2">Pwhite</span>(0.100, 1.200, <span class="s2">inf</span>)</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">// The colors of things drawn last covers that of things drawn first.<span class="Apple-converted-space"> </span></p>
+<p class="p1">// Compare following two examples</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1">// Semicircle drawn last, covers rectangle</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x, y, color, dx, dy |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(100, 100);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(color);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillRect(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(dx + x, dy + y), 200/2, 200/2));</p>
+<p class="p1"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// set the Color</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.color = <span class="s2">Color</span>.red(1, 1);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.addArc(<span class="s2">Point</span>(x, y), 100, 0, pi);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fill;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dx:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-50, 50, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dy:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-50, 50, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>color: <span class="s2">Prand</span>([<span class="s2">Color</span>.blue, <span class="s2">Color</span>.green, <span class="s2">Color</span>.black], <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: 2</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p1">// Rectangle drawn last, covers semicircle</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x, y, color, dx, dy |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(100, 100);</p>
+<p class="p1"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// set the Color</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.color = <span class="s2">Color</span>.red(1, 1);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.addArc(<span class="s2">Point</span>(x, y), 100, 0, pi);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fill;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(color);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillRect(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(dx + x, dy + y), 200/2, 200/2));<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 70], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dx:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-50, 50, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dy:<span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(-50, 50, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>color: <span class="s2">Prand</span>([<span class="s2">Color</span>.blue, <span class="s2">Color</span>.green, <span class="s2">Color</span>.black], <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: 2</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3">(</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x = 10, y = 600, xscale = 1.005, yscale = 1.05, iter = 90 |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = <span class="s2">Color</span>.black;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.line(<span class="s2">Point</span>(x, y), 100@100);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.stroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>xscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>yscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: 0.01,</p>
+<p class="p1">//<span class="Apple-tab-span">	</span>x:<span class="Apple-tab-span">	</span>Pseg(Pseq([100, 500], inf), 10),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x: <span class="Apple-tab-span">	</span><span class="s2">Pwhite</span>(100, 200, <span class="s2">inf</span>),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 700], <span class="s2">inf</span>), 2),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: <span class="s2">Pwhite</span>(0.100, 0.200, <span class="s2">inf</span>)</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p3"><span class="Apple-tab-span">	</span>drawFunc: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">var</span> r = 15;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor = <span class="s2">Color</span>.blue;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.strokeColor = <span class="s2">Color</span>.red;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.moveTo(150@150);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.arcTo(200@150, 200@225, r);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.arcTo(200@225, 100@225, r);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.arcTo(100@225, 100@150, r);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.arcTo(100@150, 150@150, r);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.lineTo(150@150);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillStroke;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: 0.01,</p>
+<p class="p3">]);</p>
+<p class="p3">)</p>
+<p class="p1">//<span class="Apple-converted-space">  </span>========================================================================</p>
+<p class="p3">(</p>
+<p class="p3">a = <span class="s2">GraphicsProxy</span>.show(<span class="s2">Window</span>(<span class="s3">"graphics"</span>, <span class="s2">Rect</span>(969, 68, 459, 784)), animation: <span class="s2">false</span> );</p>
+<p class="p3">a.window.front;</p>
+<p class="p3">a.view.background_(<span class="s2">Color</span>.white);</p>
+<p class="p3">a.run;</p>
+<p class="p3">a.reset;</p>
+<p class="p3">a.stop;</p>
+<p class="p2"><br></p>
+<p class="p3">a[1] = <span class="s2">nil</span>;</p>
+<p class="p3">a[2] = <span class="s2">nil</span>;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x = 10, y = 600, xscale = 1.005, yscale = 1.05, iter = 90 |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(<span class="s2">Color</span>.grey(0, 10/255));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillOval(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(x, y), 200/2, 200/2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>xscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>yscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: 0.01,</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([100, 500], <span class="s2">inf</span>), 10),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 700], <span class="s2">inf</span>), 2),<span class="Apple-tab-span">	</span></p>
+<p class="p3">]);</p>
+<p class="p2"><br></p>
+<p class="p3">a[2] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x = 10, y = 600, xscale = 1.005, yscale = 1.05, iter = 90 |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(<span class="s2">Color</span>.grey(0, 100/255));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillRect(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(x, y), 200/2, 200/2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>xscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>yscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: 0.01,</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([100, 500], <span class="s2">inf</span>), 10),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([300, 700], <span class="s2">inf</span>), 2),<span class="Apple-tab-span">	</span></p>
+<p class="p3">])</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s1">a[1] = { </span>| win, x, y, xscale = 1.005, yscale = 1.005 |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.setSmoothing(<span class="s2">true</span>);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(<span class="s2">Color</span>.grey(0, 10/255));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(33, 66);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>90.do{<span class="s2">|i|</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.scale(xscale, yscale);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillOval(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(25, 90), 200/2, 200/2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span>};</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s1">a[2] = { </span>| win, x, y, xscale = 1.002, yscale = 1.002 |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.setSmoothing(<span class="s2">true</span>);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(<span class="s2">Color</span>.red(0.4, 4/255));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(33, 66);</p>
+<p class="p1">//<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>SCPen.scale(0.5,0.5);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>145.do{<span class="s2">|i|</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">SCPen</span>.scale(xscale, yscale);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillOval(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(25, 90), 200/2, 200/2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">a[2] = <span class="s2">nil</span>;</p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p1">// A pattern can be assigned to an index, just like a function</p>
+<p class="p1">// drawFunc is the key for the graphics function that will take its<span class="Apple-converted-space"> </span></p>
+<p class="p1">// arguments from the pattern</p>
+<p class="p3">a[1] = <span class="s2">Pbind</span>(*[</p>
+<p class="p4"><span class="s1"><span class="Apple-tab-span">	</span>drawFunc: { </span>| x = 25, y = 90, xscale = 1.005, yscale = 1.05, iter = 90 |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.setSmoothing(<span class="s2">true</span>);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillColor_(<span class="s2">Color</span>.grey(0, 10/255));</p>
+<p class="p1">//<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Pen.fillColor_(Color.red(0.5, 10/255));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.translate(0,0);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>iter.do{<span class="s2">|i|</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.scale(xscale, yscale);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pen</span>.fillOval(<span class="s2">Rect</span>.aboutPoint(<span class="s2">Point</span>(x, y), 200/2, 200/2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},</p>
+<p class="p3"><span class="Apple-tab-span">	</span>xscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>yscale:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pwhite</span>(0.0,1).linexp(0, 1, 1, 1.1),4),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>dur: 0.01,</p>
+<p class="p3"><span class="Apple-tab-span">	</span>x:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([200, 500], <span class="s2">inf</span>), 10),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>y:<span class="Apple-tab-span">	</span><span class="s2">Pseg</span>(<span class="s2">Pseq</span>([0, 100], <span class="s2">inf</span>), 2),<span class="Apple-tab-span">	</span></p>
+<p class="p3">])</p>
+<p class="p3">a[1] = <span class="s2">nil</span>;</p>
+</body>
+</html>
