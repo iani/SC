@@ -95,9 +95,10 @@ SyncSender {
 	}
 }
 
-SyncResponder : Model {
+SyncResponder {
 	classvar <all;	// stores each responder under its syncMessage, because we should not have duplicate messages
 	var <responder;
+	var <actions;		// dictionary of lists of actions (FunctionList)
 
 	*new { | syncMessage, activate = true |
 		var new;
@@ -108,35 +109,51 @@ SyncResponder : Model {
 		}{
 			new = super.new.init(syncMessage, activate);
 			all[syncMessage] = new;
-			^new;		
+			^new;	
 		};
 	}
 
 	init { | syncMessage, activate |
+		actions = IdentityDictionary.new;
 		responder = OSCresponder(nil, syncMessage ? SyncSender.defaultSyncMessage, { | time, resp, msg |
-			this.changed(*msg[1..]);
+			actions[msg[1]].(*msg[2..]);
 		});
 		if (activate) { this.activate };
 	}
 	
+	addAction { | syncEvent, func |
+		actions[syncEvent] = actions[syncEvent] addFunc: func;
+	}
+
+	removeAction { | syncEvent, func |
+		var flist;
+		flist = actions[syncEvent];
+		if (flist.isNil) { ^this };
+		if (func === flist) {
+			actions.removeAt(syncEvent)
+		}{
+			actions.removeFunc(func)		
+		} 
+	}
+
 	activate { responder.add }
-		
+
 	deactivate { responder.remove }
 }
-
 
 /* add individual actions that respond to a syncEvent tag received by a SyncResponder
 Any number of actions can be added to listen to the same syncEvent.
 An action can be activated or deactivated by sending it the corresponding messages. 
 */
-SyncAction : SimpleController { 
+SyncAction {
+	var <syncEvent;
+	var <action;
+	var <responder;
 	*new { | syncEvent, action, syncMessage |
-		^super.new(SyncResponder(syncMessage ? SyncSender.defaultSyncMessage)).put(syncEvent, action);
-	}	
-	activate { model.addDependant(this) }
-	deactivate { this.remove }	
-//	update { arg theChanger, what ... moreArgs;
-//		[theChanger, what, moreArgs].postln;
-//	}
+		^this.newCopyArgs(syncEvent, action, SyncResponder(syncMessage ? SyncSender.defaultSyncMessage)).activate;	}
+	activate {
+		responder.addAction(syncEvent, action);
+	}
+	deactivate { responder.removeAction(syncEvent, action) }	
 }
 

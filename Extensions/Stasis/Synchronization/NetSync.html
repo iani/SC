@@ -30,6 +30,15 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">a = <span class="s1">SyncSender</span>(<span class="s1">NetAddr</span>.localAddr, <span class="s1">Pbind</span>(<span class="s2">\syncEvent</span>, <span class="s2">'/test'</span>));</p>
 <p class="p3">a.start;</p>
 <p class="p2"><br></p>
+<p class="p4"><span class="s3">e = SyncAction('/test', { </span>| beatNr, tempo, beatsInBar |</p>
+<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span>format(</span>"SYNC ACTION!!! beat number: %, tempo %, beatsInBar %"<span class="s3">, </span><span class="s1">beatNr, tempo, beatsInBar</span><span class="s3">).postln</span></p>
+<p class="p3">});</p>
+<p class="p2"><br></p>
+<p class="p3">e.deactivate;</p>
+<p class="p3">e.activate;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
 <p class="p1">// SyncResponder receives OSC and broadcasts it via 'update' message to any of its dependants.<span class="Apple-converted-space"> </span></p>
 <p class="p2"><br></p>
 <p class="p4"><span class="s3">b = </span>SyncResponder<span class="s3">.new;</span></p>
@@ -42,12 +51,6 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span>format(<span class="s4">"receiver: %, message: %, beat number: %"</span>, receiver, message, time).postln</p>
 <p class="p3">});</p>
 <p class="p2"><br></p>
-<p class="p4"><span class="s3">e = SyncAction('/test', { </span>| receiver, message, time |</p>
-<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span>format(</span>"SYNC ACTION!!! receiver: %, message: %, beat number: %"<span class="s3">, receiver, message, time).postln</span></p>
-<p class="p3">});</p>
-<p class="p2"><br></p>
-<p class="p3">e.model</p>
-<p class="p3">e.inspect;</p>
 <p class="p2"><br></p>
 <p class="p3">c.remove;</p>
 <p class="p2"><br></p>
