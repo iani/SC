@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.29">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+span.s3 {color: #000000}
+span.s4 {color: #737373}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">/*</p>
+<p class="p1">NetSync: Synchronize processes running on different computers in a network via OSC.<span class="Apple-converted-space"> </span></p>
+<p class="p1">*/</p>
+<p class="p2"><br></p>
+<p class="p1">// SyncSender broadcasts OSC to one or more hosts</p>
+<p class="p2"><br></p>
+<p class="p3">a = <span class="s1">SyncSender</span>(<span class="s1">NetAddr</span>.localAddr, <span class="s1">Pbind</span>(<span class="s2">\syncEvent</span>, <span class="s2">'/test'</span>));</p>
+<p class="p3">a.start;</p>
+<p class="p2"><br></p>
+<p class="p1">// SyncResponder receives OSC and broadcasts it via 'update' message to any of its dependants.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">b = </span>SyncResponder<span class="s3">.new;</span></p>
+<p class="p2"><br></p>
+<p class="p3">b.addDependant({ <span class="s1">| ... args |</span> args.postln; });</p>
+<p class="p2"><br></p>
+<p class="p3">a.clock.tempo = 2;</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">c = </span>SimpleController<span class="s3">(b, </span><span class="s2">'/test'</span><span class="s3">, { </span>| receiver, message, time |</p>
+<p class="p3"><span class="Apple-tab-span">	</span>format(<span class="s4">"receiver: %, message: %, beat number: %"</span>, receiver, message, time).postln</p>
+<p class="p3">});</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">e = SyncAction('/test', { </span>| receiver, message, time |</p>
+<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span>format(</span>"SYNC ACTION!!! receiver: %, message: %, beat number: %"<span class="s3">, receiver, message, time).postln</span></p>
+<p class="p3">});</p>
+<p class="p2"><br></p>
+<p class="p3">e.model</p>
+<p class="p3">e.inspect;</p>
+<p class="p2"><br></p>
+<p class="p3">c.remove;</p>
+<p class="p2"><br></p>
+<p class="p3">b.deactivate;</p>
+<p class="p3">b.activate;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">// IZ 100517</p>
+<p class="p6"><br></p>
+<p class="p1">SyncResponder('/sync').dependants</p>
+</body>
+</html>
