@@ -132,7 +132,7 @@ SyncResponder {
 		if (func === flist) {
 			actions.removeAt(syncEvent)
 		}{
-			actions.removeFunc(func)		
+			flist.removeFunc(func)		
 		} 
 	}
 
