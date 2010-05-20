@@ -1,7 +1,7 @@
-This is branch 'Stasis'
+This is branch 'iani'
+It contains the current working files of Iannis Zannos
 
-It contains the files for performance project "Stasis". 
-Scheduled for May 29 2010. 
+For Lilt, checkout Lilt branch
 
 
 IZ 100516
