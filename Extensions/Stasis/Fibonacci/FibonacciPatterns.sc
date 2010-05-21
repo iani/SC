@@ -11,32 +11,33 @@ p = f.pattern.asStream;
 p.next;
 f.play
 
-Pbind(\degree, Pseq(FibPat(10).pattern, \dur, 0.1).play;
+Pbind(\degree, Pseq([2 + FibPat(Fib.ascending(10)).pattern, 1 + FibPat(Fib.descending(10)).pattern], 1), \dur, 0.1).play;
+(
+Pbind(
+	\type, \pause,
+	\degree, Pseq([2 + FibPat(Fib.ascending(10)).pattern, 1 + FibPat(Fib.descending(10)).pattern], 1),
+	\dur, 0.1
+).play;
+)
+
+(
+Ppar([
+	Pbind(\degree, FibPat(Fib.ascending(10)).pattern, \dur, 0.1), 
+	Pbind(\degree, 10 + FibPat(Fib.descending(10)).pattern, \dur, 0.1)
+]).play;
+)
+
+FibPat.new.play;
+
+Fib.ascending(5);
+.play;
 
 */
 
-Fib {
-
-}
-
-
-FibPat {
-	var <iterations = 3;
-	var <ascendingTree;	// An array holding the entire structure of the generated fibonacci tree in ascending order
-						// smaller branches first
-	var <descendingTree;	// An array holding the entire structure of the generated fibonacci tree in descending order
-						// larger branches first
-
-	*new { | iterations = 3 |
-		^this.newCopyArgs(iterations).init;
-	}
-
-	init {
-		ascendingTree = this.makeAscendingTree;
-		descendingTree = this.makeDescendingTree;
-	}
-
-	makeAscendingTree {
+Fib {	// generates fibonacci trees
+	
+	*ascending { | n = 3 | ^this.new.ascending(n) }
+	ascending { | n = 3 |
 		^{ | n = 1, prev = 1, current = 1 |
 			var next;
 			n do: {
@@ -45,10 +46,10 @@ FibPat {
 				current = next;
 			};
 			current;
-		}.(iterations)
+		}.(n)
 	}
-
-	makeDescendingTree {
+	*descending { | n = 3 | ^this.new.descending(n) }
+	descending { | n = 3 |
 		^{ | n = 1, prev = 1, current = 1 |
 			var next;
 			n do: {
@@ -57,12 +58,20 @@ FibPat {
 				current = next;
 			};
 			current;
-		}.(iterations)		
+		}.(n)
+	}
+}
+
+
+FibPat {	// creates patterns for playing fibonacci trees
+	var <>tree;
+	
+	*new { | tree |
+		^this.newCopyArgs(tree ?? { Fib.ascending });
 	}
 
-	pattern { | tree, startFunc, endFunc |
+	pattern { | startFunc, endFunc |
 		var func;
-		tree = tree ? ascendingTree;
 		startFunc = startFunc ?? {{ | label, branch | this.startBranch(label.branch) }};
 		endFunc = endFunc ?? {{ | label | this.endBranch(label) }};
 		func = { | tree, label = "" |
