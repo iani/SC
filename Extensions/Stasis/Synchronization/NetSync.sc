@@ -4,8 +4,10 @@ NetSync: Synchronize processes running on different computers in a network via O
 */
 
 /*
-a = SyncSender(NetAddr.localAddr, Pbind(\event, '/test'));
+a = SyncSender(Pbind(\event, '/beats'));
 a.start;
+
+c = SyncAction('/beats', { | ... args | args.postln })
 
 b = SyncResponder.new;
 b.addDependant({ | ... args | args.postln; });
@@ -19,18 +21,34 @@ b.activate;
 
 a.clock.tempo = 2;
 
+=====
+
+
+a = SyncSender.new;
+a.pattern = Pbind
+a.start;
+
+b = SyncResponder.new;
+b.addDependant({ | ... args | args.postln; });
+c = SimpleController(b, '/test', { | receiver, message, time |
+	format("receiver: %, message: %, time: %", receiver, message, time).postln
+});
+
+Pcollect(['/test', _], Pseries(1, 1, inf))
+
+
 */
 
 SyncSender {
 	classvar <defaultSyncMessage = '/sync';
+	var <>pattern;	// the pattern that produces the stream
 	var <clients;	// array of NetAddr to which the messages from the pattern are broadcast
-	var <pattern;	// the pattern that produces the stream
 	var <clockFunc; 	// the function that makes the clock each time that we start the SyncSender
 	var <protoEvent; 	// protoEvent supplied to the pattern, with the clock and the clients
 	var <clock;	// clock for running the pattern
 	var <stream;		// stream that schedules and broadcasts the messages
 	
-	*new { | clients, pattern, clockFunc, protoEvent |
+	*new { | pattern, clients, clockFunc, protoEvent |
 		// lazy initialization of netsync event 
 		if (Event.partialEvents.playerEvent.eventTypes[\netsync].isNil) {
 			Event.addEventType(\netsync, {
@@ -47,18 +65,20 @@ SyncSender {
 				baseBarBeat = clock.baseBarBeat;
 				baseBar = clock.baseBarBeat;
 				args = ~args.(syncEvent, clock);
-				~clients do: { | client | client.sendMsg(oscMessage, syncEvent, beats, 
-					tempo, beatsPerBar, baseBarBeat, baseBar, *args)
-				}
+				~sender.broadcast(oscMessage, syncEvent, beats, tempo, beatsPerBar, baseBarBeat, baseBar, *args);
 			});		
 		}
-		^this.newCopyArgs(clients.asArray, pattern, clockFunc ?? {{ TempoClock.new }}, protoEvent).init;
+		^this.newCopyArgs(pattern, (clients ? [NetAddr.localAddr]), 
+			clockFunc ?? {{ TempoClock.new }}, protoEvent).init;
 	}
 	
 	init {
-		protoEvent = protoEvent ?? { (type: \netsync, clients: clients) };
+		protoEvent = protoEvent ?? { (type: \netsync, sender: this, syncEvent: 'beats') };
 	}
-	
+
+	broadcast { | ... args |
+		clients do: { | client | client.sendMsg(*args) }
+	}	
 	
 	start {
 		/* clock must be made each time we start, since clocks stopped by CMD-. cannot restart */

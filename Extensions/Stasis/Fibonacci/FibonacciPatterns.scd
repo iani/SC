@@ -3,6 +3,8 @@
 Fibonacci structures 3: Creating patterns that will send the structure of the fibonacci-tree 
 via OSC using automatically generated messages and arguments that reflect the structure of the tree. 
 
+100521: This is an older draft. See new format in FibonacciPatterns.html
+
 var start_message = '/start'; 	// message marking start of branch
 var end_message = '/end';		// message marking end of branch
 var leaf_message = '/leaf';		// message marking leaf
