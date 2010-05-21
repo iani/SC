@@ -99,17 +99,18 @@ q.next;
 
 (
 ~travrout3 = { | tree, label = "" |
-	// controller = controller; 
-	if (tree.size > 0) { format("start %: %", label, tree.flat.size).postln; };
-	if (tree.size == 0) {
-		this.yield;
-		format("% %", tree, label).postln;
-	}{
-		thisFunction.(tree[0], label ++ "A");
-		thisFunction.(tree[1], label ++ "B");		 
-	};
-	if (tree.size > 0) { format("end %", label).postln; };
-}
+	var count = 0;
+	{
+		if (tree.size > 0) { format("start %: %", label, tree.flat.size).postln; };
+		if (tree.size == 0) {
+			this.yield;
+			format("% %", tree, label).postln;
+		}{
+			thisFunction.(tree[0], label ++ "A");
+			thisFunction.(tree[1], label ++ "B");		 
+		};
+		if (tree.size > 0) { format("end %", label).postln; };
+	}
 )
 
 r = { ~travrout3.(~fibA1.(6)) }.fork;
