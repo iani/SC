@@ -59,8 +59,10 @@ span.Apple-tab-span {white-space:pre}
 <p class="p2"><br></p>
 <p class="p6">// Broadcasting the structure of a Fibonacci tree as a "score" over the network:</p>
 <p class="p2"><br></p>
-<p class="p1">a = SyncSender.new;</p>
-<p class="p4"><span class="s3">f = </span>Pfib.new;</p>
+<p class="p6">// Broadcasting the structure of a Fibonacci tree as a "score" over the network:</p>
+<p class="p7"><br></p>
+<p class="p4">a = SyncSender.new;</p>
+<p class="p4">f = Pfib.new;</p>
 <p class="p7"><br></p>
 <p class="p4">a = SyncSender.new;</p>
 <p class="p4">f = Pfib.new;</p>
@@ -74,14 +76,40 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">a.start;</p>
 <p class="p7"><br></p>
 <p class="p7"><br></p>
-<p class="p4">a = SyncSender.new;</p>
-<p class="p4">a.pattern = f.asPbind(a);</p>
+<p class="p4">t = { c = TempoClock(2); };</p>
+<p class="p4">a = SyncSender(clockFunc: t);</p>
+<p class="p4">a.pattern = Pfib(Fib.ascending(10)).asPbind(a);</p>
 <p class="p8">a.start;</p>
 <p class="p7"><br></p>
+<p class="p4">c.tempo = 4;</p>
+<p class="p7"><br></p>
+<p class="p4">b = SyncAction('s_start_', { | ... args |<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p4"><span class="Apple-tab-span">	</span>"START OF PIECE".postln;</p>
+<p class="p4">});</p>
+<p class="p4">b = SyncAction('s_end_', { | ... args | "START OF PIECE".postln;<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p4"><span class="Apple-tab-span">	</span>Synth("baxx");<span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 150, \freq2, 500, \rls, 1]);<span class="Apple-tab-span">	</span></p>
+<p class="p7"><br></p>
+<p class="p4">});</p>
+<p class="p7"><br></p>
+<p class="p4">b = SyncAction('s_start_A', { | ... args | "prase A started".postln;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 500]);<span class="Apple-tab-span">	</span></p>
+<p class="p4">});</p>
+<p class="p7"><br></p>
+<p class="p4">b = SyncAction('s_start_BA', { | ... args |<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 500]);<span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>"prase BA started".postln; });</p>
+<p class="p4">b = SyncAction('s_start_AB', { | ... args |<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>"prase AB started".postln;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 150, \freq2, 500, \rls, 1]);<span class="Apple-tab-span">	</span></p>
+<p class="p4">});</p>
 <p class="p7"><br></p>
 <p class="p7"><br></p>
-<p class="p4">///<span class="Apple-converted-space"> </span></p>
-<p class="p4">a.pattern = f.asPbind(a);</p>
+<p class="p4">b = SyncAction('s_start_BAA', { | ... args | "prase BAA started".postln; });</p>
+<p class="p4">b = SyncAction('s_start_AAB', { | ... args | "prase AAB started".postln; });</p>
+<p class="p7"><br></p>
 <p class="p8">a.start;</p>
 <p class="p9"><br></p>
 <p class="p8">c = SyncAction('/beats', { | ... args | args.postln })</p>

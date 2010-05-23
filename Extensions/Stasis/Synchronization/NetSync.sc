@@ -42,7 +42,7 @@ Pcollect(['/test', _], Pseries(1, 1, inf))
 SyncSender {
 	classvar <defaultSyncMessage = '/sync';
 	var <>pattern;	// the pattern that produces the stream
-	var <clients;	// array of NetAddr to which the messages from the pattern are broadcast
+	var <>clients;	// array of NetAddr to which the messages from the pattern are broadcast
 	var <clockFunc; 	// the function that makes the clock each time that we start the SyncSender
 	var <protoEvent; 	// protoEvent supplied to the pattern, with the clock and the clients
 	var <clock;	// clock for running the pattern
@@ -119,6 +119,7 @@ SyncResponder {
 	classvar <all;	// stores each responder under its syncMessage, because we should not have duplicate messages
 	var <responder;
 	var <actions;		// dictionary of lists of actions (FunctionList)
+	var <dependants;	// dependants are necessary to update things that depend on the osc message itself
 
 	*new { | syncMessage, activate = true |
 		var new;
@@ -136,9 +137,25 @@ SyncResponder {
 	init { | syncMessage, activate |
 		actions = IdentityDictionary.new;
 		responder = OSCresponder(nil, syncMessage ? SyncSender.defaultSyncMessage, { | time, resp, msg |
+			dependants do: { | d | d.update(this, *msg); };
 			actions[msg[1]].(*msg[2..]);
 		});
 		if (activate) { this.activate };
+	}
+	
+	addDependant { | dependant |
+		if (dependants.isNil) {
+			dependants = Set.new add: dependant
+		}{
+			dependants.add(dependant)
+		}
+	}
+
+	removeDependant { | dependant |
+		if (dependants.notNil) {
+			dependants remove: dependant;
+			if (dependants.size == 0) { dependants = nil }
+		}
 	}
 	
 	addAction { | syncEvent, func |

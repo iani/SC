@@ -21,7 +21,6 @@ AbstractProcessController {
 	var <processFunc; 	// the function that creates the process: creates Pbind and plays it or Synth or ...
 	var <controllers;	// all the MIDI CC controllers
 	var <process;		// the process that is playing: EventStreamPlayer or Synth or Group ...
-	
 
 	*new { | event, pattern ... controllers |
 		^this.newCopyArgs(event, pattern).init(controllers);
@@ -74,12 +73,27 @@ AbstractProcessController {
 	}
 	
 	activate {
-		controllers do: _.init(true); // { | element | element.install(true) }
+		controllers do: _.init(true);
 	}
 
 	deactivate {
 		controllers do: _.remove;
 	}
+	
+	// Interface for SyncSender / SyncAction
+	
+	addSyncAction { | actionPairs  |
+		actionPairs pairsDo: { | tag, action |
+			SyncAction(tag.asSymbol,
+				case (
+					{ action isKindOf: Symbol }, { { this.perform(action) } },
+					{ action isKindOf: Function }, { action.(this) },
+					{ action isKindOf: Array }, { this.performList(*action) }
+				)
+			);
+		}
+	}	
+
 }
 
 PatternController : AbstractProcessController {
@@ -95,11 +109,8 @@ SynthController : AbstractProcessController {
 	var <>stopFunc;
 
 	init { | argControllers |
-//		[thisMethod.name, "initializing"].postln; 
 		super.init(argControllers);
-//		[thisMethod.name, "initializing2"].postln;
 		if (stopFunc.isNil) { this.makeStopFunc }; 
-//		stopFunc.postln;
 	}
 
 	makeStopFunc {
