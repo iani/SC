@@ -44,6 +44,7 @@ Pfib : Prout {				// creates patterns for playing fibonacci trees
 	var <>startFunc, <>endFunc;
 	var <count;
 	var <skip = false;
+	var <totalSize;
 
 	*new { | tree, startNode, startFunc, endFunc |
 		^this.newCopyArgs(
@@ -60,39 +61,42 @@ Pfib : Prout {				// creates patterns for playing fibonacci trees
 	init {
 		var func;
 		count = 0;
-		func = { | tree, label = "" |
-			this.skipOrBranch(startFunc, label, tree);
+		totalSize = tree.asArray.flat.size;
+		func = { | tree, label = "", level |
+			this.skipOrBranch(startFunc, label, tree.asArray.flat.size, level);
 			if (tree.size == 0) {
 				count = count + 1;
 				if (skip.not) { tree.yield };
 			}{
-				thisFunction.(tree[0], label ++ "A");
-				thisFunction.(tree[1], label ++ "B");	 
+				thisFunction.(tree[0], label ++ "A", level + 1);
+				thisFunction.(tree[1], label ++ "B", level + 1);	 
 			};
 			this.skipOrBranch(endFunc, label);
 		};
-		routineFunc = { func.(tree) };
+		routineFunc = { func.(tree, "", 0) };
 		if (startNode.notNil) { skip = true };
 	}
 
-	skipOrBranch { | func, label, branch |
+	skipOrBranch { | func, label, size, level |
 		if (skip.not or: { label == startNode }) {
 			skip = false;
-			func.(label, count, branch)
+			func.(label, count, size, level)
 		}
 	}
 
-	broadcast { | syncSender, type = "s", syncMessage |
+	broadcast { | syncSender, type = "s", syncMessage, displayMessage = "branch" |
 		syncMessage = syncMessage ? SyncSender.defaultSyncMessage;
-		startFunc = { | label, count, branch |
-			syncSender.broadcast(syncMessage, type ++ "_start_" ++ label, count, branch.asArray.flat.size);
+		displayMessage = type ++ "_" ++ displayMessage;
+		startFunc = { | label, count, size, level |
+			syncSender.broadcast(displayMessage, count, size, level, totalSize); 
+			syncSender.broadcast(syncMessage, type ++ "_start_" ++ label, count, size, level);
 		};
 		endFunc = { | label, count | 
 			syncSender.broadcast(syncMessage, type ++ "_end_" ++ label, count);
 		};
 	}
 
-	asPbind { | syncSender, type = "s", syncMessage |
+	asPbind { | syncSender, type = "s", syncMessage, displayMessage = "branch" |
 		this.broadcast(syncSender, type, syncMessage);
 		syncMessage = syncMessage ? SyncSender.defaultSyncMessage;
 		^Pbind(type.asSymbol, this);

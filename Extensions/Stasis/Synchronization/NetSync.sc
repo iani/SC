@@ -47,6 +47,7 @@ SyncSender {
 	var <protoEvent; 	// protoEvent supplied to the pattern, with the clock and the clients
 	var <clock;	// clock for running the pattern
 	var <stream;		// stream that schedules and broadcasts the messages
+
 	
 	*new { | pattern, clients, clockFunc, protoEvent |
 		// lazy initialization of netsync event 
