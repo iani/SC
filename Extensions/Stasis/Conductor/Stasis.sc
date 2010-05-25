@@ -1,6 +1,10 @@
 /* 
 Broadcasting the whole fibonacci structure to everyone over the network. 
 
+Stasis.addHost; // do this if you want to send to localhost as well
+// or do it directly in the start message: 
+Stasis.start(local: true);
+
 
 
 l = Fib.ascending(15).flat.size;		// The length of a Fibonacci tree of depth 15 is 1597
@@ -31,7 +35,23 @@ a.start;
 Stasis.addHost; // do this if you want to send to localhost as well
 Stasis.start;
 Stasis.start("BB") // do this if you want to start from a specific part in the piece;
+// 1. Kafeneio: "AAA"
+~showPiece.(~descending, ["AAAAAA", "AAAAAB", "AAAAB", "AAABA", "AAABB"]);
 
+// 2. Eisodos: "AAB"
+~showPiece.(~descending, ["AABAAA", "AABAAB", "AABAB", "AABBA", "AABBB"]);
+
+// 3. Choros: "AB"
+~showPiece.(~descending, ["ABAAA", "ABAAB", "ABAB", "ABBA", "ABBB"]);
+
+// 4. Syngrousi: "BA"
+~showPiece.(~descending, ["BAAAA", "BAAAB", "BAAB", "BABA", "BABB"]);
+
+// 5. Epistrofi: "BB"
+~showPiece.(~descending, ["BBAAA", "BBAAB", "BBAB", "BBBA", "BBBB"]);
+
+
+SyncAction("s_", { 
 
 */
 
@@ -74,16 +94,17 @@ Stasis {
 		if (name == 'local') { netAddr = NetAddr.localAddr };
 		receivers[name] = netAddr;
 	}
-	*start { | startPhrase |	// phrase to start from
+	*start { | startPhrase, local = false |	// phrase to start from
 		if (sender.notNil) { this.stop };
 		if (receivers.isNil) { this.init };
+		if (local) { this.addHost };
 		this.makeSender(startPhrase);
 		sender.start;
 	}
 	
 	*makeSender { |startPhrase |
 		sender = SyncSender(nil, receivers.values.asArray, { TempoClock(tempo) });
-		pattern = Pfib(Fib.ascending(levels), startPhrase).asPbind(sender);
+		pattern = Pfib(Fib.descending(levels), startPhrase).asPbind(sender, "l");
 		sender.pattern = pattern;
 	}
 
