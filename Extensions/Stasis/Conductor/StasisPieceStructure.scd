@@ -28,17 +28,16 @@
 ~showPiece.(~descending, ["AAAAAA", "AAAAAB", "AAAAB", "AAABA", "AAABB"]);
 
 // 2. Eisodos: "AAB"
-~showPiece.(~descending, ["AAA...", "AAA..."]);
+~showPiece.(~descending, ["AABAAA", "AABAAB", "AABAB", "AABBA", "AABBB"]);
 
 // 3. Choros: "AB"
-~showPiece.(~descending, ["AAA...", "AAA..."]);
+~showPiece.(~descending, ["ABAAA", "ABAAB", "ABAB", "ABBA", "ABBB"]);
 
 // 4. Syngrousi: "BA"
-~showPiece.(~descending, ["AAA...", "AAA..."]);
+~showPiece.(~descending, ["BAAAA", "BAAAB", "BAAB", "BABA", "BABB"]);
 
 // 5. Epistrofi: "BB"
-~showPiece.(~descending, ["AAA...", "AAA..."]);
-
+~showPiece.(~descending, ["BBAAA", "BBAAB", "BBAB", "BBBA", "BBBB"]);
 
 
 
