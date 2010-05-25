@@ -8,11 +8,9 @@
 <meta name="CocoaVersion" content="1038.29">
 <style type="text/css">
 p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
-p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
-p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
-p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
 span.s1 {color: #000000}
 span.s2 {color: #162bc4}
 span.Apple-tab-span {white-space:pre}
@@ -23,12 +21,12 @@ span.Apple-tab-span {white-space:pre}
 <p class="p1">Simple way for playing and displaying a Fibonacci tree. For rehearsing the Stasis performance.<span class="Apple-converted-space"> </span></p>
 <p class="p1">*/</p>
 <p class="p2"><br></p>
-<p class="p3">// Calculating the duration from the beats:<span class="Apple-converted-space"> </span></p>
+<p class="p1">// Calculating the duration from the beats:<span class="Apple-converted-space"> </span></p>
 <p class="p2"><br></p>
-<p class="p3">l = Fib.ascending(15).flat.size;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// The length of a Fibonacci tree of depth 15 is <span class="s1">1597</span></p>
-<p class="p3">(l / 1.30) / 60; // The duration is <span class="s1">20.474358974359 minutes</span></p>
+<p class="p1"><span class="s1">l = </span><span class="s2">Fib</span><span class="s1">.ascending(15).flat.size;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// The length of a Fibonacci tree of depth 15 is 1597</p>
+<p class="p1"><span class="s1">(l / 1.30) / 60; </span>// The duration is 20.474358974359 minutes</p>
 <p class="p2"><br></p>
-<p class="p3">// Ascending tree: Short sections first</p>
+<p class="p1">// Ascending tree: Short sections first</p>
 <p class="p3">(</p>
 <p class="p4"><span class="s1">d = </span>FibDisplay<span class="s1">.new;</span></p>
 <p class="p3">d.show;</p>
@@ -39,15 +37,16 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">a.start;</p>
 <p class="p3">)</p>
 <p class="p2"><br></p>
-<p class="p3">// Descending tree: Long sections first</p>
-<p class="p5">(</p>
+<p class="p1">// Descending tree: Long sections first</p>
+<p class="p3">(</p>
 <p class="p4"><span class="s1">d = </span>FibDisplay<span class="s1">.new;</span></p>
-<p class="p5">d.show;</p>
-<p class="p6"><br></p>
-<p class="p5">t = { c = <span class="s2">TempoClock</span>(1.3); };</p>
-<p class="p5">a = <span class="s2">SyncSender</span>(clockFunc: t);</p>
-<p class="p5">a.pattern = <span class="s2">Pfib</span>(<span class="s2">Fib</span>.descending(15)).asPbind(a);</p>
-<p class="p5">a.start;</p>
-<p class="p5">)</p>
+<p class="p3">d.show;</p>
+<p class="p2"><br></p>
+<p class="p3">t = { c = <span class="s2">TempoClock</span>(1.3); };</p>
+<p class="p3">a = <span class="s2">SyncSender</span>(clockFunc: t);</p>
+<p class="p3">a.pattern = <span class="s2">Pfib</span>(<span class="s2">Fib</span>.descending(15)).asPbind(a);</p>
+<p class="p3">a.start;</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
 </body>
 </html>

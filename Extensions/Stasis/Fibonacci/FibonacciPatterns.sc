@@ -9,7 +9,7 @@ Other things could be substituted as contents of the leaves.
 */
 
 Fib {	// generates fibonacci trees
-	
+
 	*ascending { | n = 3 | ^this.new.ascending(n) }
 	ascending { | n = 3 |
 		^{ | n = 1, prev = 1, current = 1 |
@@ -45,6 +45,7 @@ Pfib : Prout {				// creates patterns for playing fibonacci trees
 	var <count;
 	var <skip = false;
 	var <totalSize;
+	var <syncSender, <tempo;
 
 	*new { | tree, startNode, startFunc, endFunc |
 		^this.newCopyArgs(
@@ -84,11 +85,16 @@ Pfib : Prout {				// creates patterns for playing fibonacci trees
 		}
 	}
 
-	broadcast { | syncSender, type = "s", syncMessage, displayMessage = "branch" |
+	broadcast { | argSyncSender, type = "s", syncMessage, displayMessage = "branch" |
+		syncSender = argSyncSender;
 		syncMessage = syncMessage ? SyncSender.defaultSyncMessage;
 		displayMessage = type ++ "_" ++ displayMessage;
 		startFunc = { | label, count, size, level |
-			syncSender.broadcast(displayMessage, count, size, level, totalSize); 
+			syncSender.broadcast(displayMessage, count, size, level, totalSize, 
+				tempo = syncSender.clock.tempo,
+				totalSize / tempo / 60, // totalDuration in minutes
+				(totalSize - count) / tempo / 60	// remainingDuration in minutes
+			);
 			syncSender.broadcast(syncMessage, type ++ "_start_" ++ label, count, size, level);
 		};
 		endFunc = { | label, count | 
