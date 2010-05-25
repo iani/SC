@@ -1,4 +1,4 @@
-/* 
+/*  To merge!!!
 
 PatternController is for controlling patterns via MIDI Control Change messages
 
@@ -7,9 +7,6 @@ SynthController is for controlling synths via MIDI Control Change messages
 Version 1.0 (IZ+OH+DT Wednesday, May 12, 2010)
 
 See examples in PatternController.html help file. 
-
-100525: This version has a protoEvent where one can store useful things such as a TempoClock to set its tempo etc. 
-It also adds a release parameter for SynthController makeReleaseFunc. 
 
 */
 
@@ -127,16 +124,19 @@ SynthController : AbstractProcessController {
 	var <>stopFunc;
 
 	init { | argControllers |
+//		[thisMethod.name, "initializing"].postln; 
 		super.init(argControllers);
+//		[thisMethod.name, "initializing2"].postln;
 		if (stopFunc.isNil) { this.makeStopFunc }; 
+//		stopFunc.postln;
 	}
 
 	makeStopFunc {
-		stopFunc = { | argProcess | argProcess.free; }
+		stopFunc = { | argProcess | argProcess.postln.free; }
 	}
 
 	makeReleaseFunc {
-		stopFunc = { | argProcess | argProcess.release(~release ? 1); }
+		stopFunc = { | argProcess | argProcess.release; }
 	}
 
 	stop {
