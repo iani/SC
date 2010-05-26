@@ -1,6 +1,29 @@
 /*
 100524 igoumeninja
 Aris Bezas
+
+Stasi_Aris.new
+Stasis.start(local: true);
+Stasis.stop
+SendAmpFreq.start;
+m = Synth(\SendAmpPitch, [\chan, 8, \ampTrig, 1, \freqTrig, 2]); // 0:output, 8:input
+Sendmidi.start;
+m.set(\chan, 8)
+(
+SynthDef("Xaraktiki",
+{ arg amp = 0, pan = 0, out = 0, panlevel = 0;
+var source;
+var panned_source;
+source = FreeVerb.ar(HPF.ar(BrownNoise.ar(amp, 0), MouseX.kr(24,200,1)), 0.2, 0.25);
+panned_source = Pan2.ar(source, MouseX.kr(-0.9, 0.9));
+Out.ar( out, panned_source);
+}
+).send(s);
+)
+x.free
+x = Synth(\Xaraktiki);
+OSCresponder(nil, "/ampXar", { | time, resp, message |x.set("amp", message[1]);}).add;
+
 */
 //
 //Stasi_Aris.new
@@ -35,8 +58,8 @@ Stasi_Aris	{
 	init { | argServer, argAddr, argChan = 0 |
 		server = argServer ?? { Server.default };  //define server
 		//addr =  argAddr ?? { NetAddr("192.168.1.11", 12345); }; //graphics Server, oF port
-		addr =  argAddr ?? { NetAddr("192.168.1.13", 12345); }; //arisOF on Router, oF port
-		//addr =  argAddr ?? { NetAddr("127.0.0.1", 12345); }; //localhost, oF port
+		//addr =  argAddr ?? { NetAddr("192.168.1.13", 12345); }; //arisOF on Router, oF port
+		addr =  argAddr ?? { NetAddr("127.0.0.1", 12345); }; //localhost, oF port
 		this.activateMIDI;	// call activateMIDI		
 		this.soundGUI;	// call soundGUI		
 		this.mainGUI;	// call mainGUI		
@@ -203,6 +226,14 @@ Stasi_Aris	{
 				])
 				.action_({ arg butt; addr.sendMsg("/scopeView")}
 		);				
+		Button(window, Rect(20,20,300,20))
+				.states_([
+					["view beats", Color.black, Color.white],
+					["stop beats", Color.white, Color.black],
+				])
+				.action_({ arg butt; addr.sendMsg("/beatsView")}
+		);				
+
 		}
 		//}
 	//##################### SUPERFORMULA GUI ################################
