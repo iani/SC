@@ -67,7 +67,7 @@ Stasis {
 		l = Fib.ascending(17).flat.size;		
 		// The length of a Fibonacci tree of depth 15 is 1597 */
 	classvar <numBeats;
-	classvar <tempo = 30.5; /*
+	classvar <tempo = 3.5; /*
 		(l / 3.5) / 60; // The duration of the piece at 3.5 beats per second is 20.474358974359 minutes
 		*/
 	classvar <ascendingFib;

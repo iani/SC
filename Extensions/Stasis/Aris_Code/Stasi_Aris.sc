@@ -9,6 +9,8 @@ SendAmpFreq.start;
 m = Synth(\SendAmpPitch, [\chan, 8, \ampTrig, 1, \freqTrig, 2]); // 0:output, 8:input
 Sendmidi.start;
 m.set(\chan, 8)
+
+
 (
 SynthDef("Xaraktiki",
 { arg amp = 0, pan = 0, out = 0, panlevel = 0;
