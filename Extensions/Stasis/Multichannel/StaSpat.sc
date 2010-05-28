@@ -37,7 +37,7 @@ StaSpat {
 	var <pannerControls;
 
 	var <oscReceivers;
-	var 
+// 	var 
 
 	makeGroups { 
 		inputGroup = Group.new;

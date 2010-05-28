@@ -114,13 +114,16 @@ AbstractProcessController {
 	}
 	
 	addSyncActions { | syncActions |
-		syncActions pairsDo: { | key, action |
-			if (action.isKindOf(Symbol)) {
-				SyncAction(key,  { | ... args | this.performList(action, args) });
+		syncActions doPairs: { | key, action |
+			SyncAction(key, if (action.isKindOf(Symbol))) { 
+				{ | ... args |
+					args.postln;
+					this.performList(action, args);
+				}
 			}{
-				SyncAction(key, action);
+				action;
 			}
-		}
+		}		
 	}
 }
 

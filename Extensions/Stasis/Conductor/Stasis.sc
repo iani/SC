@@ -53,6 +53,9 @@ Stasis.start("BB") // do this if you want to start from a specific part in the p
 
 SyncAction("s_", { 
 
+
+Stasis.start(local: true);
+
 */
 
 
