@@ -5,8 +5,6 @@ Stasis.addHost; // do this if you want to send to localhost as well
 // or do it directly in the start message: 
 Stasis.start(local: true);
 
-
-
 l = Fib.ascending(15).flat.size;		// The length of a Fibonacci tree of depth 15 is 1597
 (l / 1.30) / 60; // The duration is 20.474358974359 minutes
 
@@ -82,14 +80,16 @@ Stasis {
 
 	*init {
 	// Initialize all receivers
-		receivers = (
-			iani: NetAddr("192.168.1.10", scLangPort),
-			graphics: NetAddr("192.168.1.10", scLangPort),			manolis: NetAddr("192.168.1.12", scLangPort), 
-			aris: NetAddr("192.168.1.13", scLangPort), 
-			arisOf: NetAddr("192.168.1.13", 12345), 
-			dakis: NetAddr("192.168.1.14", scLangPort), 
-			omer: NetAddr("192.168.1.15", scLangPort)
-		);
+		if (receivers.isNil) {
+			receivers = (
+				iani: NetAddr("192.168.1.10", scLangPort),
+				graphics: NetAddr("192.168.1.10", scLangPort),				manolis: NetAddr("192.168.1.12", scLangPort), 
+				aris: NetAddr("192.168.1.13", scLangPort), 
+				arisOf: NetAddr("192.168.1.13", 12345), 
+				dakis: NetAddr("192.168.1.14", scLangPort), 
+				omer: NetAddr("192.168.1.15", scLangPort)
+			);
+		}
 	}
 
 	*addHost { | name = 'local', netAddr |
@@ -99,7 +99,7 @@ Stasis {
 	}
 	*start { | startPhrase, local = false |	// phrase to start from
 		if (sender.notNil) { this.stop };
-		if (receivers.isNil) { this.init };
+		this.init;
 		if (local) { this.addHost };
 		this.makeSender(startPhrase);
 		sender.start;

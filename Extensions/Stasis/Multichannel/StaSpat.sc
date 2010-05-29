@@ -1,6 +1,7 @@
-/* Spatializer for Stasis 
+/* Spatializer for Stasis  --- IZ 100526
+Version 0. Obsolete. 
+Redoing this as one Event tree. See: StaSpat.scd
 
-IZ 100526
 
 
 a = StaSpat.new;
