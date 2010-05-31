@@ -43,8 +43,9 @@ SendAmpFreq {
 	// start initialize	
 	init { | argServer, argAddr, argChan = 0 |
 		server = argServer ?? { Server.default };  //define server
-		//addr =  argAddr ?? { NetAddr("169.254.161.14", 12345); }; //localhost, oF port
-		addr =  argAddr ?? { NetAddr("127.0.0.1", 12345); }; //localhost, oF port
+		//addr =  argAddr ?? { NetAddr("127.0.0.1", 12345); }; //localhost, oF port
+		//addr =  argAddr ?? { NetAddr("127.0.0.1", 12345); }; //localhost, oF port
+		addr =  argAddr ?? { NetAddr("192.168.1.10", 12345); }; //localhost, 
 		chan = argChan;
 		this.makeResponders;	// call makeResponders
 	}
@@ -68,7 +69,7 @@ SendAmpFreq {
 		responders do: _.add;			//.add all the responders
 		if (not(server.serverRunning)) { server.boot };
 		server.doWhenBooted {			// doWhenBooted very good method
-			synthListen = SynthDef("SendAmpPitch",{ | chan = 8, ampTrig = 1, freqTrig = 2 |
+			 synthListen = SynthDef("SendAmpPitch",{ | chan = 8, ampTrig = 1, freqTrig = 2 |
 				var trig, in, amp, freq, hasFreq;
 				trig = Impulse.kr(60);
 				in = In.ar(chan);
