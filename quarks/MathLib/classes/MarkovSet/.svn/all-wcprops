@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/quarks/!svn/ver/1364/MathLib/classes/MarkovSet
+END
+MarkovSet.sc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/quarks/!svn/ver/836/MathLib/classes/MarkovSet/MarkovSet.sc
+END
+FuzzyDictionary.sc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/quarks/!svn/ver/836/MathLib/classes/MarkovSet/FuzzyDictionary.sc
+END
+WeighBag.sc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/quarks/!svn/ver/1364/MathLib/classes/MarkovSet/WeighBag.sc
+END
+MarkovPatterns.sc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/quarks/!svn/ver/199/MathLib/classes/MarkovSet/MarkovPatterns.sc
+END
+ShannonMarkovSet.sc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/quarks/!svn/ver/199/MathLib/classes/MarkovSet/ShannonMarkovSet.sc
+END
+extHTML.sc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/quarks/!svn/ver/78/MathLib/classes/MarkovSet/extHTML.sc
+END

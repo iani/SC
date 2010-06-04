@@ -1,0 +1,10 @@
+(
+	name:		"cruciallib",
+	path:		"cruciallib",
+	summary:		"Many useful tools by Crucial Felix (these are already in core for SC 3.4 or earlier)",
+	author:		"Crucial Systems",
+	version:		1.0,
+	url:			"http://www.crucial-systems.com/",
+	helpdoc:	"Help/CRUCIAL-LIBRARY.html",
+	isCompatible:	{ Main.versionAtMost(3, 3).not }
+)

@@ -1,0 +1,10 @@
+(
+	\name: 			"Preference (switch startup)",
+	\path: 			"Preference",
+	\summary:		"switch between startup files",
+	\helpdoc:			 "Preference.html",
+	\author: 		"Julian Rohrhuber",
+	\helpdoc:		"Republic.html",
+	\since: 		"2010",
+	\version:		"0.1"
+)

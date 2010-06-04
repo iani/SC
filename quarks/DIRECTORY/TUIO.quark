@@ -1,0 +1,13 @@
+(
+	\name: 			"TUIO",
+	\path: 			"tuio",
+	\summary:		"Tangible User Interface Object (TUIO) library.\nFor more information see http://tuio.lfsaw.de/",
+	\author: 		"Till Bovermann",
+	\organization: 	"Bielefeld University",
+	\country: 		"Germany",
+	\since: 		"2004",
+	\dependencies: [("lfsaw.de" -> 1.0)],
+	\url:           "http://tuio.lfsaw.de/",
+	\version:	1.0,
+\helpdoc: "help/TUIO.html"
+)
