@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.29">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+span.s3 {color: #737373}
+span.s4 {color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p2">/* IZ 100524</p>
+<p class="p2">Creating patterns that will send the structure of the fibonacci-tree<span class="Apple-converted-space"> </span></p>
+<p class="p2">via OSC using automatically generated messages and arguments that reflect the structure of the tree.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p2">This file gives examples.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p2">The format is described in file FibonacciPatternsOSCFormat.html</p>
+<p class="p3"><br></p>
+<p class="p2">*/</p>
+<p class="p1"><br></p>
+<p class="p2">// play a whole tree, simply</p>
+<p class="p4"><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10)), <span class="s2">\dur</span>, 0.1).play;</p>
+<p class="p1"><br></p>
+<p class="p2">// start playing from node BBBBB</p>
+<p class="p4"><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10), <span class="s3">"BBBBB"</span>), <span class="s2">\dur</span>, 0.1).play;</p>
+<p class="p1"><br></p>
+<p class="p4"><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pseq</span>([2 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10)), 1 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.descending(10))], 1), <span class="s2">\dur</span>, 0.1).play;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p4">(</p>
+<p class="p5">Pbind<span class="s4">(</span></p>
+<p class="p6"><span class="s4"><span class="Apple-tab-span">	</span></span>\type<span class="s4">, </span>\pause<span class="s4">,</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\degree</span>, <span class="s1">Pseq</span>([2 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10)), 1 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.descending(10))], 1),</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\dur</span>, 0.1</p>
+<p class="p4">).play)</p>
+<p class="p1"><br></p>
+<p class="p4">(</p>
+<p class="p5">Ppar<span class="s4">([</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10)), <span class="s2">\dur</span>, 0.1),<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">Pbind</span>(<span class="s2">\degree</span>, 10 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.descending(10)), <span class="s2">\dur</span>, 0.1)</p>
+<p class="p4">]).play;</p>
+<p class="p4">)</p>
+<p class="p1"><br></p>
+<p class="p2">// Broadcasting the structure of a Fibonacci tree as a "score" over the network:</p>
+<p class="p1"><br></p>
+<p class="p2">// Broadcasting the structure of a Fibonacci tree as a "score" over the network:</p>
+<p class="p1"><br></p>
+<p class="p5"><span class="s4">a = </span>SyncSender<span class="s4">.new;</span></p>
+<p class="p4">f = <span class="s1">Pfib</span>.new;</p>
+<p class="p4">f.broadcast(a);</p>
+<p class="p4">a.pattern = <span class="s1">Pbind</span>(<span class="s2">\test</span>, f);</p>
+<p class="p4">a.start;</p>
+<p class="p1"><br></p>
+<p class="p5"><span class="s4">a = </span>SyncSender<span class="s4">.new;</span></p>
+<p class="p4">f = <span class="s1">Pfib</span>.new;</p>
+<p class="p4">a.pattern = f.asPbind(a);</p>
+<p class="p4">a.start;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p4">t = { c = <span class="s1">TempoClock</span>(2); };</p>
+<p class="p4">a = <span class="s1">SyncSender</span>(clockFunc: t);</p>
+<p class="p4">a.pattern = <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(15)).asPbind(a);</p>
+<p class="p4">a.start;</p>
+<p class="p1"><br></p>
+<p class="p4">c.tempo = 4;</p>
+<p class="p1"><br></p>
+<p class="p5"><span class="s4">b = </span>SyncAction<span class="s4">(</span><span class="s2">'s_start_'</span><span class="s4">, { </span>| ... args |<span class="s4"><span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><br></p>
+<p class="p7"><span class="s4"><span class="Apple-tab-span">	</span></span>"START OF PIECE"<span class="s4">.postln;</span></p>
+<p class="p4">});</p>
+<p class="p5"><span class="s4">b = </span>SyncAction<span class="s4">(</span><span class="s2">'s_end_'</span><span class="s4">, { </span>| ... args |<span class="s4"> </span><span class="s3">"START OF PIECE"</span><span class="s4">.postln;<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><br></p>
+<p class="p7"><span class="s4"><span class="Apple-tab-span">	</span></span><span class="s1">Synth</span><span class="s4">(</span>"baxx"<span class="s4">);<span class="Apple-tab-span">	</span></span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">Synth</span>(<span class="s3">"baxx"</span>, [<span class="s2">\freq1</span>, 150, <span class="s2">\freq2</span>, 500, <span class="s2">\rls</span>, 1]);<span class="Apple-tab-span">	</span></p>
+<p class="p1"><br></p>
+<p class="p4">});</p>
+<p class="p1"><br></p>
+<p class="p5"><span class="s4">b = </span>SyncAction<span class="s4">(</span><span class="s2">'s_start_A'</span><span class="s4">, { </span>| ... args |<span class="s4"> </span><span class="s3">"prase A started"</span><span class="s4">.postln;</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Synth</span>(<span class="s3">"baxx"</span>, [<span class="s2">\freq1</span>, 500]);<span class="Apple-tab-span">	</span></p>
+<p class="p4">});</p>
+<p class="p1"><br></p>
+<p class="p5"><span class="s4">b = </span>SyncAction<span class="s4">(</span><span class="s2">'s_start_BA'</span><span class="s4">, { </span>| ... args |<span class="s4"><span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Synth</span>(<span class="s3">"baxx"</span>, [<span class="s2">\freq1</span>, 500]);<span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s4"><span class="Apple-tab-span">	</span></span>"prase BA started"<span class="s4">.postln; });</span></p>
+<p class="p5"><span class="s4">b = </span>SyncAction<span class="s4">(</span><span class="s2">'s_start_AB'</span><span class="s4">, { </span>| ... args |<span class="s4"><span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s4"><span class="Apple-tab-span">	</span></span>"prase AB started"<span class="s4">.postln;<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">Synth</span>(<span class="s3">"baxx"</span>, [<span class="s2">\freq1</span>, 150, <span class="s2">\freq2</span>, 500, <span class="s2">\rls</span>, 1]);<span class="Apple-tab-span">	</span></p>
+<p class="p4">});</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p4">b = <span class="s1">SyncAction</span>(<span class="s2">'s_start_BAA'</span>, { <span class="s1">| ... args |</span> <span class="s3">"phrase BAA started"</span>.postln; });</p>
+<p class="p4">b = <span class="s1">SyncAction</span>(<span class="s2">'s_start_AAB'</span>, { <span class="s1">| ... args |</span> <span class="s3">"phrase AAB started"</span>.postln; });</p>
+<p class="p1"><br></p>
+<p class="p4">a.start;</p>
+<p class="p1"><br></p>
+<p class="p4">c = <span class="s1">SyncAction</span>(<span class="s2">'/beats'</span>, { <span class="s1">| ... args |</span> args.postln })</p>
+<p class="p1"><br></p>
+</body>
+</html>

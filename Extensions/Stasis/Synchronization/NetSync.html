@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.29">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+span.s1 {color: #000000}
+span.s2 {color: #162bc4}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">/*</p>
+<p class="p1">NetSync: Synchronize processes running on different computers in a network via OSC.<span class="Apple-converted-space"> </span></p>
+<p class="p1">*/</p>
+<p class="p2"><br></p>
+<p class="p1">// SyncSender broadcasts OSC to one or more hosts</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s1">a = </span><span class="s2">SyncSender</span><span class="s1">(</span><span class="s2">Pbind</span><span class="s1">(</span>\syncEvent<span class="s1">, </span>'/test'<span class="s1">));</span></p>
+<p class="p4">a.start;</p>
+<p class="p4">a.stop;</p>
+<p class="p5"><span class="s1">e = SyncAction('/test', { </span>| beatNr, tempo, beatsInBar ... other |</p>
+<p class="p6"><span class="s1"><span class="Apple-tab-span">	</span>format(</span>"SYNC ACTION!!! beat number: %, tempo %, beatsInBar %, other %"<span class="s1">, </span><span class="s2">beatNr, tempo, beatsInBar, other</span><span class="s1">).postln</span></p>
+<p class="p4">});</p>
+<p class="p2"><br></p>
+<p class="p4">e.deactivate;</p>
+<p class="p4">e.activate;</p>
+<p class="p4">a.clock.tempo = 15;</p>
+<p class="p2"><br></p>
+<p class="p1">// IZ 100517</p>
+<p class="p7"><br></p>
+<p class="p1">SyncResponder('/sync').dependants</p>
+</body>
+</html>

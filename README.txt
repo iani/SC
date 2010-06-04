@@ -1,6 +1,9 @@
-This is branch 'iani'
-It contains the current working files of Iannis Zannos
 
-For Lilt, checkout Lilt branch
+This is branch 'Stasis'
+It contains the current working files for project Stasis (May 2010) 
 
-IZ 100516
+See more in http://earlab.org
+
+IZ 100520 /  100516
+
+

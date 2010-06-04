@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.29">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373; min-height: 12.0px}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+span.s3 {color: #182cc4}
+span.s4 {color: #008322}
+span.s5 {color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1">Creating</span> patterns that will send the structure of the fibonacci-tree<span class="Apple-converted-space"> </span></p>
+<p class="p1">via <span class="s1">OSC</span> using automatically generated messages and arguments that reflect the structure of the tree.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">See</span> after the examples for a description of the format that is provided by <span class="s1">Pfib</span> for describing the location of each node in the <span class="s1">Fibonacci</span> tree that is played.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">Examples</p>
+<p class="p2"><br></p>
+<p class="p1">Fib.ascending(10);</p>
+<p class="p1">Fib.descending(15);</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">Fib.ascending(15).flat.size;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">f = Pfib(Fib.ascending(10));</p>
+<p class="p1">g = f.asStream;</p>
+<p class="p1">g.next;</p>
+<p class="p2"><br></p>
+<p class="p1">f = Pfib(Fib.ascending(15));</p>
+<p class="p1">g = f.asStream;</p>
+<p class="p1">g.next;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">// play a whole tree, simply</p>
+<p class="p1"><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10)), <span class="s2">\dur</span>, 0.1).play;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s3">Pbind</span>(<span class="s4">\degree</span>, <span class="s3">Pfib</span>(<span class="s3">Fib</span>.ascending(15)), <span class="s4">\dur</span>, 0.05).play;</p>
+<p class="p1"><span class="s3">Pbind</span>(<span class="s4">\degree</span>, <span class="s3">Pfib</span>(<span class="s3">Fib</span>.descending(15)), <span class="s4">\dur</span>, 0.05).play;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">// start playing from node BBBBB</p>
+<p class="p1"><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10), "BBBBB"), <span class="s2">\dur</span>, 0.1).play;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pseq</span>([2 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(5)), 1 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.descending(5))], 1), <span class="s2">\dur</span>, 0.1).play;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p3">Pbind<span class="s5">(</span></p>
+<p class="p4"><span class="s5"><span class="Apple-tab-span">	</span></span>\type<span class="s5">, </span>\pause<span class="s5">,</span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="s2">\degree</span>, <span class="s1">Pseq</span>([2 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10)), 1 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.descending(10))], 1),</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="s2">\dur</span>, 0.1</p>
+<p class="p1">).play)</p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p3">Ppar<span class="s5">([</span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="s1">Pbind</span>(<span class="s2">\degree</span>, <span class="s1">Pfib</span>(<span class="s1">Fib</span>.ascending(10)), <span class="s2">\dur</span>, 0.1),<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="s1">Pbind</span>(<span class="s2">\degree</span>, 10 + <span class="s1">Pfib</span>(<span class="s1">Fib</span>.descending(10)), <span class="s2">\dur</span>, 0.1)</p>
+<p class="p1">]).play;</p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p5">// Broadcasting the structure of a Fibonacci tree as a "score" over the network:</p>
+<p class="p2"><br></p>
+<p class="p1">a = SyncSender.new;</p>
+<p class="p1">f = Pfib.new;</p>
+<p class="p2"><br></p>
+<p class="p1">a = SyncSender.new;</p>
+<p class="p1">f = Pfib.new;</p>
+<p class="p1">f.broadcast(a);</p>
+<p class="p1">a.pattern = Pbind(\test, f);</p>
+<p class="p6">a.start;</p>
+<p class="p2"><br></p>
+<p class="p1">a = SyncSender.new;</p>
+<p class="p1">f = Pfib.new;</p>
+<p class="p1">a.pattern = f.asPbind(a);</p>
+<p class="p6">a.start;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">t = { c = TempoClock(2); };</p>
+<p class="p1">a = SyncSender(clockFunc: t);</p>
+<p class="p1">a.pattern = Pfib(Fib.ascending(10)).asPbind(a);</p>
+<p class="p6">a.start;</p>
+<p class="p2"><br></p>
+<p class="p1">c.tempo = 4;</p>
+<p class="p2"><br></p>
+<p class="p1">b = SyncAction('s_start_', { | ... args |<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>"START OF PIECE".postln;</p>
+<p class="p1">});</p>
+<p class="p1">b = SyncAction('s_end_', { | ... args | "START OF PIECE".postln;<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>Synth("baxx");<span class="Apple-tab-span">	</span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 150, \freq2, 500, \rls, 1]);<span class="Apple-tab-span">	</span></p>
+<p class="p2"><br></p>
+<p class="p1">});</p>
+<p class="p2"><br></p>
+<p class="p1">b = SyncAction('s_start_A', { | ... args | "prase A started".postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 500]);<span class="Apple-tab-span">	</span></p>
+<p class="p1">});</p>
+<p class="p2"><br></p>
+<p class="p1">b = SyncAction('s_start_BA', { | ... args |<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 500]);<span class="Apple-tab-span">	</span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>"prase BA started".postln; });</p>
+<p class="p1">b = SyncAction('s_start_AB', { | ... args |<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>"prase AB started".postln;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>Synth("baxx", [\freq1, 150, \freq2, 500, \rls, 1]);<span class="Apple-tab-span">	</span></p>
+<p class="p1">});</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">b = SyncAction('s_start_BAA', { | ... args | "prase BAA started".postln; });</p>
+<p class="p1">b = SyncAction('s_start_AAB', { | ... args | "prase AAB started".postln; });</p>
+<p class="p2"><br></p>
+<p class="p7"><br></p>
+<p class="p6">c = SyncAction('/beats', { | ... args | args.postln })</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">==============</p>
+<p class="p2"><br></p>
+<p class="p1">===== <span class="s1">Structure</span> of the tree and its variants</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">There</span> are four variants:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">The</span> variant pair <span class="s1">A1</span> and <span class="s1">A2</span> is created by incrementing the values in the <span class="s2">'current'</span> branch by 1 at each iteration:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">A1</span>. <span class="s1">Ascending</span> leaf numbers, smaller branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>generated by: <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev, current + 1]; prev = current;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>[ [ 1, [ 2, 3 ] ], [ [ 2, 3 ], [ 3, [ 4, 5 ] ] ] ]</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">A2</span>. <span class="s1">Descending</span> leaf numbers, larger branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>generated by: <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current + 1, prev]; prev = current;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>[ [ [ [ 5, 4 ], 3 ], [ 3, 2 ] ], [ [ 3, 2 ], 1 ] ]</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">The</span> variant pair <span class="s1">B1</span> and <span class="s1">B2</span> is created by incrementing the values in the <span class="s2">'current'</span> branch</p>
+<p class="p1">*and* the values in the <span class="s2">'prev'</span> branch by 1 at each iteration:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">B1</span>. <span class="s1">Ascending</span> leaf numbers, larger branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>generated by: <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current, prev + 1]; prev = current + 1;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>[ [ [ [ 1, 2 ], 3 ], [ 3, 4 ] ], [ [ 3, 4 ], 5 ] ]</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1">B2</span>. <span class="s1">Descending</span> leaf numbers, smaller branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>generated by:<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev + 1, current]; prev = current + 1;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-tab-span">	</span>[ [ 5, [ 4, 3 ] ], [ [ 4, 3 ], [ 3, [ 2, 1 ] ] ] ]</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">===== <span class="s1">Message</span> format:</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">| type of message <span class="Apple-converted-space">          </span>| format of message<span class="Apple-converted-space">          </span>| argument 1<span class="Apple-converted-space">                      </span>|</p>
+<p class="p1">| branch<span class="Apple-converted-space">                    </span>| /[s,l]<span class="s1">_</span>[<span class="s1">A</span>,<span class="s1">B</span>]*<span class="s1">_</span>[start|end]<span class="Apple-converted-space">  </span>| length of branch<span class="Apple-converted-space">  </span>in beats<span class="Apple-converted-space">      </span>|</p>
+<p class="p1">| leaf<span class="Apple-converted-space">                      </span>| /leaf<span class="Apple-converted-space">                      </span>| value of the leaf <span class="Apple-converted-space">              </span>|</p>
+<p class="p1">| beat<span class="Apple-converted-space">                      </span>| /beat<span class="Apple-converted-space">                      </span>| beat count since start of piece |</p>
+<p class="p2"><br></p>
+<p class="p1">Explanation:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p8"><span class="s5">- <span class="Apple-tab-span">	</span>"s</span>" and "<span class="s5">l</span>" indicate the direction of the generation of the tree as follows:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p8"><span class="Apple-tab-span">	</span>- <span class="Apple-tab-span">	</span>"<span class="s5">l</span>" if the branches are ordered with the longer one first, (A2 or B1 above)</p>
+<p class="p8"><span class="Apple-tab-span">	</span>- <span class="Apple-tab-span">	</span>"<span class="s5">s</span>" if they are ordered with the shorter one first (A1 or B2 above).</p>
+<p class="p9"><br></p>
+<p class="p8">-<span class="Apple-tab-span">	</span>"<span class="s1">A</span>" and "<span class="s1">B</span>" indicate the branch of the tree as follows:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p8"><span class="Apple-tab-span">	</span>- A indicates the first branch in a node of the tree and B the second one.<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>- A's and B's are repeated to specify subbranches, For example:<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>AB = Branch B of branch A</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>BAA = Branch A of branch A of branch B.<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8">Following diagram shows how labels indicate branches in a tree of 3 branch levels:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p8">Level 1: A <span class="Apple-converted-space">                                            </span>B</p>
+<p class="p8">Level 2: AA<span class="Apple-converted-space">                        </span>AB<span class="Apple-converted-space">                  </span>BA <span class="Apple-converted-space">        </span>BB</p>
+<p class="p8">Level 3: AAA <span class="Apple-converted-space">          </span>AAB <span class="Apple-converted-space">        </span>ABA<span class="Apple-converted-space">        </span>ABB<span class="Apple-converted-space">      </span>BAA<span class="Apple-converted-space">    </span>BAB BBA<span class="Apple-converted-space">  </span>BBB</p>
+<p class="p9"><br></p>
+<p class="p8">-<span class="Apple-tab-span">	</span>"<span class="s5">start</span>" and "<span class="s5">end</span>" indicate the start of a branch or end of a branch.<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p8">// Note: Examples of the full algorirthms for the above are as follows</p>
+<p class="p9"><br></p>
+<p class="p8">(</p>
+<p class="p8">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p8"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>n do: { // ascending, smaller branches first</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev, current + 1];</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>};</p>
+<p class="p8"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p8">}.(i).asCompileString &lt;&lt; "<span class="s2">\n\n</span>";<span class="Apple-converted-space">  </span>}</p>
+<p class="p8">)</p>
+<p class="p9"><br></p>
+<p class="p8">(</p>
+<p class="p8">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p8"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>n do: { // ascending, larger branches first;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current, prev + 1];<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current + 1;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>};</p>
+<p class="p8"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p8">}.(i).asCompileString &lt;&lt; "<span class="s2">\n\n</span>";<span class="Apple-converted-space">  </span>}</p>
+<p class="p8">)</p>
+<p class="p9"><br></p>
+<p class="p8">2. &lt;o&gt; is "<span class="s5">d</span>" if the order of the numeric values of the leaves of the tree is ascending,<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>as produced by this version of the algorithm:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p8">(</p>
+<p class="p8">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p8"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>n do: {<span class="Apple-tab-span">	</span>// descending, smaller branches first</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev + 1, current];</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current + 1;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>};</p>
+<p class="p8"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p8">}.(i).asCompileString &lt;&lt; "<span class="s2">\n\n</span>";<span class="Apple-converted-space">  </span>}</p>
+<p class="p8">)</p>
+<p class="p9"><br></p>
+<p class="p8">(</p>
+<p class="p8">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p8"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>n do: {<span class="Apple-tab-span">	</span>// descending, larger branches first</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current + 1, prev];</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>};</p>
+<p class="p8"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p8">}.(i).asCompileString &lt;&lt; "<span class="s2">\n\n</span><span class="s5">";<span class="Apple-converted-space">  </span>}</span></p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p1">Examples:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">/start_A_0 0, 0, 0 : Beginning of the first branch at level 1, first beat of piece, first beat of branch, first branch occurrence</p>
+<p class="p2"><br></p>
+</body>
+</html>

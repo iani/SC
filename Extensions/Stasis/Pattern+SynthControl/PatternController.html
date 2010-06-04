@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.29">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+span.s1 {color: #162bc4}
+span.s2 {color: #000000}
+span.s3 {color: #008323}
+span.s4 {color: #737373}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2"><span class="s1">PatternController</span> is for controlling patterns via <span class="s1">MIDI</span> <span class="s1">Control</span> <span class="s1">Change</span> messages</p>
+<p class="p1"><br></p>
+<p class="p2"><span class="s1">SynthController</span> is for controlling synths via <span class="s1">MIDI</span> <span class="s1">Control</span> <span class="s1">Change</span> messages</p>
+<p class="p1"><br></p>
+<p class="p3">Version<span class="s2"> 1.0 (</span>IZ<span class="s2">+</span>OH<span class="s2">+</span>DT<span class="s2"> </span>Wednesday<span class="s2">, </span>May<span class="s2"> 12, 2010)</span></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p4">/// version without variable assignment, including the controllers as arguments.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">(</p>
+<p class="p4">// This one is for JL Cooper micro control<span class="Apple-converted-space"> </span></p>
+<p class="p3">PatternController<span class="s2">(</span></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// here the parameters of the pbind that you want to use initially!</p>
+<p class="p2"><span class="Apple-tab-span">	</span>(</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>melody: <span class="s1">PatternProxy</span>(<span class="s1">Pseq</span>((0..12), <span class="s1">inf</span>)),</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>legato: <span class="s1">PatternProxy</span>(<span class="s1">Pn</span>(0.1, <span class="s1">inf</span>))</p>
+<p class="p2"><span class="Apple-tab-span">	</span>),</p>
+<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// Here the pattern that uses the above parameters</p>
+<p class="p2"><span class="Apple-tab-span">	</span>{</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pbind</span>(<span class="s3">\dur</span>, 0.2,<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\degree</span>, ~melody,</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\legato</span>, ~legato</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>).play<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>},</p>
+<p class="p1"><br></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// here the controllers:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 0, <span class="s3">\toggle</span>],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 1, { ~melody.source = <span class="s1">Pwhite</span>(0, 20, <span class="s1">inf</span>); }],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 2, { ~melody.source = <span class="s1">Pseq</span>((12..0), <span class="s1">inf</span>) }, { ~melody.source = <span class="s1">Pseq</span>((0..12), <span class="s1">inf</span>) }],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 3, { ~legato.source = <span class="s1">Pwhite</span>(0.1, 2, <span class="s1">inf</span>) }]<span class="Apple-tab-span">	</span></p>
+<p class="p2">);</p>
+<p class="p2">)</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s2">p = </span>PatternController<span class="s2">(</span></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// here the parameters of the pbind that you want to use initially!</p>
+<p class="p2"><span class="Apple-tab-span">	</span>(</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>melody: <span class="s1">PatternProxy</span>(<span class="s1">Pseq</span>((0..12), <span class="s1">inf</span>)),</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>legato: <span class="s1">PatternProxy</span>(<span class="s1">Pn</span>(0.1, <span class="s1">inf</span>))</p>
+<p class="p2"><span class="Apple-tab-span">	</span>),</p>
+<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// Here the pattern that uses the above parameters</p>
+<p class="p2"><span class="Apple-tab-span">	</span>{</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pbind</span>(<span class="s3">\dur</span>, 0.2,<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\degree</span>, ~melody,</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\legato</span>, ~legato</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>).play<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>}</p>
+<p class="p2">);</p>
+<p class="p1"><br></p>
+<p class="p2">p.controllers = [</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 0, <span class="s3">\toggle</span>],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 1, { ~melody.source = <span class="s1">Pwhite</span>(0, 20, <span class="s1">inf</span>); }],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 2, { ~melody.source = <span class="s1">Pseq</span>((12..0), <span class="s1">inf</span>) }, { ~melody.source = <span class="s1">Pseq</span>((0..12), <span class="s1">inf</span>) }],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[13, 3, { ~legato.source = <span class="s1">Pwhite</span>(0.1, 2, <span class="s1">inf</span>) }]</p>
+<p class="p2">];</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p4">////////////////////////////////////////</p>
+<p class="p1"><br></p>
+<p class="p2">(</p>
+<p class="p4">// this one is for UC control</p>
+<p class="p3">PatternController<span class="s2">(</span></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// here the parameters of the pbind that you want to use initially!</p>
+<p class="p2"><span class="Apple-tab-span">	</span>(</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>melody: <span class="s1">PatternProxy</span>(<span class="s1">Pseq</span>((0..12), <span class="s1">inf</span>)),</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>legato: <span class="s1">PatternProxy</span>(<span class="s1">Pn</span>(0.1, <span class="s1">inf</span>))</p>
+<p class="p2"><span class="Apple-tab-span">	</span>),</p>
+<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// Here the pattern that uses the above parameters</p>
+<p class="p2"><span class="Apple-tab-span">	</span>{</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pbind</span>(<span class="s3">\dur</span>, 0.2,<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\degree</span>, ~melody,</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\legato</span>, ~legato</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>).play<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>},</p>
+<p class="p1"><br></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// here the controllers:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>[0, 19, <span class="s3">\toggle</span>],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[0, 20, { ~melody.source = <span class="s1">Pwhite</span>(0, 20, <span class="s1">inf</span>); }],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[0, 21, { ~melody.source = <span class="s1">Pseq</span>((12..0), <span class="s1">inf</span>) }, { ~melody.source = <span class="s1">Pseq</span>((0..12), <span class="s1">inf</span>) }],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[0, 22, { ~legato.source = <span class="s1">Pwhite</span>(0.1, 2, <span class="s1">inf</span>) }]<span class="Apple-tab-span">	</span></p>
+<p class="p2">);</p>
+<p class="p2">)</p>
+<p class="p1"><br></p>
+<p class="p2">(</p>
+<p class="p4">// this one is for UC control</p>
+<p class="p3">SynthController<span class="s2">(</span></p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// here the parameters of the pbind that you want to use initially!</p>
+<p class="p2"><span class="Apple-tab-span">	</span>(</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>freq: 1000,</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>freqSpec: <span class="s3">\freq</span>.asSpec</p>
+<p class="p2"><span class="Apple-tab-span">	</span>),</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// Here the pattern that uses the above parameters</p>
+<p class="p2"><span class="Apple-tab-span">	</span>{</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">SynthDef</span>(<span class="s4">"test"</span>, { <span class="s1">| freq = 400 |</span> <span class="s1">Out</span>.ar(0, <span class="s1">SinOsc</span>.ar(freq, 0, 0.5)) })</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s3">\freq</span>, ~freq])</p>
+<p class="p2"><span class="Apple-tab-span">	</span>},</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>// here the controllers:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>[0, 19, <span class="s3">\toggle</span>],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[0, 20, { <span class="s1">| v, synth |</span> synth.set(<span class="s3">\freq</span>, 400 rrand: 10000) }],</p>
+<p class="p2"><span class="Apple-tab-span">	</span>[0, 7, { <span class="s1">| v, synth |</span> synth.set(<span class="s3">\freq</span>, ~freqSpec.map(v / 127)) }]</p>
+<p class="p2">);</p>
+<p class="p2">)</p>
+</body>
+</html>

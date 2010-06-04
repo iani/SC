@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.29">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Arial Black'}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Arial}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Arial; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+span.s1 {font: 12.0px Arial}
+span.s2 {font: 12.0px Monaco}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">Description of the OSC message format with which the structure of the piece Stasis is sent to all computers.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p3">There are two kinds of OSC messages: '/sync' and 's_branch' or 'l_branch'. Here are first some examples taken from the beginning of a piece:</p>
+<p class="p4"><br></p>
+<p class="p5"><span class="s1">Example 1: <span class="Apple-tab-span">	</span></span>/sync, s_start_, 0, 4181, 0</p>
+<p class="p4"><br></p>
+<p class="p3">The meaning of each part of this OSC message is:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">/sync</span> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>is the message for SyncAction.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">s_start_</span><span class="Apple-tab-span">	</span>shows that:</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- this is a tree with short branches first (s),</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- this is the start of a branch (start)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- this is the root of the tree (level 0, whole piece): no branch name is present (no A or B letters)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">0</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that this is beat number 0</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">4181</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that there are 4181 beats in this branch (4181 beats in the whole piece)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">0</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that the level of this branch is 0 (meaning, this is the root of the tree)</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="s1">Example 2:<span class="Apple-tab-span">	</span></span>/sync, s_start_A, 0, 1597, 1</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">/sync</span> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>is the message for SyncAction.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">s_start_A</span><span class="Apple-tab-span">	</span>shows that:</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- this is a tree with short branches first (s),</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- this is the start of a branch (start)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- this is is branch A (level 1, first branch)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">0</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that this is beat number 0</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">1597</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that there are 4181 beats in this branch (1597 beats in the first branch of the piece)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">1</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that the level of this branch is 1 (first level of branches in the tree)</p>
+<p class="p4"><br></p>
+<p class="p5"><span class="s1">Example 3:<span class="Apple-tab-span">	</span></span>s_branch, 2584, 5, 8, 4181, 3.5, 19.909523010254, 7.6047620773315</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">s_branch</span> <span class="Apple-tab-span">	</span>is the OSC. It is sent for the GUI. It is sent at each start of branch.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>It sends the s_start data plus some more information, as follows:</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">2584</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that this is beat number 2584</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">5<span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>the number of beats in this branch<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">8</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>the level of this branch</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">4181<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>the total size of the piece in beats</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">3.5<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span>the current playback tempo</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">19.90..<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>the total duration of the piece, in minutes</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">7.60..<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>the duration left until the end of the piece, in minutes</p>
+<p class="p4"><br></p>
+<p class="p5"><span class="s1">Example 4:<span class="Apple-tab-span">	</span></span>/sync, beats, 1, 3.5, 4, 0, 0, freq, amp, pan, trig</p>
+<p class="p4"><br></p>
+<p class="p3">This message is sent every single beat by the SyncSender. It is sent independently of the Fibonacci Tree. It is sent by the sender for any beat of any structure that it plays.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">/sync</span> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>is the message for SyncAction.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">beats</span> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>this means that this is one of the beats of the piece.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The Stasis player sends <b>every single beat of the piece </b>with the message</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>combination<span class="s2"> /sync beats</span>.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">1</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that this is beat number 1, from the start of playing of the sender,<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>not from the start of the piece.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">3.5</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>the current playback tempo of the clock</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">4</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>number of beats per bar in the clock setting</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">0</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>baseBarBeat (this is a clock property not used in the present project)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">0</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>baseBar (this is a clock property not used in the present project)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">freq, amp, pan, trig </span>Additional arguments that can have numeric values if the event of the pattern played<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>has appropriate objects for these keys. Not used in the present project.</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5"><span class="s1">Example 5:<span class="Apple-tab-span">	</span></span>/sync, s_end_BBAAAAAAA, 2586</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">/sync</span> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>is the message for SyncAction.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">s_end_BBAAAAAAA</span> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Signifies the end of a branch in the Fibonacci tree. Details:<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- <span class="s2">s </span>signifies that this is a tree with short branches first.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- <span class="s2">end</span> signifies that this is the end of a branch. <span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>- this is the branch corresponding to branching <span class="s2">BBAAAAAAA</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s2">2586</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>shows that this is beat number 2584</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5">//--------------------------------------------------------------------------</p>
+<p class="p5">// Older notes. Contain some information about the algorithms generating the trees:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p6">'/sync' marks the beginning or end of a branch of the Fibonacci tree and gives some information about that tree. This is done by the arguments that accompany each '/sync' message. The arguments that accompany each '/sync' message are:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>1. A tag denoting the type of branch event and the level of the branch:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>'s_start' or 'l_start' denotes the beginning of a branch</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>'s_end' or 'l_end' denotes thes end of a branch.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>'beats' denotes that we are at a leaf of the branch.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>2. After the type of<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p6">The message '/sync' sends the<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p6">===== Message format:</p>
+<p class="p1"><br></p>
+<p class="p6">| type of message <span class="Apple-converted-space">          </span>| format of message<span class="Apple-converted-space">          </span>| argument 1<span class="Apple-converted-space">                      </span>|</p>
+<p class="p6">| branch<span class="Apple-converted-space">                    </span>| /[s,l]_[A,B]*_[start|end]<span class="Apple-converted-space">  </span>| length of branch<span class="Apple-converted-space">  </span>in beats<span class="Apple-converted-space">      </span>|</p>
+<p class="p6">| leaf<span class="Apple-converted-space">                      </span>| /leaf<span class="Apple-converted-space">                      </span>| value of the leaf <span class="Apple-converted-space">              </span>|</p>
+<p class="p6">| beat<span class="Apple-converted-space">                      </span>| /beat<span class="Apple-converted-space">                      </span>| beat count since start of piece |</p>
+<p class="p1"><br></p>
+<p class="p6">Explanation:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6">- <span class="Apple-tab-span">	</span>"s" and "l" indicate the direction of the generation of the tree as follows:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>- <span class="Apple-tab-span">	</span>"l" if the branches are ordered with the longer one first, (A2 or B1 above)</p>
+<p class="p6"><span class="Apple-tab-span">	</span>- <span class="Apple-tab-span">	</span>"s" if they are ordered with the shorter one first (A1 or B2 above).</p>
+<p class="p1"><br></p>
+<p class="p6">-<span class="Apple-tab-span">	</span>"A" and "B" indicate the branch of the tree as follows:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>- A indicates the first branch in a node of the tree and B the second one.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>- A's and B's are repeated to specify subbranches, For example:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>AB = Branch B of branch A</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>BAA = Branch A of branch A of branch B.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6">Following diagram shows how labels indicate branches in a tree of 3 branch levels:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6">Level 1: A <span class="Apple-converted-space">                                            </span>B</p>
+<p class="p6">Level 2: AA<span class="Apple-converted-space">                        </span>AB<span class="Apple-converted-space">                  </span>BA <span class="Apple-converted-space">        </span>BB</p>
+<p class="p6">Level 3: AAA <span class="Apple-converted-space">          </span>AAB <span class="Apple-converted-space">        </span>ABA<span class="Apple-converted-space">        </span>ABB<span class="Apple-converted-space">      </span>BAA<span class="Apple-converted-space">    </span>BAB BBA<span class="Apple-converted-space">  </span>BBB</p>
+<p class="p1"><br></p>
+<p class="p6">-<span class="Apple-tab-span">	</span>"start" and "end" indicate the start of a branch or end of a branch.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p6">===== Structure of the tree and its variants</p>
+<p class="p1"><br></p>
+<p class="p6">There are four variants:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6">The variant pair A1 and A2 is created by incrementing the values in the 'current' branch by 1 at each iteration:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6">A1. Ascending leaf numbers, smaller branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>generated by: <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev, current + 1]; prev = current;</p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>[ [ 1, [ 2, 3 ] ], [ [ 2, 3 ], [ 3, [ 4, 5 ] ] ] ]</p>
+<p class="p1"><br></p>
+<p class="p6">A2. Descending leaf numbers, larger branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>generated by: <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current + 1, prev]; prev = current;</p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>[ [ [ [ 5, 4 ], 3 ], [ 3, 2 ] ], [ [ 3, 2 ], 1 ] ]</p>
+<p class="p1"><br></p>
+<p class="p6">The variant pair B1 and B2 is created by incrementing the values in the 'current' branch</p>
+<p class="p6">*and* the values in the 'prev' branch by 1 at each iteration:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6">B1. Ascending leaf numbers, larger branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>generated by: <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current, prev + 1]; prev = current + 1;</p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>[ [ [ [ 1, 2 ], 3 ], [ 3, 4 ] ], [ [ 3, 4 ], 5 ] ]</p>
+<p class="p1"><br></p>
+<p class="p6">B2. Descending leaf numbers, smaller branches first:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>generated by:<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev + 1, current]; prev = current + 1;</p>
+<p class="p1"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>[ [ 5, [ 4, 3 ] ], [ [ 4, 3 ], [ 3, [ 2, 1 ] ] ] ]</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p6">// Note: Examples of the full algorirthms for the above are as follows</p>
+<p class="p1"><br></p>
+<p class="p6">(</p>
+<p class="p6">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p6"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>n do: { // ascending, smaller branches first</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev, current + 1];</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>};</p>
+<p class="p6"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p6">}.(i).asCompileString &lt;&lt; "\n\n";<span class="Apple-converted-space">  </span>}</p>
+<p class="p6">)</p>
+<p class="p1"><br></p>
+<p class="p6">(</p>
+<p class="p6">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p6"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>n do: { // ascending, larger branches first;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current, prev + 1];<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current + 1;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>};</p>
+<p class="p6"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p6">}.(i).asCompileString &lt;&lt; "\n\n";<span class="Apple-converted-space">  </span>}</p>
+<p class="p6">)</p>
+<p class="p1"><br></p>
+<p class="p6">2. &lt;o&gt; is "d" if the order of the numeric values of the leaves of the tree is ascending,<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>as produced by this version of the algorithm:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p6">(</p>
+<p class="p6">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p6"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>n do: {<span class="Apple-tab-span">	</span>// descending, smaller branches first</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [prev + 1, current];</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current + 1;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>};</p>
+<p class="p6"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p6">}.(i).asCompileString &lt;&lt; "\n\n";<span class="Apple-converted-space">  </span>}</p>
+<p class="p6">)</p>
+<p class="p1"><br></p>
+<p class="p6">(</p>
+<p class="p6">10 do: { | i | Post &lt;&lt; { | n = 1, prev = 1, current = 1 |</p>
+<p class="p6"><span class="Apple-tab-span">	</span>var next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>n do: {<span class="Apple-tab-span">	</span>// descending, larger branches first</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>next = [current + 1, prev];</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>prev = current;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>current = next;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>};</p>
+<p class="p6"><span class="Apple-tab-span">	</span>current;</p>
+<p class="p6">}.(i).asCompileString &lt;&lt; "\n\n";<span class="Apple-converted-space">  </span>}</p>
+<p class="p6">)</p>
+<p class="p1"><br></p>
+</body>
+</html>
