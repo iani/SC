@@ -29,7 +29,7 @@ a.start;
 	}
 }.fork
 )
-
+Stasi_Aris.new
 Stasis.addHost; // do this if you want to send to localhost as well
 Stasis.start;
 Stasis.start("BB") // do this if you want to start from a specific part in the piece;
@@ -75,7 +75,7 @@ Stasis {
 	classvar <descendingFib;
 	classvar <pattern;
 	classvar <conductStream;	// the stream that plays the fibonacci tree process
-	classvar <tempo = 1.3308;
+//	classvar <tempo = 1.3308;
 	classvar <scLangPort = 57120;
 
 	*init {
@@ -90,6 +90,19 @@ Stasis {
 				omer: NetAddr("192.168.1.15", scLangPort)
 			);
 		}
+/*
+		receivers = (
+			iani: NetAddr("192.168.1.10", scLangPort),
+			graphics: NetAddr("192.168.1.10", scLangPort),			manolis: NetAddr("192.168.1.12", scLangPort), 
+			aris: NetAddr("192.168.1.13", scLangPort), 
+			arisOf: NetAddr("192.168.1.10", 12345), 
+			arisLocalhost: NetAddr("127.0.0.1", 12345),
+			dakis: NetAddr("192.168.1.14", scLangPort), 
+			omer: NetAddr("192.168.1.15", scLangPort)
+			
+		);
+
+*/
 	}
 
 	*addHost { | name = 'local', netAddr |

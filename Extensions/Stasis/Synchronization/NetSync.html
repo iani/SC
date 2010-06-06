@@ -26,12 +26,15 @@ span.Apple-tab-span {white-space:pre}
 <p class="p2"><br></p>
 <p class="p1">// SyncSender broadcasts OSC to one or more hosts</p>
 <p class="p2"><br></p>
-<p class="p3"><span class="s1">a = </span><span class="s2">SyncSender</span><span class="s1">(</span><span class="s2">Pbind</span><span class="s1">(</span>\syncEvent<span class="s1">, </span>'/test'<span class="s1">));</span></p>
+<p class="p3"><span class="s1">a = </span><span class="s2">SyncSender</span><span class="s1">(</span><span class="s2">Pbind</span><span class="s1">(</span>\syncEvent<span class="s1">, Prand([</span>'/test', '/ping'], inf<span class="s1">)));</span></p>
 <p class="p4">a.start;</p>
-<p class="p4">a.stop;</p>
 <p class="p5"><span class="s1">e = SyncAction('/test', { </span>| beatNr, tempo, beatsInBar ... other |</p>
 <p class="p6"><span class="s1"><span class="Apple-tab-span">	</span>format(</span>"SYNC ACTION!!! beat number: %, tempo %, beatsInBar %, other %"<span class="s1">, </span><span class="s2">beatNr, tempo, beatsInBar, other</span><span class="s1">).postln</span></p>
 <p class="p4">});</p>
+<p class="p2"><br></p>
+<p class="p4">a.stop;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
 <p class="p2"><br></p>
 <p class="p4">e.deactivate;</p>
 <p class="p4">e.activate;</p>
