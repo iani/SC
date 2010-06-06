@@ -26,7 +26,7 @@ AbstractProcessController {
 	var <controllers;	// all the MIDI CC controllers
 	var <process;		// the process that is playing: EventStreamPlayer or Synth or Group ...
 
-	// 2 utilities for shorthand access to protoEvent	
+	// 2 utilities for shorthand access to protoEvent
 	*protoEvent {
 		if (protoEvent.isNil) { protoEvent = () };
 		^protoEvent;
