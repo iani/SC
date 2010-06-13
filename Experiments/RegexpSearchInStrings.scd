@@ -51,8 +51,28 @@ b[*(1..4)] = (101..104)
 
 "**** <2010-06-08 16:40:19> abcedellae".findRegexp("\\*{4} <\\d+-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}[^>]*>")
 "**** <2010-06-08 16:40:19> abcedellae".findRegexp("\\*{4} <\\d+-\\d{2}-\\d{2}[^>]*>")
+// ==== Trying to include date ranges
+
+"* <2010-06-14 Mon 17:00>-<2010-06-14 Mon 20:00> Algorithmic Sound Structures".findRegexp("\\* <\\d+-\\d{2}-\\d{2}[^.]*> ")
 
 
-====
+// ====
+"* <2010-06-13 Sun 11:03> Entering exam dates for June".findRegexp("\\* <\\d+-\\d{2}-\\d{2}[^>]*>")
+
+"* <2010-06-13 Sun 11:03> Entering exam dates for June".("\\* <\\d+-\\d{2}-\\d{2}[^.]*>")
+"* <2010-06-14 Mon 17:00>-<2010-06-14 Mon 20:00> Algorithmic Sound Structures".findRegexp("\\* <\\d+-\\d{2}-\\d{2}[^.]*> ")
+
+"* <2010-06-14 Mon 17:00>-<2010-06-14 Mon 20:00> Algorithmic Sound Structures".findRegexp("\\* <\\d+-\\d{2}-\\d{2}[^.]*>")
 
 
+(
+"* <2010-06-14 Mon 17:00>-<2010-06-14 Mon 20:00> Algorithmic Sound Structures"
+	.findRegexp("(\\* |-)<\\d+-\\d{2}-\\d{2}[^>]*>")
+)
+
+
+
+(
+"* <2010-06-13 Sun 11:03> Entering exam dates for June"
+	.findRegexp("(\\* |-)<\\d+-\\d{2}-\\d{2}[^>]*>")
+)

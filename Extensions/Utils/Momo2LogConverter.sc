@@ -43,7 +43,7 @@ Momo2Log {
 				}{
 					endpos = endpos[0];
 				};
-				log.copyRange(startpos, endpos - 1); // .postln;
+				log.copyRange(startpos, endpos - 1);
 			}
 		});
 	}
@@ -72,7 +72,8 @@ Momo2Log {
 					}
 				}
 			};
-			// Convert dates of entries
+			// Add the last entry without expecting next entry char:
+			m_entries = m_entries add: entry;
 			m_entries = m_entries.select { | e | e.size > 10 } collect: { | e |
 				date = e.findRegexp("\\d+-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}[^.+]*").first[1];
 				// could 'date' already found be used for the replace below?
@@ -85,10 +86,15 @@ Momo2Log {
 			};
 		});
 		// Add momo entries to log entries
-		m_entries do: { | m |
+		"------- Adding new entries from momo to Log entries: ------- ".postln;
+		m_entries do: { | m, i |
+			postf("%, ", i);
 			// Only add those entries that do not already exist
-			if (entries.detect({ | e | e == m }).isNil) { entries = entries add: m }
-		}
+			if (entries.detect({ | e | e == m }).isNil) {
+				postf("\n Adding:\n%\n", m);
+				entries = entries add: m
+			}
+		};
 	}
 	
 	makeBackup {
