@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">/* IZ 2010 11 21</p>
+<p class="p2"><br></p>
+<p class="p1">Define phrases to listen to (receive), in the form of osc messages send by Psend.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">// 1. Define the structure of the piece to listen to</p>
+<p class="p1">~score = Preceive(<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// Top phrase. All other phrases are contained here.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>\play-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at play of phrase do ...</p>
+<p class="p1"><span class="Apple-tab-span">	</span>\end-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at end of phrase do ...</p>
+<p class="p1"><span class="Apple-tab-span">	</span>1-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at beat 1 of phrase do ...</p>
+<p class="p1"><span class="Apple-tab-span">	</span>'1'-&gt;Preceive( ... ), <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at subphrase 1 do ...</p>
+<p class="p1"><span class="Apple-tab-span">	</span>'bridge'-&gt;Preceive( ... ), <span class="Apple-tab-span">	</span>// at subphrase named 'bridge' do ...</p>
+<p class="p1"><span class="Apple-tab-span">	</span>'crash'-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at ID (tag) named 'crash' do ...</p>
+<p class="p1">);</p>
+<p class="p2"><br></p>
+<p class="p1">Note: The name of the class suggests that this should be a subclass of Pattern.<span class="Apple-converted-space"> </span></p>
+<p class="p1">This could be done in the future.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.play;</p>
+<p class="p1">Preceive.stop;</p>
+<p class="p1">Preceive.verbose = true;</p>
+<p class="p1">Preceive.verbose = false;</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.addAction('status.reply', { "Hello".postln; });</p>
+<p class="p1">Preceive.removeAction('status.reply');</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.event;</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive[</p>
+<p class="p1"><span class="Apple-tab-span">	</span>\a-&gt;1</p>
+<p class="p1">]</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.addAction(1, { "hello".postln; });</p>
+<p class="p2"><br></p>
+<p class="p1">NetAddr.localAddr.sendMsg(\beat, 1);</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.play("something");</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.setEvent(\bla);</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">NetAddr.localAddr.sendMsg(\alpha);</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.event;</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive.postOSC;</p>
+<p class="p2"><br></p>
+<p class="p1">Preceive(</p>
+<p class="p1"><span class="Apple-tab-span">	</span>\start-&gt;{ "playing".postln; },</p>
+<p class="p1"><span class="Apple-tab-span">	</span>\a -&gt; { "this was alpha".postln; },</p>
+<p class="p1"><span class="Apple-tab-span">	</span>1 -&gt; { "beat 1".postln; },</p>
+<p class="p1"><span class="Apple-tab-span">	</span>5 -&gt; { "beat 5".postln; },</p>
+<p class="p1"><span class="Apple-tab-span">	</span>\end -&gt; { "end".postln; }</p>
+<p class="p1">).play;</p>
+<p class="p2"><br></p>
+<p class="p1">*/</p>
+</body>
+</html>
