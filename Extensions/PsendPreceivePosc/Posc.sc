@@ -9,7 +9,7 @@ Posc : Pbind {
 			var dest;
 			dest = ~dest;
 			~beatCounters do: _.broadcast(dest);
-			this.broadcastMessageWithBeat(dest, ~msg, ~latency);
+			this.broadcastMessage(dest, ~msg);
 		});
 	}
 
@@ -25,19 +25,17 @@ Posc : Pbind {
 		dest do: { | d | d.sendBundle(0, msg); }
 	}
 
-	*broadcastMessageWithBeat { | dest, msg, latency |
+	*broadcastMessage { | dest, msg |
+		/* Here we convert all first elements of msg to strings to avoid the annoying insertion
+		of "/" when sending symbols, which appeared first in SC version 3.4 */
 		if (msg.rank > 1) {
-			msg do: { | bundle |
-				bundle[0] = bundle[0].asString;
-			};
-			dest.asArray do: { | d |
-				d.sendBundle(latency, *msg) };
+			msg = msg.collect { | m | m.copy.asArray; };
+			msg do: { | m | m[0] = m[0].asString; };
+			dest.asArray do: { | d | msg do: { | m | d.sendMsg(*m) }; };
 		}{
-			msg = msg.asArray;
+			msg = msg.asArray.copy;
 			msg[0] = msg[0].asString;
-			dest.asArray do: { | d |
-				d.sendBundle(latency, msg);
-			}
+			dest.asArray do: { | d | d.sendMsg(*msg); };
 		}
 	}
 

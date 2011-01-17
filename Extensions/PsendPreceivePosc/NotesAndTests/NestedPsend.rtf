@@ -5,15 +5,69 @@
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
 
 \f0\fs18 \cf2 /* 2011 01 16 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
 \cf0 \
-Trying to see how to nest different psends. \cf2 \
+Trying to see how to nest different psends. \
+\
+NetAddr.localAddr.sendMsg("alpha");\
+NetAddr.localAddr.sendMsg("alpha", 1, 2, 3, 4, 5);\
+NetAddr.localAddr.sendMsg(\\alpha, 1, 2, 3);\
+NetAddr.localAddr.sendBundle(0, ["alpha", 1, 2, 3, 4, 5], [\\beta]);\
+NetAddr.localAddr.sendBundle(0, [\\alpha, 1, 2, 3, 4, 5]);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 \
 */\
 \
 \pard\pardeftab560\ql\qnatural
 \cf3 Preceive.postOSC;\
+Preceive.stopOSC;\
+Server.default.boot;\
+\pard\pardeftab560\ql\qnatural
+\cf0 (\
+\pard\pardeftab560\ql\qnatural
+\cf3 p = Preceive\cf0 (\cf3 \
+\pard\pardeftab560\ql\qnatural
+\cf0 	1 -> \{ \{ \cf3 WhiteNoise\cf0 .ar(\cf3 EnvGen\cf0 .kr(\cf3 Env\cf0 .perc, doneAction: 2) * 0.1) \}.play \},\
+	\cf4 \\a\cf0  -> \{ \{ \cf3 SinOsc\cf0 .ar(400, 0, \cf3 EnvGen\cf0 .kr(\cf3 Env\cf0 .perc, doneAction: 2) * 0.1) \}.play \},\
+	\cf4 \\b\cf0  -> \{ \{ \cf3 SinOsc\cf0 .ar(1000, 0, \cf3 EnvGen\cf0 .kr(\cf3 Env\cf0 .perc, doneAction: 2) * 0.1) \}.play \},\
+	10 -> \{ \{ \cf3 WhiteNoise\cf0 .ar(\cf3 EnvGen\cf0 .kr(\cf3 Env\cf0 .perc, doneAction: 2) * 0.1) \}.play \},\
+	3 -> \{ \{ \cf3 PinkNoise\cf0 .ar(\cf3 EnvGen\cf0 .kr(\cf3 Env\cf0 .perc, doneAction: 2) * 0.1) \}.play \}\
+).play;\
+)\
+\pard\pardeftab560\ql\qnatural
+\cf3 \
+p.inspect;\
+\
+\
 Posc\cf0 .play([\cf4 \\a\cf0 , \cf4 \\b\cf0 , [\cf4 \\c\cf0 , 1, 2, 3]]);	\cf5 // play some simple tags;\cf0 \
 \
-Posc.play([Pseq([\\a, \\b, Prand([\\c, \\d, \\e])], 3)]);\
+\cf3 Posc\cf0 .play([\cf4 \\a\cf0 , \cf4 \\b\cf0 , [\cf4 \\c\cf0 , 1, 2, 3], \\d]);\
+\
+\cf3 Posc\cf0 .play([Pseq([\cf4 \\a\cf0 , \cf4 \\b\cf0 , [\cf4 \\c\cf0 , 1, 2, 3], \\d])]);\
+\
+\cf3 Posc\cf0 .play([Pseq([\cf4 \\a\cf0 , \cf4 \\b\cf0 , [\cf4 \\c\cf0 , 1, 2, 3], \\d], 3)], \\dur, 0.1);\
+\
+\cf3 Posc\cf0 .play([Pseq([\cf4 \\a\cf0 , \cf4 \\b\cf0 , [[\cf4 \\c]\cf0 , [\\e, 1, 2, 3]], \\d], 3)], \\dur, 0.1);\
 \
 \
-Posc.play([Pseq([\\a, \\b, Psend(Pseq([\\x, \\y], 3)).name_("xxxx")], 3)]);}
+\cf3 Posc\cf0 .play(Pseq([\cf4 \\a\cf0 , \cf4 \\b\cf0 , [\cf4 \\c\cf0 , 1, 2, 3]], 10));	\cf5 // play some simple tags;\cf0 \
+\
+Posc.play([Pseq([\\a, \\b, Prand([\\c, \\d, \\e])], 3)], \\dur, 0.2);\
+\
+Posc.play([Pseq([\\a, \\b, Psend(Pseq([\\x, \\y], 3)).name_("xxxx")], 3)]);\
+\
+// Trying with OSCpathResponder, to replace current Preceive mechanism: \
+\
+r = OSCpathResponder(nil, [\\beat], \{ | ... args | args.postln; "beat ONLY received!!!!!".postln; \}).add;\
+r = OSCpathResponder(nil, \\beat, \{ | ... args | args.postln; "beat ONLY received!!!!!".postln; \}).add;\
+\
+q = OSCpathResponder(nil, [\\beat, 3], \{ | ... args | args.postln; "beat 3 received!!!!!".postln; \}).add;\
+\
+NetAddr.localAddr.sendMsg(\\beat);\
+NetAddr.localAddr.sendMsg("beat");\
+\
+NetAddr.localAddr.sendMsg(\\beat, 3);\
+\
+NetAddr.localAddr.sendMsg(\\beat, 3, 4, 5);\
+NetAddr.localAddr.sendMsg("beat", 3, 4, 5);\
+}
