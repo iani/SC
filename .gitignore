@@ -1,0 +1,4 @@
+
+# Ignore auto-save files from emacs:
+*.*~
+*~
