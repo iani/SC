@@ -19,7 +19,11 @@ Preceive {
 		if (key isKindOf: Integer) {
 			this.addBeatAction(key, action);
 		}{
-			this.addPathAction(key, action);
+			if (key.isKindOf(Symbol) or: { key.isKindOf(String) }) {
+				this.addMessageAction(key, action);	
+			}{
+				this.addPathAction(key, action);
+			}
 		}
 	}
 
@@ -35,8 +39,13 @@ Preceive {
 		this addResponder: OSCpathResponder(nil, ['beat', beat], action);
 	}
 
+	addMessageAction { | message, action |
+		this addResponder: OSCresponderNode(nil, message.asSymbol, action);
+	}
+
+
 	addPathAction { | path, action |
-		this addResponder: OSCpathResponder(nil, path.asArray, action);
+		this addResponder: OSCpathResponder(nil, path, action);
 	}
 
 	*postOSC { thisProcess.recvOSCfunc = { | ... args | args.postln } }
