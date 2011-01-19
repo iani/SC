@@ -1,0 +1,19 @@
+
+# Ignore auto-save files from emacs:
+*.*~
+*~
+
+# ignore zipped files
+*.zip
+
+#other files and folders that should be ignored
+archive.sctxar
+Extensions\ \(archive\)
+Extensions\ \(disabled\)
+HistoryLogs
+Notes
+quarks
+SC_helptree.cache.txt
+sclang_completion_dict
+sounds
+synthdefs
