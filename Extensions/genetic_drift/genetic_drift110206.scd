@@ -68,7 +68,8 @@ i.([0, 0, 0, 0, 1, 1, 1, 1]);
 // This version forks a routine that runs the while loop waiting 0.1 between iterations.
 // This lets us monitor the process of the selection in "real time". 
 // Note that we cannot get the final value of it because the function h exits BEFORE
-// the routine ends its repetitions. 
+// the routine ends its repetitions. So we post the repetitions from inside the routine, 
+// after the while loop. 
 
 (
 h = { | pop |
@@ -83,6 +84,7 @@ h = { | pop |
 			0.1.wait;
 			it = it + 1;
 		};
+		postf("Number of iterations: %\n", it);
 	}.fork;
 };
 )
