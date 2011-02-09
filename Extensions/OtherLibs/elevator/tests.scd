@@ -1,10 +1,11 @@
 /* Simulation of the elevator paradox
 http://en.wikipedia.org/wiki/Elevator_paradox
 
-2011 02 10. Incomplete 
+2011 02 10. 
 
 --- Algorithm notes ---
 
+=========== older notes: 
 elevator = LFTri.kr(...).range(0, 1);
 floor_level = 0.9;
 
@@ -38,13 +39,59 @@ SetResetFF
 
 
 */
-
+(
 Server.default = Server.internal;
 Server.default.boot;
 
-{ LFTri.kr(10) }.scope(zoom: 32);
+~count = -1;
+~statistics = [(total: 0, taken: 0), (total: 0, taken: 0)];
 
-OSCresponder(nil, 'tr', { | time, addr, msg | postf("went above bzw. below %\n", msg[2..3]); }).add;
+OSCresponder(nil, 'tr', { | time, addr, msg | 
+	var upOrDown, count;
+	#upOrDown, count = msg[2..];
+	upOrDown = ~statistics[upOrDown];
+	upOrDown.total = upOrDown.total + 1;
+	if (upOrDown.taken < count) { upOrDown.taken = count };
+	~statistics.postln;
+}).add;
+)
+
+(
+{
+	var updown, takenup, takendown, waitTrig;
+	updown = Impulse.kr(1);
+	waitTrig = TDelay.kr(updown, /* 0.3 */ Demand.kr(updown, 0, Dwhite(0.01, 0.5)) /* */ );
+	takenup = PulseCount.kr(waitTrig);
+	SendTrig.kr(updown, 0, takenup);
+
+	// sonification: 	
+	Out.ar(0, [SinOsc.ar(400, 0, 0.1 * Decay2.kr(updown)), SinOsc.ar((60 + takenup).midicps, 0, 0.1 * Decay2.kr(waitTrig))]);
+}.play;
+);
+
+
+(
+{
+	var updown, takenup, takendown, waitTrig;
+	var up, down, elevator; 
+	elevator = LFTri.kr(1).range(0, 1);
+	up = Slope.kr(elevator > 0.9); 
+	down = Slope.kr(elevator < 0.9); 
+	updown = up + down;
+//	updown = Impulse.kr(1);
+	waitTrig = TDelay.kr(updown, /* 0.3 */ Demand.kr(updown, 0, Dwhite(0.01, 0.5)) /* */ );
+	takenup = PulseCount.kr(waitTrig);
+	SendTrig.kr(updown, 0, takenup);
+
+	// sonification: 	
+	Out.ar(0, [SinOsc.ar(400, 0, 0.1 * Decay2.kr(updown)), SinOsc.ar((60 + takenup).midicps, 0, 0.1 * Decay2.kr(waitTrig))]);
+}.play;
+);
+
+===========================
+
+
+{ LFTri.kr(10) }.scope(zoom: 32);
 
 (
 { 
