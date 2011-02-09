@@ -111,6 +111,8 @@ OSCresponder(nil, 'tr', { | time, addr, msg | postf("went above bzw. below %\n",
 )
 
 (
+// This does not work. We need to introduce a TDelay with random Demand pattern to model the random waiting 
+// before trying to take the elevator again, after the elevator has been boarded. 
 {
 	var elevator;
 	var goesup, goesdown;
@@ -130,6 +132,34 @@ OSCresponder(nil, 'tr', { | time, addr, msg | postf("went above bzw. below %\n",
 	SendTrig.kr(goesdown * iswaiting, 2000, goesdown);
 	soundup = SinOsc.ar(600, 0, Decay2.kr(goesup, mul: 0.1));
 	sounddown = SinOsc.ar(400, 0, Decay2.kr(goesdown, mul: 0.1));
+	Mix([soundup, sounddown, iswaiting * SinOsc.ar(500, 0, 0.1)]);
+}.play
+)
+
+(
+// Here trying to introduce a TDelay with random Demand pattern to model the random waiting 
+// before trying to take the elevator again, after the elevator has been boarded. 
+{
+	var elevator;
+	var goesuptrig, goesdowntrig, goesupordowntrig, waittime;
+	var soundup, sounddown;
+	var iswaiting;
+	elevator = LFTri.kr(0.2).range(0, 1);
+	goesuptrig = Slope.kr(elevator > 0.9) > 0;
+	goesdowntrig = Slope.kr(elevator < 0.9) > 0;
+	goesupordowntrig = goesuptrig + goesdowntrig;
+	waittime = Demand.kr(goesupordowntrig, 0, Dwhite(0.01, 0.5, inf));
+	iswaiting = SetResetFF.kr(TDelay.kr(goesupordowntrig, waittime), goesupordowntrig);
+	SendTrig.kr(goesuptrig, 1, 1);
+	SendTrig.kr(goesdowntrig, 2, -1);
+/*	SendTrig.kr(goesuptrig, 10, goesuptrig);
+	SendTrig.kr(goesuptrig, 100, goesdowntrig);
+	SendTrig.kr(goesdowntrig, 20, goesdowntrig);
+	SendTrig.kr(goesdowntrig, 200, goesuptrig);
+*/	SendTrig.kr(goesuptrig * iswaiting, 1000, goesuptrig);
+	SendTrig.kr(goesdowntrig * iswaiting, 2000, goesdowntrig);
+	soundup = SinOsc.ar(600, 0, Decay2.kr(goesuptrig, mul: 0.1));
+	sounddown = SinOsc.ar(400, 0, Decay2.kr(goesdowntrig, mul: 0.1));
 	Mix([soundup, sounddown, iswaiting * SinOsc.ar(500, 0, 0.1)]);
 }.play
 )
