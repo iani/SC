@@ -3,6 +3,84 @@ http://en.wikipedia.org/wiki/Elevator_paradox
 
 2011 02 10. 
 
+*/
+
+// Simulation 1: Mouse x controls the level at which one is waiting for the elevator
+(
+OSCresponder(nil, 'tr', { | time, resp, msg | 
+	postf("elevator going %\n", ["down", "up"][msg[2]]);
+}).add;
+
+{ 
+	////////////////			 1. simulation
+	var elevator, level, uptrig, downtrig, updowntrig, waittrig, env;
+	elevator = LFTri.kr(1).range(0, 1);
+	level = MouseX.kr(0, 1);
+	uptrig = Slope.kr(elevator > level) > 0;
+	downtrig = Slope.kr(elevator < level) > 0;
+	updowntrig = uptrig + downtrig;
+	waittrig = TDelay.kr(updowntrig, Demand.kr(updowntrig, 0, Dwhite(0.01, 0.99, inf)));
+	
+	////////////////			 2. sending data
+	SendTrig.kr(waittrig, elevator < level, PulseCount.kr(waittrig));
+	
+	////////////////			 3. sonification 
+	env = Env.perc(level: 0.1);
+	Mix([
+		SinOsc.ar(600, 0, EnvGen.kr(env, gate: uptrig, doneAction: 0)),
+		SinOsc.ar(400, 0, EnvGen.kr(env, gate: downtrig, doneAction: 0)),
+		SinOsc.ar(800 + (elevator < level * 400), 0, EnvGen.kr(env, gate: waittrig, doneAction: 0)),
+		SinOsc.ar(8000, 0, EnvGen.kr(env, gate: updowntrig, timeScale: 0.1, doneAction: 0))
+	]);
+}.play
+)
+
+/* Simulation 2: Gather a statistic of entries to the elevator.
+Count separatetly whether the elevator was entered going up or down.
+The level at which one is waiting for the elevator is constant, and is defined by variable ~level;
+*/
+(
+var level = 0.9;
+~statistics = [(direction: 'down', count: 0), (direction: 'up', count: 0)];
+OSCresponder(nil, 'tr', { | time, addr, msg | 
+	var upOrDown;
+	upOrDown = ~statistics[msg[2]];
+	upOrDown[\count] = upOrDown[\count] + 1;
+	~statistics.postln;
+}).add;
+
+{ 
+	////////////////			 1. simulation
+	var elevator, uptrig, downtrig, updowntrig, waittrig, env;
+
+	elevator = LFTri.kr(1).range(0, 1);
+	uptrig = Slope.kr(elevator > level) > 0;
+	downtrig = Slope.kr(elevator < level) > 0;
+	updowntrig = uptrig + downtrig;
+	waittrig = TDelay.kr(updowntrig, Demand.kr(updowntrig, 0, Dwhite(0.01, 0.99, inf)));
+	
+	////////////////			 2. sending data
+	SendTrig.kr(waittrig, elevator < level, PulseCount.kr(waittrig));
+	
+	////////////////			 3. sonification 
+	env = Env.perc(level: 0.1);
+	Mix([
+		SinOsc.ar(600, 0, EnvGen.kr(env, gate: uptrig, doneAction: 0)),
+		SinOsc.ar(400, 0, EnvGen.kr(env, gate: downtrig, doneAction: 0)),
+		SinOsc.ar(800 + (elevator < level * 400), 0, EnvGen.kr(env, gate: waittrig, doneAction: 0)),
+		SinOsc.ar(8000, 0, EnvGen.kr(env, gate: updowntrig, timeScale: 0.1, doneAction: 0))
+	]);
+}.play
+)
+
+// Since ~statistics is an environment variable, one can access it after the simulation has stopped: 
+~statistics; 
+
+///////////////////////////////////////////////////////////////////////////
+          ////////////////////  Older tries /////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+/*
 --- Algorithm notes ---
 
 =========== older notes: 
@@ -69,22 +147,95 @@ OSCresponder(nil, 'tr', { | time, addr, msg |
 }.play;
 );
 
+(
+{
+	var updown, takenup, takendown, waitTrig;
+	var up, down, elevator; 
+	elevator = LFTri.kr(1).range(0, 1);
+	up = elevator > 0.9;
+	down = elevator < 0.9; 
+//	updown = up + down;
+//	updown = Impulse.kr(1);
+	waitTrig = TDelay.kr(up, /* 0.3 */ Demand.kr(up, 0, Dwhite(0.01, 0.5)) /* */ );
+	takenup = PulseCount.kr(waitTrig);
+	SendTrig.kr(up, 0, takenup);
+	[WhiteNoise.ar(Decay2.kr(up > 0))];
+	// sonification: 	
+//	Out.ar(0, [SinOsc.ar(400, 0, 0.1 * Decay2.kr(updown)), SinOsc.ar((60 + takenup).midicps, 0, 0.1 * Decay2.kr(waitTrig))]);
+}.play;
+);
+
+{ 0.1 * WhiteNoise.ar(EnvGen.kr(Env.perc, gate: Impulse.kr(1), doneAction: 0)) }.play;
+
+(
+{ 
+	var trig;
+	trig = Impulse.kr(1);
+	0.1 * WhiteNoise.ar(EnvGen.kr(Env.perc, gate: trig, doneAction: 0));
+}.play
+)
+
+(
+{ 
+	var elevator, trig;
+	elevator = LFTri.kr(1).range(0, 1);
+	trig = elevator > 0.9;
+	0.1 * WhiteNoise.ar(EnvGen.kr(Env.perc, gate: trig, doneAction: 0));
+}.play
+)
+
+(
+// Does not work! We have to use Slope to be able to add the two triggers in one.
+{ 
+	var elevator, uptrig, downtrig;
+	elevator = LFTri.kr(1).range(0, 1);
+	uptrig = elevator > 0.9;
+	downtrig = elevator < 0.9;
+	0.1 * WhiteNoise.ar(EnvGen.kr(Env.perc, gate: uptrig + downtrig, doneAction: 0));
+}.play
+)
+
+(
+{ 
+	var elevator, uptrig, downtrig;
+	elevator = LFTri.kr(1).range(0, 1);
+	uptrig = Slope.kr(elevator > 0.9) > 0;
+	downtrig = Slope.kr(elevator < 0.9) > 0;
+	0.1 * WhiteNoise.ar(EnvGen.kr(Env.perc, gate: uptrig + downtrig, doneAction: 0));
+}.play
+)
+
+
+
+
+
+(
+{ Slope.ar(LFTri.ar(50).range(0, 1) > 0.9) * 0.1 }.loadToFloatArray(0.05, Server.default, { | a | 
+	{ a.asCompileString.postln; }.defer
+});
+)
+
+(
+{ 1 < Slope.ar(LFTri.ar(100).range(0, 1) > 0.9) * 0.1 }.loadToFloatArray(0.05, Server.default, { | a | 
+	{ a.asCompileString.postln; }.defer
+});
+)
 
 (
 {
 	var updown, takenup, takendown, waitTrig;
 	var up, down, elevator; 
 	elevator = LFTri.kr(1).range(0, 1);
-	up = Slope.kr(elevator > 0.9); 
+	up = Slope.kr(elevator > 0.9);
 	down = Slope.kr(elevator < 0.9); 
 	updown = up + down;
 //	updown = Impulse.kr(1);
 	waitTrig = TDelay.kr(updown, /* 0.3 */ Demand.kr(updown, 0, Dwhite(0.01, 0.5)) /* */ );
 	takenup = PulseCount.kr(waitTrig);
 	SendTrig.kr(updown, 0, takenup);
-
+	[WhiteNoise.ar(Decay2.kr(up > 0))];
 	// sonification: 	
-	Out.ar(0, [SinOsc.ar(400, 0, 0.1 * Decay2.kr(updown)), SinOsc.ar((60 + takenup).midicps, 0, 0.1 * Decay2.kr(waitTrig))]);
+//	Out.ar(0, [SinOsc.ar(400, 0, 0.1 * Decay2.kr(updown)), SinOsc.ar((60 + takenup).midicps, 0, 0.1 * Decay2.kr(waitTrig))]);
 }.play;
 );
 
