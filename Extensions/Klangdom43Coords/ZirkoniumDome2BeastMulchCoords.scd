@@ -1,9 +1,9 @@
 
-
+/*
 How to compute the azimuth and elevation parameters that are needed for BEASTmulch lib's VBAPSpeakerArray, in order to use with: VBAP, 
 from the x, y, z coordinates given in Zirkonium presets from ZKM.
 
-
+*/
 
 
 
@@ -68,8 +68,15 @@ f = { | x, y, z |
 };
 
 
+/* Note 110303: Repeating the explanation of the algorithm above, to make sure that it is correct: 
 
+1. Compute the length of the segment from the origin point 0@0 to the point x@y on the horizontal plane. 
+	radius = (x@y).asPolar.rho
+2. Switch to the vertical plane. Here radius becomes the x dimension and z becomes the y dimension. 
+	Given x (i.e. radius) and y (i.e. z) we now compute the angle from polar coordinates: 
+	elevation = (radius@z).asPolar.theta
 
+*/
 
 
 
