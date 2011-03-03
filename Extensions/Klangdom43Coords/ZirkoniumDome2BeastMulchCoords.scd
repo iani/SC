@@ -53,6 +53,7 @@ But we can get d as rho from the x and y coordinates: (x@y).asPolar.rho;
 */
 
 /// 
+(
 f = { | x, y, z |
 	var azimuth, elevation;
 	var radius;
@@ -63,10 +64,10 @@ f = { | x, y, z |
 		// !!!!!
 	*/
 	
-	azimuth = (x@y).asPolar.theta * 180 / pi;
-	[azimuth, elevation];	
+	azimuth = (x@y).asPolar.theta;
+	[azimuth, elevation] / pi * 180;	
 };
-
+)
 
 /* Note 110303: Repeating the explanation of the algorithm above, to make sure that it is correct: 
 
@@ -78,5 +79,10 @@ f = { | x, y, z |
 
 */
 
+f.(100, 100, 0.1);
+f.(0.100, 0.100, 100);
+f.(0.00, 0.00, 100);
+f.(0.00, 0.001, 100);
+f.(0.001, 0.00, 100);
 
 
