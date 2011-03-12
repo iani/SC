@@ -1,3 +1,17 @@
+/* 
+
+Principle for reordering 
+
+1->7
+2->4
+etc exactly as in studio loudspeaker diagram. 
+
+
+
+*/
+
+
+
 a = [[1 ,    0 ],
 				[  0.75 ,    0 ],
 				[  0.62 ,    0 ],
@@ -40,16 +54,7 @@ y = [
 	0.38, -0.38, -0.62, 0.62
 ] * 180;
 
-y;
-
 z = y[[6, 3, 11, 7, 8, 0, 4, 1, 9, 5, 10, 2]]; 
-z = y[[3, 6, 11, 7, 8, 0, 4, 1, 9, 5, 10, 2]]; 
-
-
-// z = z.scramble;
-z = [0, 45, 90, 135, 180, -135, -90, -45];
-
-z = z.scramble;
 
 a = VBAPSpeakerArray.new(2, z);
 
@@ -59,12 +64,45 @@ b = Buffer.loadCollection(s, a.getSetsAndMatrices);
 x = { |azi = 0, ele = 0, spr = 0|
 	var output;
 	output = VBAP.ar(42, PinkNoise.ar(0.2), b.bufnum, azi, ele, spr);
-	Out.ar(0, [output[6], output[3], output[11], output[7], output[8], output[0], output[4],
-	output[1], output[9], output[5], output[10], output[2]]);
+	Out.ar(0, output);
 }.scope;
 )
 
 x.set(\azi, 0);
+x.set(\azi, 75);
+
+
+x.set(\azi, 0);
+x.set(\azi, 15);
+x.set(\azi, 30);
+x.set(\azi, 45);
+x.set(\azi, 75);
+x.set(\azi, 90);
+x.set(\azi, 115);
+
+
+x.set(\azi, 90);
+x.set(\azi, 115);
+x.set(\azi, 180);
+x.set(\azi, -180);
+x.set(\azi, -10);
+
+x.set(\azi, -90);
+
+
+
+(
+{ 
+	loop {
+	(-180, -165 .. 180) do: { | azi_degrees |
+		x.set(\azi, postln(azi_degrees));
+		1.wait;
+	};
+	};
+}.fork;
+)
+
+
 
 //
 
@@ -72,10 +110,10 @@ f = {
 	var window, azi, ele, speaker_selector;
 	window = GUI.window.new("MiniDom test", Rect(1100, 200, 400, 100));
 	window.addFlowLayout( 10@10, 20@5 );
-	azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-1, 1, \linear, 0, 0));
+	azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-180, 180, \linear, 0, 0));
 	ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 1, \linear, 0, 0));
 	speaker_selector = EZSlider(window.view, label: "goto speaker", controlSpec: ControlSpec(1, 24, \linear, 1, 1));
-	azi.action = { | me | me.value.postln; x.set(\azi, me.value * 180) };
+	azi.action = { | me | me.value.postln; x.set(\azi, me.value) };
 //	ele.action = { | me | me.value.postln; synth.set(\ele, me.value * 180) };
 	speaker_selector.action = { | me |
 		var azi;
@@ -93,12 +131,4 @@ f.value;
 
 
 // 
-(
-{ 
-	inf do: { | count |
-		x.set(\azi, postln(count % 360 - 180 / 180));
-		0.05.wait;
-	}
-
-}.fork;
 )
