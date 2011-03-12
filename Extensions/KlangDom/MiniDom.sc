@@ -39,7 +39,7 @@ MiniDom.new.testWithGui;
 
 MiniDom {
 	var <server;
-	var <ele_azi_list;
+	var <azi_ele_list;
 	var <speakers;
 	var <buffer;
 	var <synth;
@@ -52,7 +52,7 @@ MiniDom {
 		Server.default = Server.internal;
 		server = Server.default;	
 		server.boot;
-		ele_azi_list = [[1 ,    0 ],
+		azi_ele_list = [[1 ,    0 ],
 				[  0.75 ,    0 ],
 				[  0.62 ,    0 ],
 				[   0.5 ,    0 ],
@@ -79,7 +79,7 @@ MiniDom {
 		];
 		
 		// 3d partial dome
-		speakers = VBAPSpeakerArray.new(3, ele_azi_list * 180);
+		speakers = VBAPSpeakerArray.new(3, azi_ele_list * 180);
 
 	}
 	
@@ -124,9 +124,12 @@ MiniDom.new.testWithGui;
 		speaker_selector = EZSlider(window.view, label: "goto speaker", controlSpec: ControlSpec(1, 24, \linear, 1, 1));
 		azi.action = { | me | me.value.postln; synth.set(\azi, me.value * 180) };
 		ele.action = { | me | me.value.postln; synth.set(\ele, me.value * 180) };
-		speaker_selector.action = { | me | me.value.postln; 
-			azi.valueAction = 0.5;
-			ele.valueAction = 0.5;
+		speaker_selector.action = { | me |
+			var theEle, theAzi;
+			#theAzi, theEle = azi_ele_list[me.value - 1];
+			postf("speaker nr: %, azimuth: %, elevation: %", me.value, theEle, theAzi);
+			azi.valueAction = theAzi;
+			ele.valueAction = theEle;
 		};
 		window.front;
 	}
