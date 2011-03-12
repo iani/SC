@@ -10,7 +10,6 @@ etc exactly as in studio loudspeaker diagram.
 
 */
 Server.default = s = Server.internal;
-
 s.boot;
 
 // 2D
@@ -35,14 +34,7 @@ y = [
 	] * 180;
 
 
-x = [ 0.25, -0.25, -0.75, 0.75, 0, -0.5, 1, 0.5, 0.38, -0.38, -0.62, 0.62 ] collect: { | i | [i, 0] }
-
-z = y;
-
 z = y[[6, 3, 11, 7, 8, 0, 4, 1, 9, 5, 10, 2, 18, 19, 20, 21, 12, 13, 14, 15, 16, 17, 22, 23]]; 
-
-z.size;
-
 a = VBAPSpeakerArray.new(3, z);
 
 b = Buffer.loadCollection(s, a.getSetsAndMatrices);

@@ -77,8 +77,9 @@ MiniDom {
 				[     1 , 0.39 ],
 				[     0, 0.39]
 		];
-		
-		// 3d partial dome
+		// Reorder to contiguous spatial ordering left to right, top to bottom: 
+		azi_ele_list = azi_ele_list[[6, 3, 11, 7, 8, 0, 4, 1, 9, 5, 10, 2, 18, 19, 20, 21, 12, 13, 14, 15, 16, 17, 22, 23]];
+		// convert to degrees
 		speakers = VBAPSpeakerArray.new(3, azi_ele_list * 180);
 
 	}
@@ -87,13 +88,13 @@ MiniDom {
 		buffer = Buffer.loadCollection(server, speakers.getSetsAndMatrices);	}
 	
 	play {
-		synth = { |azi = 0, ele = 0, spr = 0|
-			VBAP.ar(8, PinkNoise.ar(0.2), buffer.bufnum, azi, ele, spr);
+		synth = { | azi = 0, ele = 0, spr = 0 |
+			VBAP.ar(24, PinkNoise.ar(0.2), buffer.bufnum, azi, ele, spr);
 		}.scope;
 	}
 	
 	test {
-		{ [45, 90, 135, 180, -135, -90, -45, 0].do({|ang| synth.set(\azi, ang); 1.wait; }) }.fork;	
+		{ [45, 90, 135, 180, -135, -90, -45, 0].do({ | ang | synth.set(\azi, ang); 1.wait; }) }.fork;	
 	}
 
 	testWithGui {
@@ -119,11 +120,11 @@ MiniDom.new.testWithGui;
 		var window, azi, ele, speaker_selector;
 		window = GUI.window.new("MiniDom test", Rect(1100, 200, 400, 100));
 		window.addFlowLayout( 10@10, 20@5 );
-		azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-1, 1, \linear, 0, 0));
-		ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 1, \linear, 0, 0));
+		azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-180, 180, \linear, 0, 0));
+		ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 90, \linear, 0, 0));
 		speaker_selector = EZSlider(window.view, label: "goto speaker", controlSpec: ControlSpec(1, 24, \linear, 1, 1));
-		azi.action = { | me | me.value.postln; synth.set(\azi, me.value * 180) };
-		ele.action = { | me | me.value.postln; synth.set(\ele, me.value * 180) };
+		azi.action = { | me | me.value.postln; synth.set(\azi, me.value) };
+		ele.action = { | me | me.value.postln; synth.set(\ele, me.value) };
 		speaker_selector.action = { | me |
 			var theEle, theAzi;
 			#theAzi, theEle = azi_ele_list[me.value - 1];
