@@ -100,20 +100,25 @@ MiniDom {
 		{
 			this.prepare;
 			this.makeGui;			
-			2.wait;
+			1.wait;
 	
 			// pan around the circle up and down
 			synth = { |azi = 0, ele = 0, spr = 0|
-			var source;
-			source = PinkNoise.ar(0.2);
-			VBAP.ar(42, source, buffer.bufnum, LFSaw.kr(0.5, 0).range(-180, 180) * -1, SinOsc.kr(3, 0).range(0, 14.97), spr);
+				var source;
+				source = PinkNoise.ar(0.2);
+				VBAP.ar(42, source, buffer.bufnum, azi, ele, spr);
 			}.play(server);		
 		}.fork(AppClock)
 	
 	}
 	
 	makeGui {
-		var window;	
+		var window, azi, ele;
+		window = GUI.window.new("MiniDom test", Rect(200, 200, 400, 100));
+		window.addFlowLayout( 10@10, 20@5 );
+		azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-180, 180, \linear, 0, 0));
+		ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 90, \linear, 0, 0));
+		window.front;
 	}
 
 	safetest3 {
