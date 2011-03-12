@@ -57,7 +57,10 @@ b = Buffer.loadCollection(s, a.getSetsAndMatrices);
 
 (
 x = { |azi = 0, ele = 0, spr = 0|
-VBAP.ar(42, PinkNoise.ar(0.2), b.bufnum, azi, ele, spr);
+	var output;
+	output = VBAP.ar(42, PinkNoise.ar(0.2), b.bufnum, azi, ele, spr);
+	Out.ar(0, [output[6], output[3], output[11], output[7], output[8], output[0], output[4],
+	output[1], output[9], output[5], output[10], output[2]]);
 }.scope;
 )
 
