@@ -39,6 +39,7 @@ MiniDom.new.testWithGui;
 
 MiniDom {
 	var <server;
+	var <ele_azi_list;
 	var <speakers;
 	var <buffer;
 	var <synth;
@@ -51,10 +52,7 @@ MiniDom {
 		Server.default = Server.internal;
 		server = Server.default;	
 		server.boot;
-//		speakers = VBAPSpeakerArray.new(2, [0, 45, 90, 135, 180, -135, -90, -45]); // 8 channel ring
-		// 3d partial dome
-		speakers = VBAPSpeakerArray.new(3, 
-			[[1 ,    0 ],
+		ele_azi_list = [[1 ,    0 ],
 				[  0.75 ,    0 ],
 				[  0.62 ,    0 ],
 				[   0.5 ,    0 ],
@@ -77,8 +75,11 @@ MiniDom {
 				[ -0.64 ,  0.2 ],
 				[ -0.76 , 0.16 ],
 				[     1 , 0.39 ],
-				[     0, 0.39]] * 180
-		);
+				[     0, 0.39]
+		];
+		
+		// 3d partial dome
+		speakers = VBAPSpeakerArray.new(3, ele_azi_list * 180);
 
 	}
 	
@@ -96,7 +97,9 @@ MiniDom {
 	}
 
 	testWithGui {
-		
+		/*
+MiniDom.new.testWithGui;		
+		*/
 		{
 			this.prepare;
 			this.makeGui;			
@@ -113,13 +116,18 @@ MiniDom {
 	}
 	
 	makeGui {
-		var window, azi, ele;
-		window = GUI.window.new("MiniDom test", Rect(200, 200, 400, 100));
+		var window, azi, ele, speaker_selector;
+		window = GUI.window.new("MiniDom test", Rect(1100, 200, 400, 100));
 		window.addFlowLayout( 10@10, 20@5 );
-		azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-180, 180, \linear, 0, 0));
-		ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 90, \linear, 0, 0));
-		azi.action = { | me | me.value.postln; synth.set(\azi, me.value) };
-		ele.action = { | me | me.value.postln; synth.set(\ele, me.value) };
+		azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-1, 1, \linear, 0, 0));
+		ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 1, \linear, 0, 0));
+		speaker_selector = EZSlider(window.view, label: "goto speaker", controlSpec: ControlSpec(1, 24, \linear, 1, 1));
+		azi.action = { | me | me.value.postln; synth.set(\azi, me.value * 180) };
+		ele.action = { | me | me.value.postln; synth.set(\ele, me.value * 180) };
+		speaker_selector.action = { | me | me.value.postln; 
+			azi.valueAction = 0.5;
+			ele.valueAction = 0.5;
+		};
 		window.front;
 	}
 
