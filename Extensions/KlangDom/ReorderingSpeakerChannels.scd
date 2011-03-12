@@ -29,20 +29,18 @@ a = [[1 ,    0 ],
 a[[]];
 
 
-a = VBAPSpeakerArray.new(2, [0, 45, 90, 135, 180, -135, -90, -45]); // 8 channel ring
-
-
-a = VBAPSpeakerArray.new(2, [0, 45, 90, 135, -45, -135, -90, 180]); // 8 channel ring
-
-
 Server.default = s = Server.internal;
+
+s.boot;
+
 // 2D
-// a = VBAPSpeakerArray.new(2, [0, 45, 90, 135, 180, -135, -90, -45]); // 8 channel ring
-a = VBAPSpeakerArray.new(2, [0, 45, 90, 135, -45, -135, -90, 180]); // 8 channel ring
+a = VBAPSpeakerArray.new(2, [
+	0.25, -0.25, -0.75, 0.75, 
+	0, -0.5, 1, 0.5,
+	0.38, -0.38, -0.62, 0.62
+	]);
 
-a.speakers[1].dump;
-
-b = a.loadToBuffer;
+b = Buffer.loadCollection(s, a.getSetsAndMatrices);
 
 (
 x = { |azi = 0, ele = 0, spr = 0|
@@ -50,4 +48,14 @@ VBAP.ar(42, PinkNoise.ar(0.2), b.bufnum, azi, ele, spr);
 }.scope;
 )
 
-x.set(\azi, 180);
+x.set(\azi, 0);
+
+
+{ 
+	inf do: { | count |
+		x.set(\azi, postln(count % 360 - 180 / 180));	
+		0.05.wait;
+	}
+
+}.fork;
+
