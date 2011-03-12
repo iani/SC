@@ -7,7 +7,7 @@ m.safetest;
 MiniDom.new.safetest2;
 MiniDom.new.safetest2b;
 MiniDom.new.safetest3;
-
+MiniDom.new.testWithGui;
 
 [[1 ,    0 ],
 [  0.75 ,    0 ],
@@ -93,6 +93,27 @@ MiniDom {
 	
 	test {
 		{ [45, 90, 135, 180, -135, -90, -45, 0].do({|ang| synth.set(\azi, ang); 1.wait; }) }.fork;	
+	}
+
+	testWithGui {
+		
+		{
+			this.prepare;
+			this.makeGui;			
+			2.wait;
+	
+			// pan around the circle up and down
+			synth = { |azi = 0, ele = 0, spr = 0|
+			var source;
+			source = PinkNoise.ar(0.2);
+			VBAP.ar(42, source, buffer.bufnum, LFSaw.kr(0.5, 0).range(-180, 180) * -1, SinOsc.kr(3, 0).range(0, 14.97), spr);
+			}.play(server);		
+		}.fork(AppClock)
+	
+	}
+	
+	makeGui {
+		var window;	
 	}
 
 	safetest3 {
