@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p14 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p15 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #001dfd}
+span.s4 {text-decoration: underline}
+span.s5 {color: #0000ff}
+span.s6 {color: #007300}
+span.s7 {color: #0000bf}
+span.s8 {color: #606060}
+span.s9 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMSubarrayMenuGUI<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>a modal sheet for editing subarrays</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractGUI.html"><b>BMAbstractGUI</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMSubarrayMenuGUI is a modal sheet which allows you to create and edit subarrays in a <a href="BMInOutArray.html"><span class="s3">BMInOutArray</span></a>. It is used in <a href="BMSpeakerArrayGUI.html"><span class="s3">BMSpeakerArrayGUI</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also: </b><a href="BMInOutArray.html"><span class="s4">BMInOutArray</span></a>, <a href="../Root Classes/BMAbstractGUI.html"><span class="s4">BMAbstractGUI</span></a>, <a href="BMSpeakerArrayGUI.html"><span class="s4">BMSpeakerArrayGUI</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (parent, outputArray)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMSubarrayMenuGUI.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>parent </b>- The parent window to which this sheet will be attached.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>outputArray </b>- The <a href="BMInOutArray.html"><span class="s5">BMInOutArray</span></a> whose subarrays will be edited (in place).</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p11">(</p>
+<p class="p12">// create a speaker list with a couple of subarrays</p>
+<p class="p11">l = [[-22.5, 40, <span class="s6">'Upper1'</span>], [22.5, 40, <span class="s6">'Upper2'</span>], [-67.5, 40, <span class="s6">'Upper3'</span>], [67.5, 40, <span class="s6">'Upper4'</span>], [-112.5, 40, <span class="s6">'Upper5'</span>], [112.5, 40, <span class="s6">'Upper6'</span>], [-157.5, 40, <span class="s6">'Upper7'</span>], [157.5, 40, <span class="s6">'Upper8'</span>], [-45, 0, <span class="s6">'Lower1'</span>], [45, 0, <span class="s6">'Lower2'</span>], [-90, 0, <span class="s6">'Lower3'</span>], [90, 0, <span class="s6">'Lower4'</span>], [-135, 0, <span class="s6">'Lower5'</span>], [135, 0, <span class="s6">'Lower6'</span>], [0, 0, <span class="s6">'Lower7'</span>], [180, 0, <span class="s6">'Lower8'</span>]].collectAs({<span class="s7">|el, i|</span></p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="s7">BMSpeaker</span>.newFromSpherical(el[2], i, el[0], el[1], 2);</p>
+<p class="p13"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p11">l.defineSubArray(<span class="s6">\upper</span>, l.keys[(0..7)]);</p>
+<p class="p11">l.defineSubArray(<span class="s6">\lower</span>, l.keys[(8..15)]);</p>
+<p class="p14"><br></p>
+<p class="p15">w = <span class="s7">Window</span>(<span class="s8">"Dummy Parent"</span>, <span class="s7">Rect</span>(400, 400, 400, 400)).front; <span class="s9">// a blank window to attach this to</span></p>
+<p class="p13">BMSubarrayMenuGUI<span class="s2">(w, l);</span></p>
+<p class="p11">)</p>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #001dfd}
+span.s4 {text-decoration: underline}
+span.s5 {color: #0034f9}
+span.s6 {color: #0000bf}
+span.s7 {color: #007300}
+span.s8 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMAutoBalancerGUI<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>a GUI for BMAutoBalancer</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractGUI.html"><b>BMAbstractGUI</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">This class provides a GUI for the utility class methods found in <a href="BMAutoBalancer.html"><span class="s3">BMAutoBalancer</span></a>. Hardware input channels start from 1 in the GUI, not 0.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="../Root Classes/BMAbstractGUI.html"><span class="s4">BMAbstractGUI</span></a>, <a href="BMAutoBalancer.html"><span class="s4">BMAutoBalancer</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (speakerList, okayFunc, server, name, origin)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMAutoBalancerGUI.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>speakerList </b>- The <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s3">BMInOutArray</span></a> to balance. This is done in place.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>okayFunc </b>- An optional <a href="SC://Function"><span class="s3">Function</span></a> to evaluate when the cycle is complete. This will be passed <b>speakerList</b> as an argument.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server </b>- The <a href="SC://Server"><span class="s3">Server</span></a> to use. nil indicates the default server.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- An optional <a href="SC://String"><span class="s5">String</span></a> or <a href="SC://Symbol"><span class="s5">Symbol</span></a> indicating the title of the window. Default is "Autobalance Speakers".</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>origin </b>- An optional <a href="SC://Point"><span class="s3">Point</span></a> specifying the origin of the window. Default is 400@600.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p11">l = [<span class="s6">BMSpeaker</span>(<span class="s7">\left</span>, 0), <span class="s6">BMSpeaker</span>(<span class="s7">\right</span>, 1), <span class="s6">BMSpeaker</span>(<span class="s7">\sub</span>, 2, spec: <span class="s7">'Generic Sub'</span>)].as(<span class="s6">BMInOutArray</span>); <span class="s8">// sub will be ignored</span></p>
+<p class="p12"><br></p>
+<p class="p13">BMAutoBalancerGUI<span class="s2">(l);<span class="Apple-converted-space"> </span></span></p>
+</body>
+</html>

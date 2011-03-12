@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p14 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {text-decoration: underline}
+span.s4 {color: #002afb}
+span.s5 {color: #0000bf}
+span.s6 {color: #007300}
+span.s7 {color: #bf0000}
+span.s8 {text-decoration: underline ; color: #0030e8}
+span.s9 {color: #606060}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMMIDICCController<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>Generic MIDI Control Change Controller</b><span class="s1"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: Object : </b><a href="../Root Classes/BMAbstractController.html"><b>BMAbstractController</b></a><b> : </b><a href="BMAbstractMIDIController.html"><b>BMAbstractMIDIController</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">This class implements a generic controller which receives MIDI control change messages.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="../Root Classes/BMAbstractController.html"><span class="s3">BMAbstractController</span></a>, <a href="BMAbstractMIDIController.html"><span class="s3">BMAbstractMIDIController</span></a>, <a href="BMMIDIBendController.html"><span class="s3">BMMIDIBendController</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (midiport, name, chan, ccArray, server)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMMIDICCController.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>midiport </b>- An instance of <a href="../Inputs and Outputs/BMMIDIPort.html"><span class="s4">BMMIDIPort</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s4">Symbol</span></a> indicating the name of this controller.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>chan </b>- The MIDI Channel to receive on. Note these start from 0.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>ccArray </b>- An Array of Integers indicating which control numbers constitute this object's controls, and the order in which they should occur.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server </b>- An instance of <a href="SC://Server"><span class="s4">Server</span></a>. If you pass nil this will be the default Server.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// initialise MIDI ports</p>
+<p class="p11"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>BMMIDIPort<span class="s2">.init;</span></p>
+<p class="p12"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// get a port</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>p = <span class="s5">BMMIDIPort</span>.ports[<span class="s6">'IAC Bus 1'</span>];</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b = <span class="s5">BMMIDICCController</span>.new(p, <span class="s6">\bendController</span>, 0, [7, 1], s); <span class="s7">// volume and mod</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.free; </span>// free my resources</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7">The following three methods are useful when creating instances from GUIs.</p>
+<p class="p8"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*newFromParamDict (dict, server)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new instance using a parameter dictionary. (See <a href="../Root Classes/BMAbstractController.html"><span class="s4">BMAbstractController</span></a> for more information.)</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>dict </b>- A Dictionary or subclass with values for the following keys: \midiport -&gt; An instance of <a href="../Inputs and Outputs/BMMIDIPort.html"><span class="s4">BMMIDIPort</span></a>, \chan -&gt; An <a href="SC://Integer"><span class="s4">Integer</span></a> from 0 to 15, \ccArray -&gt; An <a href="SC://Int8Array"><span class="s4">Int8Array</span></a>, name -&gt; A <a href="SC://Symbol"><span class="s4">Symbol</span></a> indicating the name of this controller.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server </b>- An instance of <a href="SC://Server"><span class="s4">Server</span></a>. If you pass nil this will be the default Server.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*parameterList</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>See <a href="../Root Classes/BMAbstractController.html"><span class="s8">BMAbstractController</span></a> for a discussion of this method. This is the implementation for BMMIDICCController:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>*parameterList {<span class="Apple-converted-space"> </span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">var</span> class;</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>class = <span class="s5">this</span>;</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>^(</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>name: [<span class="s5">Symbol</span>, {class.makeName}, <span class="s9">"Name"</span>],</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>midiport: [<span class="s5">BMMIDIPort</span>, <span class="s5">nil</span>, <span class="s9">"MIDI Port"</span>],</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>chan: [<span class="s5">Integer</span>, [1, 16, <span class="s6">\linear</span>, 1, 0].asSpec, <span class="s9">"MIDI Channel"</span>],</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>ccArray: [<span class="s5">Int8Array</span>, <span class="s9">""</span>, <span class="s9">"CC numbers"</span>]</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*humanName</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the String "MIDI CC Controller".</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+</body>
+</html>

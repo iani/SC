@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #002afb}
+span.s3 {color: #000000}
+span.s4 {text-decoration: underline}
+span.s5 {font: 9.0px Monaco; color: #007300}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMAbstractAutomator<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>abstract superclass of all automators</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">This is the abstract superclass of all automators within the BEASTmulch library. All automators are dependants of a <i>time reference </i>(i.e. a clock source), which updates the automator through a <b>changed</b> message which includes arguments for the updated time, a rate of change, and a reference time indicating at what moment the updated time was accurate.</p>
+<p class="p2"><br></p>
+<p class="p1">Automators should respond without failing to variable rates of time change (including backwards), and to time values of nil, &lt; 0, and +/- infinity.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3"><b>See also:</b> <a href="BMControllerAutomator.html"><span class="s4">BMControllerAutomator</span></a>, <a href="BMAbstractIndependentRateAutomator.html"><span class="s4">BMAbstractIndependentRateAutomator</span></a>, <a href="../../Time References and Automation.html"><span class="s4">Time References and Automation</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Accessing Instance and Class Variables</b></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>timeReference</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>timeReference_</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns or sets the object which functions as this automator's time reference (i.e. its clock source). This might be any object which complies with the guidelines set out in <a href="../../Time References and Automation.html"><span class="s2">Time References and Automation</span></a>.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>running</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns a <a href="SC://Boolean"><span class="s2">Boolean</span></a> indicating whether this automator is currently running.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Subclassing</b></p>
+<p class="p8"><br></p>
+<p class="p7">Subclasses should implement at least these methods.</p>
+<p class="p9"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>automate</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This method will be called in some sort of loop every time automation needs to be updated. When and how often this occurs can be subclass dependent. This is where the actual updates to whatever is being automated should occur.</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>mappings</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the subclass specific objects (e.g. automation sequences) which correspond to the automator's current settings. This should be global.</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>mappings_</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Sets the subclass specific objects (e.g. automation sequences) which correspond to the automator's current settings. This should be global, so setting mappings overwrites existing settings.</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>update</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This must respond appropriately (perhaps doing nothing) to at least the following <b>changed</b> messages from the time reference: <span class="s5">\time</span>, <span class="s5">\stop</span>, and <span class="s5">\base</span>. See <a href="../../Time References and Automation.html"><span class="s2">Time References and Automation</span></a> for more detail.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><br></p>
+<p class="p5"><b>Instance Methods</b></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>timeInitialised</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns a <a href="SC://Boolean"><span class="s2">Boolean</span></a> indicating whether or not this automator's time, rate, and referenceTime have been initialised.</p>
+<p class="p3"><br></p>
+</body>
+</html>

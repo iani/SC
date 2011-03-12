@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #606060}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #0043f5}
+span.s3 {text-decoration: underline ; color: #003de4}
+span.s4 {color: #002afb}
+span.s5 {text-decoration: underline ; color: #001bec}
+span.s6 {color: #000000}
+span.s7 {text-decoration: underline}
+span.s8 {color: #0000bf}
+span.s9 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+ul.ul1 {list-style-type: disc}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMBoidSpace<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>create an manage boids and their space</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BMBoidSpace encapsulates a swarm of boids and the artificial space in which they move. It manages boid creation, and the application of movement rules. For a discussion of Craig Reynolds' original boids algorithm see: <a href="http://www.red3d.com/cwr/boids/"><span class="s3">http://www.red3d.com/cwr/boids/</span></a></p>
+<p class="p2"><br></p>
+<p class="p1">In the BEASTmulch library boids are used for Spatial Swarm Granulation, which is an idiosyncratic approach to multichannel spatialisation over large non-homogenous speaker arrays. It is particularly useful in cases where one might wish to utilise speakers at different distances. <a href="../../Inputs and Outputs/BMSpeakerListVisualiser.html"><span class="s4">BMSpeakerListVisualiser</span></a> provides facility for visualising boids in a space.</p>
+<p class="p2"><br></p>
+<p class="p1">For information on Spatial Swarm Granulation see the following ICMC 2008 paper: <a href="http://eprints.bham.ac.uk/237/1/cr1690.pdf"><span class="s5">http://eprints.bham.ac.uk/237/1/cr1690.pdf</span></a></p>
+<p class="p2"><br></p>
+<p class="p1">BMBoidSpace implements rules for boid coherence, avoidance, velocity matching, attraction points, and space boundaries, as well as allowing for scaling and limiting boid velocity, and adding a special 'avoid desk' behaviour (see below).</p>
+<p class="p2"><br></p>
+<p class="p1"><b>N.B.</b> This implementation is still experimental and should be considered subject to change in future versions of the library.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s6"><b>See also:</b> <a href="BMBoid.html"><span class="s7">BMBoid</span></a>, <a href="BMSwarmGranulator.html"><span class="s7">BMSwarmGranulator</span></a>, <a href="../../Inputs and Outputs/BMSpeakerListVisualiser.html"><span class="s7">BMSpeakerListVisualiser</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Coordinates and Position Updating</b></p>
+<p class="p2"><br></p>
+<p class="p1">The boundaries of the space will be normalised as follows:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<ul class="ul1">
+<li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica">The centre point of the input coordinate space (e.g (0,0,0) in three dimensions) remains the centre point in the normalised coordinate space.<span class="Apple-converted-space"> </span></li>
+<li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica">Minimum X and maximum X are scaled such that whichever has the largest absolute value will have an absolute value of 1 in the new coordinates.<span class="Apple-converted-space"> </span></li>
+<li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica">All other axes are scaled proportionally.<span class="Apple-converted-space"> </span></li>
+<li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica"></li>
+</ul>
+<p class="p1">The intention of this approach is to allow boid positions to be specified in a general way that can be easily adapted to different spaces, while maintaining some sense of the proportions of a space and avoiding distorting velocity by normalising each axis separately. (In the current implementation it is assumed that positions correspond to real-world spatial locations.) Note that by convention (and in keeping with assumptions used in <a href="../../Inputs and Outputs/BMSpeaker.html"><span class="s2">BMSpeaker</span></a>) it is generally assumed that in a three dimensional space (0,0,0) corresponds to head height at the centre of the listening area.</p>
+<p class="p2"><br></p>
+<p class="p1">BMBoidSpace updates boid positions based on every <b>interval</b> in seconds which passes. In the current implementation this is done lazily, i.e. only when the object is queried for boid positions or altered in some way. If long periods of time are likely to pass between queries this could result in hangs while numerous updates are calculated. In such cases it may be useful to create a thread which periodically calls <b>moveBoids</b> so that updating does not have to be done all at once.</p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (dim, numBoids, centre, boundaries, velMax, velScale, minDist, avoidD)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMBoidSpace.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>dim </b>- The number of dimensions in the space. Default value is 3.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>numBoids </b>- The number of boids to create.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>centre </b>- An optional initial centre point around which the boids will swarm. This should be an Array in<span class="Apple-converted-space">  </span>the form [x, y, z, ...], sized to match <b>dim</b>. If nil the boids will roam freely.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>boundaries </b>- A boundary specification. This can be either an Array of two Arrays, each sized to match dim (e.g. for 3 dimensions [[minX, minY, minZ], [maxX, maxY, maxZ]]), or a <a href="../../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a> containing instances of <a href="../../Inputs and Outputs/BMSpeaker.html"><span class="s2">BMSpeaker</span></a>. If the latter, the speaker positions will be used to determine the dimensions of the smallest rectangular cuboid (aligned with the axes) which can contain them.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>velMax </b>- A maximum velocity in units/second.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>velScale </b>- A value by which boid velocity will be scaled.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>minDist </b>- The minimum distance between boids before the avoidance rule comes into effect.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>avoidD </b>- A <a href="SC://Boolean"><span class="s2">Boolean</span></a> indicating whether boids will avoid the 'desk area', i.e. (0,0,0). This can be useful in Swarm Granulation as many speaker array layouts have no speakers in the centre of the listening area.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Accessing Instance and Class Variables</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>velMax_</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>velMax</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get the maximum boid velocity in units/second. Setting this lower may help prevent 'outliers'.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>minDist_</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>minDist</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Get or set the minimum distance between boids before the avoidance rule comes into effect.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>boids</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns an Array containing this boid space's <a href="BMBoid.html"><span class="s2">BMBoid</span></a> objects.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>centre_</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>centre</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get the centring point to which boids will be attracted. This can be used to cause the swarm to move to, or cluster around, a particular location. This should be an Array in the form [x, y, z, ...], sized to match <b>dim</b>. If nil the boids will roam freely.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>interval_</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>interval</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get the interval in seconds at which this boid space updates boid positions. The default is 0.05.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>dim</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns the number of dimensions in this boid space.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>numBoids</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns the number of boids in this boid space.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>velScale_</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>velScale</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get the value by which boid velocity will be scaled.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>lastMoved</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns the last time at which boid positions were changed, expressed as seconds since SuperCollider started (i.e. Main.elapsedTime). In combination with <b>interval</b> and <b>Main.elapsedTime</b> this can be used to check if boid positions have changed since a particular point in the past.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>avoidD_</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>avoidD</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get a <a href="SC://Boolean"><span class="s2">Boolean</span></a> indicating whether boids will avoid the 'desk area', i.e. (0,0,0). This can be useful in Swarm Granulation as many speaker array layouts have no speakers in the centre of the listening area. The default is false.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b>Instance Methods</b></p>
+<p class="p11"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>next</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Calls to this method cycle through each <a href="BMBoid.html"><span class="s2">BMBoid</span></a> in turn. This can be useful if you wish to check their positions one at a time.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>positions</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s2">Array</span></a> of Arrays of size dim, corresponding to the position of each boid, e.g. [[boid1x, boid1y, boid1z], [boid2x, boid2y, boid2z], ...].</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>moveBoids</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>If <b>interval</b> in seconds has passed since the boids were last moved, update the positions of all boids in this space.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Examples</b></p>
+<p class="p3"><br></p>
+<p class="p12">// some speakers</p>
+<p class="p13"><span class="s6">l = </span><span class="s8">Object</span><span class="s6">.readArchive(</span>"../../Inputs and Outputs/BigSpeakerArray"<span class="s6">.resolveRelative);</span></p>
+<p class="p12"><span class="s6">v = </span><span class="s8">BMSpeakerListVisualiser</span><span class="s6">(l); </span>// a gui to see the boids</p>
+<p class="p3"><br></p>
+<p class="p14">(</p>
+<p class="p14">b = <span class="s8">BMBoidSpace</span>(3, 20, <span class="s8">nil</span>, l, 1, 13, 0.1);</p>
+<p class="p3"><br></p>
+<p class="p12">// this updates their positions in the GUI</p>
+<p class="p14">d = <span class="s8">Task</span>({</p>
+<p class="p14"><span class="Apple-tab-span">	</span>loop({</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>v.boidPositions = b.positions;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.05.wait;</p>
+<p class="p14"><span class="Apple-tab-span">	</span>})</p>
+<p class="p15"><span class="s6">}, </span>AppClock<span class="s6">);</span></p>
+<p class="p14">d.start;</p>
+<p class="p14">)</p>
+<p class="p3"><br></p>
+<p class="p14">b.minDist = 0.05; <span class="s9">// cluster closer</span></p>
+<p class="p3"><br></p>
+<p class="p14">b.centre = [0,0,0]; <span class="s9">// go to the middle</span></p>
+<p class="p3"><br></p>
+<p class="p14">b.centre = [1,0,0.5];<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p14">b.centre = [-1,-1,-0.2];</p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s6">b.centre = </span><span class="s8">nil</span><span class="s6">; </span>// wander freely</p>
+<p class="p3"><br></p>
+<p class="p14">b.velScale = 5; <span class="s9">// slow down</span></p>
+<p class="p3"><br></p>
+<p class="p14">b.velScale = 135; <span class="s9">// really fast</span></p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s6">b.velMax = 0.02; </span>// don't flit too far</p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s6">b.avoidD = </span><span class="s8">true</span><span class="s6">; </span>// don't go to the middle</p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s6">b.minDist = 0.1; </span>// spread a little more</p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s6">b.velMax = 0.5; </span>// wild and crazy</p>
+<p class="p3"><br></p>
+<p class="p14">d.stop;</p>
+<p class="p3"><br></p>
+</body>
+</html>

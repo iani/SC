@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {text-decoration: underline}
+span.s4 {color: #001dfd}
+span.s5 {color: #0000ff}
+span.s6 {font: 12.0px Helvetica; color: #000000}
+span.s7 {color: #0000bf}
+span.s8 {color: #007300}
+span.s9 {font: 12.0px Helvetica}
+span.s10 {color: #0000bf}
+span.s11 {color: #007300}
+span.s12 {font: 9.0px Monaco; color: #0000bf}
+span.s13 {font: 9.0px Monaco; color: #000000}
+span.s14 {font: 9.0px Monaco; color: #007300}
+span.s15 {font: 9.0px Monaco}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMAbstractAudioSource<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>abstract superclass of audio sources</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="BMAbstractAudioChainElement.html"><b>BMAbstractAudioChainElement</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMAbstractAudioSource is the abstract superclass of all BEASTmulch Library objects which serve as sources in an audio chain. It inherits most of its methods from its superclass.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="BMAbstractAudioChainElement.html"><span class="s3">BMAbstractAudioChainElement</span></a>, <a href="../Other/BMSoundFilePlayer.html"><span class="s3">BMSoundFilePlayer</span></a>, <a href="../../Time References and Automation.html"><span class="s3">Time References and Automation</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>BMAbstractAudioSources as Time References</b></p>
+<p class="p2"><br></p>
+<p class="p1">Most subclasses of BMAbstractAudioSource should be able to serve as time references, i.e. serve as clock sources for automation, etc. Other objects using instances as references can register as dependants, and thus be updated when changes in time, playing status, etc. occur. Details of how to handle this in subclass implementations are discussed below. See also <a href="../../Time References and Automation.html"><span class="s4">Time References and Automation</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p6"><b>Subclassing</b></p>
+<p class="p7"><br></p>
+<p class="p1">The following methods should be implemented if this class is going to serve as a time reference. In the discussion below the term 'playback' should be taken to mean advancing the current time for this reference, rather than necessarily referring to a soundfile.</p>
+<p class="p8"><br></p>
+<p class="p9"><span class="Apple-tab-span">	</span><b>init</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>In addition to doing any setup and calling <b>initNameAndTarget</b> (see <a href="BMAbstractAudioChainElement.html"><span class="s5">BMAbstractAudioChainElement</span></a>) this method should include the following:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>BMTimeReferences<span class="s2">.addReference(</span>this<span class="s2">);</span></p>
+<p class="p8"><br></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>play</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>In addition to any subclass specific implementation needed to start 'playback' and start advancing time, this method should call:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p11"><span class="s6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">this</span>.changed(<span class="s8">\play</span>);</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>pause</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>In addition to any subclass specific implementation needed to pause 'playback' and hold at the current time, this method should call:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s10">this</span>.changed(<span class="s11">\pause</span>);</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>stop</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>In addition to any subclass specific implementation needed to stop 'playback' and reset the current time to 0, this method should call:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s10">this</span>.changed(<span class="s11">\stop</span>);</p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s10">this</span>.changed(<span class="s11">\time</span>, 0, 0, <span class="s10">Main</span>.elapsedTime);</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>togglePlay</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This method should toggle between playing and pausing.</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>setTime (time)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This method should jump 'playback' to the specified <b>time</b>, and should call <span class="s12">this</span><span class="s13">.changed(</span><span class="s14">\time</span><span class="s13">, 0, playbackRate, </span><span class="s12">Main</span><span class="s13">.elapsedTime)</span><span class="s15"> </span>if this will not happen indirectly.</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p6"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p9">See <a href="../Other/BMSoundFilePlayer.html"><span class="s4">BMSoundFilePlayer</span></a> for some practical examples.<span class="Apple-converted-space"> </span></p>
+<p class="p8"><br></p>
+<p class="p12"><br></p>
+</body>
+</html>

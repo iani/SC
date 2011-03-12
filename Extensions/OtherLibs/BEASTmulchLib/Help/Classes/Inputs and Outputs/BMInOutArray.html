@@ -1,0 +1,465 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p14 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p15 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p16 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p17 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; color: #001bec}
+p.p18 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #7d3433; min-height: 12.0px}
+p.p19 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #007300}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #0043f5}
+span.s4 {text-decoration: underline}
+span.s5 {color: #002afb}
+span.s6 {color: #0000bf}
+span.s7 {color: #007300}
+span.s8 {color: #bf0000}
+span.s9 {color: #001dfd}
+span.s10 {color: #606060}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMInOutArray<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>an ordered Dictionary of named inputs or outputs</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="SC://Collection"><b>Collection</b></a><b> : </b><a href="SC://SequenceableCollection"><b>SequenceableCollection</b></a><b> : </b><a href="SC://List"><b>List</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMInOutArray is an ordered Dictionary of named inputs or outputs and is used to represent the input or output busses of objects in the BEASTmulch Library. Members of the collection should be either instances of <a href="SC://Association"><span class="s3">Association</span></a>, in the form name-&gt;busIndex, or instances of the <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a> class, which mimics Association polymorphically.</p>
+<p class="p2"><br></p>
+<p class="p1">In most cases members can be accessed by either key or index. For this reason numbers are not valid keys for use in this class. (Symbols are the expected key class in most places in the library in any case.)</p>
+<p class="p2"><br></p>
+<p class="p1">BMInOutArray also provides support for named subarrays, specified as lists of keys.</p>
+<p class="p2"><br></p>
+<p class="p1">In the current implementation no distinction is made between audio and control busses, and it is assumed that users will distinguish appropriately.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="BMSpeaker.html"><span class="s4">BMSpeaker</span></a>, <a href="SC://Association"><span class="s4">Association</span></a>, <a href="BMHardwareInputsProxy.html"><span class="s4">BMHardwareInputsProxy</span></a>, <a href="SC://Bus"><span class="s4">Bus</span></a>, <a href="SC://List"><span class="s4">List</span></a>, <a href="SC://Dictionary"><span class="s4">Dictionary</span></a>, <a href="BMSpeakerListVisualiser.html"><span class="s5">BMSpeakerListVisualiser</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Compatibility</b></p>
+<p class="p2"><br></p>
+<p class="p1">BMInOutArray responds to <b>asUGenInput</b>,<span class="Apple-converted-space">  </span><b>asControlInput</b>, <b>asOSCArgBundle</b>, and <b>asOSCArgArray </b>by returning an <a href="SC://Array"><span class="s3">Array</span></a> of its member's bus indices. It can thus be used directly in most places where you would pass such an Array. For example:</p>
+<p class="p2"><br></p>
+<p class="p6"><span class="s2"><span class="Apple-tab-span">	</span></span>// make a BMInOutArray with two members</p>
+<p class="p7"><span class="s2"><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>i.add(<span class="s6">BMSpeaker</span>(<span class="s7">\left</span>, 0));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>i.add(<span class="s6">BMSpeaker</span>(<span class="s7">\right</span>, 1));</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span></span>// make a Synth</p>
+<p class="p8"><span class="Apple-tab-span">	</span>(</p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span>x = {</span>|outs = #[3, 4]|<span class="s2"><span class="Apple-converted-space"> </span></span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>y = <span class="s6">SinOsc</span>.ar([440, 660], 0, 0.2);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>outs.do({<span class="s6">|out, i|</span> <span class="s6">Out</span>.ar(out, y[i])});</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.play;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>)</p>
+<p class="p8"><span class="Apple-tab-span">	</span>x.set(<span class="s7">\outs</span>, i);</p>
+<p class="p11"><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>asBMInOutArray</b></p>
+<p class="p2"><br></p>
+<p class="p1">Many classes in the BEASTMulch library which manage busses (e.g. audio sources, controllers) understand the message asBMInOutArray and return an array which corresponds to their outputs. The class <a href="SC://Bus"><span class="s3">Bus</span></a> is extended to implement it as well as a convenience method, and takes a single <b>name</b> argument as the base name for its keys:</p>
+<p class="p2"><br></p>
+<p class="p8"><span class="Apple-tab-span">	</span>b = <span class="s6">Bus</span>.audio(s, 12);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>a = b.asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p2"><br></p>
+<p class="p1">Similarly, Server is extended to include two methods: <b>insAsBMInOutArray</b>, and <b>outsAsBMInOutArray</b>. The former returns a <a href="BMHardwareInputsProxy.html"><span class="s3">BMHardwareInputsProxy</span></a>, and the latter a BMInOutArray corresponding to the server's hardware output busses.</p>
+<p class="p2"><br></p>
+<p class="p8"><span class="Apple-tab-span">	</span>s.insAsBMInOutArray;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>s.outsAsBMInOutArray;</p>
+<p class="p12"><br></p>
+<p class="p5"><b>Implementation Notes</b></p>
+<p class="p2"><br></p>
+<p class="p1">BMInOutArray is a subclass of <a href="SC://List"><span class="s3">List</span></a>, rather than a subclass of <a href="SC://Dictionary"><span class="s3">Dictionary</span></a> although it understands most methods of the latter. Its key list is lazily constructed. This keeps the implementation simpler, and also means that BMSpeakers in the array can change their names (keys) without needing the array to be updated, but means that for very large collections it will be notably slower than say an <a href="SC://IdentityDictionary"><span class="s3">IdentityDictionary</span></a>. Since input and output collections are likely to be relatively small (i.e. &lt; 100 elements), this should not pose a particular problem in normal usage.</p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>*new (size)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMInOutArray. In many cases you can get these directly from other objects in the library.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>size </b>- An initial capacity for the object.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// make a new BMInOutArray</p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s7">\foo</span><span class="s2">-&gt;1); </span>// add an Association</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s6">BMSpeaker</span><span class="s2">(</span><span class="s7">\bar</span><span class="s2">, 2)); </span>// add a BMSpeaker</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[</span><span class="s7">\foobar</span><span class="s2">] = 3; </span>// C-style syntax also works</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[<span class="s7">\foo</span>];</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[<span class="s7">\bar</span>];</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[2]; </span>// can also lookup values by index</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>*hardwareInputArray (server, name)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an instance of <a href="BMHardwareInputsProxy.html"><span class="s3">BMHardwareInputsProxy</span></a> corresponding to the hardware inputs for the specified server. The values of the Association pairs will be the indices of the hardware input busses.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server </b>- The <a href="SC://Server"><span class="s3">Server</span></a> whose hardware inputs will be represented.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://String"><span class="s3">String</span></a> or <a href="SC://Symbol"><span class="s3">Symbol</span></a> to use as the base name. Default value is "Hardware In".</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s6">BMInOutArray</span>.hardwareInputArray(s, <span class="s7">'Inputs'</span>);</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>*privateBusBlock (name, size, server)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Allocate a new block of private audio busses and return them as a BMInOutArray. This uses the server's normal bus allocator. The <a href="SC://Bus"><span class="s3">Bus</span></a> objects will be stored internally so that their indices can be freed later (see <b>freeBusObjects </b>below).</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://String"><span class="s3">String</span></a> or <a href="SC://Symbol"><span class="s3">Symbol</span></a> to use as the base name.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>size </b>- The number of busses to allocate.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server </b>- The <a href="SC://Server"><span class="s3">Server</span></a> whose busses will be allocated.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>p = <span class="s6">BMInOutArray</span>.privateBusBlock(<span class="s7">\fooBus</span>, 12, s);</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>p.freeBusObjects; </span>// release my bus indices</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p15"><b>Instance Methods</b></p>
+<p class="p16"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>keys</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Return this array's keys as an <a href="SC://Array"><span class="s3">Array</span></a>.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>a = s.outsAsBMInOutArray;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>a.keys;</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>values</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Return this array's values as an <a href="SC://Array"><span class="s3">Array</span></a>.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>a = s.outsAsBMInOutArray;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>a.values;</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>addPrivateBusBlock (name, size, server)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Add a block of private audio busses to this array. <a href="SC://Bus"><span class="s3">Bus</span></a> objects will be stored internally so that their indices can be freed later (see <b>freeBusObjects </b>below).</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://String"><span class="s3">String</span></a> or <a href="SC://Symbol"><span class="s3">Symbol</span></a> to use as the base name.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>size </b>- The number of busses to allocate.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server </b>- The <a href="SC://Server"><span class="s3">Server</span></a> whose busses will be allocated.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>a = s.outsAsBMInOutArray.addPrivateBusBlock(<span class="s7">\private</span>, 10, s);</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>a.freeBusObjects; </span>// release my bus indices</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>freeBusObjects</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Free the indices for any Bus objects created using <b>addPrivateBusBlock</b> or <b>*privateBusBlock</b>. You should only do this if you don't plan to use this array and/or its elements again.</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>add (assoc)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Add an <a href="SC://Association"><span class="s3">Association</span></a> or a <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a> to the end of this array.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>assoc </b>- The Association or BMSpeaker to add.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s7">\foo</span><span class="s2">-&gt;1); </span>// add an Association</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s6">BMSpeaker</span><span class="s2">(</span><span class="s7">\bar</span><span class="s2">, 2)); </span>// add a BMSpeaker</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>addFirst (assoc)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Insert an <a href="SC://Association"><span class="s3">Association</span></a> or a <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a> at the start of this array.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>assoc </b>- The Association or BMSpeaker to insert.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s7">\foo</span><span class="s2">-&gt;1); </span>// add an Association</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.addFirst(</span><span class="s6">BMSpeaker</span><span class="s2">(</span><span class="s7">\bar</span><span class="s2">, 2)); </span>// add a BMSpeaker before \foo</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>insert (index, assoc)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p17"><span class="s2"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Insert an <a href="SC://Association"><span class="s4">Association</span></a> or a <a href="BMSpeaker.html"><span class="s4">BMSpeaker</span></a>.</span></p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>index </b>- The index at which to insert <b>assoc</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>assoc </b>- The Association or BMSpeaker to insert.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s7">\foo</span><span class="s2">-&gt;1); </span>// add an Association</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s6">BMSpeaker</span><span class="s2">(</span><span class="s7">\bar</span><span class="s2">, 2)); </span>// add a BMSpeaker</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.insert(1, </span><span class="s6">BMSpeaker</span><span class="s2">(</span><span class="s7">\foobar</span><span class="s2">, 3)); </span>// insert a BMSpeaker inbetween</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>removeAt (key)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Remove and return the value (i.e. bus index or <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a>) specified by <b>key</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>key </b>- The key of the object to be removed.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s7">\foo</span><span class="s2">-&gt;1); </span>// add an Association</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s6">BMSpeaker</span><span class="s2">(</span><span class="s7">\bar</span><span class="s2">, 2)); </span>// add a BMSpeaker</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.removeAt(<span class="s7">\bar</span>); <span class="s8">// remove \bar</span></p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>at (keyOrIndex)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Return the value (i.e. bus index or <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a>) specified by a key or index.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>keyOrIndex </b>- The key or index of the element to be accessed</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s7">\foo</span><span class="s2">-&gt;1); </span>// add an Association</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.add(</span><span class="s6">BMSpeaker</span><span class="s2">(</span><span class="s7">\bar</span><span class="s2">, 2)); </span>// add a BMSpeaker</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.at(<span class="s7">\foo</span>); <span class="s8">// key</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.at(1); <span class="s8">// index</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[</span><span class="s7">\foo</span><span class="s2">]; </span>// C-style syntax also works</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>put (key, value)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Add the value (a bus index or <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a>) as an Association with <b>key</b>. In terms of order the Association will be added at the end of the array.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>key </b>- A <a href="SC://Symbol"><span class="s9">Symbol</span></a> to use as the key of the Association. If <b>value </b>is a BMSpeaker its name variable will be set to this.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>value </b>- The bus index or <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a> to be added.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\foo</span>, 1);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\bar</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\bar</span>, 2));</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[</span><span class="s7">\foobar</span><span class="s2">] = 3; </span>// C-style syntax also works</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>putAll (dictionaries)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Add all the elements of one or more <b>dictionaries</b> (usually also BMInOutArrays) to this array.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>dictionaries </b>- One or more dictionaries to be added.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>j = <span class="s6">BMInOutArray</span>.privateBusBlock(<span class="s7">\foo</span>, 3, s);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.putAll(j, s.outsAsBMInOutArray);</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>j.freeBusObjects; </span>// release my bus indices</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>keysValuesDo (function)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed the key, value, and index of each element as arguments.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">BMInOutArray</span>.privateBusBlock(<span class="s7">\foo</span>, 3, s);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.keysValuesDo({<span class="s6">|k, v, i|</span> [k, v, i].postln });</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.freeBusObjects; </span>// release my bus indices</p>
+<p class="p11"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>keysDo (function)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed the key and index of each element as arguments.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">BMInOutArray</span>.privateBusBlock(<span class="s7">\foo</span>, 3, s);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.keysDo({<span class="s6">|k, i|</span> [k, i].postln });</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.freeBusObjects; </span>// release my bus indices</p>
+<p class="p18"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p18"><span class="Apple-tab-span">	</span></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>associationsDo (function)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed each element (an <a href="SC://Association"><span class="s3">Association</span></a> or a <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a>) and the index as arguments.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">BMInOutArray</span>.privateBusBlock(<span class="s7">\foo</span>, 3, s);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\bar</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\bar</span>, 2));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.associationsDo({<span class="s6">|a, i|</span> [a, i].postln });</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.freeBusObjects; </span>// release my bus indices</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>do (function)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed the value and index of each element as arguments.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">BMInOutArray</span>.privateBusBlock(<span class="s7">\foo</span>, 3, s);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\bar</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\bar</span>, 2));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.do({<span class="s6">|v, i|</span> [v, i].postln });</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.freeBusObjects; </span>// release my bus indices</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>collect (function)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>, and using the results to create a new BMInOutArray.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed the value, key, and index of each element as arguments. It should return the new <i>value</i>.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\foo</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\foo</span>, 0));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\bar</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\bar</span>, 1));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[<span class="s7">\foo</span>].directivity;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = i.collect({<span class="s6">|v, k, i|</span> v.directivity = <span class="s7">'reflected'</span> });</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i[<span class="s7">\foo</span>].directivity;</p>
+<p class="p11"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>select (function)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>, adding those items for which <b>function</b> returns true to a new BMInOutArray.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed the value, key, and index of each element as arguments. It should return a <a href="SC://Boolean"><span class="s3">Boolean</span></a> indicating whether value should be added to the new BMInOutArray.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\foo</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\foo</span>, 0).directivity = <span class="s7">'reflected'</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\bar</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\bar</span>, 1).directivity = <span class="s7">'direct'</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = i.select({<span class="s6">|v, k, i|</span> v.directivity == <span class="s7">'direct'</span> });</p>
+<p class="p11"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>reject (function)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>, adding those items for which <b>function</b> returns false to a new BMInOutArray.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed the value, key, and index of each element as arguments. It should return a <a href="SC://Boolean"><span class="s3">Boolean</span></a> indicating whether value should not be added to the new BMInOutArray.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\foo</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\foo</span>, 0).directivity = <span class="s7">'reflected'</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\bar</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\bar</span>, 1).directivity = <span class="s7">'direct'</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = i.reject({<span class="s6">|v, k, i|</span> v.directivity == <span class="s7">'direct'</span> });</p>
+<p class="p11"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>associationsCollectAs (function, class)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the elements of this array evaluating <b>function</b>, and using the results to create a new instances of <b>class</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>function </b>- The <a href="SC://Function"><span class="s3">Function</span></a> to be evaluated. This will be passed each element (an <a href="SC://Association"><span class="s3">Association</span></a> or a <a href="BMSpeaker.html"><span class="s3">BMSpeaker</span></a>) and the index as arguments.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>class </b>- The class of the new Collection.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = </span>BMInOutArray<span class="s2">.new;</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\foo</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\foo</span>, 0));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\bar</span>, <span class="s6">BMSpeaker</span>(<span class="s7">\bar</span>, 1));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.put(<span class="s7">\foobar</span>, 2);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>j = i.associationsCollectAs({<span class="s6">|assoc, i|</span> assoc.key ++ <span class="s10">" has a bus index of "</span> ++ assoc.value.asUGenInput }, <span class="s6">Array</span>);</p>
+<p class="p11"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>species</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the receiver's class, i.e. BMInOutArray.</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>++ (aBMInOutArray)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Concatenate the receiver with another BMInOutArray, returning a new BMInOutArray</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>aBMInOutArray </b>- Explanation of aBMInOutArray. Default value is nil. Other information.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i =<span class="Apple-converted-space">  </span>s.outsAsBMInOutArray;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>j = <span class="s6">BMInOutArray</span>.privateBusBlock(<span class="s7">\foo</span>, 3, s);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>k = i ++ j;</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>j.freeBusObjects; </span>// release my bus indices</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>defineSubArray (name, elementNames)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Define a subarray which can be accessed by name.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the subarray.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>elementNames </b>- An <a href="SC://Array"><span class="s9">Array</span></a> of Symbols corresponding to the keys of the elements to be included in this subarray.<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">Bus</span>.audio(s, 12).asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\firstTwo<span class="s2">, [</span>'myPrivateBusaho-1'<span class="s2">, </span>'myPrivateBusaho-2'<span class="s2">]);</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.getSubArray(<span class="s7">\firstTwo</span>);</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>getSubArray (name)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns a new BMInOutArray corresponding to the subarray specified by <b>name</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the subarray to retrieve.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">Bus</span>.audio(s, 12).asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\firstTwo<span class="s2">, [</span>'myPrivateBusaho-1'<span class="s2">, </span>'myPrivateBusaho-2'<span class="s2">]);</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.getSubArray(<span class="s7">\firstTwo</span>);</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>getSubArrayKeys (name)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s9">Array</span></a> containing the keys of the elements contained in the subarray specified by <b>name</b>.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the subarray whose keys will be retrieved.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">Bus</span>.audio(s, 12).asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\firstTwo<span class="s2">, [</span>'myPrivateBusaho-1'<span class="s2">, </span>'myPrivateBusaho-2'<span class="s2">]);</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.getSubArrayKeys(<span class="s7">\firstTwo</span>);</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>removeSubArray (name)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Remove an existing subarray from the list of subarrays. (The elements themselves remain in the array).</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the subarray to remove.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">Bus</span>.audio(s, 12).asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\firstTwo<span class="s2">, [</span>'myPrivateBusaho-1'<span class="s2">, </span>'myPrivateBusaho-2'<span class="s2">]);</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.subArrays;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.removeSubArray(<span class="s7">\firstTwo</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.subArrays;</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>addToSubArray (name, element)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Add an element to an existing subarray.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the subarray to which the element will be added.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>element </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> corresponding to the key of the element to be added.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">Bus</span>.audio(s, 12).asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\firstTwo<span class="s2">, [</span>'myPrivateBusaho-1'<span class="s2">, </span>'myPrivateBusaho-2'<span class="s2">]);</span></p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.addToSubArray(</span>\firstTwo<span class="s2">, </span>'myPrivateBusaho-3'<span class="s2">);</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.getSubArrayKeys(<span class="s7">\firstTwo</span>);</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>removeFromSubArray (name, element)</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Remove an element from an existing subarray.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the subarray from which the element will be removed.</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>element </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> corresponding to the key of the element to be removed.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">Bus</span>.audio(s, 12).asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\firstTwo<span class="s2">, [</span>'myPrivateBusaho-1'<span class="s2">, </span>'myPrivateBusaho-2'<span class="s2">]);</span></p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.removeFromSubArray(</span>\firstTwo<span class="s2">, </span>'myPrivateBusaho-1'<span class="s2">);</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.getSubArrayKeys(<span class="s7">\firstTwo</span>);</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>subArrays</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s3">Array</span></a> of Symbols corresponding to the names of all defined subarrays.</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i = <span class="s6">Bus</span>.audio(s, 12).asBMInOutArray(<span class="s7">\myPrivateBusaho</span>);</p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\firstTwo<span class="s2">, [</span>'myPrivateBusaho-1'<span class="s2">, </span>'myPrivateBusaho-2'<span class="s2">]);</span></p>
+<p class="p19"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.defineSubArray(</span>\threeAndFour<span class="s2">, [</span>'myPrivateBusaho-3'<span class="s2">, </span>'myPrivateBusaho-4'<span class="s2">]);</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>i.subArrays;</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>boundaries</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Iterate over the array and calculate the smallest rectangular cuboid (aligned with the axes) which can contain all the BMSpeakers in the list. Associations are ignored. Returns an <a href="SC://Array"><span class="s9">Array</span></a> of two Arrays in the form [[minX, minY, minZ], [maxX, maxY, maxZ]]</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>isBMInOutArray</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns true. This method is defined in an extension to <a href="SC://Object"><span class="s9">Object</span></a> to return false and can thus be used for testing.</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>asBMInOutArray</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the receiver.</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>asUGenInput</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s9">Array</span></a> consisting of the bus indices of the receiver's elements.<span class="Apple-converted-space"> </span></p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span>asControlInput</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s9">Array</span></a> consisting of the bus indices of the receiver's elements.<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><b>asOSCArgArray</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s9">Array</span></a> consisting of the bus indices of the receiver's elements.<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><b>asOSCArgBundle</b></p>
+<p class="p12"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p13"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s9">Array</span></a> consisting of the bus indices of the receiver's elements.<span class="Apple-converted-space"> </span></p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+</body>
+</html>

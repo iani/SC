@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #0034f9}
+span.s4 {color: #002afb}
+span.s5 {color: #003cf7}
+span.s6 {text-decoration: underline}
+span.s7 {color: #0043f5}
+span.s8 {color: #007300}
+span.s9 {color: #0000bf}
+span.s10 {color: #0000bf}
+span.s11 {color: #007300}
+span.s12 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMAudioMixerMatrix<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>routes and scales signals from input busses to output busses</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractAudioChainElement.html"><b>BMAbstractAudioChainElement</b></a><b> : </b><a href="BMAbstractMatrix.html"><b>BMAbstractMatrix</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMAudioMixerMatrix is used to route audio signals from a set of input busses to a set of output busses, while optionally scaling the signal sent to each output. As such it can serve as a general purpose audio patch bay and mixer. These inputs and outputs are specified as instances of <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s3">BMInOutArray</span></a>.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">Changes in amplitude are lagged over the time specified in <b>BMOptions.crossfade</b> to avoid glitching.</p>
+<p class="p2"><br></p>
+<p class="p1">Although useful when straightforward matrix mixing is required, a combination of a <a href="BMAudioMatrix.html"><span class="s4">BMAudioMatrix</span></a> with one or two <a href="BMAmpControlMatrix.html"><span class="s4">BMAmpControlMatrix</span></a> instances can be more appropriate for some purposes, since it allows input and output signals to be scaled independently.</p>
+<p class="p2"><br></p>
+<p class="p1">See <a href="BMAbstractMatrix.html"><span class="s5">BMAbstractMatrix</span></a> for creation methods, etc.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="BMAbstractMatrix.html"><span class="s6">BMAbstractMatrix</span></a>, <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s6">BMInOutArray</span></a>, <a href="../Root Classes/BMAbstractAudioChainElement.html"><span class="s6">BMAbstractAudioChainElement</span></a>, <a href="BMAudioMatrix.html"><span class="s6">BMAudioMatrix</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Instance Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>connect (input, outputs)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Route a scaled version of an input to one or more outputs. If this indicates a connection which already exists, its amplitude will be changed to the new value.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>input </b>- A <a href="SC://Symbol"><span class="s7">Symbol</span></a> indicating the name of the input to connect.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>outputs </b>- One or more Arrays of <a href="SC://Symbol"><span class="s4">Symbol</span></a> and amplitude pairs indicating the names of the outputs to which the input will be connected, and the amplitude of the scaled input signal connected. This should be in the form [[output1, amp1], ...]. If an amplitude is not supplied a default value of 1 is used. Amplitudes are linear scaler values.</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p5"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p11">s.boot;</p>
+<p class="p4"><br></p>
+<p class="p11">(</p>
+<p class="p12">// make a speaker list</p>
+<p class="p13">l = [[-30, <span class="s8">'L'</span>], [30, <span class="s8">'R'</span>], [0, <span class="s8">'C'</span>], [-110, <span class="s8">'Ls'</span>], [110, <span class="s8">'Rs'</span>]].collectAs({<span class="s9">|el, i|</span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="s9">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p14"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p11">)</p>
+<p class="p4"><br></p>
+<p class="p15">// something to scale and route</p>
+<p class="p11">(</p>
+<p class="p11">b = <span class="s10">Bus</span>.audio(s, 8);</p>
+<p class="p11">x = { <span class="s10">Out</span>.ar(b, {<span class="s10">|i|</span> <span class="s10">Ringz</span>.ar(<span class="s10">Dust</span>.ar(3, 0.1), 300 * (i + 1), 2)} ! 8) }.play;</p>
+<p class="p11">)</p>
+<p class="p4"><br></p>
+<p class="p15">// make a matrix</p>
+<p class="p11">m = <span class="s10">BMAudioMixerMatrix</span>(b.asBMInOutArray(<span class="s11">\ringzes</span>), l);</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p15"><span class="s2">s.meter; </span>// so we can watch</p>
+<p class="p4"><br></p>
+<p class="p11">m.connect(<span class="s11">'ringzes-1'</span>, [<span class="s11">'L'</span>, 0.5]);</p>
+<p class="p4"><br></p>
+<p class="p11">m.connect(<span class="s11">'ringzes-2'</span>, [<span class="s11">L</span>: 0.2]); // key-value style also works</p>
+<p class="p4"><br></p>
+<p class="p11">m.connect(<span class="s11">'ringzes-1'</span>, [<span class="s11">'L'</span>, 0.1]); <span class="s12">// make 1 quieter</span></p>
+<p class="p4"><br></p>
+<p class="p11">m.disconnect(<span class="s11">'ringzes-1'</span>, <span class="s11">'L'</span>);</p>
+<p class="p4"><br></p>
+<p class="p15"><span class="s2">m.connect(</span><span class="s11">'ringzes-1'</span><span class="s2">, [</span><span class="s11">'R'</span><span class="s2">]); </span>// default amp is 1</p>
+<p class="p4"><br></p>
+<p class="p11">m.mappings;</p>
+<p class="p4"><br></p>
+<p class="p15"><span class="s2">m.clear(3); </span>// fade out connections</p>
+<p class="p4"><br></p>
+<p class="p11">m.free; b.free; x.free;</p>
+</body>
+</html>

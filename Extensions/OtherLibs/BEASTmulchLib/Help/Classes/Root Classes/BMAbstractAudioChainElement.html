@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p15 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; color: #000000; min-height: 14.0px}
+p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p17 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p18 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p19 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p20 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p21 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #002afb}
+span.s3 {color: #000000}
+span.s4 {font: 12.0px Helvetica; color: #001bec}
+span.s5 {color: #0000bf}
+span.s6 {color: #003cf7}
+span.s7 {font: 9.0px Monaco; color: #007300}
+span.s8 {font: 9.0px Monaco}
+span.s9 {font: 9.0px Monaco; color: #626034}
+span.s10 {color: #007300}
+span.s11 {color: #bf0000}
+span.s12 {color: #606060}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMAbstractAudioChainElement<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>abstract superclass of audio chain elements</b></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BMAbstractAudioChainElement is the abstract superclass of all BEASTmulch Library objects which serve as elements in an audio chain. This includes sources (subclasses of <a href="BMAbstractAudioSource.html"><span class="s2">BMAbstractAudioSource</span></a>), such as <a href="../Other/BMSoundFilePlayer.html"><span class="s2">BMSoundFilePlayer</span></a>, routers and mixers such as <a href="../Matrices/BMAudioMatrix.html"><span class="s2">BMAudioMatrix</span></a> and <a href="../Matrices/BMAmpControlMatrix.html"><span class="s2">BMAmpControlMatrix</span></a>, and processors and spatialisers such as <a href="../Plugins/BMTrimPluginsRack.html"><span class="s2">BMTrimPluginsRack</span></a> and <a href="../Plugins/BMMultichannelPluginsRack.html"><span class="s2">BMMultichannelPluginsRack</span></a>. As such it defines a standard interface and a number of inherited methods.</p>
+<p class="p2"><br></p>
+<p class="p1">Subclasses generally create a <a href="SC://Group"><span class="s2">Group</span></a> to hold all of their nodes which is stored in the <b>group</b> instance variable.</p>
+<p class="p2"><br></p>
+<p class="p1">For the sake of simplicity and to avoid conflicts subclasses of BMAbstractAudioChain do no rebuilding on Cmd-. If you want to do this simply add a <a href="SC://Function"><span class="s2">Function</span></a> to rebuild the chain to <a href="SC://ServerTree"><span class="s2">ServerTree</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p1">You can see a list of all available subclasses by executing the following:</p>
+<p class="p4"><br></p>
+<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span></span>BMAbstractAudioChainElement<span class="s3">.dumpClassSubtree;</span></p>
+<p class="p2"><br></p>
+<p class="p6"><span class="s3"><b>See also:</b> <a href="../Matrices/BMAbstractMatrix.html"><span class="s4">BMAbstractMatrix</span></a>, <a href="BMAbstractAudioSource.html"><span class="s4">BMAbstractAudioSource</span></a>, <a href="BMAbstractController.html"><span class="s4">BMAbstractController</span></a>, <a href="BMAbstractGUI.html"><span class="s4">BMAbstractGUI</span></a>, <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s4">BMInOutArray</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p7"><b>Making chains of elements</b></p>
+<p class="p2"><br></p>
+<p class="p1">Subclasses take instances of <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a> to specify input and/or busses. In some cases output busses will be the same as inputs, in others (notably <a href="../Matrices/BMAudioMatrix.html"><span class="s2">BMAudioMatrix</span></a>) take separate outputs. <b>*new</b> methods generally call <b>asBMInOutArray</b> on <b>ins</b> and <b>outs</b>, which most subclasses implement to return their output array. This means that instances can be passed as arguments for these. Some classes (e.g. subclasses of <a href="BMAbstractAudioSource.html"><span class="s2">BMAbstractAudioSource</span></a>) do not take inputs and supply their outputs as a private bus.</p>
+<p class="p2"><br></p>
+<p class="p1"><b>asTarget</b> is implemented to return the object's <b>group</b>, which means that you can pass audio chain elements most places you would pass a <a href="SC://Node"><span class="s2">Node</span></a>, e.g. as a target for a <a href="SC://Synth"><span class="s2">Synth</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p1">By convention subclasses of <a href="BMAbstractAudioSource.html"><span class="s2">BMAbstractAudioSource</span></a> use \addToHead as their default <b>addAction</b>, and all other subclasses of BMAbstractAudioChainElement use \addToTail. This means that in most cases chains of objects can be created in the order they will appear on the server.</p>
+<p class="p2"><br></p>
+<p class="p1">The examples below demonstrate this.</p>
+<p class="p2"><br></p>
+<p class="p8"><b>Accessing Instance and Class Variables</b></p>
+<p class="p9"><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>*allChainElements</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>An <a href="SC://IdentityDictionary"><span class="s2">IdentityDictionary</span></a> containing all active instances of this class' subclasses. This can be used to query the library to see which chain elements exist at the moment.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>addAction</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <b>addAction</b>, which determines where its <b>group</b> will be created relative to its <b>target</b>. See subclasses for details.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>target</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <b>target</b>, which determines the relative position at which its <b>group</b> will be created base on its <b>addAction</b> See subclasses for details.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>ins</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's inputs as a <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>inNames</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns an <a href="SC://Array"><span class="s2">Array</span></a> of Symbols corresponding to the names of this object's <b>ins</b>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>outs</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's outputs as a <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>outNames</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns an <a href="SC://Array"><span class="s2">Array</span></a> of Symbols corresponding to the names of this object's <b>outs</b>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>group</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <a href="SC://Group"><span class="s2">Group</span></a> if it is active, nil otherwise.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>name</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's name as a <a href="SC://Symbol"><span class="s2">Symbol</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>server</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <a href="SC://Server"><span class="s2">Server</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b>Instance Methods and Subclassing</b></p>
+<p class="p11"><br></p>
+<p class="p1">The following methods specify the minimum interface for a BMAbstractAudioChainElement; some notes about subclassing are included. In some cases the methods simply return a SubclassResponsibilityError, and should be overridden in subclasses.</p>
+<p class="p2"><br></p>
+<p class="p1">Implementations of <b>*new</b> in subclasses should take at least <b>target</b>, <b>addAction</b>, and <b>name</b> as arguments.</p>
+<p class="p4"><br></p>
+<p class="p12"><span class="s3"><span class="Apple-tab-span">	</span></span>// simplest case</p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span>*new { </span>|outs, target, addAction = \addToTail, name|<span class="s3"><span class="Apple-converted-space"> </span></span></p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>^<span class="s5">super</span>.new.initNameAndTarget(target, addAction, name);</p>
+<p class="p14"><span class="Apple-tab-span">	</span>}</p>
+<p class="p15"><span class="Apple-tab-span">	</span></p>
+<p class="p1">Subclasses which take <b>ins</b> or <b>outs </b>as arguments to <b>*new</b> should implement an <b>init</b> method to copy those to the corresponding instance vars, and fill in <b>inNames</b> and <b>outNames</b>.</p>
+<p class="p4"><br></p>
+<p class="p12"><span class="s3"><span class="Apple-tab-span">	</span></span>// example with ins and outs</p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span>*new { </span>|ins, outs, target, addAction = \addToTail, name|</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>^<span class="s5">super</span>.new.init(ins.asBMInOutArray, outs.asBMInOutArray, target, addAction, name);</p>
+<p class="p14"><span class="Apple-tab-span">	</span>}</p>
+<p class="p16"><span class="Apple-tab-span">	</span></p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span>init {</span>|argins, argouts, argTarget, argAddAction, argName|</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">this</span>.initNameAndTarget(argTarget, argAddAction, argName);</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>ins = argins;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>outs = argouts;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>inNames = ins.keys;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>outNames = outs.keys;</p>
+<p class="p14"><span class="Apple-tab-span">	</span>}</p>
+<p class="p16"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>initNameAndTarget (argtarget, argaddAction, argname)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Converts <b>argtarget </b>to a valid target, calls <b>makeName</b> if needed, and adds this object to <b>allChainElements</b>. Subclasses should call this method from their <b>*new</b> or <b>init</b> methods.<span class="Apple-converted-space"> </span></p>
+<p class="p17"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>argtarget </b>- Target for this object's <a href="SC://Group"><span class="s6">Group</span></a>. If target is not a Group or <a href="SC://Synth"><span class="s6">Synth</span></a>, it will be converted as follows: If it is a <a href="SC://Server"><span class="s6">Server</span></a>, it will be converted to the <a href="SC://default_group"><span class="s6">default_group</span></a> of that server. If it is nil, to the default_group of the default Server. <b>Note: </b>A Synth is not a valid target for <span class="s7">\addToHead</span> and <span class="s7">\addToTail</span>.</p>
+<p class="p17"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>argaddAction </b>- one of the following Symbols:<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p17"><span class="s8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">\addToHead</span><span class="s9"> <span class="Apple-tab-span">	</span></span>- (the default for BMAbstractAudioSources) add at the head of the group specified by <b>target</b></p>
+<p class="p10"><span class="s8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">\addToTail</span><span class="s9"> <span class="Apple-tab-span">	</span></span>- (the default for most subclasses) add at the tail of the group specified by <b>target</b></p>
+<p class="p10"><span class="s8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">\addAfter</span> <span class="Apple-tab-span">	</span>- add immediately after <b>target </b>in its server's node order</p>
+<p class="p10"><span class="s8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">\addBefore</span> <span class="Apple-tab-span">	</span>- add immediately before <b>target </b>in its server's node order</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">\addReplace</span> <span class="Apple-tab-span">	</span>- replace <b>target</b> and take its place in its server's node order</p>
+<p class="p17"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>argname </b>- Explanation of argname. Default value is nil. Other information.</p>
+<p class="p18"><br></p>
+<p class="p19"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// simplest case</p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>initNameAndTarget {</span>|argtarget, argaddAction, argname|</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>target = argtarget.asTarget;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>server = target.server;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>addAction = argaddAction;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>name = (argname ?? {<span class="s5">this</span>.makeName}).asSymbol;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>allChainElements[name] = <span class="s5">this</span>;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">this</span>.makeGroup;</p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p18"><br></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>gui</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This should create and return an appropriate GUI, usually using a specific GUI class (e.g. <a href="../Matrices/BMMatrixGUI.html"><span class="s2">BMMatrixGUI</span></a> for matrices) with this as an argument.</p>
+<p class="p18"><br></p>
+<p class="p18"><br></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>mappings_</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>mappings</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>These methods should be implemented to allow getting or setting presets, i.e. they should set or get the global state of the object. Usually these return or take some sort of <a href="SC://IdentityDictionary"><span class="s2">IdentityDictionary</span></a>. The default implementations do nothing.</p>
+<p class="p18"><br></p>
+<p class="p18"><br></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>makeGroup</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Makes this object's Group using <b>target</b> and <b>addAction</b>.</p>
+<p class="p18"><br></p>
+<p class="p18"><br></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>makeName</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Automatically generate a <b>name</b> for this object if one has not been supplied.</p>
+<p class="p18"><br></p>
+<p class="p18"><br></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>free</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>The default implementation frees <b>group </b>and<b> </b>removes this object from <b>allChainElements</b>. Subclasses should override this to do any necessary cleanup of resources. Once called, objects should not be used again.</p>
+<p class="p18"><br></p>
+<p class="p18"><br></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span>asTarget</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the element's <a href="SC://Group"><span class="s2">Group</span></a>. This means that chain elements can be passed directly as targets in most cases. Subclasses can override this to return something else if appropriate.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p18"><br></p>
+<p class="p18"><br></p>
+<p class="p8"><b>Examples</b></p>
+<p class="p3"><br></p>
+<p class="p12">// making an audio chain</p>
+<p class="p16"><br></p>
+<p class="p14">s.boot;</p>
+<p class="p16"><br></p>
+<p class="p12">// make a 5.1 speaker list (-0.1) for outputs</p>
+<p class="p14">(</p>
+<p class="p14">l = [[-30, <span class="s10">'L'</span>], [30, <span class="s10">'R'</span>], [0, <span class="s10">'C'</span>], [-110, <span class="s10">'Ls'</span>], [110, <span class="s10">'Rs'</span>]].collectAs({<span class="s5">|el, i|</span></p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="s5">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p13"><span class="s3">}, </span>BMInOutArray<span class="s3">);</span></p>
+<p class="p14">)</p>
+<p class="p16"><br></p>
+<p class="p12">// make a controller</p>
+<p class="p5"><span class="s3">c = </span>BMVirtualController<span class="s3">.new(</span><span class="s10">'Level Sliders'</span><span class="s3">, s, 4); </span><span class="s11">// new controller</span></p>
+<p class="p5"><span class="s3">g = </span>BMVirtualControllerSliders<span class="s3">(c); </span><span class="s11">// GUI sliders for it</span></p>
+<p class="p20"><br></p>
+<p class="p19">//// sources</p>
+<p class="p19"><span class="s3">p = </span><span class="s5">BMSoundFilePlayer</span><span class="s3">(8, name:</span><span class="s10">\foo</span><span class="s3">); </span>// maximum 8 channel soundfile player</p>
+<p class="p19"><span class="s3">p.read(</span><span class="s12">"sounds/a11wlk01.wav"</span><span class="s3">); </span>// mono, so only out foo-1</p>
+<p class="p21">p.gui;</p>
+<p class="p16"><br></p>
+<p class="p14">b = <span class="s5">Bus</span>.audio(s, 1);</p>
+<p class="p14">x = {<span class="s5">Out</span>.ar(b, <span class="s5">PinkNoise</span>.ar(0.2))}.play(target: p, addAction:<span class="s10">\addAfter</span>); <span class="s11">// a noise source; note p works as a target</span></p>
+<p class="p16"><br></p>
+<p class="p12">// do some processing at this stage</p>
+<p class="p14">t = <span class="s5">BMTrimPluginsRack</span>(p.asBMInOutArray ++ b.asBMInOutArray(<span class="s10">\noiseBus</span>), x, <span class="s10">\addAfter</span>); <span class="s11">// x as target</span></p>
+<p class="p14">t.gui;</p>
+<p class="p16"><br></p>
+<p class="p12">// make a matrix for connections</p>
+<p class="p14">m = <span class="s5">BMAudioMatrix</span>(t, l, name:<span class="s10">'Router'</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p16"><br></p>
+<p class="p12">// a matrix to map controls to scale amplitude</p>
+<p class="p12"><span class="s3">a = </span><span class="s5">BMAmpControlMatrix</span><span class="s3">(c, l, name:</span><span class="s10">'Level Control'</span><span class="s3">); </span>// ins are the controller's control busses</p>
+<p class="p16"><br></p>
+<p class="p12"><span class="s3">m.gui; a.gui; </span>// make some assignments here</p>
+<p class="p16"><br></p>
+<p class="p12">// congrats, you've now got sources-&gt;trim-plugins-&gt;routing-&gt;level-scaling-&gt;outputs</p>
+<p class="p12">// turn up your controllers to listen</p>
+<p class="p16"><br></p>
+<p class="p21">[p, c, b, x, m, a, t].do(<span class="s5">_</span>.free); <span class="s11">// cleanup</span></p>
+</body>
+</html>

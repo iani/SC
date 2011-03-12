@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #001dfd}
+span.s4 {text-decoration: underline}
+span.s5 {color: #002afb}
+span.s6 {color: #0000bf}
+span.s7 {color: #007300}
+span.s8 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMVirtualControllerSliders<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>GUI sliders for a BMVirtualController</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractGUI.html"><b>BMAbstractGUI</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMVirtualControllerSliders are a slider-based GUI representation for a <a href="BMVirtualController.html"><span class="s3">BMVirtualController</span></a>. Other representations are of course possible (e.g. knobs), and this class could be used as a template.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="../Root Classes/BMAbstractGUI.html"><span class="s4">BMAbstractGUI</span></a>, <a href="../Root Classes/BMAbstractController.html"><span class="s4">BMAbstractController</span></a>, <a href="BMVirtualController.html"><span class="s4">BMVirtualController</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Automation</b></p>
+<p class="p2"><br></p>
+<p class="p1">Instances of BMVirtualController are automatable, but when creating GUI classes which represent the state of one, it will likely be necessary to separate GUI updates from automation updates, since too high a GUI refresh rate will cause the system to hang (spinning beachball). BMVirtualControllerSliders provides one example of how to do this using a refresh loop which is stopped and started as necessary.</p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (virtualCont, name, origin)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMVirtualControllerSliders.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>virtualCont </b>- An instance of <a href="BMVirtualController.html"><span class="s5">BMVirtualController</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- An optional <a href="SC://String"><span class="s5">String</span></a> or <a href="SC://Symbol"><span class="s5">Symbol</span></a> indicating the title of the window. If nil is passed the name of <b>virtualCont</b> will be used.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>origin </b>- An optional <a href="SC://Point"><span class="s5">Point</span></a> indicating the origin of the resulting window. The default is 40@200.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>c = <span class="s6">BMVirtualController</span>.new(<span class="s7">\sliders</span>, s, 4); <span class="s8">// new controller</span></p>
+<p class="p11"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>g = </span>BMVirtualControllerSliders<span class="s2">(c);</span></p>
+<p class="p6"><br></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>g.close; c.free; <span class="s8">// free resources</span></p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p12"><b>Accessing Instance and Class Variables</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>refreshInterval_(arg1)</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>refreshInterval</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get a time in seconds indicating the interval at which this GUI will update in response to automation changes. The default value is 0.05 seconds (20 FPS).</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p12"><b>Implementation Details</b></p>
+<p class="p13"><br></p>
+<p class="p7">The following methods are 'private' but may be of interest to anyone making a similar class.</p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>update (changed, what, index, val)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This is called through the standard <a href="SC://Object"><span class="s5">Object</span></a> dependancy mechanism whenever this object's controller is changed. If a fader value is changed it sets the instance variable <b>needsRefresh</b> to true, and calls <b>startRefreshLoop </b>(see below).</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>startRefreshLoop</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This checks to see if the refresh loop is already running, and if not starts a loop to update the state of the sliders. Each time the loop is evaluated it checks if <b>needsRefresh</b> is true, and if so updates the sliders, sets <b>needsRefresh</b> to false, and then reschedules itself after <b>refreshInterval</b>. The next time it occurs it will update and reschedule only if <b>update </b>has been called in the interim. Otherwise, it stops the loop.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+</body>
+</html>

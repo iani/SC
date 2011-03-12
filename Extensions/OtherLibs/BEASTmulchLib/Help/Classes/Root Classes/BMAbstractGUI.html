@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+p.p5 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #001dfd}
+span.s3 {color: #002ebc}
+span.s4 {color: #0000bf}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMAbstractGUI<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>abstract superclass of all GUI classes in the BEASTmulch library</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BMAbstractGUI is the abstract superclass of all GUI classes in the BEASTmulch library. It implements a few inherited methods and defines an interface.</p>
+<p class="p2"><br></p>
+<p class="p1">You can see a list of all available subclasses by executing the following:</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3"><span class="Apple-tab-span">	</span></span><span class="s4">BMAbstractGUI</span>.dumpClassSubtree;</p>
+<p class="p2"><br></p>
+<p class="p1">Their help files and source code provide many useful examples.</p>
+<p class="p2"><br></p>
+<p class="p1"><b>See also:</b> <a href="SC://Window"><span class="s2">Window</span></a>, <a href="SC://View"><span class="s2">View</span></a></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Accessing Instance and Class Variables</b></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>name</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The name displayed in the title bar of this object's <a href="SC://Window"><span class="s2">Window</span></a> as a <a href="SC://String"><span class="s2">String</span></a> or <a href="SC://Symbol"><span class="s2">Symbol</span></a>. Usually this corresponds to the <b>name</b> of the object it represents.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>window</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <a href="SC://Window"><span class="s2">Window</span></a>.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Instance Methods</b></p>
+<p class="p8"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>onClose_ (func)</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Register a <a href="SC://Function"><span class="s2">Function</span></a> to be executed when this object's window is closed.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>func </b>- An instance of <a href="SC://Function"><span class="s2">Function</span></a>. It will be passed the receiver as an argument.</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>makeWindow</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Subclasses should override this as needed to create a <a href="SC://Window"><span class="s2">Window</span></a>.</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>close</b></p>
+<p class="p6"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Close this object's window and call any function registered in <b>onClose</b>.</p>
+<p class="p10"><br></p>
+</body>
+</html>

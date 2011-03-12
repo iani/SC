@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p14 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p15 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #007300}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #002afb}
+span.s3 {color: #000000}
+span.s4 {text-decoration: underline}
+span.s5 {color: #0000ff}
+span.s6 {color: #007300}
+span.s7 {color: #0000bf}
+span.s8 {color: #001dfd}
+span.s9 {color: #bf0000}
+span.s10 {font: 12.0px Helvetica; color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMSpeakerSpec<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>specification for a speaker model</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BMSpeakerSpec represents specifications for a particular speaker model. In addition to information on things like frequency response and type of speaker, it can also specify plugin presets for use with a speaker model (e.g. LPF input to a subwoofer), and can be extended to include arbitrary keys. User code can query a speaker's spec to find out information about its characteristics. A number of specs are created on startup, but users can add more.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3"><b>See also:</b> <a href="BMSpeaker.html"><span class="s4">BMSpeaker</span></a>, <a href="../Plugins/BMPlugin.html"><span class="s4">BMPlugin</span></a>, <a href="../Plugins/BMTrimPluginsRack.html"><span class="s4">BMTrimPluginsRack</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Specifications Dictionary</b></p>
+<p class="p2"><br></p>
+<p class="p1">BMSpeakerSpecs take an <a href="SC://IdentityDictionary"><span class="s2">IdentityDictionary</span></a> or subclass (usually an <a href="SC://Event"><span class="s2">Event</span></a>) to hold their specifications. Messages sent to BMSpeakerSpec which are not understood are forwarded to the specifications dictionary. Because of this BMSpeakerSpec can be generally treated as a <a href="SC://Dictionary"><span class="s5">Dictionary</span></a> subclass, although it is not.</p>
+<p class="p2"><br></p>
+<p class="p1">The specifications dictionary's <b>proto</b> var will be set to the following Event, thus setting a few default values:</p>
+<p class="p2"><br></p>
+<p class="p6">(brand: <span class="s6">'Unknown'</span>, fullRange: <span class="s7">true</span>);</p>
+<p class="p2"><br></p>
+<p class="p1">Standard keys used in the specifications dictionary are as follows:</p>
+<p class="p2"><br></p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>\brand</b>: A <a href="SC://Symbol"><span class="s2">Symbol</span></a> indicating the brand or manufacturer of this speaker model, e.g. 'Genelec'</p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>\minFreq</b>: Minimum frequency response (typically free field +/- 2dB, but manufacturer's practices vary)</p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>\maxFreq</b>: Maximum frequency response (typically free field +/- 2dB, but manufacturer's practices vary)</p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>\spl</b>: dB SPL (typically continuous 1W @ 1m for unpowered, maximum continuous @ 1m for powered)</p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>\powered</b>: A <a href="SC://Boolean"><span class="s2">Boolean</span></a> indicating if this speaker model is active or not</p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>\fullRange</b>: A <a href="SC://Boolean"><span class="s2">Boolean</span></a> indicating if this speaker model is nominally 'full frequency range' rather than a specialised model such as a subwoofer or tweeter array</p>
+<p class="p7"><span class="Apple-tab-span">	</span><b>\plugins</b>: An <a href="SC://Array"><span class="s5">Array</span></a> of Arrays containing Symbols in the form [[\pluginName, \pluginPresetName], ...]. These are used in <a href="../Plugins/BMTrimPluginsRack.html"><span class="s2">BMTrimPluginsRack</span></a>'s autoPlugins method. You will need to create the plugin presets themselves separately.</p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p1">User code should use these keys rather than synonyms, but custom keys may be added as desired.</p>
+<p class="p2"><br></p>
+<p class="p1">Note that in principle many or all of these values may be nil, and that user code may need to allow for this.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p8"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (name, vals)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMSpeakerSpec. This will overwrite any existing spec with the same <b>name</b>.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s8">Symbol</span></a> indicating the name of this speaker spec, e.g. '8030A' or 'Generic Sub'.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>vals </b>- An <a href="SC://IdentityDictionary"><span class="s2">IdentityDictionary</span></a> or subclass containing keys and values for this model's specification.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">BMSpeakerSpec</span>(<span class="s6">'8030A'</span>, (brand: <span class="s6">'Genelec'</span>, minFreq: 58, maxFreq: 20000, spl: 97, powered: <span class="s7">true</span>, fullRange: <span class="s7">true</span>)); <span class="s9">// make a spec for a Genelec 8030A</span></p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p12"><b>Accessing Instance and Class Variables</b></p>
+<p class="p9"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*specs</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns an IdentityDictionary containing all existing specs with names as keys.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><span class="s10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">BMSpeakerSpec</span><span class="s3">.specs.postln; </span>// see all available</p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">BMSpeakerSpec</span><span class="s3">.specs[</span><span class="s6">'UREI-809'</span><span class="s3">] </span>// get the Urei 809 spec</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>name</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this spec's name as a <a href="SC://Symbol"><span class="s2">Symbol</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p12"><b>Instance Methods</b></p>
+<p class="p14"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>doesNotUnderstand (selector, args)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Overrides the default method to forward any unimplemented method calls to the specifications dictionary.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// make a new spec</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>g = <span class="s7">BMSpeakerSpec</span>(<span class="s6">\foo</span>, (minFreq: 20, maxFreq: 20000, spl: 99, powered: <span class="s7">true</span>, fullRange: <span class="s7">true</span>));</p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>g.minFreq; </span>// forwards to spec dictionary and returns 20</p>
+<p class="p13"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>g.brand; </span>// we didn't specify so we get the value from proto</p>
+<p class="p15"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>g.brand = </span>'Foobar Industries'<span class="s3">; </span><span class="s9">// we can set too</span></p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>g.brand;</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+</body>
+</html>

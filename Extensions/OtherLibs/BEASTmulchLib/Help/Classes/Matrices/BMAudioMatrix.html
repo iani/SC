@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #0034f9; min-height: 14.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #007300}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #0034f9}
+span.s4 {color: #003cf7}
+span.s5 {text-decoration: underline}
+span.s6 {color: #002afb}
+span.s7 {color: #007300}
+span.s8 {color: #0000bf}
+span.s9 {color: #0000bf}
+span.s10 {color: #007300}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMAudioMatrix<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>routes signals on audio input busses to audio output busses</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractAudioChainElement.html"><b>BMAbstractAudioChainElement</b></a><b> : </b><a href="BMAbstractMatrix.html"><b>BMAbstractMatrix</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMAudioMatrix is used to route audio signals from a set of input busses to a set of output busses. As such it can serve as a general purpose audio patch bay. These inputs and outputs are specified as instances of <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s3">BMInOutArray</span></a>.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">See <a href="BMAbstractMatrix.html"><span class="s4">BMAbstractMatrix</span></a> for creation methods, etc.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="BMAbstractMatrix.html"><span class="s5">BMAbstractMatrix</span></a>, <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s5">BMInOutArray</span></a>, <a href="../Root Classes/BMAbstractAudioChainElement.html"><span class="s5">BMAbstractAudioChainElement</span></a>, <a href="BMAudioMixerMatrix.html"><span class="s6">BMAudioMixerMatrix</span></a></span></p>
+<p class="p5"><br></p>
+<p class="p6"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p7">// Audio matrix example</p>
+<p class="p8">(</p>
+<p class="p9">// make a speaker list</p>
+<p class="p10">l = [[-30, <span class="s7">'L'</span>], [30, <span class="s7">'R'</span>], [0, <span class="s7">'C'</span>], [-110, <span class="s7">'Ls'</span>], [110, <span class="s7">'Rs'</span>]].collectAs({<span class="s8">|el, i|</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="s8">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p11"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p8">)</p>
+<p class="p4"><br></p>
+<p class="p7">// something to route</p>
+<p class="p8">(</p>
+<p class="p8">b = <span class="s9">Bus</span>.audio(s, 8);</p>
+<p class="p8">x = { <span class="s9">Out</span>.ar(b, {<span class="s9">|i|</span> <span class="s9">Ringz</span>.ar(<span class="s9">Dust</span>.ar(3, 0.1), 300 * (i + 1), 2)} ! 8) }.play;</p>
+<p class="p8">)</p>
+<p class="p4"><br></p>
+<p class="p7">// make a matrix</p>
+<p class="p8">m = <span class="s9">BMAudioMatrix</span>(b.asBMInOutArray(<span class="s10">\ringzes</span>), l);</p>
+<p class="p4"><br></p>
+<p class="p7"><span class="s2">s.meter; </span>// so we can watch</p>
+<p class="p4"><br></p>
+<p class="p12"><span class="s2">m.connect(</span>'ringzes-1'<span class="s2">, </span>'L'<span class="s2">);</span></p>
+<p class="p4"><br></p>
+<p class="p12"><span class="s2">m.connect(</span>'ringzes-2'<span class="s2">, </span>'L'<span class="s2">);</span></p>
+<p class="p4"><br></p>
+<p class="p12"><span class="s2">m.connect(</span>'ringzes-3'<span class="s2">, </span>'Ls', 'Rs'<span class="s2">);</span></p>
+<p class="p4"><br></p>
+<p class="p8">m.disconnect(<span class="s10">'ringzes-1'</span>, <span class="s10">'L'</span>);</p>
+<p class="p4"><br></p>
+<p class="p12"><span class="s2">m.connect(</span>'ringzes-1'<span class="s2">, </span>'R'<span class="s2">);</span></p>
+<p class="p4"><br></p>
+<p class="p8">m.mappings;</p>
+<p class="p4"><br></p>
+<p class="p7"><span class="s2">m.gui; </span>// Use a GUI. Be sure to click 'View Matrix' for alternate view.</p>
+<p class="p4"><br></p>
+<p class="p7"><span class="s2">m.clear(3); </span>// fade out connections</p>
+<p class="p4"><br></p>
+<p class="p8">m.free; b.free; x.free;</p>
+<p class="p4"><br></p>
+</body>
+</html>

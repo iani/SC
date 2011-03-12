@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #0034f9}
+span.s4 {text-decoration: underline}
+span.s5 {color: #003cf7}
+span.s6 {color: #007300}
+span.s7 {color: #0000bf}
+span.s8 {color: #0000bf}
+span.s9 {color: #007300}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMMatrixMenuGUI<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>a menu GUI for matrix classes</b><span class="s1"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractGUI.html"><b>BMAbstractGUI</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMMenuMatrixGUI provides a GUI for subclasses of <a href="BMAbstractMatrix.html"><span class="s3">BMAbstractMatrix</span></a>. It presents three lists: inputs, assigned outputs and unassigned outputs. It also provides a button to open a <a href="BMMatrixGUI.html"><span class="s3">BMMatrixGUI</span></a>, which provides an alternative view.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="BMAbstractMatrix.html"><span class="s4">BMAbstractMatrix</span></a>, <a href="../Root Classes/BMAbstractGUI.html"><span class="s4">BMAbstractGUI</span></a>, <a href="BMMatrixGUI.html"><span class="s4">BMMatrixGUI</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (matrix, name)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new matrix menu GUI.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>matrix </b>- An instance of a subclass of <a href="BMAbstractMatrix.html"><span class="s3">BMAbstractMatrix</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- An optional <a href="SC://String"><span class="s5">String</span></a> or <a href="SC://Symbol"><span class="s5">Symbol</span></a> indicating the title of the window. If nil is passed the name of <b>matrix</b> will be used.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>origin </b>- An optional <a href="SC://Point"><span class="s3">Point</span></a> specifying the origin of the window. Default is 40@200.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Accessing Instance and Class Variables</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>matrixGUI</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Return this objects <a href="BMMatrixGUI.html"><span class="s3">BMMatrixGUI</span></a>, if it is currently open.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p11">(</p>
+<p class="p12">// make a speaker list</p>
+<p class="p13">l = [[-30, <span class="s6">'L'</span>], [30, <span class="s6">'R'</span>], [0, <span class="s6">'C'</span>], [-110, <span class="s6">'Ls'</span>], [110, <span class="s6">'Rs'</span>]].collectAs({<span class="s7">|el, i|</span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="s7">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p14"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p11">)</p>
+<p class="p4"><br></p>
+<p class="p15">// something to route</p>
+<p class="p11">(</p>
+<p class="p11">b = <span class="s8">Bus</span>.audio(s, 8);</p>
+<p class="p11">x = { <span class="s8">Out</span>.ar(b, {<span class="s8">|i|</span> <span class="s8">Ringz</span>.ar(<span class="s8">Dust</span>.ar(3, 0.1), 300 * (i + 1), 2)} ! 8) }.play;</p>
+<p class="p11">)</p>
+<p class="p4"><br></p>
+<p class="p15">// make a matrix</p>
+<p class="p11">m = <span class="s8">BMAudioMatrix</span>(b.asBMInOutArray(<span class="s9">\ringzes</span>), l, name: <span class="s9">'Routing'</span>);</p>
+<p class="p4"><br></p>
+<p class="p15"><span class="s2">s.meter; </span>// so we can watch</p>
+<p class="p4"><br></p>
+<p class="p15"><span class="s2">m.connect(</span><span class="s9">'ringzes-1'</span><span class="s2">, </span><span class="s9">'L'</span><span class="s2">); </span>// make one connection manually</p>
+<p class="p4"><br></p>
+<p class="p15"><span class="s8">BMMatrixMenuGUI</span><span class="s2">(m); </span>// now play with the GUI</p>
+<p class="p4"><br></p>
+</body>
+</html>

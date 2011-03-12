@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #004ef1}
+span.s4 {color: #002afb}
+span.s5 {text-decoration: underline}
+span.s6 {color: #0034f9}
+span.s7 {color: #007300}
+span.s8 {color: #0000bf}
+span.s9 {color: #bf0000}
+span.s10 {color: #606060}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMSpeakerListVisualiser<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>visualise the positions of a speaker list in a window</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractGUI.html"><b>BMAbstractGUI</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMSpeakerListVisualiser provides a 3D visualisation of the positions of a speaker list (a <a href="BMInOutArray.html"><span class="s3">BMInOutArray</span></a>) in a space. You can rotate the visualisation trackball style with the mouse, and zoom vertically using the slider at the top.</p>
+<p class="p2"><br></p>
+<p class="p1">Speakers will be labelled on the back with their names, and colour coded according to subarray membership (using first subarray found).</p>
+<p class="p2"><br></p>
+<p class="p1">This class can also be used in conjunction with <a href="../Other/Swarm Granulation/BMSwarmGranulator.html"><span class="s4">BMSwarmGranulator</span></a> and <a href="../Other/Swarm Granulation/BMBoidSpace.html"><span class="s4">BMBoidSpace</span></a> to visualise grain boid positions.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="../Root Classes/BMAbstractGUI.html"><span class="s5">BMAbstractGUI</span></a>, <a href="BMSpeaker.html"><span class="s5">BMSpeaker</span></a>, <a href="BMInOutArray.html"><span class="s5">BMInOutArray</span></a>, <a href="../Other/Swarm Granulation/BMSwarmGranulator.html"><span class="s5">BMSwarmGranulator</span></a>, <a href="../Other/Swarm Granulation/BMBoidSpace.html"><span class="s6">BMBoidSpace</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (speakerList)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMSpeakerListVisualiser.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>speakerList </b>- An instance of <a href="BMInOutArray.html"><span class="s3">BMInOutArray</span></a>.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Instance Methods</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>showBoids_ (bool)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Turn grain boid drawing on or off.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>bool </b>- A <a href="SC://Boolean"><span class="s3">Boolean</span></a> value.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>boidPositions_ (boidsArray)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set the positions at which to draw the grain boids. The x-axis is specified within the range of +/- 1. The y and z axes are sized proportionally. Normally these are derived using <a href="../Other/Swarm Granulation/BMBoidSpace.html"><span class="s6">BMBoidSpace</span></a>'s <b>positions </b>method.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>boidsArray </b>- An Array of Arrays in the form [[x1, y1, z1], [x2, y2, z2], ...]</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p11">////// 5.1 Array (-0.1)</p>
+<p class="p12">(</p>
+<p class="p11">// make a speaker list</p>
+<p class="p12">l = [[-30, <span class="s7">'L'</span>], [30, <span class="s7">'R'</span>], [0, <span class="s7">'C'</span>], [-110, <span class="s7">'Ls'</span>], [110, <span class="s7">'Rs'</span>]].collectAs({<span class="s8">|el, i|</span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="s8">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p13"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p12">)</p>
+<p class="p13"><span class="s2">v = </span>BMSpeakerListVisualiser<span class="s2">(l); </span><span class="s9">// let's look at it</span></p>
+<p class="p14"><br></p>
+<p class="p14"><br></p>
+<p class="p11">////// American style 8 Channel Ring</p>
+<p class="p12">(</p>
+<p class="p12">l = [[0, <span class="s7">'F'</span> ], [45, <span class="s7">'FR'</span>], [90, <span class="s7">'R'</span>], [135, <span class="s7">'BR'</span>], [180, <span class="s7">'B'</span>], [-135, <span class="s7">'BL'</span>], [-90, <span class="s7">'L'</span>], [-45, <span class="s7">'FL'</span>]].collectAs({<span class="s8">|el, i|</span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="s8">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p13"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p12">)</p>
+<p class="p13">BMSpeakerListVisualiser<span class="s2">(l); </span><span class="s9">// let's look at it</span></p>
+<p class="p14"><br></p>
+<p class="p14"><br></p>
+<p class="p11">////// zig zag partial dome</p>
+<p class="p12">(</p>
+<p class="p12">l = [[-22.5, 40, <span class="s7">'Upper1'</span>], [22.5, 40, <span class="s7">'Upper2'</span>], [-67.5, 40, <span class="s7">'Upper3'</span>], [67.5, 40, <span class="s7">'Upper4'</span>], [-112.5, 40, <span class="s7">'Upper5'</span>], [112.5, 40, <span class="s7">'Upper6'</span>], [-157.5, 40, <span class="s7">'Upper7'</span>], [157.5, 40, <span class="s7">'Upper8'</span>], [-45, 0, <span class="s7">'Lower1'</span>], [45, 0, <span class="s7">'Lower2'</span>], [-90, 0, <span class="s7">'Lower3'</span>], [90, 0, <span class="s7">'Lower4'</span>], [-135, 0, <span class="s7">'Lower5'</span>], [135, 0, <span class="s7">'Lower6'</span>], [0, 0, <span class="s7">'Lower7'</span>], [180, 0, <span class="s7">'Lower8'</span>]].collectAs({<span class="s8">|el, i|</span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="s8">BMSpeaker</span>.newFromSpherical(el[2], i, el[0], el[1], 2);</p>
+<p class="p13"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p12">l.defineSubArray(<span class="s7">\upper</span>, l.keys[(0..7)]);</p>
+<p class="p12">l.defineSubArray(<span class="s7">\lower</span>, l.keys[(8..15)]);</p>
+<p class="p12">)</p>
+<p class="p11"><span class="s8">BMSpeakerListVisualiser</span><span class="s2">(l); </span>// note subArray colour coding</p>
+<p class="p14"><br></p>
+<p class="p11">////// Big BEAST Array</p>
+<p class="p12"><span class="s8">BMSpeakerListVisualiser</span>(<span class="s8">Object</span>.readArchive(<span class="s10">"BigSpeakerArray"</span>.resolveRelative));</p>
+</body>
+</html>

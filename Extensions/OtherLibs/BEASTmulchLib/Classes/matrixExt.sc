@@ -1,0 +1,3 @@
++ Object {
+	isBMInOutArray {^false}
+}

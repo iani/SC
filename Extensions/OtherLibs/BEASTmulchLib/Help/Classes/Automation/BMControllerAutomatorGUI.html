@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p14 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #606060}
+p.p15 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p17 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #001bec}
+span.s3 {color: #000000}
+span.s4 {text-decoration: underline}
+span.s5 {color: #002afb}
+span.s6 {color: #007300}
+span.s7 {color: #0000bf}
+span.s8 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMControllerAutomatorGUI<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>GUI for a BMControllerAutomator</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a><b> : </b><a href="../Root Classes/BMAbstractGUI.html"><span class="s2"><b>BMAbstractGUI</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">This is a GUI class for BMControllerAutomator. It allows one to create or edit sequences and snapshots, and shows a visual representation of the automator's time base, for instance a soundfile graph.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3"><b>See also:</b> <a href="BMControllerAutomator.html"><span class="s4">BMControllerAutomator</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (ca, name, origin)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMControllerAutomatorGUI.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>ca </b>- An instance of <a href="BMControllerAutomator.html"><span class="s5">BMControllerAutomator</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://String"><span class="s5">String</span></a> indicating what to display in the title bar of the resulting window. The default is "Soundfile / Controller Snapshots".</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>origin </b>- A <a href="SC://Point"><span class="s5">Point</span></a> indicating the origin of the resulting window. The default is 200@200.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Examples</b></p>
+<p class="p3"><br></p>
+<p class="p11">s.boot;</p>
+<p class="p3"><br></p>
+<p class="p11">(</p>
+<p class="p12">// a source and time reference</p>
+<p class="p13"><span class="s3">p = </span>BMSoundFilePlayer<span class="s3">(name:</span><span class="s6">\bar</span><span class="s3">);</span></p>
+<p class="p14"><span class="s3">p.read(</span>"sounds/a11wlk01.wav"<span class="s3">);</span></p>
+<p class="p15">)</p>
+<p class="p6"><br></p>
+<p class="p15">(</p>
+<p class="p12">// make a speaker list</p>
+<p class="p11">l = [[-30, <span class="s6">'L'</span>], [30, <span class="s6">'R'</span>], [0, <span class="s6">'C'</span>], [-110, <span class="s6">'Ls'</span>], [110, <span class="s6">'Rs'</span>]].collectAs({<span class="s7">|el, i|</span></p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="s7">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p16"><span class="s3">}, </span>BMInOutArray<span class="s3">);</span></p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s3">m = </span><span class="s7">BMAudioMatrix</span><span class="s3">(p, l, name:</span><span class="s6">'Router'</span><span class="s3">); </span>// make a matrix for connections</p>
+<p class="p11">m.connect(<span class="s6">'bar-1'</span>, l.keys);</p>
+<p class="p6"><br></p>
+<p class="p17">// a controller to automate and an amp control matrix</p>
+<p class="p16"><span class="s3">c = </span>BMVirtualController<span class="s3">(</span><span class="s6">\foo</span><span class="s3">, s, 5);</span></p>
+<p class="p16">BMVirtualControllerSliders<span class="s3">(c); </span><span class="s8">// slider gui</span></p>
+<p class="p16"><span class="s3">n = </span>BMAmpControlMatrix<span class="s3">(c, m);</span></p>
+<p class="p11">c.controlNames.do({<span class="s7">|name, i|</span> n.connect(name, l.keys[i])});<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s3">a = </span><span class="s7">BMControllerAutomator</span><span class="s3">(c.controlNames, p); </span>// control virt sliders, player as time ref</p>
+<p class="p3"><br></p>
+<p class="p12">// make a sequence and add some snapshots</p>
+<p class="p11">c.setAllValues(0 ! 5);</p>
+<p class="p11">a.addSequence(<span class="s6">'test1'</span>, 0, c.controlNames);</p>
+<p class="p11">c.setVal(1, 0.5);</p>
+<p class="p11">a.addSnapShot(<span class="s6">'test1'</span>, 0.5, <span class="s6">'test1-2'</span>);</p>
+<p class="p11">c.setVal(2, 1);</p>
+<p class="p11">a.addSnapShot(<span class="s6">'test1'</span>, 1, <span class="s6">'test1-3'</span>);</p>
+<p class="p11">c.setAllValues({1.0.rand} ! 5);</p>
+<p class="p11">a.addSnapShot(<span class="s6">'test1'</span>, 3, <span class="s6">'test1-4'</span>);</p>
+<p class="p11">)</p>
+<p class="p3"><br></p>
+<p class="p15">p.play.rate_(0.5); <span class="s8">// half speed</span></p>
+<p class="p6"><br></p>
+<p class="p16">BMControllerAutomatorGUI<span class="s3">(a, origin: 100@600); </span><span class="s8">// try out the GUI</span></p>
+</body>
+</html>

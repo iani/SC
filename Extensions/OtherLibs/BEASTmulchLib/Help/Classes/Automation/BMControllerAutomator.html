@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p16 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p17 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #606060}
+p.p18 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+p.p19 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p20 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p21 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+span.s1 {font: 12.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #0034f9}
+span.s4 {text-decoration: underline}
+span.s5 {color: #002afb}
+span.s6 {color: #007300}
+span.s7 {color: #0000bf}
+span.s8 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>BMControllerAutomator<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b><span class="s1"><b>automate Controls</b></span><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="BMAbstractAutomator.html"><b>BMAbstractAutomator</b></a><b> : </b><a href="BMAbstractIndependentRateAutomator.html"><b>BMAbstractIndependentRateAutomator</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p5">BMControllerAutomator is used to automate controls such as motorised faders or GUI sliders. For this to work any BMAbstractController subclass instance representing any of its automated controls must respond to <b>acceptsAutomation</b> with true.</p>
+<p class="p2"><br></p>
+<p class="p5">BMControllerAutomator may have any number of automation sequences (instances of <a href="BMSnapShotSeq.html"><span class="s3">BMSnapShotSeq</span></a>), each consisting of a number of <a href="BMSnapShot.html"><span class="s3">BMSnapShot</span></a>s and beginning with a <a href="BMArbitraryStartSnapShot.html"><span class="s3">BMArbitraryStartSnapShot</span></a>. (This allows one to combine realtime performance with automation, by accounting for the fact that the state of controllers at the start of a sequence may not be known.)<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p5">Snapshots represent a series of momentary states for the controls being automated in a sequence, and are used as target points for interpolation.</p>
+<p class="p2"><span class="Apple-converted-space"> </span></p>
+<p class="p5">Sequences can overlap in time, and can automate any desired subgroup of controls. <b>N.B.</b> If more than one sequence attempts to automate the same control within a given automation cycle, all but the first processed will be ignored.</p>
+<p class="p2"><br></p>
+<p class="p5">Since the times and orderings of sequences and snapshots might change, they are referred to by <b>name</b>, which is represented by a <a href="SC://Symbol"><span class="s3">Symbol</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="../Root Classes/BMControl.html"><span class="s4">BMControl</span></a>, <a href="../Root Classes/BMAbstractController.html"><span class="s4">BMAbstractController</span></a>, <a href="BMAbstractAutomator.html"><span class="s4">BMAbstractAutomator</span></a>, <a href="BMAbstractIndependentRateAutomator.html"><span class="s4">BMAbstractIndependentRateAutomator</span></a>, <a href="../../Time References and Automation.html"><span class="s4">Time References and Automation</span></a>, <a href="BMAbstractSnapShot.html"><span class="s4">BMAbstractSnapShot</span></a>, <a href="BMSnapShotSeq.html"><span class="s4">BMSnapShotSeq</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p6"><b>Creation / Class Methods</b></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>*new (controls, timeref)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMControllerAutomator.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>controls </b>- An <a href="SC://Array"><span class="s3">Array</span></a> of Symbols corresponding the names of the <a href="../Root Classes/BMControl.html"><span class="s3">BMControl</span></a> instances to be automated.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>timeref </b>- The object to serve as this automator's time reference. This can be any object which complies with the guidelines set out in <a href="../../Time References and Automation.html"><span class="s3">Time References and Automation</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p11"><b>Accessing Instance and Class Variables</b></p>
+<p class="p9"><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>sequences</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns an <a href="SC://IdentityDictionary"><span class="s3">IdentityDictionary</span></a> containing one or more instances of <a href="BMSnapShotSeq.html"><span class="s3">BMSnapShotSeq</span></a>. Sequence names serve as keys.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>controls</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns an <a href="SC://Array"><span class="s3">Array</span></a> of Symbols corresponding the names of the <a href="../Root Classes/BMControl.html"><span class="s3">BMControl</span></a> instances to be automated.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p11"><b>Instance Methods</b></p>
+<p class="p12"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>addSequence (seqName, startTime, ctrlNames)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Add a new automation sequence.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>seqName </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> serving as a name for this sequence.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>startTime </b>- A time in seconds corresponding to the start time of this sequence.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>ctrlNames </b>- An <a href="SC://Array"><span class="s3">Array</span></a> of Symbols corresponding the names of the <a href="../Root Classes/BMControl.html"><span class="s3">BMControl</span></a> instances to be automated. These must be included in the list of <b>controls</b> passed when this automator was created.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>mappings</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://IdentityDictionary"><span class="s3">IdentityDictionary</span></a> containing this automator's sequences. Sequence names serve as keys.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>mappings_ (mappings)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Sets this automator's sequences. <b>mappings</b> should be an IdentityDictionary in the form of sequenceNameSymbol-&gt;BMSnapShotSeq.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>addSnapShot (seqName, ssTime, ssName)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Add a controller snapshot to a sequence.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>seqName </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the sequence to add the snapshot to.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>ssTime </b>- The time in seconds at which to add the snapshot.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>ssName </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of this snapshot.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>addIndividualSequences (seqName, startTime)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This is a convenience method to add an individual sequence for each controller. The sequences will have names in the form of <b>seqName-controllerName</b>.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>seqName </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the base name for the individual sequences.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>startTime </b>- The start time in seconds at which to add the sequences.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>removeSequence (seq)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Remove an automation sequence from this automator.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>seq </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the sequence to be removed.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>sequence (name)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Return a particular sequence.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s5">Symbol</span></a> indicating the name of the sequence to return.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>reset</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This resets all sequences (clears the states of their arbitrary start snapshots).</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>free</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Unassigns the receiver as automator for all its controls.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>gui</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Creates and returns a new <a href="BMControllerAutomatorGUI.html"><span class="s3">BMControllerAutomatorGUI</span></a> for this automator.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p11"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p13">s.boot;</p>
+<p class="p14"><br></p>
+<p class="p13">(</p>
+<p class="p15">// a source and time reference</p>
+<p class="p16"><span class="s2">p = </span>BMSoundFilePlayer<span class="s2">(name:</span><span class="s6">\bar</span><span class="s2">);</span></p>
+<p class="p17"><span class="s2">p.read(</span>"sounds/a11wlk01.wav"<span class="s2">);</span></p>
+<p class="p18">)</p>
+<p class="p19"><br></p>
+<p class="p18">(</p>
+<p class="p15">// make a speaker list</p>
+<p class="p13">l = [[-30, <span class="s6">'L'</span>], [30, <span class="s6">'R'</span>], [0, <span class="s6">'C'</span>], [-110, <span class="s6">'Ls'</span>], [110, <span class="s6">'Rs'</span>]].collectAs({<span class="s7">|el, i|</span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="s7">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p20"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p14"><br></p>
+<p class="p15"><span class="s2">m = </span><span class="s7">BMAudioMatrix</span><span class="s2">(p, l, name:</span><span class="s6">'Router'</span><span class="s2">); </span>// make a matrix for connections</p>
+<p class="p13">m.connect(<span class="s6">'bar-1'</span>, l.keys);</p>
+<p class="p19"><br></p>
+<p class="p21">// a controller to automate and an amp control matrix</p>
+<p class="p20"><span class="s2">c = </span>BMVirtualController<span class="s2">(</span><span class="s6">\foo</span><span class="s2">, s, 5);</span></p>
+<p class="p20">BMVirtualControllerSliders<span class="s2">(c); </span><span class="s8">// slider gui</span></p>
+<p class="p20"><span class="s2">n = </span>BMAmpControlMatrix<span class="s2">(c, m);</span></p>
+<p class="p13">c.controlNames.do({<span class="s7">|name, i|</span> n.connect(name, l.keys[i])});<span class="Apple-converted-space"> </span></p>
+<p class="p14"><br></p>
+<p class="p15"><span class="s2">a = </span><span class="s7">BMControllerAutomator</span><span class="s2">(c.controlNames, p); </span>// control virt sliders, player as time ref</p>
+<p class="p14"><br></p>
+<p class="p15">// make a sequence and add some snapshots</p>
+<p class="p13">c.setAllValues(0 ! 5);</p>
+<p class="p13">a.addSequence(<span class="s6">'test1'</span>, 0, c.controlNames);</p>
+<p class="p13">c.setVal(1, 0.5);</p>
+<p class="p13">a.addSnapShot(<span class="s6">'test1'</span>, 0.5, <span class="s6">'test1-2'</span>);</p>
+<p class="p13">c.setVal(2, 1);</p>
+<p class="p13">a.addSnapShot(<span class="s6">'test1'</span>, 1, <span class="s6">'test1-3'</span>);</p>
+<p class="p13">c.setAllValues({1.0.rand} ! 5);</p>
+<p class="p13">a.addSnapShot(<span class="s6">'test1'</span>, 3, <span class="s6">'test1-4'</span>);</p>
+<p class="p13">)</p>
+<p class="p14"><br></p>
+<p class="p18">p.play.rate_(0.5); <span class="s8">// half speed</span></p>
+<p class="p19"><br></p>
+<p class="p20">BMControllerAutomatorGUI<span class="s2">(a, origin: 100@600); </span><span class="s8">// try out the GUI</span></p>
+</body>
+</html>

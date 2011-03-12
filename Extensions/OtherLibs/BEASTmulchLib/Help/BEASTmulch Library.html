@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #0000bf}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Helvetica}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Helvetica; color: #1856d8; min-height: 14.0px}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Helvetica; color: #001bec}
+p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Helvetica; min-height: 14.0px}
+p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center}
+p.p18 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 22.0px Helvetica}
+span.s1 {color: #0049f3}
+span.s2 {color: #002afb}
+span.s3 {text-decoration: underline}
+span.s4 {font: 12.0px Helvetica}
+span.s5 {color: #0000bf}
+span.s6 {color: #001dfd}
+span.s7 {color: #606060}
+span.s8 {text-decoration: underline ; color: #0027ea}
+span.s9 {color: #0034f9}
+span.s10 {color: #000000}
+span.s11 {color: #007300}
+span.s12 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>BEASTmulch Library</b></p>
+<p class="p2"><br></p>
+<p class="p3">The BEASTmulch Library is a collection of SC objects designed for use in the creation, processing and presentation of complex multichannel signal chains.</p>
+<p class="p2"><br></p>
+<p class="p3">Objects includes sources (subclasses of <a href="Classes/Root Classes/BMAbstractAudioSource.html"><span class="s1">BMAbstractAudioSource</span></a>), such as <a href="Classes/Other/BMSoundFilePlayer.html"><span class="s1">BMSoundFilePlayer</span></a>, routers and mixers such as <a href="Classes/Matrices/BMAudioMatrix.html"><span class="s1">BMAudioMatrix</span></a> and <a href="Classes/Matrices/BMAmpControlMatrix.html"><span class="s1">BMAmpControlMatrix</span></a>, and processors and spatialisers such as <a href="Classes/Plugins/BMTrimPluginsRack.html"><span class="s1">BMTrimPluginsRack</span></a> and <a href="Classes/Plugins/BMMultichannelPluginsRack.html"><span class="s1">BMMultichannelPluginsRack</span></a>. There are also classes which represent controllers (subclasses of BMAbstractController) with examples including MIDI controllers, GUI Faders, EtherSense, etc., and support for automation of controllers (i.e automated mixing and diffusion).</p>
+<p class="p2"><br></p>
+<p class="p3">The library supports a number of standard spatialisation techniques, such as Ambisonics, and includes SC ports of Ville Pullki's Vector Base Amplitude Panning (<a href="../UGens/VBAP/VBAP.html"><span class="s2">VBAP</span></a>), and the <a href="../UGens/Loris/Loris.html"><span class="s2">Loris</span></a> analysis resynthesis method. It also supports some idiosyncratic techniques, such as Spatial Swarm Granulation, and provides utility classes for Speaker Array balancing and visualisation.</p>
+<p class="p2"><br></p>
+<p class="p3">Currently the library is not fully cross-platform: GUI classes and UGens are OSX only.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3"><a href="http://www.beast.bham.ac.uk/research/mulch.shtml">http://www.beast.bham.ac.uk/research/mulch.shtml</a></span></p>
+<p class="p4"><span class="s3"><a href="mailto:beastmulch-info@contacts.bham.ac.uk">beastmulch-info@contacts.bham.ac.uk</a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Installation and Dependencies</b></p>
+<p class="p2"><br></p>
+<p class="p3">The library can be installed in one of the normal platform-specific folders for extensions. You can find out what these are by executing these two lines of code:</p>
+<p class="p2"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-tab-span">	</span></span><span class="s5">Platform</span>.userExtensionDir;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s5">Platform</span>.systemExtensionDir;</p>
+<p class="p2"><br></p>
+<p class="p3">See <a href="SC://Using-Extensions"><span class="s2">Using-Extensions</span></a> for further details.</p>
+<p class="p2"><br></p>
+<p class="p3">The library also has three dependencies which are required for full functionality. The first two are Wouter Snouei's wslib and Dan Stowell's KDTree, which are available as <a href="SC://Quarks"><span class="s6">Quarks</span></a>. You can install them by calling Quarks.gui, or executing the following and recompiling:</p>
+<p class="p2"><br></p>
+<p class="p6"><span class="s4"><span class="Apple-tab-span">	</span></span><span class="s7">"wslib"</span>.include;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s7">"KDTree"</span>.include;</p>
+<p class="p2"><br></p>
+<p class="p3">The third is Josh Parmenter's collection of ambisonics UGens. These are part of the sc3-plugins package, which is available from: <a href="http://sc3-plugins.sourceforge.net/"><span class="s8">http://sc3-plugins.sourceforge.net/</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Library Overview</b></p>
+<p class="p2"><br></p>
+<p class="p7"><b>Naming Conventions and Global Lookup</b></p>
+<p class="p2"><br></p>
+<p class="p3">Classes in the library are named with the prefix 'BM'. Abstract classes include the word 'Abstract' in their name. Looking through the help files of these and other basic classes can provide a good overview of the library and its capabilities. The most important objects are <a href="Classes/Root Classes/BMAbstractAudioChainElement.html"><span class="s9">BMAbstractAudioChainElement</span></a>, <a href="Classes/Matrices/BMAbstractMatrix.html"><span class="s9">BMAbstractMatrix</span></a>, <a href="Classes/Root Classes/BMAbstractAudioSource.html"><span class="s9">BMAbstractAudioSource</span></a>, <a href="Classes/Root Classes/BMAbstractController.html"><span class="s9">BMAbstractController</span></a>, <a href="Classes/Root Classes/BMAbstractGUI.html"><span class="s9">BMAbstractGUI</span></a>, <a href="Classes/Automation/BMAbstractAutomator.html"><span class="s9">BMAbstractAutomator</span></a>, and <a href="Classes/Inputs and Outputs/BMInOutArray.html"><span class="s9">BMInOutArray</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p3">Most objects in the library take a <a href="SC://Symbol"><span class="s9">Symbol</span></a> as a <b>name</b>, which allows for global lookup of objects, preset storing and recall, etc. Where it is necessary for users to be able to query all instances of a particular type, instances are stored in global dictionaries, using each object's <b>name</b> as a key. The most important of these are:</p>
+<p class="p2"><br></p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span></span><span class="s5">BMAbstractAudioChainElement</span><span class="s10">.allChainElements;<span class="Apple-tab-span">	</span></span>// objects forming part of a signal chain</p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span></span><span class="s5">BMAbstractController</span><span class="s10">.allControllers;<span class="Apple-tab-span">	</span></span>// objects representing a controller (e.g. fader box)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span></span><span class="s5">BMAbstractController</span><span class="s10">.allControls;<span class="Apple-tab-span">	</span></span>// objects representing a single control (e.g. a fader)</p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span></span><span class="s5">BMTimeReferences</span><span class="s10">.timeReferences;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// objects which serve as clock sources</p>
+<p class="p2"><br></p>
+<p class="p7"><b>GUI Classes</b></p>
+<p class="p2"><br></p>
+<p class="p3">Many objects have corresponding GUI classes, which can usually be created automatically using the <b>gui</b> method.</p>
+<p class="p2"><br></p>
+<p class="p9"><span class="s10"><span class="Apple-tab-span">	</span>p = </span>BMSoundFilePlayer<span class="s10">(name:</span><span class="s11">\foo</span><span class="s10">);</span></p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span>p.bus = 0; </span>// for the sake of example</p>
+<p class="p10"><span class="Apple-tab-span">	</span>p.gui.onClose_({p.free});</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3">GUI objects (and other objects in the library) make heavy use of class Object's dependancy mechanism in order to stay in sync. This in combination with the global lookup facilities make it possible to design extremely flexible code, which can adapt to the resources available.</p>
+<p class="p2"><br></p>
+<p class="p7"><b>Inputs, Outputs and Groups</b></p>
+<p class="p2"><br></p>
+<p class="p3">Input and output busses for objects are generally represented as instances of <a href="Classes/Inputs and Outputs/BMInOutArray.html"><span class="s9">BMInOutArray</span></a>, which is an ordered dictionary which matches keys (i.e. meaningful names) to bus indices or speakers (which include a bus, and are represented by the <a href="Classes/Inputs and Outputs/BMSpeaker.html"><span class="s9">BMSpeaker</span></a> class).</p>
+<p class="p2"><br></p>
+<p class="p3">Objects which create synths generally do so in a specific <b>group</b> (and have a like named getter method), and respond to the message <b>asTarget</b> by returning that group. This means that objects are generally compatible with 'object-style' SC programming, and can be passed as targets to methods like Synth:new, etc.</p>
+<p class="p2"><br></p>
+<p class="p7"><b>Mappings</b></p>
+<p class="p2"><br></p>
+<p class="p3">Many objects in the library implement <b>mappings</b> and <b>mappings_ </b>methods, which allow you to capture or set their current state. Using an object's <b>name</b> as a key, one can easily construct dictionaries which can serve as presets for an entire chain of elements. For example</p>
+<p class="p2"><br></p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span>( </span>// get a preset</p>
+<p class="p10"><span class="Apple-tab-span">	</span>~preset = <span class="s5">BMAbstractAudioChainElement</span>.allChainElements.collectAs({<span class="s5">|element|</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>element.name-&gt;element.mappings;</p>
+<p class="p9"><span class="s10"><span class="Apple-tab-span">	</span>}, </span>IdentityDictionary<span class="s10">);</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span>)</p>
+<p class="p11"><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="s10"><span class="Apple-tab-span">	</span>( </span>// set a preset</p>
+<p class="p10"><span class="Apple-tab-span">	</span>~preset.keysValuesDo({<span class="s5">|k, v|</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s5">BMAbstractAudioChainElement</span>.allChainElements[k].mappings_(v);</p>
+<p class="p10"><span class="Apple-tab-span">	</span>});</p>
+<p class="p10"><span class="Apple-tab-span">	</span>)</p>
+<p class="p2"><br></p>
+<p class="p7"><b>Browsing and Searching Documentation</b></p>
+<p class="p2"><br></p>
+<p class="p3">To browse all files in the library execute the following:</p>
+<p class="p2"><br></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="s5">Help</span>(<span class="s7">"."</span>.resolveRelative).gui; <span class="s12">// for general Library</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="s5">Help</span>(<span class="s7">"../UGens"</span>.resolveRelative).gui; <span class="s12">// for UGens</span></p>
+<p class="p2"><br></p>
+<p class="p3">From there you can see sections on Root Classes, Automation (i.e. auto-mixing and diffusion), Controllers (e.g. hardware and software controllers), Inputs and Outputs (bus arrays, speakers, MIDI), Matrices (matrix routers and mixers, and controller assignment), Plugins (monophonic and multichannel processors), and Other (sound file player and utilities.)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Acknowledgements</b></p>
+<p class="p2"><br></p>
+<p class="p3">BEASTmulch Library was programmed by Scott Wilson and Sergio Luque. Significant creative input was provided by Jonty Harrison, Eric Bumstead, James Carpenter and the numerous members and guests of the BEAST community who tried out the software in its various stages of development.</p>
+<p class="p2"><br></p>
+<p class="p3">The BEASTmulch project received funding from the Arts and Humanities Research Council of the UK, and was sponsored by the University of Birmingham.</p>
+<p class="p2"><br></p>
+<p class="p12"><br></p>
+<p class="p13"><img src="attachments/BEASTmulch Library/www.ahrc.ac.uk.png" alt="attachments/BEASTmulch Library/www.ahrc.ac.uk.png"><span class="Apple-converted-space"> </span></p>
+<p class="p14"><br></p>
+<p class="p15"><span class="s3"><a href="http://www.ahrc.ac.uk/">http://www.ahrc.ac.uk</a></span></p>
+<p class="p16"><br></p>
+<p class="p16"><br></p>
+<p class="p16"><br></p>
+<p class="p17"><span class="s4"><img src="attachments/BEASTmulch Library/www.bham.ac.uk.png" alt="attachments/BEASTmulch Library/www.bham.ac.uk.png"></span></p>
+<p class="p14"><br></p>
+<p class="p15"><span class="s3"><a href="http://www.bham.ac.uk/">http://www.bham.ac.uk</a></span></p>
+<p class="p16"><br></p>
+<p class="p16"><br></p>
+<p class="p16"><br></p>
+<p class="p18"><b>BEAST</b></p>
+<p class="p14"><br></p>
+<p class="p15"><span class="s3"><a href="http://www.beast.bham.ac.uk/research/mulch.shtml">http://www.beast.bham.ac.uk/research/mulch.shtml</a></span></p>
+</body>
+</html>

@@ -1,0 +1,594 @@
+var o, p;
+o = [
+	BMInOutArray.prNew,  Array.prNew(51),  Association.prNew,  BMSpeaker.prNew,  
+	Event.prNew,  Array.prNew(24),  Array.prNew(1),  Array.prNew(2),  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Event.prNew,  Array.prNew(20),  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Event.prNew,  Array.prNew(20),  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Event.prNew,  Array.prNew(20),  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Association.prNew,  BMSpeaker.prNew,  
+	Association.prNew,  BMSpeaker.prNew,  Array.prNew(7),  IdentityDictionary.prNew,  
+	Array.prNew(32),  Array.prNew(8),  Array.prNew(8),  Array.prNew(8),  
+	Array.prNew(8),  Array.prNew(8),  Array.prNew(8),  Array.prNew(3)
+];
+p = [
+	// BMInOutArray
+	0, [ array: o[1],  subArraysKeys: o[114],  
+		subArrays: o[115],  busObjects: nil ],  
+	// Array
+	1, [ o[2],  o[8],  o[10],  o[12],  
+		o[14],  o[16],  o[18],  o[20],  
+		o[22],  o[26],  o[28],  o[30],  
+		o[32],  o[34],  o[36],  o[38],  
+		o[40],  o[44],  o[46],  o[48],  
+		o[50],  o[52],  o[54],  o[56],  
+		o[58],  o[60],  o[62],  o[64],  
+		o[66],  o[68],  o[70],  o[72],  
+		o[74],  o[76],  o[78],  o[80],  
+		o[82],  o[84],  o[86],  o[88],  
+		o[90],  o[94],  o[96],  o[98],  
+		o[100],  o[102],  o[104],  o[106],  
+		o[108],  o[110],  o[112] ],  
+	// Association
+	2, [ key: 'MainL',  value: o[3] ],  
+	// BMSpeaker
+	3, [ name: 'MainL',  index: 0,  
+		x: -2.8955225249155587,  y: 7.219427292666506,  
+		z: 0.7639969052464018,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: -21.85442375808623,  ele: 5.609585578202973,  
+		rad: 7.815873105265815,  autoTrim: -18.91242450276035 ],  
+	// Event
+	4, [ array: o[5],  size: 6,  
+		proto: nil,  parent: nil,  
+		know: true ],  
+	// Array
+	5, [ nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  'maxFreq',  20000,  
+		'minFreq',  38,  'spl',  112,  
+		nil,  nil,  'brand',  'ATC',  
+		'plugins',  o[6],  'powered',  false ],  
+	// Array
+	6, [ o[7] ],  
+	// Array
+	7, [ 'highpass',  'atcs' ],  
+	// Association
+	8, [ key: 'MainR',  value: o[9] ],  
+	// BMSpeaker
+	9, [ name: 'MainR',  index: 1,  
+		x: 2.6696161300620957,  y: 7.366551153939537,  
+		z: 0.7571941659566248,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: 19.9203650708576,  ele: 5.519811145086085,  
+		rad: 7.871865674060654,  autoTrim: -17.368037780960307 ],  
+	// Association
+	10, [ key: 'WideL',  value: o[11] ],  
+	// BMSpeaker
+	11, [ name: 'WideL',  index: 2,  
+		x: -8.002331143862632,  y: 3.4794108312513825,  
+		z: 0.7520267758776592,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: -66.50061285866292,  ele: 4.925694255042247,  
+		rad: 8.758375862013471,  autoTrim: -21.057817521704415 ],  
+	// Association
+	12, [ key: 'WideR',  value: o[13] ],  
+	// BMSpeaker
+	13, [ name: 'WideR',  index: 3,  
+		x: 7.8287012173470885,  y: 3.6869139957677417,  
+		z: 0.7786570018787832,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: 64.78198603416001,  ele: 5.141766610523342,  
+		rad: 8.688394805098046,  autoTrim: -21.214625974343434 ],  
+	// Association
+	14, [ key: 'SideL',  value: o[15] ],  
+	// BMSpeaker
+	15, [ name: 'SideL',  index: 4,  
+		x: -7.873977587101221,  y: -3.6673991440986393,  
+		z: 0.7893236964963836,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: -114.97431223142716,  ele: 5.192289460015903,  
+		rad: 8.721947685130798,  autoTrim: -21.392644124105786 ],  
+	// Association
+	16, [ key: 'SideR',  value: o[17] ],  
+	// BMSpeaker
+	17, [ name: 'SideR',  index: 5,  
+		x: 7.816452504710922,  y: -3.503595829593087,  
+		z: 0.8105551903019622,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: 114.14352068214126,  ele: 5.405656387014762,  
+		rad: 8.60401727172076,  autoTrim: -20.292201328618475 ],  
+	// Association
+	18, [ key: 'RearL',  value: o[19] ],  
+	// BMSpeaker
+	19, [ name: 'RearL',  index: 6,  
+		x: -2.5168632562766375,  y: -7.988548268870641,  
+		z: 0.7792322435101596,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: -162.5125024668015,  ele: 5.315237846965684,  
+		rad: 8.41181948119415,  autoTrim: -23.06543511356789 ],  
+	// Association
+	20, [ key: 'RearR',  value: o[21] ],  
+	// BMSpeaker
+	21, [ name: 'RearR',  index: 7,  
+		x: 2.6020292565581205,  y: -7.966200131139469,  
+		z: 0.7665713481638965,  spec: o[4],  
+		description: nil,  directivity: nil,  
+		azi: 161.91121845905934,  ele: 5.226418686048316,  
+		rad: 8.415374763679672,  autoTrim: -20.901919832798587 ],  
+	// Association
+	22, [ key: 'CloseFntL',  value: o[23] ],  
+	// BMSpeaker
+	23, [ name: 'CloseFntL',  index: 8,  
+		x: -2.085557802948917,  y: 5.283012847938594,  
+		z: 0.08611936058458003,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -21.54245840077544,  ele: 0.8686793073841566,  
+		rad: 5.680421872114154,  autoTrim: -20.698550025396973 ],  
+	// Event
+	24, [ array: o[25],  size: 5,  
+		proto: nil,  parent: nil,  
+		know: true ],  
+	// Array
+	25, [ nil,  nil,  'spl',  97,  
+		nil,  nil,  'brand',  'Genelec',  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  'maxFreq',  20000,  
+		'minFreq',  58,  'powered',  true ],  
+	// Association
+	26, [ key: 'CloseFntR',  value: o[27] ],  
+	// BMSpeaker
+	27, [ name: 'CloseFntR',  index: 9,  
+		x: 1.8905677564435772,  y: 5.366209655529328,  
+		z: 0.08218517224692057,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 19.407855656204287,  ele: 0.8275829087776732,  
+		rad: 5.69009726730023,  autoTrim: -20.76411714415923 ],  
+	// Association
+	28, [ key: 'CloseWideL',  value: o[29] ],  
+	// BMSpeaker
+	29, [ name: 'CloseWideL',  index: 10,  
+		x: -4.9104912471798325,  y: 2.6013814777489843,  
+		z: 0.05965889041008758,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -62.08715009003514,  ele: 0.615094298041901,  
+		rad: 5.5573077172863306,  autoTrim: -21.391113229666896 ],  
+	// Association
+	30, [ key: 'CloseWideR',  value: o[31] ],  
+	// BMSpeaker
+	31, [ name: 'CloseWideR',  index: 11,  
+		x: 4.707433213487629,  y: 2.9485171748515007,  
+		z: 0.1260642959101725,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 57.93888536242739,  ele: 1.3001297416288042,  
+		rad: 5.5560393444020955,  autoTrim: -21.36874804397521 ],  
+	// Association
+	32, [ key: 'CloseSideL',  value: o[33] ],  
+	// BMSpeaker
+	33, [ name: 'CloseSideL',  index: 12,  
+		x: -4.659897734798508,  y: -2.4610584779146523,  
+		z: 0.10195294765945691,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -117.84013483339214,  ele: 1.1083295744818522,  
+		rad: 5.270849090424834,  autoTrim: -22.455766236071874 ],  
+	// Association
+	34, [ key: 'CloseSideR',  value: o[35] ],  
+	// BMSpeaker
+	35, [ name: 'CloseSideR',  index: 13,  
+		x: 4.901129942442005,  y: -2.282327953494461,  
+		z: 0.166072215310209,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 114.97016330408574,  ele: 1.7594136491717476,  
+		rad: 5.409036474336426,  autoTrim: -22.221816496643278 ],  
+	// Association
+	36, [ key: 'CloseRearL',  value: o[37] ],  
+	// BMSpeaker
+	37, [ name: 'CloseRearL',  index: 14,  
+		x: -1.852891387549143,  y: -4.96124050479723,  
+		z: 0.16825175279303692,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -159.52067700086454,  ele: 1.8196677165173034,  
+		rad: 5.298624585004338,  autoTrim: -22.362204487282785 ],  
+	// Association
+	38, [ key: 'CloseRearR',  value: o[39] ],  
+	// BMSpeaker
+	39, [ name: 'CloseRearR',  index: 15,  
+		x: 1.9464130157730886,  y: -4.938814418229232,  
+		z: 0.17180652535191068,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 158.4903366430614,  ele: 1.8536897872993936,  
+		rad: 5.311302003071689,  autoTrim: -21.21311422731469 ],  
+	// Association
+	40, [ key: 'HiCloseWideL',  value: o[41] ],  
+	// BMSpeaker
+	41, [ name: 'HiCloseWideL',  index: 16,  
+		x: -3.347028239460564,  y: 3.9716652531020435,  
+		z: 1.4844472579081092,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -40.121732730462305,  ele: 15.950213401056066,  
+		rad: 5.401879911656266,  autoTrim: -23.535223278984336 ],  
+	// Event
+	42, [ array: o[43],  size: 5,  
+		proto: nil,  parent: nil,  
+		know: true ],  
+	// Array
+	43, [ nil,  nil,  'spl',  99,  
+		nil,  nil,  'brand',  'Genelec',  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  'maxFreq',  20000,  
+		'minFreq',  48,  'powered',  true ],  
+	// Association
+	44, [ key: 'HiCloseWideR',  value: o[45] ],  
+	// BMSpeaker
+	45, [ name: 'HiCloseWideR',  index: 17,  
+		x: 3.1730194100091267,  y: 4.043346986431205,  
+		z: 1.5309994528229078,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 38.12307510856299,  ele: 16.58753772657331,  
+		rad: 5.362897197739391,  autoTrim: -25.113155370889647 ],  
+	// Association
+	46, [ key: 'HiCloseSideL',  value: o[47] ],  
+	// BMSpeaker
+	47, [ name: 'HiCloseSideL',  index: 18,  
+		x: -4.704717334055301,  y: 0.42935741825366286,  
+		z: 1.5156895499733545,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -84.78557155973968,  ele: 17.78782667822514,  
+		rad: 4.96145420193196,  autoTrim: -24.224034077522766 ],  
+	// Association
+	48, [ key: 'HiCloseSideR',  value: o[49] ],  
+	// BMSpeaker
+	49, [ name: 'HiCloseSideR',  index: 19,  
+		x: 4.623848928460144,  y: 0.7255523280943329,  
+		z: 1.5858193920337749,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 81.08213799919055,  ele: 18.717373235905292,  
+		rad: 4.94178391253356,  autoTrim: -24.146696706214485 ],  
+	// Association
+	50, [ key: 'HiCloseRearL',  value: o[51] ],  
+	// BMSpeaker
+	51, [ name: 'HiCloseRearL',  index: 20,  
+		x: -3.209233538246602,  y: -3.7055501494716343,  
+		z: 1.5493323290334917,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -139.10543047961326,  ele: 17.539495530389644,  
+		rad: 5.1410808668065515,  autoTrim: -24.369349399800605 ],  
+	// Association
+	52, [ key: 'HiCloseRearR',  value: o[53] ],  
+	// BMSpeaker
+	53, [ name: 'HiCloseRearR',  index: 21,  
+		x: 3.183975956894633,  y: -3.5520625958260754,  
+		z: 1.58569003815744,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 138.12778153224505,  ele: 18.387607733837598,  
+		rad: 5.0268543320710535,  autoTrim: -24.879478648296537 ],  
+	// Association
+	54, [ key: 'HiCloseFront',  value: o[55] ],  
+	// BMSpeaker
+	55, [ name: 'HiCloseFront',  index: 22,  
+		x: -0.0821015806509473,  y: 5.378646267190549,  
+		z: 1.4968286991036985,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -0.8745153574596258,  ele: 15.549681187971915,  
+		rad: 5.583643299098598,  autoTrim: -24.1996582280774 ],  
+	// Association
+	56, [ key: 'HiCloseBack',  value: o[57] ],  
+	// BMSpeaker
+	57, [ name: 'HiCloseBack',  index: 23,  
+		x: 0.0526085506527475,  y: -4.62993303973975,  
+		z: 1.5630380850284213,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 179.34899313258103,  ele: 18.65325807599474,  
+		rad: 4.88693520187498,  autoTrim: -22.492993961022524 ],  
+	// Association
+	58, [ key: 'OverFntL',  value: o[59] ],  
+	// BMSpeaker
+	59, [ name: 'OverFntL',  index: 24,  
+		x: -1.0925152821769424,  y: 3.1818942202416953,  
+		z: 2.2786865186600873,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -18.95010062207918,  ele: 34.11088084296892,  
+		rad: 4.063305639614241,  autoTrim: -17.45486709257099 ],  
+	// Association
+	60, [ key: 'OverFntR',  value: o[61] ],  
+	// BMSpeaker
+	61, [ name: 'OverFntR',  index: 25,  
+		x: 0.9652350420281256,  y: 3.2752145949083045,  
+		z: 2.2799549893615585,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 16.420716920604036,  ele: 33.73223430001265,  
+		rad: 4.105716025564124,  autoTrim: -25.35242738542054 ],  
+	// Association
+	62, [ key: 'OverWideL',  value: o[63] ],  
+	// BMSpeaker
+	63, [ name: 'OverWideL',  index: 26,  
+		x: -2.478676593638301,  y: 1.3630775255995546,  
+		z: 2.3228518977498114,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -61.19265995439821,  ele: 39.39143236219049,  
+		rad: 3.660253944130772,  autoTrim: -17.377277353872287 ],  
+	// Association
+	64, [ key: 'OverWideR',  value: o[65] ],  
+	// BMSpeaker
+	65, [ name: 'OverWideR',  index: 27,  
+		x: 2.408792914417998,  y: 1.4269807249894382,  
+		z: 2.2984285835713547,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 59.357291755528,  ele: 39.384040714225115,  
+		rad: 3.62233781525406,  autoTrim: -17.792843050741972 ],  
+	// Association
+	66, [ key: 'OverSideL',  value: o[67] ],  
+	// BMSpeaker
+	67, [ name: 'OverSideL',  index: 28,  
+		x: -2.435743566842701,  y: -1.0192368546608204,  
+		z: 2.2900206278783104,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -112.70687143782999,  ele: 40.93516441143426,  
+		rad: 3.495123025792176,  autoTrim: -18.800468426914072 ],  
+	// Association
+	68, [ key: 'OverSideR',  value: o[69] ],  
+	// BMSpeaker
+	69, [ name: 'OverSideR',  index: 29,  
+		x: 2.4084509768011197,  y: -0.861440282530096,  
+		z: 2.332223558044917,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 109.68080894251521,  ele: 42.35800540732693,  
+		rad: 3.461499991726057,  autoTrim: -18.205053351426802 ],  
+	// Association
+	70, [ key: 'OverRearL',  value: o[71] ],  
+	// BMSpeaker
+	71, [ name: 'OverRearL',  index: 30,  
+		x: -1.0895906602570653,  y: -2.7669241867903125,  
+		z: 2.2992909363103498,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: -158.50591152640945,  ele: 37.71121931113547,  
+		rad: 3.75896476069723,  autoTrim: -18.392530921852746 ],  
+	// Association
+	72, [ key: 'OverRearR',  value: o[73] ],  
+	// BMSpeaker
+	73, [ name: 'OverRearR',  index: 31,  
+		x: 1.155742757242468,  y: -2.720690978258384,  
+		z: 2.3011611187743615,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 156.98433548079782,  ele: 37.89978938654001,  
+		rad: 3.7460970642328335,  autoTrim: -19.01082917196662 ],  
+	// Association
+	74, [ key: 'GalleryWideL',  value: o[75] ],  
+	// BMSpeaker
+	75, [ name: 'GalleryWideL',  index: 40,  
+		x: -7.917950997308674,  y: 7.523229404943065,  
+		z: 5.930831140467158,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -46.46432827384035,  ele: 28.50242386414937,  
+		rad: 12.42850299480659,  autoTrim: -27.10698238170041 ],  
+	// Association
+	76, [ key: 'GalleryWideR',  value: o[77] ],  
+	// BMSpeaker
+	77, [ name: 'GalleryWideR',  index: 41,  
+		x: 7.730954141438004,  y: 7.772668469287702,  
+		z: 5.853790791126088,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 44.845839309720915,  ele: 28.10091112240587,  
+		rad: 12.427746927611185,  autoTrim: -27.863342738363418 ],  
+	// Association
+	78, [ key: 'GallerySideL',  value: o[79] ],  
+	// BMSpeaker
+	79, [ name: 'GallerySideL',  index: 42,  
+		x: -7.470692895388881,  y: 1.3427459580279224,  
+		z: 5.878300536194938,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -79.81072662612976,  ele: 37.755580181156134,  
+		rad: 9.600449793569252,  autoTrim: -26.804188966705645 ],  
+	// Association
+	80, [ key: 'GallerySideR',  value: o[81] ],  
+	// BMSpeaker
+	81, [ name: 'GallerySideR',  index: 43,  
+		x: 7.402638159311556,  y: 1.1848382112115707,  
+		z: 5.922155103147322,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 80.90658287434616,  ele: 38.30702533528214,  
+		rad: 9.55378534247952,  autoTrim: -27.269025760305915 ],  
+	// Association
+	82, [ key: 'GalleryRearL',  value: o[83] ],  
+	// BMSpeaker
+	83, [ name: 'GalleryRearL',  index: 44,  
+		x: -7.680484731451102,  y: -7.683064767383118,  
+		z: 6.009740127340539,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -135.009621810931,  ele: 28.951198076759496,  
+		rad: 12.415164369754612,  autoTrim: -28.505057360318915 ],  
+	// Association
+	84, [ key: 'GalleryRearR',  value: o[85] ],  
+	// BMSpeaker
+	85, [ name: 'GalleryRearR',  index: 45,  
+		x: 7.539141109580831,  y: -7.443345939283546,  
+		z: 6.033539211286752,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 134.63366668390154,  ele: 29.661548078149277,  
+		rad: 12.192031941237495,  autoTrim: -28.02548583820178 ],  
+	// Association
+	86, [ key: 'GalleryFront',  value: o[87] ],  
+	// BMSpeaker
+	87, [ name: 'GalleryFront',  index: 46,  
+		x: -0.1383414637537388,  y: 11.87635532885669,  
+		z: 5.817021529237704,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: -0.6673784433040711,  ele: 26.09401001121,  
+		rad: 13.225153826306565,  autoTrim: -27.01533931433168 ],  
+	// Association
+	88, [ key: 'GalleryBack',  value: o[89] ],  
+	// BMSpeaker
+	89, [ name: 'GalleryBack',  index: 47,  
+		x: 0.20106698343917384,  y: -11.453152590743787,  
+		z: 6.072645891055377,  spec: o[42],  
+		description: nil,  directivity: nil,  
+		azi: 178.99424144020043,  ele: 27.929601750929912,  
+		rad: 12.965036070788319,  autoTrim: -27.05000853530511 ],  
+	// Association
+	90, [ key: 'FloorWideL',  value: o[91] ],  
+	// BMSpeaker
+	91, [ name: 'FloorWideL',  index: 50,  
+		x: -3.143220635319379,  y: 3.8486315419811654,  
+		z: -0.791605425281284,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: -39.23889911046535,  ele: -9.051507058835139,  
+		rad: 5.031743222538751,  autoTrim: -12.294084382917765 ],  
+	// Event
+	92, [ array: o[93],  size: 5,  
+		proto: nil,  parent: nil,  
+		know: true ],  
+	// Array
+	93, [ nil,  nil,  'spl',  101,  
+		nil,  nil,  'brand',  'Genelec',  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  'maxFreq',  20000,  
+		'minFreq',  38,  'powered',  true ],  
+	// Association
+	94, [ key: 'FloorWideR',  value: o[95] ],  
+	// BMSpeaker
+	95, [ name: 'FloorWideR',  index: 51,  
+		x: 3.077364594780929,  y: 3.8587452634583577,  
+		z: -0.8342385115544619,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: 38.57249893320526,  ele: -9.59373937443166,  
+		rad: 5.005601038000742,  autoTrim: -13.19232178913724 ],  
+	// Association
+	96, [ key: 'FloorSideL',  value: o[97] ],  
+	// BMSpeaker
+	97, [ name: 'FloorSideL',  index: 52,  
+		x: -4.432203890312081,  y: 0.6439004812191087,  
+		z: -0.8293423054585862,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: -81.7340287976277,  ele: -10.490827838847874,  
+		rad: 4.554870779136891,  autoTrim: -12.218037879725799 ],  
+	// Association
+	98, [ key: 'FloorSideR',  value: o[99] ],  
+	// BMSpeaker
+	99, [ name: 'FloorSideR',  index: 53,  
+		x: 4.408365444086131,  y: 0.40277446770403696,  
+		z: -0.8179696303774943,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: 84.7796109981844,  ele: -10.469017080536961,  
+		rad: 4.5016649671723545,  autoTrim: -12.58628727356355 ],  
+	// Association
+	100, [ key: 'FloorRearL',  value: o[101] ],  
+	// BMSpeaker
+	101, [ name: 'FloorRearL',  index: 54,  
+		x: -3.115125670652591,  y: -3.5557826366865934,  
+		z: -0.723650978004377,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: -138.77926909723797,  ele: -8.703181652546835,  
+		rad: 4.782391539939752,  autoTrim: -16.310261533191174 ],  
+	// Association
+	102, [ key: 'FloorRearR',  value: o[103] ],  
+	// BMSpeaker
+	103, [ name: 'FloorRearR',  index: 55,  
+		x: 3.015927164074465,  y: -3.4891777074963404,  
+		z: -0.7491758498319255,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: 139.16097409987916,  ele: -9.226646085342686,  
+		rad: 4.672412887091963,  autoTrim: -21.07711785009738 ],  
+	// Association
+	104, [ key: 'FloorFront',  value: o[105] ],  
+	// BMSpeaker
+	105, [ name: 'FloorFront',  index: 56,  
+		x: -0.05977910472681702,  y: 5.173790071358857,  
+		z: -0.7901669032910034,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: -0.6619785403706234,  ele: -8.682826854473756,  
+		rad: 5.2341227516089,  autoTrim: -12.414006877331392 ],  
+	// Association
+	106, [ key: 'FloorBack',  value: o[107] ],  
+	// BMSpeaker
+	107, [ name: 'FloorBack',  index: 57,  
+		x: 0.06401453877074115,  y: -4.50028202885609,  
+		z: -0.7276992419534304,  spec: o[92],  
+		description: nil,  directivity: nil,  
+		azi: 179.18504761936484,  ele: -9.184355053574457,  
+		rad: 4.559186592711327,  autoTrim: -21.094090190795324 ],  
+	// Association
+	108, [ key: 'KeyFront',  value: o[109] ],  
+	// BMSpeaker
+	109, [ name: 'KeyFront',  index: 58,  
+		x: 0.0011622295489582823,  y: 2.4349169394703662,  
+		z: 2.586588187234676,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 0.027348301637756665,  ele: 46.73005195986803,  
+		rad: 3.5523598217578165,  autoTrim: -15.475004619719625 ],  
+	// Association
+	110, [ key: 'KeyMid',  value: o[111] ],  
+	// BMSpeaker
+	111, [ name: 'KeyMid',  index: 59,  
+		x: 0.03424038188265599,  y: 0.2218552582957379,  
+		z: 2.6554700815677634,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 8.773609905971313,  ele: 85.16795062217628,  
+		rad: 2.6649415591127776,  autoTrim: -15.110182632104285 ],  
+	// Association
+	112, [ key: 'KeyBack',  value: o[113] ],  
+	// BMSpeaker
+	113, [ name: 'KeyBack',  index: 60,  
+		x: 0.07499875032753667,  y: -1.9422408926510695,  
+		z: 2.6490858883357964,  spec: o[24],  
+		description: nil,  directivity: nil,  
+		azi: 177.7886481518319,  ele: 53.731743039627645,  
+		rad: 3.285662877018361,  autoTrim: -18.02509516648576 ],  
+	// Array
+	114, [ 'MainRing',  'Close',  'HiClose',  'Over',  
+		'Gallery',  'Floor',  'Key' ],  
+	// IdentityDictionary
+	115, [ array: o[116],  size: 7,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	116, [ 'HiClose',  o[117],  'Gallery',  o[118],  
+		nil,  nil,  nil,  nil,  
+		'Close',  o[119],  'MainRing',  o[120],  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  'Over',  o[121],  
+		nil,  nil,  nil,  nil,  
+		'Floor',  o[122],  nil,  nil,  
+		'Key',  o[123],  nil,  nil ],  
+	// Array
+	117, [ 'HiCloseWideL',  'HiCloseWideR',  'HiCloseSideL',  'HiCloseSideR',  
+		'HiCloseRearL',  'HiCloseRearR',  'HiCloseFront',  'HiCloseBack' ],  
+	// Array
+	118, [ 'GalleryWideL',  'GalleryWideR',  'GallerySideL',  'GallerySideR',  
+		'GalleryRearL',  'GalleryRearR',  'GalleryFront',  'GalleryBack' ],  
+	// Array
+	119, [ 'CloseFntL',  'CloseFntR',  'CloseWideL',  'CloseWideR',  
+		'CloseSideL',  'CloseSideR',  'CloseRearL',  'CloseRearR' ],  
+	// Array
+	120, [ 'MainL',  'MainR',  'WideL',  'WideR',  
+		'SideL',  'SideR',  'RearL',  'RearR' ],  
+	// Array
+	121, [ 'OverFntL',  'OverWideL',  'OverWideR',  'OverSideL',  
+		'OverSideR',  'OverRearL',  'OverRearR',  'OverFntR' ],  
+	// Array
+	122, [ 'FloorWideL',  'FloorWideR',  'FloorSideL',  'FloorSideR',  
+		'FloorRearL',  'FloorRearR',  'FloorFront',  'FloorBack' ],  
+	// Array
+	123, [ 'KeyFront',  'KeyMid',  'KeyBack' ]
+];
+prUnarchive(o,p);

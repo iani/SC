@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p11 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #003cf7}
+span.s3 {color: #001dfd}
+span.s4 {color: #000000}
+span.s5 {text-decoration: underline}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMControl<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>represents a single control</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BMControl represents a single control, such as a hardware fader or knob. You should not create these directly; rather they are created for you by instances of <a href="BMAbstractController.html"><span class="s3">BMAbstractController</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s4"><b>See also:</b> <a href="BMAbstractController.html"><span class="s5">BMAbstractController</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Controllers vs. Controls</b></p>
+<p class="p2"><br></p>
+<p class="p1">The BEASTmulch library provides two ways of dealing with a given control:</p>
+<p class="p2"><br></p>
+<p class="p1">1) as a collection of controls - this will be a subclass of <a href="BMAbstractController.html"><span class="s2">BMAbstractController</span></a> and will generally represent a single hardware device and all of its controls. Controls should be numbered, and be accessible through <b>getVal</b> and <b>setVal</b> by index, usually starting with 1 for human readability.</p>
+<p class="p2"><br></p>
+<p class="p1">2) as an individual control - an instance of BMControl. These have a Symbol for a name, and their values can be accessed through BMAbstractController's class methods <b>*getValueByName</b> and <b>*setValueByName</b>.</p>
+<p class="p2"><br></p>
+<p class="p1">It is sometimes useful to deal with one or the other representation depending on what one is trying to do, but in normal usage it is more common to deal with the controller instance. <a href="BMAbstractController.html"><span class="s3">BMAbstractController</span></a> has two classvars, <b>allControllers</b> and <b>allControls</b>, which contain dictionaries. These allow objects to query any individual control or controller by <b>name</b>, or to get global information about what controls or controllers currently exist.</p>
+<p class="p2"><br></p>
+<p class="p1">Each controller allocates a multichannel control rate bus for its controls. Objects in the library map to controls by mapping synth Controls to the corresponding bus. Bus values are assumed to be between 0 and 1. On Cmd-. all mappings are cleared.</p>
+<p class="p2"><br></p>
+<p class="p6"><b>Accessing Instance and Class Variables</b></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>ctrlNum</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns the index of this control's control bus.</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>mappedTo_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>mappedTo</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>If this control is mapped to control anything (e.g. in a BMAmpControlMatrix), the mapping object should be stored here. Otherwise this returns nil. Objects which map controls can use this to check if a control is available, and to avoid dual mapping.</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>lastAutomated_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>lastAutomated</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get the last time (generally the logical time of a Time Reference) at which this control was automated. This can be used to check if this control has already been automated in this automation interval.</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>automator_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>automator</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get the current automator for this control. In the current implementation controls can only have a single automator.</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>name</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Return this control's name as a <a href="SC://Symbol"><span class="s3">Symbol</span></a>.</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>controller</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Return the controller object of which this control is a part. This will be an instance of a subclass of <a href="BMAbstractController.html"><span class="s3">BMAbstractController</span></a>.</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><b>Instance Methods</b></p>
+<p class="p9"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>value</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Get the current value of this control. This will be between 0 and 1 inclusive.</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>value_ (val)</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set the current value of this control.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>val </b>- The new value to set. This should be between 0 and 1 inclusive.</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>controllerSpec</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Return this control's controller's <a href="SC://ControlSpec"><span class="s3">ControlSpec</span></a>.</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+</body>
+</html>

@@ -1,0 +1,61 @@
+BEASTmulch Library
+
+The BEASTmulch Library is a collection of SC objects designed for use in the creation, processing and presentation of complex multichannel signal chains.
+
+Objects includes sources (subclasses of BMAbstractAudioSource), such as BMSoundFilePlayer, routers and mixers such as BMAudioMatrix and BMAmpControlMatrix, and processors and spatialisers such as BMTrimPluginsRack and BMMultichannelPluginsRack. There are also classes which represent controllers (subclasses of BMAbstractController) with examples including MIDI controllers, GUI Faders, EtherSense, etc., and support for automation of controllers (i.e automated mixing and diffusion).
+
+The library supports a number of standard spatialisation techniques, such as Ambisonics, and includes SC ports of Ville Pullki's Vector Base Amplitude Panning (VBAP), and the Loris analysis resynthesis method. It also supports some idiosyncratic techniques, such as Spatial Swarm Granulation, and provides utility classes for Speaker Array balancing and visualisation.
+
+Currently the library is not fully cross-platform: GUI classes and UGens are OSX only.
+
+//////////////////////////////////////
+
+Installation and Dependencies
+
+The library can be installed in one of the normal platform-specific folders for extensions. You can find out what these are by executing these two lines of code:
+
+	Platform.userExtensionDir;
+	Platform.systemExtensionDir;
+
+See Using-Extensions for further details.
+
+The library also has three dependencies which are required for full functionality. The first two are Wouter Snouei's wslib and Dan Stowell's KDTree, which are available as Quarks. You can install them by calling Quarks.gui, or executing the following and recompiling:
+
+	"wslib".include;
+	"KDTree".include;
+
+The third is Josh Parmenter's collection of ambisonics UGens. These are part of the sc3-plugins package, which is available from: http://sc3-plugins.sourceforge.net/.
+
+//////////////////////////////////////
+
+ BEASTmulch Library
+ Copyright (C) 2009 Scott Wilson and Sergio Luque
+ 
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as published by
+ the Free Software Foundation.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA 
+ 
+ http://www.beast.bham.ac.uk/research/mulch.shtml
+ beastmulch-info@contacts.bham.ac.uk
+ 
+//////////////////////////////////////
+ 
+Acknowledgements
+
+BEASTmulch Library was programmed by Scott Wilson and Sergio Luque. Significant creative input was provided by Jonty Harrison, Eric Bumstead, James Carpenter and the numerous members and guests of the BEAST community who tried out the software in its various stages of development.
+
+The BEASTmulch project received funding from the Arts and Humanities Research Council of the UK, and was sponsored by the University of Birmingham.
+
+http://www.ahrc.ac.uk
+http://www.bham.ac.uk
+http://www.beast.bham.ac.uk/research/mulch.shtml
+

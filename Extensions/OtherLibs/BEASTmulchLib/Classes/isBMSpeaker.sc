@@ -1,0 +1,3 @@
++ Object {
+	isBMSpeaker {^false}
+}

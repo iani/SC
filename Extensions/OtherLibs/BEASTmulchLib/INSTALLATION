@@ -1,0 +1,15 @@
+Installation and Dependencies
+
+The library can be installed in one of the normal platform-specific folders for extensions. You can find out what these are by executing these two lines of code:
+
+	Platform.userExtensionDir;
+	Platform.systemExtensionDir;
+
+See Using-Extensions for further details.
+
+The library also has three dependencies which are required for full functionality. The first two are Wouter Snouei's wslib and Dan Stowell's KDTree, which are available as Quarks. You can install them by calling Quarks.gui, or executing the following and recompiling:
+
+	"wslib".include;
+	"KDTree".include;
+
+The third is Josh Parmenter's collection of ambisonics UGens. These are part of the sc3-plugins package, which is available from: http://sc3-plugins.sourceforge.net/.

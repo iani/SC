@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p11 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #003cf7}
+span.s3 {color: #000000}
+span.s4 {text-decoration: underline}
+span.s5 {color: #0000bf}
+span.s6 {color: #007300}
+span.s7 {color: #bf0000}
+span.s8 {color: #001dfd}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMSpeaker<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>represents a speaker connected to a hardware output bus</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BMSpeaker represents a speaker connected to one of a server's hardware outputs. In addition to the output bus index, it encapsulates information on location (in both Cartesian and spherical coordinates), speaker type, trim values, and directivity.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3"><b>See also: </b><a href="BMInOutArray.html"><span class="s4">BMInOutArray</span></a>, <a href="BMSpeakerSpec.html"><span class="s4">BMSpeakerSpec</span></a>, <a href="../Other/BMAutoBalancer.html"><span class="s4">BMAutoBalancer</span></a>, <a href="BMSpeakerArrayGUI.html"><span class="s4">BMSpeakerArrayGUI</span></a>, <a href="BMSpeakerListVisualiser.html"><span class="s4">BMSpeakerListVisualiser</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Compatibility and Polymorphism</b></p>
+<p class="p2"><br></p>
+<p class="p1">BMSpeaker responds to <b>asUGenInput</b>, <b>asControlInput</b>, <b>asOSCArgBundle</b>, and <b>asOSCArgArray </b>by returning its bus index. It can thus be used directly in most places where you would pass such an index. For example:</p>
+<p class="p2"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>i = <span class="s5">BMSpeaker</span>(<span class="s6">\right</span>, 1);</p>
+<p class="p7"><span class="s3"><span class="Apple-tab-span">	</span></span>// make a Synth</p>
+<p class="p6"><span class="Apple-tab-span">	</span>x = {<span class="s5">Out</span>.ar(i, <span class="s5">SinOsc</span>.ar(440, 0, 0.2))}.play; <span class="s7">// pass BMSpeaker as bus arg</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>x.free;</p>
+<p class="p2"><br></p>
+<p class="p1">BMSpeaker masquerades as an Association, returning its name as <i>key</i>, and itself as <i>value</i>. The standard Collection class to use for speaker lists is <a href="BMInOutArray.html"><span class="s2">BMInOutArray</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p8"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>*new (name, index, x, y, z, spec)</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMSpeaker using Cartesian coordinates. (0,0,0) is generally considered to be head height at the centre of the listening area.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s2">Symbol</span></a> corresponding to the name of this speaker.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>index </b>- The bus index corresponding to this speaker's hardware output.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>x </b>- x (left-right) coordinate in meters. Default value is 1.<span class="Apple-converted-space"> </span></p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>y </b>- y (front-back) coordinate in meters. Default value is 1.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>z </b>- z (height) coordinate in meters. Default value is 1.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>spec </b>- A <a href="SC://Symbol"><span class="s2">Symbol</span></a> corresponding to the name of an existing <a href="BMSpeakerSpec.html"><span class="s2">BMSpeakerSpec</span></a>. Default value is 'Generic'.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b = <span class="s5">BMSpeaker</span>.new(<span class="s6">\left</span>, 0, -1, 1.732, 0, <span class="s6">'UREI-809'</span>); <span class="s7">// make a "new" Urei 809</span></p>
+<p class="p7"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.azi; </span>// spherical coords automatically calculated</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>*newFromSpherical (name, index, azi, ele, rad, spec)</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMSpeaker using spherical coordinates, generally considered relative to (0,0,0) in Cartesian coordinates (see above).</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s2">Symbol</span></a> corresponding to the name of this speaker.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>index </b>- The bus index corresponding to this speaker's hardware output.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>azi </b>- Azimuth (horizon) angle in degrees. 0 is straight ahead (positive y-axis). Default value is 0.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>ele </b>- Elevation (height) angle in degrees above or below the azimuth plane. Default value is 0.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>rad </b>- Radius in meters from the centre point.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>spec </b>- A <a href="SC://Symbol"><span class="s2">Symbol</span></a> corresponding to the name of an existing <a href="BMSpeakerSpec.html"><span class="s2">BMSpeakerSpec</span></a>. Default value is 'Generic'.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b = <span class="s5">BMSpeaker</span>.newFromSpherical(<span class="s6">\left</span>, 0, -30, 0, 2, <span class="s6">'Kef-C20'</span>); <span class="s7">// make a "new" Kef C20</span></p>
+<p class="p7"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.x; </span>// Cartesian coords automatically calculated</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p12"><b>Accessing Instance and Class Variables</b></p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>index_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>index</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this speaker's bus index.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>description_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>description</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get a <a href="SC://String"><span class="s2">String</span></a> to serve as a human readable description of this speaker. This can be more verbose than <b>name</b>. Default value is nil.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>name_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>name</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get a <a href="SC://Symbol"><span class="s2">Symbol</span></a> to use as this speaker's name. In a <a href="BMInOutArray.html"><span class="s8">BMInOutArray</span></a> this will serve as this speaker's key.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>autoTrim_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>autoTrim</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get value in dBFS to use as trim setting for this speaker. <a href="../Plugins/BMTrimPluginsRack.html"><span class="s2">BMTrimPluginsRack</span></a> has an <b>autoTrim</b> method which queries this value. Generally this is populated using <a href="../Other/BMAutoBalancer.html"><span class="s2">BMAutoBalancer</span></a>. Default value is nil.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>spec_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>spec</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get an instance of <a href="BMSpeakerSpec.html"><span class="s8">BMSpeakerSpec</span></a> which describes the characteristics of this speaker's model.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>directivity_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>directivity</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get a <a href="SC://Symbol"><span class="s8">Symbol</span></a> used to describe this speaker's directivity, i.e. is it pointed towards the listener or reflected. Valid settings are 'direct' and 'reflected'. Default value is 'direct'.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><br></p>
+<p class="p5"><b>Setting coordinates</b></p>
+<p class="p2"><br></p>
+<p class="p1">Setting any Cartesian coordinate will result in the spherical coordinates being updated, and vice versa.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">Naturally users are free to use coordinates according to any reference desired. Cartesian coordinates and <b>rad </b>can be in any units desired, but <b>azi</b> and <b>ele</b> must be in degrees since this is assumed in the update calculations. In general however other elements of the library assume that Cartesian coordinates are in meters and that both Cartesian and spherical coordinates are relative to the Cartesian point (0,0,0), which indicates head height at the centre of the listening area.</p>
+<p class="p10"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>x_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>x</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this speaker's x coordinate (usually in meters).</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>y_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>y</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this speaker's y coordinate (usually in meters).</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>z_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>z</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this speaker's z coordinate (usually in meters).</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>azi_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>azi</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this speaker's azimuth angle in degrees.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>ele_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>ele</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this speaker's azimuth angle in degrees.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>rad_</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>rad</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this speaker's radius<span class="Apple-converted-space">  </span>(usually in meters).</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p12"><b>Other Instance Methods</b></p>
+<p class="p13"><br></p>
+<p class="p9"><span class="Apple-tab-span">	</span><b>asUGenInput</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns this speaker's bus index.</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>asControlInput</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns this speaker's bus index.</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>isBMSpeaker</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns true. An extension to class <a href="SC://Object"><span class="s2">Object</span></a> defines this message to return false.</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>key</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>This is a synonym for <b>name</b>, allowing a BMSpeaker to masquerade as an <a href="SC://Association"><span class="s2">Association</span></a>.</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span>isValidBMInOutArrayMember</b></p>
+<p class="p10"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns true. An extension to class <a href="SC://Association"><span class="s2">Association</span></a> defines this message to return true. An extension to class <a href="SC://Object"><span class="s2">Object</span></a> defines this message to return false.</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p12"><b>Examples</b></p>
+<p class="p3"><br></p>
+<p class="p14">// 5.1 Array (-0.1)</p>
+<p class="p15">(</p>
+<p class="p15">l = [[-30, <span class="s6">'L'</span>], [30, <span class="s6">'R'</span>], [0, <span class="s6">'C'</span>], [-110, <span class="s6">'Ls'</span>], [110, <span class="s6">'Rs'</span>]].collectAs({<span class="s5">|el, i|</span></p>
+<p class="p15"><span class="Apple-tab-span">	</span><span class="s5">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p16"><span class="s3">}, </span>BMInOutArray<span class="s3">);</span></p>
+<p class="p15">)</p>
+<p class="p16">BMSpeakerListVisualiser<span class="s3">(l); </span><span class="s7">// let's look at it</span></p>
+<p class="p3"><br></p>
+<p class="p14">// 8 Channel Ring</p>
+<p class="p15">(</p>
+<p class="p15">l = [[0, <span class="s6">'C'</span> ], [45, <span class="s6">'FR'</span>], [90, <span class="s6">'R'</span>], [135, <span class="s6">'BR'</span>], [180, <span class="s6">'B'</span>], [-135, <span class="s6">'BL'</span>], [-90, <span class="s6">'L'</span>], [-45, <span class="s6">'FL'</span>]].collectAs({<span class="s5">|el, i|</span></p>
+<p class="p15"><span class="Apple-tab-span">	</span><span class="s5">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p16"><span class="s3">}, </span>BMInOutArray<span class="s3">);</span></p>
+<p class="p15">)</p>
+<p class="p16">BMSpeakerListVisualiser<span class="s3">(l); </span><span class="s7">// let's look at it</span></p>
+<p class="p3"><br></p>
+<p class="p14">// zig zag partial dome</p>
+<p class="p15">(</p>
+<p class="p15">l = [[-22.5, 40, <span class="s6">'Upper1'</span>], [22.5, 40, <span class="s6">'Upper2'</span>], [-67.5, 40, <span class="s6">'Upper3'</span>], [67.5, 40, <span class="s6">'Upper4'</span>], [-112.5, 40, <span class="s6">'Upper5'</span>], [112.5, 40, <span class="s6">'Upper6'</span>], [-157.5, 40, <span class="s6">'Upper7'</span>], [157.5, 40, <span class="s6">'Upper8'</span>], [-45, 0, <span class="s6">'Lower1'</span>], [45, 0, <span class="s6">'Lower2'</span>], [-90, 0, <span class="s6">'Lower3'</span>], [90, 0, <span class="s6">'Lower4'</span>], [-135, 0, <span class="s6">'Lower5'</span>], [135, 0, <span class="s6">'Lower6'</span>], [0, 0, <span class="s6">'Lower7'</span>], [180, 0, <span class="s6">'Lower8'</span>]].collectAs({<span class="s5">|el, i|</span></p>
+<p class="p15"><span class="Apple-tab-span">	</span><span class="s5">BMSpeaker</span>.newFromSpherical(el[2], i, el[0], el[1], 2);</p>
+<p class="p16"><span class="s3">}, </span>BMInOutArray<span class="s3">);</span></p>
+<p class="p15">)</p>
+<p class="p16">BMSpeakerListVisualiser<span class="s3">(l); </span><span class="s7">// let's look at it</span></p>
+</body>
+</html>

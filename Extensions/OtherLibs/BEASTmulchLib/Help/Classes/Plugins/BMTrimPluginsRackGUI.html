@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #001dfd}
+span.s4 {text-decoration: underline}
+span.s5 {color: #0034f9}
+span.s6 {color: #002afb}
+span.s7 {color: #007300}
+span.s8 {color: #0000bf}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMTrimPluginsRackGUI<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>GUI class for BMTrimPluginsRack</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="../Root Classes/BMAbstractGUI.html"><b>BMAbstractGUI</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMTrimPluginsRackGUI is a GUI class for control of a <a href="BMTrimPluginsRack.html"><span class="s3">BMTrimPluginsRack</span></a> and its strips. If provides facility for plugin creation, control, and duplication, as well access to BMTrimPluginsRack's other functionality.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="BMTrimPluginsRack.html"><span class="s4">BMTrimPluginsRack</span></a>, <a href="BMPlugin.html"><span class="s4">BMPlugin</span></a>, <a href="../Root Classes/BMAbstractGUI.html"><span class="s4">BMAbstractGUI</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (trimPluginsRack, name, origin)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BMTrimPluginsRackGUI.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>trimPluginsRack </b>- An instance of <a href="BMTrimPluginsRack.html"><span class="s3">BMTrimPluginsRack</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- An optional <a href="SC://String"><span class="s5">String</span></a> or <a href="SC://Symbol"><span class="s5">Symbol</span></a> indicating the title of the window. If nil is passed the name of <b>trimPluginsRack</b> will be used.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>origin </b>- An optional <a href="SC://Point"><span class="s6">Point</span></a> specifying the origin of the window. Default is 40@200.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Examples</b></p>
+<p class="p11"><br></p>
+<p class="p12">// 5.1 Array (-0.1)</p>
+<p class="p13">(</p>
+<p class="p13">l = [[-30, <span class="s7">'L'</span>], [30, <span class="s7">'R'</span>], [0, <span class="s7">'C'</span>], [-110, <span class="s7">'Ls'</span>], [110, <span class="s7">'Rs'</span>]].collectAs({<span class="s8">|el, i|</span></p>
+<p class="p13"><span class="Apple-tab-span">	</span><span class="s8">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p14"><span class="s2">}, </span>BMInOutArray<span class="s2">);</span></p>
+<p class="p13">)</p>
+<p class="p11"><br></p>
+<p class="p14"><span class="s2">r = </span>BMTrimPluginsRack<span class="s2">(l, name: </span><span class="s7">'Plug em In'</span><span class="s2">);</span></p>
+<p class="p11"><br></p>
+<p class="p12">// plugins are added at the end of the chain</p>
+<p class="p13">r[<span class="s7">\L</span>].addPlugin(<span class="s8">BMPlugin</span>(<span class="s7">'3 Band EQ'</span>));</p>
+<p class="p13">r[<span class="s7">\L</span>].addPlugin(<span class="s8">BMPlugin</span>(<span class="s7">\Highpass</span>));</p>
+<p class="p13">r[<span class="s7">\L</span>].addPlugin(<span class="s8">BMPlugin</span>(<span class="s7">\Lowpass</span>));</p>
+<p class="p12"><span class="s2">r[</span><span class="s7">\L</span><span class="s2">].plugins; </span>// check order</p>
+<p class="p11"><br></p>
+<p class="p12">// but you can move them</p>
+<p class="p13">r[<span class="s7">\L</span>].movePluginUp(2);</p>
+<p class="p13">r[<span class="s7">\L</span>].movePluginDown(0);</p>
+<p class="p12"><span class="s2">r[</span><span class="s7">\L</span><span class="s2">].plugins; </span>// check order</p>
+<p class="p11"><br></p>
+<p class="p12">// remove by index</p>
+<p class="p13">r[<span class="s7">\L</span>].removePlugin(0);</p>
+<p class="p13">r[<span class="s7">\L</span>].plugins;</p>
+<p class="p11"><br></p>
+<p class="p12"><span class="s2">r.gui; </span>// play with the GUI</p>
+<p class="p11"><br></p>
+<p class="p13">r.free;</p>
+</body>
+</html>

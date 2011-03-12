@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p14 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p15 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+p.p16 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p18 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p19 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #007300}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #0034f9}
+span.s3 {color: #003cf7}
+span.s4 {color: #0000bf}
+span.s5 {color: #000000}
+span.s6 {font: 12.0px Helvetica; color: #001bec}
+span.s7 {color: #002afb}
+span.s8 {font: 9.0px Monaco; color: #007300}
+span.s9 {font: 9.0px Monaco}
+span.s10 {font: 9.0px Monaco; color: #625d3c}
+span.s11 {color: #007300}
+span.s12 {color: #0000bf}
+span.s13 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMMultichannelPlugin<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>explanation of what BMMultichannelPlugin is and/or does</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BMMultichannelPlugin provides a general interface for making and managing multichannel plugins (i.e. processors) in the BEASTmulch library. Generally speaking these will be managed by a <a href="BMMultichannelPluginsRack.html"><span class="s2">BMMultichannelPluginsRack</span></a> or similar object, but they can be instantiated individually using the <b>makeSynth</b> and <b>release</b> methods. In this way they can function as resuable multichannel processing synths with automatically created GUIs.</p>
+<p class="p2"><br></p>
+<p class="p1">Plugins are made using a specification object, an instance of <a href="BMMultichannelPluginSpec.html"><span class="s2">BMMultichannelPluginSpec</span></a>, which provides functions for such things as <a href="SC://SynthDef"><span class="s3">SynthDef</span></a> and GUI creation, standard presets, etc. You can see a list of all available specs as follows:</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s4"><span class="Apple-tab-span">	</span></span>BMMultichannelPluginSpec<span class="s5">.specs.keys;</span></p>
+<p class="p2"><br></p>
+<p class="p1">The number of inputs and outputs for a multichannel plugin can vary, and there may be some limits based on spec.</p>
+<p class="p2"><br></p>
+<p class="p5"><span class="s5"><b>See also: </b><a href="BMMultichannelPluginSpec.html"><span class="s6">BMMultichannelPluginSpec</span></a>, <a href="BMMultichannelPluginsRack.html"><span class="s6">BMMultichannelPluginsRack</span></a>, <a href="BMPlugin.html"><span class="s6">BMPlugin</span></a><span class="Apple-converted-space"> </span></span></p>
+<p class="p2"><br></p>
+<p class="p6"><b>BMPlugin vs. BMMultichannelPlugin</b></p>
+<p class="p2"><br></p>
+<p class="p1">BMPlugin is monophonic, i.e. it has a single input and output, which are in fact the same bus. BMMultichannelPlugins can have variable numbers of inputs and outputs, which need not match. The exact number and configuration of inputs and outputs expected varies according to the multichannel plugin's spec.</p>
+<p class="p2"><br></p>
+<p class="p6"><b>Creation / Class Methods</b></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>*new (pluginSpecName, inArray, outArray, server, attributes)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new multichannel plugin.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>pluginSpecName </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the <a href="BMMultichannelPluginSpec.html"><span class="s2">BMMultichannelPluginSpec</span></a><span class="s2"> </span>to use to create this plugin.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>inArray </b>- An instance of <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a> to use as the inputs for this plugin.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>outArray </b>- An instance of <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a> to use as the outputs for this plugin. Some plugin specs require outputs to be instances of BMSpeaker with correctly populated coordinate values rather than Associations (for instance ambisonics decoders or VBAP panners).</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server </b>- The <a href="SC://Server"><span class="s3">Server</span></a> to use for this plugin. Default value is nil, which results in the default server.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>attributes </b>- Plugin specs can optionally provide a set of attributes which will can serve as settings to their <b>ugenGraphFunc</b>, <b>guiFunc</b>, <b>setupFunc</b>, and <b>cleanupFunc </b>(see <a href="BMMultichannelPluginSpec.html"><span class="s2">BMMultichannelPluginSpec</span></a>.). You can pass a Dictionary or subclass here containing values to override the defaults.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p11"><b>Accessing Instance and Class Variables</b></p>
+<p class="p9"><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>attributes</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns a <a href="SC://Dictionary"><span class="s3">Dictionary</span></a> or subclass containing this object's attributes.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>spec</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <a href="BMMultichannelPluginSpec.html"><span class="s2">BMMultichannelPluginSpec</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><b>specsDict</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <b>specsDict</b>, which is a dictionary matching controls as keys to instances of <a href="SC://ControlSpec"><span class="s7">ControlSpec</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>def</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <a href="SC://SynthDef"><span class="s3">SynthDef</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>synth</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's <a href="SC://Synth"><span class="s3">Synth</span></a>, if it is active, nil otherwise.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>inputs</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns a <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a> containing this plugin's inputs.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>outputs</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns a <a href="../Inputs and Outputs/BMInOutArray.html"><span class="s2">BMInOutArray</span></a> containing this plugin's outputs.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>numInputs</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns the number of inputs for this plugin.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>numOutputs</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns the number of outputs for this plugin.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>bus</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns this object's control <a href="SC://Bus"><span class="s3">Bus</span></a>, which is used for setting its controls.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>values</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns an <a href="SC://Event"><span class="s3">Event</span></a> containing this object's current control values as key-value pairs.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>defName</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns a <a href="SC://String"><span class="s2">String</span></a> or <a href="SC://Symbol"><span class="s2">Symbol</span></a> indicating the name of this object's <a href="SC://SynthDef"><span class="s3">SynthDef</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>preset</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns a <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the current preset if there is one, nil otherwise.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>server</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Return this object's <a href="SC://Server"><span class="s3">Server</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p11"><b>Instance Methods</b></p>
+<p class="p12"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>set (key, value)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set a control to a value.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>key </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the control to set.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>value </b>- The value to set the control to.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>get (key)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Get the current value of a control.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>key </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the control to get.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>debug</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Post the current values of all controls and then call <b>trace</b> on this object's <a href="SC://Synth"><span class="s3">Synth</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>preset_ (presetname)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Load a preset, setting this plugin's controls to its values.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>presetname </b>- A <a href="SC://Symbol"><span class="s3">Symbol</span></a> indicating the name of the preset to load.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>makeSynth (target, addAction)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Make a synth for this plugin. If one already exists it will be removed and the new one added.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>target </b>- Target for this object's <a href="SC://Synth"><span class="s3">Synth</span></a>. If target is not a Group or <a href="SC://Synth"><span class="s3">Synth</span></a>, it will be converted as follows: If it is a <a href="SC://Server"><span class="s3">Server</span></a>, it will be converted to the <a href="SC://default_group"><span class="s3">default_group</span></a> of that server. If it is nil, to the default_group of the default Server. <b>Note: </b>A Synth is not a valid target for <span class="s8">\addToHead</span> and <span class="s8">\addToTail</span>.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>addAction </b>- one of the following Symbols:<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s8">\addToHead</span><span class="s9"> </span><span class="s10"><span class="Apple-tab-span">	</span></span>- (the default) add at the head of the group specified by <b>target</b></p>
+<p class="p8"><span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s8">\addToTail</span><span class="s9"> </span><span class="s10"><span class="Apple-tab-span">	</span></span>- add at the tail of the group specified by <b>target</b></p>
+<p class="p8"><span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s8">\addAfter</span> <span class="Apple-tab-span">	</span>- add immediately after <b>target </b>in its server's node order</p>
+<p class="p8"><span class="s9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s8">\addBefore</span> <span class="Apple-tab-span">	</span>- add immediately before <b>target </b>in its server's node order</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s8">\addReplace</span> <span class="Apple-tab-span">	</span>- replace <b>target</b> and take its place in its server's node order</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>release</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Fade out and remove this plugin's synth, and call its spec's <b>cleanupFunc</b> if one exists. After this you should not use this object.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>gui</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Open a GUI for this plugin. If a GUI func was provided in this plugin's spec it will use that one to create it, otherwise it will use the <b>defaultGuiFunc</b> defined in <a href="BMMultichannelPluginSpec.html"><span class="s2">BMMultichannelPluginSpec</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>copy</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns a new BMMultichannelPlugin which is a copy of this object and its settings.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p11"><b>Examples</b></p>
+<p class="p13"><br></p>
+<p class="p14">// make a simple multichannel plugin</p>
+<p class="p15">s.boot;</p>
+<p class="p15">s.meter;</p>
+<p class="p16"><br></p>
+<p class="p17">// 5.1 Array (-0.1)</p>
+<p class="p18">(</p>
+<p class="p18">l = [[-30, <span class="s11">'L'</span>], [30, <span class="s11">'R'</span>], [0, <span class="s11">'C'</span>], [-110, <span class="s11">'Ls'</span>], [110, <span class="s11">'Rs'</span>]].collectAs({<span class="s12">|el, i|</span></p>
+<p class="p18"><span class="Apple-tab-span">	</span><span class="s12">BMSpeaker</span>.newFromSpherical(el[1], i, el[0], 0, 2);</p>
+<p class="p4"><span class="s5">}, </span>BMInOutArray<span class="s5">);</span></p>
+<p class="p18">)</p>
+<p class="p16"><br></p>
+<p class="p15">b = <span class="s12">Bus</span>.audio(s, 1);</p>
+<p class="p18">x = {<span class="s12">Out</span>.ar(b, <span class="s12">PinkNoise</span>.ar(0.2))}.play; <span class="s13">// something to pan</span></p>
+<p class="p19"><span class="s5">p = </span><span class="s12">BMMultichannelPlugin</span><span class="s5">(</span>'2D VBAP Auto Panner'<span class="s5">, b, l);</span></p>
+<p class="p18">p.makeSynth(x, <span class="s11">\addAfter</span>);</p>
+<p class="p18">p.gui;</p>
+<p class="p17"><span class="s5">p.debug; </span>// debug fun</p>
+<p class="p17"><span class="s5">p.attributes; </span>// see the attributes</p>
+<p class="p18">p.release;</p>
+<p class="p18">x.free;</p>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {text-decoration: underline}
+span.s4 {color: #001dfd}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BMArbitraryStartSnapShot<span class="Apple-tab-span">	</span></b></span><b>an arbitrary intial state in an automation sequence</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="BMAbstractSnapShot.html"><b>BMAbstractSnapShot</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BMArbitraryStartSnapShot represents an unknown initial state in a snapshot automation sequence. For example, if dealing with a motorised fader board, it may not be possible to know the state of the faders in advance of starting the sequence. Placing a BMArbitraySnapshot at the start of an automation sequence indicates that the intial state should be sampled when the sequence becomes active, and those values used as the start of the first segment. This means that an automation sequence can interpolate from an unknown to a known state, and allows users to combine live control with automation.</p>
+<p class="p2"><br></p>
+<p class="p1">Under normal circumstances you will not need to make these directly. A BMArbitraryStartSnapShot is automatically created as the first snapshot of a BMSnapShotSeq.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="BMSnapShot.html"><span class="s3">BMSnapShot</span></a>, <a href="BMAbstractSnapShot.html"><span class="s3">BMAbstractSnapShot</span></a>, <a href="BMSnapShotSeq.html"><span class="s3">BMSnapShotSeq</span></a>, <a href="BMAbstractAutomator.html"><span class="s3">BMAbstractAutomator</span></a>, <a href="../Root Classes/BMControl.html"><span class="s3">BMControl</span></a>, <a href="../Root Classes/BMAbstractController.html"><span class="s3">BMAbstractController</span></a>, <a href="../../Time References and Automation.html"><span class="s3">Time References and Automation</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (controls, time, name)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Make a new arbitrary snapshot.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>controls </b>- An <a href="SC://Array"><span class="s4">Array</span></a> of Symbols corresponding to the names of the <a href="../Root Classes/BMControl.html"><span class="s4">BMControl</span></a> instances to be automated.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>time </b>- Time in seconds for this snapshot. This will be relative to a Time Reference. See <a href="../../Time References and Automation.html"><span class="s4">Time References and Automation</span></a>.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name </b>- A <a href="SC://Symbol"><span class="s4">Symbol</span></a> indicating the name of this snapshot.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p10"><b>Accessing Instance and Class Variables</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>snapTime</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Returns the time at which the controller state was determined, or nil if this segment is inactive. This will correspond to the moment at which the automator first called <b>automate</b> at a time equal to or later than this snapshot's time.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><b>Instance Methods</b></p>
+<p class="p11"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>isKnown</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns false as this is an arbitrary snapshot.</p>
+</body>
+</html>
