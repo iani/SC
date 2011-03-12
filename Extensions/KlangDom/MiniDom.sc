@@ -118,6 +118,8 @@ MiniDom {
 		window.addFlowLayout( 10@10, 20@5 );
 		azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-180, 180, \linear, 0, 0));
 		ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 90, \linear, 0, 0));
+		azi.action = { | me | me.value.postln; synth.set(\azi, me.value) };
+		ele.action = { | me | me.value.postln; synth.set(\ele, me.value) };
 		window.front;
 	}
 
