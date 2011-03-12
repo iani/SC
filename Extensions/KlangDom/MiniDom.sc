@@ -52,7 +52,7 @@ MiniDom {
 		server = Server.default;	
 		server.boot;
 //		speakers = VBAPSpeakerArray.new(2, [0, 45, 90, 135, 180, -135, -90, -45]); // 8 channel ring
-		// 3d dome
+		// 3d partial dome
 		speakers = VBAPSpeakerArray.new(3, 
 			[[1 ,    0 ],
 				[  0.75 ,    0 ],
@@ -112,7 +112,7 @@ MiniDom {
 			synth = { |azi = 0, ele = 0, spr = 0|
 			var source;
 			source = PinkNoise.ar(0.2);
-			VBAP.ar(42, source, buffer.bufnum, MouseX.kr(-180, 180), MouseY.kr(0, 90).range(0, 14.97), spr);
+			VBAP.ar(42, source, buffer.bufnum, LFSaw.kr(0.5, 0).range(-180, 180) * -1, SinOsc.kr(3, 0).range(0, 14.97), spr);
 			}.play(server);		
 		}.fork(AppClock)
 	}
