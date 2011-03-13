@@ -6,7 +6,7 @@ PanAz.ar(numChans, in, pos, level, width, orientation)
 width: 2 -> panning between 2 speakers. < 1: gaps between speakers. > 2: spread over more than 2 speakers;
 pos: from -1 to 1 is full circle. 
 
-
+=============== 3 rings
 ele:
 	0 -> ring 1
 	0.5 -> ring 2
@@ -14,11 +14,27 @@ ele:
 Interpolation between rings: 
 ring1mul = 1 - ele;
 
-a = (0, 0.1 .. 1);	
+a = (0, 0.1 .. 1);
 b = 0.5 - a max: 0;
 c = 0.5 - (1 - a) max: 0;
 d = 0.5 - b - c;
 d + c + b;
+
+============= 4 rings
+
+
+a = (0, 0.05..1.0);
+
+((a - 0.75).fold(-10, 0.25) max: 0).postln.plot;
+(a - 0.5).fold(-10, 0.25) max: 0;
+(a - 0.25).fold(-10, 0.25) max: 0;
+(1 - a - 0.75).fold(-10, 0.25) max: 0;
+
+
+
+
+
+// Not so good: 
 
 b = (0.5 - a max: 0).pow(3) * 0.125.reciprocal; 
 c = (0.5 - (1 - a) max: 0).pow(3) * 0.125.reciprocal;
@@ -35,14 +51,11 @@ d.plot;
 
 0.5 - b
 
-
-
 (0.5 - (1 - a) max: 0).pow(3) * 0.125.reciprocal; // !!!!!!!!
 
 (1 - ((0.5 - a max: 0).pow(3) * 0.125.reciprocal));
 
 (1 - ((0.5 - a max: 0).pow(3) * 0.125.reciprocal)) + 
-
 
 1 - a
 
@@ -74,13 +87,73 @@ a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orien
 	
 	ring1 = PanAz.ar(12, source, azi, ring1mul, width, orientation1);
 	ring2 = PanAz.ar(10, source, azi, ring2mul, width, orientation2);
-	Out.ar(0, PinkNoise.ar(0.1) * ring1mul);
-	Out.ar(6, PinkNoise.ar(0.1) * ring2mul);
-	Out.ar(23, PinkNoise.ar(0.1) * ring3mul);
-}.play;
+	ring3 = Pan2.ar(source, azi, ring3mul);
+
+	Out.ar(0, ring1);
+	Out.ar(12, ring2);
+	Out.ar(22, ring3);
+
+}.scope;
 )
 
 a.set(\ele, 1.0);
+a.set(\ele, 0.5);
+a.set(\ele, 0.25);
+a.set(\ele, 0.1);
+
+a.set(\azi, -0.5);
+a.set(\azi, 0);
+a.set(\azi, 1);
+
+a.set(\azi, -1);
+
+(
+f = {
+	var window, azi, ele, speaker_selector;
+	window = GUI.window.new("MiniDom test", Rect(1100, 200, 400, 100));
+	window.addFlowLayout( 10@10, 20@5 );
+	azi = EZSlider(window.view, label: " azi ", controlSpec: ControlSpec(-1, 1, \linear, 0, 0));
+	ele = EZSlider(window.view, label: " ele ", controlSpec: ControlSpec(0, 1, \linear, 0, 0));
+	speaker_selector = EZSlider(window.view, label: "goto speaker", controlSpec: ControlSpec(1, 24, \linear, 1, 1));
+	azi.action = { | me | me.value.postln; a.set(\azi, me.value) };
+	ele.action = { | me | me.value.postln; a.set(\ele, me.value) };
+	window.front;
+};
+f.value;
+)
+(
+~incr = 0.02;
+r = {
+	var ele = 0;
+	loop {
+		a.set(\ele, (ele = ele + ~incr).fold(0, 1));
+		0.1.wait;	
+	};
+}.fork;
+)
+
+a.set(\ele, 0);
+a.set(\ele, 0.5);
+a.set(\ele, 1.0);
+
+a.set(\ele, 0.5);
+
+r.stop;
+
+(
+~incr = 0.02;
+r = {
+	var azi = 0;
+	loop {
+		a.set(\azi, azi = azi + ~incr);
+		0.1.wait;	
+	};
+}.fork;
+)
+
+
+
+Pan2
 
 (
 a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orientation3 = 0, vol = 1 |
@@ -101,7 +174,12 @@ a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orien
 }.play;
 )
 
+a.set(\azi, 0);
+a.set(\azi, 1);
+a.set(\azi, -1);
+
 a.set(\ele, 0.5);
+
 
 (
 ~incr = 0.1;
