@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>SuperCollider Intro Outline</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2011-03-14 10:50:46 CET"/>
+<meta name="author" content="Ioannis Zannos"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">SuperCollider Intro Outline</h1>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 What is SuperCollider? </a></li>
+<li><a href="#sec-2">2 What can SuperCollider do? </a>
+<ul>
+<li><a href="#sec-2_1">2.1 List of SuperCollider Capabilities </a></li>
+<li><a href="#sec-2_2">2.2 Uses of SuperCollider </a>
+<ul>
+<li><a href="#sec-2_2_1">2.2.1 Live electronic music as sound source and/or effect machine </a></li>
+<li><a href="#sec-2_2_2">2.2.2 Composing music as sound structures, scores, or midi </a></li>
+<li><a href="#sec-2_2_3">2.2.3 Interactive installations with sensors </a></li>
+<li><a href="#sec-2_2_4">2.2.4 Internet art </a></li>
+<li><a href="#sec-2_2_5">2.2.5 Graphics synthesis </a></li>
+<li><a href="#sec-2_2_6">2.2.6 &hellip; many other uses for wich an object oriented programming environment may be good </a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 How does SuperCollider work? </a>
+<ul>
+<li><a href="#sec-3_1">3.1 Client Server Architecture </a>
+<ul>
+<li><a href="#sec-3_1_1">3.1.1 Client: SuperCollider Language </a></li>
+<li><a href="#sec-3_1_2">3.1.2 Server: SuperCollider Sound Server </a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Obtaining and Working with SuperCollider </a>
+<ul>
+<li><a href="#sec-4_1">4.1 Home page, and download for MacOS, Windows, Linux </a></li>
+<li><a href="#sec-4_2">4.2 Mailing lists </a></li>
+<li><a href="#sec-4_3">4.3 Additional, third party plugins (big library of extra sound processing algorithms) </a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 History of SuperCollider </a>
+<ul>
+<li><a href="#sec-5_1">5.1 1989: James McCartney starts list objects on Max + Synth engine on Macintosh </a></li>
+<li><a href="#sec-5_2">5.2 1994: Pyrite: A programming language inside Max </a></li>
+<li><a href="#sec-5_3">5.3 1996: SuperCollider 1: Realtime sound synthesis on Mac PPC </a></li>
+<li><a href="#sec-5_4">5.4 1999: SuperCollider 2: SC becomes Object Oriented </a></li>
+<li><a href="#sec-5_5">5.5 2002: SuperCollider 3: Decoupled Client-Server applicaitons, Open Source </a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 Contents of this Workshop </a>
+<ul>
+<li><a href="#sec-6_1">6.1 Getting Started With SuperCollider </a>
+<ul>
+<li><a href="#sec-6_1_1">6.1.1 The SuperCollider Environment </a></li>
+<li><a href="#sec-6_1_2">6.1.2 First Steps </a></li>
+</ul>
+</li>
+<li><a href="#sec-6_2">6.2 An overview of making music with SuperCollider </a>
+<ul>
+<li><a href="#sec-6_2_1">6.2.1 Controlling Synths </a></li>
+<li><a href="#sec-6_2_2">6.2.2 Sound event control structures: Routines and Patterns </a></li>
+<li><a href="#sec-6_2_3">6.2.3 Processing sound: Filters, Effects and Groups </a></li>
+<li><a href="#sec-6_2_4">6.2.4 Working with sound samples: Sound Buffers and Disk </a></li>
+</ul>
+</li>
+<li><a href="#sec-6_3">6.3 SuperCollider as Controler for Zirkonium </a>
+<ul>
+<li><a href="#sec-6_3_1">6.3.1 Sending OSC Control messages to Zirkonium </a></li>
+<li><a href="#sec-6_3_2">6.3.2 Defining and playing source movement structures for Zirkonium in SuperCollider </a></li>
+</ul>
+</li>
+<li><a href="#sec-6_4">6.4 Moving sounds in the Dome directly with SuperCollider </a>
+<ul>
+<li><a href="#sec-6_4_1">6.4.1 With VBAP </a></li>
+<li><a href="#sec-6_4_2">6.4.2 With nested Panning over rings of speakers </a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> What is SuperCollider? </h2>
+<div class="outline-text-2" id="text-1">
+
+
+<ul>
+<li>
+SuperCollider is an environment and programming language for real time audio synthesis and algorithmic composition.
+</li>
+<li>
+SuperCollider consists of an interpreted object-oriented language which functions as a network client to a state of the art, realtime sound synthesis server.
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> What can SuperCollider do? </h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2_1" class="outline-3">
+<h3 id="sec-2_1"><span class="section-number-3">2.1</span> List of SuperCollider Capabilities </h3>
+<div class="outline-text-3" id="text-2_1">
+
+<ul>
+<li>
+Define Algorithms for interactive sound performance as well as for off-line composition
+</li>
+<li>
+Synthesize Sound Signals
+</li>
+<li>
+Process Sound Signals. Types of Signal Input: 
+<ul>
+<li>
+Live input
+</li>
+<li>
+Imported sound buffers or live disk-in from files
+</li>
+<li>
+Sounds generated internally in SuperCollider
+</li>
+</ul>
+</li>
+<li>
+Communicate with other software and hardware for input and output
+<ul>
+<li>
+Via OSC: Processing, openFrameworks, PD, Quartz Composer &hellip;
+</li>
+<li>
+Via MIDI &hellip;
+</li>
+<li>
+Via Serial Port: Arduino and other serial hardware devices
+</li>
+<li>
+Via HID: Game controllers
+</li>
+<li>
+Wii
+</li>
+<li>
+Tablet
+</li>
+</ul>
+</li>
+<li>
+Synthesize animated graphics
+<ul>
+<li>
+Via embedded Quartz Composer
+</li>
+<li>
+Directly with the Pen class
+</li>
+</ul>
+</li>
+<li>
+Communicate over the Internet for networked performance
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2_2" class="outline-3">
+<h3 id="sec-2_2"><span class="section-number-3">2.2</span> Uses of SuperCollider </h3>
+<div class="outline-text-3" id="text-2_2">
+
+
+</div>
+
+<div id="outline-container-2_2_1" class="outline-4">
+<h4 id="sec-2_2_1"><span class="section-number-4">2.2.1</span> Live electronic music as sound source and/or effect machine </h4>
+<div class="outline-text-4" id="text-2_2_1">
+
+</div>
+
+</div>
+
+<div id="outline-container-2_2_2" class="outline-4">
+<h4 id="sec-2_2_2"><span class="section-number-4">2.2.2</span> Composing music as sound structures, scores, or midi </h4>
+<div class="outline-text-4" id="text-2_2_2">
+
+</div>
+
+</div>
+
+<div id="outline-container-2_2_3" class="outline-4">
+<h4 id="sec-2_2_3"><span class="section-number-4">2.2.3</span> Interactive installations with sensors </h4>
+<div class="outline-text-4" id="text-2_2_3">
+
+</div>
+
+</div>
+
+<div id="outline-container-2_2_4" class="outline-4">
+<h4 id="sec-2_2_4"><span class="section-number-4">2.2.4</span> Internet art </h4>
+<div class="outline-text-4" id="text-2_2_4">
+
+</div>
+
+</div>
+
+<div id="outline-container-2_2_5" class="outline-4">
+<h4 id="sec-2_2_5"><span class="section-number-4">2.2.5</span> Graphics synthesis </h4>
+<div class="outline-text-4" id="text-2_2_5">
+
+</div>
+
+</div>
+
+<div id="outline-container-2_2_6" class="outline-4">
+<h4 id="sec-2_2_6"><span class="section-number-4">2.2.6</span> &hellip; many other uses for wich an object oriented programming environment may be good </h4>
+<div class="outline-text-4" id="text-2_2_6">
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> How does SuperCollider work? </h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3_1" class="outline-3">
+<h3 id="sec-3_1"><span class="section-number-3">3.1</span> Client Server Architecture </h3>
+<div class="outline-text-3" id="text-3_1">
+
+
+
+</div>
+
+<div id="outline-container-3_1_1" class="outline-4">
+<h4 id="sec-3_1_1"><span class="section-number-4">3.1.1</span> Client: SuperCollider Language </h4>
+<div class="outline-text-4" id="text-3_1_1">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3_1_2" class="outline-4">
+<h4 id="sec-3_1_2"><span class="section-number-4">3.1.2</span> Server: SuperCollider Sound Server </h4>
+<div class="outline-text-4" id="text-3_1_2">
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Obtaining and Working with SuperCollider </h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+</div>
+
+<div id="outline-container-4_1" class="outline-3">
+<h3 id="sec-4_1"><span class="section-number-3">4.1</span> Home page, and download for MacOS, Windows, Linux </h3>
+<div class="outline-text-3" id="text-4_1">
+
+<p><a href="http://supercollider.sourceforge.net">http://supercollider.sourceforge.net</a>
+</p></div>
+
+</div>
+
+<div id="outline-container-4_2" class="outline-3">
+<h3 id="sec-4_2"><span class="section-number-3">4.2</span> Mailing lists </h3>
+<div class="outline-text-3" id="text-4_2">
+
+<p><a href="http://www.beast.bham.ac.uk/research/sc_mailing_lists.shtml">http://www.beast.bham.ac.uk/research/sc_mailing_lists.shtml</a>
+</p></div>
+
+</div>
+
+<div id="outline-container-4_3" class="outline-3">
+<h3 id="sec-4_3"><span class="section-number-3">4.3</span> Additional, third party plugins (big library of extra sound processing algorithms) </h3>
+<div class="outline-text-3" id="text-4_3">
+
+<p><a href="http://sc3-plugins.sourceforge.net/">http://sc3-plugins.sourceforge.net/</a>
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> History of SuperCollider </h2>
+<div class="outline-text-2" id="text-5">
+
+
+</div>
+
+<div id="outline-container-5_1" class="outline-3">
+<h3 id="sec-5_1"><span class="section-number-3">5.1</span> 1989: James McCartney starts list objects on Max + Synth engine on Macintosh </h3>
+<div class="outline-text-3" id="text-5_1">
+
+</div>
+
+</div>
+
+<div id="outline-container-5_2" class="outline-3">
+<h3 id="sec-5_2"><span class="section-number-3">5.2</span> 1994: Pyrite: A programming language inside Max </h3>
+<div class="outline-text-3" id="text-5_2">
+
+</div>
+
+</div>
+
+<div id="outline-container-5_3" class="outline-3">
+<h3 id="sec-5_3"><span class="section-number-3">5.3</span> 1996: SuperCollider 1: Realtime sound synthesis on Mac PPC </h3>
+<div class="outline-text-3" id="text-5_3">
+
+</div>
+
+</div>
+
+<div id="outline-container-5_4" class="outline-3">
+<h3 id="sec-5_4"><span class="section-number-3">5.4</span> 1999: SuperCollider 2: SC becomes Object Oriented </h3>
+<div class="outline-text-3" id="text-5_4">
+
+</div>
+
+</div>
+
+<div id="outline-container-5_5" class="outline-3">
+<h3 id="sec-5_5"><span class="section-number-3">5.5</span> 2002: SuperCollider 3: Decoupled Client-Server applicaitons, Open Source </h3>
+<div class="outline-text-3" id="text-5_5">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Contents of this Workshop </h2>
+<div class="outline-text-2" id="text-6">
+
+
+
+</div>
+
+<div id="outline-container-6_1" class="outline-3">
+<h3 id="sec-6_1"><span class="section-number-3">6.1</span> Getting Started With SuperCollider </h3>
+<div class="outline-text-3" id="text-6_1">
+
+
+
+</div>
+
+<div id="outline-container-6_1_1" class="outline-4">
+<h4 id="sec-6_1_1"><span class="section-number-4">6.1.1</span> The SuperCollider Environment </h4>
+<div class="outline-text-4" id="text-6_1_1">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6_1_2" class="outline-4">
+<h4 id="sec-6_1_2"><span class="section-number-4">6.1.2</span> First Steps </h4>
+<div class="outline-text-4" id="text-6_1_2">
+
+
+<ul>
+<li id="sec-6_1_2_1">"Hello World" <br/>
+
+</li>
+</ul>
+<ul>
+<li id="sec-6_1_2_2">"1 + 1" <br/>
+
+</li>
+</ul>
+<ul>
+<li id="sec-6_1_2_3">Making Sounds <br/>
+
+<ul>
+<li id="sec-6_1_2_3_1">Starting the Server <br/>
+
+</li>
+</ul>
+<ul>
+<li id="sec-6_1_2_3_2">Playing a sound: Creating a Synth <br/>
+
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6_2" class="outline-3">
+<h3 id="sec-6_2"><span class="section-number-3">6.2</span> An overview of making music with SuperCollider </h3>
+<div class="outline-text-3" id="text-6_2">
+
+
+
+</div>
+
+<div id="outline-container-6_2_1" class="outline-4">
+<h4 id="sec-6_2_1"><span class="section-number-4">6.2.1</span> Controlling Synths </h4>
+<div class="outline-text-4" id="text-6_2_1">
+
+
+<ul>
+<li id="sec-6_2_1_1">Creation and freeing <br/>
+
+</li>
+</ul>
+<ul>
+<li id="sec-6_2_1_2">Setting Synth Parameters <br/>
+
+</li>
+</ul>
+<ul>
+<li id="sec-6_2_1_3">Interactive Control with the mouse <br/>
+
+</li>
+</ul>
+<ul>
+<li id="sec-6_2_1_4">Interactive control with the GUI <br/>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-6_2_2" class="outline-4">
+<h4 id="sec-6_2_2"><span class="section-number-4">6.2.2</span> Sound event control structures: Routines and Patterns </h4>
+<div class="outline-text-4" id="text-6_2_2">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6_2_3" class="outline-4">
+<h4 id="sec-6_2_3"><span class="section-number-4">6.2.3</span> Processing sound: Filters, Effects and Groups </h4>
+<div class="outline-text-4" id="text-6_2_3">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6_2_4" class="outline-4">
+<h4 id="sec-6_2_4"><span class="section-number-4">6.2.4</span> Working with sound samples: Sound Buffers and Disk </h4>
+<div class="outline-text-4" id="text-6_2_4">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6_3" class="outline-3">
+<h3 id="sec-6_3"><span class="section-number-3">6.3</span> SuperCollider as Controler for Zirkonium </h3>
+<div class="outline-text-3" id="text-6_3">
+
+
+
+</div>
+
+<div id="outline-container-6_3_1" class="outline-4">
+<h4 id="sec-6_3_1"><span class="section-number-4">6.3.1</span> Sending OSC Control messages to Zirkonium </h4>
+<div class="outline-text-4" id="text-6_3_1">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6_3_2" class="outline-4">
+<h4 id="sec-6_3_2"><span class="section-number-4">6.3.2</span> Defining and playing source movement structures for Zirkonium in SuperCollider </h4>
+<div class="outline-text-4" id="text-6_3_2">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6_4" class="outline-3">
+<h3 id="sec-6_4"><span class="section-number-3">6.4</span> Moving sounds in the Dome directly with SuperCollider </h3>
+<div class="outline-text-3" id="text-6_4">
+
+
+
+</div>
+
+<div id="outline-container-6_4_1" class="outline-4">
+<h4 id="sec-6_4_1"><span class="section-number-4">6.4.1</span> With VBAP </h4>
+<div class="outline-text-4" id="text-6_4_1">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6_4_2" class="outline-4">
+<h4 id="sec-6_4_2"><span class="section-number-4">6.4.2</span> With nested Panning over rings of speakers </h4>
+<div class="outline-text-4" id="text-6_4_2">
+
+
+
+</div>
+</div>
+</div>
+</div>
+<div id="postamble">
+<p class="author"> Author: Ioannis Zannos
+</p>
+<p class="date"> Date: 2011-03-14 10:50:46 CET</p>
+<p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
+</div>
+</div>
+</body>
+</html>

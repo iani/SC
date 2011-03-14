@@ -1,0 +1,109 @@
+
+SuperCollider Intro Outline
+
+* What is SuperCollider?
+
+- SuperCollider is an environment and programming language for real time audio synthesis and algorithmic composition.
+- SuperCollider consists of an interpreted object-oriented language which functions as a network client to a state of the art, realtime sound synthesis server.
+
+* What can SuperCollider do?
+** List of SuperCollider Capabilities
+- Define Algorithms for interactive sound performance as well as for off-line composition
+- Synthesize Sound Signals
+- Process Sound Signals. Types of Signal Input: 
+  - Live input
+  - Imported sound buffers or live disk-in from files
+  - Sounds generated internally in SuperCollider
+- Communicate with other software and hardware for input and output
+  - Via OSC: Processing, openFrameworks, PD, Quartz Composer ...
+  - Via MIDI ...
+  - Via Serial Port: Arduino and other serial hardware devices
+  - Via HID: Game controllers
+  - Wii
+  - Tablet
+- Synthesize animated graphics
+  - Via embedded Quartz Composer
+  - Directly with the Pen class
+- Communicate over the Internet for networked performance
+
+** Uses of SuperCollider
+*** Live electronic music as sound source and/or effect machine
+*** Composing music as sound structures, scores, or midi
+*** Interactive installations with sensors
+*** Internet art
+*** Graphics synthesis
+*** ... many other uses for wich an object oriented programming environment may be good
+
+* How does SuperCollider work? 
+
+** Client Server Architecture
+
+*** Client: SuperCollider Language
+
+*** Server: SuperCollider Sound Server
+
+* Obtaining and Working with SuperCollider
+
+** Home page, and download for MacOS, Windows, Linux
+http://supercollider.sourceforge.net
+** Mailing lists
+http://www.beast.bham.ac.uk/research/sc_mailing_lists.shtml
+** Additional, third party plugins (big library of extra sound processing algorithms)
+http://sc3-plugins.sourceforge.net/
+
+* History of SuperCollider
+** 1989: James McCartney starts list objects on Max + Synth engine on Macintosh
+** 1994: Pyrite: A programming language inside Max
+** 1996: SuperCollider 1: Realtime sound synthesis on Mac PPC
+** 1999: SuperCollider 2: SC becomes Object Oriented
+** 2002: SuperCollider 3: Decoupled Client-Server applicaitons, Open Source
+
+* Contents of this Workshop
+
+** Getting Started With SuperCollider
+
+*** The SuperCollider Environment
+
+*** First Steps
+
+**** "Hello World"
+
+**** "1 + 1"
+
+**** Making Sounds
+
+***** Starting the Server
+
+***** Playing a sound: Creating a Synth
+
+** An overview of making music with SuperCollider
+
+*** Controlling Synths
+
+**** Creation and freeing
+
+**** Setting Synth Parameters
+
+**** Interactive Control with the mouse
+
+**** Interactive control with the GUI
+
+*** Sound event control structures: Routines and Patterns
+
+*** Processing sound: Filters, Effects and Groups
+
+*** Working with sound samples: Sound Buffers and Disk 
+
+** SuperCollider as Controler for Zirkonium
+
+*** Sending OSC Control messages to Zirkonium
+
+*** Defining and playing source movement structures for Zirkonium in SuperCollider
+
+** Moving sounds in the Dome directly with SuperCollider
+
+*** With VBAP
+
+*** With nested Panning over rings of speakers
+
+
