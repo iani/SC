@@ -1,0 +1,42 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs44 \cf0 \
+\
+a = \{ | freqfreq = 2, dustfreq = 2, amp = 0.2 |\
+	SinOsc.ar(LFNoise0.kr(freqfreq).range(400, 800), \
+		0, Trig.kr(Dust.kr(dustfreq, 0.5), amp))\
+\}.scope(zoom: 16);\
+\
+SynthDef("blur", \{ | freqfreq = 2, dustfreq = 2, amp = 0.2, out = 0 |\
+	var source;\
+	source = SinOsc.ar(LFNoise0.kr(freqfreq).range(400, 800), \
+		0, Trig.kr(Dust.kr(dustfreq, 0.5), amp));\
+	Out.ar(out, source);\
+	\
+\}).send(Server.default);\
+\
+\
+a = Synth("blur", [\\freqfreq, 0.2]);\
+\
+b = Synth("blur", [\\freqfreq, 2]);\
+\
+c = Synth("blur", [\\freqfreq, 20]);\
+\
+a.run(0);\
+c.run(0);\
+c.run(1);\
+\
+d = \{ Synth("blur", [\\freqfreq, 2, \\amp, 0.03]) \} ! 30;\
+\
+d do: _.set(\\freqfreq, 0.2);\
+d do: _.set(\\dustfreq, 0.2);\
+d do: _.set(\\amp, 0.5);\
+\
+d do: _.free;\
+\
+\
+\
+}

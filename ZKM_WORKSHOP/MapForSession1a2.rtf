@@ -1,0 +1,22 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs52 \cf0 \
+Organizing many objects by collecting them in an Array\
+\
+a = \{ \
+	\{ SinOsc.ar(400 rrand: 4000, 0, 0.03); \
+\}.play \} ! 10;\
+\
+r = \{ \
+	loop \{\
+		a.choose.run(0);\
+		0.5.rand.wait;\
+		a.choose.run(1);\
+	\}\
+\}.fork;\
+\
+r.stop;\
+a do: _.free;}
