@@ -65,7 +65,8 @@ f.([\
 			* \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.05 rrand: 1, 0.1 rrand: 1.5, 0.3)) \}\} ! 100;\
 ]);\
 \
-\cf4 // Add parameter to control the duration of each sound\cf2 \
+
+\fs44 \cf4 // Add parameter to control the duration of each sound\cf2 \
 f = \{ \cf3 | sounds |\cf2 \
 	\cf3 var\cf2  player, source;\
 	player = \{ \cf3 | duration, sound |\cf2 \
@@ -76,11 +77,13 @@ f = \{ \cf3 | sounds |\cf2 \
 	\{	\cf4 // iterate over the collection of sounds:\cf2 \
 		\cf4 // .flat flattens the array, in case it is nested \cf2 \
 		sounds.flat pairsDo: \{ \cf3 | duration, sound |\cf2  \cf4 // iterate over pairs \cf2 \
-			player.(duration, sound); \cf4 // \cf2 \
+			player.(duration, sound); \cf4 // the player function takes duration, sound arguments\cf2 \
 		\};\
 		source.free;			\cf4 // stop the last sound after the end\cf2 \
 	\}.fork;	\
 \};\
+
+\fs30 \
 \
 f.([\
 	[0.2, \
@@ -90,7 +93,7 @@ f.([\
 	[2, \{ \cf3 SinOsc\cf2 .ar(440, 5, \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.01, 0.5, 0.1))) \}],\
 	\{[\{ 0.1 exprand: 10\}, \{ \cf3 Klank\cf2 .ar(`[\cf3 Array\cf2 .rand(10, 400, 4000)], \
 			\cf3 PinkNoise\cf2 .ar([0.007,0.007]))\
-			* \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.05 rrand: 1, 0.1 rrand: 1.5, 0.1)) \}]\
+			* \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.05 rrand: 1, 0.1 rrand: 1.5, 0.3)) * 3 \}]\
 	\} ! 10;\
 ]);\
 \
@@ -104,7 +107,7 @@ f.([\
 	[2, \{ \cf3 SinOsc\cf2 .ar(440, 5, \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.01, 0.5, 0.1))) \}],\
 	\{[\{ 0.1 exprand: 10\}, \{ \cf3 Klank\cf2 .ar(`[\cf3 Array\cf2 .rand(10, 400, 4000)], \
 			\cf3 PinkNoise\cf2 .ar([0.007,0.007]))\
-			* \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.05 rrand: 1, 0.1 rrand: 1.5, 0.1)) \}]\
+			* \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.05 rrand: 1, 0.1 rrand: 1.5, 0.1)) * 5 \}]\
 	\} ! 10;\
 ]) \} ! 8;\
 \
@@ -128,7 +131,7 @@ f.([\
 )\
 \
 \cf4 // Finally, scramble the order of events in each voice: \cf2 \
-( \
+(\
 (\{ [\
 	[0.2, \
 		\{ \cf3 LFSaw\cf2 .ar(440 + 1000.rand, 0, \cf3 EnvGen\cf2 .kr(\cf3 Env\cf2 .perc(0.05, 0.5, 0.1))) \}]\

@@ -1,0 +1,256 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs40 \cf0 \
+SYNTAX summary\
+\
+1. Basic global rule: \
+\
+object.message\
+\
+or \
+\
+object.message(argument1, ...); \
+\
+Example: \
+\
+"hello".inspect;\
+\
+Example 2;\
+SinOsc.ar(400, 0, 1);\
+\
+SinOsc : Object, in this case: The SinOsc Class\
+ar : message\
+400, 0, 1: arguments\
+\
+10.rrand(20)\
+\
+10: object (receiver)\
+rrand: message\
+20: argument\
+\
+In this case, with one argument, one can also write like this: \
+\
+10 rrand: 20\
+\
+But one can also write: \
+\
+rrand(10, 20);\
+\
+10 + 20;\
+\
+10: receiver\
++ : message\
+20 : argument\
+\
+\
+[10, 20].sum;\
+\
+This is not the same as sum(10, 20);\
+\
+=== Chapter 2: Arrays (and other collections) \
+\
+[10, 20, 30, 40, 50].sum;\
+\
+Accessing elements in arrays: \
+\
+Accessing, part 1: "reading"\
+\
+a = [10, 20, 30];\
+\
+a.at(0);	// get the first element;\
+a.at(1); // get the second element;\
+\
+Alternative: \
+\
+a[0];\
+\
+Advantages: reordering elements and taking ranges: \
+\
+a[[0, 1, 0, 2, 1, 1]];\
+\
+b = (0..10) * 10;\
+\
+b[[2, 3, 5]];\
+\
+b[5..];\
+b[..5];\
+b[2..5];\
+b[5..2];\
+\
+Accessing part 2: "writing" \
+\
+b.put(5, "five");\
+\
+b.at(5);\
+b[5..7];\
+\
+b[6] = "six"\
+\
+b[8..] = "the rest"\
+\
+======================\
+Functions: \
+\
+Define a function and store it in f: \
+\
+f = \{ \
+	/* code here */\
+\};\
+\
+f.value; 	// run the function stored in f;\
+\
+Function arguments: \
+\
+\
+f = \{ | a, b |	// define arguments a and b\
+	\
+\};\
+\
+f.value(10, 30);		// run the function with argument\
+\
+Important messages for functions: \
+\
+f.value		// evaluate the function = run the function\
+f.play			// make a SynthDef from the function and play sound\
+f.fork			// make a routine and play it. \
+\
+Routines are used for scheduling. See next section: \
+\
+---- Section: Routines and control structures: \
+\
+A routine is a function that can run in its own time.\
+It can wait between steps. \
+Functions CANNOT wait between steps. \
+\
+To work with a routine: \
+\
+r.play 	// start the routine\
+r.stop 	// stop the routine\
+r.reset	// reset = go to the beginning again\
+r.play	// restart. MUST FOLLOW A reset\
+\
+\
+1. Timing in routines\
+\{ \
+	"one".postln;\
+	1.wait;\
+	"two".postln;\
+\}.fork;\
+\
+2. Infinite loops with loop: \
+\{ \
+	loop \{\
+		"one".postln;\
+		1.wait;\
+		"two".postln;\
+	\}\
+\}.fork;\
+\
+2. Repeating for a number of times: n do: .... \
+\
+\{ \
+	5 do: \{\
+		"repeating".postln;\
+		0.5.wait;\
+	\}\
+\}.fork;\
+\
+\
+// arguments for do: \
+\{ \
+	5 do: \{ | count |\
+		"repeating ... ".post;\
+		count.postln;\
+		0.5.wait;\
+	\}\
+\}.fork;\
+\
+// repeating over a collection: \
+\
+\{ \
+	["alpha", "beta", "gamma", 5, 7] do: \{ | element, count |\
+		"repeating ... ".post;\
+		element.post;\
+		" - ".post;\
+		count.postln;\
+		0.5.wait;\
+	\}\
+\}.fork;\
+\
+// Conditional loops \
+\
+\{ \
+	var count = 0;\
+	while \{ count < 10 \} \{ \
+		count.postln;\
+		count = count + 1;\
+		0.1.wait;\
+	\}\
+\}.fork;\
+\
+// If : \
+\
+f = \{ | element |\
+	if (element > 10) \{ "go" \} \{ "do not go" \}\
+\} \
+\
+\
+f.value(0);\
+f.value(20);\
+\
+// switch - select among elements\
+\
+f = \{ | selection |\
+		switch (selection, \
+			1, \{ "one" \},\
+			2, \{ "two" \},\
+			"something else"\
+		);\
+\};\
+\
+f.value(1);\
+f.value(2);\
+f.value("bla bla");\
+\
+// case - select among evaluated objects\
+\
+f = \{ | selection |\
+		case  \
+			\{ selection == 1 \} \{ "one" \}\
+			\{ selection.even \} \{ "even" \}\
+			\{ selection.odd \} \{ "odd" \}\
+\};\
+\
+f.value(1);\
+f.value(2);\
+// f.value("bla bla"); // only numbers understand odd, even\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
