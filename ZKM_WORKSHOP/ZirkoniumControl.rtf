@@ -1,0 +1,240 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;\f1\fnil\fcharset0 Verdana;}
+{\colortbl;\red255\green255\blue255;\red187\green0\blue0;\red191\green0\blue0;\red0\green0\blue191;
+\red96\green96\blue96;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs38 \cf0 \
+\
+SuperCollider -> ZIrkonium \
+\
+Control via OSC\
+\
+\
+Doc source is here :\
+
+\fs54 \
+\pard\pardeftab720\ql\qnatural
+{\field{\*\fldinst{HYPERLINK "http://ima.zkm.de/zirkonium/download/Examples080502.zip"}}{\fldrslt 
+\f1\fs42 \cf2 \ul \ulc2 Examples080502.zip}}
+\f1\fs42 \cf2 \ul \ulc2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs38 \cf0 \ulnone \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs40 \cf0 See screenshot ZirkoniumOSCMessageDoc.png in folder\
+Extensions/KlangDom/\
+\
+See example of one message below. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs38 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs18 \cf0 	\cf3 // Connection to Zirkonium\
+\cf0 \
+
+\fs40 // Create an address to send control messages: \
+\
+// localhost: this computer\
+// 2001: Port where Zirkonium listens to. \
+z = \cf4 NetAddr\cf0 (\cf5 "localhost"\cf0 , 2001);\
+\
+Summary of OSC messages understood by Zirkonium\
+\
+
+\fs38 z.sendMsg("/pan/az", inputChanNum, azi, ele, azSpan, elSpan, amp); \
+
+\fs40 \
+z.sendMsg("/pan/speaker/az", 0, 0.1, 0.1, 1.0);\
+\
+\
+
+\fs18 \
+w = \cf4 SCWindow\cf0 (\cf5 "Dome"\cf0 , \cf4 Rect\cf0 (128, 128, 400, 256));\
+w.front;\
+slider = \cf4 SC2DSlider\cf0 (w, \cf4 Rect\cf0 (10, 10, 200, 200));\
+slider.x = 0.5;\
+slider.y = 0.0;\
+slider.action = \{ \cf4 arg\cf0  widget; panCtl.value(widget.x, widget.y) \};\
+\
+panCtl = \{ \cf4 arg\cf0  x, y;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf4 var\cf0  panx, pany;\
+	\cf4 var\cf0  polar;\
+	\cf4 var\cf0  zenith, azimuth;\
+	\cf4 var\cf0  dazimuth;\
+	\cf4 var\cf0  numChannels = 8;\
+	\cf4 var\cf0  panCommands;\
+	\
+		\cf3 // X and Y are swapped in Zirkonium (X is height)\cf0 \
+	panx = y; pany = x;\
+	\
+		\cf3 // [0, 0] needs to be in the middle\cf0 \
+	panx = (panx - 0.5) * 2.0;\
+	pany = 1.0 - pany;\
+	pany = (pany - 0.5) * 2.0;\
+	polar = \cf4 Point\cf0 (panx, pany).asPolar;\
+	\
+		\cf3 // Project onto the surface of a sphere\cf0 \
+	zenith = (0.5 - (polar.rho * 0.5)).max(0.0);\
+	azimuth = polar.theta / 3.141593;\
+\
+	\cf3 // DEBUG	\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 //	[azimuth, zenith].postln;\cf0 \
+	panCommands = \cf4 List\cf0 .new;\
+	dazimuth = 2.0 / numChannels;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs38 \cf0 	numChannels.do \{ \cf4 arg\cf0  i; panCommands.add([\cf5 "/pan/az"\cf0 , i, azimuth + (i * dazimuth), zenith, azSpan, znSpan, 1.0]) \};\
+
+\fs18 	z.sendBundle(0.0, *panCommands);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \};\
+)\
+\
+\
+\
+\
+\cf3 //\cf0 \
+\cf3 // 	Control Example 2 -- Speakers (Azimuth / Zenith)\cf0 \
+\cf3 //\cf0 \
+\cf3 //	Control the positions of the 2 of the 8 channels from SuperCollider. This example uses the\cf0 \
+\cf3 //	"/pan/speaker/az" command which takes a coordinates in spherical formant moves the ID to the\cf0 \
+\cf3 // 	speaker nearest the specified position.\cf0 \
+\cf3 //\cf0 \
+\cf3 // 	Compare to the other control examples. See the Zirkonium documentation \cf0 \
+\cf3 // 	for more information about the OSC interface.\cf0 \
+\cf3 //  	\cf0 \
+(\
+z = \cf4 NetAddr\cf0 (\cf5 "localhost"\cf0 , 2001);\
+z.sendMsg(\cf5 "/pan/speaker/az"\cf0 , 0, 0.1, 0.1, 1.0);\
+z.sendMsg(\cf5 "/pan/speaker/az"\cf0 , 1, 0.7, 0.0, 1.0);\
+)\
+\
+\
+\
+\
+\cf3 //\cf0 \
+\cf3 // 	Control Example 3 -- Speakers (X/ Y)\cf0 \
+\cf3 //\cf0 \
+\cf3 //	Control the positions of the 2 of the 8 channels from SuperCollider. This example uses the\cf0 \
+\cf3 //	"/pan/speaker/xy" command which takes a coordinates in cartesian formant moves the ID to the\cf0 \
+\cf3 // 	speaker nearest the specified position.\cf0 \
+\cf3 //\cf0 \
+\cf3 // 	Compare to the other control examples. See the Zirkonium documentation \cf0 \
+\cf3 // 	for more information about the OSC interface.\cf0 \
+\cf3 //  	\cf0 \
+(\
+z = \cf4 NetAddr\cf0 (\cf5 "localhost"\cf0 , 2001);\
+z.sendMsg(\cf5 "/pan/speaker/xy"\cf0 , 0, 0.3, 0.3, 1.0);\
+z.sendMsg(\cf5 "/pan/speaker/xy"\cf0 , 1, -0.4, -0.4, 1.0);\
+)\
+\
+\
+\
+\
+\cf3 //\cf0 \
+\cf3 // 	Control Example 4 -- Cartesian\cf0 \
+\cf3 //\cf0 \
+\cf3 //	Control the positions of the channel 1 from SuperCollider. This example uses the\cf0 \
+\cf3 //	"/pan/xy" command which takes a coordinates in cartesian form.\cf0 \
+\cf3 //\cf0 \
+\cf3 // 	Compare to the other control examples. See the Zirkonium documentation \cf0 \
+\cf3 // 	for more information about the OSC interface.\cf0 \
+\cf3 //  	\cf0 \
+(\
+\cf4 var\cf0  slider;\
+\cf4 var\cf0  text;\
+\cf4 var\cf0  panCtl;\
+\
+	\cf3 // Connection to Zirkonium\cf0 \
+z = \cf4 NetAddr\cf0 (\cf5 "localhost"\cf0 , 2001);\
+\
+w = \cf4 SCWindow\cf0 (\cf5 "Dome"\cf0 , \cf4 Rect\cf0 (128, 128, 400, 256));\
+w.front;\
+slider = \cf4 SC2DSlider\cf0 (w, \cf4 Rect\cf0 (10, 10, 200, 200));\
+slider.x = 0.5;\
+slider.y = 0.0;\
+slider.action = \{ \cf4 arg\cf0  widget; panCtl.value(widget.x, widget.y) \};\
+\
+panCtl = \{ \cf4 arg\cf0  x, y;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf4 var\cf0  panx, pany;\
+	\
+		\cf3 // X and Y are swapped in Zirkonium (X is height)\cf0 \
+	panx = y; pany = x;\
+	\
+		\cf3 // [0, 0] needs to be in the middle\cf0 \
+	panx = (panx - 0.5) * 2.0;\
+	pany = 1.0 - pany;\
+	pany = (pany - 0.5) * 2.0;\
+\
+	z.sendMsg(\cf5 "/pan/xy"\cf0 , 0, panx, pany, 0.3, 0.3, 1.0);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \};\
+)\
+\
+\cf3 //\cf0 \
+\cf3 // 	Control Example 5 -- Device\cf0 \
+\cf3 //\cf0 \
+\cf3 //   Normally, OSC commands to Zirkonium are routed to the frontmost window, but it is\cf0 \
+\cf3 //   possible to address a specific window or the device by specifying that in the OSC command.\cf0 \
+\cf3 //\cf0 \
+\cf3 //   Compare to Example 1.\cf0 \
+\cf3 //  	\cf0 \
+(\
+\cf4 var\cf0  slider;\
+\cf4 var\cf0  text;\
+\cf4 var\cf0  panCtl;\
+\cf4 var\cf0  azSpan = 0.0, znSpan = 0.0;\
+\cf3 //azSpan = 0.1;\cf0 \
+\cf3 //znSpan = 0.1;\cf0 \
+\
+	\cf3 // Connection to Zirkonium\cf0 \
+z = \cf4 NetAddr\cf0 (\cf5 "localhost"\cf0 , 2001);\
+\
+w = \cf4 SCWindow\cf0 (\cf5 "Dome"\cf0 , \cf4 Rect\cf0 (128, 128, 400, 256));\
+w.front;\
+slider = \cf4 SC2DSlider\cf0 (w, \cf4 Rect\cf0 (10, 10, 200, 200));\
+slider.x = 0.5;\
+slider.y = 0.0;\
+slider.action = \{ \cf4 arg\cf0  widget; panCtl.value(widget.x, widget.y) \};\
+\
+panCtl = \{ \cf4 arg\cf0  x, y;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf4 var\cf0  panx, pany;\
+	\cf4 var\cf0  polar;\
+	\cf4 var\cf0  zenith, azimuth;\
+	\cf4 var\cf0  dazimuth;\
+	\cf4 var\cf0  numChannels = 8;\
+	\cf4 var\cf0  panCommands;\
+	\
+		\cf3 // X and Y are swapped in Zirkonium (X is height)\cf0 \
+	panx = y; pany = x;\
+	\
+		\cf3 // [0, 0] needs to be in the middle\cf0 \
+	panx = (panx - 0.5) * 2.0;\
+	pany = 1.0 - pany;\
+	pany = (pany - 0.5) * 2.0;\
+	polar = \cf4 Point\cf0 (panx, pany).asPolar;\
+	\
+		\cf3 // Project onto the surface of a sphere\cf0 \
+	zenith = (0.5 - (polar.rho * 0.5)).max(0.0);\
+	azimuth = polar.theta / 3.141593;\
+\
+	\cf3 // DEBUG	\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 //	[azimuth, zenith].postln;\cf0 \
+	panCommands = \cf4 List\cf0 .new;\
+	dazimuth = 2.0 / numChannels;\
+	numChannels.do \{ \cf4 arg\cf0  i; panCommands.add([\cf5 "/pan/az"\cf0 , i, azimuth + (i * dazimuth), zenith, azSpan, znSpan, 1.0, \cf5 "__device__"\cf0 ]) \};\
+	z.sendBundle(0.0, *panCommands);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \};\
+)\
+}

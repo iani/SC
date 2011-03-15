@@ -1,0 +1,195 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red191\green0\blue0;\red0\green0\blue191;
+\red96\green96\blue96;\red0\green115\blue0;\red0\green0\blue191;}
+\deftab560
+\pard\pardeftab560\ql\qnatural
+
+\f0\fs32 \cf2 \
+\
+\
+\cf3 // use phasor to index into a sound file\cf2 \
+\
+\cf3 // allocate a buffer with a sound file\cf2 \
+b = \cf4 Buffer\cf2 .read(s, \cf5 "sounds/a11wlk01.wav"\cf2 );\
+\
+c = \cf4 Buffer\cf2 .read(s, \cf5 "/Users/iani/Music/SuperCollider Recordings/SC_110315_122731.aiff"\cf2 );\
+\
+c.play;\
+\
+\
+\cf3 // Helpful tricks for finding out the paths of files\cf2 \
+\
+\cf5 "~/Documents/cv/*"\cf2 .pathMatch;\
+\
+\cf5 "~/Desktop/*.wav"\cf2 .pathMatch.first;\
+\
+b = \cf4 Buffer\cf2 .read(s, \cf5 "~/Desktop/*.wav"\cf2 .pathMatch.first);\
+\
+\cf4 Dialog\cf2 .getPaths(\{ \cf4 | paths |\cf2  paths[0].postln; \});\
+\
+\
+b.play; \cf3 // test: play the buffer\cf2 \
+\
+\{ \cf4 BufRd\cf2 .ar(1, b, \cf4 SinOsc\cf2 .ar(1, 0, \cf4 BufFrames\cf2 .ir(b))) \}.play; \
+\
+\
+a = \{ \cf4 | rate = 1 |\cf2  \cf4 BufRd\cf2 .ar(1, b, \cf4 SinOsc\cf2 .ar(rate, 0, \cf4 BufFrames\cf2 .ir(b))) \}.play; \
+\
+a.set(\cf6 \\rate\cf2 , 0.1);\
+a.set(\cf6 \\rate\cf2 , 0.05);\
+a.set(\cf6 \\rate\cf2 , 2);\
+\
+a = \{ \cf4 | rate = 1 |\cf2  \cf4 BufRd\cf2 .ar(1, b, \cf4 LFDNoise1\cf2 .ar(rate, \cf4 BufFrames\cf2 .ir(b))) \}.play; \
+\
+\cf3 // See also: PlayBuf\cf2 \
+\
+\cf3 // simple playback (more examples: see BufRd)\cf2 \
+\cf3 // Start and end here are defined as 0 and the number of frames in the buffer.\cf2 \
+\cf3 // This means that the Phasor will output values from 0 to numFrames - 1 before looping,\cf2 \
+\cf3 // which is perfect for driving BufRd. (See note above)\cf2 \
+a = \{ \cf4 BufRd\cf2 .ar(1, b, \cf4 Phasor\cf2 .ar(0, \cf4 BufRateScale\cf2 .kr(b), 0, \cf4 BufFrames\cf2 .kr(b))) \}.play;\
+\
+\cf3 // Phasor Parameters to test: (trig, rate, start, end, resetPos)\cf2 \
+\
+a = \{ \cf4 | trig = 0 |\cf2  \
+	\cf4 BufRd\cf2 .ar(1, b, \cf4 Phasor\cf2 .ar(trig, \cf4 BufRateScale\cf2 .kr(b), 0, \cf4 BufFrames\cf2 .kr(b))) \
+\}.play;\
+\
+a.set(\cf6 \\trig\cf2 , 0); \cf3 // there has to be a reset, and a time lag of one control cycle; \cf2 \
+a.set(\cf6 \\trig\cf2 , 1);\
+\
+a = \{ \cf4 | trig = 0, rate = 1 |\cf2  \
+	\cf4 BufRd\cf2 .ar(1, b, \cf4 Phasor\cf2 .ar(trig, \cf4 BufRateScale\cf2 .kr(b) * rate, 0, \cf4 BufFrames\cf2 .kr(b))) \
+\}.play;\
+\
+a.set(\cf6 \\rate\cf2 , 2);\
+a.set(\cf6 \\rate\cf2 , -2);\
+a.set(\cf6 \\rate\cf2 , -0.52);\
+\
+a = \{ \cf4 | trig = 0, rate = 1, start = 0 |\cf2  \
+	\cf4 BufRd\cf2 .ar(1, b, \cf4 Phasor\cf2 .ar(trig, \cf4 BufRateScale\cf2 .kr(b) * rate, start * \cf7 BufFrames\cf0 .kr(b)\cf2 , \cf4 BufFrames\cf2 .kr(b))) \
+\}.play;\
+\
+a.set(\\start, 0.7);\
+\
+\cf0 a = \{ \cf7 | trig = 0, rate = 1, start = 0, end = 1 |\cf0  \
+	\cf7 BufRd\cf0 .ar(1, b, \cf7 Phasor\cf0 .ar(trig, \cf7 BufRateScale\cf0 .kr(b) * rate, start * \cf7 BufFrames\cf0 .kr(b), \cf7 BufFrames\cf0 .kr(b) * end)) \
+\}.play;\
+\cf2 \
+\cf0 a.set(\\end, 0.25);\
+a.set(\\start, 0.15);\
+\cf2 \
+\
+\cf0 a.set(\\start, 0.55);\
+a.set(\\end, 0.55);\
+a.set(\\end, 1.0);\
+\cf2 \
+\cf0 a = \{ \cf7 | trig = 0, rate = 1, start = 0, end = 1, reset = 0 |\cf0  \
+	\cf7 BufRd\cf0 .ar(1, b, \cf7 Phasor\cf0 .ar(trig, \cf7 BufRateScale\cf0 .kr(b) * rate, start * \cf7 BufFrames\cf0 .kr(b), \
+		\cf7 BufFrames\cf0 .kr(b) * end, \
+		\cf7 BufFrames\cf0 .kr(b) * reset\
+		)) \
+\}.play;\
+\cf2 \
+a.set(\\reset, 0.7);\
+\
+\cf0 \
+a.set(\\trig, 0);\cf2 \
+a.set(\\trig, 1);\
+\
+\
+\cf0 \{ \
+	loop \{\
+		a.set(\\start, 0.0 rrand: 1.0);\
+		a.set(\\end, 0.0 rrand: 1.0);\
+		a.set(\\trig, 0);\
+		0.01.wait;\
+		a.set(\\trig, 1);\
+		2.0.wait;	\
+	\};\
+\}.fork;\cf2 \
+\
+\
+\
+\cf3 // two phasors control two sound file positions: mouse y controls resetPos of the second\cf2 \
+(\
+\{ \cf4 var\cf2  trig, rate, framesInBuffer;\
+	rate = \cf4 MouseX\cf2 .kr(0.1, 100, 1);\
+	trig = \cf4 Impulse\cf2 .ar(rate);\
+	framesInBuffer = \cf4 BufFrames\cf2 .kr(b);\
+	x = \cf4 Phasor\cf2 .ar(trig, \cf4 BufRateScale\cf2 .kr(b), 0, framesInBuffer, \
+		[0, \cf4 MouseY\cf2 .kr(0, framesInBuffer)]);\
+	\cf4 BufRd\cf2 .ar(1, b, x);\
+\}.play;\
+)\
+\
+\
+\
+\
+\
+\
+(\
+\cf3 // read a whole sound into memory\cf2 \
+s = \cf4 Server\cf2 .local;\
+\cf3 // note: not *that* columbia, the first one\cf2 \
+s.waitForBoot\{\
+	s.sendMsg(\cf5 "/b_allocRead"\cf2 , 0, \cf5 "sounds/a11wlk01.wav"\cf2 );\
+\}\
+)\
+\
+\cf3 //use any AUDIO rate ugen as an index generator\cf2 \
+\
+\{ \cf4 BufRd\cf2 .ar(1, 0, \cf4 SinOsc\cf2 .ar(0.1) * \cf4 BufFrames\cf2 .ir(0)) \}.play;\
+\{ \cf4 BufRd\cf2 .ar(1, 0, \cf4 LFNoise1\cf2 .ar(1) * \cf4 BufFrames\cf2 .ir(0)) \}.play;\
+\{ \cf4 BufRd\cf2 .ar(1, 0, \cf4 LFNoise1\cf2 .ar(10) * \cf4 BufFrames\cf2 .ir(0)) \}.play;\
+\{ \cf4 BufRd\cf2 .ar(1, 0, \cf4 LFTri\cf2 .ar(0.1) + \cf4 LFTri\cf2 .ar(0.23) * \cf4 BufFrames\cf2 .ir(0)) \}.play;\
+\cf3 // original duration\cf2 \
+\{ \cf4 BufRd\cf2 .ar(1, 0, \cf4 LFSaw\cf2 .ar(\cf4 BufDur\cf2 .ir(0).reciprocal).range(0, \cf4 BufFrames\cf2 .ir(0)) ) \}.play;\
+\
+\
+\cf3 //use a phasor index into the file\cf2 \
+\
+\{ \cf4 BufRd\cf2 .ar(1, 0, \cf4 Phasor\cf2 .ar(0, \cf4 BufRateScale\cf2 .kr(0), 0, \cf4 BufFrames\cf2 .kr(0))) \}.play;\
+\
+\
+\cf3 //change rate and interpolation\cf2 \
+(\
+x = \{ \cf4 arg\cf2  rate=1, inter=2; \
+	\cf4 BufRd\cf2 .ar(1, 0, \cf4 Phasor\cf2 .ar(0, \cf4 BufRateScale\cf2 .kr(0) * rate, 0, \cf4 BufFrames\cf2 .kr(0)), 1, inter) \
+\}.play;\
+)\
+\
+x.set(\cf6 \\rate\cf2 , 0.9);\
+x.set(\cf6 \\rate\cf2 , 0.6);\
+x.set(\cf6 \\inter\cf2 , 1);\
+x.set(\cf6 \\inter\cf2 , 0);\
+
+\f1\fs38 \
+\
+
+\f0\fs32 \cf3 //write into the buffer with a BufWr\cf2 \
+(\
+y = \{ \cf4 arg\cf2  rate=1; \
+	\cf4 var\cf2  in;\
+	in = \cf4 SinOsc\cf2 .ar(\cf4 LFNoise1\cf2 .kr(2, 300, 400), 0, 0.1);\
+	\cf4 BufWr\cf2 .ar(in, 0, \cf4 Phasor\cf2 .ar(0, \cf4 BufRateScale\cf2 .kr(0) * rate, 0, \cf4 BufFrames\cf2 .kr(0)));\
+	0.0 //quiet\
+\}.play;\
+)\
+\
+\cf3 //read it with a BufRd\cf2 \
+(\
+x = \{ \cf4 arg\cf2  rate=1; \
+	\cf4 BufRd\cf2 .ar(1, 0, \cf4 Phasor\cf2 .ar(0, \cf4 BufRateScale\cf2 .kr(0) * rate, 0, \cf4 BufFrames\cf2 .kr(0))) \
+\}.play;\
+)\
+\
+\
+\
+x.set(\cf6 \\rate\cf2 , 5);\
+y.set(\cf6 \\rate\cf2 , 2.0.rand);\
+x.set(\cf6 \\rate\cf2 , 2);\
+
+\f1\fs38 \
+}
