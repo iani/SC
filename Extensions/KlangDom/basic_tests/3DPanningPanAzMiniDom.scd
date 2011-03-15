@@ -66,7 +66,7 @@ d.plot;
 
 */
 
-// ============= 1: 24 channel mini dom
+// ============= 1: 24 channel mini dom, linear vertical panning
 
 Server.default = Server.internal;
 
@@ -99,15 +99,67 @@ a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orien
 )
 
 a.set(\ele, 1.0);
+a.set(\ele, 0.75);
 a.set(\ele, 0.5);
 a.set(\ele, 0.25);
 a.set(\ele, 0.1);
+a.set(\ele, 0.0);
 
 a.set(\azi, -0.5);
 a.set(\azi, 0);
 a.set(\azi, 1);
 
 a.set(\azi, -1);
+
+
+// ============= 2: 24 channel mini dom, PanAz vertical panning
+
+Server.default = Server.internal;
+
+Server.default.options.numInputBusChannels = 24;
+Server.default.options.numOutputBusChannels = 24;
+
+Server.internal.boot;
+
+// PanAz.ar(numChans, in, pos, level, width, orientation)
+
+(
+a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orientation3 = 0, vol = 1 |
+	var source;
+	var rings, ring1, ring2, ring3;
+	
+	source = PinkNoise.ar(0.1) * vol;
+	
+	rings = PanAz.ar(5, source, ele, 1.5, width, 0); // channels 0 and 4 are not used
+	
+	ring1 = PanAz.ar(12, rings[1], azi, 1, width, orientation1);
+	ring2 = PanAz.ar(10, rings[2], azi, 1, width, orientation2);
+	ring3 = Pan2.ar(rings[3], azi, 1, width);
+
+	Out.ar(0, ring1);
+	Out.ar(12, ring2);
+	Out.ar(22, ring3);
+
+}.scope;
+)
+
+a.set(\ele, 1.0);
+a.set(\ele, 0.75);
+a.set(\ele, 0.5);
+a.set(\ele, 0.25);
+a.set(\ele, 0.1);
+a.set(\ele, 0.0);
+
+a.set(\azi, -0.5);
+a.set(\azi, 0);
+a.set(\azi, 1);
+
+a.set(\azi, -1);
+
+
+
+/// Other ...
+
 
 (
 f = {
