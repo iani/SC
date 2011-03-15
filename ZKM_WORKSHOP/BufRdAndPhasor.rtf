@@ -99,10 +99,11 @@ a.set(\\trig, 0);\cf2 \
 a.set(\\trig, 1);\
 \
 \
-\cf0 \{ \
+\cf0 \{\
 	loop \{\
 		a.set(\\start, 0.0 rrand: 1.0);\
 		a.set(\\end, 0.0 rrand: 1.0);\
+		a.set(\\rate, -3 rrand: 3);\
 		a.set(\\trig, 0);\
 		0.01.wait;\
 		a.set(\\trig, 1);\
