@@ -66,6 +66,8 @@ d.plot;
 
 */
 
+// ============= 1: 24 channel mini dom
+
 Server.default = Server.internal;
 
 Server.default.options.numInputBusChannels = 24;
