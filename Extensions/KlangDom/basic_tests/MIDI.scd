@@ -6,7 +6,13 @@ MIDI:
 // MIDIIn
 
 
+MIDIClient.init(16, 16);
 	MIDIIn.connect; 	// init for one port midi interface
+	
+16.do({ arg i; 
+		MIDIIn.connect(i, MIDIClient.sources.at(i));
+	});
+	
 // register functions:	
 	MIDIIn.noteOff = { arg src, chan, num, vel; 	["noteoff", chan,num,vel / 127].postln; };
 	MIDIIn.noteOn = { arg src, chan, num, vel; 	["noteOn", chan,num,vel / 127].postln; };
