@@ -52,8 +52,8 @@ b.set(\sr, 0.045);
 
 
 SynthDef("Blfn3", { | out = 0, bufnum = 0, rate = 0.045 |
-	Out.ar(out, BufRd.ar(1, bufnum, LFDNoise3.ar(rate) * BufFrames.ir(bufnum));	
-});
+	Out.ar(out, BufRd.ar(1, bufnum, LFDNoise3.ar(rate) * BufFrames.ir(bufnum))	
+}).load(Server.default);
 
 
 a = { | bufname = \weddelle |
