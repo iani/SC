@@ -2,7 +2,7 @@
 
 ~rate = 1;
 
-~numchannels = 46;
+~numchannels = 52;
 
 Server.default = s = Server.local;
 
@@ -32,6 +32,19 @@ s.waitForBoot({
 	
 ~l.sliderView.window.postln;
 )
+
+/*
+~a = { | out = 0 |
+
+Ê Ê Ê ÊOut.ar(out, SinOsc.ar(50, 0, Decay2.kr(Impulse.kr(4), 0.01, 0.15, 0.15)));
+
+//Ê Ê Ê ÊOut.ar(out, LFNoise2.ar(50, Decay2.kr(Impulse.kr(4), 0.01, 0.15, 0.05)));
+//Ê Ê Ê ÊOut.ar(out, SinOsc.ar(880, 0, Decay2.kr(Impulse.kr(4, 2 * pi), 0.1, 0.15, 0.2)));
+}.play;
+
+
+*/
+
 // Channel test.
 
 /*

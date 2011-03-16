@@ -20,10 +20,12 @@ a = (0, 0.05..1.0);
 
 */
 
+~numchannels = 50;
+
 Server.default = Server.internal;
 
 Server.default.options.numInputBusChannels = 2;
-Server.default.options.numOutputBusChannels = 43;
+Server.default.options.numOutputBusChannels = ~numchannels;
 
 Server.default.boot;
 
