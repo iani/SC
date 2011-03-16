@@ -13,13 +13,13 @@ p.set(\azi, 0.2);
 
 */
 
-SynthDef("kdpan",{ | in = 0, azi = 0, ele = 0, width = 2.0, vertical_orientation = 0.5, vol = 1 |
+SynthDef("kdpan",{ | in = 0, azi = 0, ele = 0, width = 2.0, vertical_orientation = 1.5, vol = 1 |
 	var source;
 	var rings, ring1, ring2, ring3, ring4, ring5;
 	
 	source = In.ar(in, 1) * vol;
 	
-	rings = PanAz.ar(6, source, ele, 1.5, width, vertical_orientation); // channels 0 and 5 are not used
+	rings = PanAz.ar(7, source, ele, 1.5, width, vertical_orientation); // channels 0 and 5 are not used
 	
 	ring1 = PanAz.ar(14, rings[1], azi, 1, width, 0);
 	ring2 = PanAz.ar(14, rings[2], azi, 1, width, 0);

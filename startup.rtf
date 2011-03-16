@@ -19,11 +19,22 @@ Server.internal.options.numOutputBusChannels = 46;\
 \
 \pard\pardeftab560\ql\qnatural
 \cf0 g = \cf3 SCMenuGroup\cf0 (\cf3 nil\cf0 , \cf4 "User Menu"\cf0 , 10);\cf3 \
-\cf0 i = \cf3 SCMenuItem\cf0 (g, \cf4 "Edit startup.rtf"\cf0 );\
+\cf0 \
+d = \cf3 SCMenuItem\cf0 (g, "Prepare Osmosis\cf4 "\cf0 );\
+d.setShortCut(\cf4 "p"\cf0 , \cf3 true\cf0 , true); \cf5 // Cmd-ctrl-alt-k\cf0 \
+d.action = \{\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 	(Platform.userAppSupportDir ++ "/startup_piece.scd").load;\
+\pard\pardeftab560\ql\qnatural
+\cf0 \};\
 \
-i.action = \{ \
-	Document.open(Platform.userAppSupportDir ++ "/startup.rtf");\
-\};\
+d = \cf3 SCMenuItem\cf0 (g, \cf4 "Setup - Test KLANG DOM"\cf0 );\
+d.setShortCut(\cf4 "k"\cf0 , \cf3 true\cf0 , true); \cf5 // Cmd-ctrl-alt-k\cf0 \
+d.action = \{\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 	(Platform.userAppSupportDir ++ "/klang_dom_setup_plus_check.scd").load;\
+\pard\pardeftab560\ql\qnatural
+\cf0 \};\
 \
 j = \cf3 SCMenuItem\cf0 (g, \cf4 "boot server"\cf0 );\
 j.setShortCut(\cf4 "b"\cf0 , \cf3 true\cf0 , true); \cf5 // Cmd-ctrl-alt-b\cf0 \
@@ -35,10 +46,13 @@ d = \cf3 SCMenuItem\cf0 (g, \cf4 "Load SynthDefs"\cf0 );\
 d.setShortCut(\cf4 "d"\cf0 , \cf3 true\cf0 , true); \cf5 // Cmd-ctrl-alt-d\cf0 \
 d.action = \{\
 	Server.default.waitForBoot(\{\
+		"============= LOADING SYNTHDEFS ===============".postln;\
 		(Platform.userAppSupportDir ++ "/synthdef_code/*.scd").pathMatch do: \{ | path |\
 			postf("loading: % -- ", path.basename);\
 			path.load.postln;\
 		\};\
+//		"============= LOADING BUFFERS ===============".postln;\
+\
 //		(Platform.userAppSupportDir ++ "/synthdef_code/*.scd").load;	\
 	\});\
 \};\
@@ -51,14 +65,6 @@ d.action = \{\
 \pard\pardeftab560\ql\qnatural
 \cf0 \};\
 \
-d = \cf3 SCMenuItem\cf0 (g, \cf4 "Setup - Test KLANG DOM"\cf0 );\
-d.setShortCut(\cf4 "k"\cf0 , \cf3 true\cf0 , true); \cf5 // Cmd-ctrl-alt-k\cf0 \
-d.action = \{\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf0 	(Platform.userAppSupportDir ++ "/klang_dom_setup_plus_check.scd").load;\
-\pard\pardeftab560\ql\qnatural
-\cf0 \};\
-\
 d = \cf3 SCMenuItem\cf0 (g, \cf4 "Show server"\cf0 );\
 d.setShortCut(\cf4 "s"\cf0 , \cf3 true\cf0 , true); \cf5 // Cmd-ctrl-alt-s\cf0 \
 d.action = \{\
@@ -67,4 +73,8 @@ d.action = \{\
 \};\
 \pard\pardeftab560\ql\qnatural
 \cf0 \
+i = \cf3 SCMenuItem\cf0 (g, \cf4 "Edit startup.rtf"\cf0 );\
+i.action = \{ \
+	Document.open(Platform.userAppSupportDir ++ "/startup.rtf");\
+\};\
 }
