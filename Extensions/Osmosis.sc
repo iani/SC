@@ -75,7 +75,7 @@ Osmosis {
 	
 	*doesNotUnderstand { | message ... args | ^o.perform(message, *args) }
 	
-	@ { | bufname | ^buffers[bufname] }	
+	@ { | bufname | ^buffers[bufname].bufnum }	
 	
 }
 

@@ -22,7 +22,7 @@ O.startup;
 a = { | bufname = \weddelle |
 	var buf, playfunc;
 	var sourcegroup, sources;
-	buf = (O@bufname).bufnum;
+	buf = O@bufname;
 //	buf.play;
 //	b = { | sr = 0.1 | BufRd.ar(1, buf, SinOsc.ar(sr) * BufFrames.ir(buf)) }.play;
 //	b = { | sr = 0.02 | BufRd.ar(1, buf, LFDNoise3.ar(sr) * BufFrames.ir(buf)) }.play;
@@ -59,7 +59,7 @@ SynthDef("Blfn3", { | out = 0, bufnum = 0, rate = 0.045 |
 a = { | bufname = \weddelle |
 	var buf, playfunc;
 	var sourcegroup, sources;
-	buf = (O@bufname).bufnum;
+	buf = O@bufname;
 //	buf.play;
 //	b = { | sr = 0.1 | BufRd.ar(1, buf, SinOsc.ar(sr) * BufFrames.ir(buf)) }.play;
 //	b = { | sr = 0.02 | BufRd.ar(1, buf, LFDNoise3.ar(sr) * BufFrames.ir(buf)) }.play;
