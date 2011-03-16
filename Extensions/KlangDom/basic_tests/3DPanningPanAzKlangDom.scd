@@ -31,7 +31,7 @@ Server.default.boot;
 // Version 2: vertical panning done by PanAz
 
 (
-a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orientation3 = 0, vertical_orientation = 0.5, vol = 1 |
+a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 6.8, vertical_orientation = 1.5, vol = 1 |
 	var source;
 	var rings, ring1, ring2, ring3, ring4, ring5;
 	
@@ -40,7 +40,7 @@ a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orien
 	rings = PanAz.ar(7, source, ele, 1.5, width, vertical_orientation); // channels 0 and 5 are not used
 	
 	ring1 = PanAz.ar(14, rings[1], azi, 1, width, orientation1);
-	ring2 = PanAz.ar(14, rings[2], azi, 1, width, orientation2);
+	ring2 = PanAz.ar(14, rings[2], azi, 1, width, orientation1);
 	ring3 = PanAz.ar(8, rings[3], azi, 1, width, orientation1);
 	ring4 = PanAz.ar(6, rings[4], azi, 1, width, orientation1);
 	ring5 = rings[5];
@@ -54,7 +54,8 @@ a = { | azi = 0, ele = 0, width = 2.0, orientation1 = 0, orientation2 = 0, orien
 }.play;
 )
 
-a.set(\ele, 1.0);
+a.set(\ele, 1.3);
+a.set(\ele, 0);
 
 (
 var vert_inc, vert_scale, vert;
@@ -72,7 +73,8 @@ ele = EZSlider(w, 260@15, "ele", ControlSpec(0, 1, \linear, 0, 0))
 // ele_scale = EZSlider(w, 260@15, "ele_scale", ControlSpec(0, 2, \linear, 0, 1));
 azi = EZSlider(w, 260@15, "azi", ControlSpec(-1, 1, \linear, 0, 0))
 	.action_({ | me | a.set(\azi, me.value); });
-
+azi_inc = EZSlider(w, 260@15, "azi ori", ControlSpec(-14, 14, \linear, 0, 0))
+	.action_({ | me | a.set(\orientation1, me.value); });
 
 /*
 EZSlider(w, 260@15, "azi", ControlSpec(-2, 2, \linear, 0, 0))

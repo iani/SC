@@ -24,7 +24,8 @@ d = \cf3 SCMenuItem\cf0 (g, "Prepare Osmosis\cf4 "\cf0 );\
 d.setShortCut(\cf4 "p"\cf0 , \cf3 true\cf0 , true); \cf5 // Cmd-ctrl-alt-k\cf0 \
 d.action = \{\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf0 	(Platform.userAppSupportDir ++ "/startup_piece.scd").load;\
+\cf0 //	(Platform.userAppSupportDir ++ "/startup_piece.scd").load;\
+	O.startup;\
 \pard\pardeftab560\ql\qnatural
 \cf0 \};\
 \
