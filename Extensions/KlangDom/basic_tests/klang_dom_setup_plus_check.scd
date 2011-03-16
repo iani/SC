@@ -7,7 +7,6 @@
 Server.default = s = Server.local;
 
 
-Server.default.options.numAudioBusChannels = 256;
 Server.default.options.numOutputBusChannels = ~numchannels;
 Server.default.options.numInputBusChannels = 2;
 
