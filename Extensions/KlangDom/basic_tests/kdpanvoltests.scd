@@ -6,8 +6,11 @@
 ~swallows do: { | s, i | s.map(\vol, ~volbus.index + i) };
 ~volbus;
 ~panner = Synth("kdpanvol", [\out, ~volbus.index]);
-~panner.set(\width, 0.1);
-~panner.set(\ele, 0.0); 
+~panner.set(\width, 2);
+~panner.set(\ele, 0.6); 
+~panner.set(\ele, 0.1); 
+
+~panner.set(\width, 18);
 
 
 ~dfd = { | i | Synth(\bphasor, [\out, (i * 3).postln, \bufnum, O@\dfd, \rate, 1]); } ! 3;

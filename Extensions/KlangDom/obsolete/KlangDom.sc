@@ -1,7 +1,11 @@
 /* IZ 201103
+
 Create VBAPSpeaker array with the coordinates of the KlangDom at ZKM. 
 
 KlangDom.new.speakers.inspect;
+
+This class is no longer used. Using PanAz based panning instead, which is simpler and very effective. 
+See KDpan etc. 
 
 */
 
