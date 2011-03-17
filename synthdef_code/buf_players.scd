@@ -12,19 +12,35 @@ SynthDescLib.global.browse;
 
 // racing through the buffer in varying speeds with LFDNoise3
 
-SynthDef("blfn3", { | out = 0, bufnum = 0, rate = 0.045 |
-	Out.ar(out, BufRd.ar(1, bufnum, LFDNoise3.ar(rate) * BufFrames.ir(bufnum)));
+SynthDef("blfn3", { | out = 0, bufnum = 0, rate = 0.045, vol = 1 |
+	Out.ar(out, vol * BufRd.ar(1, bufnum, LFDNoise3.ar(rate) * BufFrames.ir(bufnum)));
 }).store;
 
 
 // As above but with LFDNoise1. Speed will be constant during each time interval
-SynthDef("blfn1", { | out = 0, bufnum = 0, rate = 0.045 |
-	Out.ar(out, BufRd.ar(1, bufnum, LFDNoise1.ar(rate) * BufFrames.ir(bufnum)));
+SynthDef("blfn1", { | out = 0, bufnum = 0, rate = 0.045, vol = 1  |
+	Out.ar(out, vol * BufRd.ar(1, bufnum, LFDNoise1.ar(rate) * BufFrames.ir(bufnum)));
 }).store;
 
 /* 	Simple linear reading through a buffer with Phasor. To be developed for combination
 	with subtler controls added on top of the linear movement. 
+*/
 
+SynthDef("bphasor", { | out = 0, bufnum = 0, rate = 1, trigger = 0, start = 0, stop = 1, reset = 0, vol = 1 |
+	var source;
+	source = BufRd.ar(1, bufnum, 
+		Phasor.ar(
+			trigger, 
+			rate * BufRateScale.kr(bufnum), 
+			start * BufFrames.kr(bufnum), 
+			stop * BufFrames.kr(bufnum),
+			reset * BufFrames.kr(bufnum)
+		)
+	);
+	Out.ar(out, vol * source);
+}).store;
+
+/*
 Phasor.ar(trig, rate, start, end, resetPos)
 
 a = Synth(\bphasor, [\bufnum, O@\weddellb]);
@@ -75,19 +91,4 @@ Synth(\bphasor, [\out, 4, \bufnum, O@\weddellb, \rate, 1]);
 
 // m.free;
 */
-
-SynthDef("bphasor", { | out = 0, bufnum = 0, rate = 1, trigger = 0, start = 0, stop = 1, reset = 0 |
-	var source;
-	source = BufRd.ar(1, bufnum, 
-		Phasor.ar(
-			trigger, 
-			rate * BufRateScale.kr(bufnum), 
-			start * BufFrames.kr(bufnum), 
-			stop * BufFrames.kr(bufnum),
-			reset * BufFrames.kr(bufnum)
-		)
-	);
-	Out.ar(out, source);
-}).store;
-
 

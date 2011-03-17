@@ -12,7 +12,7 @@ O.startup;
 
 // A delicate texture to start, pianissimo: 
 
-~swallows1000 = { | i | Synth(\bphasor, [\out, i.postln, \bufnum, O@\swallowsa, \rate, i / 1000 + 1]); } ! 43;
+// ~swallows1000 = { | i | Synth(\bphasor, [\out, i.postln, \bufnum, O@\swallowsa, \rate, i / 1000 + 1]); } ! 43;
 
 // But should be prefaced by a single swallow? 
 

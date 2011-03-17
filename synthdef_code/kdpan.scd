@@ -17,13 +17,11 @@ p.set(\azi, 0.2);
 
 
 { { | i | p.set(\width, (i + 1).postln); 3.wait } ! 14 }.fork
-{ { | i | p.set(\width, (i + 1).postln); 3.wait } ! 20 }.fork
+{ { | i | p.set(\vertwidth, (i + 1).postln); 3.wait } ! 8 }.fork
 
+{ (8..1) do: { | i | p.set(\vertwidth, i.postln); 3.wait } }.fork
+p.set(\ele, 0.3);
 
-
-
-
- 
 */
 
 // kdpan and kdpanvol set the widths of the horizontal rings uniformly. For individual control 
