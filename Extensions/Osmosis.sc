@@ -27,11 +27,12 @@ Osmosis {
 	init { buffers = IdentityDictionary.new }
 	
 	startup { // setup the piece: configure and restart server, load synthdefs, load buffers.
-		this.quitServer;
-		this.setupServer;
-		this.bootServer;
-		this.loadSynthDefs;
-		this.loadBuffers;	
+		{
+			this.quitServer;
+			0.5.wait;
+			this.setupServer;
+			this.bootServer;
+		}.fork(AppClock);
 	}
 
 	quitServer {
@@ -53,7 +54,7 @@ Osmosis {
 	}
 
 	loadSynthDefs {
-		"============= LOADING SYNTHDEFS ===============".postln;
+		"======== LOADING SYNTHDEFS ==========".postln;
 		(Platform.userAppSupportDir ++ "/synthdef_code/*.scd").pathMatch do: { | path |
 			postf("loading: % -- ", path.basename);
 			path.load.postln;
@@ -62,7 +63,7 @@ Osmosis {
 	
 	loadBuffers {
 		var bufname;
-		"============= LOADING BUFFERS ===============".postln;
+		"======== LOADING BUFFERS ==========".postln;
 		(Platform.userAppSupportDir ++ "/sounds/*").pathMatch do: { | folder |
 			postf("--------- loading folder: % -- \n", folder.basename);
 			(folder ++ "/*.aiff").pathMatch do: { | path |
