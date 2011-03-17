@@ -3,6 +3,10 @@ Branch osmosis of git repository SC.
 This project is the first version of the piece Osmosis. 
 Performed at ZKM in the Klangdom (Kubus), on Friday, 18 March, 2011. 
 
+More info is provided in file 
+
+Info.org // (+ Info.html)
+
 =====================================
 About this git repository: 
 

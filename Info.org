@@ -1,0 +1,13 @@
+
+* Classes
+** Osmosis / O: Setup of Osmosis piece
+*** Sets Server options
+*** Loads synthdefs
+*** Loads buffers
+*** ...
+** KDpan: Pan a single synth by processing its output through kdpan panning synth
+** KDpan43: Pan 43 synths outputting on 43 channels, using kdpanvol to scale individual channel amplitudes
+** KDgroup: Manage a group of 43 synths outputting audio on channels 0-42
+* SynthDefs
+** 
+* Sound Buffers
