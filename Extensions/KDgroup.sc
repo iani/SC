@@ -31,7 +31,7 @@ KDgroup {
 	
 	*new { | synthfunc ... controllers |
 	     // synthfunc { | i, kdgroup | ... } : create the ith synth. 
-	     // controllers: instances of KD42ctl or its subclasses
+	     // controllers: instances of KD43ctl or its subclasses
 	}
 
 }

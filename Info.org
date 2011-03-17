@@ -6,6 +6,9 @@
 *** Loads buffers
 *** ...
 ** KDpan: Pan a single synth by processing its output through kdpan panning synth
+** CtlArray: Control one named parameter for each synth in an array of synths by either mapping or setting. 
+*** SetCtl: Subclass of CtlArray that sets the parameters values: aSynth.set(pmt, value)
+*** MapCtl: Subclass of CtlArray that maps the parameters values: aSynth.map(pmt, bus)
 ** KDpan43: Pan 43 synths outputting on 43 channels, using kdpanvol to scale individual channel amplitudes
 ** KDgroup: Manage a group of 43 synths outputting audio on channels 0-42
 * SynthDefs
