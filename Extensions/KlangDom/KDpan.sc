@@ -28,16 +28,33 @@ aKDpan.map(\azi, bus.index);
 p = KDpan({ | out, group | { | out | Out.ar(out, WhiteNoise.ar(0.1)) }
 	.play(args: [\out, out], target: group, addAction: \addToHead) });
 
+
+p = KDpan([\bphasor, \bufnum, );
+
+p.phrases(20, 
+	[\vol, [[0.1, 0], [5, 5], [10, 0]]],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+
+p = KDpan({ | out, group |
+	Synth(\bphasor, [\bufnum, O@\swallowsa, \out, out], group, \addToHead);
+});
+
+
+
 p = KDpan({ | out, group |
 	Synth(\bphasor, [\bufnum, O@\swallowsa, \out, out], group, \addToHead);
 });
 
 p = KDpan([\bphasor, \bufnum, O@\swallowsa]);
-	
-	
-p = KDpan({ | bus, group | Synth("brd(group, addAction: \addToHead, 
-	args: [\out, bus])
-});
+p.fadeIn(2, 12);	
+p.fadeIn(2, 0);
+
+
+p = KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.0, \rate, 1]);
+p.fadeIn(2, 12);	
 
 
 Phrase(50, \vol, [[0.1, 0.1], [5, 1], [10, 0]]).play(p);
@@ -80,17 +97,19 @@ KDpan {
 	var <synths;
 	var <group;
 
-	*new { | synthSpec, azi = 0, ele = 0, width = 2 |
-		^super.new.init(synthSpec, azi, ele, width);
+	*new { | synthSpec, azi = 0, ele = 0, width = 2, vol = 0 |
+		^super.new.init(synthSpec, azi, ele, width, vol);
 	}
 	
-	init { | synthSpec, azi = 0, ele = 0, width = 2 |
+	init { | synthSpec, azi = 0, ele = 0, width = 2, vol = 0 |
 		bus = Bus.audio;
 		group = Group(Server.default);
 		// *new(defName, args: [ arg1, value1, ... argN, valueN  ], target, addAction)
-		panner = Synth("kdpan", [\in, bus.index, \azi, azi, \ele, ele, \width, width], group, \addToTail);
+		panner = Synth("kdpan", [\in, bus.index, \azi, azi, \ele, ele, \width, width, \vol, vol], group, \addToTail);
 		if (synthSpec.notNil) { this.add(synthSpec) };
 	}
+
+	add { | synthSpec | synths = synths.add(synthSpec.asSynthFunc.(bus.index, group);) }
 
 	phrases { | duration ... phrases | 
 		// play a sequence of parameter settings timed and with lags
@@ -138,7 +157,6 @@ KDpan {
 
 	fadeSynths { | val = 0.5, time = 5 | this.setLagSynths(\vol, val, time); }
 
-	add { | synthSpec | synths = synths.add(synthSpec.asSynthFunc.(bus.index, group);) }
 	free { group.free }
 
 	set { | ... parlist | panner.set(*parlist); }
@@ -173,7 +191,7 @@ KDpanvol : KDpan {
 		bus = Bus.control(Server.default, 43);
 		group = Group(Server.default);
 		// *new(defName, args: [ arg1, value1, ... argN, valueN  ], target, addAction)
-		panner = Synth("kdpanvol", [\in, bus.index, \azi, azi, \ele, ele, \width, width], group, \addToTail);
+		panner = Synth("kdpanvol", [\in, bus.index, \azi, azi, \ele, ele, \width, width, \vol, vol], group, \addToTail);
 		if (nodeArray.notNil) { this.add(nodeArray) };
 	}
 	add { | nodeArray | 

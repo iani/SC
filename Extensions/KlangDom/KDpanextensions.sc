@@ -18,6 +18,7 @@ p = KDpan([\blfn3, \bufnum, O@\swallowsa, \vol, 10, \rate, 0.01]);
 		var defname, params;
 	 	#defname ... params = this;
 		^{ | out, group |
+			[defname, params ++ [\out, out], group].postln;
 			Synth(defname, params ++ [\out, out], group, \addToHead);
 		}
 
