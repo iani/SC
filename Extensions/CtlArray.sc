@@ -17,27 +17,38 @@ b.set(1);
 a.map(\out, b.index);
 a run: 1
 
+SynthDescLib.global.browse
 
+a = NodeArray({ | i | Synth(\bphasor, [\out, i.postln, \bufnum, O@\swallowsa, \rate, 1]); })
+a.set(\vol, 0.1);
+
+
+NodeArray({ | i | Synth(\blfn3, [\out, i.postln, \bufnum, O@\weddellb, \rate, 0.01, \vol, 0.01]); })
+
+
+Synth(\blfn3, [\bufnum, O@\weddellb])
 
 */
 
 NodeArray {
+	classvar <>defaultSize = 43;
 	var <generatorFunc, <size;
   	var <nodes;
   	
-  	*new { | generatorFunc, size = 43 |
-	  	this.newCopyArgs(generatorFunc, size).init;
+  	*new { | generatorFunc, size |
+	  	^this.newCopyArgs(generatorFunc, size ? defaultSize).init;
 	}
 
 	init { nodes = generatorFunc ! size; }
 	
-	set { | param, val |
-		nodes do: _.set(param, val);
+	set { | param, val, index |
+		index = index ?? { (0.. size - 1) };
+		nodes[index] do: _.set(param, val);
 	}
 	
-	setn { | param, val |
-		if (val.size < 1) { val = val ! size };
-		
+	setn { | paramval, index |
+		index = index ?? { (0.. size - 1) };
+		nodes[index] do: { | n, i | n.set(*paramval.(n, i)) };
 	}
 
 	map { | param, index |

@@ -9,6 +9,23 @@ SynthDescLib.global.browse;
 
 */
 
+SynthDef("bphasor", { 
+	| 
+		out = 0, bufnum = 0, rate = 1, trigger = 0, start = 0, stop = 1, reset = 0, 
+		vol = 1, vollag = 0.1, ratelag = 0.0
+	|
+	var source;
+	source = BufRd.ar(1, bufnum, 
+		Phasor.ar(
+			trigger, 
+			Lag.kr(rate, ratelag) * BufRateScale.kr(bufnum), 
+			start * BufFrames.kr(bufnum), 
+			stop * BufFrames.kr(bufnum),
+			reset * BufFrames.kr(bufnum)
+		)
+	);
+	Out.ar(out, Lag.kr(vol, vollag) * source);
+}).store;
 
 // racing through the buffer in varying speeds with LFDNoise3
 
@@ -26,19 +43,6 @@ SynthDef("blfn1", { | out = 0, bufnum = 0, rate = 0.045, vol = 1  |
 	with subtler controls added on top of the linear movement. 
 */
 
-SynthDef("bphasor", { | out = 0, bufnum = 0, rate = 1, trigger = 0, start = 0, stop = 1, reset = 0, vol = 1 |
-	var source;
-	source = BufRd.ar(1, bufnum, 
-		Phasor.ar(
-			trigger, 
-			rate * BufRateScale.kr(bufnum), 
-			start * BufFrames.kr(bufnum), 
-			stop * BufFrames.kr(bufnum),
-			reset * BufFrames.kr(bufnum)
-		)
-	);
-	Out.ar(out, vol * source);
-}).store;
 
 /*
 Phasor.ar(trig, rate, start, end, resetPos)
