@@ -16,6 +16,108 @@ O.startup;
 
 // But should be prefaced by a single swallow? 
 
+~swallowsap 		= KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 1.0, \rate, 1], vol: 0);
+~swallowsbp 		= KDpan([\bphasor, \bufnum, O@\swallowsb, \vol, 1.0, \rate, 1], vol: 0);
+
+~weddellap			= KDpan([\bphasor, \bufnum, O@\weddella, \vol, 1.0, \rate, 1], vol: 0);
+~weddellbp			= KDpan([\bphasor, \bufnum, O@\weddellb, \vol, 1.0, \rate, 1], vol: 0);
+~weddellcp			= KDpan([\bphasor, \bufnum, O@\weddellc, \vol, 1.0, \rate, 1], vol: 0);
+~weddelldp			= KDpan([\bphasor, \bufnum, O@\weddelld, \vol, 1.0, \rate, 1], vol: 0);
+~weddellep			= KDpan([\bphasor, \bufnum, O@\weddelle, \vol, 1.0, \rate, 1], vol: 0);
+
+~newstarp			= KDpan([\bphasor, \bufnum, O@\newstar, \vol, 1.0, \rate, 1], vol: 0);
+
+~swallowsap.phrases(35, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.5],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+~swallowsap.phrases(15, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.2],
+	[\ele, [[0, 0.8], [1, 0.1], [10, 0]]],
+	[\azi, [[0, -0.5], [3, 1.01], [0, -1], [1, -0.5]]]
+);
+
+~swallowsap.free;
+
+~weddellap.phrases(30, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.05],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+~weddellap.free;
+
+
+~weddellbp.phrases(40, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.01],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+~weddellbp.free;
+
+~wedddelcp.phrases(30, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.1],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+~weddellcp.free;
+
+~wedddeldp.phrases(30, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.02],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+~weddelldp.free;
+
+
+~weddellep.phrases(20, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.05],
+	[\ele, [[0, 0.2], [1, 0.5], [2, 0], [10, 1]]],
+	[\azi, [[0, -0.3], [1, 1.01], [0, -1], [1, 0.6]]]
+);
+
+~weddellep.free;
+
+
+~swallowsbp.phrases(35, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.5],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+~swallowsbp.phrases(15, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.2],
+	[\ele, [[0, 0.8], [1, 0.1], [10, 0]]],
+	[\azi, [[0, -0.5], [3, 1.01], [0, -1], [1, -0.5]]]
+);
+
+~swallowsbp.free;
+
+~newstarp.phrases(55, 
+	[\vol, [ [5, 1], [10, 0]] * 0.15],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]],
+	[\width, [[3, 1], [19, 15], [7, 2], [10, 1.5]]]
+);
+
+
+~newstarp.phrases(35, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 0.5],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]],
+	[\width, [[3, 1], [19, 15], [7, 2], [10, 1.5]]]
+);
+
+~newstarp.free;
+
+
+
+
 ~swallows = { | i | Synth(\bphasor, [\out, i.postln, \bufnum, O@\swallowsa, \rate, 1]); } ! 43;
 
 ~swallows do: { | s, i | s.set(\rate, i / 1000 + 1) };

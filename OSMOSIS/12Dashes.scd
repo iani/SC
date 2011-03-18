@@ -33,7 +33,6 @@ O.startup;
 
 ~dashes do: { | s, i | s.set(\ratelag, 20, \rate, i / 5 + 0.2) };
 
-
 ~dashes do: { | s, i | s.set(\vollag, 20, \vol, 0.2, \ratelag, 50, \rate, i / 100 + 1) };
 
 ~dashes do: { | s, i | s.set(\vollag, 20, \vol, 0.01, \ratelag, 17, \rate, i / 1000 + 1) };
