@@ -41,14 +41,60 @@ NodeArray {
 
 	init { nodes = generatorFunc ! size; }
 	
-	set { | param, val, index |
-		index = index ?? { (0.. size - 1) };
-		nodes[index] do: _.set(param, val);
+	do { | func |
+		nodes do: func;	
 	}
 	
-	setn { | paramval, index |
+	set { | param, val, index |
 		index = index ?? { (0.. size - 1) };
-		nodes[index] do: { | n, i | n.set(*paramval.(n, i)) };
+		nodes[index].asArray do: _.set(param, val);
+	}
+
+	setF { | paramval, index |
+		index = index ?? { (0.. size - 1) };
+		index = index.asArray;
+		nodes[index] do: { | n, i | n.set(*paramval.(index[i], i)) };
+	}
+	
+	fade1 { | id, value = 1, lag = 1, param = \vol |
+		nodes[id].set((param ++ \lag).asSymbol, lag, param, value);
+	}
+
+	fadeF { | ids, valueFunc, param = \vol |
+		var value, lag;
+		ids.asArray do: { | id | 
+			#value, lag = valueFunc.(id);
+			this.fade1(id, value, lag, param);
+		}
+	}
+
+	fadeAll { | value = 1, lag = 1, param = \vol |
+		nodes do: this.fade1(value, lag, param); 
+	}
+	
+	fadeRate1 { | id = 0, value = 1, lag = 3 |
+		this.fade1(id, value, lag, \rate);
+	}
+
+	fadeRateF { | id = 0, value = 1, lag = 3 |
+		this.fade1(id, value, lag, \rate);
+	}
+	
+	setRate1 { | id = 0, value = 1 |
+		this.fadeRate1(value, 0);
+	}
+	
+	fadeIn { | value = 1, time = 3 |
+		nodes do: { | n | n.set(\vollag, time, \vol, value); }
+	}
+
+	fadeOut { | time = 3 |
+		nodes do: { | n | n.set(\vollag, time, \vol, 0); }
+	}
+	
+	fadeOutAndEnd { | time |
+		this.fadeAll(0, time, \vol);
+		{ nodes do: _.free }.defer(time + 0.1); 		
 	}
 
 	map { | param, index |
@@ -58,7 +104,6 @@ NodeArray {
 	moveToTail { | group |
 		nodes do: _.moveToTail(group);	
 	}
-	
 }
 
 CtlArray {

@@ -29,14 +29,14 @@ SynthDef("bphasor", {
 
 // racing through the buffer in varying speeds with LFDNoise3
 
-SynthDef("blfn3", { | out = 0, bufnum = 0, rate = 0.045, vol = 1 |
-	Out.ar(out, vol * BufRd.ar(1, bufnum, LFDNoise3.ar(rate) * BufFrames.ir(bufnum)));
+SynthDef("blfn3", { | out = 0, bufnum = 0, rate = 0.045, vol = 1, vollag = 0.1 |
+	Out.ar(out, Lag.kr(vol, vollag) * BufRd.ar(1, bufnum, LFDNoise3.ar(rate) * BufFrames.ir(bufnum)));
 }).store;
 
 
 // As above but with LFDNoise1. Speed will be constant during each time interval
-SynthDef("blfn1", { | out = 0, bufnum = 0, rate = 0.045, vol = 1  |
-	Out.ar(out, vol * BufRd.ar(1, bufnum, LFDNoise1.ar(rate) * BufFrames.ir(bufnum)));
+SynthDef("blfn1", { | out = 0, bufnum = 0, rate = 0.045, vol = 1, vollag = 0.1  |
+	Out.ar(out, Lag.kr(vol, vollag) * BufRd.ar(1, bufnum, LFDNoise1.ar(rate) * BufFrames.ir(bufnum)));
 }).store;
 
 /* 	Simple linear reading through a buffer with Phasor. To be developed for combination

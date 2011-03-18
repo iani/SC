@@ -18,7 +18,8 @@ O.openScoreFiles;
 
 Osmosis {
 	classvar <o;
-	var <buffers;
+	var <>buffers;
+//	var <>players;
 	
 	*initClass { o = this.new }
 	
@@ -64,7 +65,8 @@ Osmosis {
 		(Platform.userAppSupportDir ++ "/synthdef_code/*.scd").pathMatch do: { | path |
 			postf("loading: % -- ", path.basename);
 			path.load.postln;
-		};		
+		};
+//		{ SynthDescLib.global.browse }.defer(1);		
 	}
 	
 	loadBuffers {
@@ -82,7 +84,13 @@ Osmosis {
 	
 	*doesNotUnderstand { | message ... args | ^o.perform(message, *args) }
 	
-	@ { | bufname | ^buffers[bufname].bufnum }	
+	@ { | bufname | ^buffers[bufname].bufnum }
+	
+	bplay { | bufname | ^buffers[bufname].play }
+	
+//	add { | playername | } 
+//	> { | playername | ^players[playername] }
+	
 	
 }
 

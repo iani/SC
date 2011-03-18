@@ -32,7 +32,6 @@ p = KDpan({ | out, group |
 	Synth(\bphasor, [\bufnum, O@\swallowsa, \out, out], group, \addToHead);
 });
 
-
 p = KDpan([\bphasor, \bufnum, O@\swallowsa]);
 	
 	
@@ -99,6 +98,43 @@ KDpan {
 		phrases do: { | p | Phrase(duration, p[0], p[1]).play(this) };
 	}
 
+	fadeTo { | time = 3, value = 1 |
+		panner.set(\vollag, time, \vol, value);	
+	}
+
+	fadeIn { | time = 3, value = 1 |
+		this.fadeTo(time, value);		
+	}
+		
+	fadeOut { | time = 3 |
+		this.fadeTo(time, 0);
+	}
+
+	panTo { | azi = 0, ele = 0, time = 5 |
+		panner.set(\vollag, time, \azi, azi, \elelag, time, \ele, ele);
+	}
+
+	// just a synonym to help ... : 
+	gotTo { | azi = 0, ele = 0, time = 5 |
+		this.panTo(azi, ele, time);
+	}
+	
+
+	wideTo { | width = 2, time = 5 |
+		panner.set(\widthlag, time, \width, width);
+	} 
+
+	vertWideTo { | width = 2, time = 5 |
+		panner.set(\vertwidthlag, time, \vertwidth, width);
+	}
+
+	setLag { | param, val, time = 5 |
+		panner.set((param ++ \lag).asSymbol, time, param, val);
+	}
+	
+	setLagSynths { | param, val, time = 5 |
+		synths do: { | s | s.set((param ++ \lag).asSymbol, time, param, val); }
+	}
 
 	add { | synthSpec | synths = synths.add(synthSpec.asSynthFunc.(bus.index, group);) }
 	free { group.free }
@@ -131,7 +167,7 @@ p.set(\azi, 0);
 
 KDpanvol : KDpan {
 
-	init { | nodeArray, azi = 0, ele = 0, width = 2 |
+	init { | nodeArray, azi = 0, ele = 0, width = 2, vol = 0 |
 		bus = Bus.control(Server.default, 43);
 		group = Group(Server.default);
 		// *new(defName, args: [ arg1, value1, ... argN, valueN  ], target, addAction)
@@ -140,10 +176,24 @@ KDpanvol : KDpan {
 	}
 	add { | nodeArray | 
 		nodeArray.moveToTail(group);
-		synths = synths.add(nodeArray);
+		synths = nodeArray; // synths.add(nodeArray);
 		nodeArray.map(\vol, bus.index);
 	}
+	
+	setNodes { | parFunc, ids |
+		ids = ids ?? { (0 .. synths.nodes.size) };
+		ids = ids.asArray;
+//		synths do: { | s | s.nodes[ids] do: { | n, i | n.set(*parFunc.(ids[i], i)) } };
+		synths.nodes[ids] do: { | n, i | n.set(*parFunc.(ids[i], i)) } 
+	} 
 
+	fadeOutAndEnd { | time |
+		this.fadeOut(time);
+		{ 
+			synths do: _.free;
+			panner.free;
+		}.defer(time + 0.1); 		
+	}
 }
 
 Phrase {
@@ -156,7 +206,7 @@ Phrase {
 	
 	init { 
 		duration_ratio = duration / durvaluepairs.flop.first.sum;
-		parameterlag = (parameter ++ \lag).asSymbol.postln;
+		parameterlag = (parameter ++ \lag).asSymbol; // .postln;
 	}
 	
 	play { | panner |

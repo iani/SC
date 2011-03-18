@@ -5,12 +5,25 @@ O.startup; // boot server, load buffers + synthdefs
 
 */
 
-a = KDpan.new.add({ | bus, group | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1])(group, addAction: \addToHead, 
-	args: [\out, bus])
-});
+a = NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate,  1 / 100 + 1, \vol, 1]); })
+
+a = NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\swallowsa, \rate,  i / 100 + 0.2, \vol, 1]); })
+
+m = { Out.ar(0, Mix.ar(In.ar(0, 43))) }.play(addAction: \addToTail);
+
 
 
 p = KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.1, \rate, 1]);
+
+p.set(\azi, 0);
+p.set(\vol, 10);
+
+p.phrases(40, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
 
 p.phrases(40, 
 	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
