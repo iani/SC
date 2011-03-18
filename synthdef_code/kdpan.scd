@@ -88,14 +88,18 @@ SynthDef("kdpanvol", {
 		vertical_orientation = 1.5, 
 		orientation1 = 7, orientation2 = 6.5, orientation3 = 3.5, orientation4 = 2.52, 
 		vertwidth = 2, width = 2,
-		vol = 1
+		vol = 1, azilag = 0, elelag = 0, vollag = 0, vertwidthlag = 0, widthlag = 0
 	|
 	var source;
 	var rings, ring1, ring2, ring3, ring4, ring5;
 	
-	source = vol;
+	source = Lag.kr(vol, vollag);
+
+	rings = PanAz.kr(7, source, Lag.kr(ele, elelag), 1.5, vertwidth, vertical_orientation); // channels 0 and 5 are not used
+
+	width = Lag.kr(width, widthlag);
 	
-	rings = PanAz.kr(7, source, ele, 1.5, vertwidth, vertical_orientation); // channels 0 and 5 are not used
+	azi = Lag.kr(azi, azilag);
 	
 	ring1 = PanAz.kr(14, rings[1], azi, 1, width, orientation1);
 	ring2 = PanAz.kr(14, rings[2], azi, 1, width, orientation2);

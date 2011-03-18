@@ -53,7 +53,11 @@ NodeArray {
 
 	map { | param, index |
 		nodes do: { | n, i | n.map(param, index + i) }	
-	}	
+	}
+	
+	moveToTail { | group |
+		nodes do: _.moveToTail(group);	
+	}
 	
 }
 

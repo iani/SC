@@ -12,8 +12,8 @@ a = KDpan.new.add({ | bus, group | Synth(\bphasor, [\out, i, \bufnum, O@\swallow
 
 p = KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.1, \rate, 1]);
 
-p.phrases(30, 
-	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]]],
+p.phrases(40, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
 	[\ele, [[0, 0], [1, 1], [10, 0]]],
 	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
 );

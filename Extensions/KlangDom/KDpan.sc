@@ -102,6 +102,7 @@ KDpan {
 
 	add { | synthSpec | synths = synths.add(synthSpec.asSynthFunc.(bus.index, group);) }
 	free { group.free }
+
 	set { | ... parlist | panner.set(*parlist); }
 	map { | parameter, bus | panner.map(parameter, bus.index); }
 	azi { | azi | panner.set(\azi, azi);	}
@@ -112,10 +113,13 @@ KDpan {
 
 /*
 
-p = KDpanvol({ | out, group |
+p = KDpan({ | out, group |
 	Synth(\bphasor, [\bufnum, O@\swallowsa, \out, out], group, \addToHead);
 });
+p.set(\azi, 1);
+p.set(\azi, 0);
 
+p = KDpanvol();
 p.set(\azi, 1);
 p.set(\azi, 0);
 
@@ -123,16 +127,17 @@ p.set(\azi, 0);
 
 KDpanvol : KDpan {
 
-
-	init { | synthSpec, azi = 0, ele = 0, width = 2 |
-		bus = Bus.audio;
+	init { | nodeArray, azi = 0, ele = 0, width = 2 |
+		bus = Bus.control(Server.default, 43);
 		group = Group(Server.default);
 		// *new(defName, args: [ arg1, value1, ... argN, valueN  ], target, addAction)
-		panner = Synth("kdpan", [\in, bus.index, \azi, azi, \ele, ele, \width, width], group, \addToTail);
-		if (synthSpec.notNil) { this.add(synthSpec) };
+		panner = Synth("kdpanvol", [\in, bus.index, \azi, azi, \ele, ele, \width, width], group, \addToTail);
+		if (nodeArray.notNil) { this.add(nodeArray) };
 	}
 	add { | nodeArray | 
+		nodeArray.moveToTail(group);
 		synths = synths.add(nodeArray);
+		nodeArray.map(\vol, bus.index);
 	}
 
 }
