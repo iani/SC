@@ -119,8 +119,12 @@ p = KDpan({ | out, group |
 p.set(\azi, 1);
 p.set(\azi, 0);
 
-p = KDpanvol();
+a = NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\weddellb, \rate, 0.01, \vol, 0.01]); })
+a.set(\vol, 1);
+p = KDpanvol(a);
 p.set(\azi, 1);
+
+p.set(\width, 18);
 p.set(\azi, 0);
 
 */
