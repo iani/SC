@@ -12,6 +12,8 @@ O@\x
 O.startup;
 O@\swallowse
 
+O.openScoreFiles;
+
 */
 
 Osmosis {
@@ -33,6 +35,10 @@ Osmosis {
 			this.setupServer;
 			this.bootServer;
 		}.fork(AppClock);
+	}
+
+	openScoreFiles {
+		(Platform.userAppSupportDir ++ "/OSMOSIS/*.scd").pathMatch do: Document.open(_);
 	}
 
 	quitServer {
