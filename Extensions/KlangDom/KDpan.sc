@@ -136,6 +136,8 @@ KDpan {
 		synths do: { | s | s.set((param ++ \lag).asSymbol, time, param, val); }
 	}
 
+	fadeSynths { | val = 0.5, time = 5 | this.setLagSynths(\vol, val, time); }
+
 	add { | synthSpec | synths = synths.add(synthSpec.asSynthFunc.(bus.index, group);) }
 	free { group.free }
 
@@ -177,7 +179,7 @@ KDpanvol : KDpan {
 	add { | nodeArray | 
 		nodeArray.moveToTail(group);
 		synths = nodeArray; // synths.add(nodeArray);
-		nodeArray.map(\vol, bus.index);
+		nodeArray.map(\vol, bus.index); // should become; this.remap; // but after the performance
 	}
 	
 	setNodes { | parFunc, ids |
@@ -194,6 +196,41 @@ KDpanvol : KDpan {
 			panner.free;
 		}.defer(time + 0.1); 		
 	}
+	
+	remap { synths.map(\vol, bus.index); }
+	
+	randPhrase { | duration = 20, numPoints = 5 |
+		this.phrases(duration, 
+			[\vol, [[0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
+			[\ele, [[0, 0], [1, 1], [10, 0]]],
+			[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+		);		
+	}
+
+	randWidePhrase { | duration = 20, numPoints = 5, maxVol = 1.0, durVariation = 1 |
+		this.phrases(duration,
+			[\vol, [[0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
+			[\ele, [[0, 0], [1, 1], [10, 0]]],
+			[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+		);		
+	}
+	
+	makeDurations { | numPoints, durVariation |
+		Array.rand(numPoints, 1.0, 1 + durVariation);
+	}
+	
+	makeVolDurations { | numPoints, durVariation |
+		Array.rand(numPoints + 2, 1.0, 1 + durVariation);
+	}
+
+	makeValues { | numPoints, minVal, maxVal |
+		Array.rand(numPoints, minVal, maxVal)
+	}
+
+	makeVolValues { | numPoints, minVal, maxVal |
+		[0] ++ Array.rand(numPoints, minVal, maxVal) ++ [0];
+	}
+
 }
 
 Phrase {

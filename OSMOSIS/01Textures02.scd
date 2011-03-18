@@ -18,7 +18,7 @@ p = KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.1, \rate, 1]);
 p.set(\azi, 0);
 p.set(\vol, 10);
 
-p.phrases(40, 
+p.phrases(10, 
 	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
 	[\ele, [[0, 0], [1, 1], [10, 0]]],
 	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]

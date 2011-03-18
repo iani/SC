@@ -44,7 +44,7 @@ a = NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1,
 ~allwed.fadeIn;
 ~allwed.wideTo(18, 10);
 ~allwed.vertWideTo(18, 10);
-~allwed.
+
 */
 
 ~alldf			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\dfd, \vol, 0]); });

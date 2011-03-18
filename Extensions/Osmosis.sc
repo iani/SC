@@ -91,7 +91,43 @@ Osmosis {
 //	add { | playername | } 
 //	> { | playername | ^players[playername] }
 	
-	
+	startSynths {
+		~swallowsa 		= KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.5, \rate, 1]);
+		~weddella			= KDpan([\bphasor, \bufnum, O@\weddella, \vol, 0.5, \rate, 1]);
+		~weddellb			= KDpan([\bphasor, \bufnum, O@\weddellb, \vol, 0.5, \rate, 1]);
+		~weddellc			= KDpan([\bphasor, \bufnum, O@\weddellc, \vol, 0.5, \rate, 1]);
+		~weddelld			= KDpan([\bphasor, \bufnum, O@\weddelld, \vol, 0.5, \rate, 1]);
+		~weddelle			= KDpan([\bphasor, \bufnum, O@\weddelle, \vol, 0.5, \rate, 1]);
+		
+		~chimes			= KDpan([\bphasor, \bufnum, O@\chimes, \vol, 0.5, \rate, 1]);
+		~dashes			= KDpan([\bphasor, \bufnum, O@\dashes, \vol, 0.5, \rate, 1]);
+		~dfd				= KDpan([\bphasor, \bufnum, O@\dfd, \vol, 0.5, \rate, 1]);
+		~newstar			= KDpan([\bphasor, \bufnum, O@\newstar, \vol, 0.5, \rate, 1]);
+		~strich			= KDpan([\bphasor, \bufnum, O@\strich, \vol, 0.5, \rate, 1]);
+		
+		~allsw			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1, \vol, 0]); });
+		~allswd			= KDpanvol(~allsw);
+		
+		~allwe			= NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\weddelle, \vol, 0]); });
+		~allwed			= KDpanvol(~allwe);
+		
+		~alldf			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\dfd, \vol, 0]); });
+		~alldfd			= KDpanvol(~alldf);		
+
+		~allch			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\chimes, \vol, 0]); });
+		~allchd			= KDpanvol(~allch);		
+
+		~allda			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\dashes, \vol, 0]); });
+		~alldad			= KDpanvol(~allda);		
+
+		~allne			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\newstar, \vol, 0]); });
+		~allned			= KDpanvol(~allne);		
+
+		~allst			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\strich, \vol, 0]); });
+		~allstd			= KDpanvol(~allst);		
+	}
 }
 
 O : Osmosis { } // Define O as shortcut for Osmosis
+
+

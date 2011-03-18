@@ -8,48 +8,86 @@ swallowsa, swallowsb, swallowsc, swallowsd, swallowse,
 weddell, weddella, weddellb, weddellc, weddelle
 ]
 
-
 O.bplay(\chimes)
 O.bplay(\dashes)
 O.bplay(\dfd)
 O.bplay(\newstar)
 O.bplay(\strich)
 
-
 a = NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1, \vol, 0]); });
 
+*// ===============================================================================
+
+O.startup;
+O.startSynths;
+
+//////// ==========================================================================
+/*
+		~swallowsa 		= KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.0, \rate, 1]);
+		~weddella			= KDpan([\bphasor, \bufnum, O@\weddella, \vol, 0.0, \rate, 1]);
+		~weddellb			= KDpan([\bphasor, \bufnum, O@\weddellb, \vol, 0.0, \rate, 1]);
+		~weddellc			= KDpan([\bphasor, \bufnum, O@\weddellc, \vol, 0.0, \rate, 1]);
+		~weddelld			= KDpan([\bphasor, \bufnum, O@\weddelld, \vol, 0.0, \rate, 1]);
+		~weddelle			= KDpan([\bphasor, \bufnum, O@\weddelle, \vol, 0.0, \rate, 1]);
+		
+		~chimes			= KDpan([\bphasor, \bufnum, O@\chimes, \vol, 0.0, \rate, 1]);
+		~dashes			= KDpan([\bphasor, \bufnum, O@\dashes, \vol, 0.0, \rate, 1]);
+		~dfd				= KDpan([\bphasor, \bufnum, O@\dfd, \vol, 0.0, \rate, 1]);
+		~newstar			= KDpan([\bphasor, \bufnum, O@\newstar, \vol, 0.0, \rate, 1]);
+		~strich			= KDpan([\bphasor, \bufnum, O@\strich, \vol, 0.0, \rate, 1]);
+		
+		~allsw			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1, \vol, 0]); });
+		~allswd			= KDpanvol(~allsw);
+		
+		~allwe			= NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\weddelle, \vol, 0]); });
+		~allwed			= KDpanvol(~allwe);
+		
+		~alldf			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\dfd, \vol, 0]); });
+		~alldfd			= KDpanvol(~alldf);		
+
+		~allch			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\chimes, \vol, 0]); });
+		~allchd			= KDpanvol(~allch);		
+
+		~allda			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\dashes, \vol, 0]); });
+		~alldad			= KDpanvol(~allda);		
+
+		~allne			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\newstar, \vol, 0]); });
+		~allned			= KDpanvol(~allne);		
+
+		~allst			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\strich, \vol, 0]); });
+		~allstd			= KDpanvol(~allst);		
 */
 
+//////// ==========================================================================
 
-~swallowsa 		= KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.0, \rate, 1]);
-~weddella			= KDpan([\bphasor, \bufnum, O@\weddella, \vol, 0.0, \rate, 1]);
+~swallowsa.fadeIn;	~swallowsa.wideTo(18, 10); ~swallowsa.vertWideTo(10, 10);
 
-~chimes			= KDpan([\bphasor, \bufnum, O@\chimes, \vol, 0.0, \rate, 1]);
-~dashes			= KDpan([\bphasor, \bufnum, O@\dashes, \vol, 0.0, \rate, 1]);
-~dfd				= KDpan([\bphasor, \bufnum, O@\dfd, \vol, 0.0, \rate, 1]);
-~newstar			= KDpan([\bphasor, \bufnum, O@\newstar, \vol, 0.0, \rate, 1]);
-~strich			= KDpan([\bphasor, \bufnum, O@\strich, \vol, 0.0, \rate, 1]);
+~swallowsa.phrases(20, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
 
-~allsw			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1, \vol, 0]); });
-~allswd			= KDpanvol(~allsw);
-/*
+~swallowsa.phrases(40, 
+	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
+	[\ele, [[0, 0], [1, 1], [10, 0]]],
+	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
+);
+
+~swallowsa.synths;
+~swallowsa.synths.first.set(\vol, 1);
+~swallowsa.synths.first.set(\out, 0);
+~swallowsa.fadeIn;	~swallowsa.wideTo(18, 10); 
+
+
 ~allswd.fadeIn;
 ~allswd.wideTo(18, 10);
 ~allswd.vertWideTo(18, 10);
-*/
+~allswd.fadeOut;
 
-~allwe			= NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\weddelle, \vol, 0]); });
-~allwed			= KDpanvol(~allwe);
-/*
 ~allwed.fadeIn;
 ~allwed.wideTo(18, 10);
 ~allwed.vertWideTo(18, 10);
-~allwed.
-*/
-
-~alldf			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\dfd, \vol, 0]); });
-~alldfd			= KDpanvol(~alldf);
-
 
 ~allswd.phrases(40, 
 	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
@@ -61,22 +99,23 @@ a = NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1,
 
 ~allswd.setNodes([\ratelag, 10, \rate, 1.5]);
 
-
 ~allswd.setNodes([\bufnum, O@\weddella], 0);
 ~allswd.setNodes([\bufnum, O@\weddelle], (0..1));
 
 ~allswd.setNodes([\bufnum, O@\chimes], 2);
 
 ~allwe			= NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\weddelle, \vol, 0]); });
-~allwe.fadeIn;
-
-~allwed.wideTo(18, 5);
-~allwed.setNodes([\rate, 1]);
+// ~allwe.fadeIn;
 ~allwed.fadeIn;
+~allwed.wideTo(18, 5);
 
-~allswd.fadeIn;
-~allswd.wideTo(18, 10);
-~allswd.wideTo(2, 10);
+~allwed.setNodes([\vol, 1]);
+
+~allswd.fadeIn; ~allswd.wideTo(18, 10);
+~allswd.wideTo(2, 10); allswd.fadeOut;
+
+
+
 ~allswd.goTo
 // ~allsw.fadeIn;
 

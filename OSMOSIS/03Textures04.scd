@@ -21,14 +21,14 @@ a = NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1,
 */
 
 
-~swallowsa 		= KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.0, \rate, 1]);
-~weddella			= KDpan([\bphasor, \bufnum, O@\weddella, \vol, 0.0, \rate, 1]);
+~swallowsa 		= KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.5, \rate, 1]);
+~weddella			= KDpan([\bphasor, \bufnum, O@\weddella, \vol, 0.5, \rate, 1]);
 
-~chimes			= KDpan([\bphasor, \bufnum, O@\chimes, \vol, 0.0, \rate, 1]);
-~dashes			= KDpan([\bphasor, \bufnum, O@\dashes, \vol, 0.0, \rate, 1]);
-~dfd				= KDpan([\bphasor, \bufnum, O@\dfd, \vol, 0.0, \rate, 1]);
-~newstar			= KDpan([\bphasor, \bufnum, O@\newstar, \vol, 0.0, \rate, 1]);
-~strich			= KDpan([\bphasor, \bufnum, O@\strich, \vol, 0.0, \rate, 1]);
+~chimes			= KDpan([\bphasor, \bufnum, O@\chimes, \vol, 0.5, \rate, 1]);
+~dashes			= KDpan([\bphasor, \bufnum, O@\dashes, \vol, 0.5, \rate, 1]);
+~dfd				= KDpan([\bphasor, \bufnum, O@\dfd, \vol, 0.5, \rate, 1]);
+~newstar			= KDpan([\bphasor, \bufnum, O@\newstar, \vol, 0.5, \rate, 1]);
+~strich			= KDpan([\bphasor, \bufnum, O@\strich, \vol, 0.5, \rate, 1]);
 
 ~allsw			= NodeArray({ | i | Synth(\bphasor, [\out, i, \bufnum, O@\swallowsa, \rate, 1, \vol, 0]); });
 ~allswd			= KDpanvol(~allsw);
