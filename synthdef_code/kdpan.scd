@@ -1,9 +1,25 @@
 /* 
-KlangDom panner based on 2 levels of PanAz y -> z.
-Tweaked for Klang Dom at ZKM with 43 Speakers.
-As configured on 2011 03 15
+KlangDom panners 
 
-See also class KDpan.
+Based on 2 levels of PanAz: y -> z.
+
+Tweaked for Klang Dom at ZKM with 43 Speakers, on 4 rings and a single top speaker. 
+(As configured on 2011 03 15f)
+
+////////// kdpan: 
+
+pans audio from a single audio bus channel to 43 speakers.
+
+////////// kdpanvol: 
+
+writes volume level kr signals on 43 control bus channels, which can be used to drive the 
+volume levels of output of an array of 43 synths by mapping each bus to the volume level control of 
+a corresponding audio synth. 
+
+
+
+
+See also class KDpan, KDpanvol.
 
 b = Bus.audio;
 p = Synth("kdpan", [\in, b.index]);
@@ -22,24 +38,35 @@ p.set(\azi, 0.2);
 { (8..1) do: { | i | p.set(\vertwidth, i.postln); 3.wait } }.fork
 p.set(\ele, 0.3);
 
+
+
+
+
 */
 
-// kdpan and kdpanvol set the widths of the horizontal rings uniformly. For individual control 
-// see kdpanw and kdpanvolw below. 
+/*
+kdpan and kdpanvol set the widths of the horizontal rings uniformly. For individual control 
+see kdpanw and kdpanvolw below. 
+*/
 
 SynthDef("kdpan", { 
 	| 	in = 0, azi = 0, ele = 0, 
 		vertical_orientation = 1.5, 
 		orientation1 = 7, orientation2 = 6.5, orientation3 = 3.5, orientation4 = 2.52, 
 		vertwidth = 2, width = 2,
-		vol = 1
+		vol = 1, azilag = 0, elelag = 0, vollag = 0, vertwidthlag = 0, widthlag = 0
 	|
 	var source;
 	var rings, ring1, ring2, ring3, ring4, ring5;
 	
-	source = In.ar(in, 1) * vol;
+	source = In.ar(in, 1) * Lag.kr(vol, vollag);
 	
-	rings = PanAz.ar(7, source, ele, 1.5, vertwidth, vertical_orientation); // channels 0 and 5 are not used
+	// channels 0 and 5 are not used
+	rings = PanAz.ar(7, source, Lag.kr(ele, elelag), 1.5, Lag.kr(vertwidth, vertwidthlag), vertical_orientation); 
+	
+	width = Lag.kr(width, widthlag);
+	
+	azi = Lag.kr(azi, azilag);
 	
 	ring1 = PanAz.ar(14, rings[1], azi, 1, width, orientation1);
 	ring2 = PanAz.ar(14, rings[2], azi, 1, width, orientation2);
