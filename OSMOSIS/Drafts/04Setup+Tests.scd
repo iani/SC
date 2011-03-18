@@ -61,6 +61,7 @@ O.startSynths;
 //////// ==========================================================================
 
 ~swallowsa.fadeIn;	~swallowsa.wideTo(18, 10); ~swallowsa.vertWideTo(10, 10);
+~swallowsa.fadeIn;	~swallowsa.wideTo(2, 10); ~swallowsa.vertWideTo(2, 10); ~swallowsa.fadeOut(20);
 
 ~swallowsa.phrases(20, 
 	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],

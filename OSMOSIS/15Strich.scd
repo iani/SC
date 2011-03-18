@@ -1,8 +1,6 @@
-/* Series of Textures to serve as basic building blocks of Osmosis piece. 
+/* Final ... before perfomance
 
-... Draft 1 ...
-
-IZ 2011 03 16 
+IZ 2011 03 17
 
 */
 

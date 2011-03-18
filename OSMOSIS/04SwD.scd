@@ -16,7 +16,7 @@ O.startup;
 
 // But should be prefaced by a single swallow? 
 
-~swallows = { | i | Synth(\bphasor, [\out, i.postln, \bufnum, O@\swallowsa, \rate, 1]); } ! 43;
+~swallows = { | i | Synth(\bphasor, [\out, i.postln, \bufnum, O@\swallowsa, \rate, 1, \vol, 0]); } ! 43;
 
 ~swallows do: { | s, i | s.set(\rate, i / 1000 + 1) };
 ~swallows do: { | s, i | s.set(\rate, i / 100 + 1) };
