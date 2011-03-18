@@ -23,30 +23,7 @@ O.startSynths;
 
 //////// ==========================================================================
 /*
-
-
-
 		~swallowsa 		= KDpan([\bphasor, \bufnum, O@\swallowsa, \vol, 0.0, \rate, 1]);
-~swallowsa.fadeIn;
-
-
-~allwe = NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\weddellb, \rate, 0.01, \vol, 0.01]); })
-
-//		~allwe			= NodeArray({ | i | Synth(\blfn3, [\out, i, \bufnum, O@\weddelle, \vol, 0]); });
-~allwed			= KDpanvol(~allwe);
-
-~swallowsd.phrases(20, 
-	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
-	[\ele, [[0, 0], [1, 1], [10, 0]]],
-	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
-);
-
-~allwed.phrases(20, 
-	[\vol, [ [0.2, 1], [3, 3], [7, 2], [10, 7], [5, 0]] * 1.5],
-	[\ele, [[0, 0], [1, 1], [10, 0]]],
-	[\azi, [[0, 0], [1, 1.01], [0, -1], [1, 0]]]
-);
-
 		~weddella			= KDpan([\bphasor, \bufnum, O@\weddella, \vol, 0.0, \rate, 1]);
 		~weddellb			= KDpan([\bphasor, \bufnum, O@\weddellb, \vol, 0.0, \rate, 1]);
 		~weddellc			= KDpan([\bphasor, \bufnum, O@\weddellc, \vol, 0.0, \rate, 1]);
