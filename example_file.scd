@@ -29,5 +29,5 @@ EZListView.new(label: "Post Keyboard Input").widget.focus.keyDownAction = { | ..
 
 //:e freq slider for the synth
 
-EZSlider(label: "freq control", controlSpec: \freq.asSpec).action = { | me | "test".postln; a.set(\freq, cme.value) };
+EZSlider(label: "freq control", controlSpec: \freq.asSpec).action = { | me | a.set(\freq, me.value) };
 

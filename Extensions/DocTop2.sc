@@ -11,22 +11,23 @@ DocTop2 {
 	classvar <docStack;			// this should really go in SwingDocument
 	classvar <task, <>dt;
 	classvar <>snippetFileType = "scd";
-	classvar <docText, <snippets, <snippetKeys, <documentSelectors;
+	classvar <docText, <snippets, <snippetKeys;
+	classvar <docPalette, <docSelectors, <snippetDocs, paletteDocListView, paletteSnippetListView;
 
 	*start {	 | restore = false |
 		var rects, t, h, offset;
-		CocoaMenuItem.addToMenu("User Menu", "activate snippets", ["1", false, false], {
+/*		CocoaMenuItem.addToMenu("User Menu", "activate snippets", ["1", false, false], {
 			this.loadSnippets(Document.current);
 			{ if (snippetView.notNil) { browser.front; snippetView.focus }; }.defer(0.2);
 		});
-		CocoaMenuItem.addToMenu("User Menu", "choose document by key", ["2", false, false], {
+		CocoaMenuItem.addToMenu("User Menu", "Doc Palette", ["2", false, false], {
 			if (snippetView.notNil) {
 				browser.front;
 				docListView.focus;
-				this.makeDocumentSelectors;
+				this.makeDocumentPalette;
 			}
 		});
-
+*/
 		if (task.notNil) { this.stop };
 		Task({
 			this.makeBrowser;
@@ -302,7 +303,7 @@ DocTop2 {
 	}
 	
 	*makeServerControls { |browser|
-		var t = Window.screenBounds.height - 54;
+		var t = Window.screenBounds.height - 44;
 		var h = 20;
 		currentServer = Server.default;
 		currentServer.addDependant(this);
@@ -365,16 +366,33 @@ DocTop2 {
 		^document.name.splitext.last == snippetFileType;
 	}
 
-	*makeDocumentSelectors {
-		var keys;
-		documentSelectors = [];
+	*makeDocumentPalette {
+		var key;
+		if (docPalette.notNil) { docPalette.close };
+		snippetDocs = [];
+		docSelectors = [];
 		Document.openDocuments do: { | d |
 			if (this canMakeSnippets: d) {
-				keys = d.string.findRegexp("^//Key:\(.*\)$");
-				keys.postln;
-//				documentSelectors add: d;
+				key = d.string.findRegexp("^//Doc:\(.*\)$");
+				docSelectors = docSelectors.add(
+					if (key.size > 1) {
+						key[1][1][0];
+					}{
+						0.asAscii;
+					}
+				);
+				snippetDocs = snippetDocs add: d;
 			}
-		}
+		};
+		docPalette = GUI.window.new("", Rect(0, 100, 150, 700)).front;
+		docPalette.onClose = { docPalette = nil };
+		paletteDocListView = GUI.listView.new(docPalette, Rect(2, 2, 146, 320));
+		paletteSnippetListView = GUI.listView.new(docPalette, Rect(2, 324, 146, 368));
+		paletteSnippetListView.action = 
+		paletteDocListView.items = snippetDocs collect: { | sd, i |
+			docSelectors[i].asString ++ " " ++ sd.name;
+		};
+		
 	}
 }
 
