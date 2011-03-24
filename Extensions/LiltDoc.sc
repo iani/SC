@@ -2,8 +2,15 @@
 LiltDoc.openDialog;
 LiltDoc.install;
 */
+
+Snippet {
+	*asString { ^"asdf" }
+}
+
+
 LiltDoc {
-	classvar isInstalled = false;
+	classvar <isInstalled = false;
+	classvar <>acceptedFileType = "scd";
 	var <document;
 
 	*install { // install the global keyboard command for activation of the current document
@@ -15,6 +22,20 @@ LiltDoc {
 			["1", false, false],
 			{ LiltDocPalette(Document.current) }
 		);
+/*
+		NotificationCenter.register(DocTop2, \docChanged, this, { | doc, sview |
+//			[doc, sview].postln;
+			if (doc.isNil) {
+				sview.items = [];
+			}{
+				"is this really selected? ".post; doc.name.postln;
+			};
+			sview.onClose = {
+//				"CLOSED".postln;
+				NotificationCenter.unregister(DocTop2, \docChanged, this);
+			};
+		});
+*/
 		isInstalled = true;
 	}
 
@@ -23,14 +44,16 @@ LiltDoc {
 	}
 	
 	*openDialog {
-		Dialog.getPaths({ | paths | 
+		Dialog.getPaths({ | paths |
 			^paths collect: LiltDoc(_);
 		});
 	}
 
-	makeSnippets {
+	loadSnippets { | doc, snippetView |
 		var text;
+		if ((doc.name.splitext.last == acceptedFileType) and: { snippetView.notNil }) {
 		
+		};
 	}
 
 	findDocument {
