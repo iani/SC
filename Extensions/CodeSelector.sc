@@ -27,13 +27,12 @@ CodeSelector {
 
 	*makeWindow {
 		var key;
+		var index = 0;
 		if (browser.notNil) { browser.close };
 		docs = [];
 		docKeys = [];
 		Document.openDocuments do: { | d |
-			var index = 0;
 			if (this canMakeSnippets: d) {
-				index = index + 1;
 				key = d.string.findRegexp("^//Doc:\(.*\)$");
 				docKeys = docKeys.add(
 					if (key.size > 1) {
@@ -43,7 +42,8 @@ CodeSelector {
 					}
 				);
 				docs = docs add: d;
-				d.onClose = { this docClosed: d };
+				d.onClose = { if (browser.notNil) { this.makeWindow } };
+				index = index + 1;
 			}
 		};
 		browser = GUI.window.new("", Rect(0, 100, 150, 700)).front;
@@ -92,13 +92,13 @@ CodeSelector {
 	*canMakeSnippets { | document |
 		^document.name.splitext.last == snippetFileType;
 	}
-	
+/*	
 	*docClosed { | doc |
 		if (selectedDoc == doc) {
 			this.selectDoc(nil);	
 		}			
 	}
-
+*/
 	*selectDoc { | argDoc |
 		var index;
 		selectedDoc = argDoc;
