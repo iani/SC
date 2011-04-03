@@ -68,7 +68,7 @@ CodeSelector {
 		};
 		snippetView = GUI.listView.new(browser, Rect(2, 324, 146, 368));
 		snippetView.action = { | me |
-			postf("snippet value: %\n", me.value);
+//			postf("snippet value: %\n", me.value);
 			if (me.value > 0) {
 				snippets[me.value - 1].interpret;
 			};
@@ -77,16 +77,27 @@ CodeSelector {
 			selectedSnippet = snippetKeys indexOf: char;
 //			[thisMethod.name, view, char, mod, key, "selectedSnippet index:", selectedSnippet].postln;
 //			snippets[selectedSnippet].postln;
-			if (selectedSnippet.notNil) {
-				snippets[selectedSnippet].interpret;
+//			postf("char: %\n", char);
+			if (char == $ ) {
+				this.selectDocView
 			}{
-				view.defaultKeyDownAction(char, mod, key);
-			};
+				if (selectedSnippet.notNil) {
+					snippets[selectedSnippet].interpret;
+				}{
+					view.defaultKeyDownAction(char, mod, key);
+				};
+			}
 		};
 		docListView.items = ["---"] ++ (docs collect: { | sd, i |
 			docKeys[i].asString ++ " " ++ sd.name;
 		});
 		this selectDoc: selectedDoc;
+	}
+
+	*selectDocView {
+		browser.front;
+		docListView.focus;
+//		thisMethod.name.postln;
 	}
 
 	*canMakeSnippets { | document |
@@ -109,7 +120,7 @@ CodeSelector {
 		}{
 			selectedDoc.front;
 			if (browser.notNil) {
-				docListView.value = index.postln;
+				docListView.value = index; // .postln;
 				this.loadSnippets(selectedDoc);
 			};
 		};
