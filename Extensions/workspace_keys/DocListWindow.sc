@@ -30,6 +30,13 @@ DocListWindow {
 		docBrowserView = docBrowser.view;
 		docBrowserBounds = docBrowser.view.bounds;
 		docListView = ListView(docBrowser, this.docListBounds);
+		docListView.keyDownAction = { | me, char, mod, ascii ... rest |
+			if (ascii == 127) {
+				if (allDocs[me.value - 1].notNil) { allDocs[me.value - 1].close };
+			}{
+				me.defaultKeyDownAction(char, mod, ascii, *rest);
+			}
+		};
 		docListView.action = { | me |
 			if (me.value > 0) {
 				this.selectDoc(allDocs[me.value - 1]) 
@@ -68,7 +75,7 @@ DocListWindow {
 			codeKeys = [$0];
 			
 		};
-		codeListView.items = /* ["---"] ++ */ items;
+		codeListView.items = items;
 	}
 
 	selectAndPerformCodeAt { | index |
@@ -81,7 +88,7 @@ DocListWindow {
 		codeStrings[index].interpret;
 	}
 	makeUserMenuItems {
-		remakeCodeListMenuItem = CocoaMenuItem.addToMenu("User Menu", "Remake Code List", ["1", false, false], {
+		remakeCodeListMenuItem = CocoaMenuItem.addToMenu("User Menu", "Activate Code List", ["1", false, false], {
 			this.selectDoc(Document.current);
 			this.makeCodeList(selectedDoc);
 			docBrowser.front;
