@@ -34,6 +34,9 @@ DocSession {
 		CocoaMenuItem.addToMenu("User Menu", "Open Session ...", ["o", true, false], {
 			this.loadAndOpenDialog;
 		});
+		CocoaMenuItem.addToMenu("User Menu", "Open Session from Archive ...", ["O", true, false], {
+			this.loadAndOpenDialog;
+		});
 		CocoaMenuItem.addToMenu("User Menu", "Save Session ...", ["s", true, false], {
 			this.saveAllDialog;
 		});
@@ -67,7 +70,6 @@ DocSession {
 	}
 
 	*loadDialog { | ref |
-		Archive.global.at(sessionArchiveRoot).postln;
 		ListSelectDialog("Select a session", Archive.global.at(sessionArchiveRoot).keys.asArray,
 			{ | i, name |
 				ref.value = this.load(name);
@@ -88,8 +90,19 @@ DocSession {
 		);
 	}
 
+	*loadFromArchiveAndOpenDialog {
+		Archive.global.at(sessionArchiveRoot).postln;
+		ListSelectDialog("Select a session", Archive.global.at(sessionArchiveRoot).keys.asArray,
+			{ | i, name |
+				this.load(name).openAllDocs(fromPath: false);
+			},{
+				"Loading cancelled".postln;
+			}
+		);
+	}
 
-	openAllDocs {
-		docs do: _.open;	
+
+	openAllDocs { | fromPath = false |
+		docs do: _.open(fromPath);	
 	}
 }
