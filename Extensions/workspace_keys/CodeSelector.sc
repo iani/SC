@@ -1,6 +1,17 @@
 /* IZ 110324 
 
 CodeSelector.install;
+
+
+start: 
+
+
+stop: 
+	close window
+	stop routine
+
+
+
  */
 
 CodeSelector {
@@ -10,6 +21,7 @@ CodeSelector {
 	classvar <snippetView;
 	classvar <>snippetFileType = "scd";
 	classvar <docText, <snippets, <snippetKeys, selectedSnippet;
+	classvar <pollRoutine;
 
 	*install {
 		var rects, t, h, offset;
@@ -46,8 +58,7 @@ CodeSelector {
 				index = index + 1;
 			}
 		};
-		browser = GUI.window.new("", Rect(0, 100, 150, 700)).front;
-		browser.onClose = { browser = nil };
+		this.start;
 		docListView = GUI.listView.new(browser, Rect(2, 2, 146, 320));
 		docListView.action = { | me |
 //			postf("doc list value: %\n", me.value);
@@ -92,6 +103,16 @@ CodeSelector {
 			docKeys[i].asString ++ " " ++ sd.name;
 		});
 		this selectDoc: selectedDoc;
+	}
+
+	*start {
+		browser = GUI.window.new("", Rect(0, 100, 150, 700)).front;
+		browser.onClose = {
+			NotificationCenter.unregister(this, \changed, browser);
+		};
+	}
+
+	*stop {
 	}
 
 	*selectDocView {

@@ -16,5 +16,6 @@ CocoaMenuItem.addToMenu("User Menu", "test");
 			item.setShortCut(*shortCut); // Cmd-ctrl-alt-$
 		};
 		item.action = action;
+		^item;
 	}
 }

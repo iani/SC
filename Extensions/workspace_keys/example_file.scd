@@ -10,7 +10,7 @@ if (Server.default.serverRunning.not) { Server.default.boot };
 
 if (a isKindOf: Synth and: { a.isRunning }) { a.release };
 
-a = { | freq = 400, gate = 1 | 
+a = { | freq = 400, gate = 1 |
 	SinOsc.ar(freq, 0, EnvGen.kr(Env([0, 0.1, 0.05, 0.15, 0.02, 0], [0.01, 0.1, 0.3, 0.1, 1.0], 1, 1), gate, doneAction: 2));
 }.play(args: [\freq, 500 rrand: 2000]).register;
 
@@ -25,7 +25,6 @@ if (a.notNil) { a.release };
 //:d post keyboard input
 
 EZListView.new(label: "Post Keyboard Input").widget.focus.keyDownAction = { | ... args | args.postln };
-
 
 //:e freq slider for the synth
 
