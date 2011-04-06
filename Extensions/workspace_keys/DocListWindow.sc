@@ -28,7 +28,8 @@ DocListWindow {
 			this.remove;
 		};
 		docBrowserView = docBrowser.view;
-		docBrowserBounds = docBrowser.view.bounds;
+		docBrowserBounds = docBrowser.bounds;
+		this.updateDocBounds;
 		docListView = ListView(docBrowser, this.docListBounds);
 		docListView.keyDownAction = { | me, char, mod, ascii ... rest |
 			if (ascii == 127) {
@@ -121,11 +122,7 @@ DocListWindow {
 			docBrowserBounds = docBrowser.bounds;
 			docListView.bounds = this.docListBounds;
 			codeListView.bounds = this.codeListBounds;
-			docBounds = Rect(listenerWidth, 
-				docBrowserBounds.top,
-				docBrowserBounds.left - listenerWidth,
-				docBrowserBounds.height + 22
-			);
+			this.updateDocBounds;
 		};
 		docs do: { | d, i |
 			if (d.isListener) {
@@ -143,6 +140,14 @@ DocListWindow {
 				this.selectDoc(Document.current);
 			};
 		}
+	}
+
+	updateDocBounds {
+		docBounds = Rect(listenerWidth, 
+			docBrowserBounds.top,
+			docBrowserBounds.left - listenerWidth,
+			docBrowserBounds.height + 22
+		);		
 	}
 
 	selectDoc { | doc |
