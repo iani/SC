@@ -7,7 +7,7 @@
 *.zip
 
 #other files and folders that should be ignored
-archive.sctxar
+#archive.sctxar # we are using this file to store files of work sessions with DocSession
 Extensions\ \(archive\)
 Extensions\ \(disabled\)
 HistoryLogs
