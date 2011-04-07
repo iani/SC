@@ -17,7 +17,7 @@ DocListWindow {
 	makeGui {
 		var archivedDoc;
 		archivedDoc = Archive.global.at(\currentDoc);
-		archivedDoc.postln;
+//		archivedDoc.postln;
 		archivedDoc = Document.allDocuments.detect { | d | d.name == archivedDoc };
 		if (archivedDoc.notNil) { Document.current = archivedDoc };
 		this.makeUserMenuItems;
