@@ -3467,7 +3467,7 @@ q[\\favourite_sound].value;
 
 ",  
 	DocSession.prNew,  Array.prNew(5),  DocProxy.prNew,  " post ",  
-	"[ a CocoaDocument, n, 8388864, 110, 45 ][ a CocoaDocument, n, 8388864, 110, 45 ][ a CocoaDocument, , 256, 127, 51 ][ a CocoaDocument, , 256, 127, 51 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, [ a CocoaDocument, , 256, 127, 51 ][ a CocoaDocument, [ a CocoaDocument, [ a CocoaDocument, , 262401, 13, 36 ]nil",  Rect.prNew,  "110409_232439",  DocProxy.prNew,  
+	"nil",  Rect.prNew,  "110409_235841",  DocProxy.prNew,  
 	"DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "
 DocListWindow {
 	classvar >default;
@@ -3476,7 +3476,7 @@ DocListWindow {
 	var <docBrowser, <docBrowserView, <docListView, <codeListView;
 	var <docBounds, <docBrowserBounds, <listenerBounds;
 	var <allDocs, <selectedDoc;
-	var <codeStrings, <codeKeys;
+	var <codeStrings, <codeKeys, <codePositions;
 	var <menuItems;
 	// autosave all docs to archive every 300 seconds (5 minutes), per default
 	var <>autosave = true, <>autosave_rate = 300, autosave_routine; 
@@ -3607,26 +3607,38 @@ DocListWindow {
 		this.makeCodeList(doc);	
 		docListView.value = index;
 		codeListView.enabled = false;
-		this.activateDocMouseAction(doc);
+		this.activateDocActions(doc);
 	}
 	
-	activateDocMouseAction { | doc |
+	activateDocActions { | doc |
+		var selectionStart;
 		doc.mouseUpAction_({arg doc;
 			var line;
 			line = doc.currentLine;
 			if (line[0..2] == \"//:\") {
 				this.makeCodeList(doc);	
-				line[3].postln;
 				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
 			};
-		})
+		});
+		doc.keyDownAction = { | me, char, mod, ascii, key |
+			var selectionStart;
+			if (ascii == 14) { // control-n
+				this.makeCodeList(doc);	
+				selectionStart = doc.selectionStart;
+//				postln(codePositions indexOf: codePositions.detect({ | n | selectionStart < n }));
+				this.selectAndPerformCodeAt(codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1);
+			};
+		};
 	}
 	
 	unselectDoc { | doc |
-		this.deactivateDocMouseAction;
+		this.deactivateDocActions(doc);
 	}
 
-	deactivateDocMouseAction {}
+	deactivateDocActions { | doc |
+		doc.mouseUpAction = nil;
+		doc.keyDownAction = nil;
+	}
 
 	makeGui {
 		this.makeUserMenuItems;
@@ -3681,9 +3693,10 @@ DocListWindow {
 			codeStrings = [docText];
 			items = [\"0 \" ++ doc.name];
 			codeKeys = [$0];
-			
+			poslist = [0];
 		};
 		codeListView.items = items;
+		codePositions = poslist add: (docText.size + 1);
 	}
 
 	selectAndPerformCodeAt { | index |
@@ -3758,7 +3771,7 @@ DocListWindow {
 	}
 
 }",  Rect.prNew,  
-	"110409_232439",  DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  
+	"110409_235841",  DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  
 	"
 DocProxy {
 	classvar <docBounds;
@@ -3913,7 +3926,7 @@ DocSession {
 	openAllDocs { | fromArchive = false, docListWindow |
 		docs do: _.open(fromArchive, docListWindow);	
 	}
-}",  Rect.prNew,  "110409_232439",  DocProxy.prNew,  
+}",  Rect.prNew,  "110409_235841",  DocProxy.prNew,  
 	"Document.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/Document.html",  "Document			an abstract class for editor-specific text document editing classes	
 
 Inherits from: Object
@@ -4656,7 +4669,7 @@ pair[1].wait;
 )
 
 ",  Rect.prNew,  
-	"110409_232439",  DocProxy.prNew,  "example_file2.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/Help/example_file2.scd",  
+	"110409_235841",  DocProxy.prNew,  "example_file2.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/Help/example_file2.scd",  
 	"// Example of a snippet document without a shortcut key
 
 //:a Make a window
@@ -4673,29 +4686,7 @@ if (~window.isNil) {
 
 if (~window.notNil) { ~window.close; };
 
-//:! test a mouseUp action activation method for evaluating code parts
-/*
-Document.current.mouseUpAction_({arg doc;
-	var line;
-	line = doc.currentLine;
-	if (line[0..2] == \"//:\") {
-		line[3].postln;		
-	};
-	
-})
-*/
-
-// was already built into DocListWindow so we dont want to overwrite it here. 
-
-// \"test\".postln;
-
-// But lets test here the keyboard action: 
-
-Document.current.keyDownAction = { | me, char, mod, ascii, key |
-	if (mod == 8388864 and: { char == $n }) { \"hello\".postln; };
-	[me, char, mod, ascii, key].postln;
-};
-nnnz",  Rect.prNew,  "110409_232439",  DocSession.prNew,  
+",  Rect.prNew,  "110409_235841",  DocSession.prNew,  
 	"110406_122927",  Array.prNew(3),  DocProxy.prNew,  "Archive.html",  
 	"/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
 

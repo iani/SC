@@ -137,10 +137,11 @@ DocListWindow {
 		this.makeCodeList(doc);	
 		docListView.value = index;
 		codeListView.enabled = false;
-		this.activateDocMouseActions(doc);
+		this.activateDocActions(doc);
 	}
 	
 	activateDocActions { | doc |
+		var selectionStart;
 		doc.mouseUpAction_({arg doc;
 			var line;
 			line = doc.currentLine;
@@ -150,15 +151,18 @@ DocListWindow {
 			};
 		});
 		doc.keyDownAction = { | me, char, mod, ascii, key |
-			if (ascii == 14) {
+			var selectionStart;
+			if (ascii == 14) { // control-n
 				this.makeCodeList(doc);	
-				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
+				selectionStart = doc.selectionStart;
+//				postln(codePositions indexOf: codePositions.detect({ | n | selectionStart < n }));
+				this.selectAndPerformCodeAt(codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1);
 			};
 		};
 	}
 	
 	unselectDoc { | doc |
-		this.deactivateDocActions;
+		this.deactivateDocActions(doc);
 	}
 
 	deactivateDocActions { | doc |
@@ -219,9 +223,10 @@ DocListWindow {
 			codeStrings = [docText];
 			items = ["0 " ++ doc.name];
 			codeKeys = [$0];
-			
+			poslist = [0];
 		};
 		codeListView.items = items;
+		codePositions = poslist add: (docText.size + 1);
 	}
 
 	selectAndPerformCodeAt { | index |
