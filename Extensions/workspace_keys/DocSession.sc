@@ -1,22 +1,51 @@
 
 DocProxy {
+	classvar <docBounds;
 	var <name;
 	var <path;
 	var <text;
 	var <>bounds;		// for restoring bounds of documents saved in sessions;
 	var <timestamp;	// timestamp of date last saved in archive. (Date instances themselves cannot be archived)
-		
+
+	*initClass {
+		docBounds = IdentityDictionary.new;	
+	}
+
 	*new { | document |
-		^this.newCopyArgs(document.name, document.path, document.text, document.bounds, Date.getDate.stamp);
+		^this.newCopyArgs(document.name, document.path, document.text, document.bounds, Date.getDate.stamp).init(document);
+	}
+
+	init { | document |
+		name = document.name; path = document.path;
 	}
 
 	open { | fromArchive = false |
 		var doc, extension;
 		if (Document.allDocuments.detect({ | d | d.name == name }).notNil) {
-			^postf("Document: % is already open\n", name);
+			^postf("Document \"%\" is already open\n", name);
 		};
 		doc = if (fromArchive) { this.openFromArchive } { this.openFromPath };
+		docBounds.put(doc, bounds);
 		^doc;
+	}
+	
+	*boundsFor { | doc |
+		^docBounds.at(doc);	
+	}
+	
+	*removeDocBounds { | doc |
+		docBounds.put(doc, nil);
+	}
+	
+	*loadDefaultBounds {
+
+		DocSession.default.docs do: { | d | 
+			docBounds[d.name.asSymbol] = d.bounds;
+		};
+		Document.allDocuments do: { | d |
+			docBounds[d] = docBounds[d.name.asSymbol];
+		};
+
 	}
 
 	openFromPath {
@@ -29,6 +58,7 @@ DocProxy {
 
 	openFromArchive {
 		var doc, extension;
+		postf("opening % from archive\n", name);
 		doc = Document(name, text);
 		extension = doc.name.splitext.last;
 		if (extension == "scd" or: { extension == "sc" }) { doc.syntaxColorize };
@@ -36,8 +66,37 @@ DocProxy {
 	}
 }
 
+
+
+DocWithBounds {
+	var <doc;
+	var <docProxy;
+	
+	*new { | doc, docProxy | 
+		^this.newCopyArgs(doc, docProxy ?? { DocProxy(doc) });
+	}
+	
+	name { ^doc.name }
+	path { ^doc.path }
+	bounds { ^doc.bounds }
+	text { ^doc.text }
+	string { ^doc.string }
+	
+	bounds_ { | bounds |
+		doc.bounds = bounds;
+		docProxy.bounds = bounds;	
+	}
+	
+	front { doc.front }
+	
+	isListener { ^doc.isListener }
+	
+	close { doc.name.postln; "closing".postln; doc.close }
+}
+
+
 DocSession {
-	classvar <sessionArchiveRoot = \docSessions;
+	classvar <sessionArchiveRoot = \docSessions, defaultSessionName = \recent;
 	var <name;
 	var <docs;
 
@@ -68,6 +127,8 @@ DocSession {
 		^Archive.global.at(sessionArchiveRoot, name.asSymbol);
 	}
 
+	*default { ^this.load(defaultSessionName) }
+
 	*loadDialog { | ref |
 		ListSelectDialog("Select a session", Archive.global.at(sessionArchiveRoot).keys.asArray,
 			{ | i, name |
@@ -78,17 +139,17 @@ DocSession {
 		);
 	}
 
-	*loadAndOpenDialog { | fromArchive = false |
+	*loadAndOpenDialog { | fromArchive = false, docListWindow |
 		ListSelectDialog("Select a session", Archive.global.at(sessionArchiveRoot).keys.asArray,
 			{ | i, name |
-				this.load(name).openAllDocs(fromArchive);
+				this.load(name).openAllDocs(fromArchive, docListWindow);
 			},{
 				"Loading cancelled".postln;
 			}
 		);
 	}
 
-	openAllDocs { | fromArchive = false |
-		docs do: _.open(fromArchive);	
+	openAllDocs { | fromArchive = false, docListWindow |
+		docs do: _.open(fromArchive, docListWindow);	
 	}
 }

@@ -3466,256 +3466,9 @@ q[\\favourite_sound].value;
 
 
 ",  
-	DocSession.prNew,  Array.prNew(15),  DocProxy.prNew,  " post ",  
-	"Main:shutdown",  Rect.prNew,  "110409_204943",  DocProxy.prNew,  
-	"Archive.html",  "Archive			storing objects to file	
-
-Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
-
-Archives can write any object to disk and read from file again. Compex structures of objects can thus be restored. Writing an object to file as a compile string is usually more readable, but does not account for the internal structure of the object.
-
-See also: Library, Object, LibraryBase, writeAsPlist
-
-There is only one global instance: Archive.global, which is initialized automatically.
-
-Class Methods (see superclass for more)
-
-	*global
-	*global_(obj)
-		return / set the global archive instance
-		
-	*archiveDir
-	*archiveDir_(string)
-		set or get the directory that the archive is written to. 
-		Default: Platform.userAppSupportDir.
-	
-	*write(filename)
-		write the global archive now. This is called automatically when SuperCollider quits.
-		The default filename is \"/archive.sctxar\"
-	
-	*read(filename)
-		read the global archive now. This is called automatically when SuperCollider recompiles or starts.
-		The default filename is \"/archive.sctxar\"
-				
-
-Examples
-
-// make a storage place for various objects:
-q = (); // Event
-
-q[\\a_long_array] = Array.rand(128, 0.0, 1.0);
-q[\\pi_squared] = pi * pi;
-q[\\favourite_sound] = { { SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play };
-q[\\same_long_array] = q[\\a_long_array]; // same objects may appear several times
-
-Archive.global.put(\\myData, q);
-
-
-Archive.global.at(\\myData).postcs;
-
-// after a recompile:
-s.boot;
-
-q = Archive.global.at(\\myData);
-q.postcs;
-q[\\favourite_sound].value;
-
-
-
-",  Rect.prNew,  "110409_204943",  
-	DocProxy.prNew,  "Date.html",  "Date			an object describing a point in time
-
-
-
-Class Methods
-
-
-	*new(year, month, day, hour, minute, second, dayOfWeek, rawSeconds, bootSeconds)
-				Create a new date with the given properties (all numerical values).
-				These arguments are also the names of instance variables of the date object.
-				
-	*getDate		get current date from system and create a date object from it.
-				
-				(
-				var a = Date.getDate;
-				a.bootSeconds.postln;
-				a.dayOfWeek.postln;
-				a
-				)
-	
-	*localtime	get current localized time from system and create a date object from it.
-				
-	*gmtime		get current Greenwich Mean Time (GMT) from system and create a date object from it.
-	
-	*seed		get current date and return a value suitable for seeding a random number generator.
-				see also randomSeed
-	
-				(
-				var a = Date.seed;
-				thisThread.randSeed = a; 
-				20.do { [1,0].choose.post }; \"\".postln;
-				thisThread.randSeed = a;
-				25.do { [1,0].choose.post }; \"\".postln;
-				)
-		
-		
-Instance Methods
-
-	
-	localtime		set the receiver's time to current localtime.
-	
-	gmtime		set the receiver's time to current Greenwich Mean Time (GMT).
-	
-	dayStamp	obtain a string with the year, month and day in the format YYMMDD.
-	
-	hourStamp	obtain a string in the format H:M:S
-	
-	secStamp	obtain a string with the seconds
-	
-	stamp		obtain a string in the format YYMMDD_HHMMSS.
-	
-	asSortableString	obtain a string in an alphabetically sortable standard database format
-	
-	asctime		obtain a string in the format WeekdayName MonthName Time Year
-				
-	asString		returns asctime.
-	
-	
-	format(formatstring)	obtain a date string with a given format.  The character % is replaced by the 
-						appropriate value, which is derived from the letter that follows.
-	
-		
-	Date.getDate.format(\"Today is %A. It is around %I o'clock (%p), in %B.\");
-	Date.getDate.format(\"%Y-%d-%e-%Hh%m\");
-	
-
-
-A list of formats can be found here: http://www.opengroup.org/onlinepubs/009695399/functions/strftime.html
-
-
-
-Supported conversion specifications:
-
-%a
-Replaced by the locale's abbreviated weekday name. [ tm_wday]
-
-%A
-Replaced by the locale's full weekday name. [ tm_wday]
-
-%b
-Replaced by the locale's abbreviated month name. [ tm_mon]
-
-%B
-Replaced by the locale's full month name. [ tm_mon]
-
-%c
-Replaced by the locale's appropriate date and time representation. 
-
-%C
-Replaced by the year divided by 100 and truncated to an integer, as a decimal number [00,99]. [ tm_year]
-
-%d
-Replaced by the day of the month as a decimal number [01,31]. [ tm_mday]
-
-%D
-Equivalent to %m / %d / %y. [ tm_mon, tm_mday, tm_year]
-
-%e
-Replaced by the day of the month as a decimal number [1,31]; a single digit is preceded by a space. [ tm_mday]
-
-%F
-Equivalent to %Y - %m - %d (the ISO 8601:2000 standard date format). [ tm_year, tm_mon, tm_mday]
-
-%g
-Replaced by the last 2 digits of the week-based year (see below) as a decimal number [00,99]. [ tm_year, tm_wday, tm_yday]
-
-%G
-Replaced by the week-based year (see below) as a decimal number (for example, 1977). [ tm_year, tm_wday, tm_yday]
-
-%h
-Equivalent to %b. [ tm_mon]
-
-%H
-Replaced by the hour (24-hour clock) as a decimal number [00,23]. [ tm_hour]
-
-%I
-Replaced by the hour (12-hour clock) as a decimal number [01,12]. [ tm_hour]
-
-%j
-Replaced by the day of the year as a decimal number [001,366]. [ tm_yday]
-
-%m
-Replaced by the month as a decimal number [01,12]. [ tm_mon]
-
-%M
-Replaced by the minute as a decimal number [00,59]. [ tm_min]
-
-%n
-Replaced by a <newline>.
-
-%p
-Replaced by the locale's equivalent of either a.m. or p.m. [ tm_hour]
-
-%r
-Replaced by the time in a.m. and p.m. notation; ¬¨‚Ä†in the POSIX locale this shall be equivalent to %I :%M :%S%p. [ tm_hour, tm_min, tm_sec]
-
-%R
-Replaced by the time in 24-hour notation (%H : %M ). [ tm_hour, tm_min]
-
-%S
-Replaced by the second as a decimal number [00,60]. [ tm_sec]
-
-%t
-Replaced by a <tab>.
-
-%T
-Replaced by the time ( %H : %M : %S ). [ tm_hour, tm_min, tm_sec]
-
-%u
-Replaced by the weekday as a decimal number [1,7], with 1 representing Monday. [ tm_wday]
-
-%U
-Replaced by the week number of the year as a decimal number [00,53]. The first Sunday of January is the first day of week 1; days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
-
-%V
-Replaced by the week number of the year (Monday as the first day of the week) as a decimal number [01,53]. If the week containing 1 January has four or more days in the new year, then it is considered week 1. Otherwise, it is the last week of the previous year, and the next week is week 1. Both January 4th and the first Thursday of January are always in week 1. [ tm_year, tm_wday, tm_yday]
-
-%w
-Replaced by the weekday as a decimal number [0,6], with 0 representing Sunday. [ tm_wday]
-
-%W
-Replaced by the week number of the year as a decimal number [00,53]. The first Monday of January is the first day of week 1; days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
-
-%x
-Replaced by the locale's appropriate date representation.
-
-%X
-Replaced by the locale's appropriate time representation.
-
-%y
-Replaced by the last two digits of the year as a decimal number [00,99]. [ tm_year]
-
-%Y
-Replaced by the year as a decimal number (for example, 1997). [ tm_year]
-
-%z
-Replaced by the offset from UTC in the ISO¬¨‚Ä†8601:2000 standard format ( +hhmm or -hhmm ), or by no characters if no timezone is determinable. For example, \"-0430\" means 4 hours 30 minutes behind UTC (west of Greenwich). If tm_isdst is zero, the standard time offset is used. If tm_isdst is greater than zero, the daylight savings time offset is used. If tm_isdst is negative, no characters are returned. [ tm_isdst]
-
-%Z
-Replaced by the timezone name or abbreviation, or by no bytes if no timezone information exists. [ tm_isdst]
-
-%%
-Replaced by %.
-
-If a conversion specification does not correspond to any of the above, the behavior is undefined.
-
-
-",  Rect.prNew,  
-	"110409_204943",  DocProxy.prNew,  "DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  
-	"/*
-DocListWindow.stop;
-DocListWindow.toggle;
-*/
+	DocSession.prNew,  Array.prNew(5),  DocProxy.prNew,  " post ",  
+	"[ a CocoaDocument, n, 8388864, 110, 45 ][ a CocoaDocument, n, 8388864, 110, 45 ][ a CocoaDocument, , 256, 127, 51 ][ a CocoaDocument, , 256, 127, 51 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, , 262401, 14, 45 ][ a CocoaDocument, [ a CocoaDocument, , 256, 127, 51 ][ a CocoaDocument, [ a CocoaDocument, [ a CocoaDocument, , 262401, 13, 36 ]nil",  Rect.prNew,  "110409_232439",  DocProxy.prNew,  
+	"DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "
 DocListWindow {
 	classvar >default;
 	classvar <>docListWidth = 150;
@@ -3725,8 +3478,8 @@ DocListWindow {
 	var <allDocs, <selectedDoc;
 	var <codeStrings, <codeKeys;
 	var <menuItems;
-	// autosave all docs to archive every 60 seconds, per default
-	var <>autosave = false, <>autosave_rate = 60, autosave_routine; 
+	// autosave all docs to archive every 300 seconds (5 minutes), per default
+	var <>autosave = true, <>autosave_rate = 300, autosave_routine; 
 
 	*initClass {
 		this.makeUserMenuItems;	
@@ -3737,9 +3490,6 @@ DocListWindow {
 			this.toggle;
 		});
 
-	}
-	*saveSession { 
-		DocSession.newWithAllDocs(\"recent\").save;
 	}
 
 	*default {
@@ -3762,19 +3512,22 @@ DocListWindow {
 	}
 
 	start {
+		if (Document.allDocuments.size > 1) {
+			DocProxy.loadDefaultBounds;		
+		};
 		this.makeGui;
 		{
 		NotificationCenter.register(Document, \\opened, this, { | doc | 
 			{ this.addDoc(doc); }.defer(0.01); 	// must wait for Doc to get its name
 		});
 		NotificationCenter.register(Document, \\closed, this, { | doc |
-			this.removeDoc(allDocs detect: { | d | d.doc === doc });
+			this.removeDoc(doc);
 		});
 		NotificationCenter.register(Document, \\toFront, this, { | doc | 
-			this.selectDoc(allDocs detect: { | d | d.doc === doc });
+			this.selectDoc(doc);
 		});
 		NotificationCenter.register(Document, \\endFront, this, { | doc | 
-			this.unselectDoc(allDocs detect: { | d | d.doc === doc });
+			this.unselectDoc(doc);
 		});
 		Document.allDocuments do: _.addNotifications;
 		}.defer(0.1); // defer needed when DocListWindow is started at SC startup
@@ -3788,7 +3541,7 @@ DocListWindow {
 		{
 			loop {
 				autosave_rate.wait;
-				if (autosave) { this.class.saveSession; };
+				if (autosave) { this.saveSnapshot; };
 			}	
 		}.fork(AppClock);
 	}
@@ -3796,12 +3549,8 @@ DocListWindow {
 	cmdPeriod { this.startAutosaveRoutine; }
 
 	addDoc { | doc |
-		// If  doc was already added by DocProxy, use it.
-		// Otherwise, create new DocWithBounds
-		var docWbounds;
-		docWbounds = allDocs detect: { | d | d.doc === doc };
-		if (docWbounds.isNil) { docWbounds = this makeDocWithBounds: doc };
-		allDocs = allDocs add: docWbounds;
+		allDocs = allDocs add: doc;
+		this.setDocBounds(doc, DocProxy.boundsFor(doc));
 		this.updateDocListView;
 		this.selectDoc(doc);
 	}
@@ -3812,8 +3561,11 @@ DocListWindow {
 		if (docBrowser.notNil) { docListView.items = allDocs collect: _.name; };
 	}
 	
-	makeDocWithBounds { | doc |
-		var dwb, bounds;
+	setDocBounds { | doc, bounds |
+		if (bounds.notNil) {
+			DocProxy.removeDocBounds(doc);
+			^doc.bounds = bounds;
+		};
 		if (docBrowser.bounds != docBrowserBounds) {
 			docBrowserBounds = docBrowser.bounds;
 			docListView.bounds = this.docListBounds;
@@ -3821,11 +3573,10 @@ DocListWindow {
 			this.updateDocBounds;
 		};
 		if (doc.isListener) {
-			bounds = listenerBounds;
+			doc.bounds = listenerBounds;
 		}{
-			bounds = docBounds;
+			doc.bounds = docBounds;
 		};
-		^DocWithBounds(doc).bounds_(bounds);
 	}
 
 	updateDocBounds {
@@ -3842,7 +3593,7 @@ DocListWindow {
 		this.updateDocListView;
 		{ 	// defer needed for closed document to register that it is no longer front!
 			newFront = Document.allDocuments detect: { | d | d.isFront; };
-			this.selectDoc(allDocs.detect({ | d | d.doc === newFront }));
+			this.selectDoc(doc);
 		}.defer(0.1);
 	}
 	
@@ -3851,15 +3602,31 @@ DocListWindow {
 		index = allDocs.indexOf(doc);
 		if (index.isNil) { ^this };
 		selectedDoc = doc;
-		Document.current = selectedDoc.doc;
+		Document.current = selectedDoc;
 		selectedDoc.front;
 		this.makeCodeList(doc);	
 		docListView.value = index;
 		codeListView.enabled = false;
+		this.activateDocMouseAction(doc);
+	}
+	
+	activateDocMouseAction { | doc |
+		doc.mouseUpAction_({arg doc;
+			var line;
+			line = doc.currentLine;
+			if (line[0..2] == \"//:\") {
+				this.makeCodeList(doc);	
+				line[3].postln;
+				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
+			};
+		})
 	}
 	
 	unselectDoc { | doc |
+		this.deactivateDocMouseAction;
 	}
+
+	deactivateDocMouseAction {}
 
 	makeGui {
 		this.makeUserMenuItems;
@@ -3931,12 +3698,6 @@ DocListWindow {
 
 	makeUserMenuItems {
 		menuItems = [
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
-				this.makeCodeList(Document.current);
-				docBrowser.front;
-				codeListView.enabled = true;
-				codeListView.focus;
-			}),
 			CocoaMenuItem.addToMenu(\"User Menu\", \"Open Session ...\", [\"o\", true, false], {
 				DocSession.loadAndOpenDialog(fromArchive: false);
 			}),
@@ -3944,15 +3705,28 @@ DocListWindow {
 				DocSession.loadAndOpenDialog(fromArchive: true);
 			}),
 			CocoaMenuItem.addToMenu(\"User Menu\", \"Open Session snapshot\", [\"o\", true, true], {
-				DocSession.load(\\recent);
+				\"DocListWindow opening recent session\".postln;
+				DocSession.load(\\recent).openAllDocs(fromArchive: false);
 			}),
 			CocoaMenuItem.addToMenu(\"User Menu\", \"Save Session ...\", [\"s\", true, false], {
 				DocSession.saveDialog(this.docProxies);
 			}),
 			CocoaMenuItem.addToMenu(\"User Menu\", \"Save to Session snapshot\", [\"s\", true, true], {
-				DocSession(\\recent, this.docProxies).save;
+				this.saveSnapshot;
+			}),
+			CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
+				this.makeCodeList(Document.current);
+				docBrowser.front;
+				codeListView.enabled = true;
+				codeListView.focus;
 			})
 		]
+	}
+	
+	saveSnapshot {
+		postf(\"Saving snapshot at: % ... \", Date.getDate.stamp);
+		DocSession(\\recent, this.docProxies).save;
+		\" ... done\".postln;
 	}
 
 	docProxies {
@@ -3983,8 +3757,1178 @@ DocListWindow {
 		this.removeUserMenuItems;
 	}
 
-}",  Rect.prNew,  "110409_204943",  DocProxy.prNew,  
-	"DocSession.sc",  "
+}",  Rect.prNew,  
+	"110409_232439",  DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  
+	"
+DocProxy {
+	classvar <docBounds;
+	var <name;
+	var <path;
+	var <text;
+	var <>bounds;		// for restoring bounds of documents saved in sessions;
+	var <timestamp;	// timestamp of date last saved in archive. (Date instances themselves cannot be archived)
+
+	*initClass {
+		docBounds = IdentityDictionary.new;	
+	}
+
+	*new { | document |
+		^this.newCopyArgs(document.name, document.path, document.text, document.bounds, Date.getDate.stamp).init(document);
+	}
+
+	init { | document |
+		name = document.name; path = document.path;
+	}
+
+	open { | fromArchive = false |
+		var doc, extension;
+		if (Document.allDocuments.detect({ | d | d.name == name }).notNil) {
+			^postf(\"Document \\\"%\\\" is already open\\n\", name);
+		};
+		doc = if (fromArchive) { this.openFromArchive } { this.openFromPath };
+		docBounds.put(doc, bounds);
+		^doc;
+	}
+	
+	*boundsFor { | doc |
+		^docBounds.at(doc);	
+	}
+	
+	*removeDocBounds { | doc |
+		docBounds.put(doc, nil);
+	}
+	
+	*loadDefaultBounds {
+
+		DocSession.default.docs do: { | d | 
+			docBounds[d.name.asSymbol] = d.bounds;
+		};
+		Document.allDocuments do: { | d |
+			docBounds[d] = docBounds[d.name.asSymbol];
+		};
+
+	}
+
+	openFromPath {
+		var match;
+		if (path.isNil) { ^this.openFromArchive };
+		match = path.pathMatch;
+		if (match.size == 0) { ^this.openFromArchive }; 
+		^Document.open(path);
+	}
+
+	openFromArchive {
+		var doc, extension;
+		postf(\"opening % from archive\\n\", name);
+		doc = Document(name, text);
+		extension = doc.name.splitext.last;
+		if (extension == \"scd\" or: { extension == \"sc\" }) { doc.syntaxColorize };
+		^doc;
+	}
+}
+
+
+
+DocWithBounds {
+	var <doc;
+	var <docProxy;
+	
+	*new { | doc, docProxy | 
+		^this.newCopyArgs(doc, docProxy ?? { DocProxy(doc) });
+	}
+	
+	name { ^doc.name }
+	path { ^doc.path }
+	bounds { ^doc.bounds }
+	text { ^doc.text }
+	string { ^doc.string }
+	
+	bounds_ { | bounds |
+		doc.bounds = bounds;
+		docProxy.bounds = bounds;	
+	}
+	
+	front { doc.front }
+	
+	isListener { ^doc.isListener }
+	
+	close { doc.name.postln; \"closing\".postln; doc.close }
+}
+
+
+DocSession {
+	classvar <sessionArchiveRoot = \\docSessions, defaultSessionName = \\recent;
+	var <name;
+	var <docs;
+
+	*new { | name, docProxies |
+		^this.newCopyArgs(name, docProxies ?? { this.getAllDocs });
+	}
+
+	*getAllDocs { 
+		^Document.allDocuments collect: DocProxy(_);	
+	}
+
+	*saveDialog { | docProxies |
+		TextDialog(
+			\"input name of session\",
+			Date.getDate.stamp,
+			{ | name | this.new(name, docProxies).save },
+			{ \"save cancelled\".postln }
+		);
+	}
+	
+	save {
+		Archive.global.put(sessionArchiveRoot, name.asSymbol, this);
+		Archive.write;
+	}
+
+	
+	*load { | name |
+		^Archive.global.at(sessionArchiveRoot, name.asSymbol);
+	}
+
+	*default { ^this.load(defaultSessionName) }
+
+	*loadDialog { | ref |
+		ListSelectDialog(\"Select a session\", Archive.global.at(sessionArchiveRoot).keys.asArray,
+			{ | i, name |
+				ref.value = this.load(name);
+			},{
+				\"Loading cancelled\".postln;
+			}
+		);
+	}
+
+	*loadAndOpenDialog { | fromArchive = false, docListWindow |
+		ListSelectDialog(\"Select a session\", Archive.global.at(sessionArchiveRoot).keys.asArray,
+			{ | i, name |
+				this.load(name).openAllDocs(fromArchive, docListWindow);
+			},{
+				\"Loading cancelled\".postln;
+			}
+		);
+	}
+
+	openAllDocs { | fromArchive = false, docListWindow |
+		docs do: _.open(fromArchive, docListWindow);	
+	}
+}",  Rect.prNew,  "110409_232439",  DocProxy.prNew,  
+	"Document.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/Document.html",  "Document			an abstract class for editor-specific text document editing classes	
+
+Inherits from: Object
+
+The Document class represents a text document within the context of your text editing environment. You can use the class to programmatically create, modify, and query these documents. While it is an abstract class, you still use it to create a new Document. It simply passes on new to the appropriate document implementation, e.g. CocoaDocument.
+
+See also: CocoaDocument
+
+Some Important Issues Regarding Document
+
+Different text-editing environments can be used with SuperCollider. Therefore Document is an abstract class, meaning it doesn't provide all the functionality itself, but relies on subclasses to complete the functionality. Calls to Document.new or Document.open are actually passed down to the relevant class for the editor you're using, such as CocoaDocument (for most Mac users) or ScelDocument (containing an EmacsDocument).
+
+Setting the Environment
+
+By defualt envir it is set to the current Environment. However, you can make it use its own Environment also. Thus, e.g., if you were to set the Environment variable ~myVar=12 in the current Environment, you can create a new Document window in which that Environment variable is not set.
+
+Creation / Class Methods
+
+	*new (title, string, makeListener, envir)
+	
+		title - An instance of String or Symbol. Default value is \"Untitled\".
+		string - An instance of String . Default value is \"\". The contents of the document.
+		makeListener - Makes this document the lisenter, i.e. the place where SC-lang posts messages. Default value is false. .
+		envir - An instance of Environment. The Environment to be used by the interpreter of the document window. By defualt, it is set to the current Environment.
+		
+		Document.new(\"this is the title\", \"this is the text\");
+		
+	*open (path, selectionStart, selectionLength, envir)
+	
+		Open a document from a path.
+		path - The file system path to the document. An instance of String.
+		selectionStart -The beginning of the cursor seleciton of the file content. Default value is 0.
+		selectionLength - The length of the cursor seleciton of the file content. Default value is 0.
+		envir - An instance of Environment. The Environment to be used by the interpreter of the document window. By defualt, it is set to the current Environment.
+		
+		Document.open(\"README\", 292,253); // notice the selected text in the open document
+
+
+	*openDocuments
+	
+		Returns an Array of all open documents.
+		
+		d=Document.openDocuments.do{|doc| doc.name.postln};
+
+	*hasEditedDocuments
+	
+		Returns true if there are edited Documents.
+		
+	*closeAll (leavePostWindowOpen)
+	
+		CAUTION Closes all open Documents, whether edited or not.
+		leavePostWindowOpen - An instance of Boolean. Default is true.
+		
+	*closeAllUnedited (leavePostWindowOpen)
+	
+		Closes all unedtited Documents.
+		leavePostWindowOpen - An instance of Boolean. Default is true.
+
+	*current
+	*current_(arg1)
+	
+		Gets/sets the current Document.
+		
+		Document.current.name.postln; // Prints \"Document.html\"
+
+	*listener
+	
+		Returns the current Document which is the listener, i.e. the Document where interpreter messages are posted.
+
+	*storePostWin (path)
+	
+		Stores the conteng of Document.listener.
+		path - The file system path. An instance of String.
+		
+	*allDocuments
+		
+		A class variable. Returns all documents
+		Default value is defaultValue.
+				
+	*globalKeyDownAction
+	*globalKeyDownAction_(arg1)
+	
+		A class variable. Get/set A global action to be performed when a key is pressed.
+		arg1 - An instance of Function or FunctionList.
+
+	*globalKeyUpAction
+	*globalKeyUpAction_(arg1)
+		
+		A class variable. Get/set A global action to be performed when a key is released.
+		arg1 - An instance of Function or FunctionList.
+				
+	*initAction
+	*initAction_(arg1)
+		A class variable. Get/set A an action to be performed up openning or creating a Document.
+		arg1 - An instance of Function or FunctionList.
+				
+	*autoRun
+	*autoRun_
+	
+		A class variable. If a document begins with the String, \"/*RUN*/\", then the code following it int he file will be exectued on opening the file, if autorun is set to true.
+		arg1 - An instance of Boolean. Default value is true.
+				
+	*wikiBrowse
+	*wikiBrowse_(arg1)
+		
+		A class variable. If set to true, underlining text will create a wiki link.
+		arg1 - An instance of Boolean. Default value is true.
+				
+	*implementationClass
+	*implementationClass_(arg1)
+		
+		A class variable. The editor implementation specific class which will handle Documents.
+		arg1 - A class for implementing Document, e.g. CocoaDocument
+		
+	*setTheme(arg1)
+		
+		Sets the theme for syntax colorization. The Document class has a preset theme called 'default',
+		which is set as follows (default SC colors):
+			
+			themes = (
+				default: (
+					classColor: Color(0, 0, 0.75, 1),
+					textColor: Color(0, 0, 0, 1),
+					stringColor: Color(0.375, 0.375, 0.375, 1),
+					commentColor: Color(0.75, 0, 0, 1),
+					symbolColor: Color(0, 0.45, 0, 1),
+					numberColor: Color(0, 0, 0, 1)
+					)
+			);
+			
+		If you want to have your own themes for syntax colorization, you need to put your color set into
+		Document.themes first (preferably in startup.rtf file) and call setTheme by giving it the name of
+		the theme you've added to \"themes\" earlier:
+		
+			//putting a custom color theme into Document.themes
+			Document.themes.put
+			(\\myTheme, 
+				(
+					classColor: Color.new255(53, 74, 187),
+					textColor: Color.new255(0, 0, 0),
+					stringColor: Color.new255(96, 129, 158),
+					commentColor: Color.new255(206, 27, 28),
+					symbolColor: Color.new255(57, 154, 20),
+					numberColor: Color.new255(157, 80, 65)
+				)
+			);
+			
+			//and then calling setTheme with the name:
+			Document.setTheme('myTheme');
+			//to see the current theme:
+			Document.theme;
+			
+		You can switch to the default theme anytime by calling:
+		
+			Document.setTheme('default');
+			
+		Next time you invoke syntaxColorize, the color theme set by setTheme will be used for syntax
+		colorization. If you want to change the background color for the document window and selected
+		text, in order to make them fit with your syntax colorization theme, see the help for the \"background\" and \"selectedBackground\" methods for Document.
+		
+		arg1 - A Symbol, defining the name of the theme that you've put into Document.themes.
+
+Path Utilites
+	Utilities and settings for dealing with documents such as super collider code files. By default the document directory is SuperCollider's application directory.
+
+	*dir
+	*dir_ (path)
+	
+		Get/set the default document directory. The default is dependent on Document.implementationClass.
+		path - The file system path to the directory. An instance of String.
+		
+		In Main-startUp you can set this to a more practical directory:
+		
+		Document.dir = \"~/Documents/SuperCollider\";
+		
+	*wikiDir
+	*wikiDir_ (path)
+	
+		Get/set the default wiki directory. The default is dependent on Document.implementationClass.
+		path - The file system path to the directory. An instance of String.
+		
+
+	*standardizePath (p)
+	
+		If it is a relative path, expand it to an absolute path relative to your document directory.	Expand tildes in path (your home directory), resolve symbolic links (but not aliases). Also converts from OS9 macintosh path format. See PathName for more complex needs.
+		path - The file system path to the directory. An instance of String.
+		
+		Document.standardizePath(\"~/\");//This will print your home directory	
+		
+		Document.standardizePath(\":Patches:newfoots:fastRuckAndTuck\")
+		
+		// Returns: /Volumes/Macintosh HD/Users/cruxxial/Documents/SC3docs/Patches/newfoots/fastRuckAndTuck
+	
+		Document.standardizePath(\"~/Documents/SC3docs/Patches/newfoots/fastRuckAndTuck\")
+		
+		// Returns: Patches/newfoots/fastRuckAndTuck
+		
+		Document.standardizePath(\"Patches/newfoots/fastRuckAndTuck\")
+		
+		// Returns: Patches/newfoots/fastRuckAndTuck
+
+
+	*abrevPath (path)
+	
+		Returns a path relative to Document.dir, if the path is inside Document.dir.
+		path - The file system path to the directory. An instance of String.
+
+General Document Properties
+
+	bounds
+	bounds_ (argBounds)
+	
+		Get/set the bounds of the document.
+		argBounds - an instance of Rect.
+
+	path
+	path_ (apath)
+	
+		Get / set the the Document's path.
+		apath - An instance of String. A files system path.
+		
+		Document.current.path.postln;
+		
+	dir
+		Returns the directory of a Document.
+		
+		Document.current.dir.postln;
+		
+	== (doc)
+	
+		A binary operator.
+		doc - An instance of Document.
+		
+		Document.current == Document.listener; //presumaably returns false
+		
+	editable
+	editable_(abool)
+	
+		Get / set the the document is editable.
+		arg1 - An instance of Boolean.
+
+	name
+	name_ (aname)
+	title
+	title_ (argName)
+	
+		Get / set the title.
+		aname/argName - An instance of String.
+		
+		Document.current.name.postln
+		
+	background
+	background_ (color)
+	
+		Get / set the the Document's background color.
+		color - An instance of Color;
+		
+		(
+		a = Document(\"background\", \"'hardly see anything\");
+		a.background_(Color.blue(alpha:0.8)); // notice that alpha controlls th window transparency
+		)
+		
+	postColor
+	postColor_ (color)
+	
+		Get / set the listeners pen color.
+		color - An instance of Color;
+		
+		Document.postColor; //returns current post color
+		Document.postColor_(Color.red);
+		Document.postColor_(Color.green);
+		Document.postColor_(Color.blue);
+		Document.postColor_(Color.black);
+		(
+		r = Routine({ 
+			10.do({
+				Document.postColor_(Color.rand);
+				\"There is no blue without yellow and without orange.\".postln;
+				0.5.rand.yield;
+			});
+			Document.postColor_(Color.black);
+		});
+		)
+		
+		r.play;
+		r.stop;
+
+	alwaysOnTop
+	alwaysOnTop_ (boolean)
+	
+		Get/set whether a document is always on top.
+		boolean - An instance of Boolean.
+
+	promptToSave
+	promptToSave_ (bool)
+	
+		Get/set whether a document is prompts to save if it has been changed. Use this with caution.
+		bool - An instance of Boolean.
+
+	closed
+	
+		Returns true if the document has been closed
+		
+	isEdited
+	
+		Returns true if the document has been edited.
+		
+		Document.current.isEdited.postln;
+
+	isFront
+	
+		Returns true if the document is in front.
+		
+	isListener
+	
+		Returns if the document is the listener.
+		
+	didBecomeKey
+	
+		Saves the current Environment, makes the document current, and performs its toFrontAction.
+
+	didResignKey
+	
+		Performs the Document's endFrontAction and restores the current Environment.
+
+Controlling Document
+
+	close
+	
+		Close a document.
+		
+		(
+		Task({
+			var doc;
+			doc = Document(\"background\", \"closing in 2 seconds\");
+			doc.stringColor_(Color.blue);
+			1.wait;
+			doc.background_(Color.blue(alpha:0.8));
+			1.wait;
+			doc.close;
+			}).play(AppClock);
+		)
+
+	front
+	
+		Bring a document to the front.
+
+		Document.listener.front
+
+
+	unfocusedFront
+	
+		Bring a document to the forn without focusing it.
+		
+		Document.listener.unfocusedFront
+
+	onClose
+	onClose_(arg1)
+		
+		Get / set the action to be performed on closing the document.
+		arg1 - An instance of Function or FunctionList .
+				
+	endFrontAction
+	endFrontAction_(arg1)
+		
+		Get / set the action to be performed when the document becomes no longer the front document.
+		arg1 - An instance of Function or FunctionList .
+				
+	toFrontAction
+	toFrontAction_(arg1)
+		
+		Get / set the action to be performed when the document become the front document.
+		arg1 - An instance of Function or FunctionList .
+		
+	mouseDownAction
+	mouseDownAction_(arg1)
+	mouseUpAction
+	mouseUpAction_(arg1)
+	
+		Get / set the action to be performed on mouseDown or mouseUp.
+		Note: The Mac OSX built-in editor supports only mouseUpAction. A mouseDownAction that you supply will be ignored.
+		
+		arg1 - An instance of Function or FunctionList The arguments passed to the function are.
+		
+			x, y, modifiers, buttonNumber, clickCount, clickPos
+
+			(
+			
+			//add a mouse action to this document:
+			//example: easy button:
+			//when you click in front of a 17 a SinOsc will start up;
+			s.waitForBoot({	
+				Document.current.mouseUpAction_({arg doc;
+					var char;
+					char = doc.rangeText(doc.selectionStart, 2);
+					if(char == \"17\",{
+						{EnvGen.kr(Env.perc, doneAction:2) * SinOsc.ar([600,720,300].choose, 0, 0.5)}.play;
+					});
+					if(char == \"23\",{
+						{EnvGen.kr(Env.perc, doneAction:2) * PinkNoise.ar(0.2)}.play;
+					});
+				})
+			});
+			)
+			test here and click in front of the number:
+					17
+					23
+			Document.current.mouseUpAction=nil; //clear mouseUpActiont
+		
+	keyDownAction
+	keyDownAction_(arg1)
+	keyUpAction
+	keyUpAction_(arg1)
+	
+		Get / set the action to be performed on keyDown or keyUp.
+		arg1 - An instance of Function or FunctionList The arguments passed to the function are		
+		char, modifiers, unicode,keycode
+
+		Document.current.keyDownAction={arg ...args; args.postln};
+		// now type some text
+		Document.current.keyDownAction=nil;
+		
+	makeWikiPage (wikiWord, extension, directory)
+	
+		Creates a wiki page .
+		wikiWord - An instance of String. The name of the document.
+		extension - An instance of String. The file extension. Default value is \".rtf\".
+		directory - An instance of String. The directory in which to save the page.
+		
+		Document.current.makeWikiPage(\"test1\");
+
+
+	openWikiPage
+	
+		Opens/creates a wiki page out of the currently selected text.
+		
+Editing Content
+
+	selectLine (line)
+	
+		Select a line of the document by number.
+		line - An Integer.
+		
+		Document.current.selectLine(390);
+		
+	selectRange (start, length)
+	
+		Select a text range in the string of the document
+		start -The start index.
+		length - The length of the seleciton.
+		
+		(
+		Document.current.selectRange(Document.current.selectedRangeLocation+3,
+			150);
+		)
+		
+	balanceParens (level)
+	
+		Starting from the current selection, increase the selection 
+		until matching parentheses are selected.
+		level - do this as many times to find ever wider brackets. Set to inf for outmost.
+		
+		((((
+		Document.current.balanceParens(1);
+		Document.current.balanceParens(3);
+		Document.current.balanceParens(inf);
+		))))
+
+	selectionStart
+	
+		Returns the start of a current selection.
+		
+		Document.current.selectionStart.postln;
+
+	selectionSize
+	
+		Returns the size of a current selection.
+		
+		(
+		var doc;
+		doc = Document.current;
+		doc.selectRange(doc.selectionStart-40, 10);
+		doc.selectionSize.postln;
+		)	
+
+	selectedString_ (txt)
+	selectedString
+	
+		Gets/sets the selected string.
+		txt - An instance of String.
+		
+		(
+		var doc;
+		doc = Document.current;
+		doc.selectRange(doc.selectionStart-40, 10);
+		doc.selectedString.postln;
+		)	
+			
+	currentLine
+	
+		Returns the current line as a String.
+		
+		(
+		var doc;
+		doc = Document.current;
+		doc.selectRange(doc.selectionStart-40, 10);
+		doc.currentLine.postln;
+		)
+		
+	getSelectedLines(rangestart, rangesize)
+	
+		Returns all full lines from before rangestart to after rangestart + rangesize as a String.
+		
+		(
+		var doc;
+		doc = Document.current;
+		doc.selectRange(doc.selectionStart-40, 10);
+		doc.getSelectedLines(doc.selectionStart-40, 130).postln;
+		)
+
+	string (rangestart, rangesize)
+	string_ (string, rangestart, rangesize)
+
+		Gets/sets the string within a certain range.
+		string - Explanation of string. Default value is nil. Other information.
+		rangestart - An integer. Default value is nil.
+		rangesize - An integer. Default value is 1.
+		
+		// Select the following code in parentheses and execute it
+		(
+		Document.current.string_(\": test test test test test \",
+			Document.current.selectedRangeLocation+12,
+			18);
+		)
+		// Watch me change content
+	
+	font_ (font, rangestart, rangesize)
+	
+		Gets/sets the font within a certain range.
+		font - An instance of Font.
+		rangestart - An integer. Default value is -1. If rangestart = -1, the whole document is selected.
+		rangesize - An integer. Default value is 0.
+		
+		// Select the following code in parentheses and execute it
+		(
+		Document.current.font_(Font(\"Impact\",14),
+			Document.current.selectedRangeLocation+12,
+			18);
+		)
+		// Watch me change font
+		
+	stringColor
+	
+		Gets the last color set with stringColor_.
+
+	stringColor_ (color, rangeStart, rangeSize)
+	
+		Sets the string color of a specific range of already printed text. Default is the whole document.
+		To set the listener text color for posting, see: postColor
+		color - An instance of Color.
+		rangeStart - An Integer. Default is -1.
+		rangeSize - An Integer. Default value is 0
+		
+		// Select the following code in parentheses and execute it
+		(
+		Document.current.stringColor_(Color.rand(0.2,0.8),
+			Document.current.selectedRangeLocation+13,
+			16);
+		)
+		// Watch me change color
+	
+	selectedBackground
+	
+		Gets the document's background color for selected text.
+
+	selectedBackground_ (color)
+	
+		Sets the document's background color for selected text.
+		Applies to the whole document instance.
+		color - An instance of Color.
+		
+		Document.current.selectedBackground; //returns default color
+		(
+		w = Document.new(\"Test\", \"Here is a selected text...\");
+		w.selectedBackground_(Color.new255(120, 180, 110));
+		w.selectRange(10, 13);
+		)
+
+	syntaxColorize
+	
+		Syntax colorize a document.
+		
+	underlineSelection
+	
+		Underlines the current selection of a Document.		
+			
+Auto-Completion
+	OSX version only, currently. See DocumentAutoCompletion
+
+	*allowAutoComp
+	*autoCompAll
+	*autoComplete
+	*autoCompleteKeyAction
+	*openFileAutoComplete (path)
+	*openAutoComplete
+	autoComplete
+	
+	
+Subclassing and Internal Methods
+	The following methods are usually not used directly or are called by a primitive. Programmers can still call or override these as needed.
+	
+	*startup
+	*numberOfOpen
+	mouseUp (x, y, modifiers, buttonNumber, clickCount, clickPos)
+	keyDown (character, modifiers, unicode, keycode)
+	keyUp (character, modifiers, unicode, keycode)
+	getIdentifierCoordFromEnd (endPos)
+	dataptr
+	
+	Private. Used only internally:
+	*newFromIndex (idx)
+	*prnumberOfOpen
+	*prGetLast
+	*prGetIndexOfListener
+	*prBasicNew
+	prAdd
+	prGetLastIndex
+	setFont (font, rangeStart, rangeSize)
+	setTextColor (color, rangeStart, rangeSize)	
+	propen (path, selectionStart, selectionLength)
+	rangeText (rangestart, rangesize)
+	insertTextRange (string, rangestart, rangesize)
+	prinitByString (title, str, makeListener)
+	prSetBackgroundColor (color)
+	prGetBackgroundColor (color)
+	prSelectLine (line)
+	prIsEditable_ (editable)
+	prSetTitle (argName)
+	prGetTitle
+	prGetFileName
+	prSetFileName (apath)
+	prGetBounds (argBounds)
+	prSetBounds (argBounds)
+	prclose
+	prinsertText (dataPtr, txt)
+	prinitByIndex (idx)
+	envir
+	envir_ (ev)
+	text
+	removeUndo 
+	selectedText
+	selectUnderlinedText (clickPos)
+	linkAtClickPos (clickPos)
+	selectedRangeLocation
+	selectedRangeSize
+	restoreCurrentEnvironment
+	saveCurrentEnvironment
+	initByIndex (idx)
+	initLast
+	initFromPath (path, selectionStart, selectionLength)
+	initByString (argTitle, str, makeListener)
+
+Examples
+
+//unfocusedFront_
+(
+Document.allDocuments.at(0).unfocusedFront
+)
+
+
+(
+
+var doc;
+doc = Document(\"\", \"||\");
+doc.background_(Color.blue(alpha: 1.0.rand));
+Task({
+	1000.do({
+		doc.setFont(rangeSize: [7,8,9,24].choose);
+		0.08.wait;
+	})
+}).play(AppClock);
+Task({
+	100.do({
+		1.01.wait;
+		doc.stringColor_([Color.red(alpha: 1.0.rand), Color.green(alpha: 1.0.rand)].choose);
+	})
+}).play(AppClock);
+Task({
+	100.do({
+		1.01.wait;
+		doc.selectedString_([\"\\\"\\n#\",\"||\",\"-\", \"--\"].choose);
+	})
+}).play(AppClock);
+Task({
+	var co, mul;
+	co = 0.1;
+	mul = 1.02;
+	100.do({
+		0.16.wait;
+		co = co * mul;
+		if(co > 0.99, { co = 0.1 });
+		doc.background_(Color.blue(alpha: co));
+		});
+	doc.close;
+}).play(AppClock)
+
+)
+
+
+
+// a simple implementation of TBT (time based text)
+// http://tbt.dyne.org/?info=download
+
+// record: type some text
+(
+var time = Main.elapsedTime;
+a = List.new;
+r = Routine { |char|
+loop {
+a = a.add([char, Main.elapsedTime - time]);
+char = 0.yield;
+}
+};
+
+Document.new(\"type some text\")
+	.bounds_(Rect(100,SCWindow.screenBounds.height-250,400,200))
+	.keyDownAction = { |doc, key| r.value(key) ; time=Main.elapsedTime};
+)
+
+// play back text in time
+(
+d=Document.new(\"type some text\")
+	.bounds_(Rect(550,SCWindow.screenBounds.height-250,400,200));
+fork({
+a.do { |pair|
+d.string = d.string ++ pair[0];
+pair[1].wait;
+}
+}, AppClock)
+)
+
+",  Rect.prNew,  
+	"110409_232439",  DocProxy.prNew,  "example_file2.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/Help/example_file2.scd",  
+	"// Example of a snippet document without a shortcut key
+
+//:a Make a window
+~window.postln;
+
+if (~window.isNil) {
+	~window = GUI.window.new.front;
+	~window.onClose = { ~window = nil };
+}{
+	~window.front
+};
+
+//:b close the window
+
+if (~window.notNil) { ~window.close; };
+
+//:! test a mouseUp action activation method for evaluating code parts
+/*
+Document.current.mouseUpAction_({arg doc;
+	var line;
+	line = doc.currentLine;
+	if (line[0..2] == \"//:\") {
+		line[3].postln;		
+	};
+	
+})
+*/
+
+// was already built into DocListWindow so we dont want to overwrite it here. 
+
+// \"test\".postln;
+
+// But lets test here the keyboard action: 
+
+Document.current.keyDownAction = { | me, char, mod, ascii, key |
+	if (mod == 8388864 and: { char == $n }) { \"hello\".postln; };
+	[me, char, mod, ascii, key].postln;
+};
+nnnz",  Rect.prNew,  "110409_232439",  DocSession.prNew,  
+	"110406_122927",  Array.prNew(3),  DocProxy.prNew,  "Archive.html",  
+	"/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
+
+Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
+
+Archives can write any object to disk and read from file again. Compex structures of objects can thus be restored. Writing an object to file as a compile string is usually more readable, but does not account for the internal structure of the object.
+
+See also: Library, Object, LibraryBase, writeAsPlist
+
+There is only one global instance: Archive.global, which is initialized automatically.
+
+Class Methods (see superclass for more)
+
+	*global
+	*global_(obj)
+		return / set the global archive instance
+		
+	*archiveDir
+	*archiveDir_(string)
+		set or get the directory that the archive is written to. 
+		Default: Platform.userAppSupportDir.
+	
+	*write(filename)
+		write the global archive now. This is called automatically when SuperCollider quits.
+		The default filename is \"/archive.sctxar\"
+	
+	*read(filename)
+		read the global archive now. This is called automatically when SuperCollider recompiles or starts.
+		The default filename is \"/archive.sctxar\"
+				
+
+Examples
+
+// make a storage place for various objects:
+q = (); // Event
+
+q[\\a_long_array] = Array.rand(128, 0.0, 1.0);
+q[\\pi_squared] = pi * pi;
+q[\\favourite_sound] = { { SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play };
+q[\\same_long_array] = q[\\a_long_array]; // same objects may appear several times
+
+Archive.global.put(\\myData, q);
+
+
+Archive.global.at(\\myData).postcs;
+
+// after a recompile:
+s.boot;
+
+q = Archive.global.at(\\myData);
+q.postcs;
+q[\\favourite_sound].value;
+
+
+
+",  Rect.prNew,  DocProxy.prNew,  
+	"Untitled 2",  "
+
+
+{ SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
+
+
+{ SinOsc.ar([300, 330]).sum * LFPulse.kr(5 + [0, 0.01]) * 0.1 }.play;
+
+{ SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.1]) * 0.1 }.play;
+
+{ SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
+
+{ SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
+",  DocProxy.prNew,  "DocListWindow.sc",  
+	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "/*
+DocPoller.stop;
+*/
+DocListWindow {
+	classvar <>docListWidth = 150;
+	classvar <>listenerY = 280, <>listenerWidth = 500;
+	var <docBrowser, <docBrowserView, <docListView, <codeListView;
+	var <docBounds, <docBrowserBounds, <listenerBounds;
+	var <allDocs, <selectedDoc;
+	var <codeStrings, <codeKeys;
+	var <remakeCodeListMenuItem;
+
+
+	*new { ^super.new.init; }
+	init { this.makeGui }
+	
+	makeGui {
+		var archivedDoc;
+		archivedDoc = Archive.global.at(\\currentDoc);
+		archivedDoc.postln;
+		archivedDoc = Document.allDocuments.detect { | d | d.name == archivedDoc };
+		if (archivedDoc.notNil) { Document.current = archivedDoc };
+		this.makeUserMenuItems;
+		docBrowser = Window(\"docs\", 
+			Rect(Window.screenBounds.width - docListWidth, 0, docListWidth, Window.screenBounds.height - 50));
+		docBrowser.onClose = {
+			docBrowser = nil;
+			this.remove;
+		};
+		docBrowserView = docBrowser.view;
+		docBrowserBounds = docBrowser.view.bounds;
+		docListView = ListView(docBrowser, this.docListBounds);
+		docListView.keyDownAction = { | me, char, mod, ascii ... rest |
+			if (ascii == 127) {
+				if (allDocs[me.value - 1].notNil) { allDocs[me.value - 1].close };
+			}{
+				me.defaultKeyDownAction(char, mod, ascii, *rest);
+			}
+		};
+		docListView.action = { | me |
+			if (me.value > 0) {
+				this.selectDoc(allDocs[me.value - 1]) 
+			};
+		};
+		codeListView = ListView(docBrowser, this.codeListBounds);
+		codeListView.keyDownAction = { | me, char |
+			this.selectAndPerformCodeAt(codeKeys indexOf: char);
+		};
+		codeListView.focusColor = Color.red;
+		codeListView.action = {	 | me | this.performCodeAt(me.value); }; // only perform with keys
+		
+		docBrowserBounds = docBrowser.bounds;
+		listenerBounds = Rect(0, listenerY, listenerWidth, Window.screenBounds.height - listenerY);
+		docBrowser.front;
+	}
+
+	makeCodeList { | doc |
+		var docText, poslist, snippet, items;
+		if (doc.isListener) { ^this }; // do not make code list for post window;
+		docText = doc.string;
+		poslist = docText.findRegexp(\"^//:\").slice(nil, 0);
+		poslist = poslist.asArray;
+		if (poslist.size > 0) { 
+			codeStrings = poslist collect: { | pos, i |
+				docText[pos..(poslist[i + 1] ?? { docText.size }) - 1];
+			};
+			items = codeStrings collect: { | s |
+				if (s[3] == $!) { s.interpret };
+				s[3..50];
+			};
+			codeKeys = items collect: _.first;
+		}{
+			codeStrings = [docText];
+			items = [\"0 \" ++ doc.name];
+			codeKeys = [$0];
+			
+		};
+		codeListView.items = items;
+	}
+
+	selectAndPerformCodeAt { | index |
+		if (index.isNil) { ^this };
+		codeListView.value = index;
+		this.performCodeAt(index);	
+	}
+
+	performCodeAt { | index |
+		codeStrings[index].interpret;
+	}
+	makeUserMenuItems {
+		remakeCodeListMenuItem = CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
+			this.selectDoc(Document.current);
+			this.makeCodeList(selectedDoc);
+			docBrowser.front;
+			codeListView.focus;
+		});
+	}
+
+	removeUserMenuItems {
+		if (remakeCodeListMenuItem.notNil) { remakeCodeListMenuItem.remove; };
+	}
+
+	docListBounds {
+		^Rect(2, 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
+	}
+
+	codeListBounds {
+		^Rect(2, docBrowserBounds.height / 2 - 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
+	}
+	
+	close {
+		if (docBrowser.notNil) { docBrowser.close; };
+		this.removeUserMenuItems;
+	}
+
+	add { if (DocPoller.dependants.includes(this).not) { DocPoller.add(this) } }
+	remove { DocPoller.remove(this) }
+	
+	update { | docs |
+		if (docBrowser.bounds != docBrowserBounds) {
+			docBrowserBounds = docBrowser.bounds;
+			docListView.bounds = this.docListBounds;
+			codeListView.bounds = this.codeListBounds;
+			docBounds = Rect(listenerWidth, 
+				docBrowserBounds.top,
+				docBrowserBounds.left - listenerWidth,
+				docBrowserBounds.height + 22
+			);
+		};
+		docs do: { | d, i |
+			if (d.isListener) {
+				if (listenerBounds != d.bounds) { d.bounds = listenerBounds };
+			}{
+				if (d.bounds != docBounds) { d.bounds = docBounds };
+			};
+		};
+		if (docs.size != allDocs.size) {
+			docListView.items = [\"---\"] ++ docs.collect(_.name);
+			allDocs = docs.copy;	// Document modifies the original. Copy needed!
+			this.selectDoc(Document.current);
+		}{
+			if (selectedDoc !== Document.current) {
+				this.selectDoc(Document.current);
+			};
+		}
+	}
+
+	selectDoc { | doc |
+		var index;
+		index = allDocs.indexOf(doc);
+		if (index.isNil) { ^this };
+		selectedDoc = doc;
+		Document.current = selectedDoc;
+		selectedDoc.front;
+		docListView.value = index + 1;
+		this.makeCodeList(doc);	
+		Archive.global.put(\\currentDoc, selectedDoc.name);
+	}
+		
+	
+}",  DocSession.prNew,  "110405_233219",  
+	Array.prNew(13),  DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  
+	"
 DocProxy {
 	var <name;
 	var <path;
@@ -4042,15 +4986,34 @@ DocSession {
 		^Archive.global.at(sessionArchiveRoot, name.asSymbol);
 	}
 
-	*loadDialog {
-		Archive.global.at(sessionArchiveRoot).postln;	
+	*loadDialog { | ref |
+		Archive.global.at(sessionArchiveRoot).postln;
+		ListSelectDialog(\"Select a session\", Archive.global.at(sessionArchiveRoot).keys.asArray,
+			{ | i, name |
+				ref.value = this.load(name);
+			},{
+				\"Loading cancelled\".postln;
+			}
+		);
 	}
+
+	*loadAndOpenDialog {
+		Archive.global.at(sessionArchiveRoot).postln;
+		ListSelectDialog(\"Select a session\", Archive.global.at(sessionArchiveRoot).keys.asArray,
+			{ | i, name |
+				this.load(name).openAllDocs;
+			},{
+				\"Loading cancelled\".postln;
+			}
+		);
+	}
+
 
 	openAllDocs {
 		docs do: _.open;	
 	}
-}",  Rect.prNew,  "110409_204943",  
-	DocProxy.prNew,  "DocSessionTests.scd",  "
+}",  DocProxy.prNew,  "DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  
+	"
 //:a save all docs under \"defaultDocSession\" in global archive
 
 Archive.global.put(\\defaultDocSession, Document.allDocuments collect: DocProxy(_));
@@ -4089,414 +5052,8 @@ DocSession.saveAllDialog;
 //:j load session dialog
 
 DocSession.loadDialog;
-",  Rect.prNew,  
-	"110409_204943",  DocProxy.prNew,  "GUI-Classes.html",  "GUI Classes		
-
-Lists of kit-specific and kit-independant gui classes.
-
-See also: GUI, GUI-Overview
-
-List of Kit-independant GUI Classes
-
-These classes are platform neutral in themselves.
-				
-EZSlider	
-EZNumber
-EZRanger
-EZListView
-EZPopUpMenu
-EZScroller
-EZKnob
-EZText
-Gradient	
-HiliteGradient	
-FlowLayout
-Color
-
-List of Redirection Classes and their Corresponding Kit-specific GUI Classes
-
-The following list contains the ViewRedirect subclass and corresponding CocoaGUI and SwingGUI platform dependent classes:
-
-ViewRedirect
-CocoaGUI
-SwingGUI
-Description
-Window
-SCWindow
-JSCWindow
-a frame that can contain gadgets
------------------
-SCModalWindow
------------------
-a modal window
------------------
-SCModalSheet
------------------
-a modal sheet to attach to windows
-View
-SCView
-JSCView
-The base class for most view classes. Important help file.
-CompositeView
-SCCompositeView
-JSCCompositeView
-container view for nesting layouts
-HLayoutView
-SCHLayoutView
-JSCHLayoutView
-container view with horizontal distribution of children
-VLayoutView
-SCVLayoutView
-JSCVLayoutView
-container view with vertical distribution of children
-Button
-SCButton
-JSCButton
-a multiple state push button
-PopUpMenu
-SCPopUpMenu
-JSCPopUpMenu
-a collapsed multiple choice button
-Slider
-SCSlider
-JSCSlider
-a horizontal or vertical slider
-RangeSlider
-SCRangeSlider
-JSCRangeSlider
-horizontal or vertical interval slider
-Slider2D
-SC2DSlider
-JSC2DSlider
-a horizontally and vertically moveable slider
-TextField
-SCTextField
-JSCTextField
-an editable one line text field
-ListView
-SCListView
-JSCListView
-a list of text items
-StaticText
-SCStaticText
-JSCStaticText
-a text label
-NumberBox
-SCNumberBox
-JSCNumberBox
-editable number field
-DragSource
-SCDragSource
-JSCDragSource
-object container acting as a source for drag-n-drop
-DragSink
-SCDragSink
-JSCDragSink
-object container acting as a target for drag-n-drop
-DragBoth
-SCDragBoth
-JSCDragBoth
-combination of DragSource and DragSink
-Stethoscope
-SCStethoscope
-JStethoscope
-oscilloscope tool
-ScopeView
-SCScope
-JSCScope
-oscilloscope view
-TabletView
-SCTabletView
-JSCTabletView
-view for receiving graphic tablet data
-TabletSlider2D
-SC2DTabletSlider
------------------
-2D slider with support for graphic tablet data
-FreqScope
-SCFreqScopeWindow
-JFreqScope
-spectrum tool
-FreqScopeView
-SCFreqScope
-JSCFreqScope
-spectrum view
-MultiSliderView
-SCMultiSliderView
-JSCMultiSliderView
-array of sliders
-EnvelopeView
-SCEnvelopeView
-JSCEnvelopeView
-breakpoint envelope editor
-UserView
-SCUserView
-JSCUserView
-view for user-defined drawing operations
-SoundFileView
-SCSoundFileView
-JSCSoundFileView
-waveform view / editor for sound files
-MovieView
-SCMovieView
-JSCMovieView
-canvas for movie (QuickTime) and image display
-TextView
-SCTextView
-JSCTextView
-multiline text editor
------------------
-SCQuartzComposerView
------------------
-view for displaying QuartzComposer documents
------------------
-SCImage
------------------
-an image component for the Mac OS X
------------------
-SCImageFilter
------------------
-a filter class to use with SCImage
------------------
-SCImageKernel
------------------
-a kernel class to use with SCImage.
-Knob
-SCKnob
-JKnob
-a knob view
-
-Other Redirects and Platform Specific Classes
-
-Cross Platform
-CocoaGUI
-SwingGUI
-Description
-Dialog
-CocoaDialog
-SwingDialog
-file selection dialog management
-Font
-SCFont
-JFont
-a font typeface description.
-Pen
-SCPen
-JPen
-custom drawing operations class
-MouseX
-MouseX
-JMouseX
-UGen. JMouseX for backward compatiblility only.
-MouseY
-MouseY	
-JMouseY
-UGen. JMouseY for backward compatiblility only.
-MouseButton
-MouseButton
-JMouseButton
-UGen. JMouseButton for backward compatiblility only.
-KeyState
-KeyState	
-JKeyState
-UGen. JKeyState for backward compatiblility only.
-use GUI.speech
-Speech
-JSpeech
-text-to-speech synthesis management
-
-Helper Methods
-
-Cross Platform
-CocoaGUI
-SwingGUI
-Description
-GUI.stringBounds
-is synchronous
-is asynchronous
-returns a Rect with the graphic size of a string. See the example in GUI-Overview for asynchronous use
-
-
-
-",  
-	Rect.prNew,  "110409_204943",  DocProxy.prNew,  "GUI.html",  
-	"GUI			Factory abstraction for all GUI related core classes	
-
-Inherits from: Object
-
-See also: GUI-Classes, GUI-Overview, ViewRedirect
-
-The GUI class provides a means of writing cross platform gui code. GUI provides Factory abstraction for all gui related core classes. Each gui kit is described by a gui scheme which maps class names to actual classes. These schemes are in turn used by ViewRedirect to provide a simple cross-platform gui syntax. It also provide utilities for switching kits and other cross platform tasks. You can get your available schemes (depending on what you installed) with:
-
-GUI.schemes;
-
-For a complete list of gui classes and redirects, see GUI-Classes.
-
-Switching and Referring to GUI Kits
-
-As of this writing, two GUI kits are available through the GUI class: CocoaGUI (Mac OS X native) and SwingGUI (Java) . Note that SwingOSC is not part of every SuperCollider distribution, so you may have to install it separately.
-
-You can switch the GUI kit by calling one of the following class methods:
-
-GUI.cocoa;	// use cocoa in subsequent GUI creation procedures
-GUI.swing;	// use swing in subsequent GUI creation procedures
-			// NOTE: If you do not have SwingOSC installed, you get
-			// a warning only, and do not switch; so you cannot
-			// accidentally disable your (mac) gui system.
-	
-These methods return the new GUI kit implementation. The current implementation can be queried by calling
-
-GUI.current;	// returns the current GUI kit implementation
-
-If you want to make a GUI kit specific switch (e.g. in a class), then you should use the following instead, as on non-OSX systems the class CocoaGUI is not in the class library path, and you cannot check for an undefined class:
-
-GUI.id;	// returns the current GUI kit implementation id; this is currently either \\cocoa or \\swing
-
-For persistency, you can store the identifier of the kit implementation and recall the kit through the class method fromID:
-
-x = GUI.cocoa;
-y = x.id;				// store the identifier of a kit implementation
-y.postln;				// ; the id could be stored in a preferences file for example
-GUI.swing;
-// now switch back to the kit implementation with identifier y
-GUI.fromID( y );
-GUI.current.id.postln;	// --> cocoa
-
-The *use and *useID methods allow you to temporarily switch the kit, so as to use it only for a dedicated block of statements:
-
-GUI.cocoa;
-GUI.useID( \\swing, {Array.rand( 1000, 0.0, 1.0 ).plot });
-GUI.current.id.postln;	// --> still cocoa
-
-You can get a particular kit using the *get method. You can switch to a particular kit using the *set method:
-
-x = GUI.get( \\swing );	// note: unlike *swing and *cocoa, this does not _switch_ the current kit!
-GUI.current.id.postln;	// --> still cocoa
-GUI.set( x );			// now we make SwingOSC the current kit
-GUI.window.viewPalette;
-
-Extending GUI Kits
-
-GUI Kits can be extended with custom classes by using their respective .put methods:
-
-GUI.get( \\cocoa ).put( \\myText, SCStaticText );
-GUI.get( \\swing ).put( \\myText, JSCStaticText );
-
-GUI.cocoa;
-GUI.swing;
-(
-	w = GUI.window.new;
-	GUI.myText.new( w, w.view.bounds.insetBy( 20, 20 )).string_( \"schoko\" ).background_( Color.red );
-	w.front;
-)
-
-If you intend to add extensions from within your own classes upon class library initialization time, the preferred way is to do this in the startup process:
-
-MyGUIExtension {
-	*initClass {
-		StartUp.add({
-			var scheme;
-			
-			scheme = GUI.get( \\cocoa );
-			if( scheme.notNil, {scheme.put( \\myText, SCStaticText )});
-			scheme = GUI.get( \\swing );
-			if( scheme.notNil, {scheme.put( \\myText, JSCStaticText )});
-		});
-	}
-}
-
-Methods and Variables for GUI
-
-	*new (key)
-
-	*makeGUI (key, args, properties)
-
-
-	*initClass
-	
-		Sets the skin to default values on Compile.				
-				fontSpecs: 	[\"Helvetica\", 10],
-				fontColor: 	Color.black,
-				background: 	Color(0.8, 0.85, 0.7, 0.5),
-				foreground:	Color.grey(0.95),
-				onColor:		Color(0.5, 1, 0.5),
-				offColor:		Color.clear,
-				gap:			0 @ 0,
-				margin: 		2@2,
-				buttonHeight:	16
-
-	*cocoa
-	
-		Makes Cocoa (Mac OS X GUI) the current scheme and returns it. Subsequent GUI object calls to GUI are delegated to cocoa. Returns the current (cocoa) scheme.
-		
-
-	*swing
-	
-		Makes Swing (Java GUI) the current scheme and returns it. Subsequent GUI object calls to GUI are delegated to swing. Returns the current (swing) scheme.
-		
-	*fromID (id)
-	
-		Changes the current scheme and returns the new scheme.
-		id - (Symbol) the identifier of the scheme touse
-
-	*current
-	
-		Returns the current scheme. This is useful for objects that, upon instantiation, wish to store the then-current scheme, so as to be able to consistently use the same scheme in future method calls.
-		
-		Note: the caller shouldn't make any assumptions about the nature (the class) of the returned object, so that the actual implementation (an Event) may change in the future.
-
-	*get (id)
-	
-		Returns the scheme for a given identifier. Does not switch the current scheme.
-		id - (Symbol) the identifier of the scheme to retrieve, such as returned by calling aScheme.id
-		
-	*set (aScheme)
-	
-		Changes the current scheme.
-		aScheme - An instance of Symbol. The scheme to use as current scheme
-		
-	*use (aScheme, func)
-	
-		Executes a function body, temporarily setting the current GUI scheme. This is usefull inside view's action functions in order to make this function use the GUI scheme that was originally used for the view of the action, even if the scheme has been switched meanwhile.
-		aScheme - The scheme to use during the function execution.
-		func - An Instance of Function.
-
-	*useID (id, func)
-	
-		Same as 'use' but using a scheme's id as first argument.
-		id - The id of the scheme to use during the function execution.
-		func - A body to execute.
-		
-	*add (aScheme)
-	
-		Registers a new scheme. This is typically called by external libraries in their startup procedure. If a scheme with the same identifier (scheme.id) exists, it is overwritten.
-		aScheme - The scheme to add.
-		
-	*doesNotUnderstand (selector, args)
-	
-		All method calls are mapped to the current scheme, so that for example GUI.button can be used and is delegated to the button association of the current scheme.
-		
-	*setSkin (skinName)
-	
-	
-	*scheme
-		
-		A class variable. Returns the current scheme.
-				
-	*schemes
-		
-		A class variable. Returns an IdentityDictionary of registered schemes.
-				
-	*skin
-		
-		A class variable. Returns the current skin.
-				
-	*skins
-		
-		A class variable. Returns an IdentityDictionary of registered skins.
-				
-",  Rect.prNew,  "110409_204943",  DocProxy.prNew,  
-	"Library.sc",  "MultiLevelIdentityDictionary : Collection
+",  DocProxy.prNew,  "Library.sc",  "/Applications/SuperCollider/SCClassLibrary/Common/Collections/Library.sc",  
+	"MultiLevelIdentityDictionary : Collection
 {
 
 	var <>dictionary;
@@ -4883,204 +5440,481 @@ LibraryBase : MultiLevelIdentityDictionary
 		^this.global.put(*args)
 	}
 	*create { arg ... args;
-		^this.global.create(*ar",  Rect.prNew,  "110409_204943",  
-	DocProxy.prNew,  "SCStaticText.html",  "SCStaticText			a view for displaying text	
+		^this.global.create(*ar",  DocProxy.prNew,  "GUI.html",  "/Applications/SuperCollider/Help/GUI/GUI-Tools/GUI.html",  
+	"GUI			Factory abstraction for all GUI related core classes	
 
-Inherits from: Object : SCView : SCStaticTextBase
+Inherits from: Object
 
-Inherits formatting methods from SCStaticTextBase.
+See also: GUI-Classes, GUI-Overview, ViewRedirect
 
-Creation / Class Methods
+The GUI class provides a means of writing cross platform gui code. GUI provides Factory abstraction for all gui related core classes. Each gui kit is described by a gui scheme which maps class names to actual classes. These schemes are in turn used by ViewRedirect to provide a simple cross-platform gui syntax. It also provide utilities for switching kits and other cross platform tasks. You can get your available schemes (depending on what you installed) with:
 
-	*new (parent, bounds)
+GUI.schemes;
+
+For a complete list of gui classes and redirects, see GUI-Classes.
+
+Switching and Referring to GUI Kits
+
+As of this writing, two GUI kits are available through the GUI class: CocoaGUI (Mac OS X native) and SwingGUI (Java) . Note that SwingOSC is not part of every SuperCollider distribution, so you may have to install it separately.
+
+You can switch the GUI kit by calling one of the following class methods:
+
+GUI.cocoa;	// use cocoa in subsequent GUI creation procedures
+GUI.swing;	// use swing in subsequent GUI creation procedures
+			// NOTE: If you do not have SwingOSC installed, you get
+			// a warning only, and do not switch; so you cannot
+			// accidentally disable your (mac) gui system.
 	
-		parent - The parent view.
-		bounds - An instance of Rect, or a Point indicating width@height.
-		
-		(	
-		w = Window.new.front;
-		a = StaticText(w, Rect(10, 10, 200, 20));
-		a.string = \"an instance of String\";
-		)
-		
-Examples
+These methods return the new GUI kit implementation. The current implementation can be queried by calling
 
-// basic usage
-(	
-	w = Window.new.front;
-	a = StaticText(w, Rect(10, 10, 200, 20));
-	a.string = \"Rolof's Rolex\";
-)
+GUI.current;	// returns the current GUI kit implementation
 
-// adjust look , alignment and content
-a.background=Color.grey;
-a.align = \\center;
-a.font = Font(\"Monaco\", 11);
-a.string = \"Your Rolex\";
+If you want to make a GUI kit specific switch (e.g. in a class), then you should use the following instead, as on non-OSX systems the class CocoaGUI is not in the class library path, and you cannot check for an undefined class:
 
-// Monitoring values in a synth
+GUI.id;	// returns the current GUI kit implementation id; this is currently either \\cocoa or \\swing
+
+For persistency, you can store the identifier of the kit implementation and recall the kit through the class method fromID:
+
+x = GUI.cocoa;
+y = x.id;				// store the identifier of a kit implementation
+y.postln;				// ; the id could be stored in a preferences file for example
+GUI.swing;
+// now switch back to the kit implementation with identifier y
+GUI.fromID( y );
+GUI.current.id.postln;	// --> cocoa
+
+The *use and *useID methods allow you to temporarily switch the kit, so as to use it only for a dedicated block of statements:
+
+GUI.cocoa;
+GUI.useID( \\swing, {Array.rand( 1000, 0.0, 1.0 ).plot });
+GUI.current.id.postln;	// --> still cocoa
+
+You can get a particular kit using the *get method. You can switch to a particular kit using the *set method:
+
+x = GUI.get( \\swing );	// note: unlike *swing and *cocoa, this does not _switch_ the current kit!
+GUI.current.id.postln;	// --> still cocoa
+GUI.set( x );			// now we make SwingOSC the current kit
+GUI.window.viewPalette;
+
+Extending GUI Kits
+
+GUI Kits can be extended with custom classes by using their respective .put methods:
+
+GUI.get( \\cocoa ).put( \\myText, SCStaticText );
+GUI.get( \\swing ).put( \\myText, JSCStaticText );
+
+GUI.cocoa;
+GUI.swing;
 (
-
-w = Window(\"Frequency Monitor\", Rect(200, SCWindow.screenBounds.height-200,300,150)).front;
-
-a = StaticText(w, Rect(45, 10, 200, 20)).background_(Color.rand);
-
-a.string = \" Current Frequency \";
-
-Button.new(w, Rect(45, 70, 200, 20)).states_([[\"close\",Color.black,Color.rand]]).action_({w.close});
-
-s.waitForBoot({
-
-	b=Bus.new(\\control,0,1);
-	
-	q=SynthDef(\\Docs_FreqMonitor, {var freq,snd;
-		freq=LFNoise0.ar(2, 400, 650);
-		snd=SinOsc.ar(freq,0,0.2);
-		Out.ar(0,snd);
-		Out.kr(b.index,freq); // output the frequency to a control bus
-	}).play;
-			
-	r= Routine{
-		{			// Set the value of the StaticText to the value in the control bus.
-					// Setting GUI values is asynchronous, so you must use .defer in the system clock.
-					// Also you must check if the window is still open, since Routine will continue for at least
-					// one step after you close the window.
-		b.get( {arg v; {w.isClosed.not.if{ a.string= \" Current Frequency: \"++v.round(0.01)}; }.defer} );
-		
-		0.01.wait;
-		}.loop
-	
-	}.play
-});
-
-CmdPeriod.doOnce({w.close});
-w.onClose={r.stop; q.free; b.free }; //clean up if the window closes
-
+	w = GUI.window.new;
+	GUI.myText.new( w, w.view.bounds.insetBy( 20, 20 )).string_( \"schoko\" ).background_( Color.red );
+	w.front;
 )
 
-// dynamic text
+If you intend to add extensions from within your own classes upon class library initialization time, the preferred way is to do this in the startup process:
 
-(	
-	w = Window.new.front;
-	w.view.background=Color.white;
-	a = Array.fill(20, {StaticText(w, Rect(w.bounds.extent.x.rand, w.bounds.extent.y.rand, 160, 16))
-		.string_(\"Rolof's Rolex\".scramble)
-		.align_(\\center)
-		.stringColor_(Color.rand)
-		.font_(Font([
-			\"Helvetica-Bold\",
-			\"Helvetica\",
-			\"Monaco\",
-			\"Arial\",
-			\"Gadget\",
-			\"MarkerFelt-Thin\"
-		].choose, 11))
-	});
+MyGUIExtension {
+	*initClass {
+		StartUp.add({
+			var scheme;
+			
+			scheme = GUI.get( \\cocoa );
+			if( scheme.notNil, {scheme.put( \\myText, SCStaticText )});
+			scheme = GUI.get( \\swing );
+			if( scheme.notNil, {scheme.put( \\myText, JSCStaticText )});
+		});
+	}
+}
+
+Methods and Variables for GUI
+
+	*new (key)
+
+	*makeGUI (key, args, properties)
+
+
+	*initClass
 	
-	r = {inf.do{|i|
-		thisThread.randSeed_(1284);
-		a.do{|item|
-			// setting GUI values is asynchronous, so you must use .defer
-			{item.bounds = Rect(5+w.bounds.extent.x.rand * (cos(i*0.01)).abs,
-						w.bounds.extent.y.rand * sin(i*0.01),
-						160, 20)}.defer;
+		Sets the skin to default values on Compile.				
+				fontSpecs: 	[\"Helvetica\", 10],
+				fontColor: 	Color.black,
+				background: 	Color(0.8, 0.85, 0.7, 0.5),
+				foreground:	Color.grey(0.95),
+				onColor:		Color(0.5, 1, 0.5),
+				offColor:		Color.clear,
+				gap:			0 @ 0,
+				margin: 		2@2,
+				buttonHeight:	16
+
+	*cocoa
+	
+		Makes Cocoa (Mac OS X GUI) the current scheme and returns it. Subsequent GUI object calls to GUI are delegated to cocoa. Returns the current (cocoa) scheme.
+		
+
+	*swing
+	
+		Makes Swing (Java GUI) the current scheme and returns it. Subsequent GUI object calls to GUI are delegated to swing. Returns the current (swing) scheme.
+		
+	*fromID (id)
+	
+		Changes the current scheme and returns the new scheme.
+		id - (Symbol) the identifier of the scheme touse
+
+	*current
+	
+		Returns the current scheme. This is useful for objects that, upon instantiation, wish to store the then-current scheme, so as to be able to consistently use the same scheme in future method calls.
+		
+		Note: the caller shouldn't make any assumptions about the nature (the class) of the returned object, so that the actual implementation (an Event) may change in the future.
+
+	*get (id)
+	
+		Returns the scheme for a given identifier. Does not switch the current scheme.
+		id - (Symbol) the identifier of the scheme to retrieve, such as returned by calling aScheme.id
+		
+	*set (aScheme)
+	
+		Changes the current scheme.
+		aScheme - An instance of Symbol. The scheme to use as current scheme
+		
+	*use (aScheme, func)
+	
+		Executes a function body, temporarily setting the current GUI scheme. This is usefull inside view's action functions in order to make this function use the GUI scheme that was originally used for the view of the action, even if the scheme has been switched meanwhile.
+		aScheme - The scheme to use during the function execution.
+		func - An Instance of Function.
+
+	*useID (id, func)
+	
+		Same as 'use' but using a scheme's id as first argument.
+		id - The id of the scheme to use during the function execution.
+		func - A body to execute.
+		
+	*add (aScheme)
+	
+		Registers a new scheme. This is typically called by external libraries in their startup procedure. If a scheme with the same identifier (scheme.id) exists, it is overwritten.
+		aScheme - The scheme to add.
+		
+	*doesNotUnderstand (selector, args)
+	
+		All method calls are mapped to the current scheme, so that for example GUI.button can be used and is delegated to the button association of the current scheme.
+		
+	*setSkin (skinName)
+	
+	
+	*scheme
+		
+		A class variable. Returns the current scheme.
+				
+	*schemes
+		
+		A class variable. Returns an IdentityDictionary of registered schemes.
+				
+	*skin
+		
+		A class variable. Returns the current skin.
+				
+	*skins
+		
+		A class variable. Returns an IdentityDictionary of registered skins.
+				
+",  DocProxy.prNew,  "GUI-Classes.html",  "/Applications/SuperCollider/Help/GUI/GUI-Classes.html",  
+	"GUI Classes		
+
+Lists of kit-specific and kit-independant gui classes.
+
+See also: GUI, GUI-Overview
+
+List of Kit-independant GUI Classes
+
+These classes are platform neutral in themselves.
+				
+EZSlider	
+EZNumber
+EZRanger
+EZListView
+EZPopUpMenu
+EZScroller
+EZKnob
+EZText
+Gradient	
+HiliteGradient	
+FlowLayout
+Color
+
+List of Redirection Classes and their Corresponding Kit-specific GUI Classes
+
+The following list contains the ViewRedirect subclass and corresponding CocoaGUI and SwingGUI platform dependent classes:
+
+ViewRedirect
+CocoaGUI
+SwingGUI
+Description
+Window
+SCWindow
+JSCWindow
+a frame that can contain gadgets
+-----------------
+SCModalWindow
+-----------------
+a modal window
+-----------------
+SCModalSheet
+-----------------
+a modal sheet to attach to windows
+View
+SCView
+JSCView
+The base class for most view classes. Important help file.
+CompositeView
+SCCompositeView
+JSCCompositeView
+container view for nesting layouts
+HLayoutView
+SCHLayoutView
+JSCHLayoutView
+container view with horizontal distribution of children
+VLayoutView
+SCVLayoutView
+JSCVLayoutView
+container view with vertical distribution of children
+Button
+SCButton
+JSCButton
+a multiple state push button
+PopUpMenu
+SCPopUpMenu
+JSCPopUpMenu
+a collapsed multiple choice button
+Slider
+SCSlider
+JSCSlider
+a horizontal or vertical slider
+RangeSlider
+SCRangeSlider
+JSCRangeSlider
+horizontal or vertical interval slider
+Slider2D
+SC2DSlider
+JSC2DSlider
+a horizontally and vertically moveable slider
+TextField
+SCTextField
+JSCTextField
+an editable one line text field
+ListView
+SCListView
+JSCListView
+a list of text items
+StaticText
+SCStaticText
+JSCStaticText
+a text label
+NumberBox
+SCNumberBox
+JSCNumberBox
+editable number field
+DragSource
+SCDragSource
+JSCDragSource
+object container acting as a source for drag-n-drop
+DragSink
+SCDragSink
+JSCDragSink
+object container acting as a target for drag-n-drop
+DragBoth
+SCDragBoth
+JSCDragBoth
+combination of DragSource and DragSink
+Stethoscope
+SCStethoscope
+JStethoscope
+oscilloscope tool
+ScopeView
+SCScope
+JSCScope
+oscilloscope view
+TabletView
+SCTabletView
+JSCTabletView
+view for receiving graphic tablet data
+TabletSlider2D
+SC2DTabletSlider
+-----------------
+2D slider with support for graphic tablet data
+FreqScope
+SCFreqScopeWindow
+JFreqScope
+spectrum tool
+FreqScopeView
+SCFreqScope
+JSCFreqScope
+spectrum view
+MultiSliderView
+SCMultiSliderView
+JSCMultiSliderView
+array of sliders
+EnvelopeView
+SCEnvelopeView
+JSCEnvelopeView
+breakpoint envelope editor
+UserView
+SCUserView
+JSCUserView
+view for user-defined drawing operations
+SoundFileView
+SCSoundFileView
+JSCSoundFileView
+waveform view / editor for sound files
+MovieView
+SCMovieView
+JSCMovieView
+canvas for movie (QuickTime) and image display
+TextView
+SCTextView
+JSCTextView
+multiline text editor
+-----------------
+SCQuartzComposerView
+-----------------
+view for displaying QuartzComposer documents
+-----------------
+SCImage
+-----------------
+an image component for the Mac OS X
+-----------------
+SCImageFilter
+-----------------
+a filter class to use with SCImage
+-----------------
+SCImageKernel
+-----------------
+a kernel class to use with SCImage.
+Knob
+SCKnob
+JKnob
+a knob view
+
+Other Redirects and Platform Specific Classes
+
+Cross Platform
+CocoaGUI
+SwingGUI
+Description
+Dialog
+CocoaDialog
+SwingDialog
+file selection dialog management
+Font
+SCFont
+JFont
+a font typeface description.
+Pen
+SCPen
+JPen
+custom drawing operations class
+MouseX
+MouseX
+JMouseX
+UGen. JMouseX for backward compatiblility only.
+MouseY
+MouseY	
+JMouseY
+UGen. JMouseY for backward compatiblility only.
+MouseButton
+MouseButton
+JMouseButton
+UGen. JMouseButton for backward compatiblility only.
+KeyState
+KeyState	
+JKeyState
+UGen. JKeyState for backward compatiblility only.
+use GUI.speech
+Speech
+JSpeech
+text-to-speech synthesis management
+
+Helper Methods
+
+Cross Platform
+CocoaGUI
+SwingGUI
+Description
+GUI.stringBounds
+is synchronous
+is asynchronous
+returns a Rect with the graphic size of a string. See the example in GUI-Overview for asynchronous use
+
+
+
+",  DocProxy.prNew,  "TextDialog.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/TextDialog.sc",  
+	"/*
+
+TextDialog(\"just some test\", \"input some text here\", { | t | t.postln; \"was okd\".postln; }, { \"cancelled\".postln; });
+
+ListSelectDialog(\"just some test\", [\"alpha\", \"beta\"], { | t | t.postln; \"was okd\".postln; }, { \"cancelled\".postln; });
+
+*/
+
+TextDialog {
+	var message, inputText, okFunc, cancelFunc;
+	var window;
+	*new { | message = \"input\", inputText = \"something\", okFunc, cancelFunc |
+		^this.newCopyArgs(message, inputText, okFunc, cancelFunc).init;
+	}
+
+	init {
+		var messageField, inputField, okButton, cancelButton;
+		window = Window(\"\", Rect(400, 400, 400, 400));
+		window.userCanClose = false;
+		messageField = StaticText(window, Rect(2, 2, 396, 180));
+		messageField.string = message;
+		messageField.align = \\center;
+		inputField = TextField(window, Rect(2, 184, 396, 180));
+		inputField.string = inputText;
+		
+		okButton = Button(window, Rect(2, 370, 100, 28)).states_([[\"OK\"]]);
+		okButton.action = {
+			okFunc.(inputField.string);
+			window.close;
 		};
-		0.15.wait;
-	}}.fork;
-	CmdPeriod.doOnce({w.close});
-	w.onClose_({r.stop});
-)
+		cancelButton = Button(window, Rect(298, 370, 100, 28)).states_([[\"CANCEL\"]]);
+		cancelButton.action = {
+			cancelFunc.(inputField.string);
+			window.close;
+		};
+		window.front;	
+	}
+}
 
-
-
-
-
-",  Rect.prNew,  
-	"110409_204943",  DocProxy.prNew,  "SCTextField.html",  "SCTextField			a text field for entering text	
-
-Inherits from: Object : SCView : SCStaticTextBase : SCNumberBox
-
-See also: SCStaticText, SCTextView
-
-Some Important Issues Regarding SCTextField
-
-Does not allow copying and pasting. Does not handle composed character sequences ( etc. ). Use SCTextView for these features. Hit delete before typing to clear the text field. Drag and drop accepts a any Object and recieves it asString. Inherits formatting methods from SCStaticTextBase. If you drag a file from the finder onto an SCTextView, it will display the file path.
-
-Creation / Class Methods
-	*new (parent, bounds)
+ListSelectDialog {
+	var message, items, okFunc, cancelFunc;
+	var window;
+	*new { | message = \"input\", items, okFunc, cancelFunc |
+		^this.newCopyArgs(message, items.asArray, okFunc, cancelFunc).init;
+	}
 	
-		parent - The parent view.
-		bounds - An instance of Rect, or a Point indicating width@height.
+	init {
+		var messageField, listView, okButton, cancelButton;
+		window = Window(\"\", Rect(400, 400, 400, 600));
+		window.userCanClose = false;
+		messageField = StaticText(window, Rect(2, 2, 396, 80));
+		messageField.string = message;
+		messageField.align = \\center;
+		listView = ListView(window, Rect(2, 84, 396, 480));
+		listView.items = items;
 		
-		(
-		w = Window.new.front;
-		a = TextField(w, Rect(10, 10, 150, 20));
-		a.string = \"some default text\";
-		a.action = {arg field; field.value.postln; };
-		)
-
-Accessing Instance and Class Variables
-	
-	string_ (s)
-	
-		Sets the String of the text field.
-		s - An instance of String.
-
-Subclassing and Internal Methods
-
-	The following methods are usually not used directly or are called by a primitive. Programmers can still call or override these as needed.
-	
-	*viewClass
-		
-		Sets the view class thus determining which primitive is called.
-	
-	defaultKeyDownAction (char, modifiers, unicode)
-	
-		The default keydown actions are:
-		
-		key				action									comment
-		\\r 				valueAction on the string
-		\\n, 				valueAction on the string	
-		3.asAscii,			valueAction on the string						(enter key or cmd-C on Mac OSX )
-		127.asAscii		clears the keyString (See SCNumberBox)		(delete key)
-						if no text has been typed yet. Otherwise
-						deletes the last typed character.
-		all others			adds character to the keyString (See SCNumberBox)
-		
-	defaultGetDrag
-	
-		The method called by default when initiating a drag from an SCTextView. Returns string.
-			
-	defaultCanReceiveDrag
-	
-		The method called by default when attempting to place a drag in this object. By default, SCTextView will respond only to drags containing objects that respond to the method, asString (basically, all objects, since Object does).
-
-	defaultReceiveDrag
-	
-		The default method called when a drag has been recieved. Performs valueAction_() using currentDrag as an argument.
-
-Examples
-
-(
-w = Window.new.front;
-a = TextField(w, Rect(10, 10, 150, 20));
-a.string = \"hi there\";
-a.action = {arg field; field.value.postln; };
-)
-
-// does not do the action
-a.value = \"yo\";
-a.string = \"oy\";
-
-a.valueAction_(\"this is not a pipe\"); //does the action, if the value has changed
-a.doAction; //evaluates the action with the content of the text field as an argument
-
-a.background_(Color.grey);
-a.stringColor_(Color.white);
-a.align_(\\center);
-
-",  
-	Rect.prNew,  "110409_204943",  DocProxy.prNew,  "SCWindow.html",  
+		okButton = Button(window, Rect(2, 570, 100, 28)).states_([[\"OK\"]]);
+		okButton.action = {
+			okFunc.(listView.value, listView.items[listView.value]);
+			window.close;
+		};
+		cancelButton = Button(window, Rect(298, 570, 100, 28)).states_([[\"CANCEL\"]]);
+		cancelButton.action = {
+			cancelFunc.(listView.value, listView.items[listView.value]);
+			window.close;
+		};
+		window.front;	
+	}
+}",  DocProxy.prNew,  "SCWindow.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCWindow.html",  
 	"SCWindow			Cocoa user interface window	
 
 Inherits from: Object
@@ -5333,64 +6167,8 @@ w.drawHook = Routine {
 			
 			Pen.fillColor = Color.new255(0, 120, 120).vary;
 			Pen.matrix = scale * #[1, 0, 0, 1, 1, 0];
-			Pen.stringAtPoint(char.a",  Rect.prNew,  "110409_204943",  DocProxy.prNew,  
-	"StaticText.html",  "StaticText			a cross-platform redirector for a GUI widget	
-
-Inherits from: Object : ViewRedirect
-
-This class will return the gui kit specific version of a StaticText.
-
-See also: GUI, GUI-Classes, GUI-Overview
-
-Examples and Documentation:
-For examples and platform specific documentation follow these links.
-
-SwingGUI:      JSCStaticText
-
-CocoaGUI:      SCStaticText
-
-Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
-
-",  Rect.prNew,  "110409_204943",  
-	DocProxy.prNew,  "TextDialog.sc",  "/*
-
-TextDialog(\"just some test\", \"input some text here\", { | t | t.postln; \"was okd\".postln; }, { \"cancelled\".postln; });
-
-*/
-
-TextDialog {
-	var message, inputText, okFunc, cancelFunc;
-	var window;
-	*new { | message = \"input\", inputText = \"something\", okFunc, cancelFunc |
-		^this.newCopyArgs(message, inputText, okFunc, cancelFunc).init;
-	}
-	
-	init {
-		var messageField, inputField, okButton, cancelButton;
-		window = Window(\"\", Rect(400, 400, 400, 400));
-		window.userCanClose = false;
-		messageField = StaticText(window, Rect(2, 2, 396, 180));
-		messageField.string = message;
-		messageField.align = \\center;
-		inputField = TextField(window, Rect(2, 184, 396, 180));
-		inputField.string = inputText;
-		
-		okButton = Button(window, Rect(2, 370, 100, 28)).states_([[\"OK\"]]);
-		okButton.action = {
-			okFunc.(inputField.string);
-			window.close;
-		};
-		cancelButton = Button(window, Rect(298, 370, 100, 28)).states_([[\"CANCEL\"]]);
-		cancelButton.action = {
-			cancelFunc.(inputField.string);
-			window.close;
-		};
-		window.front;	
-	}
-	
-	
-}",  Rect.prNew,  
-	"110409_204943",  DocProxy.prNew,  "TextField.html",  "TextField			a cross-platform redirector for a GUI widget	
+			Pen.stringAtPoint(char.a",  DocProxy.prNew,  "TextField.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/TextField.html",  
+	"TextField			a cross-platform redirector for a GUI widget	
 
 Inherits from: Object : ViewRedirect
 
@@ -5407,1498 +6185,8 @@ CocoaGUI:      SCTextField
 
 Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
 
-",  
-	Rect.prNew,  "110409_204943",  DocSession.prNew,  "110406_122927",  
-	Array.prNew(3),  DocProxy.prNew,  "Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  
-	"Archive			storing objects to file	
-
-Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
-
-Archives can write any object to disk and read from file again. Compex structures of objects can thus be restored. Writing an object to file as a compile string is usually more readable, but does not account for the internal structure of the object.
-
-See also: Library, Object, LibraryBase, writeAsPlist
-
-There is only one global instance: Archive.global, which is initialized automatically.
-
-Class Methods (see superclass for more)
-
-	*global
-	*global_(obj)
-		return / set the global archive instance
-		
-	*archiveDir
-	*archiveDir_(string)
-		set or get the directory that the archive is written to. 
-		Default: Platform.userAppSupportDir.
-	
-	*write(filename)
-		write the global archive now. This is called automatically when SuperCollider quits.
-		The default filename is \"/archive.sctxar\"
-	
-	*read(filename)
-		read the global archive now. This is called automatically when SuperCollider recompiles or starts.
-		The default filename is \"/archive.sctxar\"
-				
-
-Examples
-
-// make a storage place for various objects:
-q = (); // Event
-
-q[\\a_long_array] = Array.rand(128, 0.0, 1.0);
-q[\\pi_squared] = pi * pi;
-q[\\favourite_sound] = { { SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play };
-q[\\same_long_array] = q[\\a_long_array]; // same objects may appear several times
-
-Archive.global.put(\\myData, q);
-
-
-Archive.global.at(\\myData).postcs;
-
-// after a recompile:
-s.boot;
-
-q = Archive.global.at(\\myData);
-q.postcs;
-q[\\favourite_sound].value;
-
-
-
-",  DocProxy.prNew,  "Untitled 2",  "
-
-
-{ SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
-
-
-{ SinOsc.ar([300, 330]).sum * LFPulse.kr(5 + [0, 0.01]) * 0.1 }.play;
-
-{ SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.1]) * 0.1 }.play;
-
-{ SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
-
-{ SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
-",  
-	DocProxy.prNew,  "DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "/*
-DocPoller.stop;
-*/
-DocListWindow {
-	classvar <>docListWidth = 150;
-	classvar <>listenerY = 280, <>listenerWidth = 500;
-	var <docBrowser, <docBrowserView, <docListView, <codeListView;
-	var <docBounds, <docBrowserBounds, <listenerBounds;
-	var <allDocs, <selectedDoc;
-	var <codeStrings, <codeKeys;
-	var <remakeCodeListMenuItem;
-
-
-	*new { ^super.new.init; }
-	init { this.makeGui }
-	
-	makeGui {
-		var archivedDoc;
-		archivedDoc = Archive.global.at(\\currentDoc);
-		archivedDoc.postln;
-		archivedDoc = Document.allDocuments.detect { | d | d.name == archivedDoc };
-		if (archivedDoc.notNil) { Document.current = archivedDoc };
-		this.makeUserMenuItems;
-		docBrowser = Window(\"docs\", 
-			Rect(Window.screenBounds.width - docListWidth, 0, docListWidth, Window.screenBounds.height - 50));
-		docBrowser.onClose = {
-			docBrowser = nil;
-			this.remove;
-		};
-		docBrowserView = docBrowser.view;
-		docBrowserBounds = docBrowser.view.bounds;
-		docListView = ListView(docBrowser, this.docListBounds);
-		docListView.keyDownAction = { | me, char, mod, ascii ... rest |
-			if (ascii == 127) {
-				if (allDocs[me.value - 1].notNil) { allDocs[me.value - 1].close };
-			}{
-				me.defaultKeyDownAction(char, mod, ascii, *rest);
-			}
-		};
-		docListView.action = { | me |
-			if (me.value > 0) {
-				this.selectDoc(allDocs[me.value - 1]) 
-			};
-		};
-		codeListView = ListView(docBrowser, this.codeListBounds);
-		codeListView.keyDownAction = { | me, char |
-			this.selectAndPerformCodeAt(codeKeys indexOf: char);
-		};
-		codeListView.focusColor = Color.red;
-		codeListView.action = {	 | me | this.performCodeAt(me.value); }; // only perform with keys
-		
-		docBrowserBounds = docBrowser.bounds;
-		listenerBounds = Rect(0, listenerY, listenerWidth, Window.screenBounds.height - listenerY);
-		docBrowser.front;
-	}
-
-	makeCodeList { | doc |
-		var docText, poslist, snippet, items;
-		if (doc.isListener) { ^this }; // do not make code list for post window;
-		docText = doc.string;
-		poslist = docText.findRegexp(\"^//:\").slice(nil, 0);
-		poslist = poslist.asArray;
-		if (poslist.size > 0) { 
-			codeStrings = poslist collect: { | pos, i |
-				docText[pos..(poslist[i + 1] ?? { docText.size }) - 1];
-			};
-			items = codeStrings collect: { | s |
-				if (s[3] == $!) { s.interpret };
-				s[3..50];
-			};
-			codeKeys = items collect: _.first;
-		}{
-			codeStrings = [docText];
-			items = [\"0 \" ++ doc.name];
-			codeKeys = [$0];
-			
-		};
-		codeListView.items = items;
-	}
-
-	selectAndPerformCodeAt { | index |
-		if (index.isNil) { ^this };
-		codeListView.value = index;
-		this.performCodeAt(index);	
-	}
-
-	performCodeAt { | index |
-		codeStrings[index].interpret;
-	}
-	makeUserMenuItems {
-		remakeCodeListMenuItem = CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
-			this.selectDoc(Document.current);
-			this.makeCodeList(selectedDoc);
-			docBrowser.front;
-			codeListView.focus;
-		});
-	}
-
-	removeUserMenuItems {
-		if (remakeCodeListMenuItem.notNil) { remakeCodeListMenuItem.remove; };
-	}
-
-	docListBounds {
-		^Rect(2, 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
-	}
-
-	codeListBounds {
-		^Rect(2, docBrowserBounds.height / 2 - 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
-	}
-	
-	close {
-		if (docBrowser.notNil) { docBrowser.close; };
-		this.removeUserMenuItems;
-	}
-
-	add { if (DocPoller.dependants.includes(this).not) { DocPoller.add(this) } }
-	remove { DocPoller.remove(this) }
-	
-	update { | docs |
-		if (docBrowser.bounds != docBrowserBounds) {
-			docBrowserBounds = docBrowser.bounds;
-			docListView.bounds = this.docListBounds;
-			codeListView.bounds = this.codeListBounds;
-			docBounds = Rect(listenerWidth, 
-				docBrowserBounds.top,
-				docBrowserBounds.left - listenerWidth,
-				docBrowserBounds.height + 22
-			);
-		};
-		docs do: { | d, i |
-			if (d.isListener) {
-				if (listenerBounds != d.bounds) { d.bounds = listenerBounds };
-			}{
-				if (d.bounds != docBounds) { d.bounds = docBounds };
-			};
-		};
-		if (docs.size != allDocs.size) {
-			docListView.items = [\"---\"] ++ docs.collect(_.name);
-			allDocs = docs.copy;	// Document modifies the original. Copy needed!
-			this.selectDoc(Document.current);
-		}{
-			if (selectedDoc !== Document.current) {
-				this.selectDoc(Document.current);
-			};
-		}
-	}
-
-	selectDoc { | doc |
-		var index;
-		index = allDocs.indexOf(doc);
-		if (index.isNil) { ^this };
-		selectedDoc = doc;
-		Document.current = selectedDoc;
-		selectedDoc.front;
-		docListView.value = index + 1;
-		this.makeCodeList(doc);	
-		Archive.global.put(\\currentDoc, selectedDoc.name);
-	}
-		
-	
-}",  
-	DocSession.prNew,  "110405_233219",  Array.prNew(13),  DocProxy.prNew,  
-	"DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
-DocProxy {
-	var <name;
-	var <path;
-	var <text;
-	
-	*new { | document |
-		^this.newCopyArgs(document.name, document.path, document.text);
-	}
-
-	open { | fromPath = true |
-		^if (fromPath) { this.openFromPath } { this.openFromText };
-	}
-
-	openFromPath {
-		var match;
-		if (path.isNil) { ^this.openFromText };
-		match = path.pathMatch;
-		if (match.size == 0) { ^this.openFromText }; 
-		^Document.open(path);
-	}
-
-	openFromText {
-		^Document(name, text);
-	}
-}
-
-DocSession {
-	classvar <sessionArchiveRoot = \\docSessions;
-	var <name;
-	var <docs;
-
-	*saveAllDialog {
-		TextDialog(
-			\"input name of session\",
-			Date.getDate.stamp,
-			{ | i | this.newWithAllDocs(i).save },
-			{ \"save cancelled\".postln }
-		);
-	}
-
-	*newWithAllDocs { | i |
-		^this.newCopyArgs(i).getAllDocs;
-	}
-	
-	getAllDocs {
-		docs = Document.allDocuments.select({ | d | d.isListener.not }).collect(DocProxy(_));
-	}
-	
-	save {
-		Archive.global.put(sessionArchiveRoot, name.asSymbol, this);
-		Archive.write;
-	}
-	
-	*load { | name |
-		^Archive.global.at(sessionArchiveRoot, name.asSymbol);
-	}
-
-	*loadDialog { | ref |
-		Archive.global.at(sessionArchiveRoot).postln;
-		ListSelectDialog(\"Select a session\", Archive.global.at(sessionArchiveRoot).keys.asArray,
-			{ | i, name |
-				ref.value = this.load(name);
-			},{
-				\"Loading cancelled\".postln;
-			}
-		);
-	}
-
-	*loadAndOpenDialog {
-		Archive.global.at(sessionArchiveRoot).postln;
-		ListSelectDialog(\"Select a session\", Archive.global.at(sessionArchiveRoot).keys.asArray,
-			{ | i, name |
-				this.load(name).openAllDocs;
-			},{
-				\"Loading cancelled\".postln;
-			}
-		);
-	}
-
-
-	openAllDocs {
-		docs do: _.open;	
-	}
-}",  DocProxy.prNew,  
-	"DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
-//:a save all docs under \"defaultDocSession\" in global archive
-
-Archive.global.put(\\defaultDocSession, Document.allDocuments collect: DocProxy(_));
-Archive.write;
-\"Documents saved in archive: \".post;
-Document.allDocuments.collect(_.name).postln;
-
-//:b load all docs from \"defaultDocSession\" in global archive
-Archive.global.at(\\defaultDocSession).postln;
-Archive.global.at(\\defaultDocSession) do: { | p | p.path.postln; };
-Archive.global.at(\\defaultDocSession) do: { | p | p.open.postln; };
-
-//:c create DocProxy tests
-a = DocProxy(Document.allDocuments.last);
-
-//:d close the Doc of the doc proxy
-Document.allDocuments.last.close;
-
-//:e reopen Doc from proxy
-Document(a.name, a.text);
-
-//:f reopen Doc from path
-Document.open(a.path);
-
-//:g save hierarchical: many sessions
-Archive.global.put(\\test, \\one, 1);
-Archive.write;
-
-//:h load hierarchical: many sessions
-Archive.global.at(\\test, \\one).postln;
-
-//:i save all docs dialog
-
-DocSession.saveAllDialog;
-
-//:j load session dialog
-
-DocSession.loadDialog;
-",  DocProxy.prNew,  
-	"Library.sc",  "/Applications/SuperCollider/SCClassLibrary/Common/Collections/Library.sc",  "MultiLevelIdentityDictionary : Collection
-{
-
-	var <>dictionary;
-
-	*new {
-		^super.new.init
-	}
-	init {
-		dictionary = this.newInternalNode;
-	}
-
-	newInternalNode { ^this.nodeType.new }
-
-	nodeType {
-		^IdentityDictionary;
-	}
-
-	at { arg ... path;
-		^this.atPath(path)
-	}
-	atPathFail { arg path, function;
-		var item;
-		item = dictionary;
-		path.do({ arg name;
-			item = item.at(name);
-			if (item.isNil, { ^function.value });
-		});
-		^item
-	}
-	atPath { arg path;
-		^this.atPathFail(path)
-	}
-
-	put { arg ... path;
-		var item;
-		item = path.pop;
-		^this.putAtPath(path, item);
-	}
-	putAtPath { arg path, val;
-		var item, lastName;
-		path = path.copy;
-		lastName = path.pop;
-		item = dictionary;
-		path.do({ arg name;
-			item = item.atFail(name, {
-				var newitem;
-				newitem = this.newInternalNode;
-				item.put(name, newitem);
-				newitem
-			});
-		});
-		item.put(lastName, val);
-	}
-
-	create { arg ... args;
-		var item;
-		item = dictionary;
-		args.do({ arg name;
-			item = item.atFail(name, {
-				var newitem;
-				newitem = this.newInternalNode;
-				item.put(name, newitem);
-				newitem
-			});
-		});
-	}
-
-	choose { arg ... start;
-		var item;
-		if(start.isEmpty,{
-			item = dictionary;
-		},{
-			item = this.at(*start);
-			if(item.isNil,{
-				Error(\"Library-choose start address not found: \" ++ start).throw;
-			});
-		});
-		^this.prChooseFrom(item);
-	}
-	putTree { arg ... items;
-		this.prPutTree([],items)
-	}
-	postTree { arg obj,tabs=0;
-		if(obj.isNil,{ obj = dictionary });
-		if(obj.isKindOf(this.nodeType),{
-			\"\".postln;
-			obj.keysValuesDo({ arg k,v;
-				tabs.do({ Char.tab.post });
-				k.post;
-				\": \".post;
-				this.postTree(v,tabs + 1)
-			});
-		},{
-			Char.tab.post;
-			obj.asString.postln;
-		})
-	}
-	do { arg function;
-		dictionary.do(function);
-	}
-		// remove only the leaf node indicated by path
-		// parent nodes remain in the MLID even if they are empty
-	removeAt {
-		arg ... path;
-		^this.removeAtPath(path)
-	}
-	removeAtPath { arg path;
-		var item, lastName;
-		path = path.copy;
-		lastName = path.pop;
-		item = dictionary;
-		path.do({ arg name;
-			item = item.at(name);
-			if (item.isNil, { ^nil });
-		});
-		^item.removeAt(lastName);
-	}
-		// remove the leaf node
-		// as well as parent nodes that become empty after removing the child
-		// slower but leaves less cruft in the tree
-	prRemoveAtPathRecursive { |path, i = 0, item|
-		var name = path[i], result;
-		if(item[name].isNil) { ^nil };
-		if(i < (path.size-1)) {
-			result = this.prRemoveAtPathRecursive(path, i+1, item[name]);
-			(item[name].isEmpty).if({ item.removeAt(name) });
-			^result
-		} {
-			^item.removeAt(name)
-		};
-	}
-	removeEmptyAtPath { arg path;
-		^this.prRemoveAtPathRecursive(path, 0, dictionary)
-	}
-	removeEmptyAt { arg ...path;
-		^this.prRemoveAtPathRecursive(path, 0, dictionary);
-	}
-
-	//private
-	add { arg assn;
-		this.put(assn.key, assn.value);
-	}
-	remove { ^this.shouldNotImplement(thisMethod) }
-	removeFail { ^this.shouldNotImplement(thisMethod) }
-
-	prChooseFrom { arg dict;
-		var item;
-		item = dict.choose;
-		if(item.isKindOf(this.nodeType),{
-			^this.prChooseFrom(item);
-		},{
-			^item
-		})
-	}
-	prPutTree { arg keys,items;
-		forBy(0,items.size - 1,2,{ arg i;
-			var key,item;
-			key = items.at(i);
-			item = items.at(i + 1);
-			if(item.isArray.not,{
-				this.put(* keys ++ [key,item]);
-			},{
-				//array
-				this.prPutTree(keys ++ [key],item);
-			})
-		});
-	}
-	leaves { arg startAt;
-		if(startAt.isNil,{
-			startAt = dictionary;
-		},{
-			startAt = this.at(*startAt);
-		});
-		^this.prNestedValuesFromDict(startAt);
-	}
-	prNestedValuesFromDict { arg dict;
-		^dict.values.collect({ arg thing;
-			if(thing.isKindOf(this.nodeType),{
-				this.prNestedValuesFromDict(thing)
-			},{
-				thing
-			})
-		})
-	}
-
-	// Tree-like do methods
-	leafDo {
-		arg func;
-
-		this.doLeafDo([], this.dictionary, func);
-	}
-	leafDoFrom {
-		arg folderpath, func;
-		var folder;
-
-		folderpath = folderpath.asArray;
-
-		folder = this.atPath(folderpath);
-		if (folder.notNil && folder.isKindOf(this.nodeType), {
-			this.doLeafDo(folderpath, folder, func);
-		});
-	}
-
-	doLeafDo {
-		arg path, object, func;
-
-		if (object.isKindOf(this.nodeType), {
-			object.keysValuesDo({
-				arg name, subobject;
-				this.doLeafDo(path ++ [name], subobject, func)
-			});
-		}, {
-			func.value(path, object);
-		})
-	}
-
-	treeDo {
-		arg branchFunc, leafFunc, argument0, postBranchFunc;
-		var result;
-
-		result = this.doTreeDo([], this.dictionary, branchFunc, leafFunc, argument0, postBranchFunc);
-		^result;
-	}
-	treeDoFrom {
-		arg folderpath, branchFunc, leafFunc, argument0, postBranchFunc;
-		var folder, result;
-
-		folderpath = folderpath.asArray;
-
-		folder = this.atPath(folderpath);
-		if (folder.isKindOf(this.nodeType), {
-			result = this.doTreeDo(folderpath, folder, branchFunc, leafFunc, argument0, postBranchFunc);
-		}, {
-			result = nil;
-		});
-
-		^result;
-
-	}
-	doTreeDo {
-		arg path, object, branchFunc, leafFunc, argument, postBranchFunc;
-		var result;
-
-		if (object.isKindOf(this.nodeType), {
-			if (branchFunc.notNil, {
-				result = branchFunc.value(path, object, argument);
-			}, {
-				result = argument;
-			});
-			object.keysValuesDo({
-				arg name, subobject;
-				this.doTreeDo(path ++ [name], subobject, branchFunc, leafFunc, result, postBranchFunc)
-			});
-			if (postBranchFunc.notNil, {
-				result = postBranchFunc.value(path, object, result);
-			});
-			^result
-		}, {
-			leafFunc.value(path, object, argument);
-		})
-	}
-
-	treeCollect { arg branchFunc, leafFunc, postBranchFunc;
-		var result;
-		result = this.doTreeCollect([], this.dictionary, branchFunc, leafFunc, postBranchFunc);
-		^result;
-	}
-	doTreeCollect { arg path, object, branchFunc, leafFunc, postBranchFunc;
-		var confirm, collection, result;
-
-		if (object.isKindOf(this.nodeType), {
-			if (branchFunc.notNil, {
-				#confirm, result = branchFunc.value(path, object);
-			}, {
-				#confirm, result = [true, nil]
-			});
-			if (confirm, {
-				collection = [];
-				object.keysValuesDo({
-					arg name, subobject;
-					collection = collection.add(this.doTreeCollect(path ++ [name], subobject,
-						branchFunc, leafFunc, postBranchFunc));
-				});
-				collection.removeAllSuchThat({arg item; item.isNil});
-				if (postBranchFunc.notNil, {
-					result = postBranchFunc.value(path, object, collection);
-				}, {
-					result = nil;
-				});
-				^result
-			}, {
-				^nil
-			});
-		}, {
-			^leafFunc.value(path, object)
-		});
-	}
-
-	sortedTreeDo {
-		arg branchFunc, leafFunc, argument0, postBranchFunc, sortFunc;
-		var result;
-
-		result = this.doSortedTreeDo([], this.dictionary, branchFunc, leafFunc, argument0, postBranchFunc, sortFunc);
-		^result;
-	}
-	doSortedTreeDo {
-		arg path, object, branchFunc, leafFunc, argument, postBranchFunc, sortFunc;
-		var result;
-
-		sortFunc = sortFunc ? {arg a, b; a < b};
-
-		if (object.isKindOf(this.nodeType), {
-			if (branchFunc.notNil, {
-				result = branchFunc.value(path, object, argument);
-			}, {
-				result = argument;
-			});
-			object.sortedKeysValuesDo({
-				arg name, subobject;
-				this.doSortedTreeDo(path ++ [name], subobject, branchFunc, leafFunc, result, postBranchFunc, sortFunc)
-			});
-			if (postBranchFunc.notNil, {
-				postBranchFunc.value(path, object, result);
-			});
-			^result
-		}, {
-			leafFunc.value(path, object, argument);
-		})
-	}
-
-	leafDoInBranch {
-		arg folderpath, function;
-		var path, folder;
-
-		folderpath = folderpath.asArray;
-
-		folder = this.atPath(folderpath);
-		if (folder.notNil && folder.isKindOf(this.nodeType), {
-			folder.keysValuesDo({
-				arg name, object;
-				if (object.isKindOf(this.nodeType).not, {
-					function.value(folderpath ++ [name], object);
-				});
-			});
-		});
-	}
-
-	storeOn { arg stream;
-		stream << this.class.name << \"[\" <<<* dictionary << \"]\"
-	}
-
-	printOn { arg stream;
-		stream << this.class.name << \"[\" <<* dictionary << \"]\"
-	}
-}
-
-
-
-LibraryBase : MultiLevelIdentityDictionary
-{
-	*global {
-		^this.subclassResponsibility(thisMethod);
-	}
-	*global_ { arg obj;
-		^this.subclassResponsibility(thisMethod);
-	}
-
-
-	*clear {
-		this.global = this.new;
-	}
-	*at { arg ... args;
-		^this.global.at(*args);
-	}
-
-	*atList { arg args;
-		^this.global.at(*args)
-	}
-	*putList { arg args;
-		^this.global.put(*args)
-	}
-
-	*put { arg ... args;
-		^this.global.put(*args)
-	}
-	*create { arg ... args;
-		^this.global.create(*ar",  DocProxy.prNew,  
-	"GUI.html",  "/Applications/SuperCollider/Help/GUI/GUI-Tools/GUI.html",  "GUI			Factory abstraction for all GUI related core classes	
-
-Inherits from: Object
-
-See also: GUI-Classes, GUI-Overview, ViewRedirect
-
-The GUI class provides a means of writing cross platform gui code. GUI provides Factory abstraction for all gui related core classes. Each gui kit is described by a gui scheme which maps class names to actual classes. These schemes are in turn used by ViewRedirect to provide a simple cross-platform gui syntax. It also provide utilities for switching kits and other cross platform tasks. You can get your available schemes (depending on what you installed) with:
-
-GUI.schemes;
-
-For a complete list of gui classes and redirects, see GUI-Classes.
-
-Switching and Referring to GUI Kits
-
-As of this writing, two GUI kits are available through the GUI class: CocoaGUI (Mac OS X native) and SwingGUI (Java) . Note that SwingOSC is not part of every SuperCollider distribution, so you may have to install it separately.
-
-You can switch the GUI kit by calling one of the following class methods:
-
-GUI.cocoa;	// use cocoa in subsequent GUI creation procedures
-GUI.swing;	// use swing in subsequent GUI creation procedures
-			// NOTE: If you do not have SwingOSC installed, you get
-			// a warning only, and do not switch; so you cannot
-			// accidentally disable your (mac) gui system.
-	
-These methods return the new GUI kit implementation. The current implementation can be queried by calling
-
-GUI.current;	// returns the current GUI kit implementation
-
-If you want to make a GUI kit specific switch (e.g. in a class), then you should use the following instead, as on non-OSX systems the class CocoaGUI is not in the class library path, and you cannot check for an undefined class:
-
-GUI.id;	// returns the current GUI kit implementation id; this is currently either \\cocoa or \\swing
-
-For persistency, you can store the identifier of the kit implementation and recall the kit through the class method fromID:
-
-x = GUI.cocoa;
-y = x.id;				// store the identifier of a kit implementation
-y.postln;				// ; the id could be stored in a preferences file for example
-GUI.swing;
-// now switch back to the kit implementation with identifier y
-GUI.fromID( y );
-GUI.current.id.postln;	// --> cocoa
-
-The *use and *useID methods allow you to temporarily switch the kit, so as to use it only for a dedicated block of statements:
-
-GUI.cocoa;
-GUI.useID( \\swing, {Array.rand( 1000, 0.0, 1.0 ).plot });
-GUI.current.id.postln;	// --> still cocoa
-
-You can get a particular kit using the *get method. You can switch to a particular kit using the *set method:
-
-x = GUI.get( \\swing );	// note: unlike *swing and *cocoa, this does not _switch_ the current kit!
-GUI.current.id.postln;	// --> still cocoa
-GUI.set( x );			// now we make SwingOSC the current kit
-GUI.window.viewPalette;
-
-Extending GUI Kits
-
-GUI Kits can be extended with custom classes by using their respective .put methods:
-
-GUI.get( \\cocoa ).put( \\myText, SCStaticText );
-GUI.get( \\swing ).put( \\myText, JSCStaticText );
-
-GUI.cocoa;
-GUI.swing;
-(
-	w = GUI.window.new;
-	GUI.myText.new( w, w.view.bounds.insetBy( 20, 20 )).string_( \"schoko\" ).background_( Color.red );
-	w.front;
-)
-
-If you intend to add extensions from within your own classes upon class library initialization time, the preferred way is to do this in the startup process:
-
-MyGUIExtension {
-	*initClass {
-		StartUp.add({
-			var scheme;
-			
-			scheme = GUI.get( \\cocoa );
-			if( scheme.notNil, {scheme.put( \\myText, SCStaticText )});
-			scheme = GUI.get( \\swing );
-			if( scheme.notNil, {scheme.put( \\myText, JSCStaticText )});
-		});
-	}
-}
-
-Methods and Variables for GUI
-
-	*new (key)
-
-	*makeGUI (key, args, properties)
-
-
-	*initClass
-	
-		Sets the skin to default values on Compile.				
-				fontSpecs: 	[\"Helvetica\", 10],
-				fontColor: 	Color.black,
-				background: 	Color(0.8, 0.85, 0.7, 0.5),
-				foreground:	Color.grey(0.95),
-				onColor:		Color(0.5, 1, 0.5),
-				offColor:		Color.clear,
-				gap:			0 @ 0,
-				margin: 		2@2,
-				buttonHeight:	16
-
-	*cocoa
-	
-		Makes Cocoa (Mac OS X GUI) the current scheme and returns it. Subsequent GUI object calls to GUI are delegated to cocoa. Returns the current (cocoa) scheme.
-		
-
-	*swing
-	
-		Makes Swing (Java GUI) the current scheme and returns it. Subsequent GUI object calls to GUI are delegated to swing. Returns the current (swing) scheme.
-		
-	*fromID (id)
-	
-		Changes the current scheme and returns the new scheme.
-		id - (Symbol) the identifier of the scheme touse
-
-	*current
-	
-		Returns the current scheme. This is useful for objects that, upon instantiation, wish to store the then-current scheme, so as to be able to consistently use the same scheme in future method calls.
-		
-		Note: the caller shouldn't make any assumptions about the nature (the class) of the returned object, so that the actual implementation (an Event) may change in the future.
-
-	*get (id)
-	
-		Returns the scheme for a given identifier. Does not switch the current scheme.
-		id - (Symbol) the identifier of the scheme to retrieve, such as returned by calling aScheme.id
-		
-	*set (aScheme)
-	
-		Changes the current scheme.
-		aScheme - An instance of Symbol. The scheme to use as current scheme
-		
-	*use (aScheme, func)
-	
-		Executes a function body, temporarily setting the current GUI scheme. This is usefull inside view's action functions in order to make this function use the GUI scheme that was originally used for the view of the action, even if the scheme has been switched meanwhile.
-		aScheme - The scheme to use during the function execution.
-		func - An Instance of Function.
-
-	*useID (id, func)
-	
-		Same as 'use' but using a scheme's id as first argument.
-		id - The id of the scheme to use during the function execution.
-		func - A body to execute.
-		
-	*add (aScheme)
-	
-		Registers a new scheme. This is typically called by external libraries in their startup procedure. If a scheme with the same identifier (scheme.id) exists, it is overwritten.
-		aScheme - The scheme to add.
-		
-	*doesNotUnderstand (selector, args)
-	
-		All method calls are mapped to the current scheme, so that for example GUI.button can be used and is delegated to the button association of the current scheme.
-		
-	*setSkin (skinName)
-	
-	
-	*scheme
-		
-		A class variable. Returns the current scheme.
-				
-	*schemes
-		
-		A class variable. Returns an IdentityDictionary of registered schemes.
-				
-	*skin
-		
-		A class variable. Returns the current skin.
-				
-	*skins
-		
-		A class variable. Returns an IdentityDictionary of registered skins.
-				
-",  DocProxy.prNew,  
-	"GUI-Classes.html",  "/Applications/SuperCollider/Help/GUI/GUI-Classes.html",  "GUI Classes		
-
-Lists of kit-specific and kit-independant gui classes.
-
-See also: GUI, GUI-Overview
-
-List of Kit-independant GUI Classes
-
-These classes are platform neutral in themselves.
-				
-EZSlider	
-EZNumber
-EZRanger
-EZListView
-EZPopUpMenu
-EZScroller
-EZKnob
-EZText
-Gradient	
-HiliteGradient	
-FlowLayout
-Color
-
-List of Redirection Classes and their Corresponding Kit-specific GUI Classes
-
-The following list contains the ViewRedirect subclass and corresponding CocoaGUI and SwingGUI platform dependent classes:
-
-ViewRedirect
-CocoaGUI
-SwingGUI
-Description
-Window
-SCWindow
-JSCWindow
-a frame that can contain gadgets
------------------
-SCModalWindow
------------------
-a modal window
------------------
-SCModalSheet
------------------
-a modal sheet to attach to windows
-View
-SCView
-JSCView
-The base class for most view classes. Important help file.
-CompositeView
-SCCompositeView
-JSCCompositeView
-container view for nesting layouts
-HLayoutView
-SCHLayoutView
-JSCHLayoutView
-container view with horizontal distribution of children
-VLayoutView
-SCVLayoutView
-JSCVLayoutView
-container view with vertical distribution of children
-Button
-SCButton
-JSCButton
-a multiple state push button
-PopUpMenu
-SCPopUpMenu
-JSCPopUpMenu
-a collapsed multiple choice button
-Slider
-SCSlider
-JSCSlider
-a horizontal or vertical slider
-RangeSlider
-SCRangeSlider
-JSCRangeSlider
-horizontal or vertical interval slider
-Slider2D
-SC2DSlider
-JSC2DSlider
-a horizontally and vertically moveable slider
-TextField
-SCTextField
-JSCTextField
-an editable one line text field
-ListView
-SCListView
-JSCListView
-a list of text items
-StaticText
-SCStaticText
-JSCStaticText
-a text label
-NumberBox
-SCNumberBox
-JSCNumberBox
-editable number field
-DragSource
-SCDragSource
-JSCDragSource
-object container acting as a source for drag-n-drop
-DragSink
-SCDragSink
-JSCDragSink
-object container acting as a target for drag-n-drop
-DragBoth
-SCDragBoth
-JSCDragBoth
-combination of DragSource and DragSink
-Stethoscope
-SCStethoscope
-JStethoscope
-oscilloscope tool
-ScopeView
-SCScope
-JSCScope
-oscilloscope view
-TabletView
-SCTabletView
-JSCTabletView
-view for receiving graphic tablet data
-TabletSlider2D
-SC2DTabletSlider
------------------
-2D slider with support for graphic tablet data
-FreqScope
-SCFreqScopeWindow
-JFreqScope
-spectrum tool
-FreqScopeView
-SCFreqScope
-JSCFreqScope
-spectrum view
-MultiSliderView
-SCMultiSliderView
-JSCMultiSliderView
-array of sliders
-EnvelopeView
-SCEnvelopeView
-JSCEnvelopeView
-breakpoint envelope editor
-UserView
-SCUserView
-JSCUserView
-view for user-defined drawing operations
-SoundFileView
-SCSoundFileView
-JSCSoundFileView
-waveform view / editor for sound files
-MovieView
-SCMovieView
-JSCMovieView
-canvas for movie (QuickTime) and image display
-TextView
-SCTextView
-JSCTextView
-multiline text editor
------------------
-SCQuartzComposerView
------------------
-view for displaying QuartzComposer documents
------------------
-SCImage
------------------
-an image component for the Mac OS X
------------------
-SCImageFilter
------------------
-a filter class to use with SCImage
------------------
-SCImageKernel
------------------
-a kernel class to use with SCImage.
-Knob
-SCKnob
-JKnob
-a knob view
-
-Other Redirects and Platform Specific Classes
-
-Cross Platform
-CocoaGUI
-SwingGUI
-Description
-Dialog
-CocoaDialog
-SwingDialog
-file selection dialog management
-Font
-SCFont
-JFont
-a font typeface description.
-Pen
-SCPen
-JPen
-custom drawing operations class
-MouseX
-MouseX
-JMouseX
-UGen. JMouseX for backward compatiblility only.
-MouseY
-MouseY	
-JMouseY
-UGen. JMouseY for backward compatiblility only.
-MouseButton
-MouseButton
-JMouseButton
-UGen. JMouseButton for backward compatiblility only.
-KeyState
-KeyState	
-JKeyState
-UGen. JKeyState for backward compatiblility only.
-use GUI.speech
-Speech
-JSpeech
-text-to-speech synthesis management
-
-Helper Methods
-
-Cross Platform
-CocoaGUI
-SwingGUI
-Description
-GUI.stringBounds
-is synchronous
-is asynchronous
-returns a Rect with the graphic size of a string. See the example in GUI-Overview for asynchronous use
-
-
-
-",  DocProxy.prNew,  
-	"TextDialog.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/TextDialog.sc",  "/*
-
-TextDialog(\"just some test\", \"input some text here\", { | t | t.postln; \"was okd\".postln; }, { \"cancelled\".postln; });
-
-ListSelectDialog(\"just some test\", [\"alpha\", \"beta\"], { | t | t.postln; \"was okd\".postln; }, { \"cancelled\".postln; });
-
-*/
-
-TextDialog {
-	var message, inputText, okFunc, cancelFunc;
-	var window;
-	*new { | message = \"input\", inputText = \"something\", okFunc, cancelFunc |
-		^this.newCopyArgs(message, inputText, okFunc, cancelFunc).init;
-	}
-
-	init {
-		var messageField, inputField, okButton, cancelButton;
-		window = Window(\"\", Rect(400, 400, 400, 400));
-		window.userCanClose = false;
-		messageField = StaticText(window, Rect(2, 2, 396, 180));
-		messageField.string = message;
-		messageField.align = \\center;
-		inputField = TextField(window, Rect(2, 184, 396, 180));
-		inputField.string = inputText;
-		
-		okButton = Button(window, Rect(2, 370, 100, 28)).states_([[\"OK\"]]);
-		okButton.action = {
-			okFunc.(inputField.string);
-			window.close;
-		};
-		cancelButton = Button(window, Rect(298, 370, 100, 28)).states_([[\"CANCEL\"]]);
-		cancelButton.action = {
-			cancelFunc.(inputField.string);
-			window.close;
-		};
-		window.front;	
-	}
-}
-
-ListSelectDialog {
-	var message, items, okFunc, cancelFunc;
-	var window;
-	*new { | message = \"input\", items, okFunc, cancelFunc |
-		^this.newCopyArgs(message, items.asArray, okFunc, cancelFunc).init;
-	}
-	
-	init {
-		var messageField, listView, okButton, cancelButton;
-		window = Window(\"\", Rect(400, 400, 400, 600));
-		window.userCanClose = false;
-		messageField = StaticText(window, Rect(2, 2, 396, 80));
-		messageField.string = message;
-		messageField.align = \\center;
-		listView = ListView(window, Rect(2, 84, 396, 480));
-		listView.items = items;
-		
-		okButton = Button(window, Rect(2, 570, 100, 28)).states_([[\"OK\"]]);
-		okButton.action = {
-			okFunc.(listView.value, listView.items[listView.value]);
-			window.close;
-		};
-		cancelButton = Button(window, Rect(298, 570, 100, 28)).states_([[\"CANCEL\"]]);
-		cancelButton.action = {
-			cancelFunc.(listView.value, listView.items[listView.value]);
-			window.close;
-		};
-		window.front;	
-	}
-}",  DocProxy.prNew,  
-	"SCWindow.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCWindow.html",  "SCWindow			Cocoa user interface window	
-
-Inherits from: Object
-
-A class representing a user interface window in the Cocoa gui system on OSX.
-
-Besides providing a window in which to host SCView, SCWindow is also a canvas on which you can draw using Pen. See the SCPen file for many examples.
-
-For modal versions of SCWindow see SCModalWindow and SCModalSheet.
-
-See also: SCView, GUI, SCScrollTopView, SCPen, SCUserView, SCImage, SCModalWindow, SCModalSheet
-		SCVLayoutView, SCHLayoutView, FlowLayout
-	
-Some Important Issues Regarding SCWindow
-
-If you try to set parameters of a Window or a GUI widget from a  Routine , which uses the SystemClock by default, you must wrap it in a deferred function: { myWindow.bounds_( Rect(100,500,200,200) ) }.defer .  You do not need to use .defer, if you use the AppClock.
-
-Creation / Class Methods
-
-	*new(name, bounds, resizable, border, server, scroll)
-	
-		Creates a new SCWindow instance. You will need to call front (see below) on it before it will be visible.
-		name - The name that will be displayed in the title bar. An instance of String or Symbol. The default is 'panel'.
-		bounds - A Rect specifying the location and size of the window. The size does not include the title bar. N.B. Location is measured from the bottom left	of the screen. This is different from view location, which is measured from the upper left of the window (not including the title bar). The default is Rect(128, 64, 400, 400).
-		resizable - A Boolean indicating whether this window can be resized by the user. The default is true.
-		border - A Boolean indicating whether this window has a border. Borderless windows have no title bar and thus can only be closed in code. The default is true.
-		server - This is a dummy argument which is here to provide compatibility with SwingOSC and has no effect. See GUI for more details.
-		scroll - A Boolean indicating whether this window will add scrollers if its contents exceed its bounds. If this is set to true resize settings will be ignored for enclosed views. See SCScrollTopView. The default is false.
-		
-		w = Window.new;
-		w.front; // draw it and bring it to the front
-
-	*allWindows
-	
-		Returns an Array of all open SCWindows.
-		
-	*initAction
-	*initAction_(func)
-	
-		Get/set and action to be performed when any window is created.
-		func - An instance of Function or FunctionList
-		
-	*closeAll
-	
-		Closes all open SCWindows.
-		
-	*screenBounds
-	
-		Returns a Rect indicating the bounds of the current screen in pixels.
-			
-
-Instance Methods
-	
-	addFlowLayout(margin, gap)
-		
-		A convenience utility which sets view.decorator to FlowLayout and returns the decorator. See FlowLayout for examples.
-		margin - An instance of Point
-		gap - An instance of Point
-
-	acceptsClickThrough_(boolean)
-	acceptsClickThrough
-		
-		Set or return a Boolean indicating whether or not the window receives clicks when it is not front-most. The default is true.
-
-	acceptsMouseOver_(boolean)
-	acceptsMouseOver
-		
-		Set or return a Boolean indicating whether or not the window receives mouseOver events. The default is false.
-	
-	alpha_(alpha)
-	
-		Set the transparency of this window. alpha is a Float between 0.0 (invisible) and 1.0 (opaque).
-
-	alwaysOnTop_(bool)
-	alwaysOnTop
-		
-		Set or return a Boolean value indicating whether this window is always front-most. The default is false.
-		
-	bounds_(argBounds)
-	bounds
-		
-		Set or return a Rect corresponding to the location and size of the window. The size does not include the title bar. N.B. Location is measured from the bottom left of the screen. This is different from view location, which is measured from the upper left of the window (not including the title bar). Note that because of the way Cocoa applications work, setting the bounds doesn't complete until the application finishes its current application event cycle. Thus, if you check the bounds in the same chunk of code, the SCWindow will not yet return the updated values.
-		
-		(
-		w = Window.new(\"test\");
-		w.front;
-		w.bounds = Rect(150, 450, 150, 150);
-		w.bounds.postln; // still the old bounds
-		{ w.bounds.postln; nil }.defer(0.1); // next application event cycle
-		)
-		
-	close
-	
-		Closes this window.
-		
-	drawHook_(function)
-	drawHook
-		
-		Set or return a drawing Function. See Pen for more information and many examples.
-		
-	front
-	
-		Display this window and bring it to the front.		
-	
-	fullScreen
-	endFullScreen
-		
-		Puts the window in or out of full screen mode. Putting a window into fullScreen mode may change its bounds. 
-		Use the escape key to exit full screen mode and close the window.		
-		(
-		w = Window.new(border: false);
-		w.view.background_(Color.rand);
-		w.front;
-		w.fullScreen;
-		Button.new(w, Rect(200,200,200,200)).states_([[\"Close Window\"]]).action_({w.endFullScreen;w.close});
-		)
-	
-	isClosed
-	
-		Returns a Boolean indicating whether this window has been closed.
-		
-	minimize
-	
-		Minimize this window to the dock.
-		
-	name_(argName)
-	name
-		
-		Set or return a String corresponding to the text in this window's title bar.
-		
-	onClose_(val)
-	onClose
-		
-		Set or return a Function to be evaluated when the window is closed.	
-	
-	refresh
-	
-		Force this window and its contents to redraw. This is sometimes necessary in order to update drawing.
-		
-	setInnerExtent(width,height)
-	
-		Changes the size of this window while keeping the top left corner fixed. This is the usual desired behavior, as by default Cocoa uses a flipped coordinate system.
-	
-	userCanClose_(bool)
-	userCanClose
-		
-		Set or return a Boolean value indicating whether the user can close this window by clicking on its close button. The default is true.
-		
-	view
-	asView
-	
-		Returns this window's top level view, which contains all of its other views. This will be an instance of SCTopView or SCScrollTopView depending on the value passed to the scroll argument when the window was created. See *new above.
-				
-	currentSheet
-		
-		Returnscurrent modal sheet attached to this window, if it exists. See SCModalSheet
-		
-Examples
-
-
-
-//how to add views
-(
-var w;
-w = Window(\"my name is... panel\", Rect(128, 64, 340, 360));
-
-32.do({ arg i;
-	b = Button(w, Rect(rrand(20,300),rrand(20,300), 75, 24));
-	b.states = [[\"Start \"++i, Color.black, Color.rand],
-		[\"Stop \"++i, Color.white, Color.red]];
-});
-w.front;
-)
-
-// using a decorator on this window's top view
-(
-var w;
-w = Window(\"my name is... panel\", Rect(128, 64, 340, 360));
-
-w.view.decorator = FlowLayout(w.view.bounds);
-// w.addFlowLayout; // you can als write this instead of the line above
-
-w.view.background = Color(0.6,0.8,0.8);
-32.do({ arg i;
-	b = Button(w, Rect(rrand(20,300),rrand(20,300), 75, 24));
-	b.states = [[\"Start \"++i, Color.black, Color.rand],
-		[\"Stop \"++i, Color.white, Color.red]];
-});
-
-w.front;
-)
-
-// setting bounds
-// use screenbounds for precise placement from the top
-
-(
-x = Window.new(\"test\", Rect(100,Window.screenBounds.height-180,300,100));x.front;
-)
-
-// bounds.top refers to the bottom edge of the window,
-// measured from the bottom of the screen. Different than in View.
-x.bounds_(Rect(100,400,300,300));
-
-
-
-// borderless windows
-w = Window.new(border:false).front; // can't be manually closed
-w.close; // so close it in code
-
-// onClose
-(
-x = Window.new.front;
-x.alpha = 0.8;
-x.onClose_({ y = Synth.new(\\default) }); //close the window and the synth plays
-)
-x.close;
-y.free;
-
-// a window with scrollers
-(
-w = Window(scroll: true); // you must set this when the window is created
-c = Slider2D(w, Rect(0, 0, 1500, 300));
-d = Slider(w, Rect(0, 310, 20, 300));
-c.background = Color.grey.alpha = 0.6;
-d.background = Color.grey.alpha = 0.6;
-w.front;
-)
-
-
-// drawing dynamically in a window with Pen
-(
-var w, much = 0.02, string, synth;
-
-w = Window.new(\"swing\", Rect(100, 100, 300, 500)).front;
-w.view.background_(Color.new255(153, 255, 102).vary);
-
-string = \"swing \".dup(24).join;
-
-w.drawHook = Routine {	
-	var i = 0;
-	var size = 40;
-	var func = { |i, j| sin(i * 0.07 + (j * 0.0023) + 1.5pi) * much + 1 };
-	var scale;
-	Pen.font = Font(\"Helvetica-Bold\", 40);
-	loop {	
-		i = i + 1;
-		string.do {	|char, j|
-			
-			scale = func.value(i, j).dup(6);
-			
-			Pen.fillColor = Color.new255(0, 120, 120).vary;
-			Pen.matrix = scale * #[1, 0, 0, 1, 1, 0];
-			Pen.stringAtPoint(char.a",  DocProxy.prNew,  
-	"TextField.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/TextField.html",  "TextField			a cross-platform redirector for a GUI widget	
-
-Inherits from: Object : ViewRedirect
-
-This class will return the gui kit specific version of a TextField.
-
-See also: GUI, GUI-Classes, GUI-Overview
-
-Examples and Documentation:
-For examples and platform specific documentation follow these links.
-
-SwingGUI:      JSCTextField
-
-CocoaGUI:      SCTextField
-
-Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
-
-",  DocProxy.prNew,  
-	"SCTextField.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCTextField.html",  "SCTextField			a text field for entering text	
+",  DocProxy.prNew,  "SCTextField.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCTextField.html",  
+	"SCTextField			a text field for entering text	
 
 Inherits from: Object : SCView : SCStaticTextBase : SCNumberBox
 
@@ -6981,8 +6269,8 @@ a.background_(Color.grey);
 a.stringColor_(Color.white);
 a.align_(\\center);
 
-",  DocProxy.prNew,  
-	"StaticText.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/StaticText.html",  "StaticText			a cross-platform redirector for a GUI widget	
+",  DocProxy.prNew,  "StaticText.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/StaticText.html",  
+	"StaticText			a cross-platform redirector for a GUI widget	
 
 Inherits from: Object : ViewRedirect
 
@@ -6999,8 +6287,8 @@ CocoaGUI:      SCStaticText
 
 Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
 
-",  DocProxy.prNew,  
-	"SCStaticText.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCStaticText.html",  "SCStaticText			a view for displaying text	
+",  DocProxy.prNew,  "SCStaticText.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCStaticText.html",  
+	"SCStaticText			a view for displaying text	
 
 Inherits from: Object : SCView : SCStaticTextBase
 
@@ -7111,8 +6399,8 @@ w.onClose={r.stop; q.free; b.free }; //clean up if the window closes
 
 
 
-",  DocProxy.prNew,  
-	"Date.html",  "/Applications/SuperCollider/Help/Control/Date.html",  "Date			an object describing a point in time
+",  DocProxy.prNew,  "Date.html",  "/Applications/SuperCollider/Help/Control/Date.html",  
+	"Date			an object describing a point in time
 
 
 
@@ -7299,8 +6587,8 @@ Replaced by %.
 If a conversion specification does not correspond to any of the above, the behavior is undefined.
 
 
-",  DocProxy.prNew,  
-	"Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
+",  DocProxy.prNew,  "Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  
+	"Archive			storing objects to file	
 
 Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
 
@@ -7354,10 +6642,9 @@ q[\\favourite_sound].value;
 
 
 
-",  IdentityDictionary.prNew,  
-	Array.prNew(32),  "110409_164004",  Array.prNew(4),  DocProxy.prNew,  
-	" post ",  "",  DocProxy.prNew,  "DocSessionTests.scd",  
-	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
+",  IdentityDictionary.prNew,  Array.prNew(32),  "110409_164004",  
+	Array.prNew(4),  DocProxy.prNew,  " post ",  "",  
+	DocProxy.prNew,  "DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
 //:a save all docs under \"defaultDocSession\" in global archive
 
 Archive.global.put(\\defaultDocSession, Document.allDocuments collect: DocProxy(_));
@@ -7381,8 +6668,8 @@ Document(a.name, a.text);
 
 //:f reopen Doc from path
 Document.open(a.path);
-",  DocProxy.prNew,  "DocSession.sc",  
-	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
+",  
+	DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
 DocProxy {
 	var <name;
 	var <path;
@@ -7418,9 +6705,10 @@ DocSession {
 		
 	}
 	
-}",  DocProxy.prNew,  " post ",  
-	"asdfdfddfff1111111",  "Untitled 2",  Array.prNew(4),  Rect.prNew,  
-	Rect.prNew,  Rect.prNew,  Rect.prNew
+}",  
+	DocProxy.prNew,  " post ",  "asdfdfddfff1111111",  "Untitled 2",  
+	Array.prNew(4),  Rect.prNew,  Rect.prNew,  Rect.prNew,  
+	Rect.prNew
 ];
 p = [
 	// Archive
@@ -7430,14 +6718,14 @@ p = [
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	2, [ 'docSessions',  o[3],  'test',  o[279],  
-		'last_quit',  o[281],  nil,  nil,  
+	2, [ 'docSessions',  o[3],  'test',  o[233],  
+		'last_quit',  o[235],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'defaultDocSession',  o[282],  nil,  nil,  
+		'defaultDocSession',  o[236],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'currentDoc',  o[297],  'documentBrowserRects',  o[298] ],  
+		'currentDoc',  o[251],  'documentBrowserRects',  o[252] ],  
 	// IdentityDictionary
 	3, [ array: o[4],  size: 8,  
 		proto: nil,  parent: nil,  
@@ -7450,7 +6738,7 @@ p = [
 		nil,  nil,  '110405_231327',  o[22],  
 		'110405_231147',  o[77],  nil,  nil,  
 		nil,  nil,  'recent',  o[132],  
-		'110406_122927',  o[210],  '110405_233219',  o[224] ],  
+		'110406_122927',  o[163],  '110405_233219',  o[178] ],  
 	// DocSession
 	5, [ name: o[6],  docs: o[7] ],  
 	// Array
@@ -7594,10 +6882,8 @@ p = [
 	// DocSession
 	132, [ name: 'recent',  docs: o[133] ],  
 	// Array
-	133, [ o[134],  o[139],  o[144],  o[149],  
-		o[155],  o[160],  o[165],  o[170],  
-		o[175],  o[180],  o[185],  o[190],  
-		o[195],  o[200],  o[205] ],  
+	133, [ o[134],  o[139],  o[145],  o[151],  
+		o[157] ],  
 	// DocProxy
 	134, [ name: o[135],  path: nil,  
 		text: o[136],  bounds: o[137],  
@@ -7606,184 +6892,117 @@ p = [
 	137, [ left: 0.000000,  top: 258.000000,  
 		width: 500.000000,  height: 620.000000 ],  
 	// DocProxy
-	139, [ name: o[140],  path: nil,  
-		text: o[141],  bounds: o[142],  
-		timestamp: o[143] ],  
+	139, [ name: o[140],  path: o[141],  
+		text: o[142],  bounds: o[143],  
+		timestamp: o[144] ],  
 	// Rect
-	142, [ left: 500.000000,  top: 4.000000,  
+	143, [ left: 94.000000,  top: 1.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocProxy
-	144, [ name: o[145],  path: nil,  
-		text: o[146],  bounds: o[147],  
-		timestamp: o[148] ],  
+	145, [ name: o[146],  path: o[147],  
+		text: o[148],  bounds: o[149],  
+		timestamp: o[150] ],  
 	// Rect
-	147, [ left: 500.000000,  top: 4.000000,  
+	149, [ left: 524.000000,  top: 274.000000,  
+		width: 615.000000,  height: 604.000000 ],  
+	// DocProxy
+	151, [ name: o[152],  path: o[153],  
+		text: o[154],  bounds: o[155],  
+		timestamp: o[156] ],  
+	// Rect
+	155, [ left: 1038.000000,  top: -290.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocProxy
-	149, [ name: o[150],  path: o[151],  
-		text: o[152],  bounds: o[153],  
-		timestamp: o[154] ],  
+	157, [ name: o[158],  path: o[159],  
+		text: o[160],  bounds: o[161],  
+		timestamp: o[162] ],  
 	// Rect
-	153, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	155, [ name: o[156],  path: nil,  
-		text: o[157],  bounds: o[158],  
-		timestamp: o[159] ],  
-	// Rect
-	158, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	160, [ name: o[161],  path: nil,  
-		text: o[162],  bounds: o[163],  
-		timestamp: o[164] ],  
-	// Rect
-	163, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	165, [ name: o[166],  path: nil,  
-		text: o[167],  bounds: o[168],  
-		timestamp: o[169] ],  
-	// Rect
-	168, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	170, [ name: o[171],  path: nil,  
-		text: o[172],  bounds: o[173],  
-		timestamp: o[174] ],  
-	// Rect
-	173, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	175, [ name: o[176],  path: nil,  
-		text: o[177],  bounds: o[178],  
-		timestamp: o[179] ],  
-	// Rect
-	178, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	180, [ name: o[181],  path: nil,  
-		text: o[182],  bounds: o[183],  
-		timestamp: o[184] ],  
-	// Rect
-	183, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	185, [ name: o[186],  path: nil,  
-		text: o[187],  bounds: o[188],  
-		timestamp: o[189] ],  
-	// Rect
-	188, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	190, [ name: o[191],  path: nil,  
-		text: o[192],  bounds: o[193],  
-		timestamp: o[194] ],  
-	// Rect
-	193, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	195, [ name: o[196],  path: nil,  
-		text: o[197],  bounds: o[198],  
-		timestamp: o[199] ],  
-	// Rect
-	198, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	200, [ name: o[201],  path: nil,  
-		text: o[202],  bounds: o[203],  
-		timestamp: o[204] ],  
-	// Rect
-	203, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	205, [ name: o[206],  path: nil,  
-		text: o[207],  bounds: o[208],  
-		timestamp: o[209] ],  
-	// Rect
-	208, [ left: 500.000000,  top: 4.000000,  
+	161, [ left: 500.000000,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocSession
-	210, [ name: o[211],  docs: o[212] ],  
+	163, [ name: o[164],  docs: o[165] ],  
 	// Array
-	212, [ o[213],  o[217],  o[220] ],  
+	165, [ o[166],  o[171],  o[174] ],  
+	// DocProxy
+	166, [ name: o[167],  path: o[168],  
+		text: o[169],  bounds: o[170],  
+		timestamp: nil ],  
+	// Rect
+	170, [ left: 500,  top: 4.000000,  
+		width: 790.000000,  height: 872.000000 ],  
+	// DocProxy
+	171, [ name: o[172],  path: nil,  
+		text: o[173],  bounds: o[170],  
+		timestamp: nil ],  
+	// DocProxy
+	174, [ name: o[175],  path: o[176],  
+		text: o[177],  bounds: nil,  
+		timestamp: nil ],  
+	// DocSession
+	178, [ name: o[179],  docs: o[180] ],  
+	// Array
+	180, [ o[181],  o[185],  o[189],  o[193],  
+		o[197],  o[201],  o[205],  o[209],  
+		o[213],  o[217],  o[221],  o[225],  
+		o[229] ],  
+	// DocProxy
+	181, [ name: o[182],  path: o[183],  
+		text: o[184],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	185, [ name: o[186],  path: o[187],  
+		text: o[188],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	189, [ name: o[190],  path: o[191],  
+		text: o[192],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	193, [ name: o[194],  path: o[195],  
+		text: o[196],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	197, [ name: o[198],  path: o[199],  
+		text: o[200],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	201, [ name: o[202],  path: o[203],  
+		text: o[204],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	205, [ name: o[206],  path: o[207],  
+		text: o[208],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	209, [ name: o[210],  path: o[211],  
+		text: o[212],  bounds: nil,  
+		timestamp: nil ],  
 	// DocProxy
 	213, [ name: o[214],  path: o[215],  
 		text: o[216],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	217, [ name: o[218],  path: nil,  
-		text: o[219],  bounds: nil,  
+	217, [ name: o[218],  path: o[219],  
+		text: o[220],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	220, [ name: o[221],  path: o[222],  
-		text: o[223],  bounds: nil,  
-		timestamp: nil ],  
-	// DocSession
-	224, [ name: o[225],  docs: o[226] ],  
-	// Array
-	226, [ o[227],  o[231],  o[235],  o[239],  
-		o[243],  o[247],  o[251],  o[255],  
-		o[259],  o[263],  o[267],  o[271],  
-		o[275] ],  
-	// DocProxy
-	227, [ name: o[228],  path: o[229],  
-		text: o[230],  bounds: nil,  
+	221, [ name: o[222],  path: o[223],  
+		text: o[224],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	231, [ name: o[232],  path: o[233],  
-		text: o[234],  bounds: nil,  
+	225, [ name: o[226],  path: o[227],  
+		text: o[228],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	235, [ name: o[236],  path: o[237],  
-		text: o[238],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	239, [ name: o[240],  path: o[241],  
-		text: o[242],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	243, [ name: o[244],  path: o[245],  
-		text: o[246],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	247, [ name: o[248],  path: o[249],  
-		text: o[250],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	251, [ name: o[252],  path: o[253],  
-		text: o[254],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	255, [ name: o[256],  path: o[257],  
-		text: o[258],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	259, [ name: o[260],  path: o[261],  
-		text: o[262],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	263, [ name: o[264],  path: o[265],  
-		text: o[266],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	267, [ name: o[268],  path: o[269],  
-		text: o[270],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	271, [ name: o[272],  path: o[273],  
-		text: o[274],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	275, [ name: o[276],  path: o[277],  
-		text: o[278],  bounds: nil,  
+	229, [ name: o[230],  path: o[231],  
+		text: o[232],  bounds: nil,  
 		timestamp: nil ],  
 	// IdentityDictionary
-	279, [ array: o[280],  size: 1,  
+	233, [ array: o[234],  size: 1,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	280, [ nil,  nil,  nil,  nil,  
+	234, [ nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
@@ -7792,36 +7011,36 @@ p = [
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil ],  
 	// Array
-	282, [ o[283],  o[286],  o[290],  o[294] ],  
+	236, [ o[237],  o[240],  o[244],  o[248] ],  
 	// DocProxy
-	283, [ name: o[284],  path: nil,  
-		text: o[285],  bounds: nil,  
+	237, [ name: o[238],  path: nil,  
+		text: o[239],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	286, [ name: o[287],  path: o[288],  
-		text: o[289],  bounds: nil,  
+	240, [ name: o[241],  path: o[242],  
+		text: o[243],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	290, [ name: o[291],  path: o[292],  
-		text: o[293],  bounds: nil,  
+	244, [ name: o[245],  path: o[246],  
+		text: o[247],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	294, [ name: o[295],  path: nil,  
-		text: o[296],  bounds: nil,  
+	248, [ name: o[249],  path: nil,  
+		text: o[250],  bounds: nil,  
 		timestamp: nil ],  
 	// Array
-	298, [ o[299],  o[300],  o[301],  o[302] ],  
+	252, [ o[253],  o[254],  o[255],  o[256] ],  
 	// Rect
-	299, [ left: 0.000000,  top: 4.000000,  
+	253, [ left: 0.000000,  top: 4.000000,  
 		width: 150.000000,  height: 852.000000 ],  
 	// Rect
-	300, [ left: 160.000000,  top: 4.000000,  
+	254, [ left: 160.000000,  top: 4.000000,  
 		width: 800.000000,  height: 872.000000 ],  
 	// Rect
-	301, [ left: 970.000000,  top: 4.000000,  
+	255, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ],  
 	// Rect
-	302, [ left: 970.000000,  top: 4.000000,  
+	256, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ]
 ];
 prUnarchive(o,p);

@@ -1,11 +1,4 @@
-/*
-DocListWindow.stop;
-DocListWindow.toggle;
 
-Archive.global.at(\docSessions, \recent).inspect;
-
-
-*/
 DocListWindow {
 	classvar >default;
 	classvar <>docListWidth = 150;
@@ -13,10 +6,10 @@ DocListWindow {
 	var <docBrowser, <docBrowserView, <docListView, <codeListView;
 	var <docBounds, <docBrowserBounds, <listenerBounds;
 	var <allDocs, <selectedDoc;
-	var <codeStrings, <codeKeys;
+	var <codeStrings, <codeKeys, <codePositions;
 	var <menuItems;
-	// autosave all docs to archive every 60 seconds, per default
-	var <>autosave = false, <>autosave_rate = 60, autosave_routine; 
+	// autosave all docs to archive every 300 seconds (5 minutes), per default
+	var <>autosave = true, <>autosave_rate = 300, autosave_routine; 
 
 	*initClass {
 		this.makeUserMenuItems;	
@@ -27,9 +20,6 @@ DocListWindow {
 			this.toggle;
 		});
 
-	}
-	*saveSession { 
-		DocSession.newWithAllDocs("recent").save;
 	}
 
 	*default {
@@ -52,19 +42,22 @@ DocListWindow {
 	}
 
 	start {
+		if (Document.allDocuments.size > 1) {
+			DocProxy.loadDefaultBounds;		
+		};
 		this.makeGui;
 		{
 		NotificationCenter.register(Document, \opened, this, { | doc | 
 			{ this.addDoc(doc); }.defer(0.01); 	// must wait for Doc to get its name
 		});
 		NotificationCenter.register(Document, \closed, this, { | doc |
-			this.removeDoc(allDocs detect: { | d | d.doc === doc });
+			this.removeDoc(doc);
 		});
 		NotificationCenter.register(Document, \toFront, this, { | doc | 
-			this.selectDoc(allDocs detect: { | d | d.doc === doc });
+			this.selectDoc(doc);
 		});
 		NotificationCenter.register(Document, \endFront, this, { | doc | 
-			this.unselectDoc(allDocs detect: { | d | d.doc === doc });
+			this.unselectDoc(doc);
 		});
 		Document.allDocuments do: _.addNotifications;
 		}.defer(0.1); // defer needed when DocListWindow is started at SC startup
@@ -78,7 +71,7 @@ DocListWindow {
 		{
 			loop {
 				autosave_rate.wait;
-				if (autosave) { this.class.saveSession; };
+				if (autosave) { this.saveSnapshot; };
 			}	
 		}.fork(AppClock);
 	}
@@ -86,12 +79,8 @@ DocListWindow {
 	cmdPeriod { this.startAutosaveRoutine; }
 
 	addDoc { | doc |
-		// If  doc was already added by DocProxy, use it.
-		// Otherwise, create new DocWithBounds
-		var docWbounds;
-		docWbounds = allDocs detect: { | d | d.doc === doc };
-		if (docWbounds.isNil) { docWbounds = this makeDocWithBounds: doc };
-		allDocs = allDocs add: docWbounds;
+		allDocs = allDocs add: doc;
+		this.setDocBounds(doc, DocProxy.boundsFor(doc));
 		this.updateDocListView;
 		this.selectDoc(doc);
 	}
@@ -102,8 +91,11 @@ DocListWindow {
 		if (docBrowser.notNil) { docListView.items = allDocs collect: _.name; };
 	}
 	
-	makeDocWithBounds { | doc |
-		var dwb, bounds;
+	setDocBounds { | doc, bounds |
+		if (bounds.notNil) {
+			DocProxy.removeDocBounds(doc);
+			^doc.bounds = bounds;
+		};
 		if (docBrowser.bounds != docBrowserBounds) {
 			docBrowserBounds = docBrowser.bounds;
 			docListView.bounds = this.docListBounds;
@@ -111,11 +103,10 @@ DocListWindow {
 			this.updateDocBounds;
 		};
 		if (doc.isListener) {
-			bounds = listenerBounds;
+			doc.bounds = listenerBounds;
 		}{
-			bounds = docBounds;
+			doc.bounds = docBounds;
 		};
-		^DocWithBounds(doc).bounds_(bounds);
 	}
 
 	updateDocBounds {
@@ -132,7 +123,7 @@ DocListWindow {
 		this.updateDocListView;
 		{ 	// defer needed for closed document to register that it is no longer front!
 			newFront = Document.allDocuments detect: { | d | d.isFront; };
-			this.selectDoc(allDocs.detect({ | d | d.doc === newFront }));
+			this.selectDoc(doc);
 		}.defer(0.1);
 	}
 	
@@ -141,14 +132,38 @@ DocListWindow {
 		index = allDocs.indexOf(doc);
 		if (index.isNil) { ^this };
 		selectedDoc = doc;
-		Document.current = selectedDoc.doc;
+		Document.current = selectedDoc;
 		selectedDoc.front;
 		this.makeCodeList(doc);	
 		docListView.value = index;
 		codeListView.enabled = false;
+		this.activateDocMouseActions(doc);
+	}
+	
+	activateDocActions { | doc |
+		doc.mouseUpAction_({arg doc;
+			var line;
+			line = doc.currentLine;
+			if (line[0..2] == "//:") {
+				this.makeCodeList(doc);	
+				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
+			};
+		});
+		doc.keyDownAction = { | me, char, mod, ascii, key |
+			if (ascii == 14) {
+				this.makeCodeList(doc);	
+				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
+			};
+		};
 	}
 	
 	unselectDoc { | doc |
+		this.deactivateDocActions;
+	}
+
+	deactivateDocActions { | doc |
+		doc.mouseUpAction = nil;
+		doc.keyDownAction = nil;
 	}
 
 	makeGui {
@@ -221,12 +236,6 @@ DocListWindow {
 
 	makeUserMenuItems {
 		menuItems = [
-			CocoaMenuItem.addToMenu("User Menu", "Activate Code List", ["1", false, false], {
-				this.makeCodeList(Document.current);
-				docBrowser.front;
-				codeListView.enabled = true;
-				codeListView.focus;
-			}),
 			CocoaMenuItem.addToMenu("User Menu", "Open Session ...", ["o", true, false], {
 				DocSession.loadAndOpenDialog(fromArchive: false);
 			}),
@@ -241,9 +250,21 @@ DocListWindow {
 				DocSession.saveDialog(this.docProxies);
 			}),
 			CocoaMenuItem.addToMenu("User Menu", "Save to Session snapshot", ["s", true, true], {
-				DocSession(\recent, this.docProxies).save;
+				this.saveSnapshot;
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "Activate Code List", ["1", false, false], {
+				this.makeCodeList(Document.current);
+				docBrowser.front;
+				codeListView.enabled = true;
+				codeListView.focus;
 			})
 		]
+	}
+	
+	saveSnapshot {
+		postf("Saving snapshot at: % ... ", Date.getDate.stamp);
+		DocSession(\recent, this.docProxies).save;
+		" ... done".postln;
 	}
 
 	docProxies {
