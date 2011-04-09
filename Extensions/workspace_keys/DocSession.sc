@@ -3,16 +3,19 @@ DocProxy {
 	var <name;
 	var <path;
 	var <text;
-	
+	var <bounds;		// for restoring bounds of documents saved in sessions;
+	var <timestamp;	// timestamp of date last saved in archive. (Date instances themselves cannot be archived)
+		
 	*new { | document |
-		^this.newCopyArgs(document.name, document.path, document.text);
+		^this.newCopyArgs(document.name, document.path, document.text, document.bounds, Date.getDate.stamp);
 	}
 
 	open { | fromArchive = false |
 		var doc, extension;
+		if (Document.allDocuments.detect({ | d | d.name == name }).notNil) {
+			^postf("Document: % is already open\n", name);
+		};
 		doc = if (fromArchive) { this.openFromArchive } { this.openFromPath };
-		extension = doc.name.splitext.last;
-		if (extension == "scd" or: { extension == "sc" }) { doc.syntaxColorize };
 		^doc;
 	}
 
@@ -25,7 +28,11 @@ DocProxy {
 	}
 
 	openFromArchive {
-		^Document(name, text);
+		var doc, extension;
+		doc = Document(name, text);
+		extension = doc.name.splitext.last;
+		if (extension == "scd" or: { extension == "sc" }) { doc.syntaxColorize };
+		^doc;
 	}
 }
 
@@ -34,6 +41,7 @@ DocSession {
 	var <name;
 	var <docs;
 
+
 	*makeMenuItems {
 		CocoaMenuItem.addToMenu("User Menu", "Open Session ...", ["o", true, false], {
 			this.loadAndOpenDialog(fromArchive: false);
@@ -41,23 +49,30 @@ DocSession {
 		CocoaMenuItem.addToMenu("User Menu", "Open Session from Archive ...", ["O", true, false], {
 			this.loadAndOpenDialog(fromArchive: true);
 		});
+		CocoaMenuItem.addToMenu("User Menu", "Open Session snapshot", ["o", true, true], {
+			DocListWindow.openSnapshot;
+		});
 		CocoaMenuItem.addToMenu("User Menu", "Save Session ...", ["s", true, false], {
 			this.saveAllDialog;
 		});
-	
+		
+		CocoaMenuItem.addToMenu("User Menu", "Save to Session snapshot", ["s", true, true], {
+			DocListWindow.saveSnapshot;
+		});
+
 	}
 
 	*saveAllDialog {
 		TextDialog(
 			"input name of session",
 			Date.getDate.stamp,
-			{ | i | this.newWithAllDocs(i).save },
+			{ | name | this.newWithAllDocs(name).save },
 			{ "save cancelled".postln }
 		);
 	}
 
-	*newWithAllDocs { | i |
-		^this.newCopyArgs(i).getAllDocs;
+	*newWithAllDocs { | name |
+		^this.newCopyArgs(name).getAllDocs;
 	}
 	
 	getAllDocs {
@@ -84,7 +99,6 @@ DocSession {
 	}
 
 	*loadAndOpenDialog { | fromArchive = false |
-		Archive.global.at(sessionArchiveRoot).postln;
 		ListSelectDialog("Select a session", Archive.global.at(sessionArchiveRoot).keys.asArray,
 			{ | i, name |
 				this.load(name).openAllDocs(fromArchive);
