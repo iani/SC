@@ -3,7 +3,7 @@ DocProxy {
 	var <name;
 	var <path;
 	var <text;
-	var <bounds;		// for restoring bounds of documents saved in sessions;
+	var <>bounds;		// for restoring bounds of documents saved in sessions;
 	var <timestamp;	// timestamp of date last saved in archive. (Date instances themselves cannot be archived)
 		
 	*new { | document |
@@ -41,48 +41,28 @@ DocSession {
 	var <name;
 	var <docs;
 
-
-	*makeMenuItems {
-		CocoaMenuItem.addToMenu("User Menu", "Open Session ...", ["o", true, false], {
-			this.loadAndOpenDialog(fromArchive: false);
-		});
-		CocoaMenuItem.addToMenu("User Menu", "Open Session from Archive ...", ["O", true, false], {
-			this.loadAndOpenDialog(fromArchive: true);
-		});
-		CocoaMenuItem.addToMenu("User Menu", "Open Session snapshot", ["o", true, true], {
-			DocListWindow.openSnapshot;
-		});
-		CocoaMenuItem.addToMenu("User Menu", "Save Session ...", ["s", true, false], {
-			this.saveAllDialog;
-		});
-		
-		CocoaMenuItem.addToMenu("User Menu", "Save to Session snapshot", ["s", true, true], {
-			DocListWindow.saveSnapshot;
-		});
-
+	*new { | name, docProxies |
+		^this.newCopyArgs(name, docProxies ?? { this.getAllDocs });
 	}
 
-	*saveAllDialog {
+	*getAllDocs { 
+		^Document.allDocuments collect: DocProxy(_);	
+	}
+
+	*saveDialog { | docProxies |
 		TextDialog(
 			"input name of session",
 			Date.getDate.stamp,
-			{ | name | this.newWithAllDocs(name).save },
+			{ | name | this.new(name, docProxies).save },
 			{ "save cancelled".postln }
 		);
-	}
-
-	*newWithAllDocs { | name |
-		^this.newCopyArgs(name).getAllDocs;
-	}
-	
-	getAllDocs {
-		docs = Document.allDocuments.select({ | d | d.isListener.not }).collect(DocProxy(_));
 	}
 	
 	save {
 		Archive.global.put(sessionArchiveRoot, name.asSymbol, this);
 		Archive.write;
 	}
+
 	
 	*load { | name |
 		^Archive.global.at(sessionArchiveRoot, name.asSymbol);
