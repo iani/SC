@@ -5476,7 +5476,7 @@ DocSession {
 	}
 	
 }",  DocProxy.prNew,  " post ",  
-	"asdfdfddfff1111111",  "DocListWindow.sc",  Array.prNew(4),  Rect.prNew,  
+	"asdfdfddfff1111111",  " post ",  Array.prNew(4),  Rect.prNew,  
 	Rect.prNew,  Rect.prNew,  Rect.prNew
 ];
 p = [
