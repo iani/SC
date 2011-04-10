@@ -3752,41 +3752,7 @@ DocListWindow {
 				this.saveSnapshot;
 			}),
 			CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
-				this.makeCodeList(Document.current);
-				docBrowser.front;
-				codeListView.enabled = true;
-				codeListView.focus;
-			}),
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Make Performance Window\", [\"2\", false, false], {
-				this.makePerformanceWindow;
-			})
-		]
-	}
-
-	saveSnapshot {
-		postf(\"Saving snapshot at: % ... \", Date.getDate.stamp);
-		DocSession(\\recent, this.docProxies).save;
-		\" ... done\".postln;
-	}
-
-	docProxies {
-		^allDocs collect: DocProxy(_);
-	}
-
-	removeUserMenuItems {
-		if (menuItems.notNil) { menuItems do: _.remove; };
-	}
-
-	docListBounds {
-		^Rect(2, 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
-	}
-
-	codeListBounds {
-		^Rect(2, docBrowserBounds.height / 2 - 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
-	}
-
-	makePerformanceWindow { ^PerformanceWindow.makeGui(this); }
-}",  Rect.prNew,  
+				this.makeCodeList(Document.cu",  Rect.prNew,  
 	"110410_034523",  DocProxy.prNew,  "PerformanceWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/PerformanceWindow.sc",  
 	"
 PerformanceWindow {
