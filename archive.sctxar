@@ -3466,8 +3466,8 @@ q[\\favourite_sound].value;
 
 
 ",  
-	DocSession.prNew,  Array.prNew(3),  DocProxy.prNew,  " post ",  
-	"Saving snapshot at: 110410_033523 ...  ... doneSaving snapshot at: 110410_034023 ...  ... done",  Rect.prNew,  "110410_034523",  DocProxy.prNew,  
+	DocSession.prNew,  Array.prNew(5),  DocProxy.prNew,  " post ",  
+	"[ 1, beta ][ 1, beta ][ 2, gamma ][ 0, alpha ][ 3, Alpha ][ 1, beta ][ 0, alpha ][ 3, Alpha ][ 3, Alpha ][ 1, beta ][ 1, beta ][ 1, beta ][ 4, beste ][ 2, gamma ][ 5, gimli ][ 6, 01 ][ 6, 01 ][ 6, 01 ][ 7, 02 ][ 0, alpha ][ 9, ; semicolon ][ 10, - hyphen ][ 0, alpha ][ 2, gamma ][ 3, Alpha ][ 1, beta ][ 0, alpha ][ 1, beta ][ 2, gamma ][ 3, Alpha ][ 1, beta ][ 2, gamma ][ 5, gimli ][ 1, beta ][ 1, beta ][ 4, beste ][ 2, gamma ][ 5, gimli ][ 6, 01 ][ 6, 01 ][ 6, 01 ][ 7, 02 ][ 9, ; semicolon ][ 1, beta ][ 0, alpha ][ 2, gamma ][ 3, Alpha ][ 1, beta ][ 3, Alpha ][ 1, beta ][ 2, gamma ][ 3, Alpha ][ 0, alpha ][ 1, beta ]",  Rect.prNew,  "110410_133754",  DocProxy.prNew,  
 	"DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "
 DocListWindow {
 	classvar >default;
@@ -3753,112 +3753,318 @@ DocListWindow {
 			}),
 			CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
 				this.makeCodeList(Document.cu",  Rect.prNew,  
-	"110410_034523",  DocProxy.prNew,  "PerformanceWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/PerformanceWindow.sc",  
-	"
-PerformanceWindow {
-	classvar default;
-	var <docListWindow;
-	var <window;
-	var <docPane;
-	var <codePane;
-	var <codeParts, <codeKeys;
-	var <docPaneSearchString, keystrokeWaitInterval = 1.0;
+	"110410_133754",  DocProxy.prNew,  "DocPoller.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocPoller.sc",  
+	"/*
+DocPoller.start;
+DocPoller.stop;
+DocPoller.toggle;
+
+DocPoller.poller;
+*/
+
+DocPoller {
+	classvar dependants;
+	classvar <poller;
 	
-	*makeGui { | docListWindow |
-		if (default.isNil) { default = this.new(docListWindow) };
-		default.makeGui;
+	*makeUserMenuItems {
+		CocoaMenuItem.addToMenu(\"User Menu\", \"Toggle DocPoller\", [\"0\", false, false], { 
+			this.toggle;
+		});
+
+	}
+	*toggle {
+		if (this.isRunning) { this.stop } { this.start }
 	}
 	
-	*new { | docListWindow |
-		^this.newCopyArgs(docListWindow).init;	
+	*isRunning { ^poller.notNil }
+	
+	*start {
+		this.makeUserMenuItems;
+		if (this.isRunning.not) { this.startPoller };
+		if (dependants.size == 0) { this.makeWindow };
+		CmdPeriod remove: this; // prevent adding self twice
+		CmdPeriod add: this;
 	}
 	
-	init {
-		NotificationCenter.register(docListWindow, \\stopped, this, {
-			this.stop;
-		});
-		NotificationCenter.register(docListWindow, \\items, this, { | ... items |
-			docPane.items = items;
-		});
-		NotificationCenter.register(docListWindow, \\index, this, { | index |
-			docPane.value = index;
-		});
-		this.makeGui;
+	*startPoller {
+		poller = {
+			loop {
+				0.003.wait;
+				dependants do: { | d | d.update(Document.allDocuments) };
+			};
+		}.fork(AppClock);
+	}
+	
+	*cmdPeriod {
+		this.pollerStopped;
+		this.startPoller;
 	}
 
-	stop { window.close; }
 
-	makeGui {
-		if (window.notNil) { ^window.front };
-		window = Window(\"Code Performer\", Rect(300, 500, 500, 500));
-		window.onClose = { this.closed };
-		docPane = ListView(window, Rect(2, 2, 248, 496));
-		docPane.resize = 4;
-		docPane.items = docListWindow.docListView.items;
-		docPane.action = { | me | 
-			this.selectDoc(me.value);	
+	*dependants { ^dependants.asArray }
+
+	*makeWindow { DocListWindow.new.add }
+
+	*stop {
+		if (this.isRunning) { 
+			poller.stop;
+			this.pollerStopped;
 		};
-		docPane.keyDownAction = { | me, char, mod, ascii, key |
-			this.selectDocByKey(char, mod, ascii, key);
-		};
-		codePane = ListView(window, Rect(250, 2, 248, 496));
-		codePane.resize = 4;
-		codePane.action = { | me | this.performCodeAt(me.value); };
-		codePane.keyDownAction = { | me, char |
-			this.selectAndPerformCodeAt(codeKeys indexOf: char);
-		};
-		docPane.valueAction = docListWindow.docListView.value;
-		window.front;
-		docPane.focus;
-		^window;
+		dependants.copy do: _.close;	
+		CmdPeriod remove: this;
 	}
-
-	selectDoc { | index |
-		var items;
-		#items, codeParts, codeKeys = docListWindow.parseCode(docListWindow.allDocs[index]);
-		docPane.value = index;
-		codePane.items = items;
+	
+	*pollerStopped { poller = nil }
+	
+	*add { | dependant |
+		dependants = dependants add: dependant;	
 	}
+	
+	*remove { | dependant |
+		dependants remove: dependant;	
+	}
+}",  Rect.prNew,  "110410_133754",  DocProxy.prNew,  
+	"MultiKeySearch.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/MultiKeySearch.sc",  "/*
 
-	selectDocByKey { | char, mod, unicode, key |
+//:a Activate found item immediately
+if (w.notNil) { w.close };
+w = Window.new;
+StaticText(w, Rect(2, 2, 300, 20)).string = \"Selected items are executed immediately\";
+l = ListView(w, Rect(2, 25, 300, 300));
+l.items = [\"alpha\", \"beta\", \"gamma\", \"Alpha\", \"beste\", \"gimli\", \"01\", \"02\", \". a point\", \"; semicolon\", \"- hyphen\"];
+l.keyDownAction = MultiKeySearch.new;
+l.action = { | me | [me.value, me.items[me.value]].postln; };
+
+w.front;
+l.focus;
+
+//:b Activate found item immediately
+if (w.notNil) { w.close };
+w = Window.new;
+StaticText(w, Rect(2, 2, 300, 20)).string = \"Hit return to act on the selected item\";
+l = ListView(w, Rect(2, 25, 300, 300));
+l.items = [\"alpha\", \"beta\", \"gamma\", \"Alpha\", \"beste\", \"gimli\", \"01\", \"02\", \". a point\", \"; semicolon\", \"- hyphen\"];
+l.keyDownAction = MultiKeySearch(false); // or: MultiKeySearcy(doImmediately: false);
+l.action = { | me | [me.value, me.items[me.value]].postln; };
+
+w.front;
+l.focus;
+
+//:r rest
+*/
+
+// Note: The dot character (.) returns selects the first item in the list per default. This has not been changed here.
+
+
+MultiKeySearch {
+	var <>doImmediately = true;
+	var <>keystrokeWaitInterval = 1.0;
+	var <string;
+	var <done = false;
+
+	*new { | doImmediately = true, keystrokeWaitInterval = 1.0 |
+		^this.newCopyArgs(doImmediately, keystrokeWaitInterval);
+	}
+	
+	value { | listview, char, mod, unicode, key |
 		var items, match, endPos;
-		if (unicode == 16rF700, { docPane.valueAction = this.value - 1; ^this });
-		if (unicode == 16rF703, { this.valueAction = this.value + 1; ^this });
-		if (unicode == 16rF701, { this.valueAction = this.value + 1; ^this });
-		if (unicode == 16rF702, { this.valueAction = this.value - 1; ^this });
-		if (docPaneSearchString.isNil or: { unicode == 127 }) {
-			docPaneSearchString = char.asString;
-			{ docPaneSearchString = nil }.defer(keystrokeWaitInterval);
+		if (unicode == 13) { listview.doAction; done = true; ^this };
+		if (unicode == 16rF700, { listview.valueAction = listview.value - 1; ^this });
+		if (unicode == 16rF703, { listview.valueAction = listview.value + 1; ^this });
+		if (unicode == 16rF701, { listview.valueAction = listview.value + 1; ^this });
+		if (unicode == 16rF702, { listview.valueAction = listview.value - 1; ^this });
+		if (string.isNil or: { unicode == 127 }) {
+			string = char.asString;
+			{ string = nil; }.defer(keystrokeWaitInterval);
 		}{
-			docPaneSearchString = docPaneSearchString ++ char.asString;
+			string = string ++ char.asString;
 		};
-		endPos = docPaneSearchString.size;
-		items = docPane.items;
+		endPos = string.size;
+		items = listview.items;
 		match = items detect: { | i |
-			docPaneSearchString.matchRegexp(i, 0, endPos);
+			string.matchRegexp(i, 0, endPos);
 		};
-		if (match.notNil) { this.selectDoc(items indexOf: match) };
+		if (match.notNil) {
+			listview.value = items indexOf: match;
+			if (doImmediately) { listview.doAction };
+		};
+	} 
+	
+}",  Rect.prNew,  
+	"110410_133754",  DocProxy.prNew,  "SCListView.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCListView.html",  
+	"SCListView			a list view	
+
+Inherits from: Object : SCView : SCControlView
+
+See also: SCPopUpMenu
+
+Some Important Issues Regarding SCListView
+
+By default, SCSlider will respond only to drags where the drag contains a Number.
+
+Creation / Class Methods
+
+	*new (parent, bounds)
+	
+		parent - The parent view.
+		bounds - An instance of Rect, or a Point indicating width@height.
 		
-	}
+		(
+		w = Window.new.front;
+		v = ListView(w,Rect(10,10,120,200));
+		v.items = [ \"item 1\", \"item 2\", \"item 3\", \"item 4\", \"item 5\"];
+		v.action = { arg q; [ q.value, v.items[ q.value ] ].postln;	};
+		)
 
-	selectAndPerformCodeAt { | index |
-		if (index.isNil) { ^this };
-		codePane.value = index;
-		this.performCodeAt(index);	
-	}
+Accessing Instance and Class Variables
 
-	performCodeAt { | index |
-		if (index.isNil) { ^this };
-		codeParts[index].interpret;
-	}
+	items
+	items_ (array)
+	
+		array - An Array of Strings or Symbols, which make up the items in the pop up menu.
+		
+	item
+	
+		Returns items.at(this.value)
+		
+	value
+	value_ (val)
+	
+		Gets/sets the index of the currently highlighted item. This will not do the action.
+		val - The index of an item in the items array .
 
-	closed {
-		window = nil;
-		NotificationCenter.unregister(docListWindow, \\stopped, this);
-		NotificationCenter.unregister(docListWindow, \\items, this);
-		NotificationCenter.unregister(docListWindow, \\index, this);
-	}
-}",  Rect.prNew,  "110410_034523",  DocSession.prNew,  
+	valueAction_ (val)
+	
+		Sets the menu to highlight the item at index val, and evaluates action (see SCView), if the value has changed.
+		val - The index of an item in the items array .
+		
+	enterKeyAction_(arg1)
+	enterKeyAction
+		
+		Instead of, or additionally to defining an action (see SCView), you can define an action which will be performed only if you hit the enter key while the list view is focussed.
+				
+Customizing Appearance
+
+	font
+	font_ (argFont)
+	
+		Sets the Font of the list. Default value is the default font: Font.default .
+		argFont - An instance of Font.
+
+	stringColor
+	stringColor_ (color)
+	
+		Set the string Color for the unselected items in the list .
+		color - An instance of Color.
+				
+	selectedStringColor
+	selectedStringColor_ (color)
+	
+		Set the string Color for the selected item .
+		color - An instance of Color.
+
+	hiliteColor
+	hiliteColor_ (color)
+	
+		Set the background Color for the selected item .
+		color - An instance of Color.
+
+	colors
+	colors_(incolors)
+		
+		Set the background Color for the items.
+		incolor - An Array of Colors
+
+Subclassing and Internal Methods
+	The following methods are usually not used directly or are called by a primitive. Programmers can still call or override these as needed.
+
+	defaultKeyDownAction (char, modifiers, unicode)
+	
+		The default keydown actions are:
+		
+		key				action				comment
+		\" \" 				value + 1	with action	space
+		\\r 				enterKeyAction
+		\\n, 				enterKeyAction	
+		3.asAscii,			enterKeyAction			(enter key or cmd-C on Mac OSX )
+		unicode 16rF700, 	value - 1 with action		up arrow
+		unicode 16rF703, 	value + 1 with action		right arrow
+		unicode 16rF701, 	value + 1 with action	down arrow
+		unicode 16rF702, 	value - 1 with action		left arrow
+
+	properties
+	
+		A list of properties to which this view responds. See SCView.
+		
+		returns:
+		[ \\bounds, \\visible, \\enabled, \\canFocus, \\resize, \\background, \\minWidth, \\maxWidth, \\minHeight, \\maxHeight, \\value, \\font, \\items, \\stringColor, \\align, \\itemColors, \\focusColor ]
+
+	init (argParent, argBounds)
+	
+		Overrides SCView:init.
+		
+	defaultGetDrag
+	
+		The method called by default when initiating a drag from an SCListView. Returns the same as value.
+			
+	defaultCanReceiveDrag
+	
+		The method called by default when attempting to drop a drag in this object. Returns the result of currentDrag.isNumber.
+				
+	defaultReceiveDrag
+	
+		The default method called when a drag has been recieved. Performs valueAction_ with the currentDrag as an argument.
+
+Examples
+
+(
+
+w = Window.new.front;
+
+v = ListView(w,Rect(10,10,120,70))
+	.items_([ \"SinOsc\", \"Saw\", \"LFSaw\", \"WhiteNoise\", \"PinkNoise\", \"BrownNoise\", \"Osc\" ])
+	.background_(Color.clear)
+	.hiliteColor_(Color.green(alpha:0.6))
+	.action_({ arg sbs;
+		[sbs.value, v.items[sbs.value]].postln;	// .value returns the integer
+	});
+)
+
+
+// Sound example use to switch Filters
+(
+Server.default = s = Stethoscope.defaultServer.boot;
+s.waitForBoot({
+	var f, freq, ww;
+	n={r=LFSaw.ar([220, 530],0,0.3)*LFPulse.ar(12,0,0.3,0.4); [r[0],Delay2.ar(r[1])]}.play;
+	freq={SinOsc.kr(0.5,0,4000,4200)}.play;
+	w=Window(\"Filters\").front;
+	v = ListView(w,Rect(10,10,180,120))
+		.items_([ \"No Filter\",\"RLPF\", \"RHPF\", \"BPF\", \"Resonz\", \"MoogFF\" ])
+		.background_(Color.clear)
+		.hiliteColor_(Color.green(alpha:0.6))
+		.action_({arg v;
+			v.value.switch(
+			0,{try{f.free};\"test\".postln},
+			1,{try{f.free};f={ReplaceOut.ar(0,RLPF.ar(In.ar(0,2),In.kr(0,1),0.2,0.3))}.play(addAction:\\addToTail)},
+			2,{try{f.free};f={ReplaceOut.ar(0,RHPF.ar(In.ar(0,2),In.kr(0,1),0.2,0.3))}.play(addAction:\\addToTail)},
+			3,{try{f.free};f={ReplaceOut.ar(0,BPF.ar(In.ar(0,2),In.kr(0,1),0.2,1.5))}.play(addAction:\\addToTail)},
+			4,{try{f.free};f={ReplaceOut.ar(0,Resonz.ar(In.ar(0,2),In.kr(0,1),0.2,2))}.play(addAction:\\addToTail)},
+			5,{try{f.free};f={ReplaceOut.ar(0,MoogFF.ar(In.ar(0,2),In.kr(0,1),1.5))}.play(addAction:\\addToTail)}
+			);
+		
+		});
+		
+	ww=FreqScope.new(400, 200, 0);
+	w.bounds=Rect(50,Window.screenBounds.height-300,200,200);
+	ww.window.bounds=ww.window.bounds.moveTo(255,Window.screenBounds.height-328);
+	CmdPeriod.doOnce({{ww.window.close}.defer(0.5);w.close;});
+			//defer or crash, because FreqScopeWindow Class contains its own routine for cleaning up on CmdPeriod
+	w.onClose_({n.free;f.free;freq.free});
+});
+)
+
+",  Rect.prNew,  "110410_133754",  DocSession.prNew,  
 	"110406_122927",  Array.prNew(3),  DocProxy.prNew,  "Archive.html",  
 	"/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
 
@@ -5881,14 +6087,14 @@ p = [
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	2, [ 'docSessions',  o[3],  'test',  o[221],  
-		'last_quit',  o[223],  nil,  nil,  
+	2, [ 'docSessions',  o[3],  'test',  o[233],  
+		'last_quit',  o[235],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'defaultDocSession',  o[224],  nil,  nil,  
+		'defaultDocSession',  o[236],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'currentDoc',  o[239],  'documentBrowserRects',  o[240] ],  
+		'currentDoc',  o[251],  'documentBrowserRects',  o[252] ],  
 	// IdentityDictionary
 	3, [ array: o[4],  size: 8,  
 		proto: nil,  parent: nil,  
@@ -5901,7 +6107,7 @@ p = [
 		nil,  nil,  '110405_231327',  o[22],  
 		'110405_231147',  o[77],  nil,  nil,  
 		nil,  nil,  'recent',  o[132],  
-		'110406_122927',  o[151],  '110405_233219',  o[166] ],  
+		'110406_122927',  o[163],  '110405_233219',  o[178] ],  
 	// DocSession
 	5, [ name: o[6],  docs: o[7] ],  
 	// Array
@@ -6045,7 +6251,8 @@ p = [
 	// DocSession
 	132, [ name: 'recent',  docs: o[133] ],  
 	// Array
-	133, [ o[134],  o[139],  o[145] ],  
+	133, [ o[134],  o[139],  o[145],  o[151],  
+		o[157] ],  
 	// DocProxy
 	134, [ name: o[135],  path: nil,  
 		text: o[136],  bounds: o[137],  
@@ -6058,7 +6265,7 @@ p = [
 		text: o[142],  bounds: o[143],  
 		timestamp: o[144] ],  
 	// Rect
-	143, [ left: 94.000000,  top: 1.000000,  
+	143, [ left: 500.000000,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocProxy
 	145, [ name: o[146],  path: o[147],  
@@ -6067,44 +6274,46 @@ p = [
 	// Rect
 	149, [ left: 500.000000,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
-	// DocSession
-	151, [ name: o[152],  docs: o[153] ],  
-	// Array
-	153, [ o[154],  o[159],  o[162] ],  
 	// DocProxy
-	154, [ name: o[155],  path: o[156],  
-		text: o[157],  bounds: o[158],  
-		timestamp: nil ],  
+	151, [ name: o[152],  path: o[153],  
+		text: o[154],  bounds: o[155],  
+		timestamp: o[156] ],  
 	// Rect
-	158, [ left: 500,  top: 4.000000,  
+	155, [ left: 500.000000,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocProxy
-	159, [ name: o[160],  path: nil,  
-		text: o[161],  bounds: o[158],  
+	157, [ name: o[158],  path: o[159],  
+		text: o[160],  bounds: o[161],  
+		timestamp: o[162] ],  
+	// Rect
+	161, [ left: 500.000000,  top: 4.000000,  
+		width: 790.000000,  height: 872.000000 ],  
+	// DocSession
+	163, [ name: o[164],  docs: o[165] ],  
+	// Array
+	165, [ o[166],  o[171],  o[174] ],  
+	// DocProxy
+	166, [ name: o[167],  path: o[168],  
+		text: o[169],  bounds: o[170],  
+		timestamp: nil ],  
+	// Rect
+	170, [ left: 500,  top: 4.000000,  
+		width: 790.000000,  height: 872.000000 ],  
+	// DocProxy
+	171, [ name: o[172],  path: nil,  
+		text: o[173],  bounds: o[170],  
 		timestamp: nil ],  
 	// DocProxy
-	162, [ name: o[163],  path: o[164],  
-		text: o[165],  bounds: nil,  
+	174, [ name: o[175],  path: o[176],  
+		text: o[177],  bounds: nil,  
 		timestamp: nil ],  
 	// DocSession
-	166, [ name: o[167],  docs: o[168] ],  
+	178, [ name: o[179],  docs: o[180] ],  
 	// Array
-	168, [ o[169],  o[173],  o[177],  o[181],  
-		o[185],  o[189],  o[193],  o[197],  
-		o[201],  o[205],  o[209],  o[213],  
-		o[217] ],  
-	// DocProxy
-	169, [ name: o[170],  path: o[171],  
-		text: o[172],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	173, [ name: o[174],  path: o[175],  
-		text: o[176],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	177, [ name: o[178],  path: o[179],  
-		text: o[180],  bounds: nil,  
-		timestamp: nil ],  
+	180, [ o[181],  o[185],  o[189],  o[193],  
+		o[197],  o[201],  o[205],  o[209],  
+		o[213],  o[217],  o[221],  o[225],  
+		o[229] ],  
 	// DocProxy
 	181, [ name: o[182],  path: o[183],  
 		text: o[184],  bounds: nil,  
@@ -6145,12 +6354,24 @@ p = [
 	217, [ name: o[218],  path: o[219],  
 		text: o[220],  bounds: nil,  
 		timestamp: nil ],  
+	// DocProxy
+	221, [ name: o[222],  path: o[223],  
+		text: o[224],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	225, [ name: o[226],  path: o[227],  
+		text: o[228],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	229, [ name: o[230],  path: o[231],  
+		text: o[232],  bounds: nil,  
+		timestamp: nil ],  
 	// IdentityDictionary
-	221, [ array: o[222],  size: 1,  
+	233, [ array: o[234],  size: 1,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	222, [ nil,  nil,  nil,  nil,  
+	234, [ nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
@@ -6159,36 +6380,36 @@ p = [
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil ],  
 	// Array
-	224, [ o[225],  o[228],  o[232],  o[236] ],  
+	236, [ o[237],  o[240],  o[244],  o[248] ],  
 	// DocProxy
-	225, [ name: o[226],  path: nil,  
-		text: o[227],  bounds: nil,  
+	237, [ name: o[238],  path: nil,  
+		text: o[239],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	228, [ name: o[229],  path: o[230],  
-		text: o[231],  bounds: nil,  
+	240, [ name: o[241],  path: o[242],  
+		text: o[243],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	232, [ name: o[233],  path: o[234],  
-		text: o[235],  bounds: nil,  
+	244, [ name: o[245],  path: o[246],  
+		text: o[247],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	236, [ name: o[237],  path: nil,  
-		text: o[238],  bounds: nil,  
+	248, [ name: o[249],  path: nil,  
+		text: o[250],  bounds: nil,  
 		timestamp: nil ],  
 	// Array
-	240, [ o[241],  o[242],  o[243],  o[244] ],  
+	252, [ o[253],  o[254],  o[255],  o[256] ],  
 	// Rect
-	241, [ left: 0.000000,  top: 4.000000,  
+	253, [ left: 0.000000,  top: 4.000000,  
 		width: 150.000000,  height: 852.000000 ],  
 	// Rect
-	242, [ left: 160.000000,  top: 4.000000,  
+	254, [ left: 160.000000,  top: 4.000000,  
 		width: 800.000000,  height: 872.000000 ],  
 	// Rect
-	243, [ left: 970.000000,  top: 4.000000,  
+	255, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ],  
 	// Rect
-	244, [ left: 970.000000,  top: 4.000000,  
+	256, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ]
 ];
 prUnarchive(o,p);
