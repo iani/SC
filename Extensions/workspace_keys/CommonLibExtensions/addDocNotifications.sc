@@ -1,15 +1,23 @@
 
 + Document {
-	*prBasicNew { 
-		^super.new.addNotifications;
+	*prBasicNew {
+		^super.new.notify;
 	}
 
+	notify { 	NotificationCenter.notify(Document, \opened, this); }
 
 	addNotifications {
-		NotificationCenter.notify(Document, \opened, this);		this.toFrontAction = {
+		this.toFrontAction = {
 			NotificationCenter.notify(Document, \toFront, this); 
 		};
 		this.endFrontAction = { 
-			NotificationCenter.notify(Document, \endFront, this); };		this.onClose = { NotificationCenter.notify(Document, \closed, this); };
+			NotificationCenter.notify(Document, \endFront, this); };
+		this.onClose = { NotificationCenter.notify(Document, \closed, this); };
+	}
+
+	removeNotifications { // not used by DocListWindow. May be useful for other purposes
+		this.toFrontAction = nil;
+		this.endFrontAction = nil;
+		this.onClose = nil;
 	}
 }
