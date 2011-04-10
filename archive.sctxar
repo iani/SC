@@ -3466,229 +3466,9 @@ q[\\favourite_sound].value;
 
 
 ",  
-	DocSession.prNew,  Array.prNew(12),  DocProxy.prNew,  " post ",  
-	"findStringNo implementations of 'findString'.true
-
-\"c\".matchRegexp(\"abcdefg\", 0, 5)",  Rect.prNew,  "110410_031355",  DocProxy.prNew,  
-	"0_first.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/Help/0_first.scd",  "//:a something
-
-//:b something else
-
-Document",  Rect.prNew,  
-	"110410_031355",  DocProxy.prNew,  "addDocNotifications.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/CommonLibExtensions/addDocNotifications.sc",  
-	"
-+ Document {
-	*prBasicNew {
-		^super.new.notify;
-	}
-
-	notify { 	NotificationCenter.notify(Document, \\opened, this); }
-
-	addNotifications {
-		this.toFrontAction = {
-			NotificationCenter.notify(Document, \\toFront, this); 
-		};
-		this.endFrontAction = { 
-			NotificationCenter.notify(Document, \\endFront, this); };
-		this.onClose = { NotificationCenter.notify(Document, \\closed, this); };
-	}
-
-	removeNotifications { // not used by DocListWindow. May be useful for other purposes
-		this.toFrontAction = nil;
-		this.endFrontAction = nil;
-		this.onClose = nil;
-	}
-}",  Rect.prNew,  "110410_031355",  DocProxy.prNew,  
-	"Date.html",  "/Applications/SuperCollider/Help/Control/Date.html",  "Date			an object describing a point in time
-
-
-
-Class Methods
-
-
-	*new(year, month, day, hour, minute, second, dayOfWeek, rawSeconds, bootSeconds)
-				Create a new date with the given properties (all numerical values).
-				These arguments are also the names of instance variables of the date object.
-				
-	*getDate		get current date from system and create a date object from it.
-				
-				(
-				var a = Date.getDate;
-				a.bootSeconds.postln;
-				a.dayOfWeek.postln;
-				a
-				)
-	
-	*localtime	get current localized time from system and create a date object from it.
-				
-	*gmtime		get current Greenwich Mean Time (GMT) from system and create a date object from it.
-	
-	*seed		get current date and return a value suitable for seeding a random number generator.
-				see also randomSeed
-	
-				(
-				var a = Date.seed;
-				thisThread.randSeed = a; 
-				20.do { [1,0].choose.post }; \"\".postln;
-				thisThread.randSeed = a;
-				25.do { [1,0].choose.post }; \"\".postln;
-				)
-		
-		
-Instance Methods
-
-	
-	localtime		set the receiver's time to current localtime.
-	
-	gmtime		set the receiver's time to current Greenwich Mean Time (GMT).
-	
-	dayStamp	obtain a string with the year, month and day in the format YYMMDD.
-	
-	hourStamp	obtain a string in the format H:M:S
-	
-	secStamp	obtain a string with the seconds
-	
-	stamp		obtain a string in the format YYMMDD_HHMMSS.
-	
-	asSortableString	obtain a string in an alphabetically sortable standard database format
-	
-	asctime		obtain a string in the format WeekdayName MonthName Time Year
-				
-	asString		returns asctime.
-	
-	
-	format(formatstring)	obtain a date string with a given format.  The character % is replaced by the 
-						appropriate value, which is derived from the letter that follows.
-	
-		
-	Date.getDate.format(\"Today is %A. It is around %I o'clock (%p), in %B.\");
-	Date.getDate.format(\"%Y-%d-%e-%Hh%m\");
-	
-
-
-A list of formats can be found here: http://www.opengroup.org/onlinepubs/009695399/functions/strftime.html
-
-
-
-Supported conversion specifications:
-
-%a
-Replaced by the locale's abbreviated weekday name. [ tm_wday]
-
-%A
-Replaced by the locale's full weekday name. [ tm_wday]
-
-%b
-Replaced by the locale's abbreviated month name. [ tm_mon]
-
-%B
-Replaced by the locale's full month name. [ tm_mon]
-
-%c
-Replaced by the locale's appropriate date and time representation. 
-
-%C
-Replaced by the year divided by 100 and truncated to an integer, as a decimal number [00,99]. [ tm_year]
-
-%d
-Replaced by the day of the month as a decimal number [01,31]. [ tm_mday]
-
-%D
-Equivalent to %m / %d / %y. [ tm_mon, tm_mday, tm_year]
-
-%e
-Replaced by the day of the month as a decimal number [1,31]; a single digit is preceded by a space. [ tm_mday]
-
-%F
-Equivalent to %Y - %m - %d (the ISO 8601:2000 standard date format). [ tm_year, tm_mon, tm_mday]
-
-%g
-Replaced by the last 2 digits of the week-based year (see below) as a decimal number [00,99]. [ tm_year, tm_wday, tm_yday]
-
-%G
-Replaced by the week-based year (see below) as a decimal number (for example, 1977). [ tm_year, tm_wday, tm_yday]
-
-%h
-Equivalent to %b. [ tm_mon]
-
-%H
-Replaced by the hour (24-hour clock) as a decimal number [00,23]. [ tm_hour]
-
-%I
-Replaced by the hour (12-hour clock) as a decimal number [01,12]. [ tm_hour]
-
-%j
-Replaced by the day of the year as a decimal number [001,366]. [ tm_yday]
-
-%m
-Replaced by the month as a decimal number [01,12]. [ tm_mon]
-
-%M
-Replaced by the minute as a decimal number [00,59]. [ tm_min]
-
-%n
-Replaced by a <newline>.
-
-%p
-Replaced by the locale's equivalent of either a.m. or p.m. [ tm_hour]
-
-%r
-Replaced by the time in a.m. and p.m. notation; ¬†in the POSIX locale this shall be equivalent to %I :%M :%S%p. [ tm_hour, tm_min, tm_sec]
-
-%R
-Replaced by the time in 24-hour notation (%H : %M ). [ tm_hour, tm_min]
-
-%S
-Replaced by the second as a decimal number [00,60]. [ tm_sec]
-
-%t
-Replaced by a <tab>.
-
-%T
-Replaced by the time ( %H : %M : %S ). [ tm_hour, tm_min, tm_sec]
-
-%u
-Replaced by the weekday as a decimal number [1,7], with 1 representing Monday. [ tm_wday]
-
-%U
-Replaced by the week number of the year as a decimal number [00,53]. The first Sunday of January is the first day of week 1; days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
-
-%V
-Replaced by the week number of the year (Monday as the first day of the week) as a decimal number [01,53]. If the week containing 1 January has four or more days in the new year, then it is considered week 1. Otherwise, it is the last week of the previous year, and the next week is week 1. Both January 4th and the first Thursday of January are always in week 1. [ tm_year, tm_wday, tm_yday]
-
-%w
-Replaced by the weekday as a decimal number [0,6], with 0 representing Sunday. [ tm_wday]
-
-%W
-Replaced by the week number of the year as a decimal number [00,53]. The first Monday of January is the first day of week 1; days in the new year before this are in week 0. [ tm_year, tm_wday, tm_yday]
-
-%x
-Replaced by the locale's appropriate date representation.
-
-%X
-Replaced by the locale's appropriate time representation.
-
-%y
-Replaced by the last two digits of the year as a decimal number [00,99]. [ tm_year]
-
-%Y
-Replaced by the year as a decimal number (for example, 1997). [ tm_year]
-
-%z
-Replaced by the offset from UTC in the ISO¬†8601:2000 standard format ( +hhmm or -hhmm ), or by no characters if no timezone is determinable. For example, \"-0430\" means 4 hours 30 minutes behind UTC (west of Greenwich). If tm_isdst is zero, the standard time offset is used. If tm_isdst is greater than zero, the daylight savings time offset is used. If tm_isdst is negative, no characters are returned. [ tm_isdst]
-
-%Z
-Replaced by the timezone name or abbreviation, or by no bytes if no timezone information exists. [ tm_isdst]
-
-%%
-Replaced by %.
-
-If a conversion specification does not correspond to any of the above, the behavior is undefined.
-
-
-",  Rect.prNew,  
-	"110410_031355",  DocProxy.prNew,  "DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  
-	"
+	DocSession.prNew,  Array.prNew(3),  DocProxy.prNew,  " post ",  
+	"Saving snapshot at: 110410_033523 ...  ... doneSaving snapshot at: 110410_034023 ...  ... done",  Rect.prNew,  "110410_034523",  DocProxy.prNew,  
+	"DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "
 DocListWindow {
 	classvar >default;
 	classvar <>docListWidth = 150;
@@ -3864,7 +3644,6 @@ DocListWindow {
 			if (ascii == 14) { // control-n
 				this.makeCodeList(doc);	
 				selectionStart = doc.selectionStart;
-//				postln(codePositions indexOf: codePositions.detect({ | n | selectionStart < n }));
 				this.selectAndPerformCodeAt(codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1);
 			};
 		};
@@ -3972,715 +3751,44 @@ DocListWindow {
 			CocoaMenuItem.addToMenu(\"User Menu\", \"Save to Session snapshot\", [\"s\", true, true], {
 				this.saveSnapshot;
 			}),
-			CocoaMenuItem.addToMenu(\"U",  Rect.prNew,  "110410_031355",  DocProxy.prNew,  
-	"Document.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/Document.html",  "Document			an abstract class for editor-specific text document editing classes	
-
-Inherits from: Object
-
-The Document class represents a text document within the context of your text editing environment. You can use the class to programmatically create, modify, and query these documents. While it is an abstract class, you still use it to create a new Document. It simply passes on new to the appropriate document implementation, e.g. CocoaDocument.
-
-See also: CocoaDocument
-
-Some Important Issues Regarding Document
-
-Different text-editing environments can be used with SuperCollider. Therefore Document is an abstract class, meaning it doesn't provide all the functionality itself, but relies on subclasses to complete the functionality. Calls to Document.new or Document.open are actually passed down to the relevant class for the editor you're using, such as CocoaDocument (for most Mac users) or ScelDocument (containing an EmacsDocument).
-
-Setting the Environment
-
-By defualt envir it is set to the current Environment. However, you can make it use its own Environment also. Thus, e.g., if you were to set the Environment variable ~myVar=12 in the current Environment, you can create a new Document window in which that Environment variable is not set.
-
-Creation / Class Methods
-
-	*new (title, string, makeListener, envir)
-	
-		title - An instance of String or Symbol. Default value is \"Untitled\".
-		string - An instance of String . Default value is \"\". The contents of the document.
-		makeListener - Makes this document the lisenter, i.e. the place where SC-lang posts messages. Default value is false. .
-		envir - An instance of Environment. The Environment to be used by the interpreter of the document window. By defualt, it is set to the current Environment.
-		
-		Document.new(\"this is the title\", \"this is the text\");
-		
-	*open (path, selectionStart, selectionLength, envir)
-	
-		Open a document from a path.
-		path - The file system path to the document. An instance of String.
-		selectionStart -The beginning of the cursor seleciton of the file content. Default value is 0.
-		selectionLength - The length of the cursor seleciton of the file content. Default value is 0.
-		envir - An instance of Environment. The Environment to be used by the interpreter of the document window. By defualt, it is set to the current Environment.
-		
-		Document.open(\"README\", 292,253); // notice the selected text in the open document
-
-
-	*openDocuments
-	
-		Returns an Array of all open documents.
-		
-		d=Document.openDocuments.do{|doc| doc.name.postln};
-
-	*hasEditedDocuments
-	
-		Returns true if there are edited Documents.
-		
-	*closeAll (leavePostWindowOpen)
-	
-		CAUTION Closes all open Documents, whether edited or not.
-		leavePostWindowOpen - An instance of Boolean. Default is true.
-		
-	*closeAllUnedited (leavePostWindowOpen)
-	
-		Closes all unedtited Documents.
-		leavePostWindowOpen - An instance of Boolean. Default is true.
-
-	*current
-	*current_(arg1)
-	
-		Gets/sets the current Document.
-		
-		Document.current.name.postln; // Prints \"Document.html\"
-
-	*listener
-	
-		Returns the current Document which is the listener, i.e. the Document where interpreter messages are posted.
-
-	*storePostWin (path)
-	
-		Stores the conteng of Document.listener.
-		path - The file system path. An instance of String.
-		
-	*allDocuments
-		
-		A class variable. Returns all documents
-		Default value is defaultValue.
-				
-	*globalKeyDownAction
-	*globalKeyDownAction_(arg1)
-	
-		A class variable. Get/set A global action to be performed when a key is pressed.
-		arg1 - An instance of Function or FunctionList.
-
-	*globalKeyUpAction
-	*globalKeyUpAction_(arg1)
-		
-		A class variable. Get/set A global action to be performed when a key is released.
-		arg1 - An instance of Function or FunctionList.
-				
-	*initAction
-	*initAction_(arg1)
-		A class variable. Get/set A an action to be performed up openning or creating a Document.
-		arg1 - An instance of Function or FunctionList.
-				
-	*autoRun
-	*autoRun_
-	
-		A class variable. If a document begins with the String, \"/*RUN*/\", then the code following it int he file will be exectued on opening the file, if autorun is set to true.
-		arg1 - An instance of Boolean. Default value is true.
-				
-	*wikiBrowse
-	*wikiBrowse_(arg1)
-		
-		A class variable. If set to true, underlining text will create a wiki link.
-		arg1 - An instance of Boolean. Default value is true.
-				
-	*implementationClass
-	*implementationClass_(arg1)
-		
-		A class variable. The editor implementation specific class which will handle Documents.
-		arg1 - A class for implementing Document, e.g. CocoaDocument
-		
-	*setTheme(arg1)
-		
-		Sets the theme for syntax colorization. The Document class has a preset theme called 'default',
-		which is set as follows (default SC colors):
-			
-			themes = (
-				default: (
-					classColor: Color(0, 0, 0.75, 1),
-					textColor: Color(0, 0, 0, 1),
-					stringColor: Color(0.375, 0.375, 0.375, 1),
-					commentColor: Color(0.75, 0, 0, 1),
-					symbolColor: Color(0, 0.45, 0, 1),
-					numberColor: Color(0, 0, 0, 1)
-					)
-			);
-			
-		If you want to have your own themes for syntax colorization, you need to put your color set into
-		Document.themes first (preferably in startup.rtf file) and call setTheme by giving it the name of
-		the theme you've added to \"themes\" earlier:
-		
-			//putting a custom color theme into Document.themes
-			Document.themes.put
-			(\\myTheme, 
-				(
-					classColor: Color.new255(53, 74, 187),
-					textColor: Color.new255(0, 0, 0),
-					stringColor: Color.new255(96, 129, 158),
-					commentColor: Color.new255(206, 27, 28),
-					symbolColor: Color.new255(57, 154, 20),
-					numberColor: Color.new255(157, 80, 65)
-				)
-			);
-			
-			//and then calling setTheme with the name:
-			Document.setTheme('myTheme');
-			//to see the current theme:
-			Document.theme;
-			
-		You can switch to the default theme anytime by calling:
-		
-			Document.setTheme('default');
-			
-		Next time you invoke syntaxColorize, the color theme set by setTheme will be used for syntax
-		colorization. If you want to change the background color for the document window and selected
-		text, in order to make them fit with your syntax colorization theme, see the help for the \"background\" and \"selectedBackground\" methods for Document.
-		
-		arg1 - A Symbol, defining the name of the theme that you've put into Document.themes.
-
-Path Utilites
-	Utilities and settings for dealing with documents such as super collider code files. By default the document directory is SuperCollider's application directory.
-
-	*dir
-	*dir_ (path)
-	
-		Get/set the default document directory. The default is dependent on Document.implementationClass.
-		path - The file system path to the directory. An instance of String.
-		
-		In Main-startUp you can set this to a more practical directory:
-		
-		Document.dir = \"~/Documents/SuperCollider\";
-		
-	*wikiDir
-	*wikiDir_ (path)
-	
-		Get/set the default wiki directory. The default is dependent on Document.implementationClass.
-		path - The file system path to the directory. An instance of String.
-		
-
-	*standardizePath (p)
-	
-		If it is a relative path, expand it to an absolute path relative to your document directory.	Expand tildes in path (your home directory), resolve symbolic links (but not aliases). Also converts from OS9 macintosh path format. See PathName for more complex needs.
-		path - The file system path to the directory. An instance of String.
-		
-		Document.standardizePath(\"~/\");//This will print your home directory	
-		
-		Document.standardizePath(\":Patches:newfoots:fastRuckAndTuck\")
-		
-		// Returns: /Volumes/Macintosh HD/Users/cruxxial/Documents/SC3docs/Patches/newfoots/fastRuckAndTuck
-	
-		Document.standardizePath(\"~/Documents/SC3docs/Patches/newfoots/fastRuckAndTuck\")
-		
-		// Returns: Patches/newfoots/fastRuckAndTuck
-		
-		Document.standardizePath(\"Patches/newfoots/fastRuckAndTuck\")
-		
-		// Returns: Patches/newfoots/fastRuckAndTuck
-
-
-	*abrevPath (path)
-	
-		Returns a path relative to Document.dir, if the path is inside Document.dir.
-		path - The file system path to the directory. An instance of String.
-
-General Document Properties
-
-	bounds
-	bounds_ (argBounds)
-	
-		Get/set the bounds of the document.
-		argBounds - an insta",  Rect.prNew,  
-	"110410_031355",  DocProxy.prNew,  "example_file3.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/Help/example_file3.scd",  
-	"// Example of a snippet document without a shortcut key
-
-//:a post pi
-
-pi.postln;
-
-//:b post a random array
-
-Array.rand(5, 1, 5).postln;",  Rect.prNew,  "110410_031355",  DocProxy.prNew,  
-	"Library.sc",  "/Applications/SuperCollider/SCClassLibrary/Common/Collections/Library.sc",  "MultiLevelIdentityDictionary : Collection
-{
-
-	var <>dictionary;
-
-	*new {
-		^super.new.init
-	}
-	init {
-		dictionary = this.newInternalNode;
-	}
-
-	newInternalNode { ^this.nodeType.new }
-
-	nodeType {
-		^IdentityDictionary;
-	}
-
-	at { arg ... path;
-		^this.atPath(path)
-	}
-	atPathFail { arg path, function;
-		var item;
-		item = dictionary;
-		path.do({ arg name;
-			item = item.at(name);
-			if (item.isNil, { ^function.value });
-		});
-		^item
-	}
-	atPath { arg path;
-		^this.atPathFail(path)
-	}
-
-	put { arg ... path;
-		var item;
-		item = path.pop;
-		^this.putAtPath(path, item);
-	}
-	putAtPath { arg path, val;
-		var item, lastName;
-		path = path.copy;
-		lastName = path.pop;
-		item = dictionary;
-		path.do({ arg name;
-			item = item.atFail(name, {
-				var newitem;
-				newitem = this.newInternalNode;
-				item.put(name, newitem);
-				newitem
-			});
-		});
-		item.put(lastName, val);
-	}
-
-	create { arg ... args;
-		var item;
-		item = dictionary;
-		args.do({ arg name;
-			item = item.atFail(name, {
-				var newitem;
-				newitem = this.newInternalNode;
-				item.put(name, newitem);
-				newitem
-			});
-		});
-	}
-
-	choose { arg ... start;
-		var item;
-		if(start.isEmpty,{
-			item = dictionary;
-		},{
-			item = this.at(*start);
-			if(item.isNil,{
-				Error(\"Library-choose start address not found: \" ++ start).throw;
-			});
-		});
-		^this.prChooseFrom(item);
-	}
-	putTree { arg ... items;
-		this.prPutTree([],items)
-	}
-	postTree { arg obj,tabs=0;
-		if(obj.isNil,{ obj = dictionary });
-		if(obj.isKindOf(this.nodeType),{
-			\"\".postln;
-			obj.keysValuesDo({ arg k,v;
-				tabs.do({ Char.tab.post });
-				k.post;
-				\": \".post;
-				this.postTree(v,tabs + 1)
-			});
-		},{
-			Char.tab.post;
-			obj.asString.postln;
-		})
-	}
-	do { arg function;
-		dictionary.do(function);
-	}
-		// remove only the leaf node indicated by path
-		// parent nodes remain in the MLID even if they are empty
-	removeAt {
-		arg ... path;
-		^this.removeAtPath(path)
-	}
-	removeAtPath { arg path;
-		var item, lastName;
-		path = path.copy;
-		lastName = path.pop;
-		item = dictionary;
-		path.do({ arg name;
-			item = item.at(name);
-			if (item.isNil, { ^nil });
-		});
-		^item.removeAt(lastName);
-	}
-		// remove the leaf node
-		// as well as parent nodes that become empty after removing the child
-		// slower but leaves less cruft in the tree
-	prRemoveAtPathRecursive { |path, i = 0, item|
-		var name = path[i], result;
-		if(item[name].isNil) { ^nil };
-		if(i < (path.size-1)) {
-			result = this.prRemoveAtPathRecursive(path, i+1, item[name]);
-			(item[name].isEmpty).if({ item.removeAt(name) });
-			^result
-		} {
-			^item.removeAt(name)
-		};
-	}
-	removeEmptyAtPath { arg path;
-		^this.prRemoveAtPathRecursive(path, 0, dictionary)
-	}
-	removeEmptyAt { arg ...path;
-		^this.prRemoveAtPathRecursive(path, 0, dictionary);
-	}
-
-	//private
-	add { arg assn;
-		this.put(assn.key, assn.value);
-	}
-	remove { ^this.shouldNotImplement(thisMethod) }
-	removeFail { ^this.shouldNotImplement(thisMethod) }
-
-	prChooseFrom { arg dict;
-		var item;
-		item = dict.choose;
-		if(item.isKindOf(this.nodeType),{
-			^this.prChooseFrom(item);
-		},{
-			^item
-		})
-	}
-	prPutTree { arg keys,items;
-		forBy(0,items.size - 1,2,{ arg i;
-			var key,item;
-			key = items.at(i);
-			item = items.at(i + 1);
-			if(item.isArray.not,{
-				this.put(* keys ++ [key,item]);
-			},{
-				//array
-				this.prPutTree(keys ++ [key],item);
+			CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
+				this.makeCodeList(Document.current);
+				docBrowser.front;
+				codeListView.enabled = true;
+				codeListView.focus;
+			}),
+			CocoaMenuItem.addToMenu(\"User Menu\", \"Make Performance Window\", [\"2\", false, false], {
+				this.makePerformanceWindow;
 			})
-		});
-	}
-	leaves { arg startAt;
-		if(startAt.isNil,{
-			startAt = dictionary;
-		},{
-			startAt = this.at(*startAt);
-		});
-		^this.prNestedValuesFromDict(startAt);
-	}
-	prNestedValuesFromDict { arg dict;
-		^dict.values.collect({ arg thing;
-			if(thing.isKindOf(this.nodeType),{
-				this.prNestedValuesFromDict(thing)
-			},{
-				thing
-			})
-		})
+		]
 	}
 
-	// Tree-like do methods
-	leafDo {
-		arg func;
-
-		this.doLeafDo([], this.dictionary, func);
-	}
-	leafDoFrom {
-		arg folderpath, func;
-		var folder;
-
-		folderpath = folderpath.asArray;
-
-		folder = this.atPath(folderpath);
-		if (folder.notNil && folder.isKindOf(this.nodeType), {
-			this.doLeafDo(folderpath, folder, func);
-		});
+	saveSnapshot {
+		postf(\"Saving snapshot at: % ... \", Date.getDate.stamp);
+		DocSession(\\recent, this.docProxies).save;
+		\" ... done\".postln;
 	}
 
-	doLeafDo {
-		arg path, object, func;
-
-		if (object.isKindOf(this.nodeType), {
-			object.keysValuesDo({
-				arg name, subobject;
-				this.doLeafDo(path ++ [name], subobject, func)
-			});
-		}, {
-			func.value(path, object);
-		})
+	docProxies {
+		^allDocs collect: DocProxy(_);
 	}
 
-	treeDo {
-		arg branchFunc, leafFunc, argument0, postBranchFunc;
-		var result;
-
-		result = this.doTreeDo([], this.dictionary, branchFunc, leafFunc, argument0, postBranchFunc);
-		^result;
-	}
-	treeDoFrom {
-		arg folderpath, branchFunc, leafFunc, argument0, postBranchFunc;
-		var folder, result;
-
-		folderpath = folderpath.asArray;
-
-		folder = this.atPath(folderpath);
-		if (folder.isKindOf(this.nodeType), {
-			result = this.doTreeDo(folderpath, folder, branchFunc, leafFunc, argument0, postBranchFunc);
-		}, {
-			result = nil;
-		});
-
-		^result;
-
-	}
-	doTreeDo {
-		arg path, object, branchFunc, leafFunc, argument, postBranchFunc;
-		var result;
-
-		if (object.isKindOf(this.nodeType), {
-			if (branchFunc.notNil, {
-				result = branchFunc.value(path, object, argument);
-			}, {
-				result = argument;
-			});
-			object.keysValuesDo({
-				arg name, subobject;
-				this.doTreeDo(path ++ [name], subobject, branchFunc, leafFunc, result, postBranchFunc)
-			});
-			if (postBranchFunc.notNil, {
-				result = postBranchFunc.value(path, object, result);
-			});
-			^result
-		}, {
-			leafFunc.value(path, object, argument);
-		})
+	removeUserMenuItems {
+		if (menuItems.notNil) { menuItems do: _.remove; };
 	}
 
-	treeCollect { arg branchFunc, leafFunc, postBranchFunc;
-		var result;
-		result = this.doTreeCollect([], this.dictionary, branchFunc, leafFunc, postBranchFunc);
-		^result;
-	}
-	doTreeCollect { arg path, object, branchFunc, leafFunc, postBranchFunc;
-		var confirm, collection, result;
-
-		if (object.isKindOf(this.nodeType), {
-			if (branchFunc.notNil, {
-				#confirm, result = branchFunc.value(path, object);
-			}, {
-				#confirm, result = [true, nil]
-			});
-			if (confirm, {
-				collection = [];
-				object.keysValuesDo({
-					arg name, subobject;
-					collection = collection.add(this.doTreeCollect(path ++ [name], subobject,
-						branchFunc, leafFunc, postBranchFunc));
-				});
-				collection.removeAllSuchThat({arg item; item.isNil});
-				if (postBranchFunc.notNil, {
-					result = postBranchFunc.value(path, object, collection);
-				}, {
-					result = nil;
-				});
-				^result
-			}, {
-				^nil
-			});
-		}, {
-			^leafFunc.value(path, object)
-		});
+	docListBounds {
+		^Rect(2, 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
 	}
 
-	sortedTreeDo {
-		arg branchFunc, leafFunc, argument0, postBranchFunc, sortFunc;
-		var result;
-
-		result = this.doSortedTreeDo([], this.dictionary, branchFunc, leafFunc, argument0, postBranchFunc, sortFunc);
-		^result;
-	}
-	doSortedTreeDo {
-		arg path, object, branchFunc, leafFunc, argument, postBranchFunc, sortFunc;
-		var result;
-
-		sortFunc = sortFunc ? {arg a, b; a < b};
-
-		if (object.isKindOf(this.nodeType), {
-			if (branchFunc.notNil, {
-				result = branchFunc.value(path, object, argument);
-			}, {
-				result = argument;
-			});
-			object.sortedKeysValuesDo({
-				arg name, subobject;
-				this.doSortedTreeDo(path ++ [name], subobject, branchFunc, leafFunc, result, postBranchFunc, sortFunc)
-			});
-			if (postBranchFunc.notNil, {
-				postBranchFunc.value(path, object, result);
-			});
-			^result
-		}, {
-			leafFunc.value(path, object, argument);
-		})
+	codeListBounds {
+		^Rect(2, docBrowserBounds.height / 2 - 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);
 	}
 
-	leafDoInBranch {
-		arg folderpath, function;
-		var path, folder;
-
-		folderpath = folderpath.asArray;
-
-		folder = this.atPath(folderpath);
-		if (folder.notNil && folder.isKindOf(this.nodeType), {
-			folder.keysValuesDo({
-				arg name, object;
-				if (object.isKindOf(this.nodeType).not, {
-					function.value(folderpath ++ [name], object);
-				});
-			});
-		});
-	}
-
-	storeOn { arg stream;
-		stream << this.class.name << \"[\" <<<* dictionary << \"]\"
-	}
-
-	printOn { arg stream;
-		stream << this.class.name << \"[\" <<* dictionary << \"]\"
-	}
-}
-
-
-
-LibraryBase : MultiLevelIdentityDictionary
-{
-	*global {
-		^this.subclassResponsibility(thisMethod);
-	}
-	*global_ { arg obj;
-		^this.subclassResponsibility(thisMethod);
-	}
-
-
-	*clear {
-		this.global = this.new;
-	}
-	*at { arg ... args;
-		^this.global.at(*args);
-	}
-
-	*atList { arg args;
-		^this.global.at(*args)
-	}
-	*putList { arg args;
-		^this.global.put(*args)
-	}
-
-	*put { arg ... args;
-		^this.global.put(*args)
-	}
-	*create { arg ... args;
-		^this.global.create(*ar",  Rect.prNew,  
-	"110410_031355",  DocProxy.prNew,  "Main.html",  "/Applications/SuperCollider/Help/Core/Kernel/Main.html",  
-	"Main
-
-superclass: Process
-
-Main is the concrete instance of Process (the runtime environment for the virtual machine and interpreter).
-Main overrides some methods of Process. There are two methods of interest. One is named startup and is 
-called after the class library has been compiled. The other is called shutdown which gets called when the library gets re-compiled.
-
-The singleton instance of Main is available through the special keyword thisProcess. 
-For example, to find out what platform you're on:
-
-	thisProcess.platform;	// --> e.g. \"an OSXPlatform\", \"a LinuxPlatform\", ...
-
-
-startup
-
-called after the class library has been compiled. This calls the superclass' startup, which among other things initializes the AppClock and the top-level Environment. Main's startup then stores Server.default in the interpreter variable s, sets the platform default's GUI kit, initializes the GeneralHID system, calls a Platform specific startup method (for example OSXPlatform's startup opens the server windows), and finally invokes StartUp.run. To add your own startup functionalities, you could either edit the special startup-file (discussed in Using-the-Startup-File), or use StartUp.add as discussed in the StartUp help file.
-
-
-shutdown
-
-called after SuperCollider is quit or the class library is about to be re-compiled. This will quit all audio Server instances, perform a platform specific shutdown (e.g. on Mac OS X, the HID service is released), finally Process' shutdown method is called, resulting successive calls to UI.shutdown, NetAddr.disconnectAll, File.closeAll, and Archive.write. To register your own shutdown code, use a call like this:
-
-	UI.registerForShutdown({ \"Good bye!!\".postln });
-
-sleep / wake
-
-sleepAction and wakeAction are called when the computer was set in sleep mode / awoke from sleep mode.
-(currently OS X only)
-	
-	thisProcess.sleepAction =  { \"good night,\".postln };
-
-isSleeping
-returns true if computer was just set to sleep. (currently OS X only)
-	
-	thisProcess.isSleeping;
-
-run
-
-Override this to do whatever you want, e. g. add a class extension file like this to the class library:
-
-	+ Main {
-		run { \"myPatch.rtf\".load }
-	}
-
-
-recvOSCfunc
-
-You can store a custom function in this field that gets called whenever SuperCollider language (the client) receives an OSC message. That is very useful for debugging OSC-communication with other applications (e.g. Processing, Pure Data, but also the scsynth server).
-
-	// post all incoming traffic except the server status messages
-	(
-	thisProcess.recvOSCfunc = { |time, replyAddr, msg| 
-		if(msg[0] != 'status.reply') {
-			\"At time %s received message % from %\\n\".postf( time, msg, replyAddr )
-		}  
-	}
-	);
-	
-	// stop posting.
-	thisProcess.recvOSCfunc = nil;
-
-
-pid
-
-Returns the operating system's pid (process ID) for the process.
-
-	thisProcess.pid
-
-
-<>preferencesAction - OSX SC.app only.
-
-A function to evaluate when the SuperCollider preferences menu is selected.
-
-	thisProcess.preferencesAction = { arg process; SCWindow.new.front; }
-
-
-
-*version, *versionAtLeast, *versionAtMost
-
-These class methods tell you which version of SuperCollider you are running and whether that version complies to your required minimum / maximum settings:
-
-	// the current version as a human readable string
-	Main.version;	
-	// check if we are running at least version 3.1 (returns true or false)
-	Main.versionAtLeast( 3, 1 );
-	// check if we are running version 3.1 or older (returns true or false)	
-	Main.versionAtMost( 3, 1 );	
-
-
-recompile
-
-Recompiles the class library. This is equivalent to restarting SC. Currently OSX (SuperCollider.app) only.
-",  Rect.prNew,  "110410_031355",  DocProxy.prNew,  
-	"PerformanceWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/PerformanceWindow.sc",  "
+	makePerformanceWindow { ^PerformanceWindow.makeGui(this); }
+}",  Rect.prNew,  
+	"110410_034523",  DocProxy.prNew,  "PerformanceWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/PerformanceWindow.sc",  
+	"
 PerformanceWindow {
 	classvar default;
 	var <docListWindow;
@@ -4688,7 +3796,7 @@ PerformanceWindow {
 	var <docPane;
 	var <codePane;
 	var <codeParts, <codeKeys;
-	var <docPaneSearchString, keystrokeWaitInterval = 0.5;
+	var <docPaneSearchString, keystrokeWaitInterval = 1.0;
 	
 	*makeGui { | docListWindow |
 		if (default.isNil) { default = this.new(docListWindow) };
@@ -4729,7 +3837,7 @@ PerformanceWindow {
 		};
 		codePane = ListView(window, Rect(250, 2, 248, 496));
 		codePane.resize = 4;
-		codePane.action = {	 | me | this.performCodeAt(me.value); };
+		codePane.action = { | me | this.performCodeAt(me.value); };
 		codePane.keyDownAction = { | me, char |
 			this.selectAndPerformCodeAt(codeKeys indexOf: char);
 		};
@@ -4742,22 +3850,28 @@ PerformanceWindow {
 	selectDoc { | index |
 		var items;
 		#items, codeParts, codeKeys = docListWindow.parseCode(docListWindow.allDocs[index]);
+		docPane.value = index;
 		codePane.items = items;
 	}
 
-	selectDocByKey { | char, mod, ascii, key |
-		var items, match, length;
-		if (docPaneSearchString.isNil) {
+	selectDocByKey { | char, mod, unicode, key |
+		var items, match, endPos;
+		if (unicode == 16rF700, { docPane.valueAction = this.value - 1; ^this });
+		if (unicode == 16rF703, { this.valueAction = this.value + 1; ^this });
+		if (unicode == 16rF701, { this.valueAction = this.value + 1; ^this });
+		if (unicode == 16rF702, { this.valueAction = this.value - 1; ^this });
+		if (docPaneSearchString.isNil or: { unicode == 127 }) {
 			docPaneSearchString = char.asString;
 			{ docPaneSearchString = nil }.defer(keystrokeWaitInterval);
 		}{
 			docPaneSearchString = docPaneSearchString ++ char.asString;
 		};
+		endPos = docPaneSearchString.size;
 		items = docPane.items;
 		match = items detect: { | i |
-			
+			docPaneSearchString.matchRegexp(i, 0, endPos);
 		};
-		docPaneSearchString.postln;
+		if (match.notNil) { this.selectDoc(items indexOf: match) };
 		
 	}
 
@@ -4778,384 +3892,9 @@ PerformanceWindow {
 		NotificationCenter.unregister(docListWindow, \\items, this);
 		NotificationCenter.unregister(docListWindow, \\index, this);
 	}
-}",  Rect.prNew,  
-	"110410_031355",  DocProxy.prNew,  "Process.html",  "/Applications/SuperCollider/Help/Core/Kernel/Process.html",  
-	"Process
-
-superclass: Object
-
-A Process is the runtime environment for the virtual machine and interpreter.
-It has a subclass named Main which is where you should override the methods
-of Process. There are two methods of interest. One is named 'startup' and is 
-called after the class library has been compiled. The other is named 'run' and
-is called when the user chooses the Run menu command.
-
-startup
-
-called after the class library has been compiled. Override this in class Main to do whatever you want.
-
-run
-
-called when the user chooses the Run menu command. Override this in class Main to do whatever you want.
-
-*tailCallOptimize
-
-Returns a Boolean indicating whether tail call optimization is on. The default is on.
-
-*tailCallOptimize_(aBoolean)
-
-Turns tail call optimization on or off. Setting this to false can help with debugging by including intermediate levels in an error backtrace.
-",  Rect.prNew,  "110410_031355",  DocProxy.prNew,  
-	"String.html",  "/Applications/SuperCollider/Help/Collections/String.html",  "String					array of characters
-
-Inherits from: Object : Collection : SequenceableCollection : ArrayedCollection : RawArray
-
-String represents an array of characters.
-Strings can be written literally using double quotes:
-
-\"my string\".class.postln;
-
-Class Methods
-
-*readNew(file)
-
-Read the entire contents of a File and return them as a new String.
-
-Instance Methods
-
-at(index)
-
-Strings respond to .at in a manner similar to other indexed collections. Each element is a Char.
-
-\"ABCDEFG\".at(2).postln;
-
-compare(aString)
-
-Returns a -1, 0, or 1 depending on whether the receiver should be sorted before the argument,
-is equal to the argument or should be sorted after the argument. This is a case sensitive compare.
-
-< aString
-
-Returns a Boolean whether the receiver should be sorted before the argument.
-
-== aString
-
-Returns a Boolean whether the two Strings are equal.
-
-post
-
-Prints the string to the current post window.
-
-postln
-
-Prints the string and a carriage return to the current post window.
-
-postc 	postcln
-
-As post and postln above, but formatted as a comment.
-
-\"This is a comment.\".postcln;
-
-
-postf
-
-Prints a formatted string with arguments to the current post window. The % character in the format string is replaced by a string representation of an argument. To print a % character use \\\\% .
-
-postf(\"this % a %. pi = %, list = %\\n\", \"is\", \"test\", pi.round(1e-4), (1..4))
-
-this is a test. pi = 3.1416, list = [ 1, 2, 3, 4 ]
-
-format
-
-Returns a formatted string with arguments. The % character in the format string is replaced by a string representation of an argument. To print a % character use \\\\% .
-
-format(\"this % a %. pi = %, list = %\\n\", \"is\", \"test\", pi.round(1e-4), (1..4))
-
-this is a test. pi = 3.1416, list = [ 1, 2, 3, 4 ]
-
-matchRegexp(string, start, end)
-
-POSIX regular expression matching. 
-Returns true if the receiver (a regular expression pattern) matches the string passed to it.
-The start is an offset where to start searching in the string (default: 0), end where to stop.
-
-\"c\".matchRegexp(\"abcdefg\", 2, 5); // true
-\"c\".matchRegexp(\"abcdefg\", 4, 5); // false
-
-\"behaviou?r\".matchRegexp(\"behavior\"); // true
-\"behaviou?r\".matchRegexp(\"behaviour\"); // true
-\"behaviou?r\".matchRegexp(\"behavir\"); // false
-\"b.h.v.r\".matchRegexp(\"behavor\"); // true
-\"b.h.vi*r\".matchRegexp(\"behaviiiiir\"); // true
-\"(a|u)nd\".matchRegexp(\"und\"); // true
-\"(a|u)nd\".matchRegexp(\"and\"); // true
-\"[a-c]nd\".matchRegexp(\"ind\"); // false
-\"[a-c]nd\".matchRegexp(\"bnd\"); // true
-
-findRegexp(string)
-
-POSIX regular expression search. 
-
-\"foobar\".findRegexp(\"o*bar\");
-
-\"32424 334 /**aaaaaa*/\".findRegexp(\"/\\\\*\\\\*a*\\\\*/\");
-
-\"foobar\".findRegexp(\"(o*)(bar)\");
-
-\"aaaabaaa\".findAllRegexp(\"a+\");
-
-
-error
-
-Prepends an error banner and posts the string
-
-warn
-
-Prepends a warning banner and posts the string.
-
-inform
-
-Posts the string.
-
-++ aString
-
-Return a concatenation of the two strings.
-
-+ aString
-
-Return a concatenation of the two strings with a space between them.
-
-compile
-
-Compiles a String containing legal SuperCollider code and returns a Function.
-
-(
-var f;
-f = \"2 + 1\".compile.postln;
-f.value.postln;
-)
-
-asCompileString
-
-Returns a String formatted for compiling.
-
-(
-var f;
-f = \"myString\";
-f.postln;
-f.asCompileString.postln;
-)
-
-postcs
-
-As postln, but posts the compileString of the reciever
-
-List[1, 2, [\"comment\", [3, 2]], { 1.0.rand }].postcs;
-
-interpret
-
-Compile and execute a String containing legal SuperCollider code, returning the result.
-
-\"2 + 1\".interpret.postln;
-
-interpretPrint
-
-Compile, execute and print the result of a String containing legal SuperCollider code.
-
-\"2 + 1\".interpretPrint;
-
-asSymbol
-
-Return a Symbol derived from the String.
-
-(
-var z;
-z = \"myString\".asSymbol.postln;
-z.class.postln;
-)
-
-asInteger
-
-Return an Integer derived from the String. Strings beginning with non-numeric characters return 0.
-
-\"4\".asInteger.postln;
-
-asFloat
-
-Return a Float derived from the String. Strings beginning with non-numeric characters return 0.
-
-\"4.3\".asFloat.postln;
-
-asSecs
-
-Return a Float based on converting a time string in format (dd):hh:mm:ss.s.
-This is the inverse method to SimpleNumber:asTimeString. 
- 
-(45296.asTimeString).asSecs;
-\"32.1\".asSecs;
-\"62.1\".asSecs;		// warns
-\"0:0:59.9\".asSecs;
-\"1:1:1.1\".asSecs;
-\"-1\".asSecs;			// neg sign supported
-\"-12:34:56\".asSecs;
-\"12:-34:56\".asSecs;	// warns
-\"-23:12.3456\".asSecs;	//
-\"-1:00:00:00\".asSecs;	// days too.
-
-catArgs(... args)
-
-Concatenate this string with the following args.
-
-\"These are some args: \".catArgs(\\fish, SinOsc.ar, {4 + 3}).postln;
-
-scatArgs(... args)
-
-Same as catArgs, but with spaces in between.
-
-\"These are some args: \".scatArgs(\\fish, SinOsc.ar, {4 + 3}).postln;
-
-ccatArgs(... args)
-
-Same as catArgs, but with commas in between.
-
-\"a String\".ccatArgs(\\fish, SinOsc.ar, {4 + 3}).postln;
-
-catList(list)	scatList(list)	ccatList(list)
-
-As catArgs, scatArgs and ccatArgs above, but takes a Collection (usually a List or an Array) as an argument. 
-
-\"a String\".ccatList([\\fish, SinOsc.ar, {4 + 3}]).postln;
-
-split(separator)
-
-Returns an Array of Strings split at the separator. The separator is a Char, and is not included in the output array. The default separator is $/, handy for Unix paths.
-
-\"This/could/be/a/Unix/path\".split.postln;
-\"These are several words\".split($ ).postln;
-
-ascii
-
-Returns an Array of asci numbers of the Strings's characters.
-
-\"wertvoll\".ascii;
-
-
-find(string, ignoreCase, offset)
-
-Returns the index of the string in the receiver, or nil if not found. If ignoreCase is true, find makes no difference between uppercase and lowercase letters. The offset is the point in the string where the search begins.
-
-\"These are several words\".find(\"are\").postln;
-\"These are several words\".find(\"fish\").postln;
-
-findBackwards(string, ignoreCase, offset)
-
-Same like find, but starts at the end of the string.
-
-// compare:
-\"These words are several words\".find(\"words\"); // 6
-\"These words are several words\".findBackwards(\"words\"); // 24
-
-findAll(string,  ignoreCase, offset)
-
-Returns the indices of the string in the receiver, or nil if not found.
-
-\"These are several words which are fish\".findAll(\"are\").postln;
-\"These are several words which are fish\".findAll(\"fish\").postln;
-
-contains(string)
-
-Returns a Boolean indicating if the String contains string.
-
-\"These are several words\".contains(\"are\").postln;
-\"These are several words\".contains(\"fish\").postln;
-
-containsi(string)
-
-Same as contains, but case insensitive.
-
-\"These are several words\".containsi(\"ArE\").postln;
-
-containsStringAt(index, string)
-
-Returns a Boolean indicating if the String contains string beginning at the specified index.
-
-\"These are several words\".containsStringAt(6, \"are\").postln;
-
-icontainsStringAt(index, string)
-
-Same as containsStringAt, but case insensitive.
-
-escapeChar(charToEscape)
-
-Add the escape character (\\) at the location of your choice.
-
-\"This will become a Unix friendly string\".escapeChar($ ).postln;
-
-tr(from, to)
-
-Transliteration. Replace all instances of from with to.
-
-\":-(:-(:-(\".tr($(, $)); //turn the frowns upside down
-
-replace(find, replace)
-
-Like tr, but with strings as arguments.
-
-\"Here are several words which are fish\".replace(\"are\", \"were\");
-
-printOn(stream)
-
-Print the String on stream.
-
-\"Print this on Post\".printOn(Post);
-
-// equivalent to:
-Post << \"Print this on Post\";
-
-storeOn(stream)
-
-Same as printOn, but formatted asCompileString.
-
-\"Store this on Post\".storeOn(Post);
-
-// equivalent to:
-Post <<< \"Store this on Post\";
-
-inspectorClass
-
-Returns class StringInspector.
-
-stripRTF
-
-Returns a new String with all RTF formatting removed.
-
-(
-// same as File-readAllStringRTF
-g = File(\"/code/SuperCollider3/build/Help/UGens/Chaos/HenonC.help.rtf\",\"r\");
-g.readAllString.stripRTF.postln;
-g.close;
-)
-
-Unix Support
-
-Where relevant, the current working directory is the same as the location of the SuperCollider app and the shell is the Bourne shell (sh). Note that the cwd, and indeed the shell itself, does not persist:
-
-\"echo $0\".unixCmd; // print the shell (sh)
-\"pwd\".unixCmd;
-\"cd Help/\".unixCmd;
-\"pwd\".unixCmd;
-
-\"export FISH=mackerel\".unixCmd;
-\"echo $FISH\".unixCmd;
-
-It is however possible to execute complex commands:
-
-\"pwd; cd Help/; pwd\".unixCmd;
-\"export FISH=mackerel; echo $FISH\".unixCmd;
-
-Also on",  Rect.prNew,  
-	"110410_031355",  DocSession.prNew,  "110406_122927",  Array.prNew(3),  
-	DocProxy.prNew,  "Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
+}",  Rect.prNew,  "110410_034523",  DocSession.prNew,  
+	"110406_122927",  Array.prNew(3),  DocProxy.prNew,  "Archive.html",  
+	"/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
 
 Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
 
@@ -5209,8 +3948,8 @@ q[\\favourite_sound].value;
 
 
 
-",  
-	Rect.prNew,  DocProxy.prNew,  "Untitled 2",  "
+",  Rect.prNew,  DocProxy.prNew,  
+	"Untitled 2",  "
 
 
 { SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
@@ -5223,8 +3962,8 @@ q[\\favourite_sound].value;
 { SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
 
 { SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
-",  
-	DocProxy.prNew,  "DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "/*
+",  DocProxy.prNew,  "DocListWindow.sc",  
+	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "/*
 DocPoller.stop;
 */
 DocListWindow {
@@ -5384,9 +4123,9 @@ DocListWindow {
 	}
 		
 	
-}",  
-	DocSession.prNew,  "110405_233219",  Array.prNew(13),  DocProxy.prNew,  
-	"DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
+}",  DocSession.prNew,  "110405_233219",  
+	Array.prNew(13),  DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  
+	"
 DocProxy {
 	var <name;
 	var <path;
@@ -5470,8 +4209,8 @@ DocSession {
 	openAllDocs {
 		docs do: _.open;	
 	}
-}",  DocProxy.prNew,  
-	"DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
+}",  DocProxy.prNew,  "DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  
+	"
 //:a save all docs under \"defaultDocSession\" in global archive
 
 Archive.global.put(\\defaultDocSession, Document.allDocuments collect: DocProxy(_));
@@ -5510,8 +4249,8 @@ DocSession.saveAllDialog;
 //:j load session dialog
 
 DocSession.loadDialog;
-",  DocProxy.prNew,  
-	"Library.sc",  "/Applications/SuperCollider/SCClassLibrary/Common/Collections/Library.sc",  "MultiLevelIdentityDictionary : Collection
+",  DocProxy.prNew,  "Library.sc",  "/Applications/SuperCollider/SCClassLibrary/Common/Collections/Library.sc",  
+	"MultiLevelIdentityDictionary : Collection
 {
 
 	var <>dictionary;
@@ -5898,8 +4637,8 @@ LibraryBase : MultiLevelIdentityDictionary
 		^this.global.put(*args)
 	}
 	*create { arg ... args;
-		^this.global.create(*ar",  DocProxy.prNew,  
-	"GUI.html",  "/Applications/SuperCollider/Help/GUI/GUI-Tools/GUI.html",  "GUI			Factory abstraction for all GUI related core classes	
+		^this.global.create(*ar",  DocProxy.prNew,  "GUI.html",  "/Applications/SuperCollider/Help/GUI/GUI-Tools/GUI.html",  
+	"GUI			Factory abstraction for all GUI related core classes	
 
 Inherits from: Object
 
@@ -6074,8 +4813,8 @@ Methods and Variables for GUI
 		
 		A class variable. Returns an IdentityDictionary of registered skins.
 				
-",  DocProxy.prNew,  
-	"GUI-Classes.html",  "/Applications/SuperCollider/Help/GUI/GUI-Classes.html",  "GUI Classes		
+",  DocProxy.prNew,  "GUI-Classes.html",  "/Applications/SuperCollider/Help/GUI/GUI-Classes.html",  
+	"GUI Classes		
 
 Lists of kit-specific and kit-independant gui classes.
 
@@ -6303,8 +5042,8 @@ returns a Rect with the graphic size of a string. See the example in GUI-Overvie
 
 
 
-",  DocProxy.prNew,  
-	"TextDialog.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/TextDialog.sc",  "/*
+",  DocProxy.prNew,  "TextDialog.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/TextDialog.sc",  
+	"/*
 
 TextDialog(\"just some test\", \"input some text here\", { | t | t.postln; \"was okd\".postln; }, { \"cancelled\".postln; });
 
@@ -6372,8 +5111,8 @@ ListSelectDialog {
 		};
 		window.front;	
 	}
-}",  DocProxy.prNew,  
-	"SCWindow.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCWindow.html",  "SCWindow			Cocoa user interface window	
+}",  DocProxy.prNew,  "SCWindow.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCWindow.html",  
+	"SCWindow			Cocoa user interface window	
 
 Inherits from: Object
 
@@ -6625,8 +5364,8 @@ w.drawHook = Routine {
 			
 			Pen.fillColor = Color.new255(0, 120, 120).vary;
 			Pen.matrix = scale * #[1, 0, 0, 1, 1, 0];
-			Pen.stringAtPoint(char.a",  DocProxy.prNew,  
-	"TextField.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/TextField.html",  "TextField			a cross-platform redirector for a GUI widget	
+			Pen.stringAtPoint(char.a",  DocProxy.prNew,  "TextField.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/TextField.html",  
+	"TextField			a cross-platform redirector for a GUI widget	
 
 Inherits from: Object : ViewRedirect
 
@@ -6643,8 +5382,8 @@ CocoaGUI:      SCTextField
 
 Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
 
-",  DocProxy.prNew,  
-	"SCTextField.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCTextField.html",  "SCTextField			a text field for entering text	
+",  DocProxy.prNew,  "SCTextField.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCTextField.html",  
+	"SCTextField			a text field for entering text	
 
 Inherits from: Object : SCView : SCStaticTextBase : SCNumberBox
 
@@ -6727,8 +5466,8 @@ a.background_(Color.grey);
 a.stringColor_(Color.white);
 a.align_(\\center);
 
-",  DocProxy.prNew,  
-	"StaticText.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/StaticText.html",  "StaticText			a cross-platform redirector for a GUI widget	
+",  DocProxy.prNew,  "StaticText.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/StaticText.html",  
+	"StaticText			a cross-platform redirector for a GUI widget	
 
 Inherits from: Object : ViewRedirect
 
@@ -6745,8 +5484,8 @@ CocoaGUI:      SCStaticText
 
 Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
 
-",  DocProxy.prNew,  
-	"SCStaticText.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCStaticText.html",  "SCStaticText			a view for displaying text	
+",  DocProxy.prNew,  "SCStaticText.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCStaticText.html",  
+	"SCStaticText			a view for displaying text	
 
 Inherits from: Object : SCView : SCStaticTextBase
 
@@ -6857,8 +5596,8 @@ w.onClose={r.stop; q.free; b.free }; //clean up if the window closes
 
 
 
-",  DocProxy.prNew,  
-	"Date.html",  "/Applications/SuperCollider/Help/Control/Date.html",  "Date			an object describing a point in time
+",  DocProxy.prNew,  "Date.html",  "/Applications/SuperCollider/Help/Control/Date.html",  
+	"Date			an object describing a point in time
 
 
 
@@ -7045,8 +5784,8 @@ Replaced by %.
 If a conversion specification does not correspond to any of the above, the behavior is undefined.
 
 
-",  DocProxy.prNew,  
-	"Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
+",  DocProxy.prNew,  "Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  
+	"Archive			storing objects to file	
 
 Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
 
@@ -7100,10 +5839,9 @@ q[\\favourite_sound].value;
 
 
 
-",  IdentityDictionary.prNew,  
-	Array.prNew(32),  "110409_164004",  Array.prNew(4),  DocProxy.prNew,  
-	" post ",  "",  DocProxy.prNew,  "DocSessionTests.scd",  
-	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
+",  IdentityDictionary.prNew,  Array.prNew(32),  "110409_164004",  
+	Array.prNew(4),  DocProxy.prNew,  " post ",  "",  
+	DocProxy.prNew,  "DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
 //:a save all docs under \"defaultDocSession\" in global archive
 
 Archive.global.put(\\defaultDocSession, Document.allDocuments collect: DocProxy(_));
@@ -7127,8 +5865,8 @@ Document(a.name, a.text);
 
 //:f reopen Doc from path
 Document.open(a.path);
-",  DocProxy.prNew,  "DocSession.sc",  
-	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
+",  
+	DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
 DocProxy {
 	var <name;
 	var <path;
@@ -7164,9 +5902,10 @@ DocSession {
 		
 	}
 	
-}",  DocProxy.prNew,  " post ",  
-	"asdfdfddfff1111111",  "Untitled 2",  Array.prNew(4),  Rect.prNew,  
-	Rect.prNew,  Rect.prNew,  Rect.prNew
+}",  
+	DocProxy.prNew,  " post ",  "asdfdfddfff1111111",  "Untitled 2",  
+	Array.prNew(4),  Rect.prNew,  Rect.prNew,  Rect.prNew,  
+	Rect.prNew
 ];
 p = [
 	// Archive
@@ -7176,14 +5915,14 @@ p = [
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	2, [ 'docSessions',  o[3],  'test',  o[275],  
-		'last_quit',  o[277],  nil,  nil,  
+	2, [ 'docSessions',  o[3],  'test',  o[221],  
+		'last_quit',  o[223],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'defaultDocSession',  o[278],  nil,  nil,  
+		'defaultDocSession',  o[224],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'currentDoc',  o[293],  'documentBrowserRects',  o[294] ],  
+		'currentDoc',  o[239],  'documentBrowserRects',  o[240] ],  
 	// IdentityDictionary
 	3, [ array: o[4],  size: 8,  
 		proto: nil,  parent: nil,  
@@ -7196,7 +5935,7 @@ p = [
 		nil,  nil,  '110405_231327',  o[22],  
 		'110405_231147',  o[77],  nil,  nil,  
 		nil,  nil,  'recent',  o[132],  
-		'110406_122927',  o[205],  '110405_233219',  o[220] ],  
+		'110406_122927',  o[151],  '110405_233219',  o[166] ],  
 	// DocSession
 	5, [ name: o[6],  docs: o[7] ],  
 	// Array
@@ -7340,9 +6079,7 @@ p = [
 	// DocSession
 	132, [ name: 'recent',  docs: o[133] ],  
 	// Array
-	133, [ o[134],  o[139],  o[145],  o[151],  
-		o[157],  o[163],  o[169],  o[175],  
-		o[181],  o[187],  o[193],  o[199] ],  
+	133, [ o[134],  o[139],  o[145] ],  
 	// DocProxy
 	134, [ name: o[135],  path: nil,  
 		text: o[136],  bounds: o[137],  
@@ -7355,7 +6092,7 @@ p = [
 		text: o[142],  bounds: o[143],  
 		timestamp: o[144] ],  
 	// Rect
-	143, [ left: 500.000000,  top: 4.000000,  
+	143, [ left: 94.000000,  top: 1.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocProxy
 	145, [ name: o[146],  path: o[147],  
@@ -7364,153 +6101,90 @@ p = [
 	// Rect
 	149, [ left: 500.000000,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
+	// DocSession
+	151, [ name: o[152],  docs: o[153] ],  
+	// Array
+	153, [ o[154],  o[159],  o[162] ],  
 	// DocProxy
-	151, [ name: o[152],  path: o[153],  
-		text: o[154],  bounds: o[155],  
-		timestamp: o[156] ],  
+	154, [ name: o[155],  path: o[156],  
+		text: o[157],  bounds: o[158],  
+		timestamp: nil ],  
 	// Rect
-	155, [ left: 500.000000,  top: 4.000000,  
+	158, [ left: 500,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocProxy
-	157, [ name: o[158],  path: o[159],  
-		text: o[160],  bounds: o[161],  
-		timestamp: o[162] ],  
-	// Rect
-	161, [ left: 94.000000,  top: 1.000000,  
-		width: 790.000000,  height: 872.000000 ],  
+	159, [ name: o[160],  path: nil,  
+		text: o[161],  bounds: o[158],  
+		timestamp: nil ],  
 	// DocProxy
-	163, [ name: o[164],  path: o[165],  
-		text: o[166],  bounds: o[167],  
-		timestamp: o[168] ],  
-	// Rect
-	167, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
+	162, [ name: o[163],  path: o[164],  
+		text: o[165],  bounds: nil,  
+		timestamp: nil ],  
+	// DocSession
+	166, [ name: o[167],  docs: o[168] ],  
+	// Array
+	168, [ o[169],  o[173],  o[177],  o[181],  
+		o[185],  o[189],  o[193],  o[197],  
+		o[201],  o[205],  o[209],  o[213],  
+		o[217] ],  
 	// DocProxy
 	169, [ name: o[170],  path: o[171],  
-		text: o[172],  bounds: o[173],  
-		timestamp: o[174] ],  
-	// Rect
-	173, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
+		text: o[172],  bounds: nil,  
+		timestamp: nil ],  
 	// DocProxy
-	175, [ name: o[176],  path: o[177],  
-		text: o[178],  bounds: o[179],  
-		timestamp: o[180] ],  
-	// Rect
-	179, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
+	173, [ name: o[174],  path: o[175],  
+		text: o[176],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	177, [ name: o[178],  path: o[179],  
+		text: o[180],  bounds: nil,  
+		timestamp: nil ],  
 	// DocProxy
 	181, [ name: o[182],  path: o[183],  
-		text: o[184],  bounds: o[185],  
-		timestamp: o[186] ],  
-	// Rect
-	185, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
+		text: o[184],  bounds: nil,  
+		timestamp: nil ],  
 	// DocProxy
-	187, [ name: o[188],  path: o[189],  
-		text: o[190],  bounds: o[191],  
-		timestamp: o[192] ],  
-	// Rect
-	191, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
+	185, [ name: o[186],  path: o[187],  
+		text: o[188],  bounds: nil,  
+		timestamp: nil ],  
+	// DocProxy
+	189, [ name: o[190],  path: o[191],  
+		text: o[192],  bounds: nil,  
+		timestamp: nil ],  
 	// DocProxy
 	193, [ name: o[194],  path: o[195],  
-		text: o[196],  bounds: o[197],  
-		timestamp: o[198] ],  
-	// Rect
-	197, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	199, [ name: o[200],  path: o[201],  
-		text: o[202],  bounds: o[203],  
-		timestamp: o[204] ],  
-	// Rect
-	203, [ left: 500.000000,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocSession
-	205, [ name: o[206],  docs: o[207] ],  
-	// Array
-	207, [ o[208],  o[213],  o[216] ],  
-	// DocProxy
-	208, [ name: o[209],  path: o[210],  
-		text: o[211],  bounds: o[212],  
-		timestamp: nil ],  
-	// Rect
-	212, [ left: 500,  top: 4.000000,  
-		width: 790.000000,  height: 872.000000 ],  
-	// DocProxy
-	213, [ name: o[214],  path: nil,  
-		text: o[215],  bounds: o[212],  
+		text: o[196],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	216, [ name: o[217],  path: o[218],  
-		text: o[219],  bounds: nil,  
-		timestamp: nil ],  
-	// DocSession
-	220, [ name: o[221],  docs: o[222] ],  
-	// Array
-	222, [ o[223],  o[227],  o[231],  o[235],  
-		o[239],  o[243],  o[247],  o[251],  
-		o[255],  o[259],  o[263],  o[267],  
-		o[271] ],  
-	// DocProxy
-	223, [ name: o[224],  path: o[225],  
-		text: o[226],  bounds: nil,  
+	197, [ name: o[198],  path: o[199],  
+		text: o[200],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	227, [ name: o[228],  path: o[229],  
-		text: o[230],  bounds: nil,  
+	201, [ name: o[202],  path: o[203],  
+		text: o[204],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	231, [ name: o[232],  path: o[233],  
-		text: o[234],  bounds: nil,  
+	205, [ name: o[206],  path: o[207],  
+		text: o[208],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	235, [ name: o[236],  path: o[237],  
-		text: o[238],  bounds: nil,  
+	209, [ name: o[210],  path: o[211],  
+		text: o[212],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	239, [ name: o[240],  path: o[241],  
-		text: o[242],  bounds: nil,  
+	213, [ name: o[214],  path: o[215],  
+		text: o[216],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	243, [ name: o[244],  path: o[245],  
-		text: o[246],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	247, [ name: o[248],  path: o[249],  
-		text: o[250],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	251, [ name: o[252],  path: o[253],  
-		text: o[254],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	255, [ name: o[256],  path: o[257],  
-		text: o[258],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	259, [ name: o[260],  path: o[261],  
-		text: o[262],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	263, [ name: o[264],  path: o[265],  
-		text: o[266],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	267, [ name: o[268],  path: o[269],  
-		text: o[270],  bounds: nil,  
-		timestamp: nil ],  
-	// DocProxy
-	271, [ name: o[272],  path: o[273],  
-		text: o[274],  bounds: nil,  
+	217, [ name: o[218],  path: o[219],  
+		text: o[220],  bounds: nil,  
 		timestamp: nil ],  
 	// IdentityDictionary
-	275, [ array: o[276],  size: 1,  
+	221, [ array: o[222],  size: 1,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	276, [ nil,  nil,  nil,  nil,  
+	222, [ nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
@@ -7519,36 +6193,36 @@ p = [
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil ],  
 	// Array
-	278, [ o[279],  o[282],  o[286],  o[290] ],  
+	224, [ o[225],  o[228],  o[232],  o[236] ],  
 	// DocProxy
-	279, [ name: o[280],  path: nil,  
-		text: o[281],  bounds: nil,  
+	225, [ name: o[226],  path: nil,  
+		text: o[227],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	282, [ name: o[283],  path: o[284],  
-		text: o[285],  bounds: nil,  
+	228, [ name: o[229],  path: o[230],  
+		text: o[231],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	286, [ name: o[287],  path: o[288],  
-		text: o[289],  bounds: nil,  
+	232, [ name: o[233],  path: o[234],  
+		text: o[235],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	290, [ name: o[291],  path: nil,  
-		text: o[292],  bounds: nil,  
+	236, [ name: o[237],  path: nil,  
+		text: o[238],  bounds: nil,  
 		timestamp: nil ],  
 	// Array
-	294, [ o[295],  o[296],  o[297],  o[298] ],  
+	240, [ o[241],  o[242],  o[243],  o[244] ],  
 	// Rect
-	295, [ left: 0.000000,  top: 4.000000,  
+	241, [ left: 0.000000,  top: 4.000000,  
 		width: 150.000000,  height: 852.000000 ],  
 	// Rect
-	296, [ left: 160.000000,  top: 4.000000,  
+	242, [ left: 160.000000,  top: 4.000000,  
 		width: 800.000000,  height: 872.000000 ],  
 	// Rect
-	297, [ left: 970.000000,  top: 4.000000,  
+	243, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ],  
 	// Rect
-	298, [ left: 970.000000,  top: 4.000000,  
+	244, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ]
 ];
 prUnarchive(o,p);

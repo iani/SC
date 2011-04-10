@@ -47,7 +47,7 @@ PerformanceWindow {
 		};
 		codePane = ListView(window, Rect(250, 2, 248, 496));
 		codePane.resize = 4;
-		codePane.action = {	 | me | this.performCodeAt(me.value); };
+		codePane.action = { | me | this.performCodeAt(me.value); };
 		codePane.keyDownAction = { | me, char |
 			this.selectAndPerformCodeAt(codeKeys indexOf: char);
 		};
@@ -66,10 +66,10 @@ PerformanceWindow {
 
 	selectDocByKey { | char, mod, unicode, key |
 		var items, match, endPos;
-		if (unicode == 16rF700, { this.valueAction = this.value - 1; ^this });
-		if (unicode == 16rF703, { this.valueAction = this.value + 1; ^this });
-		if (unicode == 16rF701, { this.valueAction = this.value + 1; ^this });
-		if (unicode == 16rF702, { this.valueAction = this.value - 1; ^this });
+		if (unicode == 16rF700, { docPane.valueAction = docPane.value - 1; ^this });
+		if (unicode == 16rF703, { docPane.valueAction = docPane.value + 1; ^this });
+		if (unicode == 16rF701, { docPane.valueAction = docPane.value + 1; ^this });
+		if (unicode == 16rF702, { docPane.valueAction = docPane.value - 1; ^this });
 		if (docPaneSearchString.isNil or: { unicode == 127 }) {
 			docPaneSearchString = char.asString;
 			{ docPaneSearchString = nil }.defer(keystrokeWaitInterval);
