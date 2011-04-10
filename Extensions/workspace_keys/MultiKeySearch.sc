@@ -12,7 +12,7 @@ l.action = { | me | [me.value, me.items[me.value]].postln; };
 w.front;
 l.focus;
 
-//:b Activate found item immediately
+//:b Hit return key to activate found item
 if (w.notNil) { w.close };
 w = Window.new;
 StaticText(w, Rect(2, 2, 300, 20)).string = "Hit return to act on the selected item";

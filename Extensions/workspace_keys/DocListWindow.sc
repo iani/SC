@@ -161,7 +161,7 @@ DocListWindow {
 	
 	activateDocActions { | doc |
 		var selectionStart;
-		doc.mouseUpAction_({arg doc;
+/*		doc.mouseUpAction_({arg doc;
 			var line;
 			line = doc.currentLine;
 			if (line[0..2] == "//:") {
@@ -169,6 +169,7 @@ DocListWindow {
 				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
 			};
 		});
+*/
 		doc.keyDownAction = { | me, char, mod, ascii, key |
 			var selectionStart;
 			if (ascii == 14) { // control-n
