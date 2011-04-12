@@ -3466,607 +3466,644 @@ q[\\favourite_sound].value;
 
 
 ",  
-	DocSession.prNew,  Array.prNew(5),  DocProxy.prNew,  " post ",  
-	"[ 1, beta ][ 1, beta ][ 2, gamma ][ 0, alpha ][ 3, Alpha ][ 1, beta ][ 0, alpha ][ 3, Alpha ][ 3, Alpha ][ 1, beta ][ 1, beta ][ 1, beta ][ 4, beste ][ 2, gamma ][ 5, gimli ][ 6, 01 ][ 6, 01 ][ 6, 01 ][ 7, 02 ][ 0, alpha ][ 9, ; semicolon ][ 10, - hyphen ][ 0, alpha ][ 2, gamma ][ 3, Alpha ][ 1, beta ][ 0, alpha ][ 1, beta ][ 2, gamma ][ 3, Alpha ][ 1, beta ][ 2, gamma ][ 5, gimli ][ 1, beta ][ 1, beta ][ 4, beste ][ 2, gamma ][ 5, gimli ][ 6, 01 ][ 6, 01 ][ 6, 01 ][ 7, 02 ][ 9, ; semicolon ][ 1, beta ][ 0, alpha ][ 2, gamma ][ 3, Alpha ][ 1, beta ][ 3, Alpha ][ 1, beta ][ 2, gamma ][ 3, Alpha ][ 0, alpha ][ 1, beta ]",  Rect.prNew,  "110410_133754",  DocProxy.prNew,  
-	"DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "
-DocListWindow {
-	classvar >default;
-	classvar <>docListWidth = 150;
-	classvar <>listenerY = 280, <>listenerWidth = 500;
-	var <docBrowser, <docBrowserView, <docListView, <codeListView;
-	var <docBounds, <docBrowserBounds, <listenerBounds;
-	var <allDocs, <selectedDoc;
-	var <codeStrings, <codeKeys, <codePositions, <docKeys;
-	var <menuItems;
-	// autosave all docs to archive every 300 seconds (5 minutes), per default
-	var <>autosave = true, <>autosave_rate = 300, autosave_routine; 
-
-	*initClass {
-		this.makeUserMenuItems;	
+	DocSession.prNew,  Array.prNew(8),  DocProxy.prNew,  " post ",  
+	"Quarks.guia SCWindow",  Rect.prNew,  "110411_133042",  DocProxy.prNew,  
+	"Buffers.sc",  "/Users/iani/Dropbox/notes/capturefiles/data/A2/C8AA1B-F402-45C7-BF5C-04716BC50791/SuperCollider/Extensions/workspace_keys/Buffers.sc",  "Buffers : IdentityDictionary {
+	classvar default;
+	
+	*new { | x |
+		^super.new;	
 	}
-
-	*makeUserMenuItems {
-		CocoaMenuItem.addToMenu(\"User Menu\", \"Toggle Doc List\", [\"0\", false, false], { 
-			this.toggle;
-		});
-	}
-
 	*default {
 		if (default.isNil) { default = this.new };
-		^default;	
-	}
-	
-	*new { ^super.new.init }
-	
-	init { allDocs = SortedList(8, { | a, b | a.name < b.name; }); }
-
-	*toggle { this.default.toggle }
-	*start { this.default.start }
-	*stop { this.default.stop }
-
-
-	stop {
-		docBrowser.close;
-		autosave_routine.stop;
-		this.removeUserMenuItems;
-		this.init;
-		NotificationCenter.notify(this, \\stopped);
+		^default;
 	}
 
-	toggle {
-		if (docBrowser.isNil) { this.start } { this.stop }
-	}
-
-	start {
-		if (Document.allDocuments.size > 1) {
-			DocProxy.loadDefaultBounds;		
-		};
-		this.makeGui;
-		{
-			NotificationCenter.register(Document, \\opened, this, { | doc |
-//				[this, \"received document opened message with document named:\", doc.name].postln;
-				this.addDoc(doc);
-			});
-			NotificationCenter.register(Document, \\closed, this, { | doc |
-				this.removeDoc(doc);
-			});
-			NotificationCenter.register(Document, \\toFront, this, { | doc | 
-				this.selectDoc(doc);
-			});
-			NotificationCenter.register(Document, \\endFront, this, { | doc | 
-				this.unselectDoc(doc);
-			});
-			Document.allDocuments do: this.addDoc(_);
-		}.defer(0.1); // defer needed when DocListWindow is started at SC startup
-		// at startup we also need to refresh the doc list to get the right name for the post window:
-		{ this.updateDocListView }.defer(1);	// the name of the post list window is set with some delay at startup (!?);
-		this.startAutosaveRoutine;
-		CmdPeriod.add(this);
-		NotificationCenter.notify(this, \\started);
-	}
-
-	startAutosaveRoutine {
-		{
-			loop {
-				autosave_rate.wait;
-				if (autosave) { this.saveSnapshot; };
-			}	
-		}.fork(AppClock);
-	}
-	
-	cmdPeriod { this.startAutosaveRoutine; }
-
-	addDoc { | doc |
-		{ // must wait for Doc to get its name
-			allDocs = allDocs add: doc;
-			this.setDocBounds(doc, DocProxy.boundsFor(doc));
-			this.updateDocListView;
-			this.selectDoc(doc);
-			doc.addNotifications;
-			NotificationCenter.notify(this, \\docAdded, doc);
-		}.defer(0.1);
-	}
-
-	updateDocListView {
-		var items;
-		items = allDocs collect: _.name;
-		// check for docBrowser not nil because on start we perform re-update delayed by 1 second. 
-		// the user may have closed the docBrowser during the re-update interval.
-		if (docBrowser.notNil) {
-			docListView.items = items;
-			NotificationCenter.notify(this, \\items, items);
-		};
-	}
-	
-	setDocBounds { | doc, bounds |
-		if (bounds.notNil) {
-			DocProxy.removeDocBounds(doc);
-			^doc.bounds = bounds;
-		};
-		if (docBrowser.bounds != docBrowserBounds) {
-			docBrowserBounds = docBrowser.bounds;
-			docListView.bounds = this.docListBounds;
-			codeListView.bounds = this.codeListBounds;
-			this.updateDocBounds;
-		};
-		if (doc.isListener) {
-			doc.bounds = listenerBounds;
-		}{
-			doc.bounds = docBounds;
-		};
-	}
-
-	updateDocBounds {
-		docBounds = Rect(listenerWidth, 
-			docBrowserBounds.top,
-			docBrowserBounds.left - listenerWidth,
-			docBrowserBounds.height + 22
-		);		
-	}
-	
-	removeDoc { | doc |
-		var newFront;
-		allDocs remove: doc;
-		this.updateDocListView;
-		NotificationCenter.notify(this, \\docRemoved, doc);
-		{ 	// defer needed for closed document to register that it is no longer front!
-			newFront = Document.allDocuments detect: { | d | d.isFront; };
-			this.selectDoc(doc);
-		}.defer(0.1);
-	}
-	
-	selectDoc { | doc |
-		var index;
-		index = allDocs.indexOf(doc);
-		if (index.isNil) { ^this };
-		selectedDoc = doc;
-		Document.current = selectedDoc;
-		selectedDoc.front;
-		this.makeCodeList(doc);	
-		docListView.value = index;
-		codeListView.enabled = false;
-		this.activateDocActions(doc);
-		NotificationCenter.notify(this, \\index, index);
-	}
-	
-	activateDocActions { | doc |
-		var selectionStart;
-		doc.mouseUpAction_({arg doc;
-			var line;
-			line = doc.currentLine;
-			if (line[0..2] == \"//:\") {
-				this.makeCodeList(doc);	
-				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
-			};
+	*loadDialog {
+		Dialog.getPaths({ | paths |
+			this.load(*paths);
 		});
-		doc.keyDownAction = { | me, char, mod, ascii, key |
-			var selectionStart;
-			if (ascii == 14) { // control-n
-				this.makeCodeList(doc);	
-				selectionStart = doc.selectionStart;
-				this.selectAndPerformCodeAt(codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1);
-			};
-		};
 	}
 	
-	unselectDoc { | doc |
-		this.deactivateDocActions(doc);
-	}
-
-	deactivateDocActions { | doc |
-		doc.mouseUpAction = nil;
-		doc.keyDownAction = nil;
-	}
-
-	makeGui {
-		this.makeUserMenuItems;
-		docBrowser = Window(\"docs\", 
-			Rect(Window.screenBounds.width - docListWidth, 0, docListWidth, Window.screenBounds.height - 50));
-		docBrowser.onClose = {
-			[\\opened, \\closed, \\toFront, \\endFront] do: NotificationCenter.unregister(Document, _, this);
-			docBrowser = nil;
-		};
-		docBrowserView = docBrowser.view;
-		docBrowserBounds = docBrowser.bounds;
-		this.updateDocBounds;
-		docListView = ListView(docBrowser, this.docListBounds);
-		docListView.keyDownAction = { | me, char, mod, ascii ... rest |
-			if (ascii == 127) {
-				if (allDocs[me.value].notNil) { allDocs[me.value].close };
-			}{
-				me.defaultKeyDownAction(char, mod, ascii, *rest);
-			}
-		};
-		docListView.action = { | me |
-				this.selectDoc(allDocs[me.value]) 
-		};
-		codeListView = ListView(docBrowser, this.codeListBounds);
-		codeListView.keyDownAction = { | me, char |
-			this.selectAndPerformCodeAt(codeKeys indexOf: char);
-		};
-		codeListView.focusColor = Color.red;
-		codeListView.action = {	 | me | this.performCodeAt(me.value); };
-		
-		docBrowserBounds = docBrowser.bounds;
-		listenerBounds = Rect(0, listenerY, listenerWidth, Window.screenBounds.height - listenerY);
-		docBrowser.front;
-	}
-
-	makeCodeList { | doc |
-		var items;
-		if (doc.isListener) { ^this }; // do not make code list for post window;
-		#items, codeStrings, codeKeys, codePositions = this.parseCode(doc);
-		codeListView.items = items;
-	}
+	*load { | ... paths | paths do: { | path | this.default.load(path) } }
 	
-	parseCode { | doc |
-		var prPoslist, prCodeParts, prCodeKeys, prItems, string;
-		string = doc.string;
-		prPoslist = string.findRegexp(\"^//:\").slice(nil, 0);
-		prPoslist = prPoslist.asArray;
-		if (prPoslist.size > 0) { 
-			prCodeParts = prPoslist collect: { | pos, i |
-				string[pos..(prPoslist[i + 1] ?? { string.size }) - 1];
-			};
-			prItems = prCodeParts collect: { | s |
-				if (s[3] == $!) { s.interpret };
-				s[3..50];
-			};
-			prCodeKeys = prItems collect: _.first;
+	load { | path |
+		var buffer;
+		if (path.pathMatch.size > 0) { 
+			buffer = Buffer.read(Server.default, path.asString);
+			this[buffer.path.basename.splitext.first.asSymbol] = buffer;
 		}{
-			prCodeParts = [string];
-			prItems = [\"0 \" ++ doc.name];
-			prCodeKeys = [$0];
-			prPoslist = [0];
-		};
-		^[prItems, prCodeParts, prCodeKeys, prPoslist add: (string.size + 1)];
-	}
-
-	selectAndPerformCodeAt { | index |
-		if (index.isNil) { ^this };
-		codeListView.value = index;
-		this.performCodeAt(index);	
-	}
-
-	performCodeAt { | index |
-		if (index.isNil) { ^this };
-		codeStrings[index].interpret;
-	}
-
-	makeUserMenuItems {
-		menuItems = [
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Open Session ...\", [\"o\", true, false], {
-				DocSession.loadAndOpenDialog(fromArchive: false);
-			}),
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Open Session from Archive ...\", [\"O\", true, false], {
-				DocSession.loadAndOpenDialog(fromArchive: true);
-			}),
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Open Session snapshot\", [\"o\", true, true], {
-				\"DocListWindow opening recent session\".postln;
-				DocSession.load(\\recent).openAllDocs(fromArchive: false);
-			}),
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Save Session ...\", [\"s\", true, false], {
-				DocSession.saveDialog(this.docProxies);
-			}),
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Save to Session snapshot\", [\"s\", true, true], {
-				this.saveSnapshot;
-			}),
-			CocoaMenuItem.addToMenu(\"User Menu\", \"Activate Code List\", [\"1\", false, false], {
-				this.makeCodeList(Document.cu",  Rect.prNew,  
-	"110410_133754",  DocProxy.prNew,  "DocPoller.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocPoller.sc",  
-	"/*
-DocPoller.start;
-DocPoller.stop;
-DocPoller.toggle;
-
-DocPoller.poller;
-*/
-
-DocPoller {
-	classvar dependants;
-	classvar <poller;
-	
-	*makeUserMenuItems {
-		CocoaMenuItem.addToMenu(\"User Menu\", \"Toggle DocPoller\", [\"0\", false, false], { 
-			this.toggle;
-		});
-
-	}
-	*toggle {
-		if (this.isRunning) { this.stop } { this.start }
-	}
-	
-	*isRunning { ^poller.notNil }
-	
-	*start {
-		this.makeUserMenuItems;
-		if (this.isRunning.not) { this.startPoller };
-		if (dependants.size == 0) { this.makeWindow };
-		CmdPeriod remove: this; // prevent adding self twice
-		CmdPeriod add: this;
-	}
-	
-	*startPoller {
-		poller = {
-			loop {
-				0.003.wait;
-				dependants do: { | d | d.update(Document.allDocuments) };
-			};
-		}.fork(AppClock);
-	}
-	
-	*cmdPeriod {
-		this.pollerStopped;
-		this.startPoller;
-	}
-
-
-	*dependants { ^dependants.asArray }
-
-	*makeWindow { DocListWindow.new.add }
-
-	*stop {
-		if (this.isRunning) { 
-			poller.stop;
-			this.pollerStopped;
-		};
-		dependants.copy do: _.close;	
-		CmdPeriod remove: this;
-	}
-	
-	*pollerStopped { poller = nil }
-	
-	*add { | dependant |
-		dependants = dependants add: dependant;	
-	}
-	
-	*remove { | dependant |
-		dependants remove: dependant;	
-	}
-}",  Rect.prNew,  "110410_133754",  DocProxy.prNew,  
-	"MultiKeySearch.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/MultiKeySearch.sc",  "/*
-
-//:a Activate found item immediately
-if (w.notNil) { w.close };
-w = Window.new;
-StaticText(w, Rect(2, 2, 300, 20)).string = \"Selected items are executed immediately\";
-l = ListView(w, Rect(2, 25, 300, 300));
-l.items = [\"alpha\", \"beta\", \"gamma\", \"Alpha\", \"beste\", \"gimli\", \"01\", \"02\", \". a point\", \"; semicolon\", \"- hyphen\"];
-l.keyDownAction = MultiKeySearch.new;
-l.action = { | me | [me.value, me.items[me.value]].postln; };
-
-w.front;
-l.focus;
-
-//:b Activate found item immediately
-if (w.notNil) { w.close };
-w = Window.new;
-StaticText(w, Rect(2, 2, 300, 20)).string = \"Hit return to act on the selected item\";
-l = ListView(w, Rect(2, 25, 300, 300));
-l.items = [\"alpha\", \"beta\", \"gamma\", \"Alpha\", \"beste\", \"gimli\", \"01\", \"02\", \". a point\", \"; semicolon\", \"- hyphen\"];
-l.keyDownAction = MultiKeySearch(false); // or: MultiKeySearcy(doImmediately: false);
-l.action = { | me | [me.value, me.items[me.value]].postln; };
-
-w.front;
-l.focus;
-
-//:r rest
-*/
-
-// Note: The dot character (.) returns selects the first item in the list per default. This has not been changed here.
-
-
-MultiKeySearch {
-	var <>doImmediately = true;
-	var <>keystrokeWaitInterval = 1.0;
-	var <string;
-	var <done = false;
-
-	*new { | doImmediately = true, keystrokeWaitInterval = 1.0 |
-		^this.newCopyArgs(doImmediately, keystrokeWaitInterval);
-	}
-	
-	value { | listview, char, mod, unicode, key |
-		var items, match, endPos;
-		if (unicode == 13) { listview.doAction; done = true; ^this };
-		if (unicode == 16rF700, { listview.valueAction = listview.value - 1; ^this });
-		if (unicode == 16rF703, { listview.valueAction = listview.value + 1; ^this });
-		if (unicode == 16rF701, { listview.valueAction = listview.value + 1; ^this });
-		if (unicode == 16rF702, { listview.valueAction = listview.value - 1; ^this });
-		if (string.isNil or: { unicode == 127 }) {
-			string = char.asString;
-			{ string = nil; }.defer(keystrokeWaitInterval);
-		}{
-			string = string ++ char.asString;
-		};
-		endPos = string.size;
-		items = listview.items;
-		match = items detect: { | i |
-			string.matchRegexp(i, 0, endPos);
-		};
-		if (match.notNil) {
-			listview.value = items indexOf: match;
-			if (doImmediately) { listview.doAction };
-		};
-	} 
-	
-}",  Rect.prNew,  
-	"110410_133754",  DocProxy.prNew,  "SCListView.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCListView.html",  
-	"SCListView			a list view	
-
-Inherits from: Object : SCView : SCControlView
-
-See also: SCPopUpMenu
-
-Some Important Issues Regarding SCListView
-
-By default, SCSlider will respond only to drags where the drag contains a Number.
-
-Creation / Class Methods
-
-	*new (parent, bounds)
-	
-		parent - The parent view.
-		bounds - An instance of Rect, or a Point indicating width@height.
-		
-		(
-		w = Window.new.front;
-		v = ListView(w,Rect(10,10,120,200));
-		v.items = [ \"item 1\", \"item 2\", \"item 3\", \"item 4\", \"item 5\"];
-		v.action = { arg q; [ q.value, v.items[ q.value ] ].postln;	};
-		)
-
-Accessing Instance and Class Variables
-
-	items
-	items_ (array)
-	
-		array - An Array of Strings or Symbols, which make up the items in the pop up menu.
-		
-	item
-	
-		Returns items.at(this.value)
-		
-	value
-	value_ (val)
-	
-		Gets/sets the index of the currently highlighted item. This will not do the action.
-		val - The index of an item in the items array .
-
-	valueAction_ (val)
-	
-		Sets the menu to highlight the item at index val, and evaluates action (see SCView), if the value has changed.
-		val - The index of an item in the items array .
-		
-	enterKeyAction_(arg1)
-	enterKeyAction
-		
-		Instead of, or additionally to defining an action (see SCView), you can define an action which will be performed only if you hit the enter key while the list view is focussed.
-				
-Customizing Appearance
-
-	font
-	font_ (argFont)
-	
-		Sets the Font of the list. Default value is the default font: Font.default .
-		argFont - An instance of Font.
-
-	stringColor
-	stringColor_ (color)
-	
-		Set the string Color for the unselected items in the list .
-		color - An instance of Color.
-				
-	selectedStringColor
-	selectedStringColor_ (color)
-	
-		Set the string Color for the selected item .
-		color - An instance of Color.
-
-	hiliteColor
-	hiliteColor_ (color)
-	
-		Set the background Color for the selected item .
-		color - An instance of Color.
-
-	colors
-	colors_(incolors)
-		
-		Set the background Color for the items.
-		incolor - An Array of Colors
-
-Subclassing and Internal Methods
-	The following methods are usually not used directly or are called by a primitive. Programmers can still call or override these as needed.
-
-	defaultKeyDownAction (char, modifiers, unicode)
-	
-		The default keydown actions are:
-		
-		key				action				comment
-		\" \" 				value + 1	with action	space
-		\\r 				enterKeyAction
-		\\n, 				enterKeyAction	
-		3.asAscii,			enterKeyAction			(enter key or cmd-C on Mac OSX )
-		unicode 16rF700, 	value - 1 with action		up arrow
-		unicode 16rF703, 	value + 1 with action		right arrow
-		unicode 16rF701, 	value + 1 with action	down arrow
-		unicode 16rF702, 	value - 1 with action		left arrow
-
-	properties
-	
-		A list of properties to which this view responds. See SCView.
-		
-		returns:
-		[ \\bounds, \\visible, \\enabled, \\canFocus, \\resize, \\background, \\minWidth, \\maxWidth, \\minHeight, \\maxHeight, \\value, \\font, \\items, \\stringColor, \\align, \\itemColors, \\focusColor ]
-
-	init (argParent, argBounds)
-	
-		Overrides SCView:init.
-		
-	defaultGetDrag
-	
-		The method called by default when initiating a drag from an SCListView. Returns the same as value.
 			
-	defaultCanReceiveDrag
+		}
+	}
+
+	*at { | key | ^this.default.at(key) }
 	
-		The method called by default when attempting to drop a drag in this object. Returns the result of currentDrag.isNumber.
-				
-	defaultReceiveDrag
+	*names { ^this.default.keys }
 	
-		The default method called when a drag has been recieved. Performs valueAction_ with the currentDrag as an argument.
+}
+
+/*
+
+Buffers.loadDialog;
+Buffers.names.asArray.asCompileString;
+Buffers.at(\\tcp_d1_01_the_swedish_rhapsody_irdial);
+*/",  Rect.prNew,  
+	"110411_133042",  DocProxy.prNew,  "BufRd.html",  "/Applications/SuperCollider/Help/UGens/Oscillators/BufRd.html",  
+	"BufRd		buffer reading oscillator
+
+
+
+read the content of a buffer at an index. 
+see also BufWr
+
+
+
+BufRd.ar(numChannels, bufnum, phase, loop, interpolation)
+
+	numChannels 	number of channels that the buffer will be.
+				this must be a fixed integer. The architecture of the SynthDef
+				cannot change after it is compiled.
+				warning: if you supply a bufnum of a buffer that has a different
+				numChannels then you have specified to the BufRd, it will
+				fail silently.
+	
+	bufnum		the index of the buffer to use
+	phase   		audio rate modulatable index into the buffer.
+	loop      		1 means true, 0 means false.  this is modulatable.
+	interpolation    1 means no interpolation, 2 is linear, 4 is cubic interpolation
+
+
+
+in comparison to PlayBuf:
+	PlayBuf plays through the buffer by itself,
+	BufRd only moves its read point by the phase input
+		and therefore has no pitch input
+			
+	BufRd has variable interpolation
+
+
+
+(
+// read a whole sound into memory
+s = Server.local;
+// note: not *that* columbia, the first one
+s.waitForBoot{
+	s.sendMsg(\"/b_allocRead\", 0, \"sounds/a11wlk01.wav\");
+}
+)
+
+//use any AUDIO rate ugen as an index generator
+
+{ BufRd.ar(1, 0, SinOsc.ar(0.1) * BufFrames.ir(0)) }.play;
+{ BufRd.ar(1, 0, LFNoise1.ar(1) * BufFrames.ir(0)) }.play;
+{ BufRd.ar(1, 0, LFNoise1.ar(10) * BufFrames.ir(0)) }.play;
+{ BufRd.ar(1, 0, LFTri.ar(0.1) + LFTri.ar(0.23) * BufFrames.ir(0)) }.play;
+// original duration
+{ BufRd.ar(1, 0, LFSaw.ar(BufDur.ir(0).reciprocal).range(0, BufFrames.ir(0)) ) }.play;
+
+
+//use a phasor index into the file
+
+{ BufRd.ar(1, 0, Phasor.ar(0, BufRateScale.kr(0), 0, BufFrames.kr(0))) }.play;
+
+
+//change rate and interpolation
+(
+x = { arg rate=1, inter=2; 
+	BufRd.ar(1, 0, Phasor.ar(0, BufRateScale.kr(0) * rate, 0, BufFrames.kr(0)), 1, inter) 
+}.play;
+)
+
+x.set(\\rate, 0.9);
+x.set(\\rate, 0.6);
+x.set(\\inter, 1);
+x.set(\\inter, 0);
+
+
+//write into the buffer with a BufWr
+(
+y = { arg rate=1; 
+	var in;
+	in = SinOsc.ar(LFNoise1.kr(2, 300, 400), 0, 0.1);
+	BufWr.ar(in, 0, Phasor.ar(0, BufRateScale.kr(0) * rate, 0, BufFrames.kr(0)));
+	0.0 //quiet
+}.play;
+)
+
+//read it with a BufRd
+(
+x = { arg rate=1; 
+	BufRd.ar(1, 0, Phasor.ar(0, BufRateScale.kr(0) * rate, 0, BufFrames.kr(0))) 
+}.play;
+)
+
+
+
+x.set(\\rate, 5);
+y.set(\\rate, 2.0.rand);
+x.set(\\rate, 2);
+
+
+
+
+
+",  Rect.prNew,  "110411_133042",  DocProxy.prNew,  
+	"BufRd.scd",  "/Users/iani/Dropbox/notes/capturefiles/data/A2/C8AA1B-F402-45C7-BF5C-04716BC50791/SuperCollider/Extensions/workspace_keys/Examples/BufRd.scd",  "
+
+//: ! read a whole sound into memory
+// note: not *that* columbia, the first one
+Server.default.waitForBoot({
+	b = Buffer.read(path: \"sounds/a11wlk01.wav\", bufnum: 0).postln;
+});
+
+Synth(\"default\");
+Synth(\"default\");
+
+Server.default.options.inspect;
+
+//:a test the buffer
+
+b.play;
+
+b.inspect
+
+//:t test the buffer with phasor
+
+
+// BufRd.ar(numChannels, bufnum, phase, loop, interpolation)
+
+{ BufRd.ar(
+	1,
+	b, 
+	Phasor.ar(0, BufRateScale.kr(b), 0, BufFrames.kr(b))
+) }.play;
+
+
+//:x load some extra sounds: 
+Buffers.load(*[ 'tcp_d1_01_the_swedish_rhapsody_irdial', 'tcp_d1_03_counting_control_irdial', 'tcp_d1_02_counting_cia_irdial', 'tcp_d1_04_phonetic_alphabet_nato_irdial', 'tcp_d1_05_5_dashes_irdial', 'tcp_d1_06_the_lincolnshire_poacher_mi5_irdial' ])
+
+//:b reading parts of the buffer with demand / TDuty ugens driving BufRd + Phasor. 
+
+// BufRd.ar(numChannels, bufnum, phase, loop, interpolation)
+// 	Phasor.ar(trig, rate, start, end, resetPos)
+
+
+/*
+a = { Out.ar(0, BufRd.ar(1, b.bufnum, Phasor.ar(0, BufRateScale.kr(b), 0, BufFrames.kr(b)), 1, 0)) }.play; 
+*/
+
+a = { Out.ar(0, BufRd.ar(1, b.bufnum, 
+	Phasor.ar(TDuty.ar(
+		Dseq([0.1, 0.2, 0.4, 0.3] * 5, inf)), // timing of the reset of the phasor: restart loop
+		BufRateScale.kr(b), 				 // rate of playback
+		0, 								 // start from the beginning
+		BufFrames.kr(b)					 // play till the end (unless reset)
+	), 1, 0)) 
+}.play; 
+
+// { TDuty.ar(Dseq([0.1, 0.2, 0.4, 0.3], inf)) }.play; // demand ugen as durations
+
+//:c extending the above to change rate and points of start and end at each retrigger. 
+
+// Demand.ar(trig, reset, [..ugens..])
+
+
+c = Buffers.at(\\tcp_d1_03_counting_control_irdial);
+a = {
+	var trig, rate, rate_pattern, start, start_pattern, patterns;
+	trig = TDuty.ar(Dseq([0.1, 0.2, 0.4, 0.3] * 25, inf));
+	rate_pattern = Dseq([1, 1.5, -1, -1.5, 1, 1.9, -0.5], inf);
+	start_pattern = Dseq([0, 0.1, 0.2, 0.3], inf);
+	patterns = Demand.ar(trig, 0, [rate_pattern, start_pattern]);
+	rate = patterns[0];
+	start =  patterns[1];
+	Out.ar(0, BufRd.ar(1, c.bufnum.postln, 
+	Phasor.ar(
+		trig, 							// timing of the reset of the phasor: restart loop
+		rate * BufRateScale.kr(c), 			// rate of playback
+		start * BufFrames.kr(c), 			// start controlled by start_pattern
+		(start + 0.9).fold(1), BufFrames.kr(c)	// play end is start offset by 0.9
+	), 1, 0)) 
+}.play; 
+
+/*
+What form could a playlist-score take for the above?
+[
+	[dur, rate, startpoint],
+	[dur, rate, startpoint],
+	[dur, rate, startpoint],
+]
+
+or:
+
+[
+	[startpoint, endpoint, rate],
+	[startpoint, endpoint, rate],
+	[startpoint, endpoint, rate],
+]
+
+*/
+
+//:e playing random extracts. 
+
+// Demand.ar(trig, reset, [..ugens..])
+
+
+c = Buffers.at(\\tcp_d1_05_5_dashes_irdial);
+a = {
+	var trig, rate, rate_pattern, start, start_pattern;
+	trig = TDuty.ar(Dseq([2, 3, 4, 5, 6] / 20, inf));
+	rate_pattern = Dseq([1, 1, -1], inf);
+	start_pattern = Dseq((0, 0.01..1).reverse, inf);
+	#rate, start = Demand.ar(trig, 0, [rate_pattern, start_pattern]);
+	Out.ar(0, BufRd.ar(1, c.bufnum.postln, 
+	Phasor.ar(
+		trig, 							// timing of the reset of the phasor: restart loop
+		rate * BufRateScale.kr(c), 			// rate of playback
+		start * BufFrames.kr(c), 			// start controlled by start_pattern
+		(start + 0.9).fold(1), BufFrames.kr(c)	// play end is start offset by 0.9
+	), 1, 0)) 
+}.play; 
+",  Rect.prNew,  
+	"110411_133042",  DocProxy.prNew,  "Demand.html",  "/Applications/SuperCollider/Help/UGens/Synth control/Demand Rate/Demand.html",  
+	"
+Demand				demand results from demand rate ugens
+
+superclass: MultiOutUGen
+
+Demand.ar(trig, reset, [..ugens..])
+Demand.kr(trig, reset, [..ugens..])
+
+
+When there is a trigger at the trig input, a value is demanded each ugen in the list and output. The unit generators in the list should be 'demand' rate.
+When there is a trigger at the reset input, the demand rate ugens in the list are reset.
+
+trig - trigger. Can be any signal. A trigger happens when the signal changes from non-positive to positive.
+reset - trigger. Resets the list of ugens when triggered.
+
+see also: Duty, TDuty
+
+Note: By design, a reset trigger only resets the demand ugens; it does not reset the value at Demand's output. Demand continues to hold its value until the next value is demanded, at which point its output value will be the first expected item in the list.
+	
+// for Demand to jump to the start value upon receipt of a reset trigger, 
+// one can add (+) the two triggers together:
+
+(
+a = { |t_trig, t_reset|
+	var	d = Demand.kr(t_trig + t_reset, t_reset, Dseries(0, 1, inf));
+	d.poll(t_trig + t_reset);
+	0.0;
+}.play
+)
+
+// do this a few times -- the demand value should increase by 1 each time
+a.set(\\t_trig, 1);
+
+a.set(\\t_reset, 1);	// goes immediately back to 0
+
+
+// if d = Demand.kr(t_trig, t_reset, Dseries(0, 1, 10000000)), the reset trigger would output its old value and the new value would appear only on the next t_trig.
+
+
+
+Another Note: One demand ugen represents a single stream of values, so that embedding the same ugen twice calls this stream twice. To isolate a demand ugen, use a function:
+
+(
+{
+var a, b, t = Impulse.kr(2);
+a = { Dseq([1, 2, 3, 4, 5], inf) } * 100;
+b = a + 1;
+Demand.kr(t, 0, [a, b]).poll(t)
+}.play
+);
+
+
 
 Examples
 
 (
-
-w = Window.new.front;
-
-v = ListView(w,Rect(10,10,120,70))
-	.items_([ \"SinOsc\", \"Saw\", \"LFSaw\", \"WhiteNoise\", \"PinkNoise\", \"BrownNoise\", \"Osc\" ])
-	.background_(Color.clear)
-	.hiliteColor_(Color.green(alpha:0.6))
-	.action_({ arg sbs;
-		[sbs.value, v.items[sbs.value]].postln;	// .value returns the integer
-	});
+{ 
+	var trig, seq, freq;
+	trig = Impulse.kr(24);
+	seq = Drand([Dseq((1..5).mirror1, 1), Drand((4..10), 8)], 2000);
+	freq = Demand.kr(trig, 0, seq * 100);
+	SinOsc.ar(freq + [0,0.7]).cubed.cubed.scaleneg(MouseX.kr(-1,1)) * 0.1;
+}.play;
 )
 
-
-// Sound example use to switch Filters
 (
-Server.default = s = Stethoscope.defaultServer.boot;
-s.waitForBoot({
-	var f, freq, ww;
-	n={r=LFSaw.ar([220, 530],0,0.3)*LFPulse.ar(12,0,0.3,0.4); [r[0],Delay2.ar(r[1])]}.play;
-	freq={SinOsc.kr(0.5,0,4000,4200)}.play;
-	w=Window(\"Filters\").front;
-	v = ListView(w,Rect(10,10,180,120))
-		.items_([ \"No Filter\",\"RLPF\", \"RHPF\", \"BPF\", \"Resonz\", \"MoogFF\" ])
-		.background_(Color.clear)
-		.hiliteColor_(Color.green(alpha:0.6))
-		.action_({arg v;
-			v.value.switch(
-			0,{try{f.free};\"test\".postln},
-			1,{try{f.free};f={ReplaceOut.ar(0,RLPF.ar(In.ar(0,2),In.kr(0,1),0.2,0.3))}.play(addAction:\\addToTail)},
-			2,{try{f.free};f={ReplaceOut.ar(0,RHPF.ar(In.ar(0,2),In.kr(0,1),0.2,0.3))}.play(addAction:\\addToTail)},
-			3,{try{f.free};f={ReplaceOut.ar(0,BPF.ar(In.ar(0,2),In.kr(0,1),0.2,1.5))}.play(addAction:\\addToTail)},
-			4,{try{f.free};f={ReplaceOut.ar(0,Resonz.ar(In.ar(0,2),In.kr(0,1),0.2,2))}.play(addAction:\\addToTail)},
-			5,{try{f.free};f={ReplaceOut.ar(0,MoogFF.ar(In.ar(0,2),In.kr(0,1),1.5))}.play(addAction:\\addToTail)}
-			);
-		
-		});
-		
-	ww=FreqScope.new(400, 200, 0);
-	w.bounds=Rect(50,Window.screenBounds.height-300,200,200);
-	ww.window.bounds=ww.window.bounds.moveTo(255,Window.screenBounds.height-328);
-	CmdPeriod.doOnce({{ww.window.close}.defer(0.5);w.close;});
-			//defer or crash, because FreqScopeWindow Class contains its own routine for cleaning up on CmdPeriod
-	w.onClose_({n.free;f.free;freq.free});
-});
+{ 
+	var trig, seq, freq;
+	trig = Impulse.kr(12);
+	seq = Drand([Dseq((1..5).mirror1, 1), Drand((4..10), 8)], 2000) * Drand([1,2,4,8],2000);
+	freq = Demand.kr(trig, 0, seq * 100);
+	SinOsc.ar(freq + [0,0.7]).cubed.cubed.scaleneg(MouseX.kr(-1,1)) * 0.1;
+}.play;
 )
 
-",  Rect.prNew,  "110410_133754",  DocSession.prNew,  
-	"110406_122927",  Array.prNew(3),  DocProxy.prNew,  "Archive.html",  
-	"/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
+
+
+
+(
+{
+	var freq, trig, reset, seq;
+	trig = Impulse.kr(10);
+	seq = Diwhite(60, 72, inf).midicps; 
+	freq = Demand.kr(trig, 0, seq);
+	SinOsc.ar(freq + [0,0.7]).cubed.cubed * 0.1;
+}.play;
+)
+
+(
+{
+	var freq, trig, reset, seq;
+	trig = Impulse.kr(10);
+	seq = Dseq([72, 75, 79, Drand([82,84,86])], inf).midicps; 
+	freq = Demand.kr(trig, 0, seq);
+	SinOsc.ar(freq + [0,0.7]).cubed.cubed * 0.1;
+}.play;
+)
+
+
+(
+{
+	var freq, trig, reset, seq;
+	trig = Impulse.kr(10);
+	seq = Dswitch1(
+		[
+			Diwhite(60, 72, inf), 
+			Dseq([72, 75, 79, Drand([82,84,86])], inf)
+		], 
+		LFPulse.kr(0.2)
+	); 
+	freq = Demand.kr(trig, 0, seq.midicps);
+	SinOsc.ar(freq + [0,0.7]).cubed.cubed * 0.1;
+}.play;
+)
+
+
+(
+{
+	var freq, trig, reset, seq1, seq2;
+	trig = Impulse.kr(10);
+	seq1 = Drand([72, 75, 79, 82] - 12, inf).midicps; 
+	seq2 = Dseq([72, 75, 79, Drand([82,84,86])], inf).midicps; 
+	freq = Demand.kr(trig, 0, [seq1, seq2]);
+	SinOsc.ar(freq + [0,0.7]).cubed.cubed * 0.1;
+}.play;
+)
+
+(
+{
+	var trig, seq;
+	trig = Impulse.kr(8);
+	seq = Drand([
+		Dseq([4,0,0,1,2,1,0,1]),
+		Dseq([4,0,2,0,1,0,1,1]),
+		Dseq([4,0,0,2,0,0,1,1]),
+		Dseq([4,0,1,2,0,1,2,0]),
+		Dseq([4,1,1,1,2,2,3,3]),
+		Dseq([4,1,0,1,0,1,0,1])
+	], inf);
+	trig = Demand.kr(trig, 0, seq * 0.4) * trig;
+	{LPF.ar(PinkNoise.ar, 5000)}.dup * Decay.kr(trig, 0.5);
+}.play;
+)
+
+
+		
+
+",  Rect.prNew,  "110411_133042",  DocProxy.prNew,  
+	"Drand.html",  "/Applications/SuperCollider/Help/UGens/Synth control/Demand Rate/Drand.html",  "Drand, Dxrand			demand rate random sequence generators
+
+superclass: ListDUGen
+
+
+	*new(array, length)
+		
+		array	array of values or other ugens
+		length	number of values to return
+		
+	structurally related: Prand
+	see also: Demand	
+	
+	Dxrand never plays the same value twice, whereas Drand chooses any value in the list
+	
+	// example
+	
+	(
+	{ 
+		var a, freq, trig;
+		a = Drand([1, 3, 2, 7, 8], inf);
+		trig = Impulse.kr(MouseX.kr(1, 400, 1));
+		freq = Demand.kr(trig, 0, a) * 30 + 340; 
+		SinOsc.ar(freq) * 0.1
+	
+	}.play;
+	)
+	
+	(
+	{ 
+		var a, freq, trig;
+		a = Dxrand([1, 3, 2, 7, 8], inf);
+		trig = Impulse.kr(MouseX.kr(1, 400, 1));
+		freq = Demand.kr(trig, 0, a) * 30 + 340; 
+		SinOsc.ar(freq) * 0.1
+	
+	}.play;
+	)
+	
+	
+		
+	
+		
+	
+	
+",  Rect.prNew,  
+	"110411_133042",  DocProxy.prNew,  "OutputProxy.html",  "/Applications/SuperCollider/Help/UGens/Multichannel/OutputProxy.html",  
+	"OutputProxy		output place holder
+
+Superclass: UGen
+
+OutputProxy is used by some UGens as a place holder for multiple outputs.
+There is no reason for a user to create an OutputProxy directly.
+
+(
+var out;
+// Pan2 uses an OutputProxy for each of its two outputs.
+out = Pan2.ar(WhiteNoise.ar, 0.0); 
+out.postln;
+)
+
+Methods:
+
+source 
+
+Get the UGen that is the source for this OutputProxy.
+
+(
+var left, right;
+// Pan2 uses an OutputProxy for each of its two outputs.
+# left, right = Pan2.ar(WhiteNoise.ar, 0.0); 
+left.source.postln;
+)
+
+The source method is also defined in Array, so that the source can be obtained this way as well:
+
+(
+var out;
+// Pan2 uses an OutputProxy for each of its two outputs.
+out = Pan2.ar(WhiteNoise.ar, 0.0); 
+out.postln;
+out.source.postln;
+)
+
+",  Rect.prNew,  "110411_133042",  DocProxy.prNew,  
+	"TDuty.html",  "/Applications/SuperCollider/Help/UGens/Synth control/Demand Rate/TDuty.html",  "TDuty				demand results as trigger from demand rate ugens
+
+Inherits from: Object : AbstractFunction : UGen : Duty
+
+TDuty.ar(dur, reset,  level, doneAction)
+TDuty.kr(dur, reset,  level, doneAction)
+
+
+(Note that for sc 3.2, TDuty has changed. For the old behaviour, use TDuty_old.) 
+
+A value is demanded each ugen in the list and output  as a trigger according to a stream of duration values. 
+The unit generators in the list should be 'demand' rate.
+
+When there is a trigger at the reset input, the demand rate ugens in the list and the duration are reset.
+The reset input may also be a demand ugen, providing a stream of reset times.
+
+see also: Demand, Duty
+
+dur			time values. Can be a demand ugen or any signal. 
+			The next trigger value is acquired after the duration provided by the last time value.
+		
+reset		trigger or reset time values. Resets the list of ugens and the duration ugen when triggered.
+			The reset input may also be a demand ugen, providing a stream of reset times.
+
+
+level			demand ugen providing the output values.
+
+
+doneAction	a doneAction that is evaluated when the duration stream ends.
+			See UGen-doneActions for more detail.
+
+
+
+
+
+
+// examples
+
+s.boot;
+
+
+// play a little rhythm
+
+{ TDuty.ar(Dseq([0.1, 0.2, 0.4, 0.3], inf)) }.play; // demand ugen as durations
+
+
+
+// amplitude changes
+(
+	{
+		var trig;
+		trig = TDuty.ar(
+				Dseq([0.1, 0.2, 0.4, 0.3], inf), // demand ugen as durations
+				0, 
+				Dseq([0.1, 0.4, 0.01, 0.5, 1.0], inf) // demand ugen as amplitude
+			); 
+		Ringz.ar(trig, 1000, 0.1)
+	
+	}.play;
+)
+
+(
+	{
+		var trig;
+		trig = TDuty.ar(
+				MouseX.kr(0.001, 2, 1), // control rate ugen as durations
+				0, 
+				Dseq([0.1, 0.4, 0.01, 0.5, 1.0], inf)
+			); 
+		Ringz.ar(trig, 1000, 0.1)
+	
+	}.play;
+)
+
+
+
+
+// demand ugen as audio oscillator
+
+(
+	{
+		var a, trig, n=5, m=64;
+		a = {
+			var x;
+			x = { 0.2.rand2 } ! m;
+			x = x ++ ({  Drand({ 0.2.rand2 } ! n) } ! m.rand);
+			Dseq(x.scramble, inf)
+		} ! n;
+		trig = TDuty.ar(
+				MouseX.kr(1, 2048, 1) * SampleDur.ir * [1, 1.02],
+				0,
+				Dswitch1(a, MouseY.kr(0, n-1))
+			);
+		Ringz.ar(trig, 1000, 0.01)
+	
+	}.play;
+)
+
+
+// single impulses
+
+(
+SynthDef(\"delta_demand\", { arg amp=0.5, out;
+	OffsetOut.ar(out,
+		TDuty.ar(Dseq([0]), 0, amp, 2)
+	)
+}).send(s);
+)
+
+fork { 10.do { s.sendBundle(0.2, [\"/s_new\", \"delta_demand\", -1]); 1.0.rand.wait } };
+
+
+// chain of impulses
+(
+SynthDef(\"delta_demand2\", {
+	OffsetOut.ar(0,
+		TDuty.ar(Dgeom(0.05, 0.9, 20), 0, 0.5, 2)
+	)
+}).send(s);
+)
+
+fork { 10.do { s.sendBundle(0.2, [\"/s_new\", \"delta_demand2\", -1]); 1.0.rand.wait } };
+
+
+
+// multichannel expansion
+
+(
+	{
+		var t;
+		t = TDuty.ar(
+				Drand([Dgeom(0.1, 0.8, 20), 1, 2], inf) ! 2,
+				0, 
+				[Drand({ 1.0.rand } ! 8, inf), Dseq({ 1.0.rand } ! 8, inf)] * 2
+			); 
+		x = Ringz.ar(t, [400, 700], 0.1) * 0.1;
+	
+	}.play;
+)
+
+
+",  Rect.prNew,  
+	"110411_133042",  DocSession.prNew,  "110406_122927",  Array.prNew(3),  
+	DocProxy.prNew,  "Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
 
 Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
 
@@ -4120,8 +4157,8 @@ q[\\favourite_sound].value;
 
 
 
-",  Rect.prNew,  DocProxy.prNew,  
-	"Untitled 2",  "
+",  
+	Rect.prNew,  DocProxy.prNew,  "Untitled 2",  "
 
 
 { SinOsc.ar([300, 330]).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
@@ -4134,8 +4171,8 @@ q[\\favourite_sound].value;
 { SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
 
 { SinOsc.ar([300, 330] * 3).sum * LFPulse.kr(2 + [0, 0.01]) * 0.1 }.play;
-",  DocProxy.prNew,  "DocListWindow.sc",  
-	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "/*
+",  
+	DocProxy.prNew,  "DocListWindow.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocListWindow.sc",  "/*
 DocPoller.stop;
 */
 DocListWindow {
@@ -4295,9 +4332,9 @@ DocListWindow {
 	}
 		
 	
-}",  DocSession.prNew,  "110405_233219",  
-	Array.prNew(13),  DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  
-	"
+}",  
+	DocSession.prNew,  "110405_233219",  Array.prNew(13),  DocProxy.prNew,  
+	"DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
 DocProxy {
 	var <name;
 	var <path;
@@ -4381,8 +4418,8 @@ DocSession {
 	openAllDocs {
 		docs do: _.open;	
 	}
-}",  DocProxy.prNew,  "DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  
-	"
+}",  DocProxy.prNew,  
+	"DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
 //:a save all docs under \"defaultDocSession\" in global archive
 
 Archive.global.put(\\defaultDocSession, Document.allDocuments collect: DocProxy(_));
@@ -4421,8 +4458,8 @@ DocSession.saveAllDialog;
 //:j load session dialog
 
 DocSession.loadDialog;
-",  DocProxy.prNew,  "Library.sc",  "/Applications/SuperCollider/SCClassLibrary/Common/Collections/Library.sc",  
-	"MultiLevelIdentityDictionary : Collection
+",  DocProxy.prNew,  
+	"Library.sc",  "/Applications/SuperCollider/SCClassLibrary/Common/Collections/Library.sc",  "MultiLevelIdentityDictionary : Collection
 {
 
 	var <>dictionary;
@@ -4809,8 +4846,8 @@ LibraryBase : MultiLevelIdentityDictionary
 		^this.global.put(*args)
 	}
 	*create { arg ... args;
-		^this.global.create(*ar",  DocProxy.prNew,  "GUI.html",  "/Applications/SuperCollider/Help/GUI/GUI-Tools/GUI.html",  
-	"GUI			Factory abstraction for all GUI related core classes	
+		^this.global.create(*ar",  DocProxy.prNew,  
+	"GUI.html",  "/Applications/SuperCollider/Help/GUI/GUI-Tools/GUI.html",  "GUI			Factory abstraction for all GUI related core classes	
 
 Inherits from: Object
 
@@ -4985,8 +5022,8 @@ Methods and Variables for GUI
 		
 		A class variable. Returns an IdentityDictionary of registered skins.
 				
-",  DocProxy.prNew,  "GUI-Classes.html",  "/Applications/SuperCollider/Help/GUI/GUI-Classes.html",  
-	"GUI Classes		
+",  DocProxy.prNew,  
+	"GUI-Classes.html",  "/Applications/SuperCollider/Help/GUI/GUI-Classes.html",  "GUI Classes		
 
 Lists of kit-specific and kit-independant gui classes.
 
@@ -5214,8 +5251,8 @@ returns a Rect with the graphic size of a string. See the example in GUI-Overvie
 
 
 
-",  DocProxy.prNew,  "TextDialog.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/TextDialog.sc",  
-	"/*
+",  DocProxy.prNew,  
+	"TextDialog.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/TextDialog.sc",  "/*
 
 TextDialog(\"just some test\", \"input some text here\", { | t | t.postln; \"was okd\".postln; }, { \"cancelled\".postln; });
 
@@ -5283,8 +5320,8 @@ ListSelectDialog {
 		};
 		window.front;	
 	}
-}",  DocProxy.prNew,  "SCWindow.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCWindow.html",  
-	"SCWindow			Cocoa user interface window	
+}",  DocProxy.prNew,  
+	"SCWindow.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCWindow.html",  "SCWindow			Cocoa user interface window	
 
 Inherits from: Object
 
@@ -5536,8 +5573,8 @@ w.drawHook = Routine {
 			
 			Pen.fillColor = Color.new255(0, 120, 120).vary;
 			Pen.matrix = scale * #[1, 0, 0, 1, 1, 0];
-			Pen.stringAtPoint(char.a",  DocProxy.prNew,  "TextField.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/TextField.html",  
-	"TextField			a cross-platform redirector for a GUI widget	
+			Pen.stringAtPoint(char.a",  DocProxy.prNew,  
+	"TextField.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/TextField.html",  "TextField			a cross-platform redirector for a GUI widget	
 
 Inherits from: Object : ViewRedirect
 
@@ -5554,8 +5591,8 @@ CocoaGUI:      SCTextField
 
 Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
 
-",  DocProxy.prNew,  "SCTextField.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCTextField.html",  
-	"SCTextField			a text field for entering text	
+",  DocProxy.prNew,  
+	"SCTextField.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCTextField.html",  "SCTextField			a text field for entering text	
 
 Inherits from: Object : SCView : SCStaticTextBase : SCNumberBox
 
@@ -5638,8 +5675,8 @@ a.background_(Color.grey);
 a.stringColor_(Color.white);
 a.align_(\\center);
 
-",  DocProxy.prNew,  "StaticText.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/StaticText.html",  
-	"StaticText			a cross-platform redirector for a GUI widget	
+",  DocProxy.prNew,  
+	"StaticText.html",  "/Applications/SuperCollider/Help/GUI/Main-GUI/StaticText.html",  "StaticText			a cross-platform redirector for a GUI widget	
 
 Inherits from: Object : ViewRedirect
 
@@ -5656,8 +5693,8 @@ CocoaGUI:      SCStaticText
 
 Some of the links above might not work, if the help files for the listed kit are not included in your setup. If you do not see your GUI kit listed in the help redirect stubs, or to fix the above links,  see Regenerate-GUI-Help.
 
-",  DocProxy.prNew,  "SCStaticText.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCStaticText.html",  
-	"SCStaticText			a view for displaying text	
+",  DocProxy.prNew,  
+	"SCStaticText.html",  "/Applications/SuperCollider/Help/GUI/Cocoa-GUI/SCStaticText.html",  "SCStaticText			a view for displaying text	
 
 Inherits from: Object : SCView : SCStaticTextBase
 
@@ -5768,8 +5805,8 @@ w.onClose={r.stop; q.free; b.free }; //clean up if the window closes
 
 
 
-",  DocProxy.prNew,  "Date.html",  "/Applications/SuperCollider/Help/Control/Date.html",  
-	"Date			an object describing a point in time
+",  DocProxy.prNew,  
+	"Date.html",  "/Applications/SuperCollider/Help/Control/Date.html",  "Date			an object describing a point in time
 
 
 
@@ -5956,8 +5993,8 @@ Replaced by %.
 If a conversion specification does not correspond to any of the above, the behavior is undefined.
 
 
-",  DocProxy.prNew,  "Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  
-	"Archive			storing objects to file	
+",  DocProxy.prNew,  
+	"Archive.html",  "/Applications/SuperCollider/Help/Collections/Archive.html",  "Archive			storing objects to file	
 
 Inherits from: Object : Collection : MultiLevelIdentityDictionary : LibraryBase
 
@@ -6011,9 +6048,10 @@ q[\\favourite_sound].value;
 
 
 
-",  IdentityDictionary.prNew,  Array.prNew(32),  "110409_164004",  
-	Array.prNew(4),  DocProxy.prNew,  " post ",  "",  
-	DocProxy.prNew,  "DocSessionTests.scd",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
+",  IdentityDictionary.prNew,  
+	Array.prNew(32),  "110409_164004",  Array.prNew(4),  DocProxy.prNew,  
+	" post ",  "",  DocProxy.prNew,  "DocSessionTests.scd",  
+	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSessionTests.scd",  "
 //:a save all docs under \"defaultDocSession\" in global archive
 
 Archive.global.put(\\defaultDocSession, Document.allDocuments collect: DocProxy(_));
@@ -6037,8 +6075,8 @@ Document(a.name, a.text);
 
 //:f reopen Doc from path
 Document.open(a.path);
-",  
-	DocProxy.prNew,  "DocSession.sc",  "/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
+",  DocProxy.prNew,  "DocSession.sc",  
+	"/Users/iani/Library/Application Support/SuperCollider/Extensions/workspace_keys/DocSession.sc",  "
 DocProxy {
 	var <name;
 	var <path;
@@ -6074,10 +6112,9 @@ DocSession {
 		
 	}
 	
-}",  
-	DocProxy.prNew,  " post ",  "asdfdfddfff1111111",  "Untitled 2",  
-	Array.prNew(4),  Rect.prNew,  Rect.prNew,  Rect.prNew,  
-	Rect.prNew
+}",  DocProxy.prNew,  " post ",  
+	"asdfdfddfff1111111",  "Untitled 2",  Array.prNew(4),  Rect.prNew,  
+	Rect.prNew,  Rect.prNew,  Rect.prNew
 ];
 p = [
 	// Archive
@@ -6087,14 +6124,14 @@ p = [
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	2, [ 'docSessions',  o[3],  'test',  o[233],  
-		'last_quit',  o[235],  nil,  nil,  
+	2, [ 'docSessions',  o[3],  'test',  o[251],  
+		'last_quit',  o[253],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'defaultDocSession',  o[236],  nil,  nil,  
+		'defaultDocSession',  o[254],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'currentDoc',  o[251],  'documentBrowserRects',  o[252] ],  
+		'currentDoc',  o[269],  'documentBrowserRects',  o[270] ],  
 	// IdentityDictionary
 	3, [ array: o[4],  size: 8,  
 		proto: nil,  parent: nil,  
@@ -6107,7 +6144,7 @@ p = [
 		nil,  nil,  '110405_231327',  o[22],  
 		'110405_231147',  o[77],  nil,  nil,  
 		nil,  nil,  'recent',  o[132],  
-		'110406_122927',  o[163],  '110405_233219',  o[178] ],  
+		'110406_122927',  o[181],  '110405_233219',  o[196] ],  
 	// DocSession
 	5, [ name: o[6],  docs: o[7] ],  
 	// Array
@@ -6252,7 +6289,7 @@ p = [
 	132, [ name: 'recent',  docs: o[133] ],  
 	// Array
 	133, [ o[134],  o[139],  o[145],  o[151],  
-		o[157] ],  
+		o[157],  o[163],  o[169],  o[175] ],  
 	// DocProxy
 	134, [ name: o[135],  path: nil,  
 		text: o[136],  bounds: o[137],  
@@ -6288,90 +6325,111 @@ p = [
 	// Rect
 	161, [ left: 500.000000,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
-	// DocSession
-	163, [ name: o[164],  docs: o[165] ],  
-	// Array
-	165, [ o[166],  o[171],  o[174] ],  
 	// DocProxy
-	166, [ name: o[167],  path: o[168],  
-		text: o[169],  bounds: o[170],  
-		timestamp: nil ],  
+	163, [ name: o[164],  path: o[165],  
+		text: o[166],  bounds: o[167],  
+		timestamp: o[168] ],  
 	// Rect
-	170, [ left: 500,  top: 4.000000,  
+	167, [ left: 500.000000,  top: 4.000000,  
 		width: 790.000000,  height: 872.000000 ],  
 	// DocProxy
-	171, [ name: o[172],  path: nil,  
-		text: o[173],  bounds: o[170],  
+	169, [ name: o[170],  path: o[171],  
+		text: o[172],  bounds: o[173],  
+		timestamp: o[174] ],  
+	// Rect
+	173, [ left: 500.000000,  top: 4.000000,  
+		width: 790.000000,  height: 872.000000 ],  
+	// DocProxy
+	175, [ name: o[176],  path: o[177],  
+		text: o[178],  bounds: o[179],  
+		timestamp: o[180] ],  
+	// Rect
+	179, [ left: 500.000000,  top: 4.000000,  
+		width: 790.000000,  height: 872.000000 ],  
+	// DocSession
+	181, [ name: o[182],  docs: o[183] ],  
+	// Array
+	183, [ o[184],  o[189],  o[192] ],  
+	// DocProxy
+	184, [ name: o[185],  path: o[186],  
+		text: o[187],  bounds: o[188],  
+		timestamp: nil ],  
+	// Rect
+	188, [ left: 500,  top: 4.000000,  
+		width: 790.000000,  height: 872.000000 ],  
+	// DocProxy
+	189, [ name: o[190],  path: nil,  
+		text: o[191],  bounds: o[188],  
 		timestamp: nil ],  
 	// DocProxy
-	174, [ name: o[175],  path: o[176],  
-		text: o[177],  bounds: nil,  
+	192, [ name: o[193],  path: o[194],  
+		text: o[195],  bounds: nil,  
 		timestamp: nil ],  
 	// DocSession
-	178, [ name: o[179],  docs: o[180] ],  
+	196, [ name: o[197],  docs: o[198] ],  
 	// Array
-	180, [ o[181],  o[185],  o[189],  o[193],  
-		o[197],  o[201],  o[205],  o[209],  
-		o[213],  o[217],  o[221],  o[225],  
-		o[229] ],  
+	198, [ o[199],  o[203],  o[207],  o[211],  
+		o[215],  o[219],  o[223],  o[227],  
+		o[231],  o[235],  o[239],  o[243],  
+		o[247] ],  
 	// DocProxy
-	181, [ name: o[182],  path: o[183],  
-		text: o[184],  bounds: nil,  
+	199, [ name: o[200],  path: o[201],  
+		text: o[202],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	185, [ name: o[186],  path: o[187],  
-		text: o[188],  bounds: nil,  
+	203, [ name: o[204],  path: o[205],  
+		text: o[206],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	189, [ name: o[190],  path: o[191],  
-		text: o[192],  bounds: nil,  
+	207, [ name: o[208],  path: o[209],  
+		text: o[210],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	193, [ name: o[194],  path: o[195],  
-		text: o[196],  bounds: nil,  
+	211, [ name: o[212],  path: o[213],  
+		text: o[214],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	197, [ name: o[198],  path: o[199],  
-		text: o[200],  bounds: nil,  
+	215, [ name: o[216],  path: o[217],  
+		text: o[218],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	201, [ name: o[202],  path: o[203],  
-		text: o[204],  bounds: nil,  
+	219, [ name: o[220],  path: o[221],  
+		text: o[222],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	205, [ name: o[206],  path: o[207],  
-		text: o[208],  bounds: nil,  
+	223, [ name: o[224],  path: o[225],  
+		text: o[226],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	209, [ name: o[210],  path: o[211],  
-		text: o[212],  bounds: nil,  
+	227, [ name: o[228],  path: o[229],  
+		text: o[230],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	213, [ name: o[214],  path: o[215],  
-		text: o[216],  bounds: nil,  
+	231, [ name: o[232],  path: o[233],  
+		text: o[234],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	217, [ name: o[218],  path: o[219],  
-		text: o[220],  bounds: nil,  
+	235, [ name: o[236],  path: o[237],  
+		text: o[238],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	221, [ name: o[222],  path: o[223],  
-		text: o[224],  bounds: nil,  
+	239, [ name: o[240],  path: o[241],  
+		text: o[242],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	225, [ name: o[226],  path: o[227],  
-		text: o[228],  bounds: nil,  
+	243, [ name: o[244],  path: o[245],  
+		text: o[246],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	229, [ name: o[230],  path: o[231],  
-		text: o[232],  bounds: nil,  
+	247, [ name: o[248],  path: o[249],  
+		text: o[250],  bounds: nil,  
 		timestamp: nil ],  
 	// IdentityDictionary
-	233, [ array: o[234],  size: 1,  
+	251, [ array: o[252],  size: 1,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	234, [ nil,  nil,  nil,  nil,  
+	252, [ nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
@@ -6380,36 +6438,36 @@ p = [
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil ],  
 	// Array
-	236, [ o[237],  o[240],  o[244],  o[248] ],  
+	254, [ o[255],  o[258],  o[262],  o[266] ],  
 	// DocProxy
-	237, [ name: o[238],  path: nil,  
-		text: o[239],  bounds: nil,  
+	255, [ name: o[256],  path: nil,  
+		text: o[257],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	240, [ name: o[241],  path: o[242],  
-		text: o[243],  bounds: nil,  
+	258, [ name: o[259],  path: o[260],  
+		text: o[261],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	244, [ name: o[245],  path: o[246],  
-		text: o[247],  bounds: nil,  
+	262, [ name: o[263],  path: o[264],  
+		text: o[265],  bounds: nil,  
 		timestamp: nil ],  
 	// DocProxy
-	248, [ name: o[249],  path: nil,  
-		text: o[250],  bounds: nil,  
+	266, [ name: o[267],  path: nil,  
+		text: o[268],  bounds: nil,  
 		timestamp: nil ],  
 	// Array
-	252, [ o[253],  o[254],  o[255],  o[256] ],  
+	270, [ o[271],  o[272],  o[273],  o[274] ],  
 	// Rect
-	253, [ left: 0.000000,  top: 4.000000,  
+	271, [ left: 0.000000,  top: 4.000000,  
 		width: 150.000000,  height: 852.000000 ],  
 	// Rect
-	254, [ left: 160.000000,  top: 4.000000,  
+	272, [ left: 160.000000,  top: 4.000000,  
 		width: 800.000000,  height: 872.000000 ],  
 	// Rect
-	255, [ left: 970.000000,  top: 4.000000,  
+	273, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ],  
 	// Rect
-	256, [ left: 970.000000,  top: 4.000000,  
+	274, [ left: 970.000000,  top: 4.000000,  
 		width: 460.000000,  height: 872.000000 ]
 ];
 prUnarchive(o,p);

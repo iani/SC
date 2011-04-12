@@ -38,6 +38,7 @@ PerformanceWindow {
 		window.onClose = { this.closed };
 		docPane = ListView(window, Rect(2, 2, 248, 496));
 		docPane.resize = 4;
+		docPane.focusColor = Color.red;
 		docPane.items = docListWindow.docListView.items;
 		docPane.action = { | me | 
 			this.selectDoc(me.value);	
@@ -47,6 +48,7 @@ PerformanceWindow {
 		};
 		codePane = ListView(window, Rect(250, 2, 248, 496));
 		codePane.resize = 4;
+		codePane.focusColor = Color.blue;
 		codePane.action = { | me | this.performCodeAt(me.value); };
 		codePane.keyDownAction = { | me, char |
 			this.selectAndPerformCodeAt(codeKeys indexOf: char);
