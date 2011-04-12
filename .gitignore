@@ -7,6 +7,7 @@
 *.zip
 
 #other files and folders that should be ignored
+*.sctxar
 archive.sctxar # we are using this file to store files of work sessions with DocSession
 	       # but it gets in the way because of auto-save. So just leave an example version,
 	       # but stop committing new versions
