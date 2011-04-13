@@ -1,4 +1,4 @@
-SynthDef("burblekaze2", { | amp = 1, dur = 10, amp2 = 1 |
+SynthDef("burblekaze", { | amp = 1, dur = 10|
 	var src, filt, mod, aburbl, fburbl, env;
 
 	mod = LFNoise1.kr(	// fluctuate the amplitude
@@ -30,13 +30,13 @@ SynthDef("burblekaze2", { | amp = 1, dur = 10, amp2 = 1 |
 	);
 	env = EnvGen.kr(Env.new([0.001,1,0.3,0.8,0.001],[2,3,1,4].normalizeSum,'sine'), 
 		levelScale: amp, timeScale: dur, doneAction: 2);
-	Out.ar(0, amp2 * Pan2.ar(filt * env, LFNoise1.kr(LFNoise1.kr(0.1, 2, 2.5)))); 
+	Out.ar(0, Pan2.ar(filt * env, LFNoise1.kr(LFNoise1.kr(0.1, 2, 2.5)))); 
 }, [\ir,\ir]
 )
 
 /* 
 
-~burble = Synth("BurbleKaze");
+~burble = Synth("burblekaze");
 
 ~burble.free;
 

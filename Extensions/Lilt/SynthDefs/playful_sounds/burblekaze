@@ -36,7 +36,7 @@ SynthDef("burblekaze", { | amp = 1, dur = 10|
 
 /* 
 
-~burble = Synth("BurbleKaze");
+~burble = Synth("burblekaze");
 
 ~burble.free;
 
