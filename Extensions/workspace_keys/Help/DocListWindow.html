@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Arial; color: #162bc4}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+span.s1 {color: #162bc4}
+span.s2 {color: #737373}
+span.s3 {color: #000000}
+</style>
+</head>
+<body>
+<p class="p1">//:d doc</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s1">DocListWindow</span> provides a way to execute parts of the code in a <span class="s1">SuperCollider</span> document through keyboard commands.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">These commands are in the form of sigle key strokes corresponding to characters, such as "a", "b" "1", "0" etc.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">The commands are active when the code snippet list pane at the lower half of the "docs" window pane has the focus. This focus is made visible by a red outline around the list pane. To activate the code-list pane on a document, type Cmd-1 when that document is selected (window of the document is topmost).<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s1">To</span> mark part of a document for execution by <span class="s1">LiltDoc</span>, precede it by a comment in the form of<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">//:&lt;k&gt;</p>
+<p class="p2"><br></p>
+<p class="p3">where &lt;k&gt; is the character of the key that you want to press to evaluate the code following the comment.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">Example:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">//:1 Start Sound 1</p>
+<p class="p2"><br></p>
+<p class="p3">a = { <span class="s1">PinkNoise</span>.ar(0.1) }.play;</p>
+<p class="p2"><br></p>
+<p class="p1">//:2 Stop Sound 1</p>
+<p class="p2"><br></p>
+<p class="p3">a.free;</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s1">The</span> code above defines two <span class="s2">"code snippets"</span> and binds them to (keyboard) keys 1 and 2.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s1">If</span> the key for a code snippet is the character <span class="s2">"!"</span> then that snipped will be executed whenever the document is brought to the top. <span class="s1">For</span> example:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">//:! Boot default server if not running:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">if (<span class="s1">Server</span>.default.serverRunning.not) { <span class="s1">Server</span>.default.boot };</p>
+<p class="p2"><br></p>
+<p class="p1">//: rest</p>
+<p class="p2"><br></p>
+<p class="p4"><b>Activation</b></p>
+<p class="p2"><br></p>
+<p class="p5">DocPoller<span class="s3">.start;</span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s1">This</span> installs keyboard command <span class="s1">Cmd</span>-1 to re-parse a document for snippets and bring up the list of snippets with their activation keys in the bottom list of the <span class="s1">Document</span> <span class="s1">List</span> <span class="s1">Pane</span>.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+</body>
+</html>
