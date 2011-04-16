@@ -16,6 +16,16 @@ DefaultBuffer.buffer;
 
 DefaultBuffer.buffer.play;
 
+PlayBuf.ar(numChannels, bufnum, rate, trigger, startPos, loop, doneAction)
+
+DefaultBuffer.loadTo($a);
+
+a;
+
+DefaultBuffer.loadTo(\buffer);
+
+~buffer;
+
 */
 
 DefaultBuffer {
@@ -44,9 +54,23 @@ DefaultBuffer {
 		});
 	}
 
-	*play { ^this.default.play }
+	*play { | funcOrSynthDef |
+		// one can optionally provide a synthdef or function to play the buffer with
+		^this.default play: funcOrSynthDef;
+	}
 
-	play { this loadBufferIfNeededAndDo: { this.buffer.play } }
+	play { | funcOrSynthDef |
+		if (funcOrSynthDef isKindOf: SynthDef) {
+			this loadBufferIfNeededAndDo: { funcOrSynthDef.play(server, [\bufnum, buffer.bufnum]) };
+		}{
+			this.loadBufferIfNeededAndDo(
+				if (funcOrSynthDef.isNil) {
+					{ this.buffer.play }
+				}{
+					{ funcOrSynthDef.(buffer) }
+				});
+		}
+	}
 
 	loadBufferIfNeededAndDo { | func |
 		// cannot use doIfFileExists here because it causes infinite loops with other calls
@@ -57,6 +81,7 @@ DefaultBuffer {
 		if (buffer.notNil and: { buffer.numFrames == SoundFile.use(path, _.numFrames) }) {
 			func.(buffer, this);
 		}{
+			if (buffer.notNil) { buffer.free };	// free RAM of server from old buffer
 			this loadBufferAndDo: func;
 		}
 	}
@@ -99,10 +124,14 @@ duration: % minutes and % seconds\n",
 
 	*buffer { ^this.default.buffer }
 
+	*loadTo { | toLoad |
+		this.default.loadTo(toLoad);		
+	}
+
 	loadTo { | toLoad |
 		case
-		{ toLoad isKindOf: Character } {
-			this loadBufferIfNeededAndDo: { thisProcess.interpreter.perform(toLoad.asString ++ "_", buffer) }
+		{ toLoad isKindOf: Char } {
+			this loadBufferIfNeededAndDo: { thisProcess.interpreter.perform(asSymbol(toLoad.asString ++ "_"), buffer) }
 		}
 		{ toLoad isKindOf: Symbol } {
 			this loadBufferIfNeededAndDo: { currentEnvironment[toLoad] = buffer }
