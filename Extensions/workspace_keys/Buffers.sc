@@ -16,16 +16,23 @@ Buffers : IdentityDictionary {
 	}
 	
 	*load { | ... paths | paths do: { | path | this.default.load(path) } }
+
+	*loadOnce { | ... paths | paths do: { | path | this.default.loadOnce(path) } }
 	
-	load { | path |
+	loadOnce { | path | this.load(path, doNotReload: true) }
+	
+	load { | path, doNotReload = true |
 		var buffer;
+		if (this[this getNameFromPath: path].notNil) { ^postf("% already loaded\n", path) };
 		if (path.pathMatch.size > 0) { 
 			buffer = Buffer.read(Server.default, path.asString);
-			this[buffer.path.basename.splitext.first.asSymbol] = buffer;
+			this[this getNameFromPath: path] = buffer;
 		}{
-			
+			postf("file not found: %\n", path);
 		}
 	}
+	
+	getNameFromPath { | path | ^path.basename.splitext.first.asSymbol }
 
 	*at { | key | ^this.default.at(key) }
 	
