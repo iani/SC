@@ -1,31 +1,6 @@
 /*
 !!!!!!!!!!!!!!! THIS CLASS COULD BE EXPANDED INTO A CLASS BufLib !!!!!!!!!!!!!
 
-
-DefaultBuffer.play;
-
-DefaultBuffer.loadDialog;
-
-DefaultBuffer.loadDialog.play; // plays the old buffer because loading is asynchronous
-
-DefaultBuffer loadDialog: _.play; // plays new buffer
-
-DefaultBuffer loadDialog: _.postInfo;
-
-DefaultBuffer.buffer;
-
-DefaultBuffer.buffer.play;
-
-PlayBuf.ar(numChannels, bufnum, rate, trigger, startPos, loop, doneAction)
-
-DefaultBuffer.loadTo($a);
-
-a;
-
-DefaultBuffer.loadTo(\buffer);
-
-~buffer;
-
 */
 
 DefaultBuffer {
