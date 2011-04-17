@@ -77,9 +77,8 @@ DocListWindow {
 				lastCurrentDoc = Document.allDocuments detect: { | d | d.name == lastCurrentDocName };
 				if (lastCurrentDoc.notNil) { lastCurrentDoc.front; lastCurrentDoc.toFrontAction.value };
 			};
+			this.updateDocListView; // update name of post list window here, catching delay of startup
 		}.fork(AppClock); 
-		// at startup we also need to refresh the doc list to get the right name for the post window:
-		{ this.updateDocListView }.defer(1);	// the name of the post list window is set with some delay at startup (!?);
 		this.startAutosaveRoutine;
 		CmdPeriod.add(this);
 		NotificationCenter.notify(this, \started);
@@ -102,7 +101,6 @@ DocListWindow {
 			this.setDocBounds(doc, DocProxy.boundsFor(doc));
 			this.updateDocListView;
 			this.selectDoc(doc);
-//			doc.addNotifications;
 			doc.toFrontAction = {
 				NotificationCenter.notify(Document, \toFront, doc); 
 			};
@@ -173,20 +171,12 @@ DocListWindow {
 		codeListView.enabled = false;
 		this.activateDocActions(doc);
 		NotificationCenter.notify(this, \index, index);
-		{ Archive.global.put(\currentDocName, Document.current.name ? "-"); }.defer(3); 
+		// defer prevents all documents saving themselves here when they close at shutdown:
+		{ Archive.global.put(\currentDocName, Document.current.name ? "-"); }.defer(3); // defer, yes!
 	}
 	
 	activateDocActions { | doc |
 		var selectionStart;
-/*		doc.mouseUpAction_({arg doc;
-			var line;
-			line = doc.currentLine;
-			if (line[0..2] == "//:") {
-				this.makeCodeList(doc);	
-				this.selectAndPerformCodeAt(codeKeys indexOf: line[3]);
-			};
-		});
-*/
 		doc.keyDownAction = { | me, char, mod, ascii, key |
 			var selectionStart;
 			if (ascii == 14) { // control-n
