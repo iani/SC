@@ -1,5 +1,11 @@
 //:! boot default server
-Server.default.boot;
+if (Server.default.serverRunning.not) { Server.default.boot; };
+
+//:0 custom spectrogram size
+
+a = Spectrogram(bounds: Rect(0, 0, 1100, 300)).start;
+b = { SinOsc.ar(LFNoise2.kr(1).range(100, 10000), 0, 0.1) }.play;
+
 //:a from Spectrogram quark help example 1
 if (w.notNil) { w.close; w = nil };
 w = Window.new("testing spectrogram", Rect(10,10, 600, 300)).front;

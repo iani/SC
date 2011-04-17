@@ -14,8 +14,7 @@ DocListWindow {
 	*initClass {
 		Class.initClassTree(Document);
 		Document.initAction = { | me | 
-//			me.post; " Document init action".postln;
-		NotificationCenter.notify(Document, \opened, me);
+			NotificationCenter.notify(Document, \opened, me);
 		};
 		this.makeUserMenuItems;	
 	}
@@ -32,15 +31,8 @@ DocListWindow {
 	}
 	
 	*new { ^super.new.init }
-	
-//	init { allDocs = /* List.new; */ Array.new }
 
-	init { 
-		allDocs = SortedList(8, { | a, b |
-//			[a, b, "init doc list window", a.name.isNil, b.name.isNil].postln;
-			a.name < b.name;
-		}); 
-	}
+	init { allDocs = SortedList(8, { | a, b | a.name < b.name; }); }
 
 	*toggle { this.default.toggle }
 	*start { this.default.start }
@@ -65,6 +57,8 @@ DocListWindow {
 		};
 		this.makeGui;
 		{
+			var lastCurrentDocName, lastCurrentDoc;
+			0.1.wait; // defer needed when DocListWindow is started at SC startup
 			NotificationCenter.register(Document, \opened, this, { | doc |
 				this.addDoc(doc);
 			});
@@ -78,7 +72,12 @@ DocListWindow {
 				this.unselectDoc(doc);
 			});
 			Document.allDocuments do: this.addDoc(_);
-		}.defer(0.1); // defer needed when DocListWindow is started at SC startup
+			0.5.wait;
+			if ((lastCurrentDocName = Archive.global.at(\currentDocName)).notNil) {
+				lastCurrentDoc = Document.allDocuments detect: { | d | d.name == lastCurrentDocName };
+				if (lastCurrentDoc.notNil) { lastCurrentDoc.front; lastCurrentDoc.toFrontAction.value };
+			};
+		}.fork(AppClock); 
 		// at startup we also need to refresh the doc list to get the right name for the post window:
 		{ this.updateDocListView }.defer(1);	// the name of the post list window is set with some delay at startup (!?);
 		this.startAutosaveRoutine;
@@ -174,6 +173,7 @@ DocListWindow {
 		codeListView.enabled = false;
 		this.activateDocActions(doc);
 		NotificationCenter.notify(this, \index, index);
+		{ Archive.global.put(\currentDocName, Document.current.name ? "-"); }.defer(3); 
 	}
 	
 	activateDocActions { | doc |
