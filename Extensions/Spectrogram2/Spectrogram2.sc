@@ -8,12 +8,13 @@ Spectrogram2 {
 	var inbus = 0, <>rate = 25;
 	var <bufSize, binfreqs;	// size of FFT
 	var <frombin, <tobin;
-	var image, imgWidth, imgHeight, index, <>intensity, runtask;
+	var image, imgWidth, imgHeight, <>intensity = 1, runtask;
 	var color, background, colints; // colints is an array of integers each representing a color
 	var userview, mouseX, mouseY, freq, drawCrossHair = false; // mYIndex, mXIndex, freq;
-	var crosshaircolor, running;
-
-	*new { arg parent, bounds, bufSize, color, background, lowfreq=0, highfreq=inf;
+	var <>crosshairColor, running;
+	// track the iteration of polling bus values and its relative position in the window: 
+	var <index = 0, <windowIndex = 0;
+	*new { arg parent, bounds, bufSize = 1024, color, background, lowfreq=0, highfreq=inf;
 		^super.new.initSpectrogram(parent, bounds, bufSize, color, background, lowfreq, highfreq);
 	}
 	
@@ -22,23 +23,25 @@ Spectrogram2 {
 		bufSize = bufSizearg; // fft window
 		fftbuf = Buffer.alloc(server, bufSize);
 		binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
-		index = 0;
-		intensity = 1;
 		background = bg ? Color.black;
 		color = col ? Color(1, 1, 1); // white by default
-		crosshaircolor = Color.white;
+		crosshairColor = Color.white;
 		tobin = min(binfreqs.indexOf((highfreqarg/2).nearestInList(binfreqs)), bufSize.div(2) - 1);
 		frombin = max(binfreqs.indexOf((lowfreqarg/2).nearestInList(binfreqs)), 0);
 		fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
 		running = false;		
 		this.sendSynthDef;
 		this.createWindow(parent, boundsarg);
+		CmdPeriod.add(this);
 	}
 
-	createWindow {arg parent, boundsarg;
-		var bounds;
-		window = parent ? Window("Spectrogram",  Rect(200, 450, 600, 300));
-		bounds = boundsarg ? window.view.bounds;
+	cmdPeriod {
+		if (running) { this.startruntask };	
+	}
+
+	createWindow {arg parent, bounds;
+		bounds = bounds ?? { Rect(200, 450, 600, 300) };
+		window = parent ? Window("Spectrogram", bounds);
 		this.setWindowImage( bounds.width );
 		this.setUserView(window, bounds);
 		window.onClose_({
@@ -57,15 +60,27 @@ Spectrogram2 {
 				Pen.use {
 					Pen.scale( b.width / imgWidth, b.height / imgHeight );
 					Pen.image( image );
+					// experimental draw function added here: 
+					Pen.color = Color.red;
+					Pen.fillOval(Rect(windowIndex - 2, 50, 20, 20));
+					Pen.stroke;
+				};
+				// second experimental draw function, outside the scale, to preserve shape proportions: 
+				Pen.use {
+					Pen.color = Color.blue;
+					Pen.fillOval(Rect(0, 0, 10, 10).moveTo(
+						windowIndex * b.width / imgWidth, 
+						80 * b.height / imgHeight)
+					);
 				};
 				if( drawCrossHair, {
-					Pen.color = crosshaircolor;
+					Pen.color = crosshairColor;
 					Pen.addRect( b.moveTo( 0, 0 ));
 					Pen.clip;
 					Pen.line( 0@mouseY, b.width@mouseY);
 					Pen.line(mouseX @ 0, mouseX @ b.height);
 					Pen.font = Font( "Helvetica", 10 );
-					Pen.stringAtPoint( "freq: "+freq.asString, mouseX + 20 @ mouseY - 15);
+					Pen.stringAtPoint( "freq: " + freq.asString, mouseX + 20 @ mouseY - 15);
 					Pen.stroke;
 				});
 			})
@@ -91,58 +106,42 @@ Spectrogram2 {
 	}
 		
 	startruntask {
+		var blackpixels;
 		running = true;
 		this.recalcGradient;
-		{
-			runtask = Task({ 
-				fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
-				{
-					fftbuf.getn(0, bufSize, 
-					{ arg buf;
-						var magarray, complexarray;
-						magarray = buf.clump(2)[(frombin .. tobin)].flop;
-
-						/*
-// OLD METHOD:
-						// magnitude spectrum
-						complexarray = (Complex( 
-								Signal.newFrom( magarray[0] ), 
-								Signal.newFrom( magarray[1] ) 
-						).magnitude.reverse*2).clip(0, 255); // times 2 in order to strenghten color
-						*/
+		runtask = {
+			0.1.wait;
+			fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
+			loop {
+				windowIndex = index % imgWidth; // tracks current position in window for any painting funcs
+				// get fft data and draw them when received: 
+				fftbuf.getn(0, bufSize, { | buf |
+					var magarray, complexarray;
+					magarray = buf.clump(2)[frombin .. tobin].flop;
+					complexarray = ((((Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse)).log10)*80).clip(0, 255); 
 						
-// NEW METHOD:
-						/*
-						// log intensity - thanks nick 
-						// this crashes server atm., on resize and new buffer size
-						//20*log10(mag+1) * 4
-						complexarray = ((((Complex( 
-								Signal.newFrom( magarray[0] ), 
-								Signal.newFrom( magarray[1] ) 
-							).magnitude.reverse)+1).log10)*80).clip(0, 255); 
-						// That +1 above is the cause of the crash
-						// thus temporary fix below
-						*/	
-						
-						complexarray = ((((Complex( 
-								Signal.newFrom( magarray[0] ), 
-								Signal.newFrom( magarray[1] ) 
-						).magnitude.reverse)).log10)*80).clip(0, 255); 
-							
-						complexarray.do({|val, i|
-							val = val * intensity;
-							fftDataArray[i] = colints.clipAt((val/16).round);
-						});
-						{
-							image.setPixels(fftDataArray, Rect(index%imgWidth, 0, 1, (tobin - frombin + 1)));
-							index = index + 1;
-							if( userview.notClosed, { userview.refresh });
-						}.defer;
-					}); 
-					rate.reciprocal.wait; // framerate
-				}.loop; 
-			}).start;
-		}.defer(0.1); // allow the creation of an fftbuf before starting
+					complexarray.do({|val, i|
+						val = val * intensity;
+						fftDataArray[i] = colints.clipAt((val/16).round);
+					});
+					{
+						image.setPixels(fftDataArray, Rect(windowIndex, 0, 1, (tobin - frombin + 1)));
+						// other pixel setting functions could be added here
+						// order of setting pixels is significant. 
+						// must not set pixels outside this func, because they may be overwritten
+//						image.setPixel([255, 0, 0, 255].asRGBA, windowIndex, tobin - frombin / 2);
+					}.defer;
+				});
+				if (userview.notClosed) { userview.refresh }; // must be here to cleanly erase previous frames
+				index = index + 1;
+				// here testing how to set marks that will be drawn later: 
+				if (index % rate == 0) { "a second has passed - will set a test mark".postln };
+				rate.reciprocal.wait; // framerate
+			}; 
+		}.fork(AppClock); // must be AppClock for consistent timing in the userview.refresh call.
 	}
 
 	stopruntask {
@@ -173,7 +172,7 @@ Spectrogram2 {
 		if( image.notNil, { image.free });
 		imgWidth = width;
 		imgHeight = (tobin - frombin + 1); // bufSize.div(2);
-		image = Image.color(imgWidth, imgHeight, background);
+		image = Image.color(imgWidth@imgHeight, background);
 	}
 
 	setBufSize_ {arg buffersize, restart=true;
@@ -194,18 +193,17 @@ Spectrogram2 {
 
 	recalcGradient {
 		var colors;
-		colors = (0..16).collect({|val| blend(background, color, val/16)});
-		colints = colors.collect({|col| Image.colorToPixel( col )});
+		colors = (0..16).collect({ | val | blend(background, color, val / 16)});
+		colints = colors.collect({ | col | Image colorToPixel: col });
 	}
 
-	crosshairColor_{arg argcolor;
-		crosshaircolor = argcolor;
-	}
-
-	crosshairCalcFunc {|view, mx, my|
-		mouseX = (mx-1.5).clip(0, view.bounds.width);
-		mouseY = (my-1.5).clip(0, view.bounds.height); 
-		freq = binfreqs[((view.bounds.height)-mouseY).round(1).linlin(0, view.bounds.height, frombin*2, tobin*2).floor(1)].round(0.01);
+	crosshairCalcFunc { | view, mx, my |
+		mouseX = (mx - 1.5).clip(0, view.bounds.width);
+		mouseY = (my - 1.5).clip(0, view.bounds.height); 
+		freq = binfreqs[
+			((view.bounds.height) - mouseY).round(1)
+				.linlin(0, view.bounds.height, frombin * 2, tobin * 2).floor(1)
+		].round(0.01);
 	}
 
 	setWindowImage { arg width;
@@ -236,7 +234,8 @@ SpectrogramWindow2 : Spectrogram2 {
 		window = Window("Spectrogram2",  Rect(200, 450, 548 + paramW, 328));
 		bounds = window.view.bounds.insetAll(30, 10, paramW + 4, 10); // resizable
 		font = Font("Helvetica", 10);
-		mouseX=30.5; mouseY=30.5;
+		mouseX = 30.5;
+		mouseY = 30.5;
 		
 		this.setWindowImage( bounds.width );
 		super.setUserView(window, bounds);
