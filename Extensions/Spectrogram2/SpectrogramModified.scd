@@ -25,8 +25,9 @@ Spectrogram {
 		server = Server.default;
 		bufSize = bufSizearg; // fft window
 		fftbuf = Buffer.alloc(server, bufSize);
-		binfreqs = bufSize.collect({|i| ((server.sampleRate/2)/bufSize)*(i+1)});
+		binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1)});
 		background = bg ? Color.black;
+//		{ background.postln } ! 10;
 		color = col ? Color(1, 1, 1); // white by default
 		crosshaircolor = Color.white;
 		tobin = min(binfreqs.indexOf((highfreqarg/2).nearestInList(binfreqs)), bufSize.div(2) - 1);
@@ -64,7 +65,7 @@ Spectrogram {
 		if( image.notNil, { image.free });
 		imgWidth = width;
 		imgHeight = (tobin - frombin + 1); // bufSize.div(2);
-		image = Image.color(imgWidth, imgHeight, background);
+		image = Image.color(imgWidth@imgHeight, background);
 	}
 
 	setUserView {arg window, bounds;
@@ -112,55 +113,54 @@ Spectrogram {
 	startruntask {
 		running = true;
 		this.recalcGradient;
-		{
-			runtask = Task({ 
-				fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
-				loop {
-					fftbuf.getn(0, bufSize, { arg buf;
-						var magarray, complexarray;
-						magarray = buf.clump(2)[frombin .. tobin].flop;
+		runtask = { 
+			0.1.wait; // wait for synthdef to load 				fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
+			0.1.wait;
+			loop {
+				fftbuf.getn(0, bufSize, { arg buf;
+					var magarray, complexarray;
+					magarray = buf.clump(2)[frombin .. tobin].flop;
 
-						/*
+					/*
 // OLD METHOD:
-						// magnitude spectrum
-						complexarray = (Complex( 
-								Signal.newFrom( magarray[0] ), 
-								Signal.newFrom( magarray[1] ) 
-						).magnitude.reverse*2).clip(0, 255); // times 2 in order to strenghten color
-						*/
-						
+					// magnitude spectrum
+					complexarray = (Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse*2).clip(0, 255); // times 2 in order to strenghten color
+					*/
+					
 // NEW METHOD:
-						/*
-						// log intensity - thanks nick 
-						// this crashes server atm., on resize and new buffer size
-						//20*log10(mag+1) * 4
-						complexarray = ((((Complex( 
-								Signal.newFrom( magarray[0] ), 
-								Signal.newFrom( magarray[1] ) 
-							).magnitude.reverse)+1).log10)*80).clip(0, 255); 
-						// That +1 above is the cause of the crash
-						// thus temporary fix below
-						*/	
+					/*
+					// log intensity - thanks nick 
+					// this crashes server atm., on resize and new buffer size
+					//20*log10(mag+1) * 4
+					complexarray = ((((Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+						).magnitude.reverse)+1).log10)*80).clip(0, 255); 
+					// That +1 above is the cause of the crash
+					// thus temporary fix below
+					*/	
+					
+					complexarray = ((((Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse)).log10) * 80).clip(0, 255); 
 						
-						complexarray = ((((Complex( 
-								Signal.newFrom( magarray[0] ), 
-								Signal.newFrom( magarray[1] ) 
-						).magnitude.reverse)).log10) * 80).clip(0, 255); 
-							
-						complexarray.do({|val, i|
-							val = val * intensity;
-							fftDataArray[i] = colints.clipAt((val / 16).round);
-						});
-						{
-							image.setPixels(fftDataArray, Rect(index % imgWidth, 0, 1, (tobin - frombin + 1)));
-							index = index + 1;
-							if( userview.notClosed, { userview.refresh });
-						}.defer;
-					}); 
-					rate.reciprocal.wait; // framerate
-				}; 
-			}).start;
-		}.defer(0.1); // allow the creation of an fftbuf before starting
+					complexarray.do({|val, i|
+						val = val * intensity;
+						fftDataArray[i] = colints.clipAt((val / 16).round);
+					});
+					{
+						image.setPixels(fftDataArray, Rect(index % imgWidth, 0, 1, (tobin - frombin + 1)));
+						index = index + 1;
+						if( userview.notClosed, { userview.refresh });
+					}.defer; // run in AppClock time, triggered by OSC
+				}); 
+				rate.reciprocal.wait; // framerate
+			};
+		}.fork(AppClock);
 	}
 
 	stopruntask {
@@ -216,7 +216,10 @@ Spectrogram {
 	crosshairCalcFunc {|view, mx, my|
 		mouseX = (mx-1.5).clip(0, view.bounds.width);
 		mouseY = (my-1.5).clip(0, view.bounds.height); 
-		freq = binfreqs[((view.bounds.height)-mouseY).round(1).linlin(0, view.bounds.height, frombin*2, tobin*2).floor(1)].round(0.01);
+		freq = binfreqs[
+			((view.bounds.height)-mouseY).round(1)
+				.linlin(0, view.bounds.height, frombin*2, tobin*2).floor(1)
+		].round(0.01);
 	}
 
 	
