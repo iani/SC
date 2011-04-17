@@ -12,6 +12,11 @@ DocListWindow {
 	var <>autosave = true, <>autosave_rate = 300, autosave_routine; 
 
 	*initClass {
+		Class.initClassTree(Document);
+		Document.initAction = { | me | 
+//			me.post; " Document init action".postln;
+		NotificationCenter.notify(Document, \opened, me);
+		};
 		this.makeUserMenuItems;	
 	}
 
@@ -28,7 +33,14 @@ DocListWindow {
 	
 	*new { ^super.new.init }
 	
-	init { allDocs = SortedList(8, { | a, b | a.name < b.name; }); }
+//	init { allDocs = /* List.new; */ Array.new }
+
+	init { 
+		allDocs = SortedList(8, { | a, b |
+//			[a, b, "init doc list window", a.name.isNil, b.name.isNil].postln;
+			a.name < b.name;
+		}); 
+	}
 
 	*toggle { this.default.toggle }
 	*start { this.default.start }
@@ -54,7 +66,6 @@ DocListWindow {
 		this.makeGui;
 		{
 			NotificationCenter.register(Document, \opened, this, { | doc |
-//				[this, "received document opened message with document named:", doc.name].postln;
 				this.addDoc(doc);
 			});
 			NotificationCenter.register(Document, \closed, this, { | doc |
@@ -88,11 +99,17 @@ DocListWindow {
 
 	addDoc { | doc |
 		{ // must wait for Doc to get its name
-			allDocs = allDocs add: doc;
+			allDocs = allDocs add: doc; 
 			this.setDocBounds(doc, DocProxy.boundsFor(doc));
 			this.updateDocListView;
 			this.selectDoc(doc);
-			doc.addNotifications;
+//			doc.addNotifications;
+			doc.toFrontAction = {
+				NotificationCenter.notify(Document, \toFront, doc); 
+			};
+			doc.endFrontAction = { 
+				NotificationCenter.notify(Document, \endFront, doc); };
+			doc.onClose = { NotificationCenter.notify(Document, \closed, doc); };
 			NotificationCenter.notify(this, \docAdded, doc);
 		}.defer(0.1);
 	}

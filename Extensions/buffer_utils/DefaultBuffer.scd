@@ -3,6 +3,9 @@ DefaultBuffer.play;
 
 DefaultBuffer.loadDialog;
 
+DefaultBuffer.postInfo;
+
+// Following should not be used: 
 DefaultBuffer.loadDialog.play; // plays the old buffer because loading is asynchronous
 
 DefaultBuffer loadDialog: _.play; // plays new buffer

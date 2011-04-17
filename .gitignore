@@ -1,3 +1,5 @@
+# Ignore MacOS folder listing: 
+.DS_Store
 
 # Ignore auto-save files from emacs:
 *.*~
@@ -7,15 +9,18 @@
 *.zip
 
 #other files and folders that should be ignored
+# we are using this file to store files of work sessions with DocSessions
+# but it gets in the way because of auto-save. So just leave an example version,
+# but stop committing new versions:
 *.sctxar
-archive.sctxar # we are using this file to store files of work sessions with DocSession
-	       # but it gets in the way because of auto-save. So just leave an example version,
-	       # but stop committing new versions
+archive.sctxar 
+
 Extensions\ \(archive\)
 Extensions\ \(disabled\)
 HistoryLogs
 Notes
 quarks
+!Extensions/quarks
 SC_helptree.cache.txt
 sclang_completion_dict
 sounds

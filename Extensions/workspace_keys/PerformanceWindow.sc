@@ -34,7 +34,7 @@ PerformanceWindow {
 
 	makeGui {
 		if (window.notNil) { ^window.front };
-		window = Window("Code Performer", Rect(300, 500, 500, 500));
+		window = Window("Code Performer", Rect(0, 0, 500, 350));
 		window.onClose = { this.closed };
 		docPane = ListView(window, Rect(2, 2, 248, 496));
 		docPane.resize = 4;
