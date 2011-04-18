@@ -2,48 +2,43 @@
 //	- 30-Mar-10 made cross-platform, fixed relativeOrigin issue
 // modifications by IZ 2011 04 17 f
 
-/* 
-To allow other processes to plot on this spectrogram, send out 3 notifications using NotificationCenter: 
-
-1. 	'poll' -> this is sent before polling each fft frame . 
-	Here processes that acquire other analysis data from the synth 
-2. 	'drawImg' -> this is sent after having drawn on the image but before sending it to pen
-	
-*/
 Spectrogram2 {
-	classvar <server;
+	var <server;
 	var window; //, bounds;
 	var <fftbuf, fftDataArray, fftSynth;
 	var inbus = 0, <>rate = 25;
 	var <bufSize, binfreqs;	// size of FFT
 	var <frombin, <tobin;
-	var image, imgWidth, imgHeight, <>intensity = 1, runtask;
+	var image, imgWidth, imgHeight, <>intensity = 5, runtask;
 	var color, background, colints; // colints is an array of integers each representing a color
 	var userview, mouseX, mouseY, freq, drawCrossHair = false; // mYIndex, mXIndex, freq;
 	var <>crosshairColor, running;
 	// track the iteration of polling bus values and its relative position in the window: 
 	var <index = 0, <windowIndex = 0, <lastFrameIndex;
 	var <frames;	// holds the times when each frame was drawn by drawFunc;
-	*new { arg parent, bounds, bufSize = 1024, color, background, lowfreq=0, highfreq=inf;
+
+	*new { | parent, bounds, bufSize = 1024, color, background, lowfreq = 0, highfreq = inf |
 		^super.new.initSpectrogram(parent, bounds, bufSize, color, background, lowfreq, highfreq);
 	}
-	
+
 	initSpectrogram { arg parent, boundsarg, bufSizearg = 1024, col, bg, lowfreqarg, highfreqarg;
 		server = Server.default;
-		bufSize = bufSizearg; // fft window
-		fftbuf = Buffer.alloc(server, bufSize);
-		binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
-		background = bg ? Color.black;
-		color = col ? Color(1, 1, 1); // white by default
-		crosshairColor = Color.white;
-		tobin = min(binfreqs.indexOf((highfreqarg/2).nearestInList(binfreqs)), bufSize.div(2) - 1);
-		frombin = max(binfreqs.indexOf((lowfreqarg/2).nearestInList(binfreqs)), 0);
-		fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
-		running = false;		
-		this.sendSynthDef;
-		this.createWindow(parent, boundsarg);
-		CmdPeriod.add(this);
-		this.initFrames;
+		server.waitForBoot({
+			bufSize = bufSizearg; // fft window
+			binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
+			this.sendSynthDef;
+			fftbuf = Buffer.alloc(server, bufSize);
+			background = bg ? Color.black;
+			color = col ? Color(1, 1, 1); // white by default
+			crosshairColor = Color.white;
+			tobin = binfreqs.indexOf((highfreqarg/2).nearestInList(binfreqs)) min: (bufSize.div(2) - 1);
+			frombin = binfreqs.indexOf((lowfreqarg/2).nearestInList(binfreqs)) max: 0;
+			fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
+			running = false;		
+			this.createWindow(parent, boundsarg);
+			CmdPeriod.add(this);
+			this.initFrames;
+		});
 	}
 
 	initFrames { frames = Frames.new }
@@ -75,7 +70,7 @@ Spectrogram2 {
 				Pen.use {
 					Pen.scale( b.width / imgWidth, b.height / imgHeight );
 					// any more pixels on the image must be set here before it is sent to pen:
-					frames.add([index, windowIndex]);
+//					frames.add([index, windowIndex]);
 					NotificationCenter.notify(this, \drawImage, image, imgWidth, frames, this);
 					Pen image: image;
 					// experimental draw function added here: 
@@ -118,7 +113,6 @@ Spectrogram2 {
 				drawCrossHair = false;
 				view.refresh;
 			});
-		{ userview.postln }  ! 50;
 	}
 	
 	sendSynthDef {
@@ -133,11 +127,12 @@ Spectrogram2 {
 		// these vars are for temporary tests of osc round trip time:
 		var oscSentTime, oscReceivedTime, oscLapseTime;
 		running = true;
-		this.recalcGradient;
 		runtask = {
-			3.3.wait;
-			{ userview.postln }  ! 50;
+			while { server.serverRunning.not } { "Spectrogram: waiting for server to boot".postln; 0.5.wait; };
+			0.1.wait;
+			this.recalcGradient;
 			fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
+			0.1.wait;
 			loop {
 				windowIndex = index % imgWidth; // tracks current position in window for any painting funcs
 				// get fft data and draw them when received:
@@ -221,19 +216,19 @@ Spectrogram2 {
 	}
 
 	setBufSize_ {arg buffersize, restart=true;
-		if(buffersize.isPowerOfTwo, {
+		if(buffersize.isPowerOfTwo) {
 			this.stopruntask;
 			bufSize = buffersize;
-			try {fftbuf.free};
+			{ fftbuf.free }.try;
 			fftbuf = Buffer.alloc(server, bufSize, 1, { if(restart, {this.startruntask}) }) ;
 			binfreqs = bufSize.collect({|i| ((server.sampleRate/2)/bufSize)*(i+1) });
 			tobin = bufSize.div(2) - 1;
 			frombin = 0;
 			fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
 			this.setWindowImage( userview.bounds.width );
-		}, {
+		}{
 			"Buffersize has to be power of two (256, 1024, 2048, etc.)".warn;
-		});
+		};
 	}
 
 	recalcGradient {
@@ -415,8 +410,8 @@ SpectrogramWindow2 : Spectrogram2 {
 		
 		window.onClose_({
 			image.free;
-			try{ fftSynth.free };
-			try{ fftbuf.free };
+			{ fftSynth.free }.try;
+			{ fftbuf.free }.try;
 			scopeOpen = false; 
 			this.stopruntask;
 			CmdPeriod.remove(cper);

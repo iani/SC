@@ -1,6 +1,8 @@
 
 DefaultBuffer.play;
 
+DefaultBuffer.spectrogram;
+
 DefaultBuffer.loadDialog;
 
 DefaultBuffer.postInfo;

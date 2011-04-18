@@ -29,6 +29,17 @@ DefaultBuffer {
 		});
 	}
 
+	*spectrogram { | funcOrSynthDef |
+		^this.default spectrogram: funcOrSynthDef;
+	}
+
+	spectrogram { | funcOrSynthDef |
+		^this play: {
+			{ Spectrogram2(bounds: Rect(0, 0, 1000, 200)).start; }.defer;
+			this play: funcOrSynthDef;
+		};
+	}
+ 
 	*play { | funcOrSynthDef |
 		// one can optionally provide a synthdef or function to play the buffer with
 		^this.default play: funcOrSynthDef;

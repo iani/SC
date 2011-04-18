@@ -38,7 +38,7 @@ Frames : List {
 		};
 	}	
 
-	//  return the frames within the given time range
+	//  return the frames within a given time range
 	timerange { | earliest = 0, latest |
 		var index, latestIndex;
 		index = this.size - 1;
