@@ -13,7 +13,8 @@ Spectrogram2 {
 	var userview, mouseX, mouseY, freq, drawCrossHair = false; // mYIndex, mXIndex, freq;
 	var <>crosshairColor, running;
 	// track the iteration of polling bus values and its relative position in the window: 
-	var <index = 0, <windowIndex = 0;
+	var <index = 0, <windowIndex = 0, <lastFrameIndex;
+	var <frames;	// holds the times when each frame was drawn by drawFunc;
 	*new { arg parent, bounds, bufSize = 1024, color, background, lowfreq=0, highfreq=inf;
 		^super.new.initSpectrogram(parent, bounds, bufSize, color, background, lowfreq, highfreq);
 	}
@@ -33,7 +34,10 @@ Spectrogram2 {
 		this.sendSynthDef;
 		this.createWindow(parent, boundsarg);
 		CmdPeriod.add(this);
+		this.initFrames;
 	}
+
+	initFrames { frames = Frames.new }
 
 	cmdPeriod {
 		if (running) { this.startruntask };	
@@ -57,22 +61,29 @@ Spectrogram2 {
 			.resize_(5)
 			.drawFunc_({arg view;
 				var b = view.bounds;
+				lastFrameIndex = windowIndex - imgWidth + 1; 
 				Pen.use {
 					Pen.scale( b.width / imgWidth, b.height / imgHeight );
-					Pen.image( image );
+					// any more pixels on the image must be set here before it is sent to pen:
+//					frames.add(Process.elapsedTime);
+//					NotificationCenter.notify(this, \imagePrep, image, imgWidth, frames, this);
+					Pen image: image;
 					// experimental draw function added here: 
-					Pen.color = Color.red;
+/*					Pen.color = Color.red;
 					Pen.fillOval(Rect(windowIndex - 2, 50, 20, 20));
 					Pen.stroke;
+*/
+
 				};
 				// second experimental draw function, outside the scale, to preserve shape proportions: 
-				Pen.use {
+/*				Pen.use {
 					Pen.color = Color.blue;
 					Pen.fillOval(Rect(0, 0, 10, 10).moveTo(
 						windowIndex * b.width / imgWidth, 
 						80 * b.height / imgHeight)
 					);
 				};
+*/
 				if( drawCrossHair, {
 					Pen.color = crosshairColor;
 					Pen.addRect( b.moveTo( 0, 0 ));
@@ -137,11 +148,22 @@ Spectrogram2 {
 				});
 				if (userview.notClosed) { userview.refresh }; // must be here to cleanly erase previous frames
 				index = index + 1;
-				// here testing how to set marks that will be drawn later: 
-				if (index % rate == 0) { "a second has passed - will set a test mark".postln };
+				// here testing how to set marks that will be drawn later:
+/*				if (index % rate == 0) { 
+					"a second has passed - will set a test mark".postln;
+					postf("the current frame is: %, the last displayable frame is: %\n",
+						index, this.lastDisplayableFrame
+					);
+				};
+*/
 				rate.reciprocal.wait; // framerate
 			}; 
 		}.fork(AppClock); // must be AppClock for consistent timing in the userview.refresh call.
+	}
+
+	lastDisplayableFrame {
+		// the last frame that can be displayed, relative to the index of the current frame is: 
+		^index - imgWidth + 1 max: 0;
 	}
 
 	stopruntask {
