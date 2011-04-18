@@ -297,7 +297,16 @@ DocListWindow {
 			}),
 			CocoaMenuItem.addToMenu("User Menu", "Make Performance Window", ["2", false, false], {
 				this.makePerformanceWindow;
-			})
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "Open Related .scd Window", ["D", true, false], {
+				this.openScdWindow;
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "Open Related .html Window", ["D", true, true], {
+				this.openHtmlWindow;
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "Browse my Classes", ["b", true, true], {
+				this.browseMyClasses;
+			}),
 		]
 	}
 
@@ -324,4 +333,44 @@ DocListWindow {
 	}
 
 	makePerformanceWindow { ^PerformanceWindow.makeGui(this); }
+	
+	openScdWindow {
+		this.openRelatedDocWithNewExtension(selectedDoc, "sc", "scd");
+	}
+
+	openHtmlWindow {
+		this.openRelatedDocWithNewExtension(selectedDoc, "sc", "html");
+	}
+	
+	openRelatedDocWithNewExtension { | doc, oldExtension, newExtension |
+		var pathname, extension;
+		pathname = PathName(selectedDoc.path ? "/nothing");
+		// dirty trick: also work the reverse way for "scd" or "html" files: 
+		extension = pathname.extension;
+		if (extension == "scd" or: { extension == "html" }) {
+			oldExtension = extension;
+			newExtension = "sc";	
+		}; // end dirty trick
+		if (pathname.extension != oldExtension) {
+			^postf("Cancelled: this document's extension is not %\n", oldExtension);
+		};
+		pathname = format("%.%", pathname.withoutExtension, newExtension);
+		if (pathname.pathMatch.size == 1) {
+			Document.open(pathname);
+		}{
+			Document.new(pathname.basename).path = pathname;
+		}		
+	}
+	
+	browseMyClasses { 
+		var cbrowser;
+		cbrowser = EZListView(bounds: Rect(0, 0, 250, 400));
+		cbrowser.items = Class.allClasses.select({ | c |
+			"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
+			and: { "Meta*".matchRegexp(c.name.asString).not }
+		}).collect({ | c | c.name.asSymbol->{ c.openCodeFile; } });
+		cbrowser.widget.parent.resize = 5;
+		cbrowser.widget.resize = 5;		
+	}
+	
 }

@@ -1,3 +1,17 @@
+//:! boot server
+if (Server.default.serverRunning.not) { Server.default.boot };
+//:a start spectrogram
+if (a.notNil) {
+	a = Spectrogram2(bounds: Rect(0, 0, 200, 200)).start;
+};
+b.free;
+b = { SinOsc.ar(LFNoise2.kr(1).range(100, 10000), 0, 0.1) }.play;
+
+
+//:g shorter test plot 
+Frames.new.add(10000).plot({ | view, frame | postf("plotting: %\n", frame) });
+
+
 //:f pre-test plot 
 {
 	var min, frames;
@@ -8,7 +22,7 @@
 	frames do: { | f | f[0] = f[0] - min };
 	"done".postln;
 	frames.postln;
-	frames.plot({ | a | postf("plotting: %\n", a) });
+	frames.plot({ | view, frame | postf("plotting: %\n", frame) });
 }.fork;
 
 
@@ -50,6 +64,6 @@ b = { SinOsc.ar(LFNoise2.kr(1).range(100, 10000), 0, 0.1) }.play;
 //:b stop sound
 b.free;
 
-//:c other sound
+//:x other sound
 b.free;
 b = { SinOsc.ar(LFNoise2.kr(1).range(100, 10000), 0, 0.1) }.play;

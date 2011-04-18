@@ -1,6 +1,15 @@
 // changelog:
 //	- 30-Mar-10 made cross-platform, fixed relativeOrigin issue
 // modifications by IZ 2011 04 17 f
+
+/* 
+To allow other processes to plot on this spectrogram, send out 3 notifications using NotificationCenter: 
+
+1. 	'poll' -> this is sent before polling each fft frame . 
+	Here processes that acquire other analysis data from the synth 
+2. 	'drawImg' -> this is sent after having drawn on the image but before sending it to pen
+	
+*/
 Spectrogram2 {
 	classvar <server;
 	var window; //, bounds;
@@ -56,6 +65,7 @@ Spectrogram2 {
 	}
 
 	setUserView {arg window, bounds;
+
 		userview = UserView(window, bounds)
 			.focusColor_(Color.white.alpha_(0))
 			.resize_(5)
@@ -65,8 +75,8 @@ Spectrogram2 {
 				Pen.use {
 					Pen.scale( b.width / imgWidth, b.height / imgHeight );
 					// any more pixels on the image must be set here before it is sent to pen:
-//					frames.add(Process.elapsedTime);
-//					NotificationCenter.notify(this, \imagePrep, image, imgWidth, frames, this);
+					frames.add([index, windowIndex]);
+					NotificationCenter.notify(this, \drawImage, image, imgWidth, frames, this);
 					Pen image: image;
 					// experimental draw function added here: 
 /*					Pen.color = Color.red;
@@ -108,6 +118,7 @@ Spectrogram2 {
 				drawCrossHair = false;
 				view.refresh;
 			});
+		{ userview.postln }  ! 50;
 	}
 	
 	sendSynthDef {
@@ -115,25 +126,37 @@ Spectrogram2 {
 			FFT(buffer, InFeedback.ar(inbus));
 		}).send(server);
 	}
-		
+
+	start { this.startruntask }
+	
 	startruntask {
-		var blackpixels;
+		// these vars are for temporary tests of osc round trip time:
+		var oscSentTime, oscReceivedTime, oscLapseTime;
 		running = true;
 		this.recalcGradient;
 		runtask = {
-			0.1.wait;
+			3.3.wait;
+			{ userview.postln }  ! 50;
 			fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
 			loop {
 				windowIndex = index % imgWidth; // tracks current position in window for any painting funcs
-				// get fft data and draw them when received: 
+				// get fft data and draw them when received:
+				oscSentTime = Process.elapsedTime;
 				fftbuf.getn(0, bufSize, { | buf |
 					var magarray, complexarray;
+					oscReceivedTime = Process.elapsedTime;
+					oscLapseTime = oscReceivedTime - oscSentTime;
+// temporary timing tests: 
+/*					postf("trip dur: % was smaller than poll time by: %\n", 
+						oscLapseTime, 
+						rate.reciprocal - oscLapseTime
+					);
+*/
 					magarray = buf.clump(2)[frombin .. tobin].flop;
 					complexarray = ((((Complex( 
 							Signal.newFrom( magarray[0] ), 
 							Signal.newFrom( magarray[1] ) 
 					).magnitude.reverse)).log10)*80).clip(0, 255); 
-						
 					complexarray.do({|val, i|
 						val = val * intensity;
 						fftDataArray[i] = colints.clipAt((val/16).round);
@@ -233,7 +256,6 @@ Spectrogram2 {
 		index = 0;
 	}
 	
-	start { this.startruntask }
 	
 	stop { this.stopruntask }
 	
