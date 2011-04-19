@@ -49,9 +49,14 @@
 \cf2 Document\cf0 .setTheme(\cf4 \\pinkString\cf0 );\
 \
 \{ \
-	var tryout;\
-	if ((tryout = Document.allDocuments.detect(\{ | d | d.name == "try out" \})).isNil) \{\
-		tryout = Document("try out");\
+	var tryout, path;\
+	if ((tryout = Document.allDocuments.detect(\{ | d | d.name == "tryout.sc" \})).isNil) \{\
+		path = Platform.userAppSupportDir ++ "/tryout.sc";\
+		if (path.pathMatch.size == 0) \{\
+			tryout = Document("tryout.sc").path_(path);\
+		\}\{\
+			tryout = Document.open(path);\
+		\};\
 	\};\
 	1.wait;\
 	if (tryout.bounds.left != 0) \{ tryout.bounds = Rect(0, 249, 494, 212) \};\

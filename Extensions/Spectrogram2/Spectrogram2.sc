@@ -12,50 +12,87 @@ Spectrogram2 {
 	var image, imgWidth, imgHeight, <>intensity = 5, runtask;
 	var color, background, colints; // colints is an array of integers each representing a color
 	var userview, mouseX, mouseY, freq, drawCrossHair = false; // mYIndex, mXIndex, freq;
-	var <>crosshairColor, running;
+	var <>crosshairColor, running = true;
 	// track the iteration of polling bus values and its relative position in the window: 
 	var <index = 0, <windowIndex = 0, <lastFrameIndex;
 	var <frames;	// holds the times when each frame was drawn by drawFunc;
+	var <windowparent, <bounds, <lowfreq, <highfreq;
 
 	*new { | parent, bounds, bufSize = 1024, color, background, lowfreq = 0, highfreq = inf |
 		^super.new.initSpectrogram(parent, bounds, bufSize, color, background, lowfreq, highfreq);
 	}
 
 	initSpectrogram { arg parent, boundsarg, bufSizearg = 1024, col, bg, lowfreqarg, highfreqarg;
+		bufSize = bufSizearg; // fft window
+		background = bg ? Color.black;
+		color = col ? Color(1, 1, 1); // white by default
+		crosshairColor = Color.white;
+
+		windowparent = parent;
+		bounds = boundsarg;
+		lowfreq = lowfreqarg;
+		highfreq = highfreqarg;
+		
 		server = Server.default;
+
+		CmdPeriod.add(this);
+		ServerBoot.add(this, server);
+		ServerQuit.add(this, server);
+
 		server.waitForBoot({
-			bufSize = bufSizearg; // fft window
-			binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
-			this.sendSynthDef;
-			fftbuf = Buffer.alloc(server, bufSize);
-			background = bg ? Color.black;
-			color = col ? Color(1, 1, 1); // white by default
-			crosshairColor = Color.white;
-			tobin = binfreqs.indexOf((highfreqarg/2).nearestInList(binfreqs)) min: (bufSize.div(2) - 1);
-			frombin = binfreqs.indexOf((lowfreqarg/2).nearestInList(binfreqs)) max: 0;
-			fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
-			running = false;		
-			this.createWindow(parent, boundsarg);
-			CmdPeriod.add(this);
-			this.initFrames;
+			this.initServerStuff;
 		});
+	}
+
+	cmdPeriod {
+		if (running) { this.startruntask };
+	}
+	doOnServerQuit {
+//		this.stop;
+// 		only stop the poll routine, but keep the started status
+		if (runtask.notNil) { "spectrogram stopped".postln; runtask.stop; runtask = nil };
+	}
+	
+	doOnServerBoot {
+		if (running and: { runtask.isNil }) {
+			
+			"starting spectrogram".postln;
+			this.initServerStuff;
+			
+			this.startruntask;	
+		}	
+	}
+
+	initServerStuff { 
+		binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
+		this.sendSynthDef;
+		fftbuf = Buffer.alloc(server, bufSize);
+		tobin = binfreqs.indexOf((highfreq / 2).nearestInList(binfreqs)) min: (bufSize.div(2) - 1);
+		frombin = binfreqs.indexOf((lowfreq / 2).nearestInList(binfreqs)) max: 0;
+		fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
+		this.createWindow(windowparent, bounds);
+		this.initFrames;
+//		if (running) { this.start };
+	}
+
+	sendSynthDef {
+		SynthDef(\spectroscope, {|inbus=0, buffer=0|
+			FFT(buffer, InFeedback.ar(inbus));
+		}).send(server);
 	}
 
 	initFrames { frames = Frames.new }
 
-	cmdPeriod {
-		if (running) { this.startruntask };	
-	}
-
-	createWindow {arg parent, bounds;
+	createWindow { | parent, bounds |
 		bounds = bounds ?? { Rect(200, 450, 600, 300) };
-		window = parent ? Window("Spectrogram", bounds);
-		this.setWindowImage( bounds.width );
+		window = parent ? Window("Spectrogram2", bounds);
+		this setWindowImage: bounds.width;
 		this.setUserView(window, bounds);
 		window.onClose_({
 			image.free;
 			this.stopruntask;
 			fftbuf.free;
+			this.removeFromNotifiers;
 		}).front;
 	}
 
@@ -114,27 +151,32 @@ Spectrogram2 {
 				view.refresh;
 			});
 	}
-	
-	sendSynthDef {
-		SynthDef(\spectroscope, {|inbus=0, buffer=0|
-			FFT(buffer, InFeedback.ar(inbus));
-		}).send(server);
-	}
 
-	start { this.startruntask }
+	start { running = true; this.startruntask }
 	
 	startruntask {
 		// these vars are for temporary tests of osc round trip time:
-		var oscSentTime, oscReceivedTime, oscLapseTime;
-		running = true;
+		var oscSentTime, oscReceivedTime, oscLapseTime, scrollIncrement;
+		if (runtask.notNil) { ^this };
 		runtask = {
 			while { server.serverRunning.not } { "Spectrogram: waiting for server to boot".postln; 0.5.wait; };
-			0.1.wait;
+			0.5.wait;
 			this.recalcGradient;
 			fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
 			0.1.wait;
+			windowIndex = index % imgWidth;
 			loop {
-				windowIndex = index % imgWidth; // tracks current position in window for any painting funcs
+//				windowIndex = index % imgWidth; // tracks current position in window for any painting funcs
+//				windowIndex.postln;
+// Temporary: try scrolling ...
+				windowIndex = index;
+				if (windowIndex >= imgWidth) {
+//					"SCROLLING!".postln;
+					scrollIncrement = (imgWidth * 0.25).round(1).asInteger;
+					windowIndex = windowIndex % scrollIncrement + (imgWidth * 0.75).round(1).asInteger;
+				};
+//				({ windowIndex } ! 10).postln;
+
 				// get fft data and draw them when received:
 				oscSentTime = Process.elapsedTime;
 				fftbuf.getn(0, bufSize, { | buf |
@@ -184,10 +226,12 @@ Spectrogram2 {
 		^index - imgWidth + 1 max: 0;
 	}
 
+	stop { this.stopruntask }
 	stopruntask {
 		running = false;
 		runtask.stop;
-		try{fftSynth.free };
+		runtask = nil;
+		{ fftSynth.free }.try;
 	}
 	
 	inbus_ {arg inbusarg;
@@ -251,186 +295,12 @@ Spectrogram2 {
 		index = 0;
 	}
 	
-	
-	stop { this.stopruntask }
-	
-}
-
-SpectrogramWindow2 : Spectrogram2 { 
-	classvar <scopeOpen;
-	var startbutt;
-	
-	*new { ^super.new }
-
-	createWindow {
-		var cper, font;
-		var highfreq, lowfreq, rangeslider, freqtextarray;
-		var freqstringview, bounds, paramW;
-	
-		paramW = if( GUI.id == \cocoa, 36, 52 );
-	
-		scopeOpen = true;
-		window = Window("Spectrogram2",  Rect(200, 450, 548 + paramW, 328));
-		bounds = window.view.bounds.insetAll(30, 10, paramW + 4, 10); // resizable
-		font = Font("Helvetica", 10);
-		mouseX = 30.5;
-		mouseY = 30.5;
-		
-		this.setWindowImage( bounds.width );
-		super.setUserView(window, bounds);
-				
-		startbutt = Button(window, Rect(545, 10, paramW, 16))
-			.states_([["Power", Color.black, Color.clear], 
-					 ["Power", Color.black, Color.green.alpha_(0.2)]])
-			.action_({ arg view; if(view.value == 1, { this.startruntask }, { this.stopruntask }) })
-			.font_(font)
-			.resize_(3)
-			.canFocus_(false);
-
-		StaticText(window, Rect(545, 42, paramW, 16))
-			.font_(font)
-			.resize_(3)
-			.string_("BusIn");
-
-		NumberBox(window, Rect(545, 60, paramW, 16))
-			.font_(font)
-			.resize_(3)
-			.action_({ arg view;
-				view.value_(view.value.asInteger.clip(0, server.options.numAudioBusChannels));
-				this.inbus_(view.value);
-			})
-			.value_(0);
-
-		StaticText(window, Rect(545, 82, paramW, 16))
-			.font_(font)
-			.resize_(3)
-			.string_("int");
-
-		NumberBox(window, Rect(545, 100, paramW, 16))
-			.font_(font)
-			.resize_(3)
-			.action_({ arg view;
-				view.value_(view.value.asInteger.clip(1, 40));
-				this.intensity_(view.value);
-			})
-			.value_(intensity);
-
-		StaticText(window, Rect(545, 122, paramW, 16))
-			.font_(font)
-			.resize_(3)
-			.string_("winsize");
-
-		PopUpMenu(window, Rect(545, 140, paramW, 16))
-			.items_(["256", "512", "1024", "2048"])
-			.value_(2)
-			.resize_(3)
-			.font_(Font("Helvetica", 9))
-			.background_(Color.white)
-			.canFocus_(false)
-			.action_({ arg ch; var inbus;
-				this.setBufSize_( ch.items[ch.value].asInteger, startbutt.value.booleanValue );
-				rangeslider.lo_(0).hi_(1).doAction;
-			});
-
-		highfreq = NumberBox(window, Rect(545, 170, paramW, 16))
-			.font_(font)
-			.resize_(3)
-			.action_({ arg view;
-				var rangedval; 
-				rangedval = view.value.clip(lowfreq.value, (server.sampleRate/2));
-				view.value_( rangedval.nearestInList(binfreqs).round(1) );
-				rangeslider.hi_( view.value / (server.sampleRate/2) );
-			})
-			.value_(22050);
-
-		rangeslider = RangeSlider(window, Rect(545 + (paramW - 26).div( 2 ), 192, 26, 80))
-			.lo_(0.0)
-			.range_(1.4)
-			.resize_(3)
-			.knobColor_(Color(0.40392156862745, 0.58039215686275, 0.40392156862745, 1.0))
-			.action_({ |slider|
-				var lofreq, hifreq, spec;
-				lofreq = (slider.lo*(server.sampleRate/2)).nearestInList(binfreqs).round(1);
-				hifreq = (slider.hi*(server.sampleRate/2)).nearestInList(binfreqs).round(1);
-				lowfreq.value_( lofreq );
-				highfreq.value_( hifreq );
-//				frombin = max( (slider.lo * (bufSize/2)).round(0.1), 0);
-//				tobin = min( (slider.hi * (bufSize/2)).round(0.1), bufSize/2 -1);
-				frombin = max( (slider.lo * (bufSize/2)).asInteger, 0);
-				tobin = min( (slider.hi * (bufSize/2)).asInteger, bufSize.div(2) -1);
-				spec = [lofreq, hifreq].asSpec;
-				freqtextarray = Array.fill(11, { arg i;
-					var val;
-					val = ((spec.map(0.1*(10-i))/1000).round(0.1)).asString; 
-					if(val.contains(".").not, { val = val++".0"});
-					val
-				});
-				freqstringview.refresh;
-				this.setWindowImage( userview.bounds.width );
-//				userview.backgroundImage_(image, 10);
-				userview.refresh;
-			});
-
-		lowfreq = NumberBox(window, Rect(545, 278, paramW, 16))
-			.font_(font)
-			.resize_(3)
-			.action_({ arg view;
-				var rangedval; 
-				rangedval = view.value.clip(0, highfreq.value);
-				view.value_( rangedval.nearestInList(binfreqs).round(1) );
-				rangeslider.activeLo_( view.value / (server.sampleRate/2) );
-			})
-			.value_(0);
-
-		freqtextarray = Array.fill(11, { arg i;
-				if(((((server.sampleRate/2) / 10000)*(10-i)).round(0.1)).asString.contains("."), {
-					((((server.sampleRate/2) / 10000)*(10-i)).round(0.1)).asString;
-				},{
-					((((server.sampleRate/2) / 10000)*(10-i)).round(0.1)).asString++".0";
-				});				
-			});
-				
-		freqstringview = UserView(window, Rect(0, 10, 29, bounds.height))
-			.resize_(4)
-			.canFocus_( false )
-			.drawFunc_({arg view;
-				Pen.font = Font( "Helvetica", 9);
-				Pen.color = Color.black;
-				11.do({ arg i; 
-					Pen.stringAtPoint(freqtextarray[i], Point(5, (i+0)*((view.bounds.height-12)/10))) 
-				});
-			});
-		
-		CmdPeriod.add( cper = { 
-			if(startbutt.value == 1, {
-				startbutt.valueAction_(0);
-				AppClock.sched(0.5, { startbutt.valueAction_(1) });
-			});
-		 });
-		
-		window.onClose_({
-			image.free;
-			{ fftSynth.free }.try;
-			{ fftbuf.free }.try;
-			scopeOpen = false; 
-			this.stopruntask;
-			CmdPeriod.remove(cper);
-		}).front;
+	removeFromNotifiers {
+		// to be written: remove yourself from notifications when window closes. 
+		CmdPeriod.remove(this);
+		ServerQuit.remove(this, server);
+		ServerBoot.remove(this, server);
 	}
 	
-	start { {startbutt.valueAction_(1)}.defer(0.5) }
-	
-	stop { {startbutt.valueAction_(0)}.defer(0.5) }
-	
 }
 
-+ Function {
-	spectrogram2 { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
-		var synth;
-		synth = this.play(target, outbus, fadeTime, addAction, args);
-		if(SpectrogramWindow2.scopeOpen != true, {
-			SpectrogramWindow2.new.start;
-		});
-		^synth;
-	}
-}
