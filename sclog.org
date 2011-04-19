@@ -1,0 +1,74 @@
+
+* 2011
+** 2011-04 April
+*** 2011-04-19 Tuesday
+**** fixing the scaling of the fft magnitude :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-19 Tue 16:56>
+     :END:
+
+The original was: 
+					complexarray = ((((Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse)).log10) * 80).clip(0, 255); 
+
+This resulted in magnitude values below 1 producing negative values after log10, which were then clipped away. 
+
+***** Correction attempt (needs more testing after re setting fft buffer size to 1024)
+      this clipped the higher frequencies away at fft buffer size 2048 or more, but the same was for the original algorithm
+
+		 complexarray = (
+			 (Complex(Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])).magnitude.reverse + 1).log10
+			 * 80
+		 ).clip(0, 255);
+***** DONE minimum necessary change: 
+      CLOSED: [2011-04-19 Tue 17:27]
+		 complexarray = ((((Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse) + 1).log10) * 80).clip(0, 255); 
+  
+
+***** Debug tries: 
+					complexarray = Complex(
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse + 1; // prevent items < 0 producing negative values at log10
+					
+					["min, max before log10", complexarray.minItem, complexarray.maxItem].postln;
+					complexarray = complexarray.log10;
+					["min, max after log10", complexarray.minItem, complexarray.maxItem].postln;
+					complexarray = complexarray * 160;
+					["max after * 160", complexarray.maxItem].postln;
+					
+					complexarray = complexarray.clip(0, 255);
+					["max after clip", complexarray.maxItem].postln;
+
+
+/*					complexarray = (80 * Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse.log10).clip(0, 255);
+*/
+
+***** TODO Introduce more color gradations and tweak the accessing of these 
+
+      use: 
+	classvar <>defaultFFTBufSize = 1024, <>colorSize = 64;
+
+	recalcGradient {
+		var colors;
+
+//		colors = (0..16).collect({ | val | blend(background, color, val / 16)});
+		// _THIS:_
+		colors = (0..colorSize).collect({ | val | blend(background, color, val / colorSize)});
+//		colors = (1..64).pow(0.01).normalize.collect(blend(background, color, _));
+		colints = colors.collect({ | col | Image colorToPixel: col });
+	}
+
+      futhermore: 
+
+****** the intensity multiplier variable and the multiplication by 80 need to be tweaked.
+****** The colors could be graded with a bias for low values as follows: 
+       colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));

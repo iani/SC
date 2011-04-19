@@ -3,8 +3,9 @@
 // modifications by IZ 2011 04 17 f
 
 Spectrogram2 {
+	classvar <>defaultFFTBufSize = 1024, <>colorSize = 64;
 	var <server;
-	var window; //, bounds;
+	var <window, windowBounds;
 	var <fftbuf, fftDataArray, fftSynth;
 	var inbus = 0, <>rate = 25;
 	var <bufSize, binfreqs;	// size of FFT
@@ -17,12 +18,12 @@ Spectrogram2 {
 	var <index = 0, <windowIndex = 0, <lastFrameIndex;
 	var <windowparent, <bounds, <lowfreq, <highfreq;
 
-	*new { | parent, bounds, bufSize = 1024, color, background, lowfreq = 0, highfreq = inf |
+	*new { | parent, bounds, bufSize, color, background, lowfreq = 0, highfreq = inf |
 		^super.new.initSpectrogram(parent, bounds, bufSize, color, background, lowfreq, highfreq);
 	}
 
-	initSpectrogram { arg parent, boundsarg, bufSizearg = 1024, col, bg, lowfreqarg, highfreqarg;
-		bufSize = bufSizearg; // fft window
+	initSpectrogram { arg parent, boundsarg, bufSizearg, col, bg, lowfreqarg, highfreqarg;
+		bufSize = bufSizearg ? defaultFFTBufSize; // fft window
 		background = bg ? Color.black;
 		color = col ? Color(1, 1, 1); // white by default
 		crosshairColor = Color.white;
@@ -77,13 +78,19 @@ Spectrogram2 {
 	}
 
 	createWindow { | parent, bounds |
-		bounds = bounds ?? { Rect(0, 0, 500, 200) };
+		windowBounds = bounds ?? { Rect(0, 0, 500, 200) };
 		if (parent.isNil) {
-			parent = Window("Spectrogram2", bounds);
-			bounds = bounds.moveTo(0, 0);
+			parent = Window("Spectrogram2", windowBounds);
+			bounds = windowBounds.moveTo(0, 0);
 		};
 		window = parent;
 		this setWindowImage: bounds.width;
+		window.view.keyDownAction = { | view, char |
+			switch (char, 
+				$f, { this.toggleMaxScreen },
+				$t, { this.toggle }
+			);
+		};
 		this.setUserView(window, bounds);
 		window.onClose_({
 			image.free;
@@ -113,10 +120,10 @@ Spectrogram2 {
 					Pen.color = crosshairColor;
 					Pen.addRect( b.moveTo( 0, 0 ));
 					Pen.clip;
-					Pen.line( 0@mouseY, b.width@mouseY);
-					Pen.line(mouseX @ 0, mouseX @ b.height);
+					Pen.line(0@mouseY, b.width@mouseY);
+					Pen.line(mouseX@0, mouseX@b.height);
 					Pen.font = Font( "Helvetica", 10 );
-					Pen.stringAtPoint( "freq: " + freq.asString, mouseX + 20 @ mouseY - 15);
+					Pen.stringAtPoint( "freq: " + freq.asString, mouseX + 20@mouseY - 15);
 					Pen.stroke;
 				});
 			})
@@ -135,13 +142,19 @@ Spectrogram2 {
 			});
 	}
 
-	start { running = true; this.startruntask }
+	toggle { if (running) { this.stop } { this.start } }
+
+	start { running = true; if (runtask.isNil) { this.startruntask; }; }
 	
 	startruntask {
 		// these vars are for temporary tests of osc round trip time:
 		var oscSentTime, oscReceivedTime, oscLapseTime, scrollWidth;
 		var scrollImage, clearImage;
 		var tmp;
+		if (server.serverRunning.not) {
+			server.boot;
+			^"booting server to start spectrogram task".postln;
+		};
 		"starting spectrogram task".postln;
 		// does this scroll width setting belong here? it works but could be better organized?
 		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
@@ -180,13 +193,20 @@ Spectrogram2 {
 					oscReceivedTime = Process.elapsedTime;
 					oscLapseTime = oscReceivedTime - oscSentTime;
 					magarray = buf.clump(2)[frombin .. tobin].flop;
-					complexarray = ((((Complex( 
+					complexarray = 
+					(80 * log10(1 + Complex(
+						Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])).magnitude.reverse
+					)).clip(0, 255);
+
+
+/*				 complexarray = ((((Complex( 
 							Signal.newFrom( magarray[0] ), 
 							Signal.newFrom( magarray[1] ) 
-					).magnitude.reverse)).log10)*80).clip(0, 255); 
-					complexarray.do({ | val, i |
+					).magnitude.reverse) + 1).log10) * 80).clip(0, 255); 
+*/
+  					complexarray.do({ | val, i |
 						val = val * intensity;
-						fftDataArray[i] = colints.clipAt((val/16).round);
+						fftDataArray[i] = colints.clipAt((val / 16).round);
 					});
 					{
 						image.setPixels(fftDataArray, Rect(windowIndex, 0, 1, (tobin - frombin + 1)));
@@ -218,7 +238,7 @@ Spectrogram2 {
 		runtask = nil;
 		{ fftSynth.free }.try;
 	}
-	
+
 	inbus_ {arg inbusarg;
 		inbus = inbusarg;
 		fftSynth.set(\inbus, inbus);
@@ -250,7 +270,7 @@ Spectrogram2 {
 			bufSize = buffersize;
 			{ fftbuf.free }.try;
 			fftbuf = Buffer.alloc(server, bufSize, 1, { if(restart, {this.startruntask}) }) ;
-			binfreqs = bufSize.collect({|i| ((server.sampleRate/2)/bufSize)*(i+1) });
+			binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize)*(i + 1) });
 			tobin = bufSize.div(2) - 1;
 			frombin = 0;
 			fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
@@ -263,6 +283,8 @@ Spectrogram2 {
 	recalcGradient {
 		var colors;
 		colors = (0..16).collect({ | val | blend(background, color, val / 16)});
+//		colors = (0..colorSize).collect({ | val | blend(background, color, val / colorSize)});
+//		colors = (1..64).pow(0.01).normalize.collect(blend(background, color, _));
 		colints = colors.collect({ | col | Image colorToPixel: col });
 	}
 
@@ -281,11 +303,28 @@ Spectrogram2 {
 	}
 	
 	removeFromNotifiers {
-		// to be written: remove yourself from notifications when window closes. 
+		// remove yourself from notifications when window closes. 
 		CmdPeriod.remove(this);
-		ServerQuit.remove(this, server);
 		ServerBoot.remove(this, server);
+		/* TODO: must also remove NotificationCenter registrations and notify all objects listening 
+			to this that it has closed
+		*/
+//		NotificationCenter.remove(this); // ???
 	}
+	
+	toggleMaxScreen {
+		if (window.bounds.width != Window.screenBounds.width and: {
+			window.bounds.height < (Window.screenBounds.height - 60)
+			}
+		) {
+			window.bounds = Window.screenBounds;
+			window.front;
+		}{
+			window.bounds = windowBounds;
+		};
+	
+	}
+
 	
 }
 
