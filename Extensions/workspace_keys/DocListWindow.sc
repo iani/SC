@@ -71,6 +71,7 @@ DocListWindow {
 			NotificationCenter.register(Document, \endFront, this, { | doc | 
 				this.unselectDoc(doc);
 			});
+			this.makeTryoutWindow;
 			Document.allDocuments do: this.addDoc(_);
 			0.5.wait;
 			if ((lastCurrentDocName = Archive.global.at(\currentDocName)).notNil) {
@@ -82,6 +83,22 @@ DocListWindow {
 		this.startAutosaveRoutine;
 		CmdPeriod.add(this);
 		NotificationCenter.notify(this, \started);
+	}
+
+	makeTryoutWindow {
+		var tryout, path;
+		{
+			if ((tryout = Document.allDocuments.detect({ | d | d.name == "tryout.sc" })).isNil) {
+				path = Platform.userAppSupportDir ++ "/tryout.sc";
+				if (path.pathMatch.size == 0) {
+					tryout = Document("tryout.sc").path_(path);
+				}{
+					tryout = Document.open(path);
+				};
+			};
+			1.wait;
+			if (tryout.bounds.left != 0) { tryout.bounds = Rect(0, 260, 494, 212) };
+		}.fork(AppClock);
 	}
 
 	startAutosaveRoutine {
