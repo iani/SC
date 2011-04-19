@@ -156,7 +156,12 @@ Spectrogram2 {
 	
 	startruntask {
 		// these vars are for temporary tests of osc round trip time:
-		var oscSentTime, oscReceivedTime, oscLapseTime, scrollIncrement;
+		var oscSentTime, oscReceivedTime, oscLapseTime, scrollWidth;
+		var scrollImage, clearImage;
+		var tmp;
+		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
+		scrollImage = Int32Array.fill(imgHeight * (imgWidth - scrollWidth), 0);
+		clearImage = Int32Array.fill(imgHeight * scrollWidth, 255);
 		if (runtask.notNil) { ^this };
 		runtask = {
 			while { server.serverRunning.not } { "Spectrogram: waiting for server to boot".postln; 0.5.wait; };
@@ -166,16 +171,18 @@ Spectrogram2 {
 			0.1.wait;
 			windowIndex = index % imgWidth;
 			loop {
-//				windowIndex = index % imgWidth; // tracks current position in window for any painting funcs
-//				windowIndex.postln;
-// Temporary: try scrolling ...
 				windowIndex = index;
 				if (windowIndex >= imgWidth) {
-//					"SCROLLING!".postln;
-					scrollIncrement = (imgWidth * 0.25).round(1).asInteger;
-					windowIndex = windowIndex % scrollIncrement + (imgWidth * 0.75).round(1).asInteger;
+					windowIndex = windowIndex % scrollWidth; // + (imgWidth * 0.75).round(1).asInteger;
+					if (windowIndex == 0) {
+						imgHeight.postln;
+						image.loadPixels(scrollImage, Rect(scrollWidth, 0, imgWidth - scrollWidth, imgHeight), 0);
+						image.setPixels(scrollImage, Rect(0, 0, imgWidth - scrollWidth, imgHeight), 0); 
+						image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0); 
+						
+					};
+					windowIndex = windowIndex + (imgWidth - scrollWidth);
 				};
-//				({ windowIndex } ! 10).postln;
 
 				// get fft data and draw them when received:
 				oscSentTime = Process.elapsedTime;
@@ -194,7 +201,7 @@ Spectrogram2 {
 							Signal.newFrom( magarray[0] ), 
 							Signal.newFrom( magarray[1] ) 
 					).magnitude.reverse)).log10)*80).clip(0, 255); 
-					complexarray.do({|val, i|
+					complexarray.do({ | val, i |
 						val = val * intensity;
 						fftDataArray[i] = colints.clipAt((val/16).round);
 					});
