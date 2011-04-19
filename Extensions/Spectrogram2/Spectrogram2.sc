@@ -3,20 +3,26 @@
 // modifications by IZ 2011 04 17 f
 
 Spectrogram2 {
-	classvar <>defaultFFTBufSize = 1024, <>colorSize = 64, <colorScaleExp = 0.5;
+	classvar <>defaultFFTBufSize = 2048, <>colorSize = 64, <colorScaleExp = 0.5;
 	var <server;
 	var <window, windowBounds;
 	var <fftbuf, fftDataArray, fftSynth;
 	var inbus = 0, <>rate = 25;
-	var <bufSize, binfreqs;	// size of FFT
+	var <bufSize, <binfreqs;	// size of FFT
 	var <frombin, <tobin;
-	var image, imgWidth, imgHeight, <>intensity = 1, runtask;
+	var <image, <imgWidth, <imgHeight, <>intensity = 1, runtask;
 	var color, background, colints; // colints is an array of integers each representing a color
 	var userview, mouseX, mouseY, freq, drawCrossHair = false; // mYIndex, mXIndex, freq;
 	var <>crosshairColor, running = true;
 	// track the iteration of polling bus values and its relative position in the window: 
 	var <index = 0, <windowIndex = 0, <lastFrameIndex;
+	// is windowparent really needed? what for?
 	var <windowparent, <bounds, <lowfreq, <highfreq;
+	var <currentFFTframe;	// holds the last received fft frame data, for any other process that might need it
+	var <currentFFTframeMagnitudes; // magnitudes of the last received fft frame data
+	
+//	var <>drawtest; // testing how to add other drawing objects reliably
+	var <persistentWindowIndex;	// other drawing processes should use this to stay in sync with fft pixel setting
 
 	*new { | parent, bounds, bufSize, color, background, lowfreq = 0, highfreq = inf |
 		^super.new.initSpectrogram(parent, bounds, bufSize, color, background, lowfreq, highfreq);
@@ -63,7 +69,7 @@ Spectrogram2 {
 	}
 
 	initServerStuff { 
-		binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
+		this.setBinfreqs; // = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
 		this.sendSynthDef;
 		tobin = binfreqs.indexOf((highfreq / 2).nearestInList(binfreqs)) min: (bufSize.div(2) - 1);
 		frombin = binfreqs.indexOf((lowfreq / 2).nearestInList(binfreqs)) max: 0;
@@ -96,12 +102,13 @@ Spectrogram2 {
 			image.free;
 			this.stopruntask;
 			fftbuf.free;
-			this.removeFromNotifiers;
+			this.freeNotifiedDependants;
 		}).front;
 	}
 
 	setUserView {arg window, bounds;
-
+		var testImage;
+		testImage = Int32Array.fill(imgHeight, Image colorToPixel: Color.red);
 		userview = UserView(window, bounds)
 			.focusColor_(Color.white.alpha_(0))
 			.resize_(5)
@@ -110,26 +117,18 @@ Spectrogram2 {
 				lastFrameIndex = windowIndex - imgWidth + 1; 
 				Pen.use {
 					Pen.scale( b.width / imgWidth, b.height / imgHeight );
-					// notify other polling objects that they can draw with Pen.setPixels  here
-					NotificationCenter.notify(this, \drawImage, image, this);
+					// notify other polling objects that they can draw with Pen.setPixels here
+					NotificationCenter.notify(this, \drawImage, image);
+					image.setPixels(testImage, Rect(100, 0, 1, testImage.size), 0);
+//					if (drawtest.notNil) { drawtest.draw };   // testing how to add other drawing objects
 					Pen image: image;
-					// notify other polling objects that they can draw with other Pen operations here
-					NotificationCenter.notify(this, \drawPen, userview, this);
 				};
-				if( drawCrossHair, {
-					Pen.color = crosshairColor;
-					Pen.addRect( b.moveTo( 0, 0 ));
-					Pen.clip;
-					Pen.line(0@mouseY, b.width@mouseY);
-					Pen.line(mouseX@0, mouseX@b.height);
-					Pen.font = Font( "Helvetica", 10 );
-					Pen.stringAtPoint( "freq: " + freq.asString, mouseX + 20@mouseY - 15);
-					Pen.stroke;
-				});
+				// notify other polling objects that they can draw with other Pen operations here
+				NotificationCenter.notify(this, \drawPen, b);
 			})
 			.mouseDownAction_({|view, mx, my|
 				this.crosshairCalcFunc(view, mx, my);
-				drawCrossHair = true;
+				this.mouseTrigger(true); 		// experimental
 				view.refresh;
 			})
 			.mouseMoveAction_({|view, mx, my| 
@@ -137,9 +136,30 @@ Spectrogram2 {
 				view.refresh;
 			})
 			.mouseUpAction_({|view, mx, my|Ê 
-				drawCrossHair = false;
+				this.mouseTrigger(false);		// experimental
 				view.refresh;
 			});
+	}
+
+	/* 	This could just as well be written in-line as it was in Spectrogram(1).
+		But the present way shows an example of how to attach further drawing methods 
+		by other objects on the same spectrogram.
+	*/
+	mouseTrigger { | on | // experimental
+		if (on) {
+			NotificationCenter.register(this, \drawPen, thisMethod, { | vbounds |
+				Pen.color = crosshairColor;
+				Pen.addRect( vbounds.moveTo( 0, 0 ));
+				Pen.clip;
+				Pen.line(0@mouseY, vbounds.width@mouseY);
+				Pen.line(mouseX@0, mouseX@vbounds.height);
+				Pen.font = Font( "Helvetica", 10 );
+				Pen.stringAtPoint( "freq: " + freq.asString, mouseX + 20@mouseY - 15);
+				Pen.stroke;
+			});
+		}{
+			NotificationCenter.unregister(this, \drawPen, thisMethod);
+		}
 	}
 
 	toggle { if (running) { this.stop } { this.start } }
@@ -180,7 +200,8 @@ Spectrogram2 {
 				windowIndex = index;
 				if (windowIndex >= imgWidth) {
 					windowIndex = windowIndex % scrollWidth; 
-					if (windowIndex == 0) {
+					if (windowIndex == 0) {	// the frame has reached the rightmost end of the drawing window ...
+					// ... so scroll the rest of the image to the left
 						image.loadPixels(scrollImage, Rect(scrollWidth, 0, imgWidth - scrollWidth, imgHeight), 0);
 						image.setPixels(scrollImage, Rect(0, 0, imgWidth - scrollWidth, imgHeight), 0); 
 						image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0);
@@ -192,20 +213,32 @@ Spectrogram2 {
 				oscSentTime = Process.elapsedTime;
 				fftbuf.getn(0, bufSize, { | buf |
 					var magarray, complexarray;
-					var persistentWindowIndex;
+
+					currentFFTframe = buf;
+
 					persistentWindowIndex = windowIndex;
 					oscReceivedTime = Process.elapsedTime;
 					oscLapseTime = oscReceivedTime - oscSentTime;
-					magarray = buf.clump(2)[frombin .. tobin].flop;
+//					magarray = buf.clump(2)[frombin .. tobin].flop;
+					magarray = buf.clump(2).flop;
 
 					complexarray  = log10(
 						1 + 
-						Complex(
+						// store unreversed magnitudes for access by external analysis processes:
+						currentFFTframeMagnitudes = Complex(
 							Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
-						).magnitude.reverse
+						).magnitude // .reverse
 					).clip(0, 1) * intensity;
-						
-  					complexarray.do({ | val, i |
+/*
+// example of peak frequency detection. 
+// run this with a single sine tone as test to view accuracy of match
+// this was used to adjust the binfreqs contents to match actual frequencies:
+					"freq detected: ".post;
+					binfreqs[currentFFTframeMagnitudes.indexOf(
+						currentFFTframeMagnitudes.maxItem
+					)].postln;
+*/
+  					complexarray.reverse.do({ | val, i |
 						fftDataArray[i] = colints.clipAt((val * colorSize).round);
 					});
 					{	// correct: in sync with data, and index protected
@@ -274,14 +307,24 @@ Spectrogram2 {
 			bufSize = buffersize;
 			{ fftbuf.free }.try;
 			fftbuf = Buffer.alloc(server, bufSize, 1, { if(restart, {this.startruntask}) }) ;
-			binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize)*(i + 1) });
+			this.setBinfreqs;
 			tobin = bufSize.div(2) - 1;
 			frombin = 0;
 			fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
-			this.setWindowImage( userview.bounds.width );
+			this.setWindowImage(userview.bounds.width);
 		}{
 			"Buffersize has to be power of two (256, 1024, 2048, etc.)".warn;
 		};
+	}
+
+	setBinfreqs { | argfreqs |
+		// tests show that binfreqs indexed by max of fftmagnitude is 1/2 of actual freq of sinetone: 
+//		binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
+		// tests show that binfreqs indexed by max of fftmagnitude is one bin beyond freq of sinetone: 
+//		binfreqs = bufSize.collect({ | i | (server.sampleRate / bufSize) * (i + 1) });
+		// this most closely matches actual frequency of a sine tone test: 
+		binfreqs = bufSize.collect({ | i | server.sampleRate / bufSize * i });
+//		reversebinfreqs = binfreqs.reverse;	
 	}
 
 	colorScaleExp_ { | argExp |
@@ -300,7 +343,9 @@ Spectrogram2 {
 		mouseY = (my - 1.5).clip(0, view.bounds.height); 
 		freq = binfreqs[
 			((view.bounds.height) - mouseY).round(1)
-				.linlin(0, view.bounds.height, frombin * 2, tobin * 2).floor(1)
+			// IZ adjusting display of numbers to match more closely actual frequency
+			// based on sine tone pitch detection tests
+				.linlin(0, view.bounds.height, frombin /* * 2 */, tobin /* * 2 */).floor(1) - 2
 		].round(0.01);
 	}
 
@@ -309,12 +354,12 @@ Spectrogram2 {
 		index = 0;
 	}
 	
-	removeFromNotifiers {
+	freeNotifiedDependants {
 		// remove yourself from notifications when window closes. 
 		CmdPeriod.remove(this);
 		ServerBoot.remove(this, server);
-		/* TODO: must also remove NotificationCenter registrations and notify all objects listening 
-			to this that it has closed
+		NotificationCenter.notify(this, \closed);
+		/* TODO: must also remove NotificationCenter registrations 
 		*/
 //		NotificationCenter.remove(this); // ???
 	}

@@ -102,3 +102,25 @@ This resulted in magnitude values below 1 producing negative values after log10,
 Default: 0.5. Tested between: 0.01 and 1
 Higher values: peaks show clearer, lower magnitudes may disappear
 Lower values: peaks smear more, lower magnitudes are displayed
+**** TODO is var windowparent necessary? perhaps window is enough :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-19 Tue 20:28>
+     :END:
+*** 2011-04-20 Wednesday
+**** TODO simplify additional process mechanism using dependants vars  :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 02:28>
+     :END:
+
+Define vars in Spectrogram2: 
+
+1. imageObjects: objects that draw on the image (before it is sent to pen)
+1. penObjects: objects that draw with pen (after image is sent to pen) 
+
+An object that wants to draw, must add itself to one of those two lists. 
+Spectrogram2 will send all objects stored in imageObects the message drawImage, and all the objects stored in penObjects the image drawPen. 
+
+An object can add itself to start drawing or remove itself to stop drawing. This is simpler than going via NotificationCenter. 
+
+
+
