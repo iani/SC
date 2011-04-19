@@ -94,7 +94,11 @@ This resulted in magnitude values below 1 producing negative values after log10,
   					complexarray.do({ | val, i |
 						fftDataArray[i] = colints.clipAt((val * colorSize).round);
 					});
+**** added scaleable exponent for color mapping :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-19 Tue 19:04>
+     :END:
 
-
-
-	 
+Default: 0.5. Tested between: 0.01 and 1
+Higher values: peaks show clearer, lower magnitudes may disappear
+Lower values: peaks smear more, lower magnitudes are displayed

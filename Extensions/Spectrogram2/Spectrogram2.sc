@@ -3,7 +3,7 @@
 // modifications by IZ 2011 04 17 f
 
 Spectrogram2 {
-	classvar <>defaultFFTBufSize = 1024, <>colorSize = 64;
+	classvar <>defaultFFTBufSize = 1024, <>colorSize = 64, <colorScaleExp = 0.5;
 	var <server;
 	var <window, windowBounds;
 	var <fftbuf, fftDataArray, fftSynth;
@@ -192,36 +192,31 @@ Spectrogram2 {
 				oscSentTime = Process.elapsedTime;
 				fftbuf.getn(0, bufSize, { | buf |
 					var magarray, complexarray;
+					var persistentWindowIndex;
+					persistentWindowIndex = windowIndex;
 					oscReceivedTime = Process.elapsedTime;
 					oscLapseTime = oscReceivedTime - oscSentTime;
 					magarray = buf.clump(2)[frombin .. tobin].flop;
-					// testing the scaling of the color:
-/*					scaled = log10(
-						1 + 
-						Complex(
-							Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
-						).magnitude.reverse.pow(0.5)
-					);
-					max = scaled.maxItem;
-					min = scaled.minItem;
-					postf("color scale tests. min: % max: %\n", min, max); 
-*/
-					// end tests
+
 					complexarray  = log10(
 						1 + 
 						Complex(
 							Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
-						).magnitude.reverse;
+						).magnitude.reverse
 					).clip(0, 1) * intensity;
-
+						
   					complexarray.do({ | val, i |
 						fftDataArray[i] = colints.clipAt((val * colorSize).round);
 					});
-					{
-						image.setPixels(fftDataArray, Rect(windowIndex, 0, 1, (tobin - frombin + 1)));
+					{	// correct: in sync with data, and index protected
+						image.setPixels(fftDataArray, Rect(persistentWindowIndex, 0, 1, (tobin - frombin + 1)));
+						userview.refresh;	
 					}.defer;
 				});
-				if (userview.notClosed) { userview.refresh }; // must be here to cleanly erase previous frames
+				// WRONG!: frames are missed if we defer out of sync of receiving the fft data:
+//				if (userview.notClosed) { 
+//					userview.refresh
+//				}; // must be here to cleanly erase previous frames
 				index = index + 1;
 				rate.reciprocal.wait; // framerate
 			};
@@ -289,9 +284,14 @@ Spectrogram2 {
 		};
 	}
 
+	colorScaleExp_ { | argExp |
+		colorScaleExp = argExp;
+		this.recalcGradient;	
+	}
+
 	recalcGradient {
 		var colors;
-		colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
+		colors = (1..colorSize).pow(colorScaleExp).normalize.collect(blend(background, color, _));
 		colints = colors.collect({ | col | Image colorToPixel: col });
 	}
 

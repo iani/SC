@@ -1,5 +1,6 @@
-
-10.ceil(5);
+a.colorScaleExp = 0.01;
+a.intensity = 2;
+ff10.ceil(5);
 
 (0..10).clip(0, 5);
 
