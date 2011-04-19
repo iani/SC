@@ -2,7 +2,7 @@
 DocListWindow {
 	classvar >default;
 	classvar <>docListWidth = 150;
-	classvar <>listenerY = 280, <>listenerWidth = 500;
+	classvar <>listenerY = 500, <>listenerWidth = 500;
 	var <docBrowser, <docBrowserView, <docListView, <codeListView;
 	var <docBounds, <docBrowserBounds, <listenerBounds;
 	var <allDocs, <selectedDoc;
