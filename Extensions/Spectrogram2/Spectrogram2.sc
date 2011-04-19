@@ -36,47 +36,53 @@ Spectrogram2 {
 
 		CmdPeriod.add(this);
 		ServerBoot.add(this, server);
-		ServerQuit.add(this, server);
 
-		server.waitForBoot({
-			this.initServerStuff;
-		});
+		if (server.serverRunning) {
+			this.doOnServerBoot;
+		}{
+			"spectrogram booting default server".postln;
+			server.boot;
+		};
 	}
 
 	cmdPeriod {
+		runtask = nil;
 		if (running) { this.startruntask };
-	}
-	doOnServerQuit {
-//		if (runtask.notNil) { "spectrogram stopped".postln; runtask.stop; runtask = nil };
 	}
 	
 	doOnServerBoot {
-		if (running and: { runtask.isNil }) {
-			"starting spectrogram".postln;
+		{
+			0.1.wait;
 			this.initServerStuff;
-			this.startruntask;	
-		}	
+			if (running and: { runtask.isNil }) {
+				0.1.wait;
+				this.startruntask;
+			};
+		}.fork(AppClock);	
 	}
 
 	initServerStuff { 
 		binfreqs = bufSize.collect({ | i | ((server.sampleRate / 2) / bufSize) * (i + 1) });
 		this.sendSynthDef;
-		fftbuf = Buffer.alloc(server, bufSize);
 		tobin = binfreqs.indexOf((highfreq / 2).nearestInList(binfreqs)) min: (bufSize.div(2) - 1);
 		frombin = binfreqs.indexOf((lowfreq / 2).nearestInList(binfreqs)) max: 0;
 		fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
-		this.createWindow(windowparent, bounds);
+		if (userview.isNil or: { userview.notClosed.not }) { this.createWindow(windowparent, bounds); };
 	}
 
 	sendSynthDef {
-		SynthDef(\spectroscope, {|inbus=0, buffer=0|
+		SynthDef(\spectroscope, { | inbus = 0, buffer = 0 |
 			FFT(buffer, InFeedback.ar(inbus));
 		}).send(server);
 	}
 
 	createWindow { | parent, bounds |
-		bounds = bounds ?? { Rect(200, 450, 600, 300) };
-		window = parent ? Window("Spectrogram2", bounds);
+		bounds = bounds ?? { Rect(0, 0, 500, 200) };
+		if (parent.isNil) {
+			parent = Window("Spectrogram2", bounds);
+			bounds = bounds.moveTo(0, 0);
+		};
+		window = parent;
 		this setWindowImage: bounds.width;
 		this.setUserView(window, bounds);
 		window.onClose_({
@@ -136,14 +142,20 @@ Spectrogram2 {
 		var oscSentTime, oscReceivedTime, oscLapseTime, scrollWidth;
 		var scrollImage, clearImage;
 		var tmp;
+		"starting spectrogram task".postln;
+		// does this scroll width setting belong here? it works but could be better organized?
 		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
 		scrollImage = Int32Array.fill(imgHeight * (imgWidth - scrollWidth), 0);
 		clearImage = Int32Array.fill(imgHeight * scrollWidth, 255);
 		if (runtask.notNil) { ^this };
 		runtask = {
-			while { server.serverRunning.not } { "Spectrogram: waiting for server to boot".postln; 0.5.wait; };
-			0.5.wait;
 			this.recalcGradient;
+			// todo: use LocalBuf for compactness of code.
+			// this means the fftSynth has to be re-created each time that the 
+			// fft window size is changed by the user
+			if (fftbuf.notNil) { fftbuf.free };
+			fftbuf = Buffer.alloc(server, bufSize);
+			0.1.wait;
 			fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
 			0.1.wait;
 			windowIndex = index % imgWidth;
@@ -156,8 +168,7 @@ Spectrogram2 {
 					if (windowIndex == 0) {
 						image.loadPixels(scrollImage, Rect(scrollWidth, 0, imgWidth - scrollWidth, imgHeight), 0);
 						image.setPixels(scrollImage, Rect(0, 0, imgWidth - scrollWidth, imgHeight), 0); 
-						image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0); 
-						
+						image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0);
 					};
 					windowIndex = windowIndex + (imgWidth - scrollWidth);
 				};
@@ -185,8 +196,14 @@ Spectrogram2 {
 				index = index + 1;
 				rate.reciprocal.wait; // framerate
 			};
-			"spectrogram stopped".postln; runtask = nil;
+			this.cleanupServerObjects;
 		}.fork(AppClock); // must be AppClock for consistent timing in the userview.refresh call.
+	}
+
+	cleanupServerObjects {
+		"spectrogram stopped".postln;
+		runtask = nil;
+		if (server.serverRunning) { fftSynth.free; };
 	}
 
 	lastDisplayableFrame {

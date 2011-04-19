@@ -6,18 +6,4 @@ a.stop;
 
 a.intensity = 3
 
-
-r = {
-	loop {
-		1.wait;
-		"he;;".postln;
-	}
-}.fork
-
-r.stop
 { HPF.ar(LFNoise2.ar(15000, 0.5), 5000) }.play;
-
-Server.default.waitForBoot({ "hello".postln; });
-
-NotificationCenter.register(ServerQuit, 
-
