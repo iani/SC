@@ -15,7 +15,6 @@ Spectrogram2 {
 	var <>crosshairColor, running = true;
 	// track the iteration of polling bus values and its relative position in the window: 
 	var <index = 0, <windowIndex = 0, <lastFrameIndex;
-	var <frames;	// holds the times when each frame was drawn by drawFunc;
 	var <windowparent, <bounds, <lowfreq, <highfreq;
 
 	*new { | parent, bounds, bufSize = 1024, color, background, lowfreq = 0, highfreq = inf |
@@ -48,17 +47,13 @@ Spectrogram2 {
 		if (running) { this.startruntask };
 	}
 	doOnServerQuit {
-//		this.stop;
-// 		only stop the poll routine, but keep the started status
-		if (runtask.notNil) { "spectrogram stopped".postln; runtask.stop; runtask = nil };
+//		if (runtask.notNil) { "spectrogram stopped".postln; runtask.stop; runtask = nil };
 	}
 	
 	doOnServerBoot {
 		if (running and: { runtask.isNil }) {
-			
 			"starting spectrogram".postln;
 			this.initServerStuff;
-			
 			this.startruntask;	
 		}	
 	}
@@ -71,8 +66,6 @@ Spectrogram2 {
 		frombin = binfreqs.indexOf((lowfreq / 2).nearestInList(binfreqs)) max: 0;
 		fftDataArray = Int32Array.fill((tobin - frombin + 1), 0);
 		this.createWindow(windowparent, bounds);
-		this.initFrames;
-//		if (running) { this.start };
 	}
 
 	sendSynthDef {
@@ -80,8 +73,6 @@ Spectrogram2 {
 			FFT(buffer, InFeedback.ar(inbus));
 		}).send(server);
 	}
-
-	initFrames { frames = Frames.new }
 
 	createWindow { | parent, bounds |
 		bounds = bounds ?? { Rect(200, 450, 600, 300) };
@@ -106,26 +97,12 @@ Spectrogram2 {
 				lastFrameIndex = windowIndex - imgWidth + 1; 
 				Pen.use {
 					Pen.scale( b.width / imgWidth, b.height / imgHeight );
-					// any more pixels on the image must be set here before it is sent to pen:
-//					frames.add([index, windowIndex]);
-					NotificationCenter.notify(this, \drawImage, image, imgWidth, frames, this);
+					// notify other polling objects that they can draw with Pen.setPixels  here
+					NotificationCenter.notify(this, \drawImage, image, this);
 					Pen image: image;
-					// experimental draw function added here: 
-/*					Pen.color = Color.red;
-					Pen.fillOval(Rect(windowIndex - 2, 50, 20, 20));
-					Pen.stroke;
-*/
-
+					// notify other polling objects that they can draw with other Pen operations here
+					NotificationCenter.notify(this, \drawPen, userview, this);
 				};
-				// second experimental draw function, outside the scale, to preserve shape proportions: 
-/*				Pen.use {
-					Pen.color = Color.blue;
-					Pen.fillOval(Rect(0, 0, 10, 10).moveTo(
-						windowIndex * b.width / imgWidth, 
-						80 * b.height / imgHeight)
-					);
-				};
-*/
 				if( drawCrossHair, {
 					Pen.color = crosshairColor;
 					Pen.addRect( b.moveTo( 0, 0 ));
@@ -170,12 +147,13 @@ Spectrogram2 {
 			fftSynth = Synth(\spectroscope, [\inbus, inbus, \buffer, fftbuf]);
 			0.1.wait;
 			windowIndex = index % imgWidth;
-			loop {
+			while {
+				server.serverRunning and: { running } and: { userview.notClosed }
+			}{
 				windowIndex = index;
 				if (windowIndex >= imgWidth) {
-					windowIndex = windowIndex % scrollWidth; // + (imgWidth * 0.75).round(1).asInteger;
+					windowIndex = windowIndex % scrollWidth; 
 					if (windowIndex == 0) {
-						imgHeight.postln;
 						image.loadPixels(scrollImage, Rect(scrollWidth, 0, imgWidth - scrollWidth, imgHeight), 0);
 						image.setPixels(scrollImage, Rect(0, 0, imgWidth - scrollWidth, imgHeight), 0); 
 						image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0); 
@@ -190,12 +168,6 @@ Spectrogram2 {
 					var magarray, complexarray;
 					oscReceivedTime = Process.elapsedTime;
 					oscLapseTime = oscReceivedTime - oscSentTime;
-// temporary timing tests: 
-/*					postf("trip dur: % was smaller than poll time by: %\n", 
-						oscLapseTime, 
-						rate.reciprocal - oscLapseTime
-					);
-*/
 					magarray = buf.clump(2)[frombin .. tobin].flop;
 					complexarray = ((((Complex( 
 							Signal.newFrom( magarray[0] ), 
@@ -207,24 +179,13 @@ Spectrogram2 {
 					});
 					{
 						image.setPixels(fftDataArray, Rect(windowIndex, 0, 1, (tobin - frombin + 1)));
-						// other pixel setting functions could be added here
-						// order of setting pixels is significant. 
-						// must not set pixels outside this func, because they may be overwritten
-//						image.setPixel([255, 0, 0, 255].asRGBA, windowIndex, tobin - frombin / 2);
 					}.defer;
 				});
 				if (userview.notClosed) { userview.refresh }; // must be here to cleanly erase previous frames
 				index = index + 1;
-				// here testing how to set marks that will be drawn later:
-/*				if (index % rate == 0) { 
-					"a second has passed - will set a test mark".postln;
-					postf("the current frame is: %, the last displayable frame is: %\n",
-						index, this.lastDisplayableFrame
-					);
-				};
-*/
 				rate.reciprocal.wait; // framerate
-			}; 
+			};
+			"spectrogram stopped".postln; runtask = nil;
 		}.fork(AppClock); // must be AppClock for consistent timing in the userview.refresh call.
 	}
 
