@@ -1,3 +1,10 @@
+
+10.ceil(5);
+
+(0..10).clip(0, 5);
+
+{ WhiteNoise.ar(30) }.play;
+
 (1..16).reciprocal
 (1..32).pow(0.01).normalize.postln.plot
 

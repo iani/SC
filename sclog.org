@@ -22,7 +22,7 @@ This resulted in magnitude values below 1 producing negative values after log10,
 			 (Complex(Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])).magnitude.reverse + 1).log10
 			 * 80
 		 ).clip(0, 255);
-***** DONE minimum necessary change: 
+***** minimum necessary change: 
       CLOSED: [2011-04-19 Tue 17:27]
 		 complexarray = ((((Complex( 
 							Signal.newFrom( magarray[0] ), 
@@ -52,7 +52,8 @@ This resulted in magnitude values below 1 producing negative values after log10,
 					).magnitude.reverse.log10).clip(0, 255);
 */
 
-***** TODO Introduce more color gradations and tweak the accessing of these 
+***** DONE Introduce more color gradations and tweak the accessing of these 
+      CLOSED: [2011-04-19 Tue 18:23]
 
       use: 
 	classvar <>defaultFFTBufSize = 1024, <>colorSize = 64;
@@ -72,3 +73,28 @@ This resulted in magnitude values below 1 producing negative values after log10,
 ****** the intensity multiplier variable and the multiplication by 80 need to be tweaked.
 ****** The colors could be graded with a bias for low values as follows: 
        colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
+
+***** Better solution (introduces _much_ more detail in low energy regions
+      - Note taken on [2011-04-19 Tue 18:26] \\
+	The power exponent in calcGradient could be reduced to 0.1 or other values
+****** recalcGradient
+	recalcGradient {
+		var colors;
+		colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
+		colints = colors.collect({ | col | Image colorToPixel: col });
+	}
+****** spectrum magnitude scaling in startruntask
+					complexarray  = log10(
+						1 + 
+						Complex(
+							Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
+						).magnitude.reverse;
+					).clip(0, 1) * intensity;
+
+  					complexarray.do({ | val, i |
+						fftDataArray[i] = colints.clipAt((val * colorSize).round);
+					});
+
+
+
+	 

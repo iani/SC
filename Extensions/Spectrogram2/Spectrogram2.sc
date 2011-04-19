@@ -10,7 +10,7 @@ Spectrogram2 {
 	var inbus = 0, <>rate = 25;
 	var <bufSize, binfreqs;	// size of FFT
 	var <frombin, <tobin;
-	var image, imgWidth, imgHeight, <>intensity = 5, runtask;
+	var image, imgWidth, imgHeight, <>intensity = 1, runtask;
 	var color, background, colints; // colints is an array of integers each representing a color
 	var userview, mouseX, mouseY, freq, drawCrossHair = false; // mYIndex, mXIndex, freq;
 	var <>crosshairColor, running = true;
@@ -149,8 +149,10 @@ Spectrogram2 {
 	startruntask {
 		// these vars are for temporary tests of osc round trip time:
 		var oscSentTime, oscReceivedTime, oscLapseTime, scrollWidth;
+		// these var are for tweaking the coloring mechanism: 
+		var scaled, min, max;
+		// these vars are needed for scrolling the bit image to the left: 
 		var scrollImage, clearImage;
-		var tmp;
 		if (server.serverRunning.not) {
 			server.boot;
 			^"booting server to start spectrogram task".postln;
@@ -193,20 +195,27 @@ Spectrogram2 {
 					oscReceivedTime = Process.elapsedTime;
 					oscLapseTime = oscReceivedTime - oscSentTime;
 					magarray = buf.clump(2)[frombin .. tobin].flop;
-					complexarray = 
-					(80 * log10(1 + Complex(
-						Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])).magnitude.reverse
-					)).clip(0, 255);
-
-
-/*				 complexarray = ((((Complex( 
-							Signal.newFrom( magarray[0] ), 
-							Signal.newFrom( magarray[1] ) 
-					).magnitude.reverse) + 1).log10) * 80).clip(0, 255); 
+					// testing the scaling of the color:
+/*					scaled = log10(
+						1 + 
+						Complex(
+							Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
+						).magnitude.reverse.pow(0.5)
+					);
+					max = scaled.maxItem;
+					min = scaled.minItem;
+					postf("color scale tests. min: % max: %\n", min, max); 
 */
+					// end tests
+					complexarray  = log10(
+						1 + 
+						Complex(
+							Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
+						).magnitude.reverse;
+					).clip(0, 1) * intensity;
+
   					complexarray.do({ | val, i |
-						val = val * intensity;
-						fftDataArray[i] = colints.clipAt((val / 16).round);
+						fftDataArray[i] = colints.clipAt((val * colorSize).round);
 					});
 					{
 						image.setPixels(fftDataArray, Rect(windowIndex, 0, 1, (tobin - frombin + 1)));
@@ -282,9 +291,7 @@ Spectrogram2 {
 
 	recalcGradient {
 		var colors;
-		colors = (0..16).collect({ | val | blend(background, color, val / 16)});
-//		colors = (0..colorSize).collect({ | val | blend(background, color, val / colorSize)});
-//		colors = (1..64).pow(0.01).normalize.collect(blend(background, color, _));
+		colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
 		colints = colors.collect({ | col | Image colorToPixel: col });
 	}
 
