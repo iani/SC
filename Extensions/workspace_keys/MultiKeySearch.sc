@@ -24,6 +24,13 @@ l.action = { | me | [me.value, me.items[me.value]].postln; };
 w.front;
 l.focus;
 
+//:c With EZListView
+
+l = EZListView(bounds: Rect(0, 0, 250, 400));
+l.items = ["alpha", "beta", "gamma"] collect: { | s | s->{ s.postln } };
+l.widget.keyDownAction = MultiKeySearch(keystrokeWaitInterval: 0.1);
+l.widget.focus;
+
 //:r rest
 */
 
@@ -38,8 +45,8 @@ MultiKeySearch {
 	}
 	
 	value { | listview, char, mod, unicode, key |
-		var items, match, endPos;
-		char.postln;
+		var items, match, endPos, topView, parent;
+//		char.postln;
 		if (unicode == 13) { listview.doAction; done = true; ^this };
 		if (unicode == 16rF700, { listview.valueAction = listview.value - 1; ^this });
 		if (unicode == 16rF703, { listview.valueAction = listview.value + 1; ^this });

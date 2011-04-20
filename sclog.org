@@ -121,6 +121,31 @@ An object that wants to draw, must add itself to one of those two lists.
 Spectrogram2 will send all objects stored in imageObects the message drawImage, and all the objects stored in penObjects the image drawPen. 
 
 An object can add itself to start drawing or remove itself to stop drawing. This is simpler than going via NotificationCenter. 
+**** fft buffer sizes > 1024 are not supported 			:spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 11:07>
+     :END:
 
+This is because buf.getn can only fetch up to 1024 values (OSC limit?). 
+**** removed frombin - tobin as I find little use for zooming in to part of a spectrum and it complicates the code :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 16:11>
+     :END:
+**** added toggle tryout.sc + make code palette w. key shortcuts :doclistwindow:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 16:14>
+     :END:
+**** DocSession:load provides new session if not found in archive :doclistwindow:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 17:07>
+     :END:
 
-
+This is important when installing lilt2 to a new computer that does not have any sessions stored. 
+**** TODO code parser should ignore lines where //: is followed by spece :doclistwindow:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 17:38>
+     :END:
+**** PerformanceWindow should re-parse code on changing docs :doclistwindow:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 17:39>
+     :END:

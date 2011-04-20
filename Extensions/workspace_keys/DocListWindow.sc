@@ -2,7 +2,9 @@
 DocListWindow {
 	classvar >default;
 	classvar <>docListWidth = 150;
+	classvar <functionKey = 8388864;
 	classvar <>listenerY = 500, <>listenerWidth = 500;
+	classvar <>tryoutBounds;
 	var <docBrowser, <docBrowserView, <docListView, <codeListView;
 	var <docBounds, <docBrowserBounds, <listenerBounds;
 	var <allDocs, <selectedDoc;
@@ -16,6 +18,7 @@ DocListWindow {
 		Document.initAction = { | me | 
 			NotificationCenter.notify(Document, \opened, me);
 		};
+		tryoutBounds = Rect(0, 260, 494, 212);
 		this.makeUserMenuItems;	
 	}
 
@@ -97,7 +100,7 @@ DocListWindow {
 				};
 			};
 			1.wait;
-			if (tryout.bounds.left != 0) { tryout.bounds = Rect(0, 260, 494, 212) };
+			if (tryout.bounds.left != 0) { tryout.bounds = tryoutBounds };
 		}.fork(AppClock);
 	}
 
@@ -118,6 +121,17 @@ DocListWindow {
 			this.setDocBounds(doc, DocProxy.boundsFor(doc));
 			this.updateDocListView;
 			this.selectDoc(doc);
+/*			doc.keyDownAction = { | doc, char, mod, unicode, key |
+				[doc, char, mod, unicode, key].postln;
+				if (mod == functionKey) {
+					switch (char, 
+						$x, { this.makeCodePalette(doc) },
+						$c, { this.zoomTryOutDoc }
+					);
+				};  
+
+			};
+*/
 			doc.toFrontAction = {
 				NotificationCenter.notify(Document, \toFront, doc); 
 			};
@@ -126,6 +140,38 @@ DocListWindow {
 			doc.onClose = { NotificationCenter.notify(Document, \closed, doc); };
 			NotificationCenter.notify(this, \docAdded, doc);
 		}.defer(0.1);
+	}
+
+	zoomTryOutDoc {
+		var tryout;
+		tryout = Document.allDocuments detect: { | d | d.name == "tryout.sc" };
+		if (tryout.notNil) { 
+			if (tryout.bounds == tryoutBounds) {
+				tryout.bounds = docBounds;			
+			}{
+				tryout.bounds = tryoutBounds;
+			};
+			tryout.front;
+			this.selectDoc(tryout); // make sure code palette opens on this
+		};
+	}
+	
+	makeCodePalette { | doc |
+		var cpalette, window;
+		var items, codeStrings, codeKeys, codePositions;
+		if (doc.isNil) { ^this };
+		window = Window(doc.name, Rect(0, 0, 250, 400));
+		cpalette = EZListView(window, window.view.bounds.insetBy(3, 3));
+		cpalette.widget.keyDownAction = MultiKeySearch(keystrokeWaitInterval: 0.1);
+		cpalette.widget.parent.resize = 5;
+		cpalette.widget.resize = 5;
+		cpalette.widget.focusColor = Color.green;	
+		window.toFrontAction = {
+			#items, codeStrings, codeKeys, codePositions = this.parseCode(doc);
+			cpalette.items = items collect: { | s, i | s->{ codeStrings[i].interpret; } };
+		};
+		window.front;
+		cpalette.widget.focus;
 	}
 
 	updateDocListView {
@@ -257,7 +303,8 @@ DocListWindow {
 	parseCode { | doc |
 		var prPoslist, prCodeParts, prCodeKeys, prItems, string;
 		string = doc.string;
-		prPoslist = string.findRegexp("^//:").slice(nil, 0);
+		// note: [^ ] means: ignore whitespace after the ":"
+		prPoslist = string.findRegexp("^//:[^ ]").slice(nil, 0);
 		prPoslist = prPoslist.asArray;
 		if (prPoslist.size > 0) { 
 			prCodeParts = prPoslist collect: { | pos, i |
@@ -265,7 +312,7 @@ DocListWindow {
 			};
 			prItems = prCodeParts collect: { | s |
 				if (s[3] == $!) { s.interpret };
-				s[3..50];
+				s[3..50];   //.tr($\n, $ );
 			};
 			prCodeKeys = prItems collect: _.first;
 		}{
@@ -324,6 +371,12 @@ DocListWindow {
 			CocoaMenuItem.addToMenu("User Menu", "Browse my Classes", ["b", true, true], {
 				this.browseMyClasses;
 			}),
+			CocoaMenuItem.addToMenu("User Menu", "Zoom tryout doc", ["z", false, true], {
+				this.zoomTryOutDoc;
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "make code palette", ["x", false, true], {
+				this.makeCodePalette(selectedDoc);
+			}),
 		]
 	}
 
@@ -362,8 +415,8 @@ DocListWindow {
 	openRelatedDocWithNewExtension { | doc, oldExtension, newExtension |
 		var pathname, extension;
 		pathname = PathName(selectedDoc.path ? "/nothing");
-		// dirty trick: also work the reverse way for "scd" or "html" files: 
 		extension = pathname.extension;
+		// dirty trick: also work the reverse way for "scd" or "html" files: 
 		if (extension == "scd" or: { extension == "html" }) {
 			oldExtension = extension;
 			newExtension = "sc";	

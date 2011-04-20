@@ -122,12 +122,16 @@ DocSession {
 		Archive.write;
 	}
 
-	
-	*load { | name |
-		^Archive.global.at(sessionArchiveRoot, name.asSymbol);
-	}
-
 	*default { ^this.load(defaultSessionName) }
+
+	*load { | name |
+		var session; 
+		session = Archive.global.at(sessionArchiveRoot, name.asSymbol);
+		if (session.isNil) {
+			session = this.new(name);
+		};
+		^session;
+	}
 
 	*loadDialog { | ref |
 		ListSelectDialog("Select a session", Archive.global.at(sessionArchiveRoot).keys.asArray,

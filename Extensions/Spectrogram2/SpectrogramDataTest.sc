@@ -2,7 +2,45 @@
 
 an additional process accessing data in a spectrogram, and possibly drawing some results on it.
 
++ a test class for pre-testing this
 */
+
+ImageDrawTest {
+	var <spectrogram;
+		var mags, maxMag, freqIndex, freq;
+		var testImage;
+	
+	*new { | spectrogram |
+		^this.newCopyArgs(spectrogram).init;	
+	}
+	
+	init {
+		testImage = Int32Array.fill(1, Image colorToPixel: Color.red);
+		this.start;
+	}
+	start { 
+		spectrogram addImageObject: this;
+	}
+
+	stop { 
+		spectrogram removeImageObject: this;
+	}
+
+	drawImage { | image, currentFFTframeMagnitudes, binfreqs, 
+		currentFFTframeMagnitudesReversed, binfreqsReversed, 
+		persistentWindowIndex, imgWidth, imgHeight |
+		
+		mags = currentFFTframeMagnitudesReversed;
+				maxMag = mags.maxItem;
+				freqIndex = mags indexOf: maxMag;
+		if (maxMag > 0 and: { freqIndex < imgHeight }) {
+			image.setPixels(testImage, Rect(persistentWindowIndex.clip(0, imgWidth), freqIndex, 1, 1), 0);
+		};
+			
+	}
+	
+	
+}
 
 SpectrogramDataTest {
 	var <spectrogram;
@@ -59,7 +97,7 @@ SpectrogramDataTest {
 	}
 	
 	// alternative approach, to ensure correct drawing even when resizing the window
-	draw	{
+	drawImage {
 	
 			mags = spectrogram.currentFFTframeMagnitudes;
 				maxMag = mags.maxItem;

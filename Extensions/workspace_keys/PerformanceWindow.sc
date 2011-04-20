@@ -39,6 +39,16 @@ PerformanceWindow {
 		docPane = ListView(window, Rect(2, 2, 248, 496));
 		docPane.resize = 4;
 		docPane.focusColor = Color.red;
+		window.toFrontAction = {
+			this.createItems;
+			this.selectDoc(docPane.value);
+		};
+		window.front;
+		docPane.focus;
+		^window;
+	}
+
+	createItems {
 		docPane.items = docListWindow.docListView.items;
 		docPane.action = { | me | 
 			this.selectDoc(me.value);	
@@ -54,9 +64,6 @@ PerformanceWindow {
 			this.selectAndPerformCodeAt(codeKeys indexOf: char);
 		};
 		docPane.valueAction = docListWindow.docListView.value;
-		window.front;
-		docPane.focus;
-		^window;
 	}
 
 	selectDoc { | index |

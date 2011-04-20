@@ -4,6 +4,9 @@
 # Ignore auto-save files from emacs:
 *.*~
 *~
+\#*
+*\#
+\.\#*
 
 # ignore zipped files
 *.zip
