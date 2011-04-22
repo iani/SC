@@ -9,8 +9,8 @@ f.resetDoOnce;
 */
 
 + Function {
-	doOnce {
-		^UniqueFunction(this);		
+	doOnce { | args ... resetKeys |
+		^UniqueFunction(this, args, *resetKeys);		
 	}
 	
 	removeDoOnce {

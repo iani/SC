@@ -6,15 +6,30 @@ If the function has been already evaluated, it will not be evaluated again, unti
 	
 For example, try: 
 
-{ | a, b, c | [a, b, c].postln }.doOnce(10, 20, 30);
+{ | a, b, c | [a, b, c].postln }.doOnce([10, 20, 30]);
 
 As ID of the function, a hash of its compiled byte code. If a function when compiled results in the same byte code as another one, it is recognized as identical, and therefore not repeated. For example: 
 
+Compare this: 
 (
-10 do: { 
-	{ | a, b, c | [a, b, c].postln }.doOnce(10, 20, 30); 
+f = { | a, b, c | [a, b, c].postln };
+10 do: { | i |
+	postf("% : \n", i); f.doOnce(Array.rand(3, 0, 10)); 
 };
+f.removeDoOnce;
 )
+
+To this: 
+(
+f = { | a, b, c | [a, b, c].postln };
+10 do: { | i |
+	f.removeDoOnce;
+	postf("% : \n", i + 1); f.doOnce(Array.rand(3, 0, 10)); 
+};
+f.removeDoOnce;
+)
+
+
 
 Verifying the identity of byte code and its hash of different function instances: 
 
