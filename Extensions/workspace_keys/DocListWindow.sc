@@ -300,7 +300,9 @@ DocListWindow {
 
 	performCodeAt { | index |
 		if (index.isNil) { ^this };
-		codeStrings[index].interpret;
+//		codeStrings[index].interpret;
+//		codeStrings[index].compile.value;
+		codeStrings[index].fork;
 	}
 
 	makeUserMenuItems {
@@ -439,7 +441,7 @@ DocListWindow {
 		cpalette.widget.focusColor = Color.green;	
 		window.toFrontAction = {
 			#items, codeStrings, codeKeys, codePositions = this.parseCode(doc);
-			cpalette.items = items collect: { | s, i | s->{ codeStrings[i].interpret; } };
+			cpalette.items = items collect: { | s, i | s->{ codeStrings[i].fork; } };
 		};
 		window.front;
 		cpalette.widget.focus;

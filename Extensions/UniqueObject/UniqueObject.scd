@@ -1,41 +1,42 @@
-//:a 
-UniqueObject.at(\myWindow, { Window.new("MyWindow") })
-	.front.bounds_(Rect(0, 0, 100, 100).moveBy(400 + 500.rand, 700.rand))
-	.view.background_(Color.red);
 
-Library.postTree;
-//:b
-UniqueObject.remove(\myWindow);
+//:w simple unique window
 
-Library.postTree;
+UniqueWindow(\simple, onClose: { | me | postf("The window named '%' was closed\n", me.name) });
 
-//:B 
+//:y does not reopen: 
 
-{
-	15 do: { 
-		UniqueObject.at(\secondWindow, { 
-			var w;
-			w = Window.new("MyWindow");
-			w.view.background = Color.rand(0.0, 1.0);
-			StaticText(w, Rect(0, 0, 300, 50)).string = "if you close me I will reappear within 3 seconds\n15 times";
-			w.onClose = { UniqueObject.remove(\secondWindow); };
-			w;
-		}).front.bounds_(Rect(0, 0, 300, 100).moveBy(400 + 500.rand, 700.rand));
-		3.wait;
+{ 
+	8 do: { 
+		UniqueWindow(\repeatsimple, onClose: { | me | postf("The window named '%' was closed\n", me.name) })
+			.window.view.background  = Color.rand;
+		"It's still the same window".postln;
+		0.5.wait;
 	};
+	5.wait;
+	UniqueWindow(\repeatsimple).window.close;
 }.fork(AppClock);
 
 //:c
 
-{
-	15 do: {
-		UniqueWindow([\my, \other, \Window], { 
+r = {
+	5 do: { | i |
+		UniqueWindow(\otherWindow, {
 			var w;
-			w = Window.new("MyWindow");
-			StaticText(w, Rect(0, 0, 300, 50)).string = "if you close me I will reappear within 5 seconds\n15 times";
+			w = Window.new("MyWindow", Rect(*Array.rand(4, 250, 400)));
+			w.view.background = Color.rand(0.5, 1);
+			StaticText(w, Rect(0, 0, 300, 50)).string = 
+				format("if you close me I will reappear - up to 5 times.\ncounting: % times", i + 1);
 			w;
-		}).front.bounds_(Rect(400, 400, 400, 100));
-		5.wait;
+		}, { postf("I closed for the %th time\n", i + 1); r.next }).object.front;
+		nil.yield;
 	};
+	"THE END".postln;
 }.fork(AppClock)
+
+//:f UniqueFunction
+
+u = { | a, b, c | [a, b, c].sum.postln; }.doOnce(10, 20, 30);
+u.onRemove({ | uf | uf.result.postln; });
+u.remove;
+
 

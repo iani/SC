@@ -4,146 +4,86 @@ UniqueObject {
 	var <key, <object;
 	
 	*mainKey { ^\objects }
+	*removedMessage { ^\removed }
 
-	*new { | key, makeFunc |
+	*new { | key, makeFunc ... otherArgs |
 		var object;
-		object = Library.at(this.mainKey, key);
+		key = this.makeKey(key, makeFunc, *otherArgs); // server objects include the server in the key
+		object = this.getObject(key);
 		if (object.isNil) {
-			object = this.newCopyArgs(key).init(makeFunc);
+			object = this.newCopyArgs(key).init(makeFunc, *otherArgs);
 			Library.put(this.mainKey, key, object);
 		};
-		^object.object;
+		^object;
 	}
 	
-	init { | makeFunc | object = makeFunc.value }
-	
-	remove {
-		^this.class.remove(key);	
+	*makeKey { | key |
+		/* server-related subclasses UniqueSynth etc. compose the key to include the server */
+		^key.asSymbol;
 	}
+	
+	*getObject { | key |
+		^Library.global.at(this.mainKey, key);
+	}
+	
+
+	init { | makeFunc ... otherArgs | object = makeFunc.value }
+
+	onRemove { | func |
+		NotificationCenter.registerOneShot(key, this.class.removedMessage, this, func);
+	}
+
+	remove { ^this.class.remove(key); }
 	
 	*remove { | key |
-		^Library.global.removeAt(this.mainKey, key);
+		var removed, mainKey;
+		removed = this.getObject(key);
+		if (removed.notNil) { 
+			NotificationCenter.notify(key, this.removedMessage, removed);
+			^Library.global.removeAt(this.mainKey, key);
+		};
+		^nil;
 	}
+	
+	*removeAll {
+		// remove all objects by performing their remove method
+		// this sends out notifications. See Meta_UniqueObject:remove
+		Library.global.at(this.mainKey) do: _.remove;
+	}
+
+	*clear {
+		// clear all objects stored under the mainKey
+		Library.global.removeAt(this.mainKey);
+	}
+
+	printOn { arg stream;
+		stream << this.class.name << "(" <<* [key, object] <<")";
+	}
+
 }
 
 UniqueWindow : UniqueObject {
 	*mainKey { ^\windows }
-	*new { | key, windowFunc |
-		^super.at(key, windowFunc).onClose = { | me |
-			UniqueObject.remove(key);
-			NotificationCenter.notify(me, \closed);
-		};
-	}
-}
-
-UniqueFunction : UniqueObject {
-	var <hash;
-	var <function;
-	var <>results; 	// if this fun returns a large data collection, 
-					// then set this to nil to free memory
-	var <resetKeys;
-
-	*mainKey { ^\functions }
-
-	*new { | function, funcArgs ... resetKeys |
-		var hash;
-		^this.at(hash = this.getHashFor(function), {
-			this.newCopyArgs(hash, function, function.(*funcArgs)).init(resetKeys);
-		});
-	}
+	*removedMessage { ^\closed }
 	
-	init { | argResetKeys |
-		argResetKeys do: { | keys | this.addRemoveAction(*keys) }
-	}
-	
-	*getHashFor { | function | ^function.def.code.hash; }
-	
-	addRemoveAction { | sender, key, action |
-		resetKeys = resetKeys.add([sender, key, action]);
-		NotificationCenter.register(sender, key, this, {
-			this.remove;		
-			action.(this);
-		})	
+	*new { | key, makeFunc ... onClose |
+		/* this method just renames the nondescript argument "otherArgs" to "onClose", for clarity */
+		^super.new(key, makeFunc, *onClose);
 	}
 
-	remove {
-		
-	}
-
-	*removeAtHash { | hash | Library.global.removeAt(this.mainKey, hash) }
-
-	*remove { | function |
-		this.removeAtHash(this.getHashFor(function));
-	}
-}
-
-// Experimental / Drafts 
-
-UniqueSynth : UniqueObject {
-	var <key;
-	var <synth;
-	*mainKey { ^\synths }
-	*new { | key, defName, args, target, addAction=\addToHead |
-		^this.at(key, {
-			this.newCopyArgs(key).init(defName, args, target, addAction=\addToHead);
-		});
-	}
-	
-	
-	init { | defName, args, target, addAction=\addToHead |
-/*		synth = Synth(defName ? key, args, target, addAction).register;
-		synth addDependant: { | me, what |
-			[me, what].postln;
-			switch (what, 
-				\n_end, {
-					[me, "stopped"].postln;
-					this.remove;
-		}
-*/
-	}
-
-	remove {
-		this.class.remove(key);			
-	}
-}
-
-
-
-// Synonym - abbreviation for UniqueSynth :  
-Usynth : UniqueSynth {}
-
-UniquePlay : UniqueSynth {
-	*mainKey { ^\playFuncs }
-	*new { | func ... args |
-			
-	}
-}
-
-// Synonym - abbreviation for UniqueSynth :  
-Uplay : UniquePlay {}
-
-
-
-/*
-	Interpret a string only once (avoid doing the same initialization code marked by //:! 
-	see DocListWindow ...
-*/
-
-UniqueCodeString : UniqueObject {
-	classvar <>uniqueCodeStringKey = \uniqueCodeStrings;
-	*new { | string |
-		var hash;
-		hash = string.hash;
-		if (Library.at(uniqueCodeStringKey, hash).isNil) {
-			string.interpret;
-			Library.put(uniqueCodeStringKey, hash, string);
+	init { | windowFunc ... onClose |
+		/*	
+			note: onClose functionality can also be done with onRemove message, 
+			but since it is used often, an additional simple mechanism is provided here
+		*/
+		super.init(windowFunc ?? { Window(key.asString).front });
+		object.onClose = {
+			this.remove(key);
+			onClose do: _.(object, key);
 		}
 	}
-}
-
-
-UniqueBuffer : UniqueObject {
-
 	
+	onClose { | func | this.onRemove(func) }	// synonym
+	window { ^object } 					// synonym
 }
 

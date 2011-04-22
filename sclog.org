@@ -179,3 +179,22 @@ Could not remedy that.  Suggestion: Try using EZListView instead.
      :PROPERTIES:
      :ENTERED_ON: <2011-04-21 Thu 15:28>
      :END:
+*** 2011-04-23 Saturday
+**** function hashKey is taken from def.sourceCode, not def.code :uniquefunction:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-23 Sat 01:16>
+     :END:
+
+This is because, for example: 
+
+{ WhiteNoise.ar(0.2) }
+and
+{ WhiteNoise.ar(0.1) }
+
+have the same code: 
+
+Int8Array[ 0, 0, 64, -80, -62, 52, -14 ]
+
+So now, in order for a function to be treated as "unique" by UniqueFunction, it must have exactly the same source code string. 
+
+Note: function.hashKey is used by UniquePlay. 
