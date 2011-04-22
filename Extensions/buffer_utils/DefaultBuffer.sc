@@ -7,26 +7,98 @@ DefaultBuffer {
 	classvar all;
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	var <server;
-	var <>path;
+	var <path;
 	var <buffer;
+	var <synth;	// stores the latest synth created by play
 
 	*initClass { all = IdentityDictionary.new; }
 	*default { ^this.new(Server.default); }
-	*new { | server, path |
-		if (all[server].isNil) { all[server] = this.newCopyArgs(server, path ? defaultPath); };
+	*reset { | server | // restore the default sample path
+		^this.new(server ? Server.default).path_(defaultPath);
+	}
+
+	*isLoaded { | server |
+		server = server ? Server.default;
+		^all[server].notNil and: { all[server].buffer.notNil };
+	}
+
+	*new { | server, path, play |
+		var new;
+		server = server ? Server.default;
+		if (all[server].isNil) { 
+			all[server] = new = this.newCopyArgs(server, path ? defaultPath);
+		}{
+			new = all[server];
+		};
+		if (play.notNil) { new.play(play) };
 		^all[server];
 	}
-	*loadDialog { | func |
-		^this.default.loadDialog({ | p | 
-			this.defaultPath = p;
-			func.value(this.default);
-		})
+	*loadDialog { | func, server |
+		^this.new(server ? Server.default).loadDialog(func)
 	}
-	loadDialog { | onLoadFunc | 
+	loadDialog { | func | 
 		Dialog.getPaths({ | paths | 
 			path = paths.first;
-			onLoadFunc.(path);
+			if (func.notNil) { this.play(func); };
 		});
+	}
+ 
+ 	*defaultPlayFunc { ^{ | buffer | buffer.play } }
+ 	defaultPlayFunc { ^this.class.defaultPlayFunc }
+ 
+	*play { | funcOrSynthDef |
+		// one can optionally provide a synthdef or function to play the buffer with
+		^this.default play: funcOrSynthDef;
+	}
+
+	play { | funcOrSynthDef |
+		if (funcOrSynthDef isKindOf: SynthDef) {
+			this loadBufferIfNeededAndDo: { funcOrSynthDef.play(server, [\bufnum, buffer.bufnum]) };
+		}{
+			this.loadBufferIfNeededAndDo(funcOrSynthDef ?? this.defaultPlayFunc);
+		}
+	}
+
+	loadBufferIfNeededAndDo { | func |
+		// cannot use doIfFileExists here because it causes infinite loops with other calls
+		if (path.pathMatch.size == 0) { ^postf("file not found: %\n", path); };
+		if (func.isNil) { ^this };
+		if (server.serverRunning.not) {
+			^server.waitForBoot({ this loadBufferAndDo: func });
+		};
+		if (buffer.notNil and: { buffer.numFrames == SoundFile.use(path, _.numFrames) }) {
+			~synth = synth = func.(buffer, this);
+		}{
+			if (buffer.notNil) { buffer.free };	// free RAM of server from old buffer
+			this loadBufferAndDo: func;
+		}
+	}
+
+	loadBufferAndDo { | func |
+		buffer = Buffer.read(server, path, action: { | b | ~synth = synth = func.(b, this); }); 
+	}
+
+	*postInfo { this.default.postInfo }
+	postInfo {
+		var data;
+		this doIfFileExists: { 
+			this loadBufferIfNeededAndDo: {
+				data = [buffer.path, buffer.bufnum, buffer.numChannels, 
+					buffer.numFrames, buffer.sampleRate, buffer.numFrames / buffer.sampleRate];
+				postln("========= BUFFER INFO : =========");
+				postf("path: %\nbufnum: %\nnumChannels: %\nnumFrames: %\nsampleRate: %
+duration: % minutes and % seconds\n",
+					buffer.path, buffer.bufnum, buffer.numChannels, 
+					buffer.numFrames, buffer.sampleRate, 
+					(data.last / 60) round: 1, data.last % 60);
+			}
+		}
+		^data;
+	}
+
+	doIfFileExists { | func |
+		if (path.pathMatch.size == 0) { ^postf("file not found: %\n", path); };
+		func.value;
 	}
 
 	*spectrogram { | funcOrSynthDef |
@@ -38,64 +110,6 @@ DefaultBuffer {
 			{ Spectrogram2(bounds: Rect(0, 0, 1000, 200)).start; }.defer;
 			this play: funcOrSynthDef;
 		};
-	}
- 
-	*play { | funcOrSynthDef |
-		// one can optionally provide a synthdef or function to play the buffer with
-		^this.default play: funcOrSynthDef;
-	}
-
-	play { | funcOrSynthDef |
-		if (funcOrSynthDef isKindOf: SynthDef) {
-			this loadBufferIfNeededAndDo: { funcOrSynthDef.play(server, [\bufnum, buffer.bufnum]) };
-		}{
-			this.loadBufferIfNeededAndDo(
-				if (funcOrSynthDef.isNil) {
-					{ this.buffer.play }
-				}{
-					{ funcOrSynthDef.(buffer) }
-				});
-		}
-	}
-
-	loadBufferIfNeededAndDo { | func |
-		// cannot use doIfFileExists here because it causes infinite loops with other calls
-		if (path.pathMatch.size == 0) { ^postf("file not found: %\n", path); };
-		if (server.serverRunning.not) {
-			^server.waitForBoot({ this loadBufferAndDo: func });
-		};
-		if (buffer.notNil and: { buffer.numFrames == SoundFile.use(path, _.numFrames) }) {
-			func.(buffer, this);
-		}{
-			if (buffer.notNil) { buffer.free };	// free RAM of server from old buffer
-			this loadBufferAndDo: func;
-		}
-	}
-
-	loadBufferAndDo { | func |
-		buffer = Buffer.read(server, path, action: { | b | func.(b, this) }); 
-	}
-
-	*postInfo { this.default.postInfo }
-	postInfo {
-		var dur;
-		this doIfFileExists: { 
-			this loadBufferIfNeededAndDo: {
-				dur = buffer.numFrames / buffer.sampleRate;
-				postln("========= BUFFER INFO : =========");
-				postf("path: %\nbufnum: %\nnumChannels: %\nnumFrames: %\nsampleRate: %
-duration: % minutes and % seconds\n",
-					buffer.path, buffer.bufnum, buffer.numChannels, 
-					buffer.numFrames, buffer.sampleRate, 
-					(dur / 60) round: 1, dur % 60
-				); 
-			}
-		}
-	}
-
-	doIfFileExists { | func |
-		if (path.pathMatch.size == 0) { ^postf("file not found: %\n", path); };
-		func.value;
 	}
 
 	*showInFinder { this.default.showInFinder }
@@ -123,5 +137,11 @@ duration: % minutes and % seconds\n",
 			this loadBufferIfNeededAndDo: { currentEnvironment[toLoad] = buffer }
 		}
 		{ true } { this loadBufferIfNeededAndDo: { toLoad.(buffer) } }
+	}
+	
+	printOn { | stream |
+		stream << this.class.name << "(";
+		buffer.printOn(stream);
+		stream << ")";
 	}	
 }

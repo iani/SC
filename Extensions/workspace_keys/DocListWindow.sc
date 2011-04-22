@@ -142,38 +142,6 @@ DocListWindow {
 		}.defer(0.1);
 	}
 
-	zoomTryOutDoc {
-		var tryout;
-		tryout = Document.allDocuments detect: { | d | d.name == "tryout.sc" };
-		if (tryout.notNil) { 
-			if (tryout.bounds == tryoutBounds) {
-				tryout.bounds = docBounds;			
-			}{
-				tryout.bounds = tryoutBounds;
-			};
-			tryout.front;
-			this.selectDoc(tryout); // make sure code palette opens on this
-		};
-	}
-	
-	makeCodePalette { | doc |
-		var cpalette, window;
-		var items, codeStrings, codeKeys, codePositions;
-		if (doc.isNil) { ^this };
-		window = Window(doc.name, Rect(0, 0, 250, 400));
-		cpalette = EZListView(window, window.view.bounds.insetBy(3, 3));
-		cpalette.widget.keyDownAction = MultiKeySearch(keystrokeWaitInterval: 0.1);
-		cpalette.widget.parent.resize = 5;
-		cpalette.widget.resize = 5;
-		cpalette.widget.focusColor = Color.green;	
-		window.toFrontAction = {
-			#items, codeStrings, codeKeys, codePositions = this.parseCode(doc);
-			cpalette.items = items collect: { | s, i | s->{ codeStrings[i].interpret; } };
-		};
-		window.front;
-		cpalette.widget.focus;
-	}
-
 	updateDocListView {
 		var items;
 		items = allDocs collect: _.name;
@@ -432,6 +400,8 @@ DocListWindow {
 		}		
 	}
 	
+	// UTILITIES 
+
 	browseMyClasses { 
 		var cbrowser;
 		cbrowser = EZListView(bounds: Rect(0, 0, 250, 400));
@@ -441,6 +411,38 @@ DocListWindow {
 		}).collect({ | c | c.name.asSymbol->{ c.openCodeFile; } });
 		cbrowser.widget.parent.resize = 5;
 		cbrowser.widget.resize = 5;		
+	}
+
+	zoomTryOutDoc {
+		var tryout;
+		tryout = Document.allDocuments detect: { | d | d.name == "tryout.sc" };
+		if (tryout.notNil) { 
+			if (tryout.bounds == tryoutBounds) {
+				tryout.bounds = docBounds;			
+			}{
+				tryout.bounds = tryoutBounds;
+			};
+			tryout.front;
+			this.selectDoc(tryout); // make sure code palette opens on this
+		};
+	}
+	
+	makeCodePalette { | doc |
+		var cpalette, window;
+		var items, codeStrings, codeKeys, codePositions;
+		if (doc.isNil) { ^this };
+		window = Window(doc.name, Rect(0, 0, 250, 400));
+		cpalette = EZListView(window, window.view.bounds.insetBy(3, 3));
+		cpalette.widget.keyDownAction = MultiKeySearch(keystrokeWaitInterval: 0.1);
+		cpalette.widget.parent.resize = 5;
+		cpalette.widget.resize = 5;
+		cpalette.widget.focusColor = Color.green;	
+		window.toFrontAction = {
+			#items, codeStrings, codeKeys, codePositions = this.parseCode(doc);
+			cpalette.items = items collect: { | s, i | s->{ codeStrings[i].interpret; } };
+		};
+		window.front;
+		cpalette.widget.focus;
 	}
 	
 }

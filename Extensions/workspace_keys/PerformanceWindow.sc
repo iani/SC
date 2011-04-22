@@ -63,14 +63,21 @@ PerformanceWindow {
 		codePane.keyDownAction = { | me, char |
 			this.selectAndPerformCodeAt(codeKeys indexOf: char);
 		};
-		docPane.valueAction = docListWindow.docListView.value;
+//		docPane.valueAction = docListWindow.docListView.value;
 	}
 
 	selectDoc { | index |
 		var items;
 		#items, codeParts, codeKeys = docListWindow.parseCode(docListWindow.allDocs[index]);
-		docPane.value = index;
+//		items.postln;
+		codeKeys.postln;
+//		docPane.value = index;
+//		codePane.items = [" "];
+//		codePane.refresh;
 		codePane.items = items;
+//		{ 
+//			10 do: { codePane.items = items; 0.2.wait; codePane.refresh; };
+//		}.fork(AppClock);
 	}
 
 	selectDocByKey { | char, mod, unicode, key |

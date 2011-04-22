@@ -1,4 +1,6 @@
 
+#+SEQ_TODO: TODO(t) BUG(b) | DONE(d) CANCELLED(c) DEFERRED(f)
+
 * 2011
 ** 2011-04 April
 *** 2011-04-19 Tuesday
@@ -141,11 +143,39 @@ This is because buf.getn can only fetch up to 1024 values (OSC limit?).
      :END:
 
 This is important when installing lilt2 to a new computer that does not have any sessions stored. 
-**** TODO code parser should ignore lines where //: is followed by spece :doclistwindow:
+**** DONE code parser should ignore lines where //: is followed by spece :doclistwindow:
+     CLOSED: [2011-04-20 Wed 18:01]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 17:38>
      :END:
-**** PerformanceWindow should re-parse code on changing docs :doclistwindow:
+**** TODO PerformanceWindow should re-parse code on changing docs :doclistwindow:
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 17:39>
+     :END:
+**** TODO add 'doOnce' message to Function			       :idea:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 19:27>
+     :END:
+
+Function registers itself to notifier and does not reevaluate. 
+
+Important for booting servers / scopes only once. 
+
+! marked items in DocListWindow type files can use this automatically. Something like: 
+
+   { codeString.interpret }.doOnce 
+instead of: 
+   { codeString.interpret }.value 
+**** BUG code item pane does not refresh properly     :performancewindow:bug:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 21:22>
+     :END:
+
+At some point the older items remain on the pane together with the newly selecte ones. 
+
+Could not remedy that.  Suggestion: Try using EZListView instead.
+*** 2011-04-21 Thursday
+**** added load, play, loadDefault methods to Buffer class :buffer:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-21 Thu 15:28>
      :END:

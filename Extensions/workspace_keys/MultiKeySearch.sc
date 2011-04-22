@@ -46,7 +46,9 @@ MultiKeySearch {
 	
 	value { | listview, char, mod, unicode, key |
 		var items, match, endPos, topView, parent;
-//		char.postln;
+		if (mod == 1179914 and: { char == $c }) {  // catch Control-shift-c to clear listener window
+			^Document.listener.string = "" 
+		};
 		if (unicode == 13) { listview.doAction; done = true; ^this };
 		if (unicode == 16rF700, { listview.valueAction = listview.value - 1; ^this });
 		if (unicode == 16rF703, { listview.valueAction = listview.value + 1; ^this });

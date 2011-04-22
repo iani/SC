@@ -38,7 +38,6 @@ DocProxy {
 	}
 	
 	*loadDefaultBounds {
-
 		DocSession.default.docs do: { | d | 
 			docBounds[d.name.asSymbol] = d.bounds;
 		};

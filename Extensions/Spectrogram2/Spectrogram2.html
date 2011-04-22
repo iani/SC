@@ -7,64 +7,63 @@
 <meta name="Generator" content="Cocoa HTML Writer">
 <meta name="CocoaVersion" content="1038.35">
 <style type="text/css">
-p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Optima}
-p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Optima; min-height: 14.0px}
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Optima; min-height: 14.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Optima}
 p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px Optima}
 p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Optima}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
 <body>
-<p class="p1">// changelog:</p>
-<p class="p1">//<span class="Apple-tab-span">	</span>- 30-Mar-10 made cross-platform, fixed relativeOrigin issue</p>
-<p class="p1">// modifications by IZ 2011 04 17 f</p>
-<p class="p2"><br></p>
-<p class="p1">Ongoing notes ...</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
+<p class="p1"><br></p>
+<p class="p2">Based on Spectrogram quark by Thor Magnusson and Dan Stowell</p>
+<p class="p1"><br></p>
+<p class="p2">Modifications and additions by Ioannis Zannos</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
 <p class="p3"><b>Adding polling and plotting processes</b></p>
-<p class="p2"><span class="Apple-converted-space"> </span></p>
-<p class="p1">To allow other processes to plot on this spectrogram, send out 3 notifications using NotificationCenter:<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1">1. <span class="Apple-tab-span">	</span>'poll' -&gt; this is sent before polling each fft frame .<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-tab-span">	</span>Here processes that acquire other analysis data from the synth can use this to sync their polling</p>
-<p class="p2"><br></p>
-<p class="p1">2. <span class="Apple-tab-span">	</span>'drawImg' -&gt; this is sent after having drawn on the image but before sending it to Pen</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Processes that want to set pixels on the image should do so here.</p>
-<p class="p2"><span class="Apple-tab-span">	</span></p>
-<p class="p1">3. <span class="Apple-tab-span">	</span>'drawPen' -&gt; this is sent just before the end of the userview updateFunc.</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Processes that use the pen to draw should do so here.<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space"> </span></p>
+<p class="p2">To allow other processes to plot on this spectrogram, send out 3 notifications using NotificationCenter:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">1. <span class="Apple-tab-span">	</span>'poll' -&gt; this is sent before polling each fft frame .<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>Here processes that acquire other analysis data from the synth can use this to sync their polling</p>
+<p class="p1"><br></p>
+<p class="p2">2. <span class="Apple-tab-span">	</span>'drawImg' -&gt; this is sent after having drawn on the image but before sending it to Pen</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Processes that want to set pixels on the image should do so here.</p>
+<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p2">3. <span class="Apple-tab-span">	</span>'drawPen' -&gt; this is sent just before the end of the userview updateFunc.</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Processes that use the pen to draw should do so here.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
 <p class="p3"><b>Data acquisition mechanisms</b></p>
-<p class="p2"><br></p>
+<p class="p1"><br></p>
 <p class="p4"><b>Continuous features</b></p>
-<p class="p2"><br></p>
-<p class="p1">FFT based processes, or processes monitoring continuous features such as MFCC can use buffer.getn or bus.getn to poll the buffer or bus.</p>
-<p class="p1">These should do so when notified<span class="Apple-converted-space">  </span>from the spectrogram with the 'poll' message.</p>
-<p class="p2"><br></p>
-<p class="p1">UGens to explore:<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-tab-span">	</span>DetectSilence</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Amplitude</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Loudness</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Pitch</p>
-<p class="p1"><span class="Apple-tab-span">	</span>RunningSum</p>
-<p class="p1"><span class="Apple-tab-span">	</span>SpecCentroid</p>
-<p class="p1"><span class="Apple-tab-span">	</span>SpecFlatness</p>
-<p class="p1"><span class="Apple-tab-span">	</span>SpecPcile</p>
-<p class="p1"><span class="Apple-tab-span">	</span>MFCC</p>
-<p class="p1"><span class="Apple-tab-span">	</span>PV_HainsworthFoote -&gt; also possibly transformable to onset detection</p>
-<p class="p1"><span class="Apple-tab-span">	</span>PV_JensenAndersen -&gt; also possibly transformable to onset detection</p>
-<p class="p2"><br></p>
+<p class="p1"><br></p>
+<p class="p2">FFT based processes, or processes monitoring continuous features such as MFCC can use buffer.getn or bus.getn to poll the buffer or bus.</p>
+<p class="p2">These should do so when notified<span class="Apple-converted-space">  </span>from the spectrogram with the 'poll' message.</p>
+<p class="p1"><br></p>
+<p class="p2">UGens to explore:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2"><span class="Apple-tab-span">	</span>DetectSilence</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Amplitude</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Loudness</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Pitch</p>
+<p class="p2"><span class="Apple-tab-span">	</span>RunningSum</p>
+<p class="p2"><span class="Apple-tab-span">	</span>SpecCentroid</p>
+<p class="p2"><span class="Apple-tab-span">	</span>SpecFlatness</p>
+<p class="p2"><span class="Apple-tab-span">	</span>SpecPcile</p>
+<p class="p2"><span class="Apple-tab-span">	</span>MFCC</p>
+<p class="p2"><span class="Apple-tab-span">	</span>PV_HainsworthFoote -&gt; also possibly transformable to onset detection</p>
+<p class="p2"><span class="Apple-tab-span">	</span>PV_JensenAndersen -&gt; also possibly transformable to onset detection</p>
+<p class="p1"><br></p>
 <p class="p4"><b>Event-based features</b></p>
-<p class="p2"><br></p>
-<p class="p1">Event-detection processes</p>
-<p class="p2"><br></p>
-<p class="p1">UGens to explore:<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-tab-span">	</span>Onsets</p>
-<p class="p1"><span class="Apple-tab-span">	</span>(possibly: PV_HainsworthFoote)</p>
-<p class="p1"><span class="Apple-tab-span">	</span>(possibly: PV_JensenAndersen)</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-tab-span">	</span>(possibly: events when slopes of above continuous UGens exceed a certain value)</p>
+<p class="p1"><br></p>
+<p class="p2">Event-detection processes</p>
+<p class="p1"><br></p>
+<p class="p2">UGens to explore:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>Onsets</p>
+<p class="p2"><span class="Apple-tab-span">	</span>(possibly: PV_HainsworthFoote)</p>
+<p class="p2"><span class="Apple-tab-span">	</span>(possibly: PV_JensenAndersen)</p>
+<p class="p1"><br></p>
+<p class="p2"><span class="Apple-tab-span">	</span>(possibly: events when slopes of above continuous UGens exceed a certain value)</p>
 </body>
 </html>
