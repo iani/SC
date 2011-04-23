@@ -24,10 +24,14 @@ r = {
 			var w;
 			w = Window.new("MyWindow", Rect(*Array.rand(4, 250, 400)));
 			w.view.background = Color.rand(0.5, 1);
-			StaticText(w, Rect(0, 0, 300, 50)).string = 
-				format("if you close me I will reappear - up to 5 times.\ncounting: % times", i + 1);
+			StaticText(w, Rect(0, 0, 300, 50))
+			.string = format("if you close me I will reappear - up to 5 times.\ncounting: % times", i + 1);
 			w;
-		}, { postf("I closed for the %th time\n", i + 1); r.next }).object.front;
+		}, 
+		{
+			postf("I closed for the %th time\n", i + 1); 
+			r.next;
+		}).object.front;
 		nil.yield;
 	};
 	"THE END".postln;

@@ -1,44 +1,68 @@
 UniqueSynth : UniqueObject {
 	*mainKey { ^\synths }
 	*removedMessage { ^\n_end }
+	*makeKey { | key, defName, args, target, addAction=\addToHead |
+		^(target.asTarget.server.asString ++ ":" ++ key).asSymbol;
+	}
+
 	*new { | key, defName, args, target, addAction=\addToHead |
 		^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
 	}
 
-	*makeKey { | key, defName, args, target, addAction=\addToHead |
-		^(target.asTarget.server.asString ++ ":" ++ key).asSymbol;
-	}
 	
 	init { | what, args, target, addAction ... moreArgs |
 		// moreArgs are used by subclass UniquePlay
 		target = target.asTarget;
 		if (target.asTarget.server.serverRunning) {
-			this.makeSynth(what, args, target, addAction, *moreArgs);
+			this.makeObject(what, args, target, addAction, *moreArgs);
 		}{
 			target.server.waitForBoot({
-				this.makeSynth(what, args, target, addAction, *moreArgs);
+				0.1.wait;	// ensure that \n_go works for notification of start of synth
+				this.makeObject(what, args, target, addAction, *moreArgs);
 			});
 		}
 	}
 
-	makeSynth { | defName, args, target, addAction |
+	makeObject { | defName, args, target, addAction |
 		object = Synth(defName, args, target, addAction);
-		this.registerOnEnd;
+		this.registerObject;
 	}
 
-	registerOnEnd {
-		object.register;
+	registerObject {
 		object addDependant: { | me, what |
-			switch (what, \n_end, { 
-				object = nil; 	// make this.free safe
-				this.remove;
-				object.release;	// clear dependants
-			});
+			switch (what, 
+				\n_go, {
+					NotificationCenter.notify(key, \n_go, this);
+				},
+				\n_end, { 
+					object = nil; 	// make this.free safe
+					this.remove;
+					object.release;	// clear dependants
+				}
+			);
 		};
+		object.register;
 	}
 
 	synth { ^object }						// synonym
+
+	// Synchronization with start / stop events: 
+	onStart { | func |
+		NotificationCenter.registerOneShot(key, \n_go, this, func);
+	}
 	onEnd { | func | this.onRemove(func) }	// synonym
+	rsync { | func, clock |
+		var routine;
+		this.onStart({
+			routine = { func.(object, this) }.fork(clock ? AppClock);
+		});
+		this.onEnd({
+			routine.stop;	
+		});	
+	}
+
+	rsyncs { | func | this.rsync(func, SystemClock) }
+	rsynca { | func | this.rsync(func, AppClock) }
 
 	free { if (object.notNil) { object.free } }	// safe free: only runs if not already freed
 	
@@ -64,9 +88,9 @@ UniquePlay : UniqueSynth {
 		^super.new(playFunc.hashKey, playFunc, args, target, addAction, outbus, fadeTime);
 	}
 
-	makeSynth { | playFunc, args, target, addAction = \addToHead, outbus = 0, fadeTime = 0.02 |
+	makeObject { | playFunc, args, target, addAction = \addToHead, outbus = 0, fadeTime = 0.02 |
 		object = playFunc.play(target, outbus, fadeTime, addAction, args);
-		this.registerOnEnd;
+		this.registerObject;
 	}
 }
 

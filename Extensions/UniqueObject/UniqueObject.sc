@@ -25,9 +25,8 @@ UniqueObject {
 	*getObject { | key |
 		^Library.global.at(this.mainKey, key);
 	}
-	
 
-	init { | makeFunc ... otherArgs | object = makeFunc.value }
+	init { | makeFunc | object = makeFunc.value }
 
 	onRemove { | func |
 		NotificationCenter.registerOneShot(key, this.class.removedMessage, this, func);

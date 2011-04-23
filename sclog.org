@@ -198,3 +198,87 @@ Int8Array[ 0, 0, 64, -80, -62, 52, -14 ]
 So now, in order for a function to be treated as "unique" by UniqueFunction, it must have exactly the same source code string. 
 
 Note: function.hashKey is used by UniquePlay. 
+**** TODO add chain, Udef, Ubuf to load synthdefs and buffers before creating a synth :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-23 Sat 10:03>
+     :END:
+**** Design of UniqueBuffer :uniquebuffer:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-23 Sat 20:28>
+     :END:
+
+***** Templates from existing classes to consider 
+BUFFER:
+	*new { arg server, numFrames, numChannels, bufnum;}
+	*alloc(server, numFrames, numChannels, completionMessage, bufnum)
+	*read { arg server, path, startFrame = 0, numFrames = -1, action, bufnum; }
+	*read(server, path, startFrame, numFrames, action, bufnum)
+
+UNIQUESYNTH:
+	*new { | key, defName, args, target, addAction=\addToHead | 
+				^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
+
+		
+	}
+	init { | what, args, target, addAction ... moreArgs | }
+***** Interface for UniqueBuffer: Class methods, synonyms, utilities
+****** Methods modeled after Buffer class methods
+
+	*new { | key, server, numFrames, numChannels, bufnum | }
+		create buffer instance without allocating
+	
+	*alloc( | key, server, numFrames, numChannels, completionMessage, bufnum | )
+		allocate immediately. Boot server if needed. 
+	
+	*read { | key, server, path, startFrame = 0, numFrames = -1, action, bufnum | }
+		read from file
+		
+****** Methods for convenient use
+
+	*play { | func, args | }
+		play last selected buffer or default buffer if none selected
+	
+	*load { | func, args | }
+		load from file and play if given func
+	
+	*select { | func, args | }
+	
+	*spectrogram { | func, args | }
+
+	*clear { | server | }
+		clear all UniqueBuffers on server
+
+****** Synonyms of convenient methods on Buffer class
+
+	*play { | func, args | }
+		play last selected buffer or default buffer if none selected
+	
+	*load { | func, args | }
+		load from file and play if given func
+	
+	*select { | func, args | }
+	
+	*spectrogram { | func, args | }
+
+	*clear { | server | }
+		clear all UniqueBuffers on server
+
+****** UniqueBuffer access methods for String and symbol
+
+String:ubuf(func) -> get / load the UniqueBuffer corresponding to this path, on the default server
+	if func is provided, it is used to play the buffer
+
+Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under this string
+	if func is provided, it is used to play the buffer
+
+****** Designing the code: argument massage
+
+	*new { | key, server, numFrames, numChannels, bufnum |
+		^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
+	}
+
+	*alloc {
+	
+	}
+
+*/	

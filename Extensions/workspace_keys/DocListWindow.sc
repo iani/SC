@@ -121,17 +121,6 @@ DocListWindow {
 			this.setDocBounds(doc, DocProxy.boundsFor(doc));
 			this.updateDocListView;
 			this.selectDoc(doc);
-/*			doc.keyDownAction = { | doc, char, mod, unicode, key |
-				[doc, char, mod, unicode, key].postln;
-				if (mod == functionKey) {
-					switch (char, 
-						$x, { this.makeCodePalette(doc) },
-						$c, { this.zoomTryOutDoc }
-					);
-				};  
-
-			};
-*/
 			doc.toFrontAction = {
 				NotificationCenter.notify(Document, \toFront, doc); 
 			};
@@ -200,24 +189,28 @@ DocListWindow {
 		this.makeCodeList(doc);	
 		docListView.value = index;
 		codeListView.enabled = false;
-		this.activateDocActions(doc);
+//		this.activateDocActions(doc);
 		NotificationCenter.notify(this, \index, index);
 		// defer prevents all documents saving themselves here when they close at shutdown:
 		{ Archive.global.put(\currentDocName, Document.current.name ? "-"); }.defer(3); // defer, yes!
 	}
-	
+
+/*	
 	activateDocActions { | doc |
-		var selectionStart;
-		doc.keyDownAction = { | me, char, mod, ascii, key |
+		doc.keyDownAction = { | me, char, mod, unicode, key |
 			var selectionStart;
-			if (ascii == 14) { // control-n
-				this.makeCodeList(doc);	
-				selectionStart = doc.selectionStart;
-				this.selectAndPerformCodeAt(codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1);
-			};
+			switch (unicode, 
+				14, { // control-n
+					this.runCurrentSnippet;
+				} /*,
+				1, {
+					"control a".postln;
+				}
+				*/	
+			)
 		};
 	}
-	
+*/	
 	unselectDoc { | doc |
 		this.deactivateDocActions(doc);
 	}
@@ -292,7 +285,7 @@ DocListWindow {
 		^[prItems, prCodeParts, prCodeKeys, prPoslist add: (string.size + 1)];
 	}
 
-	selectAndPerformCodeAt { | index |
+	selectAndPerformCodeAt { | index = 0 |
 		if (index.isNil) { ^this };
 		codeListView.value = index;
 		this.performCodeAt(index);	
@@ -344,8 +337,17 @@ DocListWindow {
 			CocoaMenuItem.addToMenu("User Menu", "Zoom tryout doc", ["z", false, true], {
 				this.zoomTryOutDoc;
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "make code palette", ["x", false, true], {
+			CocoaMenuItem.addToMenu("User Menu", "make code palette", ["A", false, false], {
 				this.makeCodePalette(selectedDoc);
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "run current snippet", ["X", false, false], {
+				this.runCurrentSnippet(selectedDoc);
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
+				this.nextSnippet(selectedDoc);
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "next snippet", ["K", false, false], {
+				this.previousSnippet(selectedDoc);
 			}),
 		]
 	}
@@ -358,6 +360,36 @@ DocListWindow {
 
 	docProxies {
 		^allDocs collect: DocProxy(_);
+	}
+
+	runCurrentSnippet { | doc |
+		var selectionStart;
+		if (doc.isNil) { ^this };
+		this.makeCodeList(doc);	
+		selectionStart = doc.selectionStart;
+		this.selectAndPerformCodeAt(
+			codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1
+		);		
+	}
+
+	nextSnippet { | doc |
+		var selectionStart;
+		if (doc.isNil) { ^this };
+		this.makeCodeList(doc);	
+		selectionStart = doc.selectionStart;
+		this.selectAndPerformCodeAt(
+			codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1
+		);		
+	}
+
+	previousSnippet { | doc |
+		var selectionStart;
+		if (doc.isNil) { ^this };
+		this.makeCodeList(doc);	
+		selectionStart = doc.selectionStart;
+		this.selectAndPerformCodeAt(
+			codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1
+		);		
 	}
 
 	removeUserMenuItems {
