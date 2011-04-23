@@ -344,10 +344,10 @@ DocListWindow {
 				this.runCurrentSnippet(selectedDoc);
 			}),
 			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
-				this.nextSnippet(selectedDoc);
+				this.selectNextSnippet(selectedDoc);
 			}),
 			CocoaMenuItem.addToMenu("User Menu", "next snippet", ["K", false, false], {
-				this.previousSnippet(selectedDoc);
+				this.selectPreviousSnippet(selectedDoc);
 			}),
 		]
 	}
@@ -363,33 +363,35 @@ DocListWindow {
 	}
 
 	runCurrentSnippet { | doc |
-		var selectionStart;
 		if (doc.isNil) { ^this };
 		this.makeCodeList(doc);	
-		selectionStart = doc.selectionStart;
-		this.selectAndPerformCodeAt(
-			codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1
-		);		
+		this.selectAndPerformCodeAt(this.findIndexOfSnippet(doc));
 	}
 
-	nextSnippet { | doc |
+	findIndexOfSnippet { | doc |
 		var selectionStart;
-		if (doc.isNil) { ^this };
-		this.makeCodeList(doc);	
-		selectionStart = doc.selectionStart;
-		this.selectAndPerformCodeAt(
-			codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1
-		);		
+		selectionStart = doc.selectionStart;		
+		^codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1
 	}
 
-	previousSnippet { | doc |
-		var selectionStart;
+	selectNextSnippet { | doc |
+		var start, length;
 		if (doc.isNil) { ^this };
 		this.makeCodeList(doc);	
-		selectionStart = doc.selectionStart;
-		this.selectAndPerformCodeAt(
-			codePositions.indexOf(codePositions.detect({ | n | selectionStart < n })) - 1
-		);		
+		#start, length = codePositions[
+			[0, 1] + (this.findIndexOfSnippet(doc) + 1).min(codeKeys.size - 1)
+		].differentiate;
+		doc.selectRange(start, length - 1);
+	}
+
+	selectPreviousSnippet { | doc |
+		var start, length;
+		if (doc.isNil) { ^this };
+		this.makeCodeList(doc);	
+		#start, length = codePositions[
+			[0, 1] + (this.findIndexOfSnippet(doc) - 1).max(0)
+		].differentiate;
+		doc.selectRange(start, length - 1);
 	}
 
 	removeUserMenuItems {

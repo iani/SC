@@ -1,7 +1,7 @@
 
 // DRAFT!!!
 
-UniqueBuffer : UniqueSynth {
+UniqueBuffer : UniqueObject {
 	*mainKey { ^\buffers }
 	*removedMessage { ^\b_free }
 

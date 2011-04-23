@@ -23,9 +23,7 @@ SynthDef(\test, { Out.ar(0, SinOsc.ar(Rand(4, 10) * 100, 0, 0.1)) }).load(Server
 5 do: {
 	a = \test.usynth;
 	a.onRemove({ | x |  postf("% stopped\n", x); });
-	
 	0.2.wait;
-	
 	a.free;
 	0.1.wait;
 };
