@@ -57,8 +57,6 @@ UniqueBuffer : AbstractUniqueServerObject {
 			this.playNow(play) 
 		} {
 			// enable starting multiple play functions on the same buffer at server boot time:
-//			NotificationCenter.registerOneShot(key, \loaded, this, Chain(key) add: { this.playNow(play) });
-//			Chain.registerOneShot(key, \loaded, this, { this.playNow(play) });
 			NotifyOnce(key, \loaded, this, { this.playNow(play) });
 			if (server.serverBooting.not) { server.boot; };
 		}
