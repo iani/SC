@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+</style>
+</head>
+<body>
+<p class="p1">/*<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">Send notifications after a Server has called initTree and created its root node, but only when it boots.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">Add to ServerReady objects that want to start Synths, Groups or routines right after a server boots, but that do not want to restart them when a Server re-inits its tree after CmdPeriod (after the user types Command-. to stop all synths)</p>
+<p class="p2"><br></p>
+<p class="p1">*/</p>
+<p class="p3"><br></p>
+<p class="p1">//:a using the default server</p>
+<p class="p3"><br></p>
+<p class="p4"><span class="s1">Server</span>.default.quit;</p>
+<p class="p4">1.wait;</p>
+<p class="p4"><span class="s1">ServerReady</span>.add(<span class="s2">\default2</span>, { { <span class="s1">SinOsc</span>.ar(2000, 0, 0.1) }.play; });</p>
+<p class="p4"><span class="s1">Server</span>.default.boot;</p>
+<p class="p3"><br></p>
+<p class="p1">//:b specifying the server</p>
+<p class="p4"><span class="s1">Server</span>.internal.quit;</p>
+<p class="p4">1.wait;</p>
+<p class="p3"><br></p>
+<p class="p4"><span class="s1">ServerReady</span>.add(<span class="s2">\default</span>, { { <span class="s1">SinOsc</span>.ar(1000, 0, 0.1) }.scope; }, <span class="s1">Server</span>.internal);</p>
+<p class="p4"><span class="s1">Server</span>.internal.boot;</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+</body>
+</html>

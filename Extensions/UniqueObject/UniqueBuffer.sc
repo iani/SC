@@ -17,9 +17,12 @@ UniqueBuffer : AbstractUniqueServerObject {
 
 	*mainKey { ^\buffers }
 	*removedMessage { ^\b_free }
+	*makeKey { | key, target, numFrames, numChannels, path |
+		^(target.asTarget.server.asString ++ ":" ++ (key ?? { this.keyFromPath(path) })).asSymbol;
+	}
+
 	*keyFromPath { | path |
 		path = path ? defaultPath;
-		path.pathMatch.postln;
 		^PathName(path).fileNameWithoutExtension.asSymbol;
 	}	
 
@@ -40,21 +43,24 @@ UniqueBuffer : AbstractUniqueServerObject {
 		if (ubuf.isNil) { ^postf("Could not find a UniqueBuffer named: %\n", name); };
 		ubuf.play(func);
 	}
-	
+
 	*current { 
 		if (current.isNil) { current = this.getObject(this.makeKey(this.keyFromPath)); };
 		if (current.isNil) { current = this.new(path: defaultPath); };
 		^current;
 	}
+	
+	*default { | server | ^this.new(server: server ? Server.default, path: defaultPath) }
 
 	play { | play |
 		if (this.isLoaded) {
 			this.playNow(play) 
 		} {
-			NotificationCenter.registerOneShot(key, \loaded, this, {
-				this.playNow(play);
-			});
-			server.boot;
+			// enable starting multiple play functions on the same buffer at server boot time:
+//			NotificationCenter.registerOneShot(key, \loaded, this, Chain(key) add: { this.playNow(play) });
+//			Chain.registerOneShot(key, \loaded, this, { this.playNow(play) });
+			NotifyOnce(key, \loaded, this, { this.playNow(play) });
+			if (server.serverBooting.not) { server.boot; };
 		}
 	}
 
@@ -73,12 +79,14 @@ UniqueBuffer : AbstractUniqueServerObject {
 	
 	*loadAllBuffers { | server |
 		var buffers;
+		server = server ? Server.default;
 		buffers = this.onServer(server);
 		buffers.inject(nil, { | a, b |
 			if (a.notNil) { NotificationCenter.registerOneShot(a.key, \loaded, a, { b.makeObject }) };
 			b;
 		});
 		buffers.first.makeObject;
+//		UniqueSynthDef(server).doWhenLoaded({ buffers.first.makeObject });
 	}
 	
 	*doOnServerQuit { | server |
@@ -100,7 +108,8 @@ UniqueBuffer : AbstractUniqueServerObject {
 			object = Buffer.read(server, path, startFrame, numFrames, { | b | 
 				NotificationCenter.notify(key, \loaded, this);
 			});
-		}			
+		};
+		postf("loaded (makeObject): %\n", this);
 	}
 
 	playNow { | playFunc |		

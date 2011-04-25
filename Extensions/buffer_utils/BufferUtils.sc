@@ -1,18 +1,16 @@
 
-/*
 + Buffer {
 	
 	*default { | server |
-		^DefaultBuffer(server ? Server.default);
+		^UniqueBuffer.default(server ? Server.default);
+	}
+
+	*current { | server |
+		^UniqueBuffer.current(server ? Server.default);
 	}
 	
-	*play { | func, server, path |
-		server = server ? Server.default;
-		^DefaultBuffer(
-			server ? Server.default, 
-			path ? DefaultBuffer.defaultPath, 
-			func ?? { DefaultBuffer.defaultPlayFunc }
-		);
+	*play { | func, server |
+		this.current(server).play(func);
 	}
 	
 	*loadDefault { | server, play |
@@ -43,4 +41,3 @@
 	
 	
 }
-*/

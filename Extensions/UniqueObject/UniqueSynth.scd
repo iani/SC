@@ -6,7 +6,7 @@ To select the previous example, press Command-shift-k
 
 */
 
-//:a runs also with non-booted server
+//:a can be started also with server not booted
 
 \default.play;
 \default.wait(0.1); 				// make sure to wait for server boot also
@@ -42,7 +42,7 @@ SynthDef(\test, { Out.ar(0, SinOsc.ar(Rand(4, 10) * 100, 0, 0.1)) }).load(Server
 		0.1.wait;
 		synth.set(\freq, 200 rrand: 400);
 	};
-	synth.free;
+	synth.release;
 });
 
 2.wait;
