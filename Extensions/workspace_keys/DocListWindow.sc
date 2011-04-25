@@ -19,10 +19,10 @@ DocListWindow {
 			NotificationCenter.notify(Document, \opened, me);
 		};
 		tryoutBounds = Rect(0, 260, 494, 212);
-		this.makeUserMenuItems;	
+		this.makeMenuItems;	
 	}
 
-	*makeUserMenuItems {
+	*makeMenuItems {
 		CocoaMenuItem.addToMenu("User Menu", "Toggle Doc List", ["0", false, false], { 
 			this.toggle;
 		});
@@ -45,7 +45,7 @@ DocListWindow {
 	stop {
 		docBrowser.close;
 		autosave_routine.stop;
-		this.removeUserMenuItems;
+		this.removeMenuItems;
 		this.init;
 		NotificationCenter.notify(this, \stopped);
 	}
@@ -221,7 +221,7 @@ DocListWindow {
 	}
 
 	makeGui {
-		this.makeUserMenuItems;
+		this.makeMenuItems;
 		docBrowser = Window("docs", 
 			Rect(Window.screenBounds.width - docListWidth, 0, docListWidth, Window.screenBounds.height - 50));
 		docBrowser.onClose = {
@@ -298,7 +298,7 @@ DocListWindow {
 		codeStrings[index].fork;
 	}
 
-	makeUserMenuItems {
+	makeMenuItems {
 		menuItems = [
 			CocoaMenuItem.addToMenu("User Menu", "Open Session ...", ["o", true, false], {
 				DocSession.loadAndOpenDialog(fromArchive: false);
@@ -340,15 +340,15 @@ DocListWindow {
 			CocoaMenuItem.addToMenu("User Menu", "make code palette", ["A", false, false], {
 				this.makeCodePalette(selectedDoc);
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "run current snippet", ["X", false, false], {
-				this.runCurrentSnippet(selectedDoc);
-			}),
-			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
-				this.selectNextSnippet(selectedDoc);
-			}),
-			CocoaMenuItem.addToMenu("User Menu", "next snippet", ["K", false, false], {
-				this.selectPreviousSnippet(selectedDoc);
-			}),
+//			CocoaMenuItem.addToMenu("User Menu", "run current snippet", ["X", false, false], {
+//				this.runCurrentSnippet(selectedDoc);
+//			}),
+//			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
+//				this.selectNextSnippet(selectedDoc);
+//			}),
+//			CocoaMenuItem.addToMenu("User Menu", "next snippet", ["K", false, false], {
+//				this.selectPreviousSnippet(selectedDoc);
+//			}),
 		]
 	}
 
@@ -381,7 +381,7 @@ DocListWindow {
 		#start, length = codePositions[
 			[0, 1] + (this.findIndexOfSnippet(doc) + 1).min(codeKeys.size - 1)
 		].differentiate;
-		doc.selectRange(start, length - 1);
+		doc.selectRange(start, length); // - 1
 	}
 
 	selectPreviousSnippet { | doc |
@@ -394,9 +394,7 @@ DocListWindow {
 		doc.selectRange(start, length - 1);
 	}
 
-	removeUserMenuItems {
-		if (menuItems.notNil) { menuItems do: _.remove; };
-	}
+	removeMenuItems { menuItems do: _.remove; }
 
 	docListBounds {
 		^Rect(2, 2, docBrowserBounds.width - 4, docBrowserBounds.height / 2 - 4);

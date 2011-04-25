@@ -1,29 +1,43 @@
-UniqueSynth : UniqueObject {
-	*mainKey { ^\synths }
-	*removedMessage { ^\n_end }
-	*makeKey { | key, defName, args, target, addAction=\addToHead |
+
+
+AbstractUniqueServerObject : UniqueObject {
+
+	*makeKey { | key, target |
 		^(target.asTarget.server.asString ++ ":" ++ key).asSymbol;
 	}
 
-	*new { | key, defName, args, target, addAction=\addToHead |
-		^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
+	*onServer { | server |
+		var regexp;
+		regexp = format("^%:", server.asTarget.server);
+		^Library.global.at(this.mainKey).values select: { | node |
+			regexp.matchRegexp(node.key.asString);
+		};	
+	}
+} 
+
+UniqueSynth : AbstractUniqueServerObject {
+	*mainKey { ^\synths }
+	*removedMessage { ^\n_end }
+
+	*new { | key, defName, args, target, addAction=\addToHead ... moreArgs |
+		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);
 	}
 
-	
-	init { | what, args, target, addAction ... moreArgs |
-		// moreArgs are used by subclass UniquePlay
-		target = target.asTarget;
-		if (target.asTarget.server.serverRunning) {
-			this.makeObject(what, args, target, addAction, *moreArgs);
+	init { | target, what ... moreArgs |
+		if (target.server.serverRunning) {
+			this.makeObject(target, what, *moreArgs);
 		}{
-			target.server.waitForBoot({
-				0.1.wait;	// ensure that \n_go works for notification of start of synth
-				this.makeObject(what, args, target, addAction, *moreArgs);
+			ServerReady(target.server).addOneShot(this, {
+				this.makeObject(target, what, *moreArgs);
+		// needed because the server has not time to send the \n_go notification
+		// when the synth is created right after booting the server
+				NotificationCenter.notify(key, \n_go, this);
 			});
+			target.server.boot;
 		}
 	}
 
-	makeObject { | defName, args, target, addAction |
+	makeObject { | target, defName, args, addAction |
 		object = Synth(defName, args, target, addAction);
 		this.registerObject;
 	}
@@ -34,10 +48,9 @@ UniqueSynth : UniqueObject {
 				\n_go, {
 					NotificationCenter.notify(key, \n_go, this);
 				},
-				\n_end, { 
-					object = nil; 	// make this.free safe
+				\n_end, {
 					this.remove;
-					object.release;	// clear dependants
+					object.releaseDependants; // clean up synth's dependants
 				}
 			);
 		};
@@ -45,12 +58,26 @@ UniqueSynth : UniqueObject {
 	}
 
 	synth { ^object }						// synonym
+	isPlaying { ^object.isPlaying; }
+	release { object.release }
 
 	// Synchronization with start / stop events: 
 	onStart { | func |
 		NotificationCenter.registerOneShot(key, \n_go, this, func);
 	}
 	onEnd { | func | this.onRemove(func) }	// synonym
+
+	wait { | dtime = 0 |	
+	/* wait dtime seconds after start of synth or after receiving wait, whichever is earlier
+	makes routines wait safely when starting a UniqueSynth with unbooted server.
+	Can only be called inside a routine.
+	This includes running a code snippet by typing Command-Shift-x (see DocListWindow)
+	*/
+	// cannot use this.onStart({ dtime.wait }) because it calls .wait on a function, not a routine
+		while { this.isPlaying.not }{ 0.01.wait };
+		dtime.wait;
+	}	
+	
 	rsync { | func, clock |
 		var routine;
 		this.onStart({
@@ -63,37 +90,13 @@ UniqueSynth : UniqueObject {
 
 	rsyncs { | func | this.rsync(func, SystemClock) }
 	rsynca { | func | this.rsync(func, AppClock) }
-
-	free { if (object.notNil) { object.free } }	// safe free: only runs if not already freed
 	
-	*onServer { | server |
-		var regexp;
-		regexp = format("^%:", server.asTarget.server);
-		^Library.global.at(this.mainKey).values select: { | node |
-			regexp.matchRegexp(node.key.asString);
-		};	
-	}
+	dur { | dtime = 1 | this.onStart({ { this.release }.defer(dtime) }) }
+
+	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
 	
 }
 
 // Synonym - abbreviation for UniqueSynth :  
 Usynth : UniqueSynth {}
-
-// Experimental / Drafts 
-
-UniquePlay : UniqueSynth {
-//	*mainKey { ^\playFuncs }
-	
-	*new { | playFunc, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
-		^super.new(playFunc.hashKey, playFunc, args, target, addAction, outbus, fadeTime);
-	}
-
-	makeObject { | playFunc, args, target, addAction = \addToHead, outbus = 0, fadeTime = 0.02 |
-		object = playFunc.play(target, outbus, fadeTime, addAction, args);
-		this.registerObject;
-	}
-}
-
-// Synonym - abbreviation for UniqueSynth :  
-Uplay : UniquePlay {}
 

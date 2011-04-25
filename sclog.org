@@ -224,24 +224,29 @@ UNIQUESYNTH:
 ***** Interface for UniqueBuffer: Class methods, synonyms, utilities
 ****** Methods modeled after Buffer class methods
 
-	*new { | key, server, numFrames, numChannels, bufnum | }
-		create buffer instance without allocating
-	
+ 	MODIFIED, works like Buffer:alloc
+	*new { | key, server, numFrames, numChannels, action | }
+		like Buffer:alloc, with action executed as soon as info is received, no bufnum
+		allocates immediately, boots buffer if needed
+
+	*read { | key, server, path, startFrame = 0, numFrames = -1, action | }
+		read from file. Boot buffer if needed. Store in library at [buffers, server:key]
+
+	NOT USED:
 	*alloc( | key, server, numFrames, numChannels, completionMessage, bufnum | )
 		allocate immediately. Boot server if needed. 
 	
-	*read { | key, server, path, startFrame = 0, numFrames = -1, action, bufnum | }
-		read from file
-		
 ****** Methods for convenient use
 
 	*play { | func, args | }
 		play last selected buffer or default buffer if none selected
 	
 	*load { | func, args | }
-		load from file and play if given func
+		load with file open dialog window, play if func is given
 	
 	*select { | func, args | }
+		open list of buffers, select one and execute func if provided.
+		selected buffer stays for next calls of "play" or spectrogram. 
 	
 	*spectrogram { | func, args | }
 

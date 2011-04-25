@@ -1,6 +1,4 @@
 
-b = Buffer(Server.default, 1024, 1);
-b.alloc
+\default.play.rsync( { | s | loop {  s.postln; 1.wait } } );
 
-
-Buffer.alloc(Server.default, 1024, 1, { | ... args | args.postln; })
+\default.play.dur(1);

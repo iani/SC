@@ -1,61 +1,121 @@
+/* 
 
-// DRAFT!!!
+Following additional class methods of Buffer provide an interface for using UniqueBuffer easily: 
+	*load( (optional: func) )
+	*play( (optional: func) )
+	*select( (optional: func) )
 
-UniqueBuffer : UniqueObject {
+Instance methods of String: 
+	aString.load( (optional: func) )
+		
+*/
+
+UniqueBuffer : AbstractUniqueServerObject {
+	classvar <>defaultPath = "sounds/a11wlk01.wav";
+	classvar >current;
+	var <server, <path, <startFrame = 0, <numFrames, <numChannels = 1;
+
 	*mainKey { ^\buffers }
 	*removedMessage { ^\b_free }
+	*keyFromPath { | path |
+		path = path ? defaultPath;
+		path.pathMatch.postln;
+		^PathName(path).fileNameWithoutExtension.asSymbol;
+	}	
 
-	init { | what, args, target, addAction ... moreArgs |
-		// moreArgs are used by subclass UniquePlay
-		target = target.asTarget;
-		if (target.asTarget.server.serverRunning) {
-			this.makeObject(what, args, target, addAction, *moreArgs);
-		}{
-			target.server.waitForBoot({
-				0.1.wait;	// ensure that \n_go works for notification of start of synth
-				this.makeObject(what, args, target, addAction, *moreArgs);
+	*read { | path, server, startFrame = 0, numFrames, play |
+		^this.new(this.keyFromPath(path), server, numFrames, nil, path, startFrame, play);
+	}
+
+	// this method just defines arguments similar to Buffer-new
+	// use it only to create buffers that do not read from a file
+	// to read buffers from file use *read
+	*new { | key, server, numFrames, numChannels = 1, path, startFrame = 0, play |
+		^super.new(key, server ? Server.default, numFrames, numChannels, path, startFrame, play);
+	}
+	
+	*play { | func, name |
+		var ubuf;
+		if (name.isNil) { ubuf = this.current } { ubuf = this.getObject(this.makeKey(name)); };
+		if (ubuf.isNil) { ^postf("Could not find a UniqueBuffer named: %\n", name); };
+		ubuf.play(func);
+	}
+	
+	*current { 
+		if (current.isNil) { current = this.getObject(this.makeKey(this.keyFromPath)); };
+		if (current.isNil) { current = this.new(path: defaultPath); };
+		^current;
+	}
+
+	play { | play |
+		if (this.isLoaded) {
+			this.playNow(play) 
+		} {
+			NotificationCenter.registerOneShot(key, \loaded, this, {
+				this.playNow(play);
 			});
+			server.boot;
 		}
 	}
 
-	makeObject { | defName, args, target, addAction |
-		object = Synth(defName, args, target, addAction);
-		this.registerObject;
-	}
+	isLoaded { ^object.notNil }
 
-	registerObject {
-		object addDependant: { | me, what |
-			switch (what, 
-				\n_go, {
-					NotificationCenter.notify(key, \n_go, this);
-				},
-				\n_end, { 
-					object = nil; 	// make this.free safe
-					this.remove;
-					object.release;	// clear dependants
-				}
-			);
-		};
-		object.register;
-	}
-
-	synth { ^object }						// synonym
-
-	// Synchronization with start / stop events: 
-	onStart { | func |
-		NotificationCenter.registerOneShot(key, \n_go, this, func);
-	}
-	onEnd { | func | this.onRemove(func) }	// synonym
-	rsync { | func, clock |
-		var routine;
-		this.onStart({
-			routine = { func.(object, this) }.fork(clock ? AppClock);
-		});
-		this.onEnd({
-			routine.stop;	
-		});	
+	init { | argServer, argNumFrames, argNumChannels = 1, argPath, argStartFrame, playFunc |
+		server = argServer;
+		numFrames = argNumFrames;
+		numChannels = argNumChannels;
+		path = argPath;
+		startFrame = argStartFrame;
+		if (server.serverRunning) { this.makeObject(playFunc) };
+		ServerReady(server).add(this.class, { this.class.loadAllBuffers(server) });
+		ServerQuit.add(this.class, server);
 	}
 	
+	*loadAllBuffers { | server |
+		var buffers;
+		buffers = this.onServer(server);
+		buffers.inject(nil, { | a, b |
+			if (a.notNil) { NotificationCenter.registerOneShot(a.key, \loaded, a, { b.makeObject }) };
+			b;
+		});
+		buffers.first.makeObject;
+	}
+	
+	*doOnServerQuit { | server |
+		this.onServer(server) do: _.serverQuit;	
+	}
+
+	serverQuit {
+		object = nil;
+		NotificationCenter.notify(key, \serverQuit, this);
+	}
+
+	makeObject { | play |
+		if (play.notNil) { this.playWhenLoaded(play) };
+		if (path.isNil) {
+			object = Buffer.alloc(server, numFrames ? 1024, numChannels, completionMessage: { | b | 
+				NotificationCenter.notify(key, \loaded, this);
+			});
+		}{
+			object = Buffer.read(server, path, startFrame, numFrames, { | b | 
+				NotificationCenter.notify(key, \loaded, this);
+			});
+		}			
+	}
+
+	playNow { | playFunc |		
+		if (	playFunc isKindOf: Function ) {
+			playFunc.(object, this);	
+		}{
+			object.play;
+		}
+	}
+
+	free {
+		if (this.isLoaded) { object.free };
+		this.remove;	
+		object = nil;
+	}
 }
 
-Ubuffer : UniqueBuffer {} // synonym for UniqueBuffer
+Ubuf : UniqueBuffer {} // synonym for UniqueBuffer

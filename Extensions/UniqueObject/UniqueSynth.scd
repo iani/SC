@@ -1,19 +1,21 @@
 /*
 To run an example, go anywhere after the //: mark that starts it, and press Command-Shift-x
+
+To select the next example, press Command-shift-j
+To select the previous example, press Command-shift-k
+
 */
 
-//:f fun
+//:a runs also with non-booted server
 
-"hello ".post;
-{ WhiteNoise.ar(EnvGen.kr(Env.perc(0.001, 0.7, 0.3), doneAction: 2)) }.uplay;
-
+\default.play;
+\default.wait(0.1); 				// make sure to wait for server boot also
+\default.set(\freq, 440 * 3/2);
+0.4.wait;
+15 do: { \default.set(\freq, ((4..12) * 110).choose); 0.05.wait };
+(16..4) * 110 do: { | i | \default.set(\freq, i); 0.1.wait };
 0.5.wait;
-
-\default.usynth.rsynca({ | s |
-	50 do: { | i | (i + 2).reciprocal.wait; s.set(\freq, 200 rrand: 1500); ".".post; };
-	s.free;
-	" there".postln;
-});
+\default.release; 
 
 //:s synth
 SynthDef(\test, { Out.ar(0, SinOsc.ar(Rand(4, 10) * 100, 0, 0.1)) }).load(Server.default);
@@ -21,40 +23,20 @@ SynthDef(\test, { Out.ar(0, SinOsc.ar(Rand(4, 10) * 100, 0, 0.1)) }).load(Server
 0.3.wait;
 
 5 do: {
-	a = \test.usynth;
+	a = \test.play.onStart;
 	a.onRemove({ | x |  postf("% stopped\n", x); });
 	0.2.wait;
-	a.free;
+	\test.free;
 	0.1.wait;
 };
 
-//:S stringOrSymbol.usynth
-
-\test.usynth; 1.wait; \test.usynth.free;
-
-//:p Uplay(function)
-
-p = Uplay({ WhiteNoise.ar(0.1) }).onEnd({ | x | x.post; " ended".postln; });
-1.wait;
-p.free;
-
-//:P function.uplay
-
-a = { | v = 1 | SinOsc.ar(LFPulse.kr(v).range(400, 440), 0, 0.1) }.uplay(args: [\v, 15]);
-1.wait;
-a.synth.set(\v, 1);
-1.5.wait;
-a.free;
-
 //:o on start
 
-\test.usynth.onStart({ "hello".postln; });
-1.wait;
+\test.play.onStart({ "hello".postln; });
+\test.wait(1);
 \test.usynth.free;
 
-//:r routine sync
-
-\default.usynth.rsyncs({ | synth | 
+\default.play.rsyncs({ | synth | 
 	0.25.wait;
 	10 do: {
 		0.1.wait;

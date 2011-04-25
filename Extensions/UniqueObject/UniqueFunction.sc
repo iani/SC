@@ -1,11 +1,13 @@
 /*
 	Interpret a string only once (avoid doing the same initialization code marked by //:! 
 	see DocListWindow ...
+
 */
 
+// Somewhat similar to Thunk, but not the same
 
 UniqueFunction : UniqueObject {
-	var <result;
+	var <value;
 
 	*mainKey { ^\functions }
 	*removedMessage { ^\reset }
@@ -16,7 +18,7 @@ UniqueFunction : UniqueObject {
 
 	init { | func ... args |
 		object = func;
-		result = func.(*args);
+		value = func.(*args);
 	}
 
 	function { ^object }
@@ -30,7 +32,7 @@ UniqueCodeString : UniqueObject {
 		var hash;
 		hash = string.hash;
 		if (Library.at(uniqueCodeStringKey, hash).isNil) {
-			string.interpret;
+			string.fork;
 			Library.put(uniqueCodeStringKey, hash, string);
 		}
 	}

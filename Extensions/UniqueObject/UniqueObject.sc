@@ -17,16 +17,18 @@ UniqueObject {
 		^object;
 	}
 	
-	*makeKey { | key |
-		/* server-related subclasses UniqueSynth etc. compose the key to include the server */
-		^key.asSymbol;
-	}
-	
 	*getObject { | key |
 		^Library.global.at(this.mainKey, key);
 	}
 
-	init { | makeFunc | object = makeFunc.value }
+	*at { | key | ^this.getObject(key) }  // synonym
+
+	*makeKey { | key |
+		/* server-related subclasses UniqueSynth etc. compose the key to include the server */
+		^key.asSymbol;
+	}
+
+	init { | makeFunc | object = makeFunc.value; }
 
 	onRemove { | func |
 		NotificationCenter.registerOneShot(key, this.class.removedMessage, this, func);
@@ -35,7 +37,7 @@ UniqueObject {
 	remove { ^this.class.remove(key); }
 	
 	*remove { | key |
-		var removed, mainKey;
+		var removed;
 		removed = this.getObject(key);
 		if (removed.notNil) { 
 			NotificationCenter.notify(key, this.removedMessage, removed);
