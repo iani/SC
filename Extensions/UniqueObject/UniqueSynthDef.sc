@@ -10,12 +10,12 @@ UniqueSynthDef : AbstractUniqueServerObject {
 			if (a.notNil) { NotificationCenter.registerOneShot(a.key, \loaded, a, { b.sendToServer }) };
 			b;
 		});
-		NotificationCenter.registerOneShot(a.key, \loaded, synthDefs.last, {
-			b.sendToServer
+		NotificationCenter.registerOneShot(synthDefs.last.key, \loaded, synthDefs.last, {
+			NotificationCenter.notify(server, \synthDefsLoaded);
 		});
-//		synthDefs.last
 		synthDefs.first.sendToServer;
 //		UniqueSynthDef(server).doWhenLoaded({ buffers.first.makeObject });
+//		synthDefs.last
 	}
 
 	doWhenLoaded { | func |
@@ -24,7 +24,7 @@ UniqueSynthDef : AbstractUniqueServerObject {
 			using some synthdef sent here. 
 			UniqueSynthDef.doWhenLoaded({ buffers.first.makeObject });
 		*/
-//		NotifyOnce(key, ).add(func);
+		NotifyOnce(this.server, \synthDefsLoaded, this, func);
 		
 	}	
 }

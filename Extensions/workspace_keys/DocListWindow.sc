@@ -1,4 +1,6 @@
-
+/*
+Document.current.bounds.postln;
+*/
 DocListWindow {
 	classvar >default;
 	classvar <>docListWidth = 150;

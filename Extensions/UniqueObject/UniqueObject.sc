@@ -1,31 +1,39 @@
+/*
+MultiLevelIdentityDictionary
+	atPath { arg path; }
+	putAtPath { arg path, val; }
+	removeAtPath { arg path; }
+	removeEmptyAtPath { arg path; }
+	leaves { arg startAt; }
+	leafDo { arg func; }
+	leafDoFrom { arg folderpath, func; }
+*/
 
 UniqueObject {
-	
+	classvar <objects;
 	var <key, <object;
+	*iniClass { this.clear; }
 	
-	*mainKey { ^\objects }
+	
+	*mainKey { ^[\objects] }
 	*removedMessage { ^\removed }
 
 	*new { | key, makeFunc ... otherArgs |
 		var object;
 		key = this.makeKey(key, makeFunc, *otherArgs); // server objects include the server in the key
-		object = this.getObject(key);
+		object = this.at(key);
 		if (object.isNil) {
 			object = this.newCopyArgs(key).init(makeFunc, *otherArgs);
-			Library.put(this.mainKey, key, object);
+			objects.putAtPath(key, object);
 		};
 		^object;
 	}
-	
-	*getObject { | key |
-		^Library.global.at(this.mainKey, key);
-	}
 
-	*at { | key | ^this.getObject(key) }  // synonym
+	*at { | key | ^objects.atPath(key) }
 
 	*makeKey { | key |
 		/* server-related subclasses UniqueSynth etc. compose the key to include the server */
-		^key.asSymbol;
+		^this.mainKey ++ key.asKey;
 	}
 
 	init { | makeFunc | object = makeFunc.value; }
@@ -38,7 +46,7 @@ UniqueObject {
 	
 	*remove { | key |
 		var removed;
-		removed = this.getObject(key);
+		removed = this.at(key);
 		if (removed.notNil) { 
 			NotificationCenter.notify(key, this.removedMessage, removed);
 			^Library.global.removeAt(this.mainKey, key);
@@ -49,12 +57,11 @@ UniqueObject {
 	*removeAll {
 		// remove all objects by performing their remove method
 		// this sends out notifications. See Meta_UniqueObject:remove
-		Library.global.at(this.mainKey) do: _.remove;
+		objects.at(this.mainKey) do: _.remove;
 	}
 
-	*clear {
-		// clear all objects stored under the mainKey
-		Library.global.removeAt(this.mainKey);
+	*clear { // clear all objects
+		objects = MultiLevelIdentityDictionaty.new;
 	}
 
 	printOn { arg stream;

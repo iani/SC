@@ -99,7 +99,5 @@ Code {
 
 		];
 	}
-	
 	*removeMenuItems { menuItems do: _.remove; }
-
 }
