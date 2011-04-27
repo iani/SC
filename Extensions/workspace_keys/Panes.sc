@@ -24,10 +24,9 @@ Panes {
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
 			// give Document some time to get its name and bounds - otherwise error occurs
-			{ 
-				"Document init action notifying document opened".postln;
+//			{ 
 				NotificationCenter.notify(this, \docOpened, doc);  
-			}.defer(0.1); // defer transferred to any views that need to display doc name
+//			}.defer(0.1); // defer transferred to any views that need to display doc name
 		};
 		this.addMenu;
 		Code.addMenu;

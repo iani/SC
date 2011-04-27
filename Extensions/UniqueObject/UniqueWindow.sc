@@ -21,18 +21,34 @@ UniqueWindow : UniqueObject {
 	*listWindow { | key = 'list', bounds, getItemsAction, getIndexAction, notifier, messages, title, delay = 0.0 |
 		var ulistwindow;
 		ulistwindow = this.new(key, {
-			var w, listview;
-			w = Window(title ? key, bounds ?? { Rect(0, 0, 250, 400) });
-			listview = EZListView(w, w.view.bounds);
+			var w, view, listview, searchview, items;
+			w = Window(title ? key, bounds ?? { Rect(0, 0, 200, Window.screenBounds.height) });
+			view = w.view;
+			searchview = TextView(w, view.bounds.height = 20).font = Font("Helvetica", 12);
+			searchview.keyDownAction = { | view, char, mod, unicode, key | 
+				if (unicode == 13) {
+					listview.doAction; // = listview.value;
+					{ view.string = ""; }.defer(0.01);
+				}{
+					{	
+						var string, item;
+						string = view.string;
+						item = items.select({ | i | ("^" ++ string).matchRegexp(i.key.asString) }).first;
+						listview.value = items.indexOf(item) ? 0;
+					}.defer(0.001); // must defer to get the latest string !!!
+				}
+			};
+			listview = EZListView(w, view.bounds.insetBy(0, 12).top = 24);
 			listview.widget.resize = 5;
 			listview.widget.parent.resize = 5;
-			listview.items = getItemsAction.value;
+			listview.items = items = getItemsAction.value;
 			w.addDependant({ | me |
-				{ 	var items;
+				{ 	items;
 					listview.items = items = getItemsAction.value;
 					listview.value = getIndexAction.(items) ? 0;
 				}.defer(delay);
 			});
+			w.toFrontAction = { searchview.focus };
 			w;
 		});
 		messages.asArray do: { | m | 
