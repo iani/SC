@@ -8,11 +8,11 @@ UniqueSynthDef : AbstractUniqueServerObject {
 		synthDefs = this.onServer(server);
 		synthDefs.inject(nil, { | a, b |
 			if (a.notNil) { NotificationCenter.registerOneShot(a.key, \loaded, a, { b.sendToServer }) };
-			b;
+//			b;
 		});
-		NotificationCenter.registerOneShot(a.key, \loaded, synthDefs.last, {
-			b.sendToServer
-		});
+//		NotificationCenter.registerOneShot(a.key, \loaded, synthDefs.last, {
+//			b.sendToServer
+//		});
 //		synthDefs.last
 		synthDefs.first.sendToServer;
 //		UniqueSynthDef(server).doWhenLoaded({ buffers.first.makeObject });
