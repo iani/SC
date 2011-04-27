@@ -28,17 +28,15 @@ UniqueWindow : UniqueObject {
 			listview.widget.parent.resize = 5;
 			listview.items = getItemsAction.value;
 			w.addDependant({ | me |
-				{ 
-					listview.items = getItemsAction.value;
-//					listview.value = getIndexAction.value;
+				{ 	var items;
+					listview.items = items = getItemsAction.value;
+					listview.value = getIndexAction.(items) ? 0;
 				}.defer(delay);
 			});
 			w;
 		});
 		messages.asArray do: { | m | 
-			ulistwindow.addNotifier(notifier, m, { | me |
-				me.window.changed;
-			});
+			ulistwindow.addNotifier(notifier, m, { | me | me.window.changed; });
 		};
 		ulistwindow.front;
 	}

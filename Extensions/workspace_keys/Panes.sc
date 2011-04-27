@@ -24,11 +24,15 @@ Panes {
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
 			// give Document some time to get its name and bounds - otherwise error occurs
-			{ NotificationCenter.notify(this, \docOpened, doc);  }.defer(0.1);
+			{ 
+				"Document init action notifying document opened".postln;
+				NotificationCenter.notify(this, \docOpened, doc);  
+			}.defer(0.1); // defer transferred to any views that need to display doc name
 		};
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;
+		Document.allDocuments do: this.setDocActions(_);
 		this.arrange1Pane;
 	}
 
@@ -60,10 +64,13 @@ Panes {
 	}
 
 	*arrange1Pane {
-		listenerPos = Rect(0, listenerY, this.twoPaneWidth, Window.screenBounds.height - listenerY);
+		var width;
+		width = Dock.width;
+		listenerPos = Rect(0, listenerY, this.twoPaneWidth - width, Window.screenBounds.height - listenerY);
 		tryoutPos = Rect(0, 0, this.twoPaneWidth, listenerY - 28);
-		panePos = Rect(this.twoPaneWidth, 0, this.twoPaneWidth, Window.screenBounds.height);
+		panePos = Rect(this.twoPaneWidth - width, 0, this.twoPaneWidth, Window.screenBounds.height);
 		this changeArrangement: { | doc | this.placeDoc(doc) };
+		Dock.showDocListWindow;
 	}
 
 	*arrange2Panes {
@@ -105,18 +112,17 @@ Panes {
 	}
 
 	*docOpened { | doc |
-		// why does this post twice always???????????
+// why does this post twice always???????????
 //		postf("Panes init doc actions docOpened: %\n", doc.name).postln;
+		this.setDocActions(doc);
+		currentPositionAction.(doc);
+	}
+	
+	*setDocActions { | doc |
 		doc.toFrontAction = { NotificationCenter.notify(this, \docToFront, doc); };
 		doc.endFrontAction = { NotificationCenter.notify(this, \docEndFront, doc); };
 		doc.mouseUpAction = { NotificationCenter.notify(this, \docMouseUp, doc); };
-		doc.onClose = { | me |
-//			postf("doc closed: %, %\n", me, me.name);
-			{
-				NotificationCenter.notify(this, \docClosed, doc); 
-			}.defer(0.1); // must defer for changes to register
-		};
-		currentPositionAction.(doc);
+		doc.onClose = { NotificationCenter.notify(this, \docClosed, doc); };		
 	}
 	
 	*docNotifiers { ^[\docOpened, \docToFront, \docEndFront, \docMouseUp, \docClosed] }
