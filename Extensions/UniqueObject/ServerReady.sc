@@ -9,30 +9,17 @@ Add to ServerReady objects that want to start Synths, Groups or routines right a
 ServerReady : UniqueObject {
 	classvar servers;
 
-	var <cmdPeriod = false, <serverBoot = false, <serverTree = false;
+	var <>server, <cmdPeriod = false;
 
-	*mainKey { ^\serverReady }
+	*mainKey { ^[\serverReady] }
 
-	*makeKey { | server | ^server ? Server.default; }
+	*makeKey { | server | ^this.mainKey ++ [server ? Server.default]; }
 
-	init { | makeFunc |
-		ServerTree.add(this, key);	
+	init {
 		CmdPeriod.add(this);
-	}
-
-	*add { | object, function, server | this.new(server ? Server.default).add(object, function); }
-	*remove { | object, server | this.at(server ? Server.default).remove(object); }
-	
-	add { | argObject, action |
-		NotificationCenter.register(this, \reallyBooted, argObject, action);
-	}
-	
-	addOneShot { | argObject, action |
-		NotificationCenter.registerOneShot(this, \reallyBooted, argObject, action);
-	}
-
-	remove { | argObject | 
-		NotificationCenter.unregister(this, \reallyBooted, argObject);
+		server = key[1];
+		ServerTree.add(this, server);
+		object = IdentityDictionary.new;
 	}
 
 	doOnCmdPeriod { cmdPeriod = true; }
@@ -41,7 +28,35 @@ ServerReady : UniqueObject {
 		if (cmdPeriod) {
 			cmdPeriod = false;
 		}{
-			NotificationCenter.notify(this, \reallyBooted);
+//			NotificationCenter.notify(this, \reallyBooted);
+			object.asKeyValuePairs pairsDo: { | obj, func | func.value(obj, server, this); };
 		};
 	}	
+
+	*register { | object, function, server | ^this.new(server ? Server.default).register(object, function); }
+	register { | argObject, action |
+//		NotificationCenter.register(this, \reallyBooted, argObject, action);
+		object[argObject] = action;
+	}
+
+	*registerOneShot { | object, function, server | ^this.new(server).registerOneShot(object, function) }
+
+	registerOneShot { | argObject, action |
+//		NotificationCenter.registerOneShot(this, \reallyBooted, argObject, action);
+		object[argObject] = { | obj, server, me |
+			action.(obj, server, me);
+			object.removeAt(obj);
+		}
+	}
+
+	*unregister { | object, server | 
+		
+		this.new(this.makeKey(server ? Server.default)).remove(object); }
+	
+	
+
+	unregister { | argObject | 
+		NotificationCenter.unregister(this, \reallyBooted, argObject);
+	}
+
 }

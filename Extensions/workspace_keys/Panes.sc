@@ -23,15 +23,13 @@ Panes {
 	*activate {
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
-			// give Document some time to get its name and bounds - otherwise error occurs
-//			{ 
-				NotificationCenter.notify(this, \docOpened, doc);  
-//			}.defer(0.1); // defer transferred to any views that need to display doc name
+			NotificationCenter.notify(this, \docOpened, doc);  
 		};
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;
 		Document.allDocuments do: this.setDocActions(_);
+		this.openTryoutWindow;
 		this.arrange1Pane;
 	}
 
@@ -62,11 +60,23 @@ Panes {
 		doc.front;
 	}
 
+	*openTryoutWindow {
+		var tryout, path;
+		if ((tryout = Document.allDocuments.detect({ | d | d.name == "tryout.sc" })).isNil) {
+		path = Platform.userAppSupportDir ++ "/tryout.sc";
+			if (path.pathMatch.size == 0) {
+				tryout = Document("tryout.sc").path_(path);
+			}{
+				tryout = Document.open(path);
+			};
+		};		
+	}
+
 	*arrange1Pane {
 		var width;
 		width = Dock.width;
 		listenerPos = Rect(0, listenerY, this.twoPaneWidth - width, Window.screenBounds.height - listenerY);
-		tryoutPos = Rect(0, 0, this.twoPaneWidth, listenerY - 28);
+		tryoutPos = Rect(0, 0, this.twoPaneWidth - width, listenerY - 28);
 		panePos = Rect(this.twoPaneWidth - width, 0, this.twoPaneWidth, Window.screenBounds.height);
 		this changeArrangement: { | doc | this.placeDoc(doc) };
 		Dock.showDocListWindow;
@@ -121,7 +131,7 @@ Panes {
 		doc.toFrontAction = { NotificationCenter.notify(this, \docToFront, doc); };
 		doc.endFrontAction = { NotificationCenter.notify(this, \docEndFront, doc); };
 		doc.mouseUpAction = { NotificationCenter.notify(this, \docMouseUp, doc); };
-		doc.onClose = { NotificationCenter.notify(this, \docClosed, doc); };		
+		doc.onClose = { NotificationCenter.notify(this, \docClosed, doc); };
 	}
 	
 	*docNotifiers { ^[\docOpened, \docToFront, \docEndFront, \docMouseUp, \docClosed] }
