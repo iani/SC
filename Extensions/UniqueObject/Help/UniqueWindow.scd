@@ -1,13 +1,18 @@
+//:a
+UniqueWindow(\test).onClose({ |...args| { args.postln } ! 10; });
+//:b
+\test2.window.onClose({ ({ 10.rand } ! 10).postln });
 
 //:w simple unique window
 
-UniqueWindow(\simple, onClose: { | me | postf("The window named '%' was closed\n", me.name) });
+UniqueWindow(\simple) onClose: { | me | postf("The window named '%' was closed\n", me.name) };
+
 
 //:y does not reopen: 
 
 { 
 	8 do: { 
-		UniqueWindow(\repeatsimple, onClose: { | me | postf("The window named '%' was closed\n", me.name) })
+		UniqueWindow(\repeatsimple).onClose({ | me | postf("The window named '%' was closed\n", me.name) })
 			.window.view.background  = Color.rand;
 		"It's still the same window".postln;
 		0.5.wait;
@@ -27,20 +32,12 @@ r = {
 			StaticText(w, Rect(0, 0, 300, 50))
 			.string = format("if you close me I will reappear - up to 5 times.\ncounting: % times", i + 1);
 			w;
-		}, 
+		}).front.onClose(
 		{
 			postf("I closed for the %th time\n", i + 1); 
 			r.next;
-		}).object.front;
+		});
 		nil.yield;
 	};
 	"THE END".postln;
 }.fork(AppClock)
-
-//:f UniqueFunction
-
-u = { | a, b, c | [a, b, c].sum.postln; }.doOnce(10, 20, 30);
-u.onRemove({ | uf | uf.result.postln; });
-u.remove;
-
-

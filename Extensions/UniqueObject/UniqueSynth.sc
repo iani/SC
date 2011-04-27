@@ -3,9 +3,11 @@
 AbstractUniqueServerObject : UniqueObject {
 
 	*makeKey { | key, target |
-		^(target.asTarget.server.asString ++ ":" ++ key).asSymbol;
+		^[target.asTarget.server, key.asKey];
 	}
 
+// Must be rewritten
+/*
 	*onServer { | server |
 		var regexp;
 		regexp = format("^%:", server.asTarget.server);
@@ -13,25 +15,24 @@ AbstractUniqueServerObject : UniqueObject {
 			regexp.matchRegexp(node.key.asString);
 		};	
 	}
-} 
+*/
+}
 
 UniqueSynth : AbstractUniqueServerObject {
-	*mainKey { ^\synths }
-	*removedMessage { ^\n_end }
+	*mainKey { ^[\synths] }
+	*removedMessage { ^\synthEnded }
 
 	*new { | key, defName, args, target, addAction=\addToHead ... moreArgs |
-		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);
+		^super.new(key, target.asTarget, key ?? { defName.asSymbol }, args, addAction, *moreArgs);
 	}
 
-	init { | target, what ... moreArgs |
+	init { | target, defName ... moreArgs |
 		if (target.server.serverRunning) {
-			this.makeObject(target, what, *moreArgs);
+			this.makeObject(target, defName, *moreArgs);
 		}{
 			ServerReady(target.server).addOneShot(this, {
-				this.makeObject(target, what, *moreArgs);
-		// needed because the server has not time to send the \n_go notification
-		// when the synth is created right after booting the server
-				NotificationCenter.notify(key, \n_go, this);
+				this.makeObject(target, defName, *moreArgs);
+				this.synthStarted;  // on boot, no \n_go notification is received. Supply one here. 
 			});
 			target.server.boot;
 		}
@@ -41,12 +42,14 @@ UniqueSynth : AbstractUniqueServerObject {
 		object = Synth(defName, args, target, addAction);
 		this.registerObject;
 	}
-
+	
+	synthStarted { NotificationCenter.notify(key, \synthStarted, this); }
+ 
 	registerObject {
 		object addDependant: { | me, what |
 			switch (what, 
 				\n_go, {
-					NotificationCenter.notify(key, \n_go, this);
+					this.synthStarted
 				},
 				\n_end, {
 					this.remove;

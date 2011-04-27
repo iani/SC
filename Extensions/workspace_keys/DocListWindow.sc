@@ -17,9 +17,9 @@ DocListWindow {
 
 	*initClass {
 		Class.initClassTree(Document);
-		Document.initAction = { | me | 
-			NotificationCenter.notify(Document, \opened, me);
-		};
+//		Document.initAction = { | me | 
+//			NotificationCenter.notify(Document, \opened, me);
+//		};
 		tryoutBounds = Rect(0, 260, 494, 212);
 		this.makeMenuItems;	
 	}

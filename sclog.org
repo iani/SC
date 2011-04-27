@@ -286,4 +286,9 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
 	
 	}
 
-*/	
+*/
+*** 2011-04-26 Tuesday
+**** TODO add doOnce and forkOnce methods to function 	     :uniquefunction:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-26 Tue 16:02>
+     :END:

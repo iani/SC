@@ -9,10 +9,10 @@ But: run following regexp to get the headers and their positions:
 
 "string ... ".findRegexp("^//:[^ ][^\n]*");
 
+Object:addMenu
 */
 
 Code {
-	classvar <menuItems;
 	var <doc, <string;
 	var <headers, <positions; // , <functions, <keys;
 	
@@ -20,22 +20,6 @@ Code {
 		^this.newCopyArgs(doc).init;	
 	}
 	
-	*test {
-		^this.new(Document.current);			
-	}
-
-	*runCurrentSnippet {
-		^this.new(Document.current).runCurrentSnippet;	
-	}
-
-	*selectNextSnippet {
-		^this.new(Document.current).selectNextSnippet;	
-	}
-
-	*selectPreviousSnippet {
-		^this.new(Document.current).selectPreviousSnippet;
-	}
-
 	init {
 		var prItems;
 		string = doc.string;
@@ -46,18 +30,52 @@ Code {
 			headers = [doc.getSelectedLines(0, 1)];
 		};
 		positions = positions add: (string.size + 1);
-//		positions.postln;
-//		headers.postln;
 	}
 
-	runCurrentSnippet {
-		this.performCodeAt(this.findIndexOfSnippet(doc));
+	*menuItems {
+		^[
+			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
+				this.selectNextSnippet;
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "next snippet", ["K", false, false], {
+				this.selectPreviousSnippet;
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "fork current snippet", ["X", false, false], {
+				this.forkCurrentSnippet;
+			}),
+			CocoaMenuItem.addToMenu("User Menu", "eval+post current snippet", ["V", false, false], {
+				this.evalPostCurrentSnippet;
+			}),
+		];
 	}
 
-	performCodeAt { | index = 0 |
+	*forkCurrentSnippet {
+		^this.new(Document.current).forkCurrentSnippet;
+	}
+
+	forkCurrentSnippet {
+		this.performCodeAt(this.findIndexOfSnippet(doc), \fork);
+	}
+
+	performCodeAt { | index = 0, message = \fork |
 		if (index.isNil) { ^this };
-//		string[positions[index]..(positions[index + 1] - 1)].postln;
-		string[positions[index]..(positions[index + 1] - 1)].fork;
+		string[positions[index]..(positions[index + 1] - 1)].perform(message);
+	}
+
+	*evalPostCurrentSnippet {
+		^this.new(Document.current).evalPostCurrentSnippet;
+	}
+
+	evalPostCurrentSnippet {
+		this.performCodeAt(this.findIndexOfSnippet(doc), \evalPost );
+	}
+
+	*selectNextSnippet {
+		^this.new(Document.current).selectNextSnippet;	
+	}
+
+	*selectPreviousSnippet {
+		^this.new(Document.current).selectPreviousSnippet;
 	}
 
 	findIndexOfSnippet {
@@ -81,23 +99,4 @@ Code {
 		].differentiate;
 		doc.selectRange(start, length); // - 1
 	}
-
-	*addMenuItems {
-		menuItems = [
-//			CocoaMenuItem.addToMenu("User Menu", "test Code Class", ["T", false, false], {
-//				this.test;
-//			}),
-			CocoaMenuItem.addToMenu("User Menu", "run current snippet", ["X", false, false], {
-				this.runCurrentSnippet;
-			}),
-			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
-				this.selectNextSnippet;
-			}),
-			CocoaMenuItem.addToMenu("User Menu", "next snippet", ["K", false, false], {
-				this.selectPreviousSnippet;
-			}),
-
-		];
-	}
-	*removeMenuItems { menuItems do: _.remove; }
 }
