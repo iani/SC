@@ -9,7 +9,7 @@ UniqueWindow(\simple) onClose: { | me | postf("The window named '%' was closed\n
 
 //:y does not reopen: 
 
-{ 
+{
 	8 do: { 
 		UniqueWindow(\repeatsimple).onClose({ | me | postf("The window named '%' was closed\n", me.name) })
 			.window.view.background  = Color.rand;
@@ -40,7 +40,7 @@ r = {
 	};
 	"THE END".postln;
 }.fork(AppClock)
-
+Ԯ
 //:f UniqueFunction
 
 u = { | a, b, c | [a, b, c].sum.postln; }.doOnce(10, 20, 30);

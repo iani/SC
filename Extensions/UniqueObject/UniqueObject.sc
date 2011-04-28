@@ -2,16 +2,16 @@ UniqueObject {
 	classvar <objects;
 	var <key, <object;
 
-	*initClass { StartUp.add(this); }
-	
-	*doOnStartUp { objects = MultiLevelIdentityDictionary.new; }
+	// ====== configuration ======
 
-	*clear { // clear all objects
-		objects = MultiLevelIdentityDictionaty.new;
+	*initClass { this.clear }
+	*clear { // clear all objects, no notifications happen
+		objects = MultiLevelIdentityDictionary.new;
 	}	
-	
 	*mainKey { ^[\objects] }
 	removedMessage { ^\objectRemoved }
+
+	// ====== creating objects ======
 
 	*new { | key, makeFunc ... otherArgs |
 		var object;
@@ -24,15 +24,22 @@ UniqueObject {
 		^object;
 	}
 
-	*at { | key | ^objects.atPath(key) }
-
 	*makeKey { | key |
 		/* server-related subclasses UniqueSynth etc. compose the key to include the server */
 		^this.mainKey ++ key.asKey;
 	}
 
+	*at { | key | ^objects.atPath(key) }
+
 	init { | makeFunc | object = makeFunc.value; }
 
+	// ====== removing objects ======
+
+	*removeAll { | keys |
+		// remove all objects by performing their remove method
+		// this sends out notifications. See Meta_UniqueObject:remove
+		objects.leaves(keys) do: _.remove;
+	}
 	remove {
 		var reallyRemoved;
 		reallyRemoved = objects.removeEmptyAtPath(key);
@@ -40,25 +47,23 @@ UniqueObject {
 			this.notify(this.removedMessage);
 		};
 	}
-	
-	notify { | message | NotificationCenter.notify(UniqueObject, message, this); }
-
 	onRemove { | func | this.doOnceOn(this.removedMessage, func); }
-	
+
+	// ====== notifying objects ======
+
 	doOnceOn { | message, func |
 		NotificationCenter.registerOneShot(UniqueObject, message, this, { func.(this) });
 	}
+
+	notify { | message | NotificationCenter.notify(UniqueObject, message, this); }
 	
 	addNotifier { | notifier, message, action |
+		postf("% adding notifier: %, %, %\n", this, notifier, message, action);
 		NotificationCenter.register(notifier, message, this, { | args | action.(this, args) });
 		this onRemove: { NotificationCenter.unregister(notifier, message, this); };
 	}
-	
-	*removeAll { | keys |
-		// remove all objects by performing their remove method
-		// this sends out notifications. See Meta_UniqueObject:remove
-		objects.leaves(keys) do: _.remove;
-	}
+
+	// ====== printing ======
 
 	printOn { arg stream;
 		stream << this.class.name << "(" <<* [key, object] <<")";

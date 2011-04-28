@@ -1,25 +1,16 @@
 /* 
-
 Arrange Document windows conveniently for a laptop-sized monitor screen. 
-
 */
 
 Panes {
 	classvar <>listenerY = 300, <>onePaneListenerWidth = 500, <>twoPaneListenerHeight = 300;
-	classvar <>docListWidth = 0; // <>onePaneWidth = 790, 
 	classvar <>panePos;
 	classvar <>listenerPos, <>tryoutPos;
 	classvar <session;					// for saving / restoring doc positions and doc texts to archive
 	classvar <currentPositionAction;
+	classvar <>tryoutName = "tryout.scd";
 
-	*initClass {
-		StartUp.add(this);	
-	}
-	
-	*doOnStartUp {
-		this.activate;
-	}
-
+	*start { this.activate } // synonym
 	*activate {
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
@@ -29,10 +20,11 @@ Panes {
 		Code.addMenu;
 		Dock.addMenu;
 		Document.allDocuments do: this.setDocActions(_);
-		this.openTryoutWindow;
 		this.arrange1Pane;
+		{ this.openTryoutWindow; }.defer(0.5); // confuses post and Untitled windows if not deferred on startup
 	}
 
+	*stop { this.deactivate } // synonym
 	*deactivate {
 		NotificationCenter.unregister(this, \docOpened, this);
 		Document.initAction = nil;
@@ -62,10 +54,10 @@ Panes {
 
 	*openTryoutWindow {
 		var tryout, path;
-		if ((tryout = Document.allDocuments.detect({ | d | d.name == "tryout.sc" })).isNil) {
-		path = Platform.userAppSupportDir ++ "/tryout.sc";
+		if ((tryout = Document.allDocuments.detect({ | d | d.name == tryoutName })).isNil) {
+		path = Platform.userAppSupportDir ++ "/" ++ tryoutName;
 			if (path.pathMatch.size == 0) {
-				tryout = Document("tryout.sc").path_(path);
+				tryout = Document(tryoutName).path_(path);
 			}{
 				tryout = Document.open(path);
 			};
@@ -105,7 +97,7 @@ Panes {
 	
 	*placeDoc { | doc |
 		if (doc.isListener) { ^doc.bounds = listenerPos };
-		if (doc.name == "tryout.sc") { ^doc.bounds = tryoutPos };
+		if (doc.name == tryoutName) { ^doc.bounds = tryoutPos };
 		doc.bounds = panePos;
 	}
 

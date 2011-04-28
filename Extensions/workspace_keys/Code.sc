@@ -13,7 +13,7 @@ Object:addMenu
 */
 
 Code {
-	var <doc, <string;
+	var <doc, <string, <canEvaluate = true;
 	var <headers, <positions; // , <functions, <keys;
 	
 	*new { | doc |
@@ -26,6 +26,8 @@ Code {
 		// note: [^ ] means: ignore whitespace after the ":"
 		#positions, headers = string.findRegexp("^//:[^ ][^\n]*").flop;
 		if (positions.size == 0) {
+			// prevent evaluation of non-.scd documents with no snippets:
+			if ( doc.name.splitext.last != "scd" ) { canEvaluate = false; };
 			positions = [0];
 			headers = [doc.getSelectedLines(0, 1)];
 		};
@@ -34,6 +36,9 @@ Code {
 
 	*menuItems {
 		^[
+			CocoaMenuItem.addToMenu("User Menu", "snippet list view", [/*{*/ "}", false, false], {
+				this.showCodeListWindow;
+			}),
 			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
 				this.selectNextSnippet;
 			}),
@@ -58,8 +63,8 @@ Code {
 	}
 
 	performCodeAt { | index = 0, message = \fork |
-		if (index.isNil) { ^this };
-		string[positions[index]..(positions[index + 1] - 1)].perform(message);
+		if (index.isNil or: { canEvaluate.not }) { ^this };
+		(string[positions[index]..(positions[index + 1] - 1)] ?? { { } }).perform(message);
 	}
 
 	*evalPostCurrentSnippet {
@@ -98,5 +103,37 @@ Code {
 			[0, 1] + (this.findIndexOfSnippet(doc) - 1).max(0)
 		].differentiate;
 		doc.selectRange(start, length); // - 1
+	}
+	
+	*showCodeListWindow {
+		var listWindow;
+		listWindow = UniqueWindow.listWindow('Code Selector', 
+			Rect(
+				Window.screenBounds.width - Dock.width, Window.screenBounds.height / 2, 
+				Dock.width, Window.screenBounds.height / 2
+			), 
+			{ | ulistwin |
+				var code;
+				code = this.new(Document.current);
+				if (code.canEvaluate) {
+					if (ulistwin.notNil) { ulistwin.front };
+					code.headers collect: { | h, i | h[3..]->{ code.performCodeAt(i) } };
+				}{
+					["---"->{ }]
+				};
+			},
+			nil,
+			Panes, [\docOpened, \docToFront, \docClosed],
+			delay: 0.1;
+		);
+//		NotificationCenter.register(
+//			this.asSymbol, \openedCodeListWindow, \something, { "testing register codelist".postln; }
+//		);
+//		NotificationCenter.register(Code.asSymbol, \openedCodeListWindow, \somethinElse, 
+//			{ "Code window opened".postln }
+//		);
+//		(this == Code).postln;
+		listWindow.onClose({ NotificationCenter.notify(this, \closedCodeListWindow, listWindow); });
+		NotificationCenter.notify(this, \openedCodeListWindow, listWindow);
 	}
 }

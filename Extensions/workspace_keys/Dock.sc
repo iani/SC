@@ -1,7 +1,9 @@
 /* 
-
-Provide a list of currently open windows to choose from 
-Code
+Dock.showDocListWindow: 
+	Provide an automatically updating list of currently open windows to choose from
+Dock.browseUserClasses:
+	Provide a list of Classes defined in the current Users' Extensions diractory
+	(in MacOS X: ~/Library/Application Support/SuperCollider/Extensions/)
 */
 
 Dock {
@@ -19,15 +21,30 @@ Dock {
 	*showDocListWindow {
 		UniqueWindow.listWindow('Documents', 
 			Rect(Window.screenBounds.width - width, 0, width, Window.screenBounds.height), 
-			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | d.name->{ d.front } }; },
+			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
+				d.name->{
+					d.front; 
+// NotificationCenter.notify(Panes, \docToFront, d);
+// sending a document to front does not make it current. Therefore compensate here: 
+					d.didBecomeKey;
+				} };
+			},
 			{ | items |
 				var doc;
 				doc = Document.current.name;
 				items.indexOf(items detect: { | d | d.key == doc });
 			},
 			Panes, [\docOpened, \docToFront, \docClosed],
-			delay: 0.1;
-		);
+			delay: 0.1; // leave some time for Documents to update their name etc.
+		)
+		.addNotifier(Code, \openedCodeListWindow, { | listwin |
+//			postf("from inside notifier Code window opened %\n", listwin);
+			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height / 2 - 70;
+		})
+		.addNotifier(Code, \closedCodeListWindow, { | listwin |
+			postf("from inside notifier Code window closed %\n", listwin);
+			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
+		});
 	}
 	*browseUserClasses { 
 		UniqueWindow.listWindow('User Classes', nil, {

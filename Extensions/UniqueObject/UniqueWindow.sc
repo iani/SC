@@ -25,9 +25,10 @@ UniqueWindow : UniqueObject {
 			w = Window(title ? key, bounds ?? { Rect(0, 0, 200, Window.screenBounds.height) });
 			view = w.view;
 			searchview = TextView(w, view.bounds.height = 20).font = Font("Helvetica", 12);
+			searchview.focusColor = Color.red;
 			searchview.keyDownAction = { | view, char, mod, unicode, key | 
 				if (unicode == 13) {
-					listview.doAction; // = listview.value;
+					listview.doAction;
 					{ view.string = ""; }.defer(0.01);
 				}{
 					{	
@@ -44,7 +45,7 @@ UniqueWindow : UniqueObject {
 			listview.items = items = getItemsAction.value;
 			w.addDependant({ | me |
 				{ 	items;
-					listview.items = items = getItemsAction.value;
+					listview.items = items = getItemsAction.(ulistwindow);
 					listview.value = getIndexAction.(items) ? 0;
 				}.defer(delay);
 			});
@@ -54,6 +55,6 @@ UniqueWindow : UniqueObject {
 		messages.asArray do: { | m | 
 			ulistwindow.addNotifier(notifier, m, { | me | me.window.changed; });
 		};
-		ulistwindow.front;
+		^ulistwindow.front;
 	}
 }
