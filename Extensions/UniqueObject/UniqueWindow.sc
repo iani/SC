@@ -11,7 +11,6 @@ UniqueWindow : UniqueObject {
 		}
 	}
 	
-	onClose { | func | this.onRemove(func) }	// synonym
 	window { ^object } 					// synonym
 	name { ^object.name }
 	bounds { ^object.bounds }
@@ -44,7 +43,7 @@ UniqueWindow : UniqueObject {
 			listview.widget.parent.resize = 5;
 			listview.items = items = getItemsAction.value;
 			w.addDependant({ | me |
-				{ 	items;
+				{	items;
 					listview.items = items = getItemsAction.(ulistwindow);
 					listview.value = getIndexAction.(items) ? 0;
 				}.defer(delay);

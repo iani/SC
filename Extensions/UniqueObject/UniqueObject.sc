@@ -44,23 +44,23 @@ UniqueObject {
 		var reallyRemoved;
 		reallyRemoved = objects.removeEmptyAtPath(key);
 		if (reallyRemoved.notNil) {
-			this.notify(this.removedMessage);
+			this.notify(this.removedMessage, this);
 		};
 	}
-	onRemove { | func | this.doOnceOn(this.removedMessage, func); }
+	// evaluate function when object is removed
+	onClose { | action | this.onRemove(UniqueID.next, action) } 
+	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
+	doOnceOn { | message, receiver, func |
+		NotificationCenter.registerOneShot(this, message, receiver, { func.(this) });
+	}
 
 	// ====== notifying objects ======
 
-	doOnceOn { | message, func |
-		NotificationCenter.registerOneShot(UniqueObject, message, this, { func.(this) });
-	}
-
-	notify { | message | NotificationCenter.notify(UniqueObject, message, this); }
+	notify { | message, what | NotificationCenter.notify(this, message, what); }
 	
 	addNotifier { | notifier, message, action |
-		postf("% adding notifier: %, %, %\n", this, notifier, message, action);
 		NotificationCenter.register(notifier, message, this, { | args | action.(this, args) });
-		this onRemove: { NotificationCenter.unregister(notifier, message, this); };
+		this onClose: { NotificationCenter.unregister(notifier, message, this); };
 	}
 
 	// ====== printing ======

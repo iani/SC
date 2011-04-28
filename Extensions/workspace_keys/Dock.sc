@@ -38,11 +38,9 @@ Dock {
 			delay: 0.1; // leave some time for Documents to update their name etc.
 		)
 		.addNotifier(Code, \openedCodeListWindow, { | listwin |
-//			postf("from inside notifier Code window opened %\n", listwin);
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height / 2 - 70;
 		})
 		.addNotifier(Code, \closedCodeListWindow, { | listwin |
-			postf("from inside notifier Code window closed %\n", listwin);
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
 		});
 	}

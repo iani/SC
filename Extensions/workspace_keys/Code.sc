@@ -125,15 +125,9 @@ Code {
 			nil,
 			Panes, [\docOpened, \docToFront, \docClosed],
 			delay: 0.1;
-		);
-//		NotificationCenter.register(
-//			this.asSymbol, \openedCodeListWindow, \something, { "testing register codelist".postln; }
-//		);
-//		NotificationCenter.register(Code.asSymbol, \openedCodeListWindow, \somethinElse, 
-//			{ "Code window opened".postln }
-//		);
-//		(this == Code).postln;
-		listWindow.onClose({ NotificationCenter.notify(this, \closedCodeListWindow, listWindow); });
+		).onClose({ 
+			NotificationCenter.notify(this, \closedCodeListWindow, listWindow);
+		});
 		NotificationCenter.notify(this, \openedCodeListWindow, listWindow);
 	}
 }
