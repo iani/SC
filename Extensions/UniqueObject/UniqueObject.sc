@@ -8,7 +8,7 @@ UniqueObject {
 	*clear { // clear all objects, no notifications happen
 		objects = MultiLevelIdentityDictionary.new;
 	}	
-	*mainKey { ^[\objects] }
+	*mainKey { ^[this] /* ^[\objects] */ }
 	removedMessage { ^\objectRemoved }
 
 	// ====== creating objects ======
@@ -16,7 +16,7 @@ UniqueObject {
 	*new { | key, makeFunc ... otherArgs |
 		var object;
 		key = this.makeKey(key, makeFunc, *otherArgs); // server objects include the server in the key
-		object = this.at(key);
+		object = this.atKey(key);
 		if (object.isNil) {
 			object = this.newCopyArgs(key).init(makeFunc, *otherArgs);
 			objects.putAtPath(key, object);
@@ -29,7 +29,9 @@ UniqueObject {
 		^this.mainKey ++ key.asKey;
 	}
 
-	*at { | key | ^objects.atPath(key) }
+	*atKey { | key | ^objects.atPath(key) }
+	
+	*at { | key ... args | ^this.atKey(this.makeKey(key, *args)) }
 
 	init { | makeFunc | object = makeFunc.value; }
 
@@ -66,7 +68,7 @@ UniqueObject {
 	// ====== printing ======
 
 	printOn { arg stream;
-		stream << this.class.name << "(" <<* [key, object] <<")";
+		stream << this.class.name << "(" <<* [key.last, object] <<")";
 	}
 
 }

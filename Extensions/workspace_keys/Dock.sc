@@ -12,19 +12,18 @@ Dock {
 			CocoaMenuItem.addToMenu("User Menu", "show doc list window", ["\"", false, false], {
 				this.showDocListWindow;
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "browse user classes", ["b", true, true], {
+			CocoaMenuItem.addToMenu("User Menu", "open user class", ["b", true, true], {
 				this.browseUserClasses;
 			}),
 			
 		]		
 	}
 	*showDocListWindow {
-		UniqueWindow.listWindow('Documents', 
+		ListWindow('Documents', 
 			Rect(Window.screenBounds.width - width, 0, width, Window.screenBounds.height), 
 			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
 				d.name->{
 					d.front; 
-// NotificationCenter.notify(Panes, \docToFront, d);
 // sending a document to front does not make it current. Therefore compensate here: 
 					d.didBecomeKey;
 				} };
@@ -45,11 +44,28 @@ Dock {
 		});
 	}
 	*browseUserClasses { 
+		ListWindow('User Classes', nil, {
+			Class.allClasses.select({ | c |
+				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
+				and: { "Meta*".matchRegexp(c.name.asString).not }
+			}).collect({ | c | c.name.asSymbol->{ c.openCodeFile;
+				ListWindow('User Classes').close;
+				}
+			});	
+		});
+	}
+
+/*
+	*browseUserClasses { 
 		UniqueWindow.listWindow('User Classes', nil, {
 			Class.allClasses.select({ | c |
 				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
 				and: { "Meta*".matchRegexp(c.name.asString).not }
-			}).collect({ | c | c.name.asSymbol->{ c.openCodeFile; } });	
+			}).collect({ | c | c.name.asSymbol->{ c.openCodeFile;
+				UniqueWindow('User Classes').close;
+				}
+			});	
 		});
 	}
+*/
 }

@@ -19,7 +19,7 @@ Code {
 	*new { | doc |
 		^this.newCopyArgs(doc).init;	
 	}
-	
+
 	init {
 		var prItems;
 		string = doc.string;
@@ -29,7 +29,7 @@ Code {
 			// prevent evaluation of non-.scd documents with no snippets:
 			if ( doc.name.splitext.last != "scd" ) { canEvaluate = false; };
 			positions = [0];
-			headers = [doc.getSelectedLines(0, 1)];
+			headers = ["//:" ++ doc.getSelectedLines(0, 1)];
 		};
 		positions = positions add: (string.size + 1);
 	}
@@ -107,7 +107,7 @@ Code {
 	
 	*showCodeListWindow {
 		var listWindow;
-		listWindow = UniqueWindow.listWindow('Code Selector', 
+		listWindow = ListWindow('Code Selector', 
 			Rect(
 				Window.screenBounds.width - Dock.width, Window.screenBounds.height / 2, 
 				Dock.width, Window.screenBounds.height / 2
@@ -116,7 +116,8 @@ Code {
 				var code;
 				code = this.new(Document.current);
 				if (code.canEvaluate) {
-					if (ulistwin.notNil) { ulistwin.front };
+//					if (ulistwin.notNil) { ulistwin.front };
+					ListWindow.front('Code Selector');
 					code.headers collect: { | h, i | h[3..]->{ code.performCodeAt(i) } };
 				}{
 					["---"->{ }]
@@ -130,4 +131,8 @@ Code {
 		});
 		NotificationCenter.notify(this, \openedCodeListWindow, listWindow);
 	}
+/*
+	*docsWithSnippets { 
+		// used by Dock to filter docs when showing code list window
+	}	*/
 }

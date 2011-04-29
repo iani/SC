@@ -6,7 +6,72 @@ To select the previous example, press Command-shift-k
 
 */
 
-//:a can be started also with server not booted
+//:Can be started when the server is not running
+\default.play.onStart({ | s | postf("% started\n", s.synth); });
+
+//:2
+\default2.playDef(\default, [\freq, 550]).onStart({ | s | postf("% started\n", s.synth); });
+
+\default3.playDef(\default, [\freq, 660]).onStart({ | s | postf("% started\n", s.synth); });
+
+UniqueSynth.onServer.postln;
+
+
+//:3
+[\default, \default2, \default3] do: _.release;
+
+//:1a
+\default.play.onStart({ | s | postf("% started\n", s.synth); });
+
+\default.wait(1);
+
+\default2.playDef(\default, [\freq, 550]).onStart({ | s | postf("% started\n", s.synth); });
+
+1.wait;
+
+\default3.playDef(\default, [\freq, 660]).onStart({ | s | postf("% started\n", s.synth); });
+
+[\default, \default2, \default3] do: { | s | 0.5.wait; s.release; };
+
+//:4
+
+\default.play.dur(1).rsyncs({
+	inf do: { \default.set(\freq, 80 rrand: 1800); 0.01.wait; };
+});
+
+//:4a
+
+\default.play.dur(1.5).rsyncs({
+	100 do: { \default.set(\freq, 80 rrand: 1800); 0.01.wait; };
+});
+
+//:4b
+
+\default.play.rsyncs({ | s |
+	20 do: { s.set(\freq, 80 rrand: 1800); 0.05.wait; };
+	(1..40) do: { | i | 0.1.wait; s.set(\freq, i * 100) }; 
+	1.wait;
+	s.release;
+});
+
+//:WRONG!
+\default.play;
+
+{ inf do: { \default.set(\freq, 400 rrand: 4000); 0.25.wait; }; }.fork;
+
+\default.wait(1);
+
+\default.release;
+
+//:Right!
+\default.play.rsynca({ inf do: { \default.set(\freq, 400 rrand: 4000); 0.25.wait; }; });
+
+\default.wait(1);
+
+\default.release;
+
+//:More examples: 
+ 
 
 \default.play;
 \default.wait(0.1); 				// make sure to wait for server boot also
@@ -34,7 +99,7 @@ SynthDef(\test, { Out.ar(0, SinOsc.ar(Rand(4, 10) * 100, 0, 0.1)) }).load(Server
 
 \test.play.onStart({ "hello".postln; });
 \test.wait(1);
-\test.usynth.free;
+\test.free;
 
 \default.play.rsyncs({ | synth | 
 	0.25.wait;

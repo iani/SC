@@ -57,5 +57,4 @@ Frames : List {
 		
 		^this[index + 1 .. latestIndex];
 	}
-
 }

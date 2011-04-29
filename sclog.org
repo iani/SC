@@ -292,3 +292,13 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
      :PROPERTIES:
      :ENTERED_ON: <2011-04-26 Tue 16:02>
      :END:
+*** 2011-04-29 Friday
+**** DONE add Symbol:playDef					:uniquesynth:
+     CLOSED: [2011-04-29 Fri 09:43]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-29 Fri 00:01>
+     :END:
+**** UniqueObject *mainKey now returns [this] :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-29 Fri 09:42>
+     :END:

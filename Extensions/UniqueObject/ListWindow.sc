@@ -1,33 +1,10 @@
-UniqueWindow : UniqueObject {
-	*mainKey { ^[UniqueWindow] } // all subclasses store instances under UniqueWindow
-	*removedMessage { ^\closed }
 
-	init { | windowFunc |
-		super.init(windowFunc ?? { Window(key.last.asString).front });
-		object.onClose = {
-			this.remove;
-			object.releaseDependants;
-			object = nil;	
-		}
-	}
-	
-	*front { | windowName |
-		var window;
-		window = this.at(windowName);
-		if (window.notNil) { window.front };
-	}
-	
-	// shortcuts and synonyms
-	window { ^object }
-	name { ^object.name }
-	bounds { ^object.bounds }
-	front { object.front }
-	close { { object.close }.defer(0.01); /* prevent crashing when closing from keyboard on window */ }
-	
+ListWindow : UniqueWindow {
+
 	// Utilities: types of commonly used windows
-	*listWindow { | key = 'list', bounds, getItemsAction, getIndexAction, notifier, messages, title, delay = 0.0 |
-		var ulistwindow, screenBounds, centerX, centerY, itemsHeight;
-		ulistwindow = this.new(key, {
+	*new { | key = 'list', bounds, getItemsAction, getIndexAction, notifier, messages, title, delay = 0.0 |
+		^super.new(key, {
+			var screenBounds, centerX, centerY, itemsHeight;
 			var w, view, listview, searchview, items;
 			w = Window(title ? key, bounds ?? { Rect(500, 500, 500, 500) });
 			view = w.view;
@@ -59,7 +36,7 @@ UniqueWindow : UniqueObject {
 			listview.items = items = getItemsAction.value;
 			w.addDependant({ | me |
 				{	items;
-					listview.items = items = getItemsAction.(ulistwindow);
+					listview.items = items = getItemsAction.value;
 					listview.value = getIndexAction.(items) ? 0;
 				}.defer(delay);
 			});
@@ -72,25 +49,12 @@ UniqueWindow : UniqueObject {
 				w.bounds = Rect(centerX - 200, centerY, 400, itemsHeight);
 			};
 			w;
-		});
+		}).addMessages(notifier, messages).front;
+	}
+
+	addMessages { | notifier, messages |
 		messages.asArray do: { | m | 
-			ulistwindow.addNotifier(notifier, m, { | me | me.window.changed; });
-		};
-		^ulistwindow.front;
+			this.addNotifier(notifier, m, { | me | me.window.changed; });
+		};	
 	}
 }
-
-/* 
-// Fonts tried out for listWindow / listview: 
-
-// 			listview.widget.font = Font("Helvetica", 10);
-//			listview.widget.font = Font("ArialNarrow", 12);
-//			listview.widget.font = Font("Impact", 11);
-//			listview.widget.font = Font("GillSans", 11);
-//			listview.widget.font = Font("Futura", 12);
-//			listview.widget.font = Font("Skia-Regular_Condensed", 12);
-			listview.widget.font = Font("Optima", 10);
-			listview.widget.font = Font("TrebuchetMS", 10);
-
-
-*/

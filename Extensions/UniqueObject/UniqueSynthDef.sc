@@ -1,6 +1,6 @@
 
 UniqueSynthDef : AbstractUniqueServerObject {
-	*mainKey { ^\synthdefs }
+	*mainKey { ^[UniqueSynthDef] }
 
 	*loadAllSynthDefs { | server |
 		var synthDefs;

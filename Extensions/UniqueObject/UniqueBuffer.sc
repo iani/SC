@@ -1,24 +1,11 @@
-/* 
-
-Following additional class methods of Buffer provide an interface for using UniqueBuffer easily: 
-	*load( (optional: func) )
-	*play( (optional: func) )
-	*select( (optional: func) )
-
-Instance methods of String: 
-	aString.load( (optional: func) )
-		
-*/
 
 UniqueBuffer : AbstractUniqueServerObject {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	classvar >current;
 	var <server, <path, <startFrame = 0, <numFrames, <numChannels = 1;
 
-	*mainKey { ^\buffers }
-	*removedMessage { ^\b_free }
 	*makeKey { | key, target, numFrames, numChannels, path |
-		^(target.asTarget.server.asString ++ ":" ++ (key ?? { this.keyFromPath(path) })).asSymbol;
+		^super.makeKey(key ?? { this.keyFromPath(path) }, target)
 	}
 
 	*keyFromPath { | path |
@@ -124,5 +111,3 @@ UniqueBuffer : AbstractUniqueServerObject {
 		object = nil;
 	}
 }
-
-Ubuf : UniqueBuffer {} // synonym for UniqueBuffer

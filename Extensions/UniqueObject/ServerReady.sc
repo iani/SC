@@ -7,13 +7,11 @@ Add to ServerReady objects that want to start Synths, Groups or routines right a
 */
 
 ServerReady : UniqueObject {
-	classvar servers;
 
-	var <>server, <cmdPeriod = false;
+	var <>server; 
+	var <cmdPeriod = false;
 
-	*mainKey { ^[\serverReady] }
-
-	*makeKey { | server | ^this.mainKey ++ [server ? Server.default]; }
+	*makeKey { | server | ^this.mainKey add: (server ?? { server.asTarget.server }); }
 
 	init {
 		CmdPeriod.add(this);
@@ -28,35 +26,49 @@ ServerReady : UniqueObject {
 		if (cmdPeriod) {
 			cmdPeriod = false;
 		}{
-//			NotificationCenter.notify(this, \reallyBooted);
 			object.asKeyValuePairs pairsDo: { | obj, func | func.value(obj, server, this); };
 		};
 	}	
 
-	*register { | object, function, server | ^this.new(server ? Server.default).register(object, function); }
+	*register { | object, function, server | ^this.new(server).register(object, function); }
 	register { | argObject, action |
-//		NotificationCenter.register(this, \reallyBooted, argObject, action);
 		object[argObject] = action;
 	}
 
 	*registerOneShot { | object, function, server | ^this.new(server).registerOneShot(object, function) }
 
 	registerOneShot { | argObject, action |
-//		NotificationCenter.registerOneShot(this, \reallyBooted, argObject, action);
 		object[argObject] = { | obj, server, me |
 			action.(obj, server, me);
-			object.removeAt(obj);
-		}
+			this.unregister(argObject);
+		};
 	}
 
-	*unregister { | object, server | 
-		
-		this.new(this.makeKey(server ? Server.default)).remove(object); }
-	
-	
-
-	unregister { | argObject | 
-		NotificationCenter.unregister(this, \reallyBooted, argObject);
+	*unregister { | object, server | 	
+		this.new(server).unregister(object);
 	}
 
+	unregister { | argObject | object.removeAt(argObject); }
+}
+
+WaitForServer {
+	var <function, <server, <waiting = true;
+	*new { | server, function |
+		server = server.asTarget.server;
+		if (server.serverRunning) {
+			^function.value;	
+		}{
+			^this.newCopyArgs(function, server).init;
+		};
+	}
+	
+	init {
+		ServerReady.registerOneShot(
+			UniqueID.next, 
+			{ waiting = false; function; }, 
+			server
+		);
+		server.boot;
+		while { waiting or: { server.serverRunning.not } } { 0.01.wait };
+	}
 }

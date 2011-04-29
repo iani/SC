@@ -3,34 +3,31 @@
 AbstractUniqueServerObject : UniqueObject {
 
 	*makeKey { | key, target |
-		^[target.asTarget.server, key.asKey];
+		^this.mainKey ++ [target.asTarget.server, key.asKey];
 	}
+	
+	server { ^key[0] }
 
-// Must be rewritten
-/*
 	*onServer { | server |
-		var regexp;
-		regexp = format("^%:", server.asTarget.server);
-		^Library.global.at(this.mainKey).values select: { | node |
-			regexp.matchRegexp(node.key.asString);
-		};	
-	}
-*/
+		var path;
+		path = this.mainKey.add(server ? Server.default);
+		if (objects.atPath(path).isNil) { ^[] };
+		^objects.leaves(path);
+	}	
 }
 
 UniqueSynth : AbstractUniqueServerObject {
-	*mainKey { ^[\synths] }
-	*removedMessage { ^\synthEnded }
+	*mainKey { ^[UniqueSynth] } // subclasses store instances under UniqueSynth
 
 	*new { | key, defName, args, target, addAction=\addToHead ... moreArgs |
-		^super.new(key, target.asTarget, key ?? { defName.asSymbol }, args, addAction, *moreArgs);
+		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);
 	}
 
 	init { | target, defName ... moreArgs |
 		if (target.server.serverRunning) {
 			this.makeObject(target, defName, *moreArgs);
 		}{
-			ServerReady(target.server).addOneShot(this, {
+			ServerReady(target.server).registerOneShot(this, {
 				this.makeObject(target, defName, *moreArgs);
 				this.synthStarted;  // on boot, no \n_go notification is received. Supply one here. 
 			});
@@ -38,12 +35,20 @@ UniqueSynth : AbstractUniqueServerObject {
 		}
 	}
 
-	makeObject { | target, defName, args, addAction |
-		object = Synth(defName, args, target, addAction);
+	makeObject { | target, defName, args, addAction ... otherArgs |
+		this.prMakeObject(target, defName, args, addAction, *otherArgs);
+//		object = Synth(defName, args, target, addAction);
 		this.registerObject;
 	}
-	
-	synthStarted { NotificationCenter.notify(key, \synthStarted, this); }
+
+	prMakeObject { | target, defName, args, addAction |
+		object = Synth(defName, args, target, addAction);
+	}
+
+	synthStarted {
+		object.isPlaying = true; // set status to playing when missed because started on boot time
+		NotificationCenter.notify(this, \synthStarted, this);
+	}
  
 	registerObject {
 		object addDependant: { | me, what |
@@ -62,22 +67,21 @@ UniqueSynth : AbstractUniqueServerObject {
 
 	synth { ^object }						// synonym
 	isPlaying { ^object.isPlaying; }
-	release { object.release }
 
 	// Synchronization with start / stop events: 
 	onStart { | func |
-		NotificationCenter.registerOneShot(key, \n_go, this, func);
+		NotificationCenter.registerOneShot(this, \synthStarted, UniqueID.next, func);
 	}
-	onEnd { | func | this.onRemove(func) }	// synonym
+	onEnd { | func | this.onClose(func) }	// synonym
 
-	wait { | dtime = 0 |	
+	wait { | dtime = 0 |
 	/* wait dtime seconds after start of synth or after receiving wait, whichever is earlier
 	makes routines wait safely when starting a UniqueSynth with unbooted server.
 	Can only be called inside a routine.
 	This includes running a code snippet by typing Command-Shift-x (see DocListWindow)
 	*/
 	// cannot use this.onStart({ dtime.wait }) because it calls .wait on a function, not a routine
-		while { this.isPlaying.not }{ 0.01.wait };
+		while { this.isPlaying.not } { 0.01.wait };
 		dtime.wait;
 	}	
 	
@@ -94,12 +98,23 @@ UniqueSynth : AbstractUniqueServerObject {
 	rsyncs { | func | this.rsync(func, SystemClock) }
 	rsynca { | func | this.rsync(func, AppClock) }
 	
-	dur { | dtime = 1 | this.onStart({ { this.release }.defer(dtime) }) }
+	dur { | dtime = 1, message | this.onStart({ { this.perform(message ? \release) }.defer(dtime ? inf) }) }
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
+	release { | dtime = 0.02 |
+		if (this.isPlaying ) { object.set(\decay, dtime, \gate, dtime.neg) } 
+	}
 	
 }
 
-// Synonym - abbreviation for UniqueSynth :  
-Usynth : UniqueSynth {}
+UniquePlay : UniqueSynth {
+	
+	*new { | playFunc, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, key |
+		^super.new(key ?? { playFunc.asKey }, playFunc, args, target, addAction, outbus, fadeTime);
+	}
+
+	prMakeObject { | target, playFunc, args, addAction = \addToHead, outbus = 0, fadeTime = 0.02 |
+		object = playFunc.play(target, outbus, fadeTime, addAction, args);
+	}
+}
 
