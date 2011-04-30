@@ -1,18 +1,25 @@
-//:a
-WaitForServer.new;
-
-SynthDef("test", { | out = 0 |
-	var fadeout;
-
-	fadeout = FadeOut.kr;
-
-	Out.ar(out, SinOsc.ar(440, 0, 0.1) * fadeout);	
-	
-}).send(Server.default);
-0.1.wait;
+//:a OK!
+ServerReady.addFuncToLoadChain({ | nextfunc | { nextfunc.value }.defer(5) });
+UniqueSynth2(\default);
+//:c
+UniqueSynth2(\default);
+//:s
+ServerReady
+//:x 
+a = FunctionChain([{ | ch | { ch.postln; ch.next; }.defer(1) }], { "ended".postln; });
+a.start;
+//:y
+//:x 
+a = FunctionChain(nil, { "ended".postln; });
+a.start;
+//:a 
+a = FunctionChain(({ | i | { i.postln; }} ! 10), { "ended".postln; });
+a.start;
+//:b 
+a = FunctionChain(nil, { "ended".postln; });
+\default.play;
 \test.play;
-0.5.wait;
-\test.set(\fadeOut, 5, \gate, 0);
+UniqueSynth2(\test);
 
 
-
+List.new.addAll((1..5))

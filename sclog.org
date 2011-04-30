@@ -302,3 +302,12 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
      :PROPERTIES:
      :ENTERED_ON: <2011-04-29 Fri 09:42>
      :END:
+*** 2011-04-30 Saturday
+**** TODO decouple coloring scheme from Panes and add it to non-gittable private startup file  :panes:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-30 Sat 13:02>
+     :END:
+**** TODO debug Symbol:synth method 				:uniquesynth:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-30 Sat 19:14>
+     :END:

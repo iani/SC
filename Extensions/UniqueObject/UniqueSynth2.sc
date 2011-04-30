@@ -1,22 +1,10 @@
 
+/* 
+Rewriting UniqueSynth to use ServerReady for booting synth, and ensure SynthDefs and Buffers are loaded
+before it starts.
+*/
 
-AbstractUniqueServerObject : UniqueObject {
-
-	*makeKey { | key, target |
-		^this.mainKey ++ [target.asTarget.server, key.asKey];
-	}
-
-	server { ^key[0] }
-
-	*onServer { | server |
-		var path;
-		path = this.mainKey.add(server ? Server.default);
-		if (objects.atPath(path).isNil) { ^[] };
-		^objects.leaves(path);
-	}	
-}
-
-UniqueSynth : AbstractUniqueServerObject {
+UniqueSynth2 : AbstractUniqueServerObject {
 	*mainKey { ^[UniqueSynth] } // subclasses store instances under UniqueSynth
 
 	*new { | key, defName, args, target, addAction=\addToHead ... moreArgs |
@@ -24,20 +12,11 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	init { | target, defName ... moreArgs |
-		if (target.server.serverRunning) {
-			this.makeObject(target, defName, *moreArgs);
-		}{
-			ServerReady(target.server).registerOneShot(this, {
-				this.makeObject(target, defName, *moreArgs);
-				this.synthStarted;  // on boot, no \n_go notification is received. Supply one here. 
-			});
-			target.server.boot;
-		}
+		ServerReady.addSynth(this, { this.makeObject(target, defName, *moreArgs); });
 	}
 
 	makeObject { | target, defName, args, addAction ... otherArgs |
 		this.prMakeObject(target, defName, args, addAction, *otherArgs);
-//		object = Synth(defName, args, target, addAction);
 		this.registerObject;
 	}
 
@@ -106,15 +85,3 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 	
 }
-
-UniquePlay : UniqueSynth {
-	
-	*new { | playFunc, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, key |
-		^super.new(key ?? { playFunc.asKey }, playFunc, args, target, addAction, outbus, fadeTime);
-	}
-
-	prMakeObject { | target, playFunc, args, addAction = \addToHead, outbus = 0, fadeTime = 0.02 |
-		object = playFunc.play(target, outbus, fadeTime, addAction, args);
-	}
-}
-

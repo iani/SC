@@ -9,9 +9,12 @@ Panes {
 	classvar <session;					// for saving / restoring doc positions and doc texts to archive
 	classvar <currentPositionAction;
 	classvar <>tryoutName = "tryout.scd";
+	classvar <>backgroundColor;
 
 	*start { this.activate } // synonym
 	*activate {
+		backgroundColor = backgroundColor ? Color.grey(0.05);
+
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
 			NotificationCenter.notify(this, \docOpened, doc);  
@@ -21,6 +24,7 @@ Panes {
 		Dock.addMenu;
 		Document.allDocuments do: this.setDocActions(_);
 		this.arrange1Pane;
+		Document.listener.background = backgroundColor;
 		{ this.openTryoutWindow; }.defer(0.5); // confuses post and Untitled windows if not deferred on startup
 	}
 
@@ -115,6 +119,18 @@ Panes {
 	*docOpened { | doc |
 // why does this post twice always???????????
 //		postf("Panes init doc actions docOpened: %\n", doc.name).postln;
+//		if ("sc".matchRegexp(doc.name.splitext.last)) { "matched".postln; } { "did not match" .postln; };
+		
+		{
+			if (doc.name.splitext.last != "html") {
+				doc.background_(backgroundColor);
+				if ("Untitled".matchRegexp(doc.name)) {
+					doc.string = " ";
+					doc.selectLine(0);
+				};
+				doc.syntaxColorize;
+			};
+		}.defer(0.1);
 		this.setDocActions(doc);
 		currentPositionAction.(doc);
 	}

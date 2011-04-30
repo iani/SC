@@ -54,18 +54,4 @@ Dock {
 			});	
 		});
 	}
-
-/*
-	*browseUserClasses { 
-		UniqueWindow.listWindow('User Classes', nil, {
-			Class.allClasses.select({ | c |
-				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
-				and: { "Meta*".matchRegexp(c.name.asString).not }
-			}).collect({ | c | c.name.asSymbol->{ c.openCodeFile;
-				UniqueWindow('User Classes').close;
-				}
-			});	
-		});
-	}
-*/
 }

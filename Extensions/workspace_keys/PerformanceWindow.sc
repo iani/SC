@@ -12,11 +12,11 @@ PerformanceWindow {
 		if (default.isNil) { default = this.new(docListWindow) };
 		default.makeGui;
 	}
-	
+
 	*new { | docListWindow |
 		^this.newCopyArgs(docListWindow).init;	
 	}
-	
+
 	init {
 		NotificationCenter.register(docListWindow, \stopped, this, {
 			this.stop;

@@ -1,7 +1,6 @@
 
 ListWindow : UniqueWindow {
 
-	// Utilities: types of commonly used windows
 	*new { | key = 'list', bounds, getItemsAction, getIndexAction, notifier, messages, title, delay = 0.0 |
 		^super.new(key, {
 			var screenBounds, centerX, centerY, itemsHeight;
@@ -58,3 +57,17 @@ ListWindow : UniqueWindow {
 		};	
 	}
 }
+
+/* 
+// Fonts tried out: 
+
+// 			listview.widget.font = Font("Helvetica", 10);
+//			listview.widget.font = Font("ArialNarrow", 12);
+//			listview.widget.font = Font("Impact", 11);
+//			listview.widget.font = Font("GillSans", 11);
+//			listview.widget.font = Font("Futura", 12);
+//			listview.widget.font = Font("Skia-Regular_Condensed", 12);
+			listview.widget.font = Font("Optima", 10);
+			listview.widget.font = Font("TrebuchetMS", 10);
+*/
+

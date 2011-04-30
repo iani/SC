@@ -17,6 +17,7 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 + Symbol {
 	asKey { ^this }	
 	// access a unique synth if present, without starting it
+	// TODO : Debug. Errof if not UniqueSynth present at key?
 	synth { | server | ^UniqueSynth.at(UniqueSynth.makeKey(this, target: server ? Server.default)) }
 	
 	// start a unique synth if not already running

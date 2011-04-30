@@ -1,67 +1,8 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
 {\fonttbl\f0\fnil\fcharset0 Monaco;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red204\green0\blue179;\red0\green115\blue0;
-}
+{\colortbl;\red255\green255\blue255;}
 \deftab560
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
 
 \f0\fs18 \cf0 \
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
-\cf2 CocoaMenuItem\cf0 .addToMenu(\cf3 "User Menu"\cf0 , \cf3 "Edit startup file"\cf0 , [\cf3 "S"\cf0 , \cf2 true\cf0 , \cf2 true\cf0 ], \{ \
-	\cf2 Document\cf0 .open(\cf2 UserPath\cf0 (\cf3 "startup.rtf"\cf0 ))\
-\});\
-\
-\cf2 CocoaMenuItem\cf0 .addToMenu(\cf3 "User Menu"\cf0 , \cf3 "Open User Directory"\cf0 , [\cf3 "o"\cf0 , \cf2 true\cf0 , \cf2 true\cf0 ], \{ \
-	\cf3 "open ~/Library/Application\\\\ Support/SuperCollider"\cf0 .unixCmd;\
-\});\
-\
-\cf2 CocoaMenuItem\cf0 .addToMenu(\cf3 "User Menu"\cf0 , \cf3 "Toggle OSC input posting"\cf0 , [\cf3 "O"\cf0 , \cf2 true\cf0 , \cf2 true\cf0 ], \{ \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf0 	if (\cf2 thisProcess\cf0 .recvOSCfunc.isNil) \{\
-		\cf2 thisProcess\cf0 .recvOSCfunc = \{ \cf2 | time, addr, msg |\cf0 \
-			if (msg[0].asString.contains(\cf3 "status.reply"\cf0 ).not) \{			postf(\cf3 "time: % sender: % message: %\\n"\cf0 , time, addr, msg)\
-			\};\
-		\};\
-	\}\{\
-		\cf2 thisProcess\cf0 .recvOSCfunc= \cf2 nil\cf0 ;\
-	\}\
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
-\cf0 \});\
-\
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
-\cf2 CocoaMenuItem\cf0 .addToMenu(\cf3 "User Menu"\cf0 , \cf3 "Start OSC input test"\cf0 , [\cf3 "I"\cf0 , \cf2 true\cf0 , \cf2 true\cf0 ], \{ \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf0 	\{\
-		\cf2 var\cf0  a;\
-		a = \cf2 NetAddr\cf0 .localAddr;\
-		loop \{ a.sendMsg(\cf4 \\test\cf0 ); 0.25.wait \};\
-	\}.fork\
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
-\cf0 \});\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf0 \
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
-\cf2 CocoaMenuItem\cf0 .addToMenu(\cf3 "User Menu"\cf0 , \cf3 "Open log file in orgmode"\cf0 , [\cf3 "l"\cf0 , \cf2 true\cf0 , \cf2 true\cf0 ], \{ \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf0 	\{\
-		\cf2 var\cf0  logname;\
-		logname = \cf2 Platform\cf0 .userAppSupportDir ++ \cf3 "/sclog.org"\cf0 ;\
-		if (logname.pathMatch.size == 0) \{\
-			format(\cf3 "touch %"\cf0 , logname.asCompileString).unixCmd;\
-			0.1.wait;\
-		\};\
-		format(\cf3 "open -a Emacs.app %"\cf0 , logname.asCompileString).unixCmd;\
-	\}.fork\
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
-\cf0 \});\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf0 \
-\pard\pardeftab560\li1140\fi-1140\ql\qnatural
-\cf2 // DocListWindow\cf0 .start;\
-\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
-\cf2 Document\cf0 .themes[\cf4 \\pinkString\cf0 ] = \cf2 Document\cf0 .themes[\cf4 \\default\cf0 ].copy;\
-\cf2 Document\cf0 .themes[\cf4 \\pinkString\cf0 ][\cf4 \\stringColor\cf0 ] = \cf2 Color\cf0 (0.8, 0.0, 0.7);\
-\cf2 Document\cf0 .setTheme(\cf4 \\pinkString\cf0 );\
-\
-Panes.activate;}
+(Platform.userAppSupportDir ++ "/startup.scd").load;}
