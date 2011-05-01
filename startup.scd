@@ -53,10 +53,8 @@ Document.themes[\pinkString][\textColor] = Color(0.5, 0.4, 0.4);
 Document.themes[\pinkString][\stringColor] = Color(0.9, 0.1, 0.6);
 Document.themes[\pinkString][\numberColor] = Color(0.7, 0.2, 0, 1);
 Document.themes[\pinkString][\classColor] = Color(0.1, 0.6, 0.9);
-Document.themes[\pinkString][\backColor] = Color.grey;
-Document.themes[\pinkString][\background] = Color.grey;
-Document.themes[\pinkString][\backgroundColor] = Color.grey;
+Document.themes[\pinkString][\commentColor] = Color(0.85, 0.1, 0.2, 0.75);
 Document.setTheme(\pinkString);
 
-Document.postColor = Color(0.4, 0.4, 0.5);
+Document.postColor = Color(0.4, 0.7, 0.5);
 Panes.activate;

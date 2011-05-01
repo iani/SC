@@ -127,8 +127,8 @@ Panes {
 				if ("Untitled".matchRegexp(doc.name)) {
 					doc.string = " ";
 					doc.selectLine(0);
+					doc.syntaxColorize;
 				};
-				doc.syntaxColorize;
 			};
 		}.defer(0.1);
 		this.setDocActions(doc);

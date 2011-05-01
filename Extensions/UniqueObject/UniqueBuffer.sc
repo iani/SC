@@ -1,4 +1,6 @@
-
+/* 
+Redo of UniqueBuffer to work with new version of ServerReady, so that buffers are always loaded before any synths are started. 
+*/
 UniqueBuffer : AbstractUniqueServerObject {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	classvar >current;
@@ -58,8 +60,14 @@ UniqueBuffer : AbstractUniqueServerObject {
 		path = argPath;
 		startFrame = argStartFrame;
 		if (server.serverRunning) { this.makeObject(playFunc) };
-		ServerReady(server).add(this.class, { this.class.loadAllBuffers(server) });
-		ServerQuit.add(this.class, server);
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		this.prepareToLoad(ServerReady.at(server));
+	}
+
+	prepareToLoad { | serverReady |
+		serverReady.addFuncToLoadChain({ | func |
+			
+		})		
 	}
 	
 	*loadAllBuffers { | server |

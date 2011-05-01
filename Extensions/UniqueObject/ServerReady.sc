@@ -1,9 +1,23 @@
+/*
+
+Buffer(0, 352800, 2, 44100, nil)
+time: 29416.435429297 sender: a NetAddr(127.0.0.1, 57110) message: [ /done, /b_alloc, 0 ]
+
+Buffer(1, nil, nil, nil, sounds/a11wlk01.wav)
+time: 29431.900108977 sender: a NetAddr(127.0.0.1, 57110) message: [ /b_info, 1, 188893, 1, 44100 ]
+time: 29431.90029767 sender: a NetAddr(127.0.0.1, 57110) message: [ /done, /b_allocRead, 1 ]
+
+a SynthDef
+time: 29482.39184218 sender: a NetAddr(127.0.0.1, 57110) message: [ /done, /d_recv ]
+
+*/
 
 ServerReady : UniqueObject {
 
 	var <>server; 
 	var <cmdPeriod = false;
 	var <loadChain;			// will become scheme for loading SynthDefs and Buffers
+	var <responder;			// notifies when synthdefs or buffers are loaded
 
 	*makeKey { | server | ^this.mainKey add: (server ?? { server.asTarget.server }); }
 
@@ -11,35 +25,64 @@ ServerReady : UniqueObject {
 		CmdPeriod.add(this);
 		server = key[1];
 		ServerTree.add(this, server);
+		object = IdentityDictionary.new;
 		this.initLoadChain;
+		this.makeResponder;
+	}
+
+	makeResponder { 
+		responder = OSCresponderNode(nil, '/done', { | time, resp, msg |
+			if (['/b_allocRead', '/b_alloc', '/d_recv'] includes: msg[1]) {
+				loadChain.next;
+			}
+		}).add;	
 	}
 
 	initLoadChain {
-		object = IdentityDictionary.new;
 		loadChain = FunctionChain(nil, { this.notifyObjects });
-		Udef.onServer(server) do: _.prepareToLoad(this);
+		Udef.all.values do: _.prepareToLoad(this);
 		UniqueBuffer.onServer(server) do: _.prepareToLoad(this);
 	}
 
 	doOnCmdPeriod { cmdPeriod = true; }
 
-	doOnServerTree {		
+	doOnServerTree {
 		if (cmdPeriod) {
 			cmdPeriod = false;
 		}{
+			this.initLoadChain;
 			this.loadSynthDefsAndBuffersAndStartSynths;
 		};
 	}
 	
-	loadSynthDefsAndBuffersAndStartSynths {
-		// algorithm to be entered here yet. use a Stream. 		postf("% loading synthdefs and buffers");
-		loadChain.start;
-	}
+	loadSynthDefsAndBuffersAndStartSynths { loadChain.start; }
 
 	notifyObjects {
 		object.asKeyValuePairs pairsDo: { | obj, func | func.value(obj, server, this); };
 	}
+	
+	// methods for ensuring synthdefs and buffers are loaded before synths start
+	*addFuncToLoadChain { | func, server |
+		^this.new(server).addFuncToLoadChain(func);
+	}
+	addFuncToLoadChain { | func | loadChain.add(func); }
+	
+	*addSynth { | uSynth, makeFunc, server |
+		^this.new(server).addSynth(uSynth, makeFunc);	
+	}
 
+	addSynth { | uSynth, makeFunc |
+		if (server.serverRunning) {
+			this.registerOneShot(uSynth, makeFunc);
+			this.loadSynthDefsAndBuffersAndStartSynths;
+		}{
+			this.registerOneShot(uSynth, {
+				makeFunc.value;
+				uSynth.synthStarted;
+			});
+			server.boot;
+		}
+	}
 	*register { | object, function, server | ^this.new(server).register(object, function); }
 	register { | argObject, action |
 		object[argObject] = action;
@@ -59,32 +102,6 @@ ServerReady : UniqueObject {
 	}
 
 	unregister { | argObject | object.removeAt(argObject); }
-	
-	// methods for ensuring synthdefs and buffers are loaded before synths start
-	*addFuncToLoadChain { | func, server |
-		^this.new(server).addFuncToLoadChain(func);
-	}
-	addFuncToLoadChain { | func |
-		loadChain.add({ | chain | func.({ chain.next }); });
-	}
-	
-	*addSynth { | uSynth, makeFunc, server |
-		^this.new(server).addSynth(uSynth, makeFunc);	
-	}
-
-	addSynth { | uSynth, makeFunc |
-		if (server.serverRunning) {
-			this.registerOneShot(uSynth, makeFunc);
-			this.loadSynthDefsAndBuffersAndStartSynths;
-		}{
-			this.registerOneShot(uSynth, {
-				makeFunc.value;
-				uSynth.synthStarted;
-			});
-			this.initLoadChain;
-			server.boot;
-		}
-	}
 
 }
 

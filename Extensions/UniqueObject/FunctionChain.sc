@@ -11,7 +11,7 @@ FunctionChain : List {
 		routine = {
 			while { (func = this.pop).notNil } { func.(this); this.yield; };
 			onEnd.(this);
-			routine = nil; // prevent restarting
+			routine = nil; 			// routine ended, can restart
 		}.fork;
 	}
 
