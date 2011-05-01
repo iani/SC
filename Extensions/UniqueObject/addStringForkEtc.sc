@@ -17,8 +17,7 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 + Symbol {
 	asKey { ^this }	
 	// access a unique synth if present, without starting it
-	// TODO : Debug. Errof if not UniqueSynth present at key?
-	synth { | server | ^UniqueSynth.at(UniqueSynth.makeKey(this, target: server ? Server.default)) }
+	synth { | server | ^UniqueSynth.at(this, server) }
 	
 	// start a unique synth if not already running
 	play { | args, target, addAction=\addToHead |
@@ -33,6 +32,18 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 	playFunc { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
 		^UniquePlay(func, target, outbus, fadeTime, addAction, args, this);
 	}	
+
+	playBuf { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
+		^UniqueBuffer(func, target, outbus, fadeTime, addAction, args, this);
+	}	
+
+	buffer { | target |
+		^switch (this, 
+			\default, { UniqueBuffer.default(target.asTarget.server) },
+			\current, { UniqueBuffer.current(target.asTarget.server) },
+			{ UniqueBuffer(this, target.asTarget.server) }
+		)
+	}
 
 	free { | server | ^this.synth(server).free }
 	wait { | dtime, server | ^this.synth(server).wait(dtime) }
@@ -51,14 +62,19 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 		^UniquePlay(this, target, outbus, fadeTime, addAction, args);
 	}
 	// create new key to force creation of multiple UniquePlay instances
-	mplay { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, dur, message = \free |
+	mplay { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, 
+			dur, fadeOut = 0.2, message = \release |
 		^("play" ++ UniqueID.next).asSymbol.playFunc(this, target, outbus, fadeTime, addAction, args)
-			.dur(dur, message);
+			.dur(dur, fadeOut, message);
 	}
 
 
-	// Function methods yet to test! : 
 	doOnce { | ... args | ^UniqueFunction(this, *args) }
+	doOnceIn { | duration = 0.5 |
+		^TimedFunction(this, duration);
+	}
+
+	// Function methods yet to test! : 
 	// NOT YET TESTED
 	remove {	^UniqueFunction.removeAtKey(this.asKey) }
 	// NOT YET TESTED

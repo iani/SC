@@ -9,11 +9,11 @@ ListSelectDialog("just some test", ["alpha", "beta"], { | t | t.postln; "was okd
 TextDialog {
 	var message, inputText, okFunc, cancelFunc;
 	var window;
-	*new { | message = "input", inputText = "something", okFunc, cancelFunc |
-		^this.newCopyArgs(message, inputText, okFunc, cancelFunc).init;
+	*new { | message = "input", inputText = "something", okFunc, cancelFunc, bounds |
+		^this.newCopyArgs(message, inputText, okFunc, cancelFunc).init(bounds);
 	}
 
-	init {
+	init { | bounds |
 		var messageField, inputField, okButton, cancelButton;
 		window = Window("", Rect(400, 400, 400, 400));
 		window.userCanClose = false;

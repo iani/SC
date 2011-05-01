@@ -22,7 +22,6 @@ UniqueFunction : UniqueObject {
 	}
 
 	function { ^object }
-
 }
 
 UniqueRoutine : UniqueObject {

@@ -9,10 +9,10 @@ Dock.browseUserClasses:
 Dock {
 	classvar <>width = 150;
 	*menuItems { ^[
-			CocoaMenuItem.addToMenu("User Menu", "show doc list window", ["\"", false, false], {
+			CocoaMenuItem.addToMenu("Utils", "show doc list window", ["\"", false, false], {
 				this.showDocListWindow;
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "open user class", ["b", true, true], {
+			CocoaMenuItem.addToMenu("Utils", "open user class", ["b", true, true], {
 				this.browseUserClasses;
 			}),
 			
@@ -43,15 +43,21 @@ Dock {
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
 		});
 	}
-	*browseUserClasses { 
-		ListWindow('User Classes', nil, {
+	*browseUserClasses {
+		var windowName = 'User Classes';
+		ListWindow(windowName, nil, {
 			Class.allClasses.select({ | c |
 				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
 				and: { "Meta*".matchRegexp(c.name.asString).not }
-			}).collect({ | c | c.name.asSymbol->{ c.openCodeFile;
-				ListWindow('User Classes').close;
+			}).collect({ | c | 
+				c.name.asSymbol->{ 
+					{ 
+						c.openCodeFile;
+						{ if (ListWindow.at(windowName).notNil) { ListWindow.at(windowName).close; }; 
+						}.defer(0.5)
+					}.doOnceIn(0.75);
 				}
-			});	
+			});
 		});
 	}
 }

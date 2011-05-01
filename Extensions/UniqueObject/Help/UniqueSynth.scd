@@ -18,7 +18,7 @@ UniqueSynth.onServer.postln;
 
 
 //:3
-[\default, \default2, \default3] do: _.release;
+[\default, \default2, \default3] do: _.release(1.5);
 
 //:1a
 \default.play.onStart({ | s | postf("% started\n", s.synth); });

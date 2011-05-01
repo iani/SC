@@ -93,11 +93,23 @@ UniqueSynth : AbstractUniqueServerObject {
 	rsyncs { | func | this.rsync(func, SystemClock) }
 	rsynca { | func | this.rsync(func, AppClock) }
 	
-	dur { | dtime = 1, message | this.onStart({ { this.perform(message ? \release) }.defer(dtime ? inf) }) }
+	dur { | dtime = 1, fadeOut = 0.2, message |
+		this.onStart({ { this.perform(message ? \release, fadeOut) }.defer(dtime ? inf) }) }
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
 	release { | dtime = 0.02 |
-		if (this.isPlaying ) { object.set(\decay, dtime, \gate, dtime.neg) } 
-	}
-	
+		if (this.isPlaying ) { object.release(dtime) } 
+	}	
 }
+
+UniquePlay : UniqueSynth {
+	
+	*new { | playFunc, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, key |
+		^super.new(key ?? { playFunc.asKey }, playFunc, args, target, addAction, outbus, fadeTime);
+	}
+
+	prMakeObject { | target, playFunc, args, addAction = \addToHead, outbus = 0, fadeTime = 0.02 |
+		object = playFunc.play(target, outbus, fadeTime, addAction, args);
+	}
+}
+

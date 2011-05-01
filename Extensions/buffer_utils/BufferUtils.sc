@@ -12,20 +12,17 @@
 	*play { | func, server |
 		this.current(server).play(func);
 	}
-	
-	*loadDefault { | server, play |
-		^this.load(DefaultBuffer.defaultPath, server, play ?? {{}});
-	}
 
-	*load { | path, server, play |
-		server = server ? Server.default;
-		if (path.isNil) {
-			^DefaultBuffer(server).loadDialog(play);
-		}{
-			^DefaultBuffer(server, path, play);
-		}
-	}
+	*load { UniqueBuffer.load }	
 	
+	*saveList { UniqueBuffer.saveList }
+	*loadList { UniqueBuffer.loadList }
+	*list { BufferListWindow.new }
+}
+
+
+
+/*	
 	*info { | server |
 		server = server ? Server.default;
 		if (DefaultBuffer isLoaded: server) {
@@ -38,6 +35,4 @@
 			"Or do:\n\tBuffer.play;\nto load and play the default buffer".postln;
 		}
 	}
-	
-	
-}
+*/	

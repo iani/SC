@@ -22,8 +22,10 @@ Panes {
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;
+		UniqueBuffer.addMenu;
 		Document.allDocuments do: this.setDocActions(_);
 		this.arrange1Pane;
+//		this.arrange2Panes;
 		Document.listener.background = backgroundColor;
 		{ this.openTryoutWindow; }.defer(0.5); // confuses post and Untitled windows if not deferred on startup
 	}
@@ -35,16 +37,17 @@ Panes {
 		this.removeMenu;
 		Code.removeMenu;
 		Dock.removeMenu;
+		UniqueBuffer.removeMenu;
 	}
 
 	*menuItems { ^[
-			CocoaMenuItem.addToMenu("User Menu", "1-pane doc arrangement", ["<", false, false], {
+			CocoaMenuItem.addToMenu("Utils", "1-pane doc arrangement", ["<", false, false], {
 				this.doRestoreTop({ this.arrange1Pane; });
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "2-pane doc arrangement", [">", false, false], {
+			CocoaMenuItem.addToMenu("Utils", "2-pane doc arrangement", [">", false, false], {
 				this.doRestoreTop({ this.arrange2Panes; });
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "switch window pos", ["<", false, true], {
+			CocoaMenuItem.addToMenu("Utils", "switch window pos", ["<", false, true], {
 				currentPositionAction.(Document.current);
 			}),
 		]
@@ -65,7 +68,8 @@ Panes {
 			}{
 				tryout = Document.open(path);
 			};
-		};		
+		};
+		tryout.front;
 	}
 
 	*arrange1Pane {
@@ -90,6 +94,7 @@ Panes {
 			this.placeDoc(doc);
 			this.next2Pane;
 		};
+		Document.listener.front;
 	}
 
 	*twoPaneWidth { ^Window.screenBounds.width / 2 }
@@ -119,14 +124,14 @@ Panes {
 	*docOpened { | doc |
 // why does this post twice always???????????
 //		postf("Panes init doc actions docOpened: %\n", doc.name).postln;
-//		if ("sc".matchRegexp(doc.name.splitext.last)) { "matched".postln; } { "did not match" .postln; };
-		
 		{
 			if (doc.name.splitext.last != "html") {
 				doc.background_(backgroundColor);
-				if ("Untitled".matchRegexp(doc.name)) {
-					doc.string = " ";
-					doc.selectLine(0);
+				if (doc.name.includes($.).not) {
+					if (doc.name[..7] == "Untitled") {
+						doc.string = " ";
+						doc.selectLine(0);
+					};
 					doc.syntaxColorize;
 				};
 			};

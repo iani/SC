@@ -1,13 +1,17 @@
 
-CocoaMenuItem.addToMenu("User Menu", "Edit startup file", ["S", true, true], { 
+CocoaMenuItem.addToMenu("Utils", "Boot/Quit default server", ["B", true, false], { 
+	if (Server.default.serverRunning) { Server.default.quit } { Server.default.boot };
+});
+
+CocoaMenuItem.addToMenu("Utils", "Edit startup file", ["S", true, true], { 
 	Document.open(UserPath("startup.scd"))
 });
 
-CocoaMenuItem.addToMenu("User Menu", "Open User Directory", ["o", true, true], { 
+CocoaMenuItem.addToMenu("Utils", "Open User Directory", ["o", true, true], { 
 	"open ~/Library/Application\\ Support/SuperCollider".unixCmd;
 });
 
-CocoaMenuItem.addToMenu("User Menu", "Toggle OSC input posting", ["O", true, true], { 
+CocoaMenuItem.addToMenu("Utils", "Toggle OSC input posting", ["O", true, true], { 
 	if (thisProcess.recvOSCfunc.isNil) {
 		thisProcess.recvOSCfunc = { | time, addr, msg |
 			if (msg[0].asString.contains("status.reply").not) {			postf("time: % sender: % message: %\n", time, addr, msg)
@@ -18,7 +22,7 @@ CocoaMenuItem.addToMenu("User Menu", "Toggle OSC input posting", ["O", true, tru
 	}
 });
 
-CocoaMenuItem.addToMenu("User Menu", "Start OSC input test", ["I", true, true], { 
+CocoaMenuItem.addToMenu("Utils", "Start OSC input test", ["I", true, true], { 
 	{
 		var a;
 		a = NetAddr.localAddr;
@@ -26,7 +30,7 @@ CocoaMenuItem.addToMenu("User Menu", "Start OSC input test", ["I", true, true], 
 	}.fork
 });
 
-CocoaMenuItem.addToMenu("User Menu", "Open log file in orgmode", ["l", true, true], { 
+CocoaMenuItem.addToMenu("Utils", "Open log file in orgmode", ["l", true, true], { 
 	{
 		var logname;
 		logname = Platform.userAppSupportDir ++ "/sclog.org";
@@ -56,5 +60,7 @@ Document.themes[\pinkString][\classColor] = Color(0.1, 0.6, 0.9);
 Document.themes[\pinkString][\commentColor] = Color(0.85, 0.1, 0.2, 0.75);
 Document.setTheme(\pinkString);
 
-Document.postColor = Color(0.4, 0.7, 0.5);
+Document.postColor = Color(0.5, 0.5, 0.6, 0.75);
 Panes.activate;
+
+{ Document.listener.front }.defer(0.5);

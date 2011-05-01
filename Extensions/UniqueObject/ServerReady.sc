@@ -1,17 +1,3 @@
-/*
-
-Buffer(0, 352800, 2, 44100, nil)
-time: 29416.435429297 sender: a NetAddr(127.0.0.1, 57110) message: [ /done, /b_alloc, 0 ]
-
-Buffer(1, nil, nil, nil, sounds/a11wlk01.wav)
-time: 29431.900108977 sender: a NetAddr(127.0.0.1, 57110) message: [ /b_info, 1, 188893, 1, 44100 ]
-time: 29431.90029767 sender: a NetAddr(127.0.0.1, 57110) message: [ /done, /b_allocRead, 1 ]
-
-a SynthDef
-time: 29482.39184218 sender: a NetAddr(127.0.0.1, 57110) message: [ /done, /d_recv ]
-
-*/
-
 ServerReady : UniqueObject {
 
 	var <>server; 
@@ -70,7 +56,6 @@ ServerReady : UniqueObject {
 	*addSynth { | uSynth, makeFunc, server |
 		^this.new(server).addSynth(uSynth, makeFunc);	
 	}
-
 	addSynth { | uSynth, makeFunc |
 		if (server.serverRunning) {
 			this.registerOneShot(uSynth, makeFunc);
@@ -83,6 +68,7 @@ ServerReady : UniqueObject {
 			server.boot;
 		}
 	}
+
 	*register { | object, function, server | ^this.new(server).register(object, function); }
 	register { | argObject, action |
 		object[argObject] = action;

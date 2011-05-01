@@ -36,19 +36,19 @@ Code {
 
 	*menuItems {
 		^[
-			CocoaMenuItem.addToMenu("User Menu", "snippet list view", [/*{*/ "}", false, false], {
+			CocoaMenuItem.addToMenu("Code", "snippet list view", [/*{*/ "}", false, false], {
 				this.showCodeListWindow;
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "previous snippet", ["J", false, false], {
+			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
 				this.selectNextSnippet;
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "next snippet", ["K", false, false], {
+			CocoaMenuItem.addToMenu("Code", "next snippet", ["K", false, false], {
 				this.selectPreviousSnippet;
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "fork current snippet", ["X", false, false], {
+			CocoaMenuItem.addToMenu("Code", "fork current snippet", ["X", false, false], {
 				this.forkCurrentSnippet;
 			}),
-			CocoaMenuItem.addToMenu("User Menu", "eval+post current snippet", ["V", false, false], {
+			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
 			}),
 		];

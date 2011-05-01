@@ -307,7 +307,16 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
      :PROPERTIES:
      :ENTERED_ON: <2011-04-30 Sat 13:02>
      :END:
-**** TODO debug Symbol:synth method 				:uniquesynth:
+**** DONE debug Symbol:synth method				:uniquesynth:
+     CLOSED: [2011-05-01 Sun 10:05]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-30 Sat 19:14>
      :END:
+** 2011-05 May
+*** 2011-05-01 Sunday
+**** UniqueBuffer:play crashes on multiple starts, using mplay instead  :uniquebuffer:buq:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-01 Sun 17:49>
+     :END:
+
+UniqueBuffer:play therefore now uses Function:mplay. This is not a major handicap. 
