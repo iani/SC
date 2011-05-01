@@ -9,11 +9,11 @@
 UniqueFunction : UniqueObject {
 	var <value;
 
-	*mainKey { ^\functions }
-	*removedMessage { ^\reset }
+	*mainKey { ^[\functions] }
+	*removedMessage { ^\funcReset }
 
-	*new { | function ... args |
-		^super.new(function.hashKey, function, *args)
+	*new { | func ... args |
+		^super.new(func.asKey, func, *args);	
 	}
 
 	init { | func ... args |
@@ -22,8 +22,32 @@ UniqueFunction : UniqueObject {
 	}
 
 	function { ^object }
+}
+
+UniqueRoutine : UniqueObject {
+
+	*mainKey { ^[\routines] }
+	*removedMessage { ^\routineReset }
+
+	*new { | func, clock ... args |
+		^super.new(func.asKey, func, clock);	
+	}
+
+	init { | func, clock ... args |
+		object = { 
+			func.(*args);
+			this.remove;	
+		}.fork(clock);
+		CmdPeriod.add(this);
+	}
+
+	doOnCmdPeriod { "cmd period received by ".post; this.postln; }
+
+	routine { ^object }
 
 }
+
+
 
 // DRAFT!!!!!
 UniqueCodeString : UniqueObject {

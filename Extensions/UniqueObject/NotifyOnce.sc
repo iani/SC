@@ -6,7 +6,7 @@ Example of an application, see UniqueBuffer:play. Code there:
 
 Usage: 
 
-// do the following any number of times, with different functions as actions
+// Evaluate the following any number of times, with different functions as actions:
 NotifyOnce(sender, message, listener, action);
 
 // then call all these actions at once when receiving the notification from NotificationCenter: 

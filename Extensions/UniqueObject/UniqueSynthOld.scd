@@ -1,8 +1,4 @@
 
-/* 
-Rewriting UniqueSynth to use ServerReady for booting synth, and ensure SynthDefs and Buffers are loaded
-before it starts.
-*/
 
 AbstractUniqueServerObject : UniqueObject {
 
@@ -28,11 +24,20 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	init { | target, defName ... moreArgs |
-		ServerReady.addSynth(this, { this.makeObject(target, defName, *moreArgs); });
+		if (target.server.serverRunning) {
+			this.makeObject(target, defName, *moreArgs);
+		}{
+			ServerReady(target.server).registerOneShot(this, {
+				this.makeObject(target, defName, *moreArgs);
+				this.synthStarted;  // on boot, no \n_go notification is received. Supply one here. 
+			});
+			target.server.boot;
+		}
 	}
 
 	makeObject { | target, defName, args, addAction ... otherArgs |
 		this.prMakeObject(target, defName, args, addAction, *otherArgs);
+//		object = Synth(defName, args, target, addAction);
 		this.registerObject;
 	}
 
@@ -71,7 +76,7 @@ UniqueSynth : AbstractUniqueServerObject {
 
 	wait { | dtime = 0 |
 	/* wait dtime seconds after start of synth or after receiving wait, whichever is earlier
-	makes routines wait for server to boot before they start.
+	makes routines wait safely when starting a UniqueSynth with unbooted server.
 	Can only be called inside a routine.
 	This includes running a code snippet by typing Command-Shift-x (see DocListWindow)
 	*/
@@ -93,13 +98,13 @@ UniqueSynth : AbstractUniqueServerObject {
 	rsyncs { | func | this.rsync(func, SystemClock) }
 	rsynca { | func | this.rsync(func, AppClock) }
 	
-	dur { | dtime = 1, fadeOut = 0.2, message |
-		this.onStart({ { this.perform(message ? \release, fadeOut) }.defer(dtime ? inf) }) }
+	dur { | dtime = 1, message | this.onStart({ { this.perform(message ? \release) }.defer(dtime ? inf) }) }
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
 	release { | dtime = 0.02 |
-		if (this.isPlaying ) { object.release(dtime) } 
-	}	
+		if (this.isPlaying ) { object.set(\decay, dtime, \gate, dtime.neg) } 
+	}
+	
 }
 
 UniquePlay : UniqueSynth {

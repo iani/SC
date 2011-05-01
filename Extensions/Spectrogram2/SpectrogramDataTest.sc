@@ -13,16 +13,16 @@ ImageDrawTest {
 	*new { | spectrogram |
 		^this.newCopyArgs(spectrogram).init;	
 	}
-	
+
 	init {
 		testImage = Int32Array.fill(1, Image colorToPixel: Color.red);
 		this.start;
 	}
-	start { 
+	start {
 		spectrogram addImageObject: this;
 	}
 
-	stop { 
+	stop {
 		spectrogram removeImageObject: this;
 	}
 

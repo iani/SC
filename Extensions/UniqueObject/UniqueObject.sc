@@ -1,90 +1,74 @@
-
 UniqueObject {
-	
+	classvar <objects;
 	var <key, <object;
-	
-	*mainKey { ^\objects }
-	*removedMessage { ^\removed }
+
+	// ====== configuration ======
+
+	*initClass { this.clear }
+	*clear { // clear all objects, no notifications happen
+		objects = MultiLevelIdentityDictionary.new;
+	}	
+	*mainKey { ^[this] /* ^[\objects] */ }
+	removedMessage { ^\objectRemoved }
+
+	// ====== creating objects ======
 
 	*new { | key, makeFunc ... otherArgs |
 		var object;
 		key = this.makeKey(key, makeFunc, *otherArgs); // server objects include the server in the key
-		object = this.getObject(key);
+		object = this.atKey(key);
 		if (object.isNil) {
 			object = this.newCopyArgs(key).init(makeFunc, *otherArgs);
-			Library.put(this.mainKey, key, object);
+			objects.putAtPath(key, object);
 		};
 		^object;
 	}
-	
-	*getObject { | key |
-		^Library.global.at(this.mainKey, key);
-	}
-
-	*at { | key | ^this.getObject(key) }  // synonym
 
 	*makeKey { | key |
 		/* server-related subclasses UniqueSynth etc. compose the key to include the server */
-		^key.asSymbol;
+		^this.mainKey ++ key.asKey;
 	}
+
+	*atKey { | key | ^objects.atPath(key) }
+	
+	*at { | key ... args | ^this.atKey(this.makeKey(key, *args)) }
 
 	init { | makeFunc | object = makeFunc.value; }
 
-	onRemove { | func |
-		NotificationCenter.registerOneShot(key, this.class.removedMessage, this, func);
-	}
+	// ====== removing objects ======
 
-	remove { ^this.class.remove(key); }
-	
-	*remove { | key |
-		var removed;
-		removed = this.getObject(key);
-		if (removed.notNil) { 
-			NotificationCenter.notify(key, this.removedMessage, removed);
-			^Library.global.removeAt(this.mainKey, key);
-		};
-		^nil;
-	}
-	
-	*removeAll {
+	*removeAll { | keys |
 		// remove all objects by performing their remove method
 		// this sends out notifications. See Meta_UniqueObject:remove
-		Library.global.at(this.mainKey) do: _.remove;
+		objects.leaves(keys) do: _.remove;
+	}
+	remove {
+		var reallyRemoved;
+		reallyRemoved = objects.removeEmptyAtPath(key);
+		if (reallyRemoved.notNil) {
+			this.notify(this.removedMessage, this);
+		};
+	}
+	// evaluate function when object is removed
+	onClose { | action | this.onRemove(UniqueID.next, action) } 
+	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
+	doOnceOn { | message, receiver, func |
+		NotificationCenter.registerOneShot(this, message, receiver, { func.(this) });
 	}
 
-	*clear {
-		// clear all objects stored under the mainKey
-		Library.global.removeAt(this.mainKey);
+	// ====== notifying objects ======
+
+	notify { | message, what | NotificationCenter.notify(this, message, what); }
+	
+	addNotifier { | notifier, message, action |
+		NotificationCenter.register(notifier, message, this, { | args | action.(this, args) });
+		this onClose: { NotificationCenter.unregister(notifier, message, this); };
 	}
+
+	// ====== printing ======
 
 	printOn { arg stream;
-		stream << this.class.name << "(" <<* [key, object] <<")";
+		stream << this.class.name << "(" <<* [key.last, object] <<")";
 	}
 
 }
-
-UniqueWindow : UniqueObject {
-	*mainKey { ^\windows }
-	*removedMessage { ^\closed }
-	
-	*new { | key, makeFunc ... onClose |
-		/* this method just renames the nondescript argument "otherArgs" to "onClose", for clarity */
-		^super.new(key, makeFunc, *onClose);
-	}
-
-	init { | windowFunc ... onClose |
-		/*	
-			note: onClose functionality can also be done with onRemove message, 
-			but since it is used often, an additional simple mechanism is provided here
-		*/
-		super.init(windowFunc ?? { Window(key.asString).front });
-		object.onClose = {
-			this.remove(key);
-			onClose do: _.(object, key);
-		}
-	}
-	
-	onClose { | func | this.onRemove(func) }	// synonym
-	window { ^object } 					// synonym
-}
-
