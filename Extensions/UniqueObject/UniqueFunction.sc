@@ -9,8 +9,8 @@
 UniqueFunction : UniqueObject {
 	var <value;
 
-	*mainKey { ^[\functions] }
-	*removedMessage { ^\funcReset }
+//	*mainKey { ^[\functions] }
+//	*removedMessage { ^\funcReset }
 
 	*new { | func ... args |
 		^super.new(func.asKey, func, *args);	
@@ -26,8 +26,8 @@ UniqueFunction : UniqueObject {
 
 UniqueRoutine : UniqueObject {
 
-	*mainKey { ^[\routines] }
-	*removedMessage { ^\routineReset }
+//	*mainKey { ^[\routines] }
+//	*removedMessage { ^\routineReset }
 
 	*new { | func, clock ... args |
 		^super.new(func.asKey, func, clock);	

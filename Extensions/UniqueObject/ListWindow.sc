@@ -44,10 +44,10 @@ ListWindow : UniqueWindow {
 				)
 			};
 			listview.items = items = getItemsAction.value;
+			listview.value = getIndexAction.(items) ? 0;
 			w.addDependant({ | me |
 				{	items;
 					listview.items = items = getItemsAction.value;
-					listview.value = getIndexAction.(items) ? 0;
 				}.defer(delay);
 			});
 			w.toFrontAction = { searchview.focus };

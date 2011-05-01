@@ -142,13 +142,13 @@ UniqueBuffer : AbstractUniqueServerObject {
 				this.list;
 			}),
 			CocoaMenuItem.addToMenu("Buffers", "Load buffers", [], {
-				this.load;
+				{ this.load; this.list; }.defer(0.1);
 			}),
 			CocoaMenuItem.addToMenu("Buffers", "Load buffer list", [], {
-				this.loadList;
+				{ this.loadList; this.list; }.defer(0.1);
 			}),
 			CocoaMenuItem.addToMenu("Buffers", "Save buffer list", [], {
-				this.saveList;
+				{ this.saveList; }.defer(0.1);
 			}),
 		];
 	}

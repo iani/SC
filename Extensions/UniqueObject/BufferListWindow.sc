@@ -12,7 +12,12 @@ BufferListWindow : ListWindow {
 				UniqueBuffer.onServer(server) collect: { | b |
 					format("%:%:%", b.key[2], PathName(b.path ? "-").fileName, b.numFrames)->{ b.play }
 				}
-			}, nil, UniqueBuffer, [\loaded, \free, \created], delay: 0.01
+			}, { | items |
+				var c, cs;
+				c = UniqueBuffer.current;
+				cs = format("%:%:%", c.key[2], PathName(c.path ? "-").fileName, c.numFrames);
+				items.indexOf(items detect: { | d | d.key == cs });
+			}, UniqueBuffer, [\loaded, \free, \created], delay: 0.01
 		);	
 	}
 }
