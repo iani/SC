@@ -131,7 +131,7 @@ UniqueBuffer : AbstractUniqueServerObject {
 	freed {
 		object = nil;
 		NotificationCenter.notify(UniqueBuffer, \free, this);
-		if (current[server] === this) { current[server] = this.default };
+		if (current[server] === this) { current[server] = nil; /* this.class.default */ };
 	}
 
 	isLoaded { ^object.notNil }

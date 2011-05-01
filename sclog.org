@@ -148,11 +148,13 @@ This is important when installing lilt2 to a new computer that does not have any
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 17:38>
      :END:
-**** TODO PerformanceWindow should re-parse code on changing docs :doclistwindow:
+**** CANCELLED PerformanceWindow should re-parse code on changing docs :doclistwindow:
+     CLOSED: [2011-05-02 Mon 01:01]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 17:39>
      :END:
-**** TODO add 'doOnce' message to Function			       :idea:
+**** DONE add 'doOnce' message to Function			       :idea:
+     CLOSED: [2011-05-02 Mon 01:01]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 19:27>
      :END:
@@ -166,7 +168,8 @@ Important for booting servers / scopes only once.
    { codeString.interpret }.doOnce 
 instead of: 
    { codeString.interpret }.value 
-**** BUG code item pane does not refresh properly     :performancewindow:bug:
+**** DONE code item pane does not refresh properly    :performancewindow:bug:
+     CLOSED: [2011-05-02 Mon 01:01]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 21:22>
      :END:
@@ -198,7 +201,8 @@ Int8Array[ 0, 0, 64, -80, -62, 52, -14 ]
 So now, in order for a function to be treated as "unique" by UniqueFunction, it must have exactly the same source code string. 
 
 Note: function.hashKey is used by UniquePlay. 
-**** TODO add chain, Udef, Ubuf to load synthdefs and buffers before creating a synth :uniqueobject:
+**** DONE add chain, Udef, Ubuf to load synthdefs and buffers before creating a synth :uniqueobject:
+     CLOSED: [2011-05-02 Mon 01:01]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-23 Sat 10:03>
      :END:
@@ -288,7 +292,8 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
 
 */
 *** 2011-04-26 Tuesday
-**** TODO add doOnce and forkOnce methods to function 	     :uniquefunction:
+**** DONE add doOnce and forkOnce methods to function	     :uniquefunction:
+     CLOSED: [2011-05-02 Mon 01:00]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-26 Tue 16:02>
      :END:
@@ -319,4 +324,26 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
      :ENTERED_ON: <2011-05-01 Sun 17:49>
      :END:
 
-UniqueBuffer:play therefore now uses Function:mplay. This is not a major handicap. 
+UniqueBuffer:play therefore now uses Function:mplay. This is not a major handicap.
+*** 2011-05-02 Monday
+**** BUG UniqueBuffer:load loads also the default buffer if not loaded :uniquebuffer:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-02 Mon 00:57>
+     :END:
+
+A minor glitch, but should be looked into. 
+**** TODO PrivateBusSynth, SignalPoller 			:spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-02 Mon 01:03>
+     :END:
+
+Extend UniqueSynth class with subclasses: 
+
+PrivateBusSynth: adds a private Bus and redirects the output of the synth to it. For analysis synths, effects etc.
+The bus gets freed as soon as the UniqueSynth stops. 
+
+SignalPoller: 
+Adds a synchronized routine (rsynca) that polls the output of the synth to the private bus, or an anasysis buffer, and shares the data via a list of functions with other processes. 
+
+
+

@@ -9,9 +9,9 @@ BufferListWindow : ListWindow {
 		server = server ? Server.default;
 		^super.new(format("Buffers on %", server.name).asSymbol, nil, 
 			{ 
-				UniqueBuffer.onServer(server) collect: { | b |
+				UniqueBuffer.onServer(server).collect({ | b |
 					format("%:%:%", b.key[2], PathName(b.path ? "-").fileName, b.numFrames)->{ b.play }
-				}
+				}).sort({ | a, b | a.key < b.key });
 			}, { | items |
 				var c, cs;
 				c = UniqueBuffer.current;
