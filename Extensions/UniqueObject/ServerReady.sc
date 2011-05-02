@@ -2,7 +2,7 @@ ServerReady : UniqueObject {
 
 	var <>server; 
 	var <cmdPeriod = false;
-	var <loadChain;			// will become scheme for loading SynthDefs and Buffers
+	var <loadChain;			// scheme for loading SynthDefs and Buffers
 	var <responder;			// notifies when synthdefs or buffers are loaded
 
 	*makeKey { | server | ^this.mainKey add: (server ?? { server.asTarget.server }); }
@@ -18,25 +18,13 @@ ServerReady : UniqueObject {
 
 	makeResponder { 
 		responder = OSCresponderNode(nil, '/done', { | time, resp, msg |
-			if (['/b_allocRead', '/b_alloc', '/d_recv'] includes: msg[1]) {
-//				{ 
-					
-					loadChain.next; 
-				
-//				}.defer(3);
-			}
-		}).add;	
+			if (['/b_allocRead', '/b_alloc', '/d_recv'] includes: msg[1]) { loadChain.next; }
+		}).add;
+		this.onClose({ responder.remove });
 	}
 
 	initLoadChain {
-		loadChain = FunctionChain(nil, { 
-			
-//			"initLoadChain for ServerReady waiting 3 seconds before starting synths".postln;
-//			{
-				this.notifyObjects; 
-//			}.defer(3);
-			
-		});
+		loadChain = FunctionChain(nil, { this.notifyObjects; });
 		Udef.all.values do: _.prepareToLoad(this);
 		UniqueBuffer.onServer(server) do: _.prepareToLoad(this);
 	}
