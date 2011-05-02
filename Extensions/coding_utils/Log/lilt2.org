@@ -1,7 +1,0 @@
-
-Lilt2 Log
-
-
-* TODO Create KeySearch class for multi-keystroke search of items in ListView
-<2011-04-10 Sun 12:47>
-

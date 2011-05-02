@@ -10,7 +10,7 @@ AbstractUniqueServerObject : UniqueObject {
 		^this.mainKey ++ [target.asTarget.server, key.asKey];
 	}
 
-	server { ^key[0] }
+	server { ^key[1] }
 
 	*onServer { | server |
 		var path;
@@ -32,6 +32,7 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	makeObject { | target, defName, args, addAction ... otherArgs |
+		postf("uniquesynth makeobject: target %, defname %, args %, addaction %, otherArgs%\n", target, defName, args, addAction, otherArgs);
 		this.prMakeObject(target, defName, args, addAction, *otherArgs);
 		this.registerObject;
 	}

@@ -62,6 +62,9 @@ UniqueObject {
 	
 	addNotifier { | notifier, message, action |
 		NotificationCenter.register(notifier, message, this, { | args | action.(this, args) });
+// can we  simplify the above like this: 
+//		NotificationCenter.register(notifier, message, this, action);
+
 		this onClose: { NotificationCenter.unregister(notifier, message, this); };
 	}
 

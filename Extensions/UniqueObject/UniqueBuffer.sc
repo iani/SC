@@ -135,6 +135,8 @@ UniqueBuffer : AbstractUniqueServerObject {
 	}
 
 	isLoaded { ^object.notNil }
+	
+	bufnum { if (object.notNil) { ^object.bufnum } { ^nil } }
 
 	*menuItems {
 		^[
