@@ -38,3 +38,15 @@ FFTpollSynth : UniqueSynth {
 		})
 	}
 }
+
+/*
+
+		NotificationCenter.notify(asKey, \start, this);
+		NotificationCenter.notify(asKey, \cmdPeriod, this);
+		NotificationCenter.notify(asKey, \stop, this);
+		NotificationCenter.notify(asKey, \rate, rate);
+		NotificationCenter.notify(asKey, \bufSize, bufSize);
+		NotificationCenter.notify(asKey, \fft, [object]);
+
+
+*/

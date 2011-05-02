@@ -19,7 +19,8 @@ Dock {
 		]		
 	}
 	*showDocListWindow {
-		ListWindow('Documents', 
+		var listwin;
+		listwin = ListWindow('Documents', 
 			Rect(Window.screenBounds.width - width, 0, width, Window.screenBounds.height), 
 			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
 				d.name->{
@@ -36,10 +37,10 @@ Dock {
 			Panes, [\docOpened, \docToFront, \docClosed],
 			delay: 0.1; // leave some time for Documents to update their name etc.
 		)
-		.addNotifier(Code, \openedCodeListWindow, { | listwin |
+		.addNotifier(Code, \openedCodeListWindow, {
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height / 2 - 70;
 		})
-		.addNotifier(Code, \closedCodeListWindow, { | listwin |
+		.addNotifier(Code, \closedCodeListWindow, {
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
 		});
 	}

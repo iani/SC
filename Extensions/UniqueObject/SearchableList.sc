@@ -40,7 +40,7 @@ SearchableList {
 		listview.widget.resize = 5;
 		searchview.onClose = { this.closed };
 		messages.asArray do: { | m | 
-				this.addNotifier(notifier, m, { | me | view.changed; });
+				this.addNotifier(notifier, m, { view.changed; });
 		};
 		this.getItems;
 	}

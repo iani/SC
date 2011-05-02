@@ -59,8 +59,8 @@ FFTsynthPoller : AbstractUniqueServerObject {
 
 	bufSize_ { | argBufSize = 1024 |
 		bufSize = argBufSize;
-		FFTpollSynth.at(
 		NotificationCenter.notify(asKey, \bufSize, bufSize);
+		this.makeFFTpollSynth;
 	}
 
 	fftData_ { | data |

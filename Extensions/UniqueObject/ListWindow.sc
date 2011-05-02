@@ -64,7 +64,7 @@ ListWindow : UniqueWindow {
 
 	addMessages { | notifier, messages |
 		messages.asArray do: { | m | 
-			this.addNotifier(notifier, m, { | me | me.window.changed; });
+			this.addNotifier(notifier, m, { this.window.changed; });
 		};	
 	}
 }
