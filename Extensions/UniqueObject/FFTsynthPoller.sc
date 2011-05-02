@@ -27,10 +27,15 @@ FFTsynthPoller : AbstractUniqueServerObject {
 	init { | server, argRate, argBufSize, argIn, start |
 		asKey = key[2];
 		rate = argRate; bufSize = argBufSize; in = argIn; 
-		postf("fftsynthpoller init server: %, rate: %, bufSize: %\n", server, rate, bufSize);
+//		postf("fftsynthpoller init server: %, rate: %, bufSize: %\n", server, rate, bufSize);
 		if (start) { this.start; };
 	}
 
+/* 
+The advantage of notifying via NotifiationCenter using a symbol as key is that 
+other objects (clients) can register for notification from this Poller, based on its key, 
+even before the FFTsynthPoller is created. 
+*/
 	start {
 		CmdPeriod.add(this);
 		this.makeFFTpollSynth;
@@ -39,6 +44,7 @@ FFTsynthPoller : AbstractUniqueServerObject {
 
 	cmdPeriod {
 		NotificationCenter.notify(asKey, \cmdPeriod, this);
+		/* FFTpollSynth has been stopped by cmdPeriod, remake it here */
 		this.makeFFTpollSynth;
 	}
 
@@ -60,7 +66,6 @@ FFTsynthPoller : AbstractUniqueServerObject {
 	bufSize_ { | argBufSize = 1024 |
 		bufSize = argBufSize;
 		NotificationCenter.notify(asKey, \bufSize, bufSize);
-		this.makeFFTpollSynth;
 	}
 
 	fftData_ { | data |

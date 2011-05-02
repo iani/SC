@@ -52,7 +52,7 @@ Document.setTheme(\pinkString);
 //:theme
 Document.themes[\pinkString] = Document.themes[\default].copy;
 // Document.themes[\pinkString][\textColor] = Color(0.4, 0.4, 0.5);
-Document.themes[\pinkString][\textColor] = Color(0.9, 0.9, 0.9);
+Document.themes[\pinkString][\textColor] = Color(0.9, 0.7, 0.6);
 // Document.themes[\pinkString][\stringColor] = Color(0.8, 0.0, 0.7);
 Document.themes[\pinkString][\stringColor] = Color(0.9, 0.1, 0.6);
 Document.themes[\pinkString][\numberColor] = Color(0.7, 0.2, 0, 1);
@@ -61,7 +61,7 @@ Document.themes[\pinkString][\classColor] = Color(0.1, 0.6, 0.9);
 Document.themes[\pinkString][\commentColor] = Color(1.0, 0.5, 0.1, 0.9);
 Document.setTheme(\pinkString);
 
-Document.postColor = Color(0.9, 0.9, 0.9);
+Document.postColor = Color(0.15, 0.85, 0.90);
 
 //:rest
 Panes.activate;

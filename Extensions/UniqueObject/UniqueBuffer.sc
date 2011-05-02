@@ -88,7 +88,13 @@ UniqueBuffer : AbstractUniqueServerObject {
 	}
 
 	prepareToLoad { | serverReady |
-		serverReady addFuncToLoadChain: { this.makeObject; };
+//				postf("% preparing to load\n", this);
+			
+
+		serverReady addFuncToLoadChain: { this.makeObject; 
+					//			postf("%  SENT TO SERVER/ makeObject\n", this);
+
+			};
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
@@ -105,7 +111,11 @@ UniqueBuffer : AbstractUniqueServerObject {
 
 	makeObject { | play |
 		if (path.isNil) {
-			object = Buffer.alloc(server, numFrames ? 1024, numChannels, completionMessage: { | b | 
+//				postf("% makeObject, allocating: numFrames : %, numCHannels: %\n", this,
+//				numFrames, numChannels);
+//			postln("server, numframes, numchannels follow");
+			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, completionMessage: { | b | 
+//				postf("UBuf allocation succeeded : %\n", b);
 				this.loaded(b);
 			});
 		}{

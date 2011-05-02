@@ -32,12 +32,40 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	makeObject { | target, defName, args, addAction ... otherArgs |
-		postf("uniquesynth makeobject: target %, defname %, args %, addaction %, otherArgs%\n", target, defName, args, addAction, otherArgs);
+//		postf("uniquesynth makeobject: target %, defname %, args %, addaction %, otherArgs%\n", target, defName, args, addAction, otherArgs);
 		this.prMakeObject(target, defName, args, addAction, *otherArgs);
 		this.registerObject;
 	}
 
 	prMakeObject { | target, defName, args, addAction |
+		
+/*
+
+//		postf("uniquesynth prMakeObject: target %, defname %, args %, addaction %\n", target, defName, args, addAction);
+
+		UniqueBuffer.onServer do: _.postln;
+
+		args do: { | a | postf("argument to synth! %\n", a);
+			
+			if (a.isKindOf(UniqueBuffer)) {
+				postf("the bufnum of this unique buffer is %\n", a.bufnum);
+				postf("the buffer of this unique buffer is: %\n", a.object);
+			 };
+		};
+		
+		fork {
+			var s;
+		5.wait;
+			UniqueBuffer.onServer do: { | b |
+				
+				b.postln;
+				s = b.play;
+				2.wait;
+				s.free;
+				1.wait;
+			};
+		};
+*/	
 		object = Synth(defName, args, target, addAction);
 	}
 

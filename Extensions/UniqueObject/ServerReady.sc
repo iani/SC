@@ -19,13 +19,24 @@ ServerReady : UniqueObject {
 	makeResponder { 
 		responder = OSCresponderNode(nil, '/done', { | time, resp, msg |
 			if (['/b_allocRead', '/b_alloc', '/d_recv'] includes: msg[1]) {
-				loadChain.next;
+//				{ 
+					
+					loadChain.next; 
+				
+//				}.defer(3);
 			}
 		}).add;	
 	}
 
 	initLoadChain {
-		loadChain = FunctionChain(nil, { this.notifyObjects });
+		loadChain = FunctionChain(nil, { 
+			
+//			"initLoadChain for ServerReady waiting 3 seconds before starting synths".postln;
+//			{
+				this.notifyObjects; 
+//			}.defer(3);
+			
+		});
 		Udef.all.values do: _.prepareToLoad(this);
 		UniqueBuffer.onServer(server) do: _.prepareToLoad(this);
 	}
