@@ -10,6 +10,7 @@ Panes {
 	classvar <currentPositionAction;
 	classvar <>tryoutName = "tryout.scd";
 	classvar <>backgroundColor;
+	classvar <>customTheme = \pinkString;
 
 	*start { this.activate } // synonym
 	*activate {
@@ -141,7 +142,14 @@ Panes {
 	}
 	
 	*setDocActions { | doc |
-		doc.toFrontAction = { NotificationCenter.notify(this, \docToFront, doc); };
+		doc.toFrontAction = {
+			if ("\.html".matchRegexp(doc.name)) { 
+				Document.setTheme(\default) 
+			}{
+				Document.setTheme(customTheme)
+			};
+				NotificationCenter.notify(this, \docToFront, doc); 
+		};
 		doc.endFrontAction = { NotificationCenter.notify(this, \docEndFront, doc); };
 		doc.mouseUpAction = { NotificationCenter.notify(this, \docMouseUp, doc); };
 		doc.onClose = { NotificationCenter.notify(this, \docClosed, doc); };

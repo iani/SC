@@ -45,8 +45,11 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "next snippet", ["K", false, false], {
 				this.selectPreviousSnippet;
 			}),
-			CocoaMenuItem.addToMenu("Code", "fork current snippet", ["X", false, false], {
-				this.forkCurrentSnippet;
+			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false], {
+				this.forkCurrentSnippet(AppClock);
+			}),
+			CocoaMenuItem.addToMenu("Code", "fork current snippet (SystemClock)", ["X", false, true], {
+				this.forkCurrentSnippet(SystemClock);
 			}),
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
@@ -54,17 +57,44 @@ Code {
 		];
 	}
 
-	*forkCurrentSnippet {
-		^this.new(Document.current).forkCurrentSnippet;
+	*showCodeListWindow {
+		var listWindow;
+		listWindow = ListWindow('Code Selector', 
+			Rect(
+				Window.screenBounds.width - Dock.width, Window.screenBounds.height / 2, 
+				Dock.width, Window.screenBounds.height / 2
+			), 
+			{ | ulistwin |
+				var code;
+				code = this.new(Document.current);
+				if (code.canEvaluate) {
+					ListWindow.front('Code Selector');
+					code.headers collect: { | h, i | (h[3..] + " ")->{ code.performCodeAt(i) } };
+				}{
+					["---"->{ }]
+				};
+			},
+			nil,
+			Panes, [\docOpened, \docToFront, \docClosed],
+			delay: 0.1;
+		).onClose({ 
+			NotificationCenter.notify(this, \closedCodeListWindow, listWindow);
+		});
+		NotificationCenter.notify(this, \openedCodeListWindow, listWindow);
 	}
 
-	forkCurrentSnippet {
-		this.performCodeAt(this.findIndexOfSnippet(doc), \fork);
+	*forkCurrentSnippet { | clock |
+		^this.new(Document.current).forkCurrentSnippet(clock);
 	}
 
-	performCodeAt { | index = 0, message = \fork |
+	forkCurrentSnippet { | clock |
+		this.performCodeAt(this.findIndexOfSnippet(doc), \fork, clock);
+	}
+
+	performCodeAt { | index = 0, message = \fork, clock |
 		if (index.isNil or: { canEvaluate.not }) { ^this };
-		(string[positions[index]..(positions[index + 1] - 1)] ?? { { } }).perform(message);
+		(string[positions[index]..(positions[index + 1] - 1)] ?? { { } })
+			.perform(message, clock ? AppClock);
 	}
 
 	*evalPostCurrentSnippet {
@@ -103,36 +133,6 @@ Code {
 			[0, 1] + (this.findIndexOfSnippet(doc) - 1).max(0)
 		].differentiate;
 		doc.selectRange(start, length); // - 1
-	}
+	}	
 	
-	*showCodeListWindow {
-		var listWindow;
-		listWindow = ListWindow('Code Selector', 
-			Rect(
-				Window.screenBounds.width - Dock.width, Window.screenBounds.height / 2, 
-				Dock.width, Window.screenBounds.height / 2
-			), 
-			{ | ulistwin |
-				var code;
-				code = this.new(Document.current);
-				if (code.canEvaluate) {
-//					if (ulistwin.notNil) { ulistwin.front };
-					ListWindow.front('Code Selector');
-					code.headers collect: { | h, i | h[3..]->{ code.performCodeAt(i) } };
-				}{
-					["---"->{ }]
-				};
-			},
-			nil,
-			Panes, [\docOpened, \docToFront, \docClosed],
-			delay: 0.1;
-		).onClose({ 
-			NotificationCenter.notify(this, \closedCodeListWindow, listWindow);
-		});
-		NotificationCenter.notify(this, \openedCodeListWindow, listWindow);
-	}
-/*
-	*docsWithSnippets { 
-		// used by Dock to filter docs when showing code list window
-	}	*/
 }

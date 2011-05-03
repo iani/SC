@@ -15,6 +15,9 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open user class", ["b", true, true], {
 				this.browseUserClasses;
 			}),
+			CocoaMenuItem.addToMenu("Utils", "open / create class help", ["D", true, false], {
+				this.openCreateHelpFile;
+			}),
 			
 		]		
 	}
@@ -61,4 +64,23 @@ Dock {
 			});
 		});
 	}
+	
+	*openCreateHelpFile {
+		var windowName = 'Select Class to open Help';
+		ListWindow(windowName, nil, {
+			Class.allClasses.select({ | c |
+				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
+				and: { "Meta*".matchRegexp(c.name.asString).not }
+			}).collect({ | c | 
+				c.name.asSymbol->{ 
+					{ 
+						c.openHelpFileLocally;
+						{ if (ListWindow.at(windowName).notNil) { ListWindow.at(windowName).close; }; 
+						}.defer(0.5)
+					}.doOnceIn(0.75);
+				}
+			});
+		});		
+	}
+
 }

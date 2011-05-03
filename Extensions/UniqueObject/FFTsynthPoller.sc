@@ -36,6 +36,17 @@ The advantage of notifying via NotifiationCenter using a symbol as key is that
 other objects (clients) can register for notification from this Poller, based on its key, 
 even before the FFTsynthPoller is created. 
 */
+	addListener { | object, action |
+		NotificationCenter.register(asKey, \fft, object, action);
+		
+NotificationCenter.unregister(\test, \fft, \testing);
+
+	}
+	
+	removeListener { | object |
+		
+	}
+
 	start {
 		CmdPeriod.add(this);
 		this.makeFFTpollSynth;

@@ -58,7 +58,7 @@ Document.themes[\pinkString][\stringColor] = Color(0.9, 0.1, 0.6);
 Document.themes[\pinkString][\numberColor] = Color(0.7, 0.2, 0, 1);
 Document.themes[\pinkString][\classColor] = Color(0.1, 0.6, 0.9);
 //Document.themes[\pinkString][\commentColor] = Color(0.85, 0.1, 0.2, 0.75);
-Document.themes[\pinkString][\commentColor] = Color(1.0, 0.5, 0.1, 0.9);
+Document.themes[\pinkString][\commentColor] = Color(0.99, 0.52, 0.14, 0.99);
 Document.setTheme(\pinkString);
 
 Document.postColor = Color(0.15, 0.85, 0.90);

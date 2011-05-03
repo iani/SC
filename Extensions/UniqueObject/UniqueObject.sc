@@ -9,7 +9,8 @@ UniqueObject {
 		objects = MultiLevelIdentityDictionary.new;
 	}	
 	*mainKey { ^[this] /* ^[\objects] */ }
-	removedMessage { ^\objectRemoved }
+	removedMessage { ^this.class.removedMessage }
+	*removedMessage { ^\objectRemoved }
 
 	// ====== creating objects ======
 

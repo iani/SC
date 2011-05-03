@@ -23,7 +23,11 @@ ListWindow : UniqueWindow {
 					{	
 						var string, item;
 						string = view.string;
-						item = items.select({ | i | ("^" ++ string).matchRegexp(i.key.asString) }).first;
+						if (string.size == 0) {
+							string = ("^ ")								}{
+							string = ("^" ++ string);
+						};
+						item = items.select({ | i | string.matchRegexp(i.key.asString) }).first;
 						listview.value = items.indexOf(item) ? 0;
 					}.defer(0.001); // must defer to get the latest string !!!
 				})
