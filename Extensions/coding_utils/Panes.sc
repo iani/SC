@@ -143,12 +143,20 @@ Panes {
 	
 	*setDocActions { | doc |
 		doc.toFrontAction = {
-			if ("\.html".matchRegexp(doc.name)) { 
-				Document.setTheme(\default) 
+			var selectionStart, selectionSize;
+			NotificationCenter.notify(this, \docToFront, doc);
+			if ("\.html".matchRegexp(Document.current.name)) {
+				Document.setTheme(\default);
 			}{
-				Document.setTheme(customTheme)
+				if (Document.theme !== Document.themes[customTheme]) {
+					Document.setTheme(customTheme);
+					selectionStart = doc.selectionStart;
+					selectionSize = doc.selectionSize;	
+					doc.selectRange(0, 2147483647); // select everything
+					doc.syntaxColorize;  // restore selection: 
+					doc.selectRange(selectionStart, selectionSize);
+				};
 			};
-				NotificationCenter.notify(this, \docToFront, doc); 
 		};
 		doc.endFrontAction = { NotificationCenter.notify(this, \docEndFront, doc); };
 		doc.mouseUpAction = { NotificationCenter.notify(this, \docMouseUp, doc); };

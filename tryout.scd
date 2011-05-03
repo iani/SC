@@ -1,9 +1,12 @@
-\default.play;
-\test.play;
+asdf asdf 
 
-Udef(\test, { Out.ar(0, LFNoise0.ar(SinOsc.kr(5).range(400, 4000), 0.1)) });
 
-\test.play;
 
-\test.play(\test);
+Document.current.selectRange(0, 2147483647);
 
+Document.current.selectRange(0, 1000000000000000000);
+
+
+asdfasdfadsf 
+
+Dock

@@ -39,7 +39,6 @@ ListWindow : UniqueWindow {
 				switch (unicode, 
 				13, {
 					listview.doAction;
-//					{ view.string = ""; }.defer(0.01);
 				},
 				16rF700, { listview.value = listview.value - 1; },
 				16rF701, { listview.value = listview.value + 1; },
@@ -52,6 +51,7 @@ ListWindow : UniqueWindow {
 			w.addDependant({ | me |
 				{	items;
 					listview.items = items = getItemsAction.value;
+					listview.value = getIndexAction.(items) ? 0;
 				}.defer(delay);
 			});
 			w.toFrontAction = { searchview.focus };

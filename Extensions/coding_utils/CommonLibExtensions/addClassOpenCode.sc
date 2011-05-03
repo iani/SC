@@ -6,14 +6,24 @@ Added these modifications to remove a harmless but obnoxious error message in Do
 
 + Class {
 	openCodeFile {
-		var openDoc, filename;
+		var openDoc, filename, newDoc;
+		"OPENING CLASS DEF".postln;
 		// use the base name for comparison because quarks installed through links to Extensions
 		// gives a different path than the Class
 		filename = this.filenameSymbol.asString.basename;
 		openDoc = Document.allDocuments detect: { | d | (d.path ? "-").basename == filename };
 		if (openDoc.isNil) {
-			this.filenameSymbol.asString.openTextFile(this.charPos, -1);
+			"OPEN DOC WAS NIL -------- did I forget??????????? ".postln;
+			newDoc = this.filenameSymbol.asString.openTextFileWithReturn(this.charPos, -1);
+// 			{ 			newDoc.postln } ! 20;
+			Document.current = newDoc;
+			newDoc.front;
+			"NOTIFYING Panes TO FRONT FROM NEW CLASS DEF FILE".postln;
+			newDoc.toFrontAction.value;
+
 		}{
+			"OPEN DOC WAS NOT NIL, DOING THE STUFF".postln;
+			Document.current = openDoc;
 			openDoc.front;
 			openDoc.toFrontAction.value;
 		}
@@ -27,44 +37,13 @@ Added these modifications to remove a harmless but obnoxious error message in Do
 		if (classHelpPath.pathMatch.size == 0) {
 			format("mkdir %", classHelpPath.asCompileString).unixCmd;
 		};
-		(classHelpPath ++ "/" ++ this.name ++ ".*").pathMatch do: Document.open(_);		match = (classHelpPath = classHelpPath ++ "/" ++ this.name ++ ".html").pathMatch;
+		match = (classHelpPath ++ "/" ++ this.name ++ ".*").pathMatch;
 		if (match.size == 0) {
-			{
-				format("touch %", classHelpPath.asCompileString).unixCmd;
-				0.2.wait;
-				Document.open(classHelpPath);
-				0.2.wait;
-				doc = Document.current;
-				0.2.wait;
-				postln({ doc.string.size } ! 100);
-				if (doc.string.size.postln == 0) {
-					doc.string_(format("%\n\n\Inherits from: %\n \n \n    ",
-						this.name.asString,
-						"".strcatList(this.superclasses collect: _.name);
-					));
-					0.2.wait;
-					doc.selectLine(1);	 0.2.wait;
-					doc.font_(Font("Helvetica-Bold", 18), 
-						doc.selectionStart.postln, doc.selectionSize.postln);
-					0.2.wait;
-					doc.selectLine(2);		0.2.wait;
-					doc.font_(Font("Helvetica-Bold", 18), 
-						doc.selectionStart, doc.selectionSize); 0.2.wait;
-					doc.selectLine(3); 0.2.wait;
-					doc.font_(Font("Helvetica-Bold", 12), 
-						doc.selectionStart, doc.selectionSize); 
-					doc.selectLine(4); 0.2.wait;
-					doc.font_(Font("Helvetica", 12), 
-						doc.selectionStart, doc.selectionSize); 
-					doc.selectLine(5); 0.2.wait;
-					doc.selectLine(5); 0.2.wait;
-					doc.font_(Font("Helvetica", 12), 
-						doc.selectionStart, doc.selectionSize); 0.2.wait; 
-					doc.font_(Font("Helvetica", 12), 
-						doc.selectionStart, doc.string.size - doc.selectionStart); 
-				};
-			}.fork(AppClock);
+			match = (classHelpPath = classHelpPath ++ "/" ++ this.name ++ ".html").pathMatch;
+		}{
+			match do: Document.open(_);
 		};
+		Library.at(\classdocgen).(this); // special stuff removed out of git
 	}
 
 }

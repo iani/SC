@@ -26,16 +26,7 @@ SynthDef(\test, { Out.ar(0, SinOsc.ar(Rand(400, 4000), 0, 0.1 * Fade.kr)) }).sen
 10 do: { \test.play; 0.1.wait; \test.release(exprand(0.01, 0.9)); 1.0.wait; };
 
 //:testing release with default synthdef
+WaitForServer.new;
 
-10 do: { \default.play(args: [\freq: rrand(20, 60).midicps]); 0.1.wait; \default.release;  0.5.wait; };
+10 do: { \default.play(args: [\freq: rrand(30, 90).midicps]); 0.1.wait; \default.release;  0.5.wait; };
 
-//:testing release with default synthdef
-
-10 do: { \default.play; 0.1.wait; \default.synth.release(1.2);  1.7.wait; };
-
-
-//:again
-
-a = Synth(\default);
-a.release;
-a.release(5);
