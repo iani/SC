@@ -33,18 +33,18 @@ FFTsynthPoller : AbstractUniqueServerObject {
 
 /* 
 The advantage of notifying via NotifiationCenter using a symbol as key is that 
-other objects (clients) can register for notification from this Poller, based on its key, 
-even before the FFTsynthPoller is created. 
+other objects (clients) can register for notification from a poller instance, based on its key, 
+even before the FFTsynthPoller instance is created. 
 */
 	addListener { | object, action |
 		NotificationCenter.register(asKey, \fft, object, action);
-		
-NotificationCenter.unregister(\test, \fft, \testing);
-
+		this.onClose({
+			NotificationCenter.unregister(asKey, \fft, object);
+		});
 	}
 	
 	removeListener { | object |
-		
+		NotificationCenter.unregister(asKey, \fft);
 	}
 
 	start {

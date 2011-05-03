@@ -16,19 +16,6 @@ ServerReady : UniqueObject {
 		this.makeResponder;
 	}
 
-	makeResponder { 
-		responder = OSCresponderNode(nil, '/done', { | time, resp, msg |
-			if (['/b_allocRead', '/b_alloc', '/d_recv'] includes: msg[1]) { loadChain.next; }
-		}).add;
-		this.onClose({ responder.remove });
-	}
-
-	initLoadChain {
-		loadChain = FunctionChain(nil, { this.notifyObjects; });
-		Udef.all.values do: _.prepareToLoad(this);
-		UniqueBuffer.onServer(server) do: _.prepareToLoad(this);
-	}
-
 	doOnCmdPeriod { cmdPeriod = true; }
 
 	doOnServerTree {
@@ -39,8 +26,21 @@ ServerReady : UniqueObject {
 			this.loadSynthDefsAndBuffersAndStartSynths;
 		};
 	}
-	
+
+	initLoadChain {
+		loadChain = FunctionChain(nil, { this.notifyObjects; });
+		Udef.all.values do: _.prepareToLoad(this);
+		UniqueBuffer.onServer(server) do: _.prepareToLoad(this);
+	}
+
 	loadSynthDefsAndBuffersAndStartSynths { loadChain.start; }
+
+	makeResponder { 
+		responder = OSCresponderNode(nil, '/done', { | time, resp, msg |
+			if (['/b_allocRead', '/b_alloc', '/d_recv'] includes: msg[1]) { loadChain.next; }
+		}).add;
+		this.onClose({ responder.remove });
+	}
 
 	notifyObjects {
 		object.asKeyValuePairs pairsDo: { | obj, func | func.value(obj, server, this); };
@@ -88,26 +88,4 @@ ServerReady : UniqueObject {
 
 	unregister { | argObject | object.removeAt(argObject); }
 
-}
-
-WaitForServer {
-	var <function, <server, <waiting = true;
-	*new { | server, function |
-		server = server.asTarget.server;
-		if (server.serverRunning) {
-			^function.value;	
-		}{
-			^this.newCopyArgs(function, server).init;
-		};
-	}
-	
-	init {
-		ServerReady.registerOneShot(
-			UniqueID.next, 
-			{ waiting = false; function; }, 
-			server
-		);
-		server.boot;
-		while { waiting or: { server.serverRunning.not } } { 0.01.wait };
-	}
 }

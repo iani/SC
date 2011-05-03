@@ -35,35 +35,35 @@ Added these modifications to remove a harmless but obnoxious error message in Do
 				Document.open(classHelpPath);
 				0.2.wait;
 				doc = Document.current;
+				0.2.wait;
+				postln({ doc.string.size } ! 100);
 				if (doc.string.size.postln == 0) {
 					doc.string_(format("%\n\n\Inherits from: %\n \n \n    ",
 						this.name.asString,
 						"".strcatList(this.superclasses collect: _.name);
 					));
-					{
-						0.2.wait;
-						doc.selectLine(1);	 0.2.wait;
-						doc.font_(Font("Helvetica-Bold", 18), 
-							doc.selectionStart.postln, doc.selectionSize.postln);
-						0.2.wait;
-						doc.selectLine(2);		0.2.wait;
-						doc.font_(Font("Helvetica-Bold", 18), 
-							doc.selectionStart, doc.selectionSize); 0.2.wait;
-						doc.selectLine(3); 0.2.wait;
-						doc.font_(Font("Helvetica-Bold", 12), 
-							doc.selectionStart, doc.selectionSize); 
-						doc.selectLine(4); 0.2.wait;
-						doc.font_(Font("Helvetica", 12), 
-							doc.selectionStart, doc.selectionSize); 
-						doc.selectLine(5); 0.2.wait;
-						doc.selectLine(5); 0.2.wait;
-						doc.font_(Font("Helvetica", 12), 
-							doc.selectionStart, doc.selectionSize); 0.2.wait; 
-						doc.font_(Font("Helvetica", 12), 
-							doc.selectionStart, doc.string.size - doc.selectionStart); 
-					}.fork(AppClock);
+					0.2.wait;
+					doc.selectLine(1);	 0.2.wait;
+					doc.font_(Font("Helvetica-Bold", 18), 
+						doc.selectionStart.postln, doc.selectionSize.postln);
+					0.2.wait;
+					doc.selectLine(2);		0.2.wait;
+					doc.font_(Font("Helvetica-Bold", 18), 
+						doc.selectionStart, doc.selectionSize); 0.2.wait;
+					doc.selectLine(3); 0.2.wait;
+					doc.font_(Font("Helvetica-Bold", 12), 
+						doc.selectionStart, doc.selectionSize); 
+					doc.selectLine(4); 0.2.wait;
+					doc.font_(Font("Helvetica", 12), 
+						doc.selectionStart, doc.selectionSize); 
+					doc.selectLine(5); 0.2.wait;
+					doc.selectLine(5); 0.2.wait;
+					doc.font_(Font("Helvetica", 12), 
+						doc.selectionStart, doc.selectionSize); 0.2.wait; 
+					doc.font_(Font("Helvetica", 12), 
+						doc.selectionStart, doc.string.size - doc.selectionStart); 
 				};
-			}.fork(AppClock);			
+			}.fork(AppClock);
 		};
 	}
 

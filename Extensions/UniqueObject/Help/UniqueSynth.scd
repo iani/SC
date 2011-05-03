@@ -51,7 +51,7 @@ UniqueSynth.onServer.postln;
 	20 do: { s.set(\freq, 80 rrand: 1800); 0.05.wait; };
 	(1..40) do: { | i | 0.1.wait; s.set(\freq, i * 100) }; 
 	1.wait;
-	s.release;
+	s.release(5);
 });
 
 //:WRONG!
@@ -72,9 +72,9 @@ UniqueSynth.onServer.postln;
 
 //:More examples: 
  
-
+WaitForServer.new;
 \default.play;
-\default.wait(0.1); 				// make sure to wait for server boot also
+0.1.wait;
 \default.set(\freq, 440 * 3/2);
 0.4.wait;
 15 do: { \default.set(\freq, ((4..12) * 110).choose); 0.05.wait };
@@ -82,20 +82,8 @@ UniqueSynth.onServer.postln;
 0.5.wait;
 \default.release; 
 
-//:s synth
-SynthDef(\test, { Out.ar(0, SinOsc.ar(Rand(4, 10) * 100, 0, 0.1)) }).load(Server.default);
-
-0.3.wait;
-
-5 do: {
-	a = \test.play.onStart;
-	a.onRemove({ | x |  postf("% stopped\n", x); });
-	0.2.wait;
-	\test.free;
-	0.1.wait;
-};
-
-//:o on start
+//:On start. 
+// This example also shows the combined use of Symbol:play with Function:uplay. 
 
 \test.play.onStart({ "hello".postln; });
 \test.wait(1);

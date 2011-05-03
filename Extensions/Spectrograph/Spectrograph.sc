@@ -1,10 +1,10 @@
-// changelog:
-//	- 30-Mar-10 made cross-platform, fixed relativeOrigin issue
-// modifications by IZ 2011 04 17 f
 
 /* 
+
+Inspired by Spectrogram Quark of Thor Magnusson and Dan Stowell. 
+
 This here is a redo using UniqueObject subclasses to simplify the 
-synchronization between window, synth and routine
+synchronization between window, synth and routine. 
 
 fft sizes > 1024 are not supported, because that is the largest size of a buffer that 
 can be obtained with buf.getn at the moment
@@ -13,7 +13,7 @@ NOT YET DONE!
 
 */
 
-Spectrogram3 : UniqueWindow {
+Spectrograph : UniqueWindow {
 	var <bounds, <server, <rate, <bufsize, <image, <>stopOnClose = true;
 	
 	*start { | name, bounds, server, rate = 0.025, bufsize = 1024 |

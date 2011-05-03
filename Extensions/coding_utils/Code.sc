@@ -23,8 +23,8 @@ Code {
 	init {
 		var prItems;
 		string = doc.string;
-		// note: [^ ] means: ignore whitespace after the ":"
-		#positions, headers = string.findRegexp("^//:[^ ][^\n]*").flop;
+		// REMOVED: note: [^ ] means: ignore whitespace after the ":"
+		#positions, headers = string.findRegexp("^//:[^\n]*").flop;
 		if (positions.size == 0) {
 			// prevent evaluation of non-.scd documents with no snippets:
 			if ( doc.name.splitext.last != "scd" ) { canEvaluate = false; };
