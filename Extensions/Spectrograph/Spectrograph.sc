@@ -27,6 +27,8 @@ Spectrograph : UniqueWindow {
 	var <penObjects; // array of objecs that add display graphics using Pen
 	var <drawSpectrogram, <drawCrosshair;	// the two built-in drawing objects
 	
+	var <persistentWindowIndex;	// needed for frame drawing sync????
+	
 	*start { | name, bounds, server, rate = 0.025, bufsize = 1024 |
 		^this.new	(name, bounds, server ? Server.default, rate, bufsize = 1024).start;
 	}
@@ -35,6 +37,8 @@ Spectrograph : UniqueWindow {
 		name = format("%:%", name = name ? "Spectrograph", server = server ? Server.default).asSymbol;
 		^current = super.new(name, bounds, server, rate, bufsize);
 	}
+
+	name { ^key[1] }
 	
 	init { | argBounds, argServer, argRate, argBufsize |
 		var window; // just for naming convenience
@@ -51,8 +55,9 @@ Spectrograph : UniqueWindow {
 	}
 
 	initViews {
-		userview = UserView(object, object.view.bounds);
-		userview.drawFunc = { | view |
+		userview = UserView(object, object.view.bounds)
+			.resize_(5)
+			.drawFunc = { | view |
 			var b = view.bounds;
 			Pen.use {
 				Pen.scale( b.width / imgWidth, b.height / imgHeight );
@@ -101,6 +106,40 @@ Spectrograph : UniqueWindow {
 	}
 
 	update { | argIndex, magnitudes, fftData |
+		windowIndex = argIndex;
+		if (windowIndex >= imgWidth) {
+			windowIndex = windowIndex % scrollWidth; 
+			if (windowIndex == 0) {	// the frame has reached the rightmost end of the drawing window ...
+			// ... so scroll the rest of the image to the left
+				image.loadPixels(scrollImage, Rect(scrollWidth, 0, imgWidth - scrollWidth, imgHeight), 0);
+				image.setPixels(scrollImage, Rect(0, 0, imgWidth - scrollWidth, imgHeight), 0); 
+				image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0);
+			};
+			windowIndex = windowIndex + (imgWidth - scrollWidth);
+		};
+
+		persistentWindowIndex = windowIndex;
+/*		currentFFTframeMagnitudes = Complex(
+				Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
+			).magnitude;
+		currentFFTframeMagnitudesReversed = currentFFTframeMagnitudes.reverse;
+		complexarray = log10(1 + currentFFTframeMagnitudesReversed).clip(0, 1) * intensity;
+		complexarray.do({ | val, i |
+			fftDataArray[i] = colints.clipAt((val * colorSize).round);
+		});
+*/
+		{	// correct: in sync with data, and index protected
+			drawSpectrogram.update(image, persistentWindowIndex, magnitudes);
+//			image.setPixels(fftDataArray, Rect(persistentWindowIndex, 0, 1, fftDataArray.size));
+			userview.refresh;	
+		}.defer;		
+	}
+
+}
+
+/*
+
+	update { | argIndex, magnitudes, fftData |
 		// FFT data received from FFTsynthPoller. Draw graphics and refresh user view.
 		// Received from the FFTsynthPoller each time an fft frame is polled.
 		index = argIndex;
@@ -127,6 +166,4 @@ Spectrograph : UniqueWindow {
 		};
 	}		
 
-	name { ^key[1] }
-
-}
+*/
