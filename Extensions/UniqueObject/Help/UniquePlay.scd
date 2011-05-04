@@ -15,7 +15,6 @@ To select the previous example, press Command-shift-k
 
 //:play a function multiple times, (server-boot-safe), for specified durations: 
 
-WaitForServer.new;			// Wait for server to start, if needed
 thisThread.randSeed_(4);	// always play the same sequence
 100 do: { 
 	{ SinOsc.ar(exprand(400, 1800), 0, 0.1) }.mplay(dur: 0.01, fadeOut: exprand(0.01, 3));

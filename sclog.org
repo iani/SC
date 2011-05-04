@@ -360,3 +360,7 @@ LibObject?
      :PROPERTIES:
      :ENTERED_ON: <2011-05-04 Wed 12:24>
      :END:
+**** Added WaitForServer.new to String:fork. Snippets don't need it any more  :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-04 Wed 19:21>
+     :END:

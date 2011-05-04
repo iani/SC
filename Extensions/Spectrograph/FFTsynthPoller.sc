@@ -18,7 +18,6 @@ FFTsynthPoller : AbstractUniqueServerObject {
 	var <rate; 			// how long to wait between each poll.
 	var <bufSize; 		// the size of the FFT buffer. Should not be larger than 1024
 	var <in = 0;			// The number of the audio bus to analyse and poll
-	var <index = 0;		// 
 	var <asKey;			// The FFTpollSynth uses as key. Clients can use it to get notified
 						// about every change in the state and to receive the data
 	var <fftMagnitudes;	// the fftMagnitude array of the last FFT buffer polled
@@ -44,7 +43,7 @@ FFTsynthPoller : AbstractUniqueServerObject {
 
 	removeListener { | object | listeners remove: object; }
 
-	fftData_ { | data |
+	update { | index, data |
 		// fft data received from FFTpollSynth. 
 		// Caclulate magnitudes and send data to all listeners. 
 		// Increment index of poll count
@@ -56,10 +55,8 @@ FFTsynthPoller : AbstractUniqueServerObject {
 			postf("% polled. Index: %, magsize: %, fftsize: %\n", 
 				asKey, index, fftMagnitudes.size, data.size);
 		};
-		// Defer so that listeners can use graphics primitives:
-		{ listeners do: _.update(index, fftMagnitudes, data); }.defer;
-		index = index + 1; // Increment index of poll count
-	}	
+		listeners do: _.update(index, fftMagnitudes, data);
+	}
 
 /* All communication except fft data updates is done via NotificationCenter using asKey as 
 The id of this poller. This means objects can register to be notified by the poller under
@@ -69,7 +66,6 @@ the message notification \start.
 */
 
 	start {
-		index = 0;
 		CmdPeriod.add(this);
 		this.makeFFTpollSynth;
 		NotificationCenter.notify(asKey, \start, this);

@@ -18,10 +18,14 @@ Spectrograph : UniqueWindow {
 	classvar <current;
 	var <bounds, <server, <rate, <bufsize, <>stopOnClose = true;
 	var <userview, <image, <imgWidth, <imgHeight;
-	var scrollWidth, scrollImage, clearImage;
-	var <windowIndex = 0;
+	var <scrollWidth, scrollImage, clearImage;
+	var <index;	// running count of the currently polled fft frame. 
+				// received from FFTsynthPoller. Cached for asynchronous use by penObjects
+	var <windowIndex;	// index of x pixel on image where current frame is being drawn
 
-	var <drawProcesses; // array of objecs that add display graphics to the image
+	var <imageObjects; // array of objecs that add display graphics to pixels on the image
+	var <penObjects; // array of objecs that add display graphics using Pen
+	var <drawSpectrogram, <drawCrosshair;	// the two built-in drawing objects
 	
 	*start { | name, bounds, server, rate = 0.025, bufsize = 1024 |
 		^this.new	(name, bounds, server ? Server.default, rate, bufsize = 1024).start;
@@ -34,12 +38,14 @@ Spectrograph : UniqueWindow {
 	
 	init { | argBounds, argServer, argRate, argBufsize |
 		var window; // just for naming convenience
-		bounds = argBounds ?? { Window.centeredWindowBounds(100) };
+		bounds = argBounds ?? { Window.centeredWindowBounds(1000) };
 		server = argServer;
 		rate = argRate;
 		bufsize = argBufsize;
 		window = object = Window(this.name, bounds);
 		this.initViews;
+		drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, Color.white, Color.black);
+		this.addImageObject(drawSpectrogram);
 		this.addWindowOnCloseAction;
 		this.front;
 	}
@@ -52,9 +58,7 @@ Spectrograph : UniqueWindow {
 				Pen.scale( b.width / imgWidth, b.height / imgHeight );
 				Pen image: image;
 			};
-			// notify other polling objects that they can draw with other Pen operations here
-			// may be replaced with simple dependant array mechanism
-			NotificationCenter.notify(this, \drawPen, b);
+			penObjects do: _.update(this); 	// let objects draw with Pen here
 		};
 		imgWidth = userview.bounds.width;
 		imgHeight = bufsize / 2;
@@ -73,7 +77,9 @@ Spectrograph : UniqueWindow {
 		image = Image.color(imgWidth@imgHeight, color);
 		// clearImage is an image used when scrolling to erase the right part of the screen 
 		clearImage = Int32Array.fill(imgHeight * scrollWidth, Integer.fromColor(color));
-	}	
+	}
+	
+	addImageObject { | object | imageObjects = imageObjects add: object }
 		
 	start {
 		var poller;
@@ -93,15 +99,17 @@ Spectrograph : UniqueWindow {
 		var poller;
 		if ((poller = FFTsynthPoller.at(this.name.postln, server)).postln.notNil) { poller.stop; };
 	}
-	
-	update { | index, fftFrame, magnitudes |
+
+	update { | argIndex, magnitudes, fftData |
+		// FFT data received from FFTsynthPoller. Draw graphics and refresh user view.
 		// Received from the FFTsynthPoller each time an fft frame is polled.
-		// This message is sent by FFTsynthPoller within a deferred function. 
-		// So graphics drawing primitives can run. 
-		postf("Spectrogram updating: %, %, %\n", index, fftFrame.size, magnitudes.size);
-		this.scroll(index);
-		drawProcesses do: _.update(index, fftFrame, magnitudes);
-		userview.refresh;
+		index = argIndex;
+//		postf("% updating: %, %, %\n", this.name, index, fftData.size, magnitudes.size);
+		{ 
+			this.scroll(index);
+			imageObjects do: _.update(image, windowIndex, magnitudes);
+			if (userview.notClosed) { userview.refresh };
+		}.defer;
 	}
 
 	scroll { | index |
@@ -110,7 +118,7 @@ Spectrograph : UniqueWindow {
 			windowIndex = windowIndex % scrollWidth; 
 			if (windowIndex == 0) {	// the frame has reached the rightmost end of the drawing window ...
 			// ... so scroll the rest of the image to the left
-				"SCROLLING".postln;
+//				"SCROLLING".postln;
 				image.loadPixels(scrollImage, Rect(scrollWidth, 0, imgWidth - scrollWidth, imgHeight), 0);
 				image.setPixels(scrollImage, Rect(0, 0, imgWidth - scrollWidth, imgHeight), 0); 
 				image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0);

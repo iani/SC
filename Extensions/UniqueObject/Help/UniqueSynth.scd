@@ -71,8 +71,6 @@ UniqueSynth.onServer.postln;
 \default.release;
 
 //:More examples: 
- 
-WaitForServer.new;
 \default.play;
 0.1.wait;
 \default.set(\freq, 440 * 3/2);

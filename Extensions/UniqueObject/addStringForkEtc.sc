@@ -6,8 +6,16 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 + Magnitude { asKey { ^this } }
 
 + String { 
-	asKey { ^this.hash }	
-	fork { | clock | this.compile.fork(clock ? AppClock); }
+	asKey { ^this.hash }
+	fork { | clock |
+		var func;
+		func = this.compile;
+		// include WaitForServer for safety. 
+		{ 
+			WaitForServer.new;
+			func.value;
+		}.fork(clock ? AppClock); 
+	}
 	evalPost { | clock | this.eval.postln; }
 	eval { | clock | ^this.interpret; }
 	window { | makeFunc | ^this.asSymbol.window(makeFunc); }

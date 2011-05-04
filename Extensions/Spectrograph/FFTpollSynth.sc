@@ -8,7 +8,7 @@ It is not designed to be used on its own.
 */
 
 FFTpollSynth : UniqueSynth {
-	var <poller, <server, <rate = 0.025, <buffer, <bufSize;
+	var <poller, <server, <rate = 0.025, <buffer, <bufSize, <index = 0;
 	
 	*new { | poller, server, rate = 0.025, bufSize = 1024, in = 0 |
 		^super.new(poller.asKey, \fft, nil, server ? Server.default, \addToHead, rate, bufSize, in, poller)
@@ -23,7 +23,7 @@ FFTpollSynth : UniqueSynth {
 		Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
 		});
-			super.init(server, \fft, [\in, in], \addToHead);
+		super.init(server, \fft, [\in, in], \addToHead);
 
 		this.rsync({
 			var fftbuf, bufnum, notifyKey;
@@ -32,11 +32,12 @@ FFTpollSynth : UniqueSynth {
 			notifyKey = key[2];
 			loop {
 				fftbuf.getn(0, bufSize, { | buf |
-					poller.fftData = buf;
+					poller.update(index, buf);
+					index = index + 1;
 				});
-				rate.wait;	
+				rate.wait;
 			};
-		}, AppClock); // Using AppClock may cause index sync problems (debug?)
+		}, SystemClock); // Using AppClock may cause index sync problems (DEBUGGING!)
 		this.connectToPoller;
 	}
 
