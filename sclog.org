@@ -356,3 +356,7 @@ ObjectServer?
 
 PersistentObject?
 LibObject?
+**** Many small bugs have been removed. Library is ready for alpha testing
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-04 Wed 12:24>
+     :END:

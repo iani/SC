@@ -23,6 +23,7 @@ FFTsynthPoller : AbstractUniqueServerObject {
 						// about every change in the state and to receive the data
 	var <fftMagnitudes;	// the fftMagnitude array of the last FFT buffer polled
 	var <listeners;		// these are the clients that get the data, for drawing or other processing
+	var <>post = false;	// turn on posting of polling for debugging purposes
 	
 	*new { | key, server, rate = 0.025, bufSize = 1024, in = 0, start = true |
 		server = server ? Server.default;
@@ -51,6 +52,10 @@ FFTsynthPoller : AbstractUniqueServerObject {
 		object = data; 
 		#real, imaginary = data.clump(2).flop;
 		fftMagnitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
+		if (post) { 
+			postf("% polled. Index: %, magsize: %, fftsize: %\n", 
+				asKey, index, fftMagnitudes.size, data.size);
+		};
 		// Defer so that listeners can use graphics primitives:
 		{ listeners do: _.update(index, fftMagnitudes, data); }.defer;
 		index = index + 1; // Increment index of poll count

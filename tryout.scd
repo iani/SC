@@ -1,9 +1,2 @@
-Spectrograph.start.stopOnClose = false;
+Spectrograph.start
 
-FFTsynthPoller.onServer.first.addListener(\test, { | data | data.postln; });
-
-FFTsynthPoller.onServer.first.stop;
-
-Spectrogram2.new;
-
-\default.play;
