@@ -37,7 +37,7 @@ Spectrograph : UniqueWindow {
 		rate = argRate;
 		bufsize = argBufsize;
 		window = object = Window(this.name, bounds);
-		this.initViews;
+//		this.initViews;
 		this.addWindowOnCloseAction;
 		this.front;
 	}
@@ -54,19 +54,8 @@ Spectrograph : UniqueWindow {
 	start {
 		var poller;
 		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize);
-		/* // ===== NEXT LINES TO BE ADDED
-		// 	poller addListener: this;
-		//	this onClose: { poller removeListener: this }; 
-		*/
-		// ======= NEXT PART TO BE REMOVED
-		poller.addListener(this, { | data |
-			// THIS IS WHERE THE DATA MUST BE DRAWN ON THE IMAGE
-			data.size.postln;
-			object.postln;
-//			{  object.bounds = Rect(*Array.rand(4, 200, 400)) }.defer;
-		});
-		this.onClose({ poller.removeListener(this) });
-		// ======= END OF PART TO BE REMOVED
+		poller addListener: this;
+		this onClose: { poller removeListener: this }; 
 		poller.addNotifier(this, this.removedMessage, { 
 			if (stopOnClose) { poller.stop; } });
 		poller.start;
@@ -74,11 +63,12 @@ Spectrograph : UniqueWindow {
 	
 	update { | index, fftFrame, magnitudes |
 		// Received from the FFTsynthPoller each time an fft frame is polled.
-		// This message is made by FFTsynthPoller within a deferred function. 
+		// This message is sent by FFTsynthPoller within a deferred function. 
 		// So graphics drawing primitives can run. 
-		this.scroll(index);
-		drawProcesses do: _.update(index, fftFrame, magnitudes);
-		userview.refresh;
+		postf("Spectrogram updating: %, %, %\n", index, fftFrame.size, magnitudes.size);
+//		this.scroll(index);
+//		drawProcesses do: _.update(index, fftFrame, magnitudes);
+//		userview.refresh;
 	}
 
 	scroll { | index |

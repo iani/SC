@@ -25,7 +25,6 @@ UniqueWindow : UniqueObject {
 			this.remove;
 			object.releaseDependants;
 			object = nil;	
-			postf("set object to nli: %\n", object);	
 		};
 	}
 

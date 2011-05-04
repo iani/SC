@@ -21,7 +21,7 @@ FFTsynthPoller : AbstractUniqueServerObject {
 	var <index = 0;		// 
 	var <asKey;			// The FFTpollSynth uses as key. Clients can use it to get notified
 						// about every change in the state and to receive the data
-	var <fftMangitudes;	// the fftMagnitude array of the last FFT buffer polled
+	var <fftMagnitudes;	// the fftMagnitude array of the last FFT buffer polled
 	var <listeners;		// these are the clients that get the data, for drawing or other processing
 	
 	*new { | key, server, rate = 0.025, bufSize = 1024, in = 0, start = true |
@@ -30,28 +30,38 @@ FFTsynthPoller : AbstractUniqueServerObject {
 	}
 
 	init { | server, argRate, argBufSize, argIn, start |
-		asKey = key[2];
 		rate = argRate; bufSize = argBufSize; in = argIn; 
+		asKey = key[2];
 		if (start) { this.start; };
+		this.onClose({ listeners = nil })
 	}
 
-/* 
-The advantage of notifying via NotifiationCenter using a symbol as key is that 
-other objects (clients) can register for notification from a poller instance, based on its key, 
-even before the FFTsynthPoller instance is created. 
-*/
-	addListener { | object, action | /* action will become redundant in next version */ 
+	// a simplified Observer pattern (Model-dependants) using just an array:
+	addListener { | object | 
 		listeners = listeners add: object;
-		// This part of code to be removed in next version
-		NotificationCenter.register(asKey, \fft, object, action);
-		this.onClose({
-			NotificationCenter.unregister(asKey, \fft, object);
-		});
 	}
-	
-	removeListener { | object |
-		NotificationCenter.unregister(asKey, \fft, object);
-	}
+
+	removeListener { | object | listeners remove: object; }
+
+	fftData_ { | data |
+		// fft data received from FFTpollSynth. 
+		// Caclulate magnitudes and send data to all listeners. 
+		// Increment index of poll count
+		var real, imaginary;
+		object = data; 
+		#real, imaginary = data.clump(2).flop;
+		fftMagnitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
+		// Defer so that listeners can use graphics primitives:
+		{ listeners do: _.update(index, fftMagnitudes, data); }.defer;
+		index = index + 1; // Increment index of poll count
+	}	
+
+/* All communication except fft data updates is done via NotificationCenter using asKey as 
+The id of this poller. This means objects can register to be notified by the poller under
+its "asKey" even before the poller exists. 
+Under such a scheme, a listener may add itself as listener to the poller as soon as it receives
+the message notification \start. 
+*/
 
 	start {
 		index = 0;
@@ -85,20 +95,5 @@ even before the FFTsynthPoller instance is created.
 		// FFTpollSynth receives this and restarts. see FFTpollSynth:connectToPoller
 		bufSize = argBufSize;
 		NotificationCenter.notify(asKey, \bufSize, bufSize);
-	}
-
-	fftData_ { | data |
-		// This will change: send .update(index, data, magnitudes) to an array of listeners.
-		// It is more efficient than using NotificationCenter
-		var real, imaginary;
-		object = data; 	// data.postln;
-		#real, imaginary = data.clump(2).flop;
-		fftMangitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
-		/* // next line to be inserted: 
-		{ listeners do: _.update; }.defer;
-		*/
-		// next line to be removed: 
-		NotificationCenter.notify(asKey, \fft, [index, data, fftMangitudes]);
-		index = index + 1;
 	}
 }
