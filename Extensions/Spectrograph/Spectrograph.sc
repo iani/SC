@@ -14,15 +14,20 @@ NOT YET DONE!
 */
 
 Spectrograph : UniqueWindow {
-	var <bounds, <server, <rate, <bufsize, <image, <>stopOnClose = true;
+	var <bounds, <server, <rate, <bufsize, <>stopOnClose = true;
+	var <userview, <image, <imgWidth, <imgHeight;
+	var scrollWidth, scrollImage, clearImage;
+	var <windowIndex = 0;
 	
-	*start { | name, bounds, server, rate = 0.025, bufsize = 1024 |
-		^this.new	(name, bounds, server ? Server.default, rate = 0.025, bufsize = 1024).start;
+	var <drawProcesses; // array of objecs that add display graphics to the image
+	
+	*start { | name, bounds, server, rate = 0.25, bufsize = 1024 |
+		^this.new	(name, bounds, server ? Server.default, rate = 1, bufsize = 1024).start;
 	}
 	
 	*new { | name, bounds, server, rate = 0.025, bufsize = 1024 |
 		name = format("%:%", name = name ? "spectrogram", server = server ? Server.default).asSymbol;
-		^super.new(name, bounds, server, rate, bufsize)
+		^super.new(name, bounds, server, rate, bufsize);
 	}
 	
 	init { | argBounds, argServer, argRate, argBufsize |
@@ -30,20 +35,66 @@ Spectrograph : UniqueWindow {
 		bounds = argBounds ?? { Window.centeredWindowBounds(600) };
 		server = argServer;
 		rate = argRate;
-		bufsize = argBufsize;		
+		bufsize = argBufsize;
 		window = object = Window(this.name, bounds);
-		window.onClose = { this.remove };
-		window.front;
+		this.initViews;
+		this.addWindowOnCloseAction;
+		this.front;
+	}
+
+	initViews {
+		// userview = ...
+		// image = ...
+		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
+		scrollImage = Int32Array.fill(imgHeight * (imgWidth - scrollWidth), 0);
+		clearImage = Int32Array.fill(imgHeight * scrollWidth, 255);
 	}
 	
-	name { ^key[1] }
-	
+		
 	start {
 		var poller;
-		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize); 
-		if (stopOnClose) {
-			poller.addNotifier(this, this.removedMessage, { poller.stop; })
-		};
+		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize);
+		/* // ===== NEXT LINES TO BE ADDED
+		// 	poller addListener: this;
+		//	this onClose: { poller removeListener: this }; 
+		*/
+		// ======= NEXT PART TO BE REMOVED
+		poller.addListener(this, { | data |
+			// THIS IS WHERE THE DATA MUST BE DRAWN ON THE IMAGE
+			data.size.postln;
+			object.postln;
+//			{  object.bounds = Rect(*Array.rand(4, 200, 400)) }.defer;
+		});
+		this.onClose({ poller.removeListener(this) });
+		// ======= END OF PART TO BE REMOVED
+		poller.addNotifier(this, this.removedMessage, { 
+			if (stopOnClose) { poller.stop; } });
+		poller.start;
 	}
 	
+	update { | index, fftFrame, magnitudes |
+		// Received from the FFTsynthPoller each time an fft frame is polled.
+		// This message is made by FFTsynthPoller within a deferred function. 
+		// So graphics drawing primitives can run. 
+		this.scroll(index);
+		drawProcesses do: _.update(index, fftFrame, magnitudes);
+		userview.refresh;
+	}
+
+	scroll { | index |
+		windowIndex = index;
+		if (windowIndex >= imgWidth) {
+			windowIndex = windowIndex % scrollWidth; 
+			if (windowIndex == 0) {	// the frame has reached the rightmost end of the drawing window ...
+			// ... so scroll the rest of the image to the left
+				image.loadPixels(scrollImage, Rect(scrollWidth, 0, imgWidth - scrollWidth, imgHeight), 0);
+				image.setPixels(scrollImage, Rect(0, 0, imgWidth - scrollWidth, imgHeight), 0); 
+				image.setPixels(clearImage, Rect(imgWidth - scrollWidth, 0, scrollWidth, imgHeight), 0);
+			};
+			windowIndex = windowIndex + (imgWidth - scrollWidth);
+		};
+	}		
+
+	name { ^key[1] }
+
 }

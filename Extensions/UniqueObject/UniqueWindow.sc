@@ -5,11 +5,7 @@ UniqueWindow : UniqueObject {
 
 	init { | windowFunc |
 		super.init(windowFunc ?? { Window(key.last.asString).bounds_(this.defaultBounds).front });
-		object.onClose = {
-			this.remove;
-			object.releaseDependants;
-			object = nil;	
-		}
+		this.addWindowOnCloseAction;
 	}
 
 	defaultBounds { 
@@ -22,6 +18,15 @@ UniqueWindow : UniqueObject {
 			defaultBounds.left = 100;
 		};
 		^defaultBounds;
+	}
+	
+	addWindowOnCloseAction {
+		object.onClose = {
+			this.remove;
+			object.releaseDependants;
+			object = nil;	
+			postf("set object to nli: %\n", object);	
+		};
 	}
 
 	*front { | windowName |

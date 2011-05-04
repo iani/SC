@@ -343,7 +343,16 @@ PrivateBusSynth: adds a private Bus and redirects the output of the synth to it.
 The bus gets freed as soon as the UniqueSynth stops. 
 
 SignalPoller: 
-Adds a synchronized routine (rsynca) that polls the output of the synth to the private bus, or an anasysis buffer, and shares the data via a list of functions with other processes. 
+Adds a synchronized routine (rsynca) that polls the output of the synth to the private bus, or an anasysis buffer, and shares the data via a list of functions with other processes.
+*** 2011-05-04 Wednesday
+**** alternative names for UniqueObject? :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-04 Wed 00:23>
+     :END:
 
+ObjectService? 
+ObjectRegistry? 
+ObjectServer? 
 
-
+PersistentObject?
+LibObject?

@@ -15,9 +15,14 @@ If the bufSize is changed, it will stop the current FFTpollSynth and restart a n
 */
 
 FFTsynthPoller : AbstractUniqueServerObject {
-	var <rate, <bufSize, <in = 0;
-
-	var <asKey;	// this is what the FFTpollSynth uses as key
+	var <rate; 			// how long to wait between each poll.
+	var <bufSize; 		// the size of the FFT buffer. Should not be larger than 1024
+	var <in = 0;			// The number of the audio bus to analyse and poll
+	var <index = 0;		// 
+	var <asKey;			// The FFTpollSynth uses as key. Clients can use it to get notified
+						// about every change in the state and to receive the data
+	var <fftMangitudes;	// the fftMagnitude array of the last FFT buffer polled
+	var <listeners;		// these are the clients that get the data, for drawing or other processing
 	
 	*new { | key, server, rate = 0.025, bufSize = 1024, in = 0, start = true |
 		server = server ? Server.default;
@@ -27,7 +32,6 @@ FFTsynthPoller : AbstractUniqueServerObject {
 	init { | server, argRate, argBufSize, argIn, start |
 		asKey = key[2];
 		rate = argRate; bufSize = argBufSize; in = argIn; 
-//		postf("fftsynthpoller init server: %, rate: %, bufSize: %\n", server, rate, bufSize);
 		if (start) { this.start; };
 	}
 
@@ -36,7 +40,9 @@ The advantage of notifying via NotifiationCenter using a symbol as key is that
 other objects (clients) can register for notification from a poller instance, based on its key, 
 even before the FFTsynthPoller instance is created. 
 */
-	addListener { | object, action |
+	addListener { | object, action | /* action will become redundant in next version */ 
+		listeners = listeners add: object;
+		// This part of code to be removed in next version
 		NotificationCenter.register(asKey, \fft, object, action);
 		this.onClose({
 			NotificationCenter.unregister(asKey, \fft, object);
@@ -44,10 +50,11 @@ even before the FFTsynthPoller instance is created.
 	}
 	
 	removeListener { | object |
-		NotificationCenter.unregister(asKey, \fft);
+		NotificationCenter.unregister(asKey, \fft, object);
 	}
 
 	start {
+		index = 0;
 		CmdPeriod.add(this);
 		this.makeFFTpollSynth;
 		NotificationCenter.notify(asKey, \start, this);
@@ -75,12 +82,23 @@ even before the FFTsynthPoller instance is created.
 	}
 
 	bufSize_ { | argBufSize = 1024 |
+		// FFTpollSynth receives this and restarts. see FFTpollSynth:connectToPoller
 		bufSize = argBufSize;
 		NotificationCenter.notify(asKey, \bufSize, bufSize);
 	}
 
 	fftData_ { | data |
-		object = data; 	// data.postln; 
-		NotificationCenter.notify(asKey, \fft, [object]);
+		// This will change: send .update(index, data, magnitudes) to an array of listeners.
+		// It is more efficient than using NotificationCenter
+		var real, imaginary;
+		object = data; 	// data.postln;
+		#real, imaginary = data.clump(2).flop;
+		fftMangitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
+		/* // next line to be inserted: 
+		{ listeners do: _.update; }.defer;
+		*/
+		// next line to be removed: 
+		NotificationCenter.notify(asKey, \fft, [index, data, fftMangitudes]);
+		index = index + 1;
 	}
 }

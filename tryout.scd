@@ -1,12 +1,9 @@
-asdf asdf 
+Spectrograph.start.stopOnClose = false;
 
+FFTsynthPoller.onServer.first.addListener(\test, { | data | data.postln; });
 
+FFTsynthPoller.onServer.first.stop;
 
-Document.current.selectRange(0, 2147483647);
+Spectrogram2.new;
 
-Document.current.selectRange(0, 1000000000000000000);
-
-
-asdfasdfadsf 
-
-Dock
+\default.play;
