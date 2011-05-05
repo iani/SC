@@ -23,7 +23,7 @@ FFTpollSynth : UniqueSynth {
 		Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
 		});
-		super.init(server, \fft, [\in, in], \addToHead);
+		super.init(server, \fft, [\in, in], \addToTail);
 
 		this.rsync({
 			var fftbuf, bufnum, notifyKey;
