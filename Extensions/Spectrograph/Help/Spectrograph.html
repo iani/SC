@@ -12,12 +12,13 @@ p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0p
 p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
 p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
 p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
-p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
-p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
-p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
-span.s1 {color: #162bc4}
-span.s2 {color: #000000}
-span.s3 {color: #008323}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+span.s1 {color: #000000}
+span.s2 {color: #008323}
+span.s3 {color: #162bc4}
+span.Apple-tab-span {white-space:pre}
 </style>
 </head>
 <body>
@@ -27,13 +28,25 @@ span.s3 {color: #008323}
 <p class="p4"><span class="Apple-converted-space"> </span></p>
 <p class="p3">A real time Spectrogram<span class="Apple-converted-space">  </span>with customizable window dimensions and colors.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p5">//:Customize Spectrograph background color</p>
-<p class="p6"><span class="s1">Spectrograph</span>.backgroundColor = <span class="s1">Color</span>(0.2, 0.5, 0.9);</p>
-<p class="p5">//:Start Spectrograph with some test tones.</p>
-<p class="p7">Spectrograph<span class="s2">.start;</span></p>
-<p class="p8"><br></p>
-<p class="p6"><span class="s3">\test</span>.playFunc({ <span class="s1">SinOsc</span>.ar(<span class="s1">LFSaw</span>.kr(0.1).range(100, 10000), 0, 0.1) });</p>
-<p class="p6"><span class="s3">\test2</span>.playFunc({ <span class="s1">SinOsc</span>.ar(<span class="s1">LFSaw</span>.kr(0.01).range(100, 10000), 0, 0.1) });</p>
-<p class="p8"><br></p>
+<p class="p5">//:Start the default spectrograph</p>
+<p class="p6">Spectrograph<span class="s1">.start;</span></p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s2">\test3</span>.play({ <span class="s3">LFSaw</span>.ar(<span class="s3">LFNoise2</span>.kr(0.1).range(100, 10000), 0, 0.005) });</p>
+<p class="p7"><br></p>
+<p class="p5">//:Set backround color</p>
+<p class="p8"><span class="s3">Spectrograph</span>.background = <span class="s3">Color</span>(0.1, 0.3, 0.6);</p>
+<p class="p7"><br></p>
+<p class="p5">//:Change to small size</p>
+<p class="p5"><span class="s3">Spectrograph</span><span class="s1">.small;<span class="Apple-tab-span">	</span></span>// Works also with no spectrograph running</p>
+<p class="p5">//:Change back to big size</p>
+<p class="p5"><span class="s3">Spectrograph</span><span class="s1">.big;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Works also with no spectrograph running</p>
+<p class="p7"><br></p>
+<p class="p5">//:Start Spectrograph with some (more) test tones.</p>
+<p class="p5"><span class="s3">Spectrograph</span><span class="s1">.start; </span>// in case needed ...</p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s2">\test</span>.play({ <span class="s3">SinOsc</span>.ar(<span class="s3">LFSaw</span>.kr(0.1).range(100, 10000), 0, 0.001) });</p>
+<p class="p8"><span class="s2">\test2</span>.play({ <span class="s3">SinOsc</span>.ar(<span class="s3">LFSaw</span>.kr(0.01).range(100, 10000), 0, 0.001) });</p>
+<p class="p8"><span class="s2">\default</span>.play rsyncs: { loop { 0.25.rand.wait; <span class="s2">\default</span>.set(<span class="s2">\freq</span>, 100 + 10000.rand) } };</p>
+<p class="p7"><br></p>
 </body>
 </html>

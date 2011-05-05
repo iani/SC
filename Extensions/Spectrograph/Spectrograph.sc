@@ -34,10 +34,37 @@ Spectrograph : UniqueWindow {
 		backgroundColor = Color.black;
 		binColor = Color.white;
 	}
-	
-	*start { | name, bounds, server, rate = 0.04, bufsize = 1024 |
-		^this.new	(name, bounds, server ? Server.default, rate, bufsize = 1024).start;
+
+	*big { | server | // TODO: retrieve existing Spectrograph to change its bounds
+		if (this.current.isNil) { ^this.start(nil, nil, server ? Server.default); };
+		this.current.bounds = Window.centeredWindowBounds(1000);
 	}
+
+	*small { | server | // TODO: retrieve existing Spectrograph to change its bounds
+		if (this.current.isNil) { 
+			^this.start(nil, 
+				Rect(Window.screenBounds.width - 600, 0, 600, 200),
+				server: server ? Server.default
+			)
+		};
+		this.current.bounds = Rect(Window.screenBounds.width - 600, 0, 600, 200);
+	}
+	
+	*background_ { | color |
+		color = color ? Color.black;
+		backgroundColor = color;
+		if (current.notNil) { current.background = color };
+	}
+
+	*onServer { | server |
+		server = server ? Server.default;
+		^this.all select: { | s | s.server == server };
+	}
+
+	*start { | name, bounds, server, rate = 0.04, bufsize = 1024 |
+		^this.new(name, bounds, server ? Server.default, rate, bufsize = 1024).start;
+	}
+	
 	
 	*new { | name, bounds, server, rate = 0.04, bufsize = 1024 |
 		name = format("%:%", name = name ? "Spectrograph", server = server ? Server.default).asSymbol;
@@ -79,13 +106,15 @@ Spectrograph : UniqueWindow {
 		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
 		// Setting the background also creates the image
 		this.background = backgroundColor; // method can be called at any time to change color
-		this onClose: { image.free; image = nil; };
+		this onClose: { if (current === this); { current = nil; } };
 	}
 
 	background_ { | color |
 		// This method can be called at any time to change the background color
 		if (image.notNil) { image.free };
 		image = Image.color(imgWidth@imgHeight, color);
+		if (scroll.notNil) { scroll setColor: color; };
+		if (drawSpectrogram.notNil) { drawSpectrogram.background = color; }
 		// clearImage is an image used when scrolling to erase the right part of the screen 
 	}
 	
@@ -94,20 +123,22 @@ Spectrograph : UniqueWindow {
 	start {
 		var poller;
 		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize);
-		this.name.postln;
 		poller addListener: this;
 		this onClose: { poller removeListener: this }; 
 		poller.addNotifier(this, this.removedMessage, { 
 			if (stopOnClose) { poller.stop; } });
 		poller.start;
 	}
-	
+
+//	rate_ { | argRate = 0.04 | this.notify(rate = argRate); /* this ... */ }
+		
+
 	// Added for symmetry, but should only be used for debugging.
 	// (Normally you just close the Spectrograph window.)
 	*stop { if (current.notNil) { current.stop } }
 	stop { // only for debugging purposes. Normally just close the Spectrograph window.
 		var poller;
-		if ((poller = FFTsynthPoller.at(this.name.postln, server)).notNil) { poller.stop; };
+		if ((poller = FFTsynthPoller.at(this.name, server)).notNil) { poller.stop; };
 	}
 
 	update { | argIndex, magnitudes, fftData |
@@ -115,7 +146,7 @@ Spectrograph : UniqueWindow {
 			if (this.isOpen) {
 				argIndex = scroll.update(argIndex, image);
 				drawSpectrogram.update(argIndex, image, magnitudes);
-				userview .refresh;
+				userview.refresh;
 			};
 		}.defer;		
 	}

@@ -34,6 +34,12 @@ UniqueObject {
 	
 	*at { | key ... args | ^this.atKey(this.makeKey(key, *args)) }
 
+	*all { 	// return all objects of the same kind as the receiver 
+			// "Kind" is defined by the main key method of the receiver.
+		if (objects.atPath(this.mainKey).isNil) { ^[] };
+		^objects.leaves(this.mainKey);
+	}
+
 	init { | makeFunc | object = makeFunc.value; }
 
 	// ====== removing objects ======

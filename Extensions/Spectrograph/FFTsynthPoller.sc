@@ -33,29 +33,8 @@ FFTsynthPoller : AbstractUniqueServerObject {
 		rate = argRate; bufSize = argBufSize; in = argIn; 
 		asKey = key[2];
 		if (start) { this.start; };
-		this.onClose({ listeners = nil })
-	}
-
-	// a simplified Observer pattern (Model-dependants) using just an array:
-	addListener { | object | 
-		listeners = listeners add: object;
-	}
-
-	removeListener { | object | listeners remove: object; }
-
-	update { | index, data |
-		// fft data received from FFTpollSynth. 
-		// Caclulate magnitudes and send data to all listeners. 
-		// Increment index of poll count
-		var real, imaginary;
-		object = data; 
-		#real, imaginary = data.clump(2).flop;
-		fftMagnitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
-		if (post) { 
-			postf("% polled. Index: %, magsize: %, fftsize: %\n", 
-				asKey, index, fftMagnitudes.size, data.size);
-		};
-		listeners do: _.update(index, fftMagnitudes, data);
+		listeners = Set.new;
+		this.onClose({ listeners = nil });
 	}
 
 /* All communication except fft data updates is done via NotificationCenter using asKey as 
@@ -97,4 +76,25 @@ the message notification \start.
 		bufSize = argBufSize;
 		NotificationCenter.notify(asKey, \bufSize, bufSize);
 	}
+
+	update { | index, data |
+		// fft data received from FFTpollSynth. 
+		// Caclulate magnitudes and send data to all listeners. 
+		// Increment index of poll count
+		var real, imaginary;
+		object = data; 
+		#real, imaginary = data.clump(2).flop;
+		fftMagnitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
+		if (post) { 
+			postf("% polled. Index: %, magsize: %, fftsize: %\n", 
+				asKey, index, fftMagnitudes.size, data.size);
+		};
+		listeners do: _.update(index, fftMagnitudes, data);
+	}
+
+	// a simplified Observer pattern (Model-dependants) using just an array:
+	addListener { | object | listeners add: object; }
+
+	removeListener { | object | listeners remove: object; }
+
 }

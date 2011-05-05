@@ -50,5 +50,6 @@ DrawSpectrogram {
 	colorSize_ { | size = 64 | colorSize = size; this.makeColors; }
 	colorScaleExponent_ { | exp = 64 | colorScaleExponent = exp; this.makeColors; }
 	intensity_ { | factor = 64 | intensity = factor; this.makeColors; }
-	binColor_ { | color = 64 | binColor = color; this.makeColors; }
+	binColor_ { | color | binColor = color; this.makeColors; }
+	background_ { | color | background = color; this.makeColors; }
 }

@@ -38,6 +38,7 @@ UniqueWindow : UniqueObject {
 	window { ^object }
 	name { ^object.name }
 	bounds { ^object.bounds }
+	bounds_ { | rect | object.bounds = rect; }
 	front { object.front }
 	close { { object.close }.defer(0.01); /* prevent crashing when closing from keyboard on window */ }
 	isOpen { ^object.notNil }

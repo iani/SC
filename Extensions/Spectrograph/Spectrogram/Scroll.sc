@@ -14,13 +14,11 @@ Scroll {
 	}
 	
 	setColor { | argColor |
-		argColor.postln;
 		color = argColor ?? { Color.black };
 		this.makeBlankPixels;	
 	}
 	
 	makeBlankPixels {
-		color.postln;
 		blankPixels = Int32Array.fill(scrollWidth * imageHeight, Image colorToPixel: color);
 	}
 	
