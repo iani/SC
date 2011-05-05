@@ -1,2 +1,0 @@
-
-Spectrogram2.new;
