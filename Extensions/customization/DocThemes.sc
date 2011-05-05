@@ -52,11 +52,11 @@ DocThemes {
 		Document.themes[\pinkString][\stringColor] = Color(0.9, 0.1, 0.6);
 		Document.themes[\pinkString][\numberColor] = Color(0.7, 0.2, 0, 1);
 		Document.themes[\pinkString][\classColor] = Color(0.1, 0.6, 0.9);
-		Document.themes[\pinkString][\commentColor] = Color(0.99, 0.52, 0.14, 0.99);
+		Document.themes[\pinkString][\commentColor] = Color(0.9, 0.5, 0.3, 0.99);
 
 		// also add background color and post color:
 		Document.themes[\pinkString][\background] = Color(0.1, 0.1, 0.1, 1);
-		Document.themes[\pinkString][\postColor] = Color(0.6, 0.7, 0.8);
+		Document.themes[\pinkString][\postColor] = Color(0.6, 0.6, 0.6);
 		Document.themes[\default][\background] = Color.white;
 		Document.themes[\default][\postColor] =Color.black;
 		defaultCustomTheme = \pinkString;

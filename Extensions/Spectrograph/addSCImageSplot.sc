@@ -1,11 +1,11 @@
 /* 
-Towards a scrolling plot for fft's
+
+copied from SCImage plot for study to show info on Spectrograph.
 */
 
-+ SCImage { 
-	splot { arg name, bounds, freeOnClose=false, background=nil, showInfo=true;
++ SCImage {
+	plot_test { arg name, bounds, freeOnClose=false, background=nil, showInfo=true;
 		var uview, window, nw, nh, ratio = width / height, info="";
-		var routine;
 		nw = width.min(600).max(200);
 		nh = nw / ratio;
 		window = SCWindow.new(name ? "plot", bounds ? Rect(400,400,nw,nh)/*, textured: false*/);
@@ -21,31 +21,11 @@ Towards a scrolling plot for fft's
 			.focusColor_(Color.clear);
 
 		window.onClose_({
-			routine.stop;
 			allPlotWindows.remove(window);
 			if(freeOnClose, {
 				this.free
 			});
 		});
-		
-		routine = {
-			var scrollpixels, width = 10, height;
-			height = this.height;
-			width = this.width - 1;
-			scrollpixels = Int32Array.fill(height * width, 0);
-			100 do: { | i |
-				0.25.wait;
-				"scrolling".postln;
-				this.loadPixels(scrollpixels, Rect(1, 0, width, height));
-				this.setPixels(scrollpixels, Rect(0, 0, width, height));
-//				this.loadPixels(scrollpixels, Rect(50, 0, width, height));
-//				tileInRect( rect, fromRect, operation, fraction )
-//	loadPixels(array, region, start)
-//	setPixels(array, region, start)
-				uview.refresh;	
-			};
-		}.fork(AppClock);
-		
 		uview.drawFunc_({
 
 			SCPen.use {
@@ -75,7 +55,6 @@ Towards a scrolling plot for fft's
 				window.view.refreshInRect(Rect(5.5,5.5,100,20));
 			});
 		});
-		
 		^window.front;
 	}
 }

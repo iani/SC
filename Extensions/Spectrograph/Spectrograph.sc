@@ -84,12 +84,16 @@ Spectrograph : UniqueWindow {
 		this.initViews;
 		drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, binColor, backgroundColor);
 		scroll = Scroll(image, (bounds.width / 4).round(1).asInteger, backgroundColor);
-		this.addImageObject(drawSpectrogram);
 		this.addWindowOnCloseAction;
+		this.addImageObject(drawSpectrogram);
+		NotificationCenter.notify(this, \viewsInited);
 		this.front;
 	}
 
 	initViews {
+		imageObjects = Set.new;
+		penObjects = Set.new;
+		penObjects add: PenObjectTest(this);
 		userview = UserView(object, object.view.bounds)
 			.resize_(5)
 			.drawFunc = { | view |
@@ -100,13 +104,16 @@ Spectrograph : UniqueWindow {
 			};
 			penObjects do: _.update(this); 	// let objects draw with Pen here
 		};
+		userview.postln;
+//		userview.mouseOverAction = { | v, x, y | [v, x, y].postln };
+
 		imgWidth = userview.bounds.width;
 		imgHeight = bufsize / 2;
 		scrollWidth = (imgWidth / 4).round(1).asInteger;
 		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
 		// Setting the background also creates the image
 		this.background = backgroundColor; // method can be called at any time to change color
-		this onClose: { if (current === this); { current = nil; } };
+		this onClose: { if (current === this) { current = nil; } };
 	}
 
 	background_ { | color |
@@ -117,9 +124,9 @@ Spectrograph : UniqueWindow {
 		if (drawSpectrogram.notNil) { drawSpectrogram.background = color; }
 		// clearImage is an image used when scrolling to erase the right part of the screen 
 	}
-	
+
 	addImageObject { | object | imageObjects = imageObjects add: object }
-		
+
 	start {
 		var poller;
 		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize);

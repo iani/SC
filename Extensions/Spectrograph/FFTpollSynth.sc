@@ -9,7 +9,9 @@ It is not designed to be used on its own.
 
 FFTpollSynth : UniqueSynth {
 	var <poller, <server, <rate = 0.025, <buffer, <bufSize, <index = 0;
-	
+	// List of timestamps recorded since starting the synth
+	// Useful for displaying the time of a certain frame on mouseover: 
+	var <frames;
 	*new { | poller, server, rate = 0.025, bufSize = 1024, in = 0 |
 		^super.new(poller.asKey, \fft, nil, server ? Server.default, \addToHead, rate, bufSize, in, poller)
 	}
@@ -19,6 +21,7 @@ FFTpollSynth : UniqueSynth {
 		rate = argRate;
 		bufSize = argBufSize;
 		poller = argPoller;
+//		frames = Frames.new;
 		buffer = UniqueBuffer(key[2], server, bufSize);
 		Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
@@ -31,6 +34,7 @@ FFTpollSynth : UniqueSynth {
 			notifyKey = key[2];
 			loop {
 				fftbuf.getn(0, bufSize, { | buf |
+//					frames.add;
 					poller.update(index, buf);
 					index = index + 1;
 				});

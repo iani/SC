@@ -10,3 +10,7 @@ Group.new;
 Server.default.queryAllNodes;
 
 \default.play;
+//:pen stuff
+Spectrograph.current.penObjects;
+
+Spectrograph.current;
