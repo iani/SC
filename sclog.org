@@ -1,0 +1,373 @@
+
+#+SEQ_TODO: TODO(t) BUG(b) | DONE(d) CANCELLED(c) DEFERRED(f)
+
+* 2011
+** 2011-04 April
+*** 2011-04-19 Tuesday
+**** fixing the scaling of the fft magnitude :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-19 Tue 16:56>
+     :END:
+
+The original was: 
+					complexarray = ((((Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse)).log10) * 80).clip(0, 255); 
+
+This resulted in magnitude values below 1 producing negative values after log10, which were then clipped away. 
+
+***** Correction attempt (needs more testing after re setting fft buffer size to 1024)
+      this clipped the higher frequencies away at fft buffer size 2048 or more, but the same was for the original algorithm
+
+		 complexarray = (
+			 (Complex(Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])).magnitude.reverse + 1).log10
+			 * 80
+		 ).clip(0, 255);
+***** minimum necessary change: 
+      CLOSED: [2011-04-19 Tue 17:27]
+		 complexarray = ((((Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse) + 1).log10) * 80).clip(0, 255); 
+  
+
+***** Debug tries: 
+					complexarray = Complex(
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse + 1; // prevent items < 0 producing negative values at log10
+					
+					["min, max before log10", complexarray.minItem, complexarray.maxItem].postln;
+					complexarray = complexarray.log10;
+					["min, max after log10", complexarray.minItem, complexarray.maxItem].postln;
+					complexarray = complexarray * 160;
+					["max after * 160", complexarray.maxItem].postln;
+					
+					complexarray = complexarray.clip(0, 255);
+					["max after clip", complexarray.maxItem].postln;
+
+
+/*					complexarray = (80 * Complex( 
+							Signal.newFrom( magarray[0] ), 
+							Signal.newFrom( magarray[1] ) 
+					).magnitude.reverse.log10).clip(0, 255);
+*/
+
+***** DONE Introduce more color gradations and tweak the accessing of these 
+      CLOSED: [2011-04-19 Tue 18:23]
+
+      use: 
+	classvar <>defaultFFTBufSize = 1024, <>colorSize = 64;
+
+	recalcGradient {
+		var colors;
+
+//		colors = (0..16).collect({ | val | blend(background, color, val / 16)});
+		// _THIS:_
+		colors = (0..colorSize).collect({ | val | blend(background, color, val / colorSize)});
+//		colors = (1..64).pow(0.01).normalize.collect(blend(background, color, _));
+		colints = colors.collect({ | col | Image colorToPixel: col });
+	}
+
+      futhermore: 
+
+****** the intensity multiplier variable and the multiplication by 80 need to be tweaked.
+****** The colors could be graded with a bias for low values as follows: 
+       colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
+
+***** Better solution (introduces _much_ more detail in low energy regions
+      - Note taken on [2011-04-19 Tue 18:26] \\
+	The power exponent in calcGradient could be reduced to 0.1 or other values
+****** recalcGradient
+	recalcGradient {
+		var colors;
+		colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
+		colints = colors.collect({ | col | Image colorToPixel: col });
+	}
+****** spectrum magnitude scaling in startruntask
+					complexarray  = log10(
+						1 + 
+						Complex(
+							Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
+						).magnitude.reverse;
+					).clip(0, 1) * intensity;
+
+  					complexarray.do({ | val, i |
+						fftDataArray[i] = colints.clipAt((val * colorSize).round);
+					});
+**** added scaleable exponent for color mapping :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-19 Tue 19:04>
+     :END:
+
+Default: 0.5. Tested between: 0.01 and 1
+Higher values: peaks show clearer, lower magnitudes may disappear
+Lower values: peaks smear more, lower magnitudes are displayed
+**** TODO is var windowparent necessary? perhaps window is enough :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-19 Tue 20:28>
+     :END:
+*** 2011-04-20 Wednesday
+**** TODO simplify additional process mechanism using dependants vars  :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 02:28>
+     :END:
+
+Define vars in Spectrogram2: 
+
+1. imageObjects: objects that draw on the image (before it is sent to pen)
+1. penObjects: objects that draw with pen (after image is sent to pen) 
+
+An object that wants to draw, must add itself to one of those two lists. 
+Spectrogram2 will send all objects stored in imageObects the message drawImage, and all the objects stored in penObjects the image drawPen. 
+
+An object can add itself to start drawing or remove itself to stop drawing. This is simpler than going via NotificationCenter. 
+**** fft buffer sizes > 1024 are not supported 			:spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 11:07>
+     :END:
+
+This is because buf.getn can only fetch up to 1024 values (OSC limit?). 
+**** removed frombin - tobin as I find little use for zooming in to part of a spectrum and it complicates the code :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 16:11>
+     :END:
+**** added toggle tryout.sc + make code palette w. key shortcuts :doclistwindow:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 16:14>
+     :END:
+**** DocSession:load provides new session if not found in archive :doclistwindow:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 17:07>
+     :END:
+
+This is important when installing lilt2 to a new computer that does not have any sessions stored. 
+**** DONE code parser should ignore lines where //: is followed by spece :doclistwindow:
+     CLOSED: [2011-04-20 Wed 18:01]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 17:38>
+     :END:
+**** CANCELLED PerformanceWindow should re-parse code on changing docs :doclistwindow:
+     CLOSED: [2011-05-02 Mon 01:01]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 17:39>
+     :END:
+**** DONE add 'doOnce' message to Function			       :idea:
+     CLOSED: [2011-05-02 Mon 01:01]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 19:27>
+     :END:
+
+Function registers itself to notifier and does not reevaluate. 
+
+Important for booting servers / scopes only once. 
+
+! marked items in DocListWindow type files can use this automatically. Something like: 
+
+   { codeString.interpret }.doOnce 
+instead of: 
+   { codeString.interpret }.value 
+**** DONE code item pane does not refresh properly    :performancewindow:bug:
+     CLOSED: [2011-05-02 Mon 01:01]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-20 Wed 21:22>
+     :END:
+
+At some point the older items remain on the pane together with the newly selecte ones. 
+
+Could not remedy that.  Suggestion: Try using EZListView instead.
+*** 2011-04-21 Thursday
+**** added load, play, loadDefault methods to Buffer class :buffer:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-21 Thu 15:28>
+     :END:
+*** 2011-04-23 Saturday
+**** function hashKey is taken from def.sourceCode, not def.code :uniquefunction:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-23 Sat 01:16>
+     :END:
+
+This is because, for example: 
+
+{ WhiteNoise.ar(0.2) }
+and
+{ WhiteNoise.ar(0.1) }
+
+have the same code: 
+
+Int8Array[ 0, 0, 64, -80, -62, 52, -14 ]
+
+So now, in order for a function to be treated as "unique" by UniqueFunction, it must have exactly the same source code string. 
+
+Note: function.hashKey is used by UniquePlay. 
+**** DONE add chain, Udef, Ubuf to load synthdefs and buffers before creating a synth :uniqueobject:
+     CLOSED: [2011-05-02 Mon 01:01]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-23 Sat 10:03>
+     :END:
+**** Design of UniqueBuffer :uniquebuffer:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-23 Sat 20:28>
+     :END:
+
+***** Templates from existing classes to consider 
+BUFFER:
+	*new { arg server, numFrames, numChannels, bufnum;}
+	*alloc(server, numFrames, numChannels, completionMessage, bufnum)
+	*read { arg server, path, startFrame = 0, numFrames = -1, action, bufnum; }
+	*read(server, path, startFrame, numFrames, action, bufnum)
+
+UNIQUESYNTH:
+	*new { | key, defName, args, target, addAction=\addToHead | 
+				^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
+
+		
+	}
+	init { | what, args, target, addAction ... moreArgs | }
+***** Interface for UniqueBuffer: Class methods, synonyms, utilities
+****** Methods modeled after Buffer class methods
+
+ 	MODIFIED, works like Buffer:alloc
+	*new { | key, server, numFrames, numChannels, action | }
+		like Buffer:alloc, with action executed as soon as info is received, no bufnum
+		allocates immediately, boots buffer if needed
+
+	*read { | key, server, path, startFrame = 0, numFrames = -1, action | }
+		read from file. Boot buffer if needed. Store in library at [buffers, server:key]
+
+	NOT USED:
+	*alloc( | key, server, numFrames, numChannels, completionMessage, bufnum | )
+		allocate immediately. Boot server if needed. 
+	
+****** Methods for convenient use
+
+	*play { | func, args | }
+		play last selected buffer or default buffer if none selected
+	
+	*load { | func, args | }
+		load with file open dialog window, play if func is given
+	
+	*select { | func, args | }
+		open list of buffers, select one and execute func if provided.
+		selected buffer stays for next calls of "play" or spectrogram. 
+	
+	*spectrogram { | func, args | }
+
+	*clear { | server | }
+		clear all UniqueBuffers on server
+
+****** Synonyms of convenient methods on Buffer class
+
+	*play { | func, args | }
+		play last selected buffer or default buffer if none selected
+	
+	*load { | func, args | }
+		load from file and play if given func
+	
+	*select { | func, args | }
+	
+	*spectrogram { | func, args | }
+
+	*clear { | server | }
+		clear all UniqueBuffers on server
+
+****** UniqueBuffer access methods for String and symbol
+
+String:ubuf(func) -> get / load the UniqueBuffer corresponding to this path, on the default server
+	if func is provided, it is used to play the buffer
+
+Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under this string
+	if func is provided, it is used to play the buffer
+
+****** Designing the code: argument massage
+
+	*new { | key, server, numFrames, numChannels, bufnum |
+		^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
+	}
+
+	*alloc {
+	
+	}
+
+*/
+*** 2011-04-26 Tuesday
+**** DONE add doOnce and forkOnce methods to function	     :uniquefunction:
+     CLOSED: [2011-05-02 Mon 01:00]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-26 Tue 16:02>
+     :END:
+*** 2011-04-29 Friday
+**** DONE add Symbol:playDef					:uniquesynth:
+     CLOSED: [2011-04-29 Fri 09:43]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-29 Fri 00:01>
+     :END:
+**** UniqueObject *mainKey now returns [this] :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-29 Fri 09:42>
+     :END:
+*** 2011-04-30 Saturday
+**** TODO decouple coloring scheme from Panes and add it to non-gittable private startup file  :panes:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-30 Sat 13:02>
+     :END:
+**** DONE debug Symbol:synth method				:uniquesynth:
+     CLOSED: [2011-05-01 Sun 10:05]
+     :PROPERTIES:
+     :ENTERED_ON: <2011-04-30 Sat 19:14>
+     :END:
+** 2011-05 May
+*** 2011-05-01 Sunday
+**** UniqueBuffer:play crashes on multiple starts, using mplay instead  :uniquebuffer:buq:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-01 Sun 17:49>
+     :END:
+
+UniqueBuffer:play therefore now uses Function:mplay. This is not a major handicap.
+*** 2011-05-02 Monday
+**** BUG UniqueBuffer:load loads also the default buffer if not loaded :uniquebuffer:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-02 Mon 00:57>
+     :END:
+
+A minor glitch, but should be looked into. 
+**** TODO PrivateBusSynth, SignalPoller 			:spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-02 Mon 01:03>
+     :END:
+
+Extend UniqueSynth class with subclasses: 
+
+PrivateBusSynth: adds a private Bus and redirects the output of the synth to it. For analysis synths, effects etc.
+The bus gets freed as soon as the UniqueSynth stops. 
+
+SignalPoller: 
+Adds a synchronized routine (rsynca) that polls the output of the synth to the private bus, or an anasysis buffer, and shares the data via a list of functions with other processes.
+*** 2011-05-04 Wednesday
+**** alternative names for UniqueObject? :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-04 Wed 00:23>
+     :END:
+
+ObjectService? 
+ObjectRegistry? 
+ObjectServer? 
+
+PersistentObject?
+LibObject?
+**** Many small bugs have been removed. Library is ready for alpha testing
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-04 Wed 12:24>
+     :END:
+**** Added WaitForServer.new to String:fork. Snippets don't need it any more  :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-04 Wed 19:21>
+     :END:
+*** 2011-05-05 Thursday
+**** added toggle server auto boot for code evaluation :code:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-05 Thu 08:22>
+     :END:
+
+If Code class variable autoBoot is set to true, then evaluating a code snippet with Cmd-shift-x will call WaitForServer.new, thereby ensuring that any calls to 'wait' will be in sync with the server booted. 
