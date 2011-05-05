@@ -20,18 +20,22 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 	synth { | server | ^UniqueSynth.at(this, server) }
 	
 	// start a unique synth if not already running
-	play { | args, target, addAction=\addToHead |
-		^UniqueSynth(this, this, args, target, addAction);
-	}
-
-	// start a unique synth, use symbol as key for storing and first arg as name of SynthDef
-	playDef { | def, args, target, addAction=\addToHead |
-		^UniqueSynth(this, def ? this, args, target, addAction);
+	play { | args, target, addAction ... moreArgs |
+		if (args isKindOf: Function) {
+			^this.playFunc(args, target, addAction, *moreArgs)
+		}{
+			^UniqueSynth(this, this, args, target, addAction ? \addToHead);
+		}
 	}
 
 	playFunc { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
 		^UniquePlay(func, target, outbus, fadeTime, addAction, args, this);
 	}	
+
+	// start a unique synth, use symbol as key for storing and first arg as name of SynthDef
+	playDef { | def, args, target, addAction=\addToHead |
+		^UniqueSynth(this, def ? this, args, target, addAction);
+	}
 
 	playBuf { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
 		^UniqueBuffer(func, target, outbus, fadeTime, addAction, args, this);

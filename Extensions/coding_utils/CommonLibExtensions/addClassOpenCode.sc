@@ -7,22 +7,17 @@ Added these modifications to remove a harmless but obnoxious error message in Do
 + Class {
 	openCodeFile {
 		var openDoc, filename, newDoc;
-		"OPENING CLASS DEF".postln;
 		// use the base name for comparison because quarks installed through links to Extensions
 		// gives a different path than the Class
 		filename = this.filenameSymbol.asString.basename;
 		openDoc = Document.allDocuments detect: { | d | (d.path ? "-").basename == filename };
 		if (openDoc.isNil) {
-//			"OPEN DOC WAS NIL -------- did I forget??????????? ".postln;
 			newDoc = this.filenameSymbol.asString.openTextFileWithReturn(this.charPos, -1);
-// 			{ 			newDoc.postln } ! 20;
 			Document.current = newDoc;
 			newDoc.front;
-//			"NOTIFYING Panes TO FRONT FROM NEW CLASS DEF FILE".postln;
 			newDoc.toFrontAction.value;
 
 		}{
-//			"OPEN DOC WAS NOT NIL, DOING THE STUFF".postln;
 			Document.current = openDoc;
 			openDoc.front;
 			openDoc.toFrontAction.value;

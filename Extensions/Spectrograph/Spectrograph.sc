@@ -24,11 +24,10 @@ Spectrograph : UniqueWindow {
 				// received from FFTsynthPoller. Cached for asynchronous use by penObjects
 	var <windowIndex;	// index of x pixel on image where current frame is being drawn
 
-	var <imageObjects; // array of objecs that add display graphics to pixels on the image
-	var <penObjects; // array of objecs that add display graphics using Pen
+	var <imageObjects; 	// array of objecs that add display graphics to pixels on the image
+	var <penObjects; 		// array of objecs that add display graphics using Pen
 	var <drawSpectrogram, <drawCrosshair;	// the two built-in drawing objects
-	var <scroll;	// object that scrolls the image at each new frame
-	var <pixelCache; // debugging scroll
+	var <scroll;			// object that scrolls the image when drawind has reached the end
 	
 	*initClass {
 		Class.initClassTree(Color);
@@ -58,10 +57,6 @@ Spectrograph : UniqueWindow {
 		this.initViews;
 		drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, binColor, backgroundColor);
 		scroll = Scroll(image, (bounds.width / 4).round(1).asInteger, backgroundColor);
-		// debugging scroll: 
-		pixelCache = Int32Array.fill(image.width - scrollWidth * image.height, 0);
-
-		
 		this.addImageObject(drawSpectrogram);
 		this.addWindowOnCloseAction;
 		this.front;
@@ -82,9 +77,8 @@ Spectrograph : UniqueWindow {
 		imgHeight = bufsize / 2;
 		scrollWidth = (imgWidth / 4).round(1).asInteger;
 		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
-		// Scroll image is an array used when scrolling to copy the already drawn pixels 
-		// from the right part of the image to the left part
-		this.background = Color.black; // method can be called at any time to change color
+		// Setting the background also creates the image
+		this.background = backgroundColor; // method can be called at any time to change color
 		this onClose: { image.free; image = nil; };
 	}
 
@@ -93,7 +87,6 @@ Spectrograph : UniqueWindow {
 		if (image.notNil) { image.free };
 		image = Image.color(imgWidth@imgHeight, color);
 		// clearImage is an image used when scrolling to erase the right part of the screen 
-//		clearImage = Int32Array.fill(imgHeight * scrollWidth, Integer.fromColor(color));
 	}
 	
 	addImageObject { | object | imageObjects = imageObjects add: object }
@@ -126,16 +119,4 @@ Spectrograph : UniqueWindow {
 			};
 		}.defer;		
 	}
-	
-//	makeImageIndex { | argIndex |
-//		if (argIndex < image.width) { ^argIndex };
-//		argIndex = argIndex % scrollWidth;
-//		if (argIndex == 0) { "SCROLLING".postln; 
-//			image.loadPixels(pixelCache, Rect(scrollWidth, 0, image.width - scrollWidth, image.height));
-//			image.setPixels(pixelCache, Rect(0, 0, image.width - scrollWidth, image.height));
-//			image.setPixels(clearImage, Rect(image.width - scrollWidth, 0, scrollWidth, image.height));
-//		};
-//		^argIndex + (image.width - scrollWidth);
-//	}
-
 }

@@ -67,3 +67,7 @@ Document.postColor = Color(0.15, 0.85, 0.90);
 Panes.activate;
 
 { Document.listener.front }.defer(0.5);
+
+//:developer specials - should not be on git because they create files that interfere with pull: 
+
+(Platform.userAppSupportDir ++ "/dev_only/*.scd").pathMatch do: _.load;
