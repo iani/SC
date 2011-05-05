@@ -24,7 +24,6 @@ FFTpollSynth : UniqueSynth {
 			FFT(buf, InFeedback.ar(in));
 		});
 		super.init(server, \fft, [\in, in], \addToTail);
-
 		this.rsync({
 			var fftbuf, bufnum, notifyKey;
 			fftbuf = buffer.object;
@@ -37,7 +36,7 @@ FFTpollSynth : UniqueSynth {
 				});
 				rate.wait;
 			};
-		}, SystemClock); // Using AppClock may cause index sync problems (DEBUGGING!)
+		}, SystemClock);
 		this.connectToPoller;
 	}
 

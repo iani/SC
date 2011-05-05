@@ -37,7 +37,12 @@ ServerReady : UniqueObject {
 
 	makeResponder { 
 		responder = OSCresponderNode(nil, '/done', { | time, resp, msg |
-			if (['/b_allocRead', '/b_alloc', '/d_recv'] includes: msg[1]) { loadChain.next; }
+			switch (msg[1],
+				'/b_allocRead', { loadChain.next; },
+				'/d_recv', { loadChain.next; },
+	/* Introduced delay because starting Spectrograph occasionally reported Error Buffer not initialized: */
+				'/b_alloc', { { loadChain.next; }.defer(0.1); } // give buffer time to initialize
+			);
 		}).add;
 		this.onClose({ responder.remove });
 	}

@@ -12,7 +12,7 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "show doc list window", ["\"", false, false], {
 				this.showDocListWindow;
 			}),
-			CocoaMenuItem.addToMenu("Utils", "open user class", ["b", true, true], {
+			CocoaMenuItem.addToMenu("Utils", "browse / open user classes", ["b", true, true], {
 				this.browseUserClasses;
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open / create class help", ["D", true, false], {
