@@ -40,5 +40,6 @@ UniqueWindow : UniqueObject {
 	bounds { ^object.bounds }
 	front { object.front }
 	close { { object.close }.defer(0.01); /* prevent crashing when closing from keyboard on window */ }
+	isOpen { ^object.notNil }
 }
 

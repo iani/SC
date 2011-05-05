@@ -13,11 +13,27 @@ Object:addMenu
 */
 
 Code {
+	classvar <>autoBoot = true;	// if true, forking a string from code will call WaitForServer.new
 	var <doc, <string, <canEvaluate = true;
 	var <headers, <positions; // , <functions, <keys;
 	
 	*new { | doc |
 		^this.newCopyArgs(doc).init;	
+	}
+	
+	*fork { | string, clock |
+		// compile a string into a function and then fork it as a routine
+		var func;
+		func = string.compile;
+		clock = clock ? AppClock;
+		if (autoBoot) { 		// include WaitForServer for safety. 
+			{ 
+				WaitForServer.new;
+				func.value;
+			}.fork(clock); 
+		}{
+			func.fork(clock);
+		}
 	}
 
 	init {
@@ -53,6 +69,10 @@ Code {
 			}),
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
+			}),
+			CocoaMenuItem.addToMenu("Code", "toggle server auto-boot", ["B", true, true], {
+				autoBoot = autoBoot.not;
+				postf("Server auto-boot set to %\n", autoBoot);
 			}),
 		];
 	}

@@ -364,3 +364,10 @@ LibObject?
      :PROPERTIES:
      :ENTERED_ON: <2011-05-04 Wed 19:21>
      :END:
+*** 2011-05-05 Thursday
+**** added toggle server auto boot for code evaluation :code:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-05 Thu 08:22>
+     :END:
+
+If Code class variable autoBoot is set to true, then evaluating a code snippet with Cmd-shift-x will call WaitForServer.new, thereby ensuring that any calls to 'wait' will be in sync with the server booted. 

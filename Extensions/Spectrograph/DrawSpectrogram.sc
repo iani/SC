@@ -36,7 +36,7 @@ DrawSpectrogram {
 	}
 
 	// Called by Spectrograph. Draw 1 fft frame magnitudes as pixeled colors on image
-	update { | image, windowIndex, magnitudes |
+	update { | windowIndex, image, magnitudes |
 //		[fftImageArray.size, magnitudes.size].postln;
 		(1 + magnitudes.reverse).log10.clip(0, 1) * intensity do: { | val, i |
 			fftImageArray[i] = colors.clipAt((val * colorSize).round);

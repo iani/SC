@@ -7,15 +7,7 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 
 + String { 
 	asKey { ^this.hash }
-	fork { | clock |
-		var func;
-		func = this.compile;
-		// include WaitForServer for safety. 
-		{ 
-			WaitForServer.new;
-			func.value;
-		}.fork(clock ? AppClock); 
-	}
+	fork { | clock | Code.fork(this, clock); }
 	evalPost { | clock | this.eval.postln; }
 	eval { | clock | ^this.interpret; }
 	window { | makeFunc | ^this.asSymbol.window(makeFunc); }

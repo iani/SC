@@ -13,16 +13,16 @@ Added these modifications to remove a harmless but obnoxious error message in Do
 		filename = this.filenameSymbol.asString.basename;
 		openDoc = Document.allDocuments detect: { | d | (d.path ? "-").basename == filename };
 		if (openDoc.isNil) {
-			"OPEN DOC WAS NIL -------- did I forget??????????? ".postln;
+//			"OPEN DOC WAS NIL -------- did I forget??????????? ".postln;
 			newDoc = this.filenameSymbol.asString.openTextFileWithReturn(this.charPos, -1);
 // 			{ 			newDoc.postln } ! 20;
 			Document.current = newDoc;
 			newDoc.front;
-			"NOTIFYING Panes TO FRONT FROM NEW CLASS DEF FILE".postln;
+//			"NOTIFYING Panes TO FRONT FROM NEW CLASS DEF FILE".postln;
 			newDoc.toFrontAction.value;
 
 		}{
-			"OPEN DOC WAS NOT NIL, DOING THE STUFF".postln;
+//			"OPEN DOC WAS NOT NIL, DOING THE STUFF".postln;
 			Document.current = openDoc;
 			openDoc.front;
 			openDoc.toFrontAction.value;
