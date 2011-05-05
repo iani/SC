@@ -19,7 +19,8 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 	// access a unique synth if present, without starting it
 	synth { | server | ^UniqueSynth.at(this, server) }
 	
-	// start a unique synth if not already running
+	// Start a unique synth if not already running.
+	// If args is a Function, play it, otherwise use this symbol as a synthDef name. 
 	play { | args, target, addAction ... moreArgs |
 		if (args isKindOf: Function) {
 			^this.playFunc(args, target, addAction, *moreArgs)

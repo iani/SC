@@ -9,13 +9,9 @@ Panes {
 	classvar <session;					// for saving / restoring doc positions and doc texts to archive
 	classvar <currentPositionAction;
 	classvar <>tryoutName = "tryout.scd";
-	classvar <>backgroundColor;
-	classvar <>customTheme = \pinkString;
 
 	*start { this.activate } // synonym
 	*activate {
-		backgroundColor = backgroundColor ? Color.grey(0.05);
-
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
 			NotificationCenter.notify(this, \docOpened, doc);  
@@ -27,7 +23,6 @@ Panes {
 		Document.allDocuments do: this.setDocActions(_);
 		this.arrange1Pane;
 //		this.arrange2Panes;
-		Document.listener.background = backgroundColor;
 		{ this.openTryoutWindow; }.defer(0.5); // confuses post and Untitled windows if not deferred on startup
 	}
 
@@ -125,18 +120,6 @@ Panes {
 	*docOpened { | doc |
 // why does this post twice always???????????
 //		postf("Panes init doc actions docOpened: %\n", doc.name).postln;
-		{
-			if (doc.name.splitext.last != "html") {
-				doc.background_(backgroundColor);
-				if (doc.name.includes($.).not) {
-					if (doc.name[..7] == "Untitled") {
-						doc.string = " ";
-						doc.selectLine(0);
-					};
-					doc.syntaxColorize;
-				};
-			};
-		}.defer(0.1);
 		this.setDocActions(doc);
 		currentPositionAction.(doc);
 	}
@@ -145,18 +128,6 @@ Panes {
 		doc.toFrontAction = {
 			var selectionStart, selectionSize;
 			NotificationCenter.notify(this, \docToFront, doc);
-			if ("\.html".matchRegexp(Document.current.name)) {
-				Document.setTheme(\default);
-			}{
-				if (Document.theme !== Document.themes[customTheme]) {
-					Document.setTheme(customTheme);
-					selectionStart = doc.selectionStart;
-					selectionSize = doc.selectionSize;	
-					doc.selectRange(0, 2147483647); // select everything
-					doc.syntaxColorize;  // restore selection: 
-					doc.selectRange(selectionStart, selectionSize);
-				};
-			};
 		};
 		doc.endFrontAction = { NotificationCenter.notify(this, \docEndFront, doc); };
 		doc.mouseUpAction = { NotificationCenter.notify(this, \docMouseUp, doc); };

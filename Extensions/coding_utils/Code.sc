@@ -1,15 +1,5 @@
 /* 
 Select and execute code in a doc by typing command keys. 
-
-Will replace part of code of DocListWindow
-
-
-TODO: don't need to collect all strings all the time. 
-But: run following regexp to get the headers and their positions: 
-
-"string ... ".findRegexp("^//:[^ ][^\n]*");
-
-Object:addMenu
 */
 
 Code {
@@ -73,6 +63,9 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "toggle server auto-boot", ["B", true, true], {
 				autoBoot = autoBoot.not;
 				postf("Server auto-boot set to %\n", autoBoot);
+			}),
+			CocoaMenuItem.addToMenu("Code", "toggle light/dark color theme", ["T", true, true], {
+				DocThemes.toggle;
 			}),
 		];
 	}
