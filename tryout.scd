@@ -1,4 +1,4 @@
-//:spetrogram
+//:spetrogram Spectrogram3
 Spectrogram3.new;
 
 

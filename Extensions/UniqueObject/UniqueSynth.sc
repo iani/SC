@@ -65,7 +65,11 @@ UniqueSynth : AbstractUniqueServerObject {
 
 	// Synchronization with start / stop events: 
 	onStart { | func |
-		NotificationCenter.registerOneShot(this, \synthStarted, UniqueID.next, func);
+		if (this.isPlaying) {
+			func.value;	
+		}{
+			NotificationCenter.registerOneShot(this, \synthStarted, UniqueID.next, func);
+		}
 	}
 	onEnd { | func | this.onClose(func) }	// synonym
 
