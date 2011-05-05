@@ -24,19 +24,18 @@ DocThemes {
 			^this;
 		};
 		currentTheme = symbol;
-		Document.postColor = Document.themes[currentTheme][\postColor];
 		this.activate;
 		Document.openDocuments do: _.colorizeIfAppropriate;
 	}
 
 	*resetToSCdefault {
 		this setTheme: \default;
-		Document.postColor = Document.theme[\postColor];
 		this.deactivate;
 	}
 
 	*activate {
 		NotificationCenter.register(Panes, \docToFront, this, { | doc |
+			"WILL COLORIZE".postln;
 			doc.colorizeIfAppropriate;
 		});
 	}
@@ -53,12 +52,54 @@ DocThemes {
 		Document.themes[\pinkString][\numberColor] = Color(0.7, 0.2, 0, 1);
 		Document.themes[\pinkString][\classColor] = Color(0.1, 0.6, 0.9);
 		Document.themes[\pinkString][\commentColor] = Color(0.99, 0.52, 0.14, 0.99);
-
-		// also add background color and post color:
 		Document.themes[\pinkString][\background] = Color(0.1, 0.1, 0.1, 1);
-		Document.themes[\pinkString][\postColor] = Color(0.6, 0.7, 0.8);
 		Document.themes[\default][\background] = Color.white;
-		Document.themes[\default][\postColor] =Color.black;
 		defaultCustomTheme = \pinkString;
 	}
+
+
 }
+
+/*
+		{
+			if (doc.name.splitext.last != "html") {
+				doc.background_(backgroundColor);
+				if (doc.name.includes($.).not) {
+					if (doc.name[..7] == "Untitled") {
+						doc.string = " ";
+						doc.selectLine(0);
+					};
+					doc.syntaxColorize;
+				};
+			};
+		}.defer(0.1);
+
+
+			if ("\.html".matchRegexp(Document.current.name)) {
+			}{
+				if (Document.theme !== Document.themes[customTheme]) {
+					Document.setTheme(customTheme);
+					selectionStart = doc.selectionStart;
+					selectionSize = doc.selectionSize;	
+					doc.selectRange(0, 2147483647); // select everything
+					doc.syntaxColorize;  // restore selection: 
+					doc.selectRange(selectionStart, selectionSize);
+				};
+			};
+
+		Document.allDocuments do: this.setDocActions(_);
+//		backgroundColor = backgroundColor ? Color.grey(0.05);
+
+		{
+			if (doc.name.splitext.last != "html") {
+				doc.background_(backgroundColor);
+				if (doc.name.includes($.).not) {
+					if (doc.name[..7] == "Untitled") {
+						doc.string = " ";
+						doc.selectLine(0);
+					};
+					doc.syntaxColorize;
+				};
+			};
+		}.defer(0.1);
+*/
