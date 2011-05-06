@@ -18,6 +18,24 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open / create class help", ["D", true, false], {
 				this.openCreateHelpFile;
 			}),
+			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
+				{ 
+					var u;
+					Server.default = Server.internal;
+					WaitForServer(Server.internal);
+					u = UniqueObject('stethoscope', { 
+						var s; 
+						s = Stethoscope(Server.internal);
+						s.window.onClose_(s.window.onClose addFunc: { u.remove });
+						s;
+					});
+					u.object.window.front;
+					u.object.run;	// restart if server re-booted with scope on
+				}.fork(AppClock);
+			}),
+			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
+				Spectrograph.small;
+			}),
 			
 		]		
 	}

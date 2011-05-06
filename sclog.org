@@ -389,3 +389,15 @@ If Code class variable autoBoot is set to true, then evaluating a code snippet w
      :PROPERTIES:
      :ENTERED_ON: <2011-05-06 Fri 11:06>
      :END:
+**** TODO Add doWhen to UniqueObject to do when object is initialized  :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-06 Fri 13:00>
+     :END:
+
+	doWhen { | condition, action | 
+		// Some objects created by makeFunc may need time to initialize
+		{
+		while { condition.(this).not } { 0.1.wait };
+		action.(this);
+		}.fork(AppClock)
+	}

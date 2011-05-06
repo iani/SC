@@ -23,6 +23,10 @@ DrawSpectrogram {
 	init {
 		binColor = binColor ?? { Color.white };
 		background = background ?? { Color.black };
+		this.initImageData;
+	}
+
+	initImageData {
 		this.makeFFTimageArray;	
 		this.makeColors;
 	}

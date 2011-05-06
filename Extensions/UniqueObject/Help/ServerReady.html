@@ -7,37 +7,81 @@
 <meta name="Generator" content="Cocoa HTML Writer">
 <meta name="CocoaVersion" content="1038.35">
 <style type="text/css">
-p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
-p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
-p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
-p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-span.s1 {color: #162bc4}
-span.s2 {color: #008323}
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000; min-height: 14.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4; min-height: 12.0px}
+span.s1 {color: #000000}
+span.s2 {color: #162bc4}
+span.s3 {color: #008323}
+span.Apple-tab-span {white-space:pre}
 </style>
 </head>
 <body>
-<p class="p1">/*<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1">Send notifications after a Server has called initTree and created its root node, but only when it boots.<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1">Add to ServerReady objects that want to start Synths, Groups or routines right after a server boots, but that do not want to restart them when a Server re-inits its tree after CmdPeriod (after the user types Command-. to stop all synths)</p>
-<p class="p2"><br></p>
-<p class="p1">*/</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">Send notifications after a Server has called initTree and created its root node, but only when it boots.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">ServerReady ensures that any SynthDefs created as Udef instances or any Buffers created as UniqueBuffer instances will be loaded to the buffer before any synth starts. This is ensured when using the classes</p>
+<p class="p2">Udef, UniqueBuffer, UniqueSynth, UniquePlay either directly or by sending the messages play, playDef, playFunc on Symbols or the messages uplay, mplay on Functions (see Shortcuts.html).<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">Additionally, any function can be added to be evaluated after the Server has booted and all SynthDefs and Buffers are loaded, as follows:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
 <p class="p3"><br></p>
-<p class="p1">//:a using the default server</p>
+<p class="p4"><br></p>
+<p class="p5"><b>General User Interface</b></p>
+<p class="p6"><br></p>
+<p class="p2"><span class="s1"><span class="Apple-tab-span">	</span><b>*addAction(action, server)</b> </span>Evaluate action when the server is ready<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>action:</b> a Function<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server:</b> a server to monitor for booting. Default is Server.default</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Evaluate action when the server is ready, i.e. when all synthdefs and buffers<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>have been loaded.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Clean up notification connection when ServerReady closes.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p2"><span class="s1"><span class="Apple-tab-span">	</span><b>*addObjectAction(object, action, server) </b></span>Evaluate action for object when the server is ready.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(Active only as long as the object has not received the objectClosed message)</p>
+<p class="p6"><br></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>object:</b> any Object</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>action:</b> a Function<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server:</b> a server to monitor for booting. Default is Server.default</p>
+<p class="p6"><br></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Perform an action for object when the server is ready, i.e. <span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>when all synthdefs and buffers have been loaded.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Clean up notification connection when either ServerReady or the<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>object receive the onClosed message (see Object:onClosed)</p>
+<p class="p4"><br></p>
 <p class="p3"><br></p>
-<p class="p4"><span class="s1">Server</span>.default.quit;</p>
-<p class="p4">1.wait;</p>
-<p class="p4"><span class="s1">ServerReady</span>.add(<span class="s2">\default2</span>, { { <span class="s1">SinOsc</span>.ar(2000, 0, 0.1) }.play; });</p>
-<p class="p4"><span class="s1">Server</span>.default.boot;</p>
+<p class="p2"><b>Examples</b></p>
 <p class="p3"><br></p>
-<p class="p1">//:b specifying the server</p>
-<p class="p4"><span class="s1">Server</span>.internal.quit;</p>
-<p class="p4">1.wait;</p>
+<p class="p7">//:a Start as soon as the server boots:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p8"><span class="s2">ServerReady</span>.addObjectAction(<span class="s3">\testServerReady</span>, { { <span class="s2">SinOsc</span>.ar(2000, 0, 0.1) }.play; });</p>
+<p class="p9"><br></p>
+<p class="p8"><span class="s2">Server</span>.default.boot;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p7">//:quit the server</p>
+<p class="p7">Server.default.quit;</p>
 <p class="p3"><br></p>
-<p class="p4"><span class="s1">ServerReady</span>.add(<span class="s2">\default</span>, { { <span class="s1">SinOsc</span>.ar(1000, 0, 0.1) }.scope; }, <span class="s1">Server</span>.internal);</p>
-<p class="p4"><span class="s1">Server</span>.internal.boot;</p>
+<p class="p7">//:restart the server: The fuction evaluates again.<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="s2">Server</span>.default.boot;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p8">//:release the object's notification connections:<span class="Apple-converted-space"> </span></p>
+<p class="p8">\testServerReady.objectClosed;</p>
+<p class="p4"><br></p>
+<p class="p7">//:quit the server again</p>
+<p class="p7">Server.default.quit;</p>
 <p class="p3"><br></p>
-<p class="p3"><br></p>
+<p class="p7">//:restart the server again: The fuction does not evaluate</p>
+<p class="p8"><span class="s2">Server</span>.default.boot;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
 </body>
 </html>

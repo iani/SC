@@ -49,19 +49,32 @@ UniqueObject {
 		// this sends out notifications. See Meta_UniqueObject:remove
 		objects.leaves(keys) do: _.remove;
 	}
+
 	remove {
 		var reallyRemoved;
 		reallyRemoved = objects.removeEmptyAtPath(key);
 		if (reallyRemoved.notNil) {
 			this.notify(this.removedMessage, this);
 		};
+		// remove all notification connections added with Object:addNotifier, addListener :
+		this.objectClosed;
 	}
+	// ====== printing ======
+
+	printOn { arg stream;
+		stream << this.class.name << "(" <<* [key.last, object] <<")";
+	}
+
+	// ========================= STUFF MOVED TO OBJECT =======================
 	// evaluate function when object is removed
+	// Next 3 methods to be have been moved to Object
+/*
 	onClose { | action | this.onRemove(UniqueID.next, action) } 
 	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
 	doOnceOn { | message, receiver, func |
 		NotificationCenter.registerOneShot(this, message, receiver, { func.(this) });
 	}
+*/
 
 	// ====== notifying objects ======
 
@@ -69,7 +82,9 @@ UniqueObject {
 //	notify { | message, what | NotificationCenter.notify(this, message, what); }
 	
 	// ====== listening to notifications from other objects ======
-	addNotifier { | notifier, message, action |
+
+	// These have been moved to Object
+/*	addNotifier { | notifier, message, action |
 		NotificationCenter.register(notifier, message, this, action);
 		this onClose: { NotificationCenter.unregister(notifier, message, this); };
 	}
@@ -83,11 +98,6 @@ UniqueObject {
 		NotificationCenter.register(this, message, listener, action); 
 		this onClose: { NotificationCenter.unregister(this, message, listener); };
 	}
-
-	// ====== printing ======
-
-	printOn { arg stream;
-		stream << this.class.name << "(" <<* [key.last, object] <<")";
-	}
+*/
 
 }

@@ -35,6 +35,7 @@ Spectrograph : UniqueWindow {
 		binColor = Color.white;
 	}
 
+
 	*big { | server | // TODO: retrieve existing Spectrograph to change its bounds
 		if (this.current.isNil) { ^this.start(nil, nil, server ? Server.default); };
 		^this.current.bounds_(Window.centeredWindowBounds(1000)).front;
@@ -49,7 +50,7 @@ Spectrograph : UniqueWindow {
 	
 	*smallBounds { 
 //		^Rect(Window.screenBounds.width - 600, 0, 600, 200);
-		^Rect(0, 0, 570, 200)
+		^Rect(0, Window.screenBounds.height - 200, 570, 200)
 	}
 
 	*background_ { | color |
@@ -98,6 +99,7 @@ Spectrograph : UniqueWindow {
 		penObjects add: PenObjectTest(this);
 		userview = UserView(object, object.view.bounds)
 			.resize_(5)
+			.focus(true)
 			.drawFunc = { | view |
 			var b = view.bounds;
 			Pen.use {
@@ -106,15 +108,20 @@ Spectrograph : UniqueWindow {
 			};
 			penObjects do: _.update(this); 	// let objects draw with Pen here
 		};
-
 		imgWidth = userview.bounds.width;
 		imgHeight = bufsize / 2;
 		scrollWidth = (imgWidth / 4).round(1).asInteger;
 		scrollWidth = (imgWidth * 0.25).round(1).asInteger;
 		// Setting the background also creates the image
 		this.background = backgroundColor; // method can be called at any time to change color
-		this onClose: { if (current === this) { current = nil; } };
+		ServerBoot.add(this, server);
+		this onClose: {
+			ServerBoot.remove(this, server);
+			if (current === this) { current = nil; };
+		};
 	}
+	
+	doOnServerBoot { this.start }
 
 	background_ { | color |
 		// This method can be called at any time to change the background color
@@ -122,12 +129,21 @@ Spectrograph : UniqueWindow {
 		image = Image.color(imgWidth@imgHeight, color);
 		if (scroll.notNil) { scroll setColor: color; };
 		if (drawSpectrogram.notNil) { drawSpectrogram.background = color; }
-		// clearImage is an image used when scrolling to erase the right part of the screen 
 	}
 
 	addImageObject { | object | imageObjects = imageObjects add: object }
 
-	start {
+	start { 
+//		this.rebuildScreen; // rebuildScreen does not work yet  
+		ServerReady(server).addListener(this, \started, { this.prStart });
+	}
+
+	rebuildScreen { // does not seem to work? 
+		if (scroll.notNil) { scroll.initImageData; };
+		if (drawSpectrogram.notNil) { drawSpectrogram.initImageData; }
+	}
+
+	prStart {	
 		var poller;
 		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize);
 		poller addListener: this;
@@ -137,6 +153,7 @@ Spectrograph : UniqueWindow {
 		poller.addMessage(this, 'rate_');
 		poller.start;
 	}
+
 
 	rate_ { | argRate = 0.04 | this.notify('rate_', rate = argRate); }
 		

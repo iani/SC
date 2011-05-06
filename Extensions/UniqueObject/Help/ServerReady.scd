@@ -1,21 +1,15 @@
-/* 
+
 
 Send notifications after a Server has called initTree and created its root node, but only when it boots. 
 
-Add to ServerReady objects that want to start Synths, Groups or routines right after a server boots, but that do not want to restart them when a Server re-inits its tree after CmdPeriod (after the user types Command-. to stop all synths)
+ServerReady ensures that any SynthDefs created as Udef instances or any Buffers created as UniqueBuffer instances will be loaded to the buffer before any synth starts. This is ensured when using the classes
+Udef, UniqueBuffer, UniqueSynth, UniquePlay either directly or by sending the messages play, playDef, playFunc on Symbols or the messages uplay, mplay on Functions (see Shortcuts.html). 
 
-ServerReady(action, server, object)
+Additionally, any function can be added to be evaluated after the Server has booted and all SynthDefs and Buffers are loaded, with: 
 
-ServerReady({ Synth(\default) });
-WaitForServer.new;
-WaitForServer({ Synth(\default) });
 
- 
-ServerReady.registerOneShot(object, action, server) 
 
-ServerReady({ | ... args | args.postln }, );
 
-*/
 
 //:Boot server and do something when booted
 WaitForServer(function: { { WhiteNoise.ar(0.1) }.play; });
