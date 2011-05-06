@@ -65,12 +65,20 @@ UniqueObject {
 
 	// ====== notifying objects ======
 
-	notify { | message, what | NotificationCenter.notify(this, message, what); }
+	// this has been added to Object:
+//	notify { | message, what | NotificationCenter.notify(this, message, what); }
 	
+	// ====== listening to notifications from other objects ======
 	addNotifier { | notifier, message, action |
 		NotificationCenter.register(notifier, message, this, action);
 		this onClose: { NotificationCenter.unregister(notifier, message, this); };
 	}
+	
+	addMessage { | notifier, message |
+		this.addNotifier(notifier, message, { | value | this.perform(message, value) });
+	}
+
+	// ====== sending notifications to other objecs ======
 	addListener { | listener, message, action |
 		NotificationCenter.register(this, message, listener, action); 
 		this onClose: { NotificationCenter.unregister(this, message, listener); };

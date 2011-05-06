@@ -15,6 +15,9 @@ p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
 p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
 p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
 p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
 span.s1 {color: #000000}
 span.s2 {color: #008323}
 span.s3 {color: #162bc4}
@@ -27,6 +30,32 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><b>Inherits from: UniqueWindow : UniqueObject : Object</b></p>
 <p class="p4"><span class="Apple-converted-space"> </span></p>
 <p class="p3">A real time Spectrogram<span class="Apple-converted-space">  </span>with customizable window dimensions and colors.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">A Spectrograph instance is identified by its name and server. That is, if you call Spectrograph.new with the same name and Server as that of an already existing Spectrograph instance, the old Spectrograph instance will be returned.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*new(name, bounds, server, rate, bufsize) </b>: Create a Spectrograph window without starting it</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name</b>: the name of the window and the Spectrograph (a Symbol).<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Note: The server's name will automatically be added to the name</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>bounds: </b>A Rect. The bounds of the Spectrograph window. Width should be 400 or greater.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Defaults to a centered window of 1000x390</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server: </b>The server on which the Spectrograph will operate. Default: Server.default.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>rate</b>: The time in seconds to wait between polls. Default: 0.04 (25 polls per second).</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>bufsize: </b>The size of the fft buffer to use for polling the fft signal. Default: 1024.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Should be between a power of 2 between 2 * Server blockSize and 1024</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*start (name, bounds, server, rate, bufsize)</b> : Create a Spectrograph window and start.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The arguments are like those of *new, and are optional.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*current </b>: Return the last created Spectrograph instance, if still open. If closed, return nil</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*big</b> : Create a default Spectrograph on a big centered window (1000x390). If already open,<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>then change the size of the window.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*small</b> : Create a default Spectrograph on a small window at the bottom left. If already open.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>then change the size of the window.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Closing a Spectrograph window stops the spectrogram and removes the instance from UniqueObject:objects.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p5">//:Start the default spectrograph</p>
 <p class="p6">Spectrograph<span class="s1">.start;</span></p>
@@ -43,9 +72,42 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7"><br></p>
 <p class="p5">//:Start Spectrograph with some (more) test tones.</p>
 <p class="p5"><span class="s3">Spectrograph</span><span class="s1">.start; </span>// in case needed ...</p>
+<p class="p9"><br></p>
+<p class="p10"><span class="s2">\test</span>.play({ <span class="s3">SinOsc</span>.ar(<span class="s3">LFSaw</span>.kr(0.1).range(100, 10000), 0, 0.001) });</p>
+<p class="p10"><span class="s2">\test2</span>.play({ <span class="s3">SinOsc</span>.ar(<span class="s3">LFSaw</span>.kr(0.01).range(100, 10000), 0, 0.001) });</p>
+<p class="p10"><span class="s2">\default</span>.play rsyncs: { loop { 0.25.rand.wait; <span class="s2">\default</span>.set(<span class="s2">\freq</span>, 100 + 10000.rand) } };</p>
+<p class="p9"><br></p>
+<p class="p5">//:stop the examples</p>
+<p class="p10">[<span class="s2">\test</span>, <span class="s2">\test2</span>, <span class="s2">\default</span>] do: <span class="s3">_</span>.release;</p>
+<p class="p9"><br></p>
+<p class="p5">//:-</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s2">\test</span>.play({ <span class="s3">SinOsc</span>.ar(<span class="s3">LFSaw</span>.kr(0.1).range(100, 10000), 0, 0.001) });</p>
-<p class="p8"><span class="s2">\test2</span>.play({ <span class="s3">SinOsc</span>.ar(<span class="s3">LFSaw</span>.kr(0.01).range(100, 10000), 0, 0.001) });</p>
-<p class="p8"><span class="s2">\default</span>.play rsyncs: { loop { 0.25.rand.wait; <span class="s2">\default</span>.set(<span class="s2">\freq</span>, 100 + 10000.rand) } };</p>
+<p class="p3"><b>Instance Methods</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>rate(number) </b>: Set the rate of fft data polling.</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p5">//:Start with default rate and small size</p>
+<p class="p6">Spectrograph<span class="s1">.small;</span></p>
+<p class="p9"><br></p>
+<p class="p5">//:Start a test sound</p>
+<p class="p10"><span class="s2">\test3</span>.play({ <span class="s3">SinOsc</span>.ar(<span class="s3">LFNoise0</span>.kr(20).range(100, <span class="s3">LFSaw</span>.kr(0.1, pi).range(100, 10000)), 0, 0.01) })</p>
+<p class="p9"><br></p>
+<p class="p5">//:Change the rate to 2 frames per second</p>
+<p class="p10"><span class="s3">Spectrograph</span>.current.rate = 0.5;</p>
+<p class="p9"><br></p>
+<p class="p5">//:Change the rate to 100 frames per second</p>
+<p class="p10"><span class="s3">Spectrograph</span>.current.rate = 0.01;</p>
+<p class="p9"><br></p>
+<p class="p5">//:Close the spectrograph</p>
+<p class="p10"><span class="s3">Spectrograph</span>.current.close;</p>
+<p class="p9"><br></p>
+<p class="p5">//:Stop the test sound</p>
+<p class="p10"><span class="s2">\test3</span>.release;</p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
+<p class="p11"><br></p>
 </body>
 </html>

@@ -34,7 +34,10 @@ FFTsynthPoller : AbstractUniqueServerObject {
 		asKey = key[2];
 		if (start) { this.start; };
 		listeners = Set.new;
-		this.onClose({ listeners = nil });
+		this.onClose({
+//			listeners.asArray do: this.removeListener(_); // (TODO)
+			listeners = nil;
+		});
 	}
 
 /* All communication except fft data updates is done via NotificationCenter using asKey as 
@@ -92,9 +95,13 @@ the message notification \start.
 		listeners do: _.update(index, fftMagnitudes, data);
 	}
 
-	// a simplified Observer pattern (Model-dependants) using just an array:
+	// A simplified Observer pattern (Model-dependants) using just an array
+	// Note: This overrides the addListener method of superclass UniqueObject.
 	addListener { | object | listeners add: object; }
 
 	removeListener { | object | listeners remove: object; }
+
+	// TODO: Enable listeners to set your rate, bufSize etc. through 
+	// NotificationCenter. 
 
 }

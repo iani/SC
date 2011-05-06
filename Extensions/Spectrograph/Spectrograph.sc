@@ -37,19 +37,21 @@ Spectrograph : UniqueWindow {
 
 	*big { | server | // TODO: retrieve existing Spectrograph to change its bounds
 		if (this.current.isNil) { ^this.start(nil, nil, server ? Server.default); };
-		this.current.bounds = Window.centeredWindowBounds(1000);
+		^this.current.bounds_(Window.centeredWindowBounds(1000)).front;
 	}
 
 	*small { | server | // TODO: retrieve existing Spectrograph to change its bounds
 		if (this.current.isNil) { 
-			^this.start(nil, 
-				Rect(Window.screenBounds.width - 600, 0, 600, 200),
-				server: server ? Server.default
-			)
+			^this.start(nil, this.smallBounds, server: server ? Server.default);
 		};
-		this.current.bounds = Rect(Window.screenBounds.width - 600, 0, 600, 200);
+		^this.current.bounds_(this.smallBounds).front;
 	}
 	
+	*smallBounds { 
+//		^Rect(Window.screenBounds.width - 600, 0, 600, 200);
+		^Rect(0, 0, 570, 200)
+	}
+
 	*background_ { | color |
 		color = color ? Color.black;
 		backgroundColor = color;
@@ -58,11 +60,11 @@ Spectrograph : UniqueWindow {
 
 	*onServer { | server |
 		server = server ? Server.default;
-		^this.all select: { | s | s.server == server };
+		^this.all.select({ | s | s.server == server }) // .do(_.front);
 	}
 
 	*start { | name, bounds, server, rate = 0.04, bufsize = 1024 |
-		^this.new(name, bounds, server ? Server.default, rate, bufsize = 1024).start;
+		^this.new(name, bounds, server ? Server.default, rate, bufsize = 1024).start.front;
 	}
 	
 	
@@ -104,8 +106,6 @@ Spectrograph : UniqueWindow {
 			};
 			penObjects do: _.update(this); 	// let objects draw with Pen here
 		};
-		userview.postln;
-//		userview.mouseOverAction = { | v, x, y | [v, x, y].postln };
 
 		imgWidth = userview.bounds.width;
 		imgHeight = bufsize / 2;
@@ -134,10 +134,11 @@ Spectrograph : UniqueWindow {
 		this onClose: { poller removeListener: this }; 
 		poller.addNotifier(this, this.removedMessage, { 
 			if (stopOnClose) { poller.stop; } });
+		poller.addMessage(this, 'rate_');
 		poller.start;
 	}
 
-//	rate_ { | argRate = 0.04 | this.notify(rate = argRate); /* this ... */ }
+	rate_ { | argRate = 0.04 | this.notify('rate_', rate = argRate); }
 		
 
 	// Added for symmetry, but should only be used for debugging.

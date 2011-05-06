@@ -1,8 +1,11 @@
-Spectrograph.start; // in case needed ...
+Spectrograph.small; // in case needed ...
+//:test sound 
+\default.play({ SinOsc.ar(LFNoise0.ar(10).range(100, 10000), 0, 0.05) });
 
-\test.play({ SinOsc.ar(LFSaw.kr(0.1).range(100, 10000), 0, 0.001) });
-\test2.play({ SinOsc.ar(LFSaw.kr(0.01).range(100, 10000), 0, 0.001) });
-\default.play rsyncs: { loop { 0.25.rand.wait; \default.set(\freq, 100 + 10000.rand) } };
+Spectrograph.start(nil, 
+		Rect(Window.screenBounds.width - 600, 0, 600, 200),
+		server: Server.default
+);
 
 //:checking
 
@@ -14,3 +17,4 @@ Server.default.queryAllNodes;
 Spectrograph.current.penObjects;
 
 Spectrograph.current;
+

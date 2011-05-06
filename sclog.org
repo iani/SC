@@ -380,7 +380,8 @@ If Code class variable autoBoot is set to true, then evaluating a code snippet w
      :PROPERTIES:
      :ENTERED_ON: <2011-05-06 Fri 08:24>
      :END:
-**** Added addListener method :uniqueobject:
+**** Added addListener method				       :uniqueobject:
      :PROPERTIES:
      :ENTERED_ON: <2011-05-06 Fri 08:24>
+     :ID:       DC7BD27A-F893-4750-9A8D-B22AC3B2C960
      :END:
