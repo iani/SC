@@ -370,4 +370,17 @@ LibObject?
      :ENTERED_ON: <2011-05-05 Thu 08:22>
      :END:
 
-If Code class variable autoBoot is set to true, then evaluating a code snippet with Cmd-shift-x will call WaitForServer.new, thereby ensuring that any calls to 'wait' will be in sync with the server booted. 
+If Code class variable autoBoot is set to true, then evaluating a code snippet with Cmd-shift-x will call WaitForServer.new, thereby ensuring that any calls to 'wait' will be in sync with the server booted.
+*** 2011-05-06 Friday
+**** Spectrograph alpha version complete, added Pen Object Test  :spectrogram:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-06 Fri 08:22>
+     :END:
+**** Added theme switching with DocThemes class :panes:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-06 Fri 08:24>
+     :END:
+**** Added addListener method :uniqueobject:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-06 Fri 08:24>
+     :END:
