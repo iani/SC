@@ -68,10 +68,12 @@ UniqueObject {
 	notify { | message, what | NotificationCenter.notify(this, message, what); }
 	
 	addNotifier { | notifier, message, action |
-//		NotificationCenter.register(notifier, message, this, { | args | action.(this, args) });
-		NotificationCenter.register(notifier, message, this, action); // OK!
-
+		NotificationCenter.register(notifier, message, this, action);
 		this onClose: { NotificationCenter.unregister(notifier, message, this); };
+	}
+	addListener { | listener, message, action |
+		NotificationCenter.register(this, message, listener, action); 
+		this onClose: { NotificationCenter.unregister(this, message, listener); };
 	}
 
 	// ====== printing ======

@@ -8,8 +8,7 @@ PenObjectTest {
 
 	init { | spectrogram |
 		rect = Rect(5.5, 5.5, 400, 20);
-		NotificationCenter.register(spectrogram, \viewsInited, this, {
-			{ spectrogram.userview.postln; } ! 10;
+		spectrogram.addListener(this, \viewsInited, {
 			spectrogram.object.view.mouseOverAction = { | v, x, y |
 				[v, x, y].postln;	
 			};
