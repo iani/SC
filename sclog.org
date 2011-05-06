@@ -385,3 +385,7 @@ If Code class variable autoBoot is set to true, then evaluating a code snippet w
      :ENTERED_ON: <2011-05-06 Fri 08:24>
      :ID:       DC7BD27A-F893-4750-9A8D-B22AC3B2C960
      :END:
+**** Merged lilt2 to master, added tag v1.0alpha		      :lilt2:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-06 Fri 11:06>
+     :END:
