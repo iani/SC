@@ -30,7 +30,8 @@ Dock {
 						s;
 					});
 					u.object.window.front;
-					u.object.run;	// restart if server re-booted with scope on
+					// restart if server re-booted with scope on
+					ServerReady(Server.internal).addObjectAction(u, { u.object.run.postln });
 				}.fork(AppClock);
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
@@ -47,7 +48,8 @@ Dock {
 				d.name->{
 					d.front; 
 // sending a document to front does not make it current. Therefore compensate here: 
-					d.didBecomeKey;
+					Document.current = d;
+//					d.didBecomeKey;
 				} };
 			},
 			{ | items |

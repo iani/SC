@@ -60,7 +60,7 @@ the message notification \start.
 	}
 
 	makeFFTpollSynth {
-		FFTpollSynth(this, this.server, rate, bufSize, in);
+		FFTpollSynth(this, this.server.asTarget, rate, bufSize, in);
 	}
 
 	stop {

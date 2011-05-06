@@ -135,7 +135,7 @@ Spectrograph : UniqueWindow {
 
 	start { 
 //		this.rebuildScreen; // rebuildScreen does not work yet  
-		ServerReady(server).addListener(this, \started, { this.prStart });
+		ServerReady(server).addObjectAction(this, { this.prStart });
 	}
 
 	rebuildScreen { // does not seem to work? 
@@ -145,6 +145,7 @@ Spectrograph : UniqueWindow {
 
 	prStart {	
 		var poller;
+		postf("Spectrograph prStart server is: %\n", server);
 		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize);
 		poller addListener: this;
 		this onClose: { poller removeListener: this }; 

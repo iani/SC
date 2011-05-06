@@ -17,7 +17,7 @@ FFTpollSynth : UniqueSynth {
 	}
 
 	init { | target, defName, args, addAction, argRate, argBufSize, in, argPoller |
-		server = target.server;
+		server = target.asTarget.server;
 		rate = argRate;
 		bufSize = argBufSize;
 		poller = argPoller;
@@ -26,7 +26,7 @@ FFTpollSynth : UniqueSynth {
 		Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
 		});
-		super.init(server, \fft, [\in, in], \addToTail);
+		super.init(server.asTarget, \fft, [\in, in], \addToTail);
 		this.rsync({
 			var fftbuf, bufnum, notifyKey;
 			fftbuf = buffer.object;

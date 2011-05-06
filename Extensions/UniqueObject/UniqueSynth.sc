@@ -28,7 +28,7 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	init { | target, defName ... moreArgs |
-		ServerReady.addSynth(this, { this.makeObject(target, defName, *moreArgs); });
+		ServerReady(target.server).addSynth(this, { this.makeObject(target, defName, *moreArgs); });
 	}
 
 	makeObject { | target, defName, args, addAction ... otherArgs |
@@ -66,9 +66,9 @@ UniqueSynth : AbstractUniqueServerObject {
 	// Synchronization with start / stop events: 
 	onStart { | func |
 		if (this.isPlaying) {
-			func.value;	
+			func.(this);	
 		}{
-			NotificationCenter.registerOneShot(this, \synthStarted, UniqueID.next, func);
+			NotificationCenter.registerOneShot(this, \synthStarted, UniqueID.next, { func.(this) });
 		}
 	}
 	onEnd { | func | this.onClose(func) }	// synonym

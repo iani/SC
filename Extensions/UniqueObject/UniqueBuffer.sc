@@ -88,7 +88,10 @@ UniqueBuffer : AbstractUniqueServerObject {
 	}
 
 	prepareToLoad { | serverReady |
-		serverReady addFuncToLoadChain: { this.makeObject; };
+		postf("PREPARING %: %\n", this, thisMethod.name);
+		serverReady addFuncToLoadChain: { 		postf("INSIDE LOAD CHAIN %: %\n", this, thisMethod.name);
+
+this.makeObject; };
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
@@ -104,6 +107,7 @@ UniqueBuffer : AbstractUniqueServerObject {
 	doOnServerQuit { | server | this.freed; }
 
 	makeObject { | play |
+		postf("%: %\n", this, thisMethod.name);
 		if (path.isNil) {
 			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, completionMessage: { | b | 
 				this.loaded(b);

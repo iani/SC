@@ -14,7 +14,7 @@ To select the previous example, press Command-shift-k
 
 \default3.playDef(\default, [\freq, 660]).onStart({ | s | postf("% started\n", s.synth); });
 
-UniqueSynth.onServer.postln;
+postf("Synths on server are: %\n", UniqueSynth.onServer);
 
 
 //:3
@@ -23,7 +23,7 @@ UniqueSynth.onServer.postln;
 //:1a
 \default.play.onStart({ | s | postf("% started\n", s.synth); });
 
-\default.wait(1);
+1.wait;
 
 \default2.playDef(\default, [\freq, 550]).onStart({ | s | postf("% started\n", s.synth); });
 
@@ -57,18 +57,18 @@ UniqueSynth.onServer.postln;
 //:WRONG!
 \default.play;
 
-{ inf do: { \default.set(\freq, 400 rrand: 4000); 0.25.wait; }; }.fork;
+{ inf do: { \default.set(\freq, 400 rrand: 4000); 0.025.wait; }; }.fork;
 
-\default.wait(1);
+2.wait;
 
-\default.release;
+\default.release(3);
 
 //:Right!
-\default.play.rsynca({ inf do: { \default.set(\freq, 400 rrand: 4000); 0.25.wait; }; });
+\default.play.rsynca({ inf do: { \default.set(\freq, 400 rrand: 4000); 0.025.wait; }; });
 
-\default.wait(1);
+2.wait;
 
-\default.release;
+\default.release(3);
 
 //:More examples: 
 \default.play;
@@ -83,9 +83,9 @@ UniqueSynth.onServer.postln;
 //:On start. 
 // This example also shows the combined use of Symbol:play with Function:uplay. 
 
-\test.play.onStart({ "hello".postln; });
-\test.wait(1);
-\test.free;
+\test.play({ LFNoise2.ar(4000, 0.1) }).onStart({ "hello".postln; });
+1.wait;
+\test.release;
 
 \default.play.rsyncs({ | synth | 
 	0.25.wait;

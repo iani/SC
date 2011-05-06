@@ -7,10 +7,13 @@ FunctionChain : List {
 	}
 	
 	start {
+				postf("%: %\n", this, thisMethod.name);
+
 		if (routine.notNil) { ^this };	// do not start if running
+		postf("%: %\n NOW STARTING ROUTINE", this, thisMethod.name);
 		routine = {
-			while { (func = this.pop).notNil } { func.(this); this.yield; };
-			onEnd.(this);
+			while { (func = this.pop).notNil } { func.(this).postln; this.yield; };
+//			onEnd.(this);				// had problems with this, disabling it
 			routine = nil; 			// routine ended, can restart
 		}.fork;
 	}
@@ -18,5 +21,7 @@ FunctionChain : List {
 	next {
 		routine.next;	
 	}
+	
+	isRunning { ^routine.notNil }
 }
 

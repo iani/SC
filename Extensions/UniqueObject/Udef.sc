@@ -28,7 +28,11 @@ Udef {
 	}
 
 	prepareToLoad { | serverReady |
-		serverReady addFuncToLoadChain: { def.send(serverReady.server); }
+				postf("PREPARING %: %\n", this, thisMethod.name);
+
+		serverReady addFuncToLoadChain: { 		postf("%: %\n", this, thisMethod.name);
+
+def.send(serverReady.server); }
 	}
 
 }
