@@ -29,10 +29,10 @@ Panes {
 	*stop { this.deactivate } // synonym
 	*deactivate {
 		NotificationCenter.unregister(this, \docOpened, this);
-		Document.initAction = nil;
+		Document.initAction = { | doc | doc.front; };
 		this.removeMenu;
 		Code.removeMenu;
-		Dock.removeMenu;
+		Dock.removeMenu.closeDocListWindow;
 		UniqueBuffer.removeMenu;
 	}
 

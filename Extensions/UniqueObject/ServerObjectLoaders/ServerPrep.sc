@@ -24,12 +24,11 @@ ServerPrep : UniqueObject {
 	}
 
 	addBuffer { | buffer | bufs add: buffer }
-	addDef { | def | postf("def received: %\n", def.def.name); defs add: def }
+	addDef { | def | defs add: def }
 	addAction { | action | actions add: action }
 
 	loadAllObjects { 
 		bufs.loadAllObjects; // bufs load defs when done, defs load actions when done
-//		defs.loadAllObjects;	// tested OK
 	}
 
 	loadDefs {

@@ -1,6 +1,6 @@
 
 ServerActionLoader {
-	
+	classvar <>verbose = false;
 	var <serverPrep, <server;
 	var <isLoading = false;
 	var <objects;
@@ -15,9 +15,7 @@ ServerActionLoader {
 	}
 
 	add { | object |
-		[this, "adding", object].postln;
 		objects add: object;
-		[this, "objects are now:", objects].postln;
 		if (isLoading.not and: { server.serverRunning }) {
 			serverPrep.loadAllObjects;
 		};
@@ -25,13 +23,14 @@ ServerActionLoader {
 
 	loadAllObjects {
 		var array;
-		[this, "loadingAllObjects", objects, "isLoading?:", isLoading].postln;
 		if (isLoading) { ^this };	// may be still in previous loading loop
 		isLoading = true;
+		if (verbose and: { objects.size > 0 }) {
+			postf("Loading % actions to %\n", objects.size, server);
+		};
 		while { objects.size > 0 } {
 			array = objects.asArray;
 			array do: { | action |
-				["evaluating action", action].postln;
 				objects remove: action; 
 				action.value;	
 			};		

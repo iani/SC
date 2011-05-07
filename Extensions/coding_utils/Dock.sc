@@ -67,6 +67,13 @@ Dock {
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
 		});
 	}
+	
+	*closeDocListWindow {
+		var window;
+		window = Window.allWindows.detect({ | w | w.name == "Documents" });
+		if (window.notNil) { window.close };
+	}
+	
 	*browseUserClasses {
 		var windowName = 'User Classes';
 		ListWindow(windowName, nil, {
