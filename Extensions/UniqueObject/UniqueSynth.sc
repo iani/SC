@@ -5,12 +5,10 @@ before it starts.
 */
 
 AbstractUniqueServerObject : UniqueObject {
-
+	var <server;
 	*makeKey { | key, target |
 		^this.mainKey ++ [target.asTarget.server, key.asKey];
 	}
-
-	server { ^key[1] }
 
 	*onServer { | server |
 		var path;
@@ -28,7 +26,9 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	init { | target, defName ... moreArgs |
-		ServerReady(target.server).addSynth(this, { this.makeObject(target, defName, *moreArgs); });
+		server = target.asTarget.server;
+		ServerPrep(server).addAction({ this.makeObject(target, defName, *moreArgs); });
+		if (server.serverRunning.not) { server.boot };
 	}
 
 	makeObject { | target, defName, args, addAction ... otherArgs |

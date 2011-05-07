@@ -1,15 +1,5 @@
-//:r
-ServerReady.addObjectAction(\test, { postf("stargint %\n",100.rand);
-		{ \default.play; }.defer(0.1) 
-});
 
-//:b
-Server.default.boot;
-//:q
-Server.default.quit;
 
-//:xxx
+Udef(\default2, { Out.ar(0, LFNoise2.ar(2000, 0.1)) });
 
-\test.objectClosed;
-
-\default.play;
+\default2.play;

@@ -24,16 +24,11 @@ Udef {
 	init { | name, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
 		def = SynthDef(name, ugenGraphFunc, rates, prependArgs, variants, metadata);
 		all[name.asSymbol] = this;
-		this.prepareToLoad(ServerReady(server));
+		ServerPrep(server).addDef(this);
 	}
 
-	prepareToLoad { | serverReady |
-				postf("PREPARING %: %\n", this, thisMethod.name);
-
-		serverReady addFuncToLoadChain: { 		postf("%: %\n", this, thisMethod.name);
-
-def.send(serverReady.server); }
-	}
+	// using generic different name to be also used by UniqueBuffer
+	sendTo { | server | def.send(server) }
 
 }
 	

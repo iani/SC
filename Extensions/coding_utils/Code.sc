@@ -17,7 +17,7 @@ Code {
 		func = string.compile;
 		clock = clock ? AppClock;
 		if (autoBoot) { 		// include WaitForServer for safety. 
-				ServerReady.addAction({ func.fork(clock); });				if (Server.default.serverRunning.not) { Server.default.boot };
+				ServerPrep(Server.default).addAction({ func.fork(clock); });				if (Server.default.serverRunning.not) { Server.default.boot };
 		}{
 			func.fork(clock);
 		}

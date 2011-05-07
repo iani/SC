@@ -3,6 +3,8 @@ Add UniqueObject support plus support for a number of UniqueSupport subclasses.
 
 */
 
++ Server { asKey { ^this } }
+
 + Magnitude { asKey { ^this } }
 
 + String { 

@@ -89,9 +89,7 @@ UniqueBuffer : AbstractUniqueServerObject {
 
 	prepareToLoad { | serverReady |
 		postf("PREPARING %: %\n", this, thisMethod.name);
-		serverReady addFuncToLoadChain: { 		postf("INSIDE LOAD CHAIN %: %\n", this, thisMethod.name);
-
-this.makeObject; };
+		BufLoader(server).add(this);
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
