@@ -326,13 +326,15 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
 
 UniqueBuffer:play therefore now uses Function:mplay. This is not a major handicap.
 *** 2011-05-02 Monday
-**** BUG UniqueBuffer:load loads also the default buffer if not loaded :uniquebuffer:
+**** DONE UniqueBuffer:load loads also the default buffer if not loaded :uniquebuffer:
+     CLOSED: [2011-05-07 Sat 13:26]
      :PROPERTIES:
      :ENTERED_ON: <2011-05-02 Mon 00:57>
      :END:
 
 A minor glitch, but should be looked into. 
-**** TODO PrivateBusSynth, SignalPoller 			:spectrogram:
+**** CANCELLED PrivateBusSynth, SignalPoller			:spectrogram:
+     CLOSED: [2011-05-07 Sat 13:25]
      :PROPERTIES:
      :ENTERED_ON: <2011-05-02 Mon 01:03>
      :END:

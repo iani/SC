@@ -27,7 +27,7 @@ UniqueSynth : AbstractUniqueServerObject {
 
 	init { | target, defName ... moreArgs |
 		server = target.asTarget.server;
-		ServerPrep(server).addAction({ this.makeObject(target, defName, *moreArgs); });
+		ServerPrep(server).addSynth({ this.makeObject(target, defName, *moreArgs); });
 		if (server.serverRunning.not) { server.boot };
 	}
 
@@ -86,7 +86,7 @@ UniqueSynth : AbstractUniqueServerObject {
 	
 	rsync { | func, clock |
 		var routine;
-		this.onStart({
+		ServerPrep(server).addRoutine({
 			routine = { func.(object, this) }.fork(clock ? AppClock);
 		});
 		this.onEnd({

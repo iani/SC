@@ -51,7 +51,7 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false], {
 				this.forkCurrentSnippet(AppClock);
 			}),
-			CocoaMenuItem.addToMenu("Code", "fork current snippet (SystemClock)", ["X", false, true], {
+			CocoaMenuItem.addToMenu("Code", "fork current snippet (SystemClock)", ["X", true, false], {
 				this.forkCurrentSnippet(SystemClock);
 			}),
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {

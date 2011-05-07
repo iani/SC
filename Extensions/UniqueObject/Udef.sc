@@ -30,7 +30,11 @@ Udef {
 	// using generic different name to be also used by UniqueBuffer
 	sendTo { | server | def.send(server) }
 	
-	*onServer { | server | ^all.leaves(server ? Server.default) }
+	*at { | server | ^this.onServer(server) }
+	*onServer { | server |
+		server = server ? Server.default;
+		if (all.atPath(server).isNil) { ^[] };
+		^all.leaves(server);
+	}
 
 }
-	

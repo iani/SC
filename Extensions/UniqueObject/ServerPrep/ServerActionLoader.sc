@@ -26,7 +26,7 @@ ServerActionLoader {
 		if (isLoading) { ^this };	// may be still in previous loading loop
 		isLoading = true;
 		if (verbose and: { objects.size > 0 }) {
-			postf("Loading % actions to %\n", objects.size, server);
+			postf("Loading % % to %\n", objects.size, this.objectKind, server);
 		};
 		while { objects.size > 0 } {
 			array = objects.asArray;
@@ -38,5 +38,29 @@ ServerActionLoader {
 		this.done;
 	}
 
+	objectKind { ^"actions" }
+
 	done { isLoading = false; }
+}
+
+SynthLoader : ServerActionLoader {
+
+	done { 
+		super.done;
+		serverPrep.loadRoutines;
+	}
+
+	objectKind { ^"Synths" }
+	
+}
+
+RoutineLoader : ServerActionLoader {
+
+	done { 
+		super.done;
+		serverPrep.loadActions;
+	}
+
+	objectKind { ^"Routines" }
+	
 }

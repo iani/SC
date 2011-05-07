@@ -50,7 +50,8 @@ Spectrograph : UniqueWindow {
 	
 	*smallBounds { 
 //		^Rect(Window.screenBounds.width - 600, 0, 600, 200);
-		^Rect(0, Window.screenBounds.height - 200, 570, 200)
+//		^Rect(0, Window.screenBounds.height - 200, 570, 200)
+		^Rect(0, 0, 570, 200)
 	}
 
 	*background_ { | color |

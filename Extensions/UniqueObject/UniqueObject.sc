@@ -46,7 +46,7 @@ UniqueObject {
 
 	*removeAll { | keys |
 		// remove all objects by performing their remove method
-		// this sends out notifications. See Meta_UniqueObject:remove
+		// this sends out notifications.
 		objects.leaves(keys) do: _.remove;
 	}
 
@@ -64,40 +64,4 @@ UniqueObject {
 	printOn { arg stream;
 		stream << this.class.name << "(" <<* [key.last, object] <<")";
 	}
-
-	// ========================= STUFF MOVED TO OBJECT =======================
-	// evaluate function when object is removed
-	// Next 3 methods to be have been moved to Object
-/*
-	onClose { | action | this.onRemove(UniqueID.next, action) } 
-	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
-	doOnceOn { | message, receiver, func |
-		NotificationCenter.registerOneShot(this, message, receiver, { func.(this) });
-	}
-*/
-
-	// ====== notifying objects ======
-
-	// this has been added to Object:
-//	notify { | message, what | NotificationCenter.notify(this, message, what); }
-	
-	// ====== listening to notifications from other objects ======
-
-	// These have been moved to Object
-/*	addNotifier { | notifier, message, action |
-		NotificationCenter.register(notifier, message, this, action);
-		this onClose: { NotificationCenter.unregister(notifier, message, this); };
-	}
-	
-	addMessage { | notifier, message |
-		this.addNotifier(notifier, message, { | value | this.perform(message, value) });
-	}
-
-	// ====== sending notifications to other objecs ======
-	addListener { | listener, message, action |
-		NotificationCenter.register(this, message, listener, action); 
-		this onClose: { NotificationCenter.unregister(this, message, listener); };
-	}
-*/
-
 }

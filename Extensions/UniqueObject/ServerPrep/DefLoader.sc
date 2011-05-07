@@ -45,11 +45,19 @@ DefLoader : ServerActionLoader {
 		this.loadNextObjectGroup;
 	}
 
-	loadNextObjectGroup { serverPrep.loadActions; }
+	loadNextObjectGroup {
+//		serverPrep.notifyTree; // CRASH!!!
+		serverPrep.loadSynths;
+	}
 		
 	load { | object |
 		objects.remove(object);
 		object.sendTo(server); // object decides appropriate action
+	}
+	
+	addAllUdefs {
+		/* Received from ServerPrep on Boot time. Done before loading process starts */
+		objects addAll: Udef.onServer(server);
 	}
 }
 
@@ -66,6 +74,10 @@ BufLoader : DefLoader {
 //		{	// leave time for alloc buffers to initialize?
 			serverPrep.loadDefs;
 //		}.defer(0.5);
+	}
+	addAllUniqueBuffers {
+		/* Received from ServerPrep on Boot time. Done before loading process starts */
+		objects addAll: UniqueBuffer.onServer(server);
 	}
 	
 }

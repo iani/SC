@@ -7,47 +7,63 @@ It is not designed to be used on its own.
 
 */
 
-FFTpollSynth : UniqueSynth {
-	var <poller, <server, <rate = 0.025, <buffer, <bufSize, <index = 0;
+FFTpollSynth : UniqueObject {
+	var <poller, <server, <rate = 0.025, <synthdef, <buffer, <bufSize, <index = 0;
+	var <in = 0;
+
 	// TODO: List of timestamps recorded since starting the synth
 	// Useful for displaying the time of a certain frame on mouseover: 
-	var <frames; // ... TODO
-	*new { | poller, server, rate = 0.025, bufSize = 1024, in = 0 |
-		^super.new(poller.asKey, \fft, nil, server ? Server.default, \addToHead, rate, bufSize, in, poller)
+//	var <frames; // ... TODO
+	*new { | poller, server, rate = 0.04, bufSize = 1024, in = 0 |
+		^super.new((poller ? 'test').asKey, server, rate, bufSize, in, poller)
 	}
 
-	init { | target, defName, args, addAction, argRate, argBufSize, in, argPoller |
-		server = target.asTarget.server;
+	init { | argServer, argRate, argBufSize, argIn = 0, argPoller |
+		server = argServer.asTarget.server;
 		rate = argRate;
 		bufSize = argBufSize;
+		in = argIn;
 		poller = argPoller;
 //		frames = Frames.new;
+//		buffer = UniqueBuffer(key[2], server, bufSize);
+//		synthdef = Udef(\fft, { | in = 0, buf = 0 |
+//			FFT(buf, InFeedback.ar(in));
+//		}, server: server);
+//		this.makeSynth;
+//		this.connectToPoller;
+		ServerPrep(server).addToServerTree(this, { this.makeSynth }); // run as long as server is booted
+	}
+
+	makeSynth {
 		buffer = UniqueBuffer(key[2], server, bufSize);
-		Udef(\fft, { | in = 0, buf = 0 |
+		synthdef = Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
-		}, server: target.asTarget.server);
-		super.init(server.asTarget, \fft, [\in, in], \addToTail);
-		this.rsync({
-			var fftbuf, bufnum, notifyKey;
+		}, server: server);
+//		{ 
+		object = UniqueSynth(\fft, \fft, [\in, in, \buf, buffer.object.bufnum], server, \addToTail);
+		postf("% added synth %\n", this, object);
+		object.rsynca({
+			var fftbuf;
 			fftbuf = buffer.object;
-			bufnum = fftbuf.bufnum;
-			notifyKey = key[2];
 			loop {
 				fftbuf.getn(0, bufSize, { | buf |
 //					frames.add;
+//					buf.sum.postln;
 					poller.update(index, buf);
 					index = index + 1;
+//					if (index % 25 == 0) { index.postln; }
 				});
 				rate.wait;
 			};
-		}, SystemClock);
+		});
 		this.connectToPoller;
+		\default.play;
+		poller.postln;
+			{ server.queryAllNodes; }.defer(2);
+			
+//		}.defer(1);
 	}
 
-	prMakeObject { | target, defName, args, addAction |
-		// need to provide the bufnum here or else it is not properly initialized
-		object = Synth(defName, args ++ [\buf, buffer.object.bufnum], target, addAction);
-	}
 /* 
 The advantage of notifying via NotifiationCenter using a symbol as key is that 
 other objects (clients) can register for notification from this Poller, based on its key, 

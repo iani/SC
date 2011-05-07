@@ -1,6 +1,6 @@
 // useful shortcut for sending notifications via NotificationCenter
 + Object {
-	notify { | message, what | NotificationCenter.notify(this, message, what); }
+	notify { | message, args | NotificationCenter.notify(this, message, args); }
 	
 	addMessage { | notifier, message |
 		NotificationCenter.register(notifier, message, this, { | ... args | this.performList(message, args) });
@@ -39,4 +39,7 @@
 		NotificationCenter.registerOneShot(this, message, receiver, { func.(this) });
 	}
 
+	addToServerTree { | function, server |
+		ServerPrep(server).addToServerTree(this, function);
+	}
 }
