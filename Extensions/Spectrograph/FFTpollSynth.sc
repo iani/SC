@@ -25,7 +25,7 @@ FFTpollSynth : UniqueSynth {
 		buffer = UniqueBuffer(key[2], server, bufSize);
 		Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
-		});
+		}, server: target.asTarget.server);
 		super.init(server.asTarget, \fft, [\in, in], \addToTail);
 		this.rsync({
 			var fftbuf, bufnum, notifyKey;

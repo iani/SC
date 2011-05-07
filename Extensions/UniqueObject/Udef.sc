@@ -14,7 +14,7 @@ Udef {
 	var <def;
 	
 	*initClass {
-		all = IdentityDictionary.new;	
+		all = MultiLevelIdentityDictionary.new;	
 	}
 	
 	*new { | name, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
@@ -23,12 +23,14 @@ Udef {
 
 	init { | name, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
 		def = SynthDef(name, ugenGraphFunc, rates, prependArgs, variants, metadata);
-		all[name.asSymbol] = this;
+		all.putAtPath([server, name.asSymbol], this);
 		ServerPrep(server).addDef(this);
 	}
 
 	// using generic different name to be also used by UniqueBuffer
 	sendTo { | server | def.send(server) }
+	
+	*onServer { | server | ^all.leaves(server ? Server.default) }
 
 }
 	

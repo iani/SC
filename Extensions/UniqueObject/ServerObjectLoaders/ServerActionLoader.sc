@@ -15,7 +15,9 @@ ServerActionLoader {
 	}
 
 	add { | object |
+		[this, "adding", object].postln;
 		objects add: object;
+		[this, "objects are now:", objects].postln;
 		if (isLoading.not and: { server.serverRunning }) {
 			serverPrep.loadAllObjects;
 		};
@@ -23,12 +25,13 @@ ServerActionLoader {
 
 	loadAllObjects {
 		var array;
-		thisMethod.postt(objects);
+		[this, "loadingAllObjects", objects, "isLoading?:", isLoading].postln;
 		if (isLoading) { ^this };	// may be still in previous loading loop
 		isLoading = true;
 		while { objects.size > 0 } {
 			array = objects.asArray;
-			array do: { | action | 
+			array do: { | action |
+				["evaluating action", action].postln;
 				objects remove: action; 
 				action.value;	
 			};		
@@ -36,8 +39,5 @@ ServerActionLoader {
 		this.done;
 	}
 
-	done {
-		thisMethod.postt(this);
-		isLoading = false;
-	}
+	done { isLoading = false; }
 }

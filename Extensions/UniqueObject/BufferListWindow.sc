@@ -13,12 +13,16 @@ BufferListWindow : ListWindow {
 					format("%(%) file: % num frames: %", b.key[2], b.bufnum, 
 						PathName(b.path ? "-").fileName, b.numFrames)->{ b.play }
 				}).sort({ | a, b | a.key < b.key });
-			}, { | items |
+			},
+			{ | items |
 				var c, cs;
 				c = UniqueBuffer.current;
-				cs = format("%:%:%", c.key[2], PathName(c.path ? "-").fileName, c.numFrames);
-				items.indexOf(items detect: { | d | d.key == cs });
-			}, UniqueBuffer, [\loaded, \free, \created], delay: 0.01
+				if (c.notNil) {
+					cs = format("%:%:%", c.key[2], PathName(c.path ? "-").fileName, c.numFrames);
+					items.indexOf(items detect: { | d | d.key == cs });
+				};
+			}, 
+			UniqueBuffer, [\loaded, \free, \created], delay: 0.01
 		);	
 	}
 }

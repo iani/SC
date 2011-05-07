@@ -16,7 +16,6 @@ ServerPrep : UniqueObject {
 	doOnCmdPeriod { cmdPeriod = true; }
 
 	doOnServerTree {
-		thisMethod.name.postln;
 		if (cmdPeriod) {
 			cmdPeriod = false;
 		}{
@@ -25,11 +24,8 @@ ServerPrep : UniqueObject {
 	}
 
 	addBuffer { | buffer | bufs add: buffer }
-	addDef { | def | 
-		thisMethod.postt(def.def.name);
-		
-		defs add: def }
-	addAction { | action | thisMethod.postt; actions add: action }
+	addDef { | def | postf("def received: %\n", def.def.name); defs add: def }
+	addAction { | action | actions add: action }
 
 	loadAllObjects { 
 		bufs.loadAllObjects; // bufs load defs when done, defs load actions when done
@@ -39,7 +35,7 @@ ServerPrep : UniqueObject {
 	loadDefs {
 		// received from bufs (BufLoader) when done.
 		// proceed with loading defs (SynthDefs in DefLoader)
-		actions.loadAllObjects;
+		defs.loadAllObjects;
 	}
 
 	loadActions {

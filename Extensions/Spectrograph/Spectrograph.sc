@@ -135,7 +135,7 @@ Spectrograph : UniqueWindow {
 
 	start { 
 //		this.rebuildScreen; // rebuildScreen does not work yet  
-		ServerReady(server).addObjectAction(this, { this.prStart });
+		ServerPrep(server).addAction({ this.prStart });
 	}
 
 	rebuildScreen { // does not seem to work? 

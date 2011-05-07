@@ -22,10 +22,12 @@ UniqueBuffer : AbstractUniqueServerObject {
 	*default { | server | ^this.new(server: server ? Server.default, path: defaultPath) }
 	
 	*current { | server |
-		var cur;
+		^current[server ? Server.default];
+/*		var cur;
 		server = server ? Server.default;
 		cur = current[server];
 		if (cur.isNil) { ^this.default } { ^cur };
+*/
 	}
 
 	*read { | path, server, startFrame = 0, numFrames, play |
@@ -81,15 +83,9 @@ UniqueBuffer : AbstractUniqueServerObject {
 		numChannels = argNumChannels;
 		path = argPath;
 		startFrame = argStartFrame;
-		ServerQuit.add(this, server);
-		this.prepareToLoad(ServerReady(server));
+		ServerPrep(server).addBuffer(this);
 		NotificationCenter.notify(UniqueBuffer, \created, this);
 		current[server] = this;
-	}
-
-	prepareToLoad { | serverReady |
-		postf("PREPARING %: %\n", this, thisMethod.name);
-		BufLoader(server).add(this);
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
@@ -102,10 +98,7 @@ UniqueBuffer : AbstractUniqueServerObject {
 		^{ | bufnum | PlayBuf.ar(bufnum.numChannels, bufnum, 1, 0, 0, 0, 2); };
 	}
 
-	doOnServerQuit { | server | this.freed; }
-
-	makeObject { | play |
-		postf("%: %\n", this, thisMethod.name);
+	sendTo {
 		if (path.isNil) {
 			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, completionMessage: { | b | 
 				this.loaded(b);

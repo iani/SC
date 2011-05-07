@@ -15,23 +15,24 @@ DefLoader : ServerActionLoader {
 
 	next {
 		var next;
-		thisMethod.postt;
 		next = objects detect: true;
 		if (next.isNil) {
 			this.done;
 		}{
-			thisMethod.postt(next.name);
 			this.load(next);
 		};
 	}
 
 	loadAllObjects {
 		var first;
-		thisMethod.postt(objects);
+		"loadAllObjects DEFLOADER starts".postln;
+		postf("% isLoading: %, numObjects: %\n", this, isLoading, objects.size).postln;
 		if (isLoading) { ^this };	// may be still waiting for the last def to load
 		if ( objects.size == 0) {
+		"loadAllObjects DEFLOADER DONE".postln;
 			this.done
 		}{
+		"loadAllObjects starting do load synthdef chain".postln;
 			isLoading = true;
 			first = objects detect: true;
 			this.load(first);
@@ -47,14 +48,7 @@ DefLoader : ServerActionLoader {
 		
 	load { | object |
 		objects.remove(object);
-		postf("PREPARING TO SEND DEFERRED: %\n", object.def.name);
-		{ 
-			postf("DEFER ended, sending now:: %\n", object.def.name);
-			
-			object.sendTo(server); 
-			
-		}.defer(1);
-			// object decides appropriate action
+		object.sendTo(server); // object decides appropriate action
 	}
 }
 

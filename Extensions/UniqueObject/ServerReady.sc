@@ -26,7 +26,6 @@ ServerReady : UniqueObject {
 	doOnCmdPeriod { cmdPeriod = true; }
 
 	doOnServerTree {
-		thisMethod.name.postln;
 		if (cmdPeriod) {
 			cmdPeriod = false;
 		}{

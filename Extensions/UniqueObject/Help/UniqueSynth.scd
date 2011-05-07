@@ -88,8 +88,8 @@ postf("Synths on server are: %\n", UniqueSynth.onServer);
 \test.release;
 
 \default.play.rsyncs({ | synth | 
-	0.25.wait;
-	10 do: {
+	0.05.wait;
+	50 do: {
 		0.1.wait;
 		synth.set(\freq, 200 rrand: 400);
 	};
