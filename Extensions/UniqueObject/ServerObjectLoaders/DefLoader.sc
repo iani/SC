@@ -25,19 +25,20 @@ DefLoader : ServerActionLoader {
 
 	loadAllObjects {
 		var first;
-		"loadAllObjects DEFLOADER starts".postln;
-		postf("% isLoading: %, numObjects: %\n", this, isLoading, objects.size).postln;
 		if (isLoading) { ^this };	// may be still waiting for the last def to load
 		if ( objects.size == 0) {
-		"loadAllObjects DEFLOADER DONE".postln;
 			this.done
 		}{
-		"loadAllObjects starting do load synthdef chain".postln;
+			if (verbose and: { objects.size > 0 }) {
+				postf("Loading % % to %\n", objects.size, this.objectKind, server);
+			};
 			isLoading = true;
 			first = objects detect: true;
 			this.load(first);
 		}
 	}
+
+	objectKind { ^"SynthDefs" }
 
 	done {
 		super.done;
@@ -53,6 +54,8 @@ DefLoader : ServerActionLoader {
 }
 
 BufLoader : DefLoader {
+
+	objectKind { ^"Buffers" }
 
 	responderPaths { ^[
 			['/done', '/b_allocRead'],

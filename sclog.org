@@ -401,3 +401,10 @@ If Code class variable autoBoot is set to true, then evaluating a code snippet w
 		action.(this);
 		}.fork(AppClock)
 	}
+*** 2011-05-07 Saturday
+**** " ... and her name was Elemenbí. "
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-07 Sat 12:31>
+     :END:
+
+Elemenbí (L. M.: N. B!)
