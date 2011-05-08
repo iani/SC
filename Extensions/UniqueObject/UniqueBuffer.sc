@@ -85,7 +85,7 @@ UniqueBuffer : AbstractUniqueServerObject {
 		startFrame = argStartFrame;
 		ServerPrep(server).addBuffer(this);
 		NotificationCenter.notify(UniqueBuffer, \created, this);
-		current[server] = this;
+		if (path.notNil) { current[server] = this; };
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |

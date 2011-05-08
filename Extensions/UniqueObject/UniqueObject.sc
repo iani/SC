@@ -16,7 +16,7 @@ UniqueObject {
 
 	*new { | key, makeFunc ... otherArgs |
 		var object;
-		key = this.makeKey(key, makeFunc, *otherArgs); // server objects include the server in the key
+		key = this.makeKey(key ? 'u', makeFunc, *otherArgs); // server objects include the server in the key
 		object = this.atKey(key);
 		if (object.isNil) {
 			object = this.newCopyArgs(key).init(makeFunc, *otherArgs);
@@ -38,7 +38,7 @@ UniqueObject {
 			// "Kind" is defined by the main key method of the receiver.
 		if (objects.atPath(this.mainKey).isNil) { ^[] };
 		^objects.leaves(this.mainKey);
-	}
+	}	// could also use objects.leaves.select({ | o | o.isKindOf ... }) ...
 
 	init { | makeFunc | object = makeFunc.value; }
 

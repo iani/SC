@@ -89,6 +89,7 @@ Spectrograph : UniqueWindow {
 		drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, binColor, backgroundColor);
 		scroll = Scroll(image, (bounds.width / 4).round(1).asInteger, backgroundColor);
 		this.addWindowOnCloseAction;
+		this.onClose({ "CLOSED".postln; });
 		this.addImageObject(drawSpectrogram);
 		NotificationCenter.notify(this, \viewsInited);
 		this.front;

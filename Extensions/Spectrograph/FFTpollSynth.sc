@@ -25,12 +25,6 @@ FFTpollSynth : UniqueObject {
 		in = argIn;
 		poller = argPoller;
 //		frames = Frames.new;
-//		buffer = UniqueBuffer(key[2], server, bufSize);
-//		synthdef = Udef(\fft, { | in = 0, buf = 0 |
-//			FFT(buf, InFeedback.ar(in));
-//		}, server: server);
-//		this.makeSynth;
-//		this.connectToPoller;
 		ServerPrep(server).addToServerTree(this, { this.makeSynth }); // run as long as server is booted
 	}
 
@@ -39,29 +33,23 @@ FFTpollSynth : UniqueObject {
 		synthdef = Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
 		}, server: server);
-//		{ 
 		object = UniqueSynth(\fft, \fft, [\in, in, \buf, buffer.object.bufnum], server, \addToTail);
-		postf("% added synth %\n", this, object);
 		object.rsynca({
 			var fftbuf;
 			fftbuf = buffer.object;
 			loop {
 				fftbuf.getn(0, bufSize, { | buf |
 //					frames.add;
-//					buf.sum.postln;
 					poller.update(index, buf);
 					index = index + 1;
-//					if (index % 25 == 0) { index.postln; }
 				});
 				rate.wait;
 			};
 		});
 		this.connectToPoller;
-		\default.play;
-		poller.postln;
-			{ server.queryAllNodes; }.defer(2);
-			
-//		}.defer(1);
+		// test tones, to be removed!
+		\test.play({ SinOsc.ar(LFNoise0.kr(20).range(100, 5000), 0, 0.01) });
+//		\default.play; // test tone. to be removed
 	}
 
 /* 
@@ -76,11 +64,24 @@ even before the FFTsynthPoller or the FFTpollSynth are created.
 		this.addNotifier(asKey, \rate, { | argRate | rate = argRate });
 		this.addNotifier(asKey, \bufSize, { | argBufSize |
 			if (argBufSize != bufSize) {
-				NotificationCenter.notify(asKey, \makeFFTpollSynth);
-				this.free;
+				bufSize = argBufSize;
+				this.freeSynthAndBuffer;
+				this.makeSynth;
 			};
 		});
 		poller.addNotifier(asKey, \makeFFTpollSynth, { poller.makeFFTpollSynth });
 	}
+	
+	free { this.remove }
+	remove {
+		this.freeSynthAndBuffer;
+		super.remove;	
+	}
+	
+	freeSynthAndBuffer {
+		object.free;
+		buffer.free;
+	}
+
 }
 

@@ -53,7 +53,9 @@ ServerPrep {
 			// perform this action after the previous load object chain has finished
 			// this ensures that any SynthDefs, Buffers, Synths, Routines added by the action
 			// will load in the correct order in a new loadAllObjects chain. 
-			this addAction: { action.defer(0.000001) }; 
+//			this addAction: { action.defer(0.000001) };  // this is safest so far
+// Now experimenting with new scheme where actions examines if the chain needs restarting
+			this addAction: action;
 		});
 	}
 
