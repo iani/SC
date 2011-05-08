@@ -1,26 +1,27 @@
 
 PenObjectTest {
+	var <model;
 	var <info = "-----", <userview;
 	var rect;
-	*new { | spectrogram |
-		^super.new.init(spectrogram);
+	*new { | model |
+		^this.newCopyArgs(model).init;
 	}
 
-	init { | spectrogram |
+	init {
 		rect = Rect(5.5, 5.5, 400, 20);
-		spectrogram.addListener(this, \viewsInited, {
-			spectrogram.object.view.mouseOverAction = { | v, x, y |
+		model.addListener(this, \viewsInited, {
+			model.object.view.mouseOverAction = { | v, x, y |
 				[v, x, y].postln;	
 			};
-			userview = spectrogram.userview;
-			spectrogram.object.acceptsMouseOver = true;
+			userview = model.userview;
+			model.object.acceptsMouseOver = true;
 			userview.mouseOverAction = { | v, x, y |
 				info = format("X: %, Y: %", x, y);
 				userview.refreshInRect(rect);
 			};
 		});
-		spectrogram.onClose({
-			NotificationCenter.unregister(spectrogram, \viewsInited, this);
+		model.onClose({
+			NotificationCenter.unregister(model, \viewsInited, this);
 		});
 	}
 

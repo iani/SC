@@ -17,7 +17,7 @@ Getting of buffers with larger sizes is documented in SC Help, but for spectrogr
 Spectrograph : UniqueWindow {
 	classvar <current;
 	classvar <minWidth = 400, <>backgroundColor, <>binColor;
-	var <bounds, <server, <rate, <bufsize, <>stopOnClose = true;
+	var <bounds, <server, <rate, <bufsize, <>stopPollerOnClose = false;
 	var <userview, <image, <imgWidth, <imgHeight;
 	var <scrollWidth; // , scrollImage, clearImage;
 	var <index;	// running count of the currently polled fft frame. 
@@ -36,21 +36,19 @@ Spectrograph : UniqueWindow {
 	}
 
 
-	*big { | server | // TODO: retrieve existing Spectrograph to change its bounds
+	*big { | server |
 		if (this.current.isNil) { ^this.start(nil, nil, server ? Server.default); };
 		^this.current.bounds_(Window.centeredWindowBounds(1000)).front;
 	}
 
-	*small { | server | // TODO: retrieve existing Spectrograph to change its bounds
+	*small { | server |
 		if (this.current.isNil) { 
 			^this.start(nil, this.smallBounds, server: server ? Server.default);
 		};
 		^this.current.bounds_(this.smallBounds).front;
 	}
 	
-	*smallBounds { 
-		^Rect(0, 0, 570, 200)
-	}
+	*smallBounds { ^Rect(0, 0, 570, 200) }
 
 	*background_ { | color |
 		color = color ? Color.black;
@@ -87,7 +85,6 @@ Spectrograph : UniqueWindow {
 		drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, binColor, backgroundColor);
 		scroll = Scroll(image, (bounds.width / 4).round(1).asInteger, backgroundColor);
 		this.addWindowOnCloseAction;
-		this.onClose({ "CLOSED".postln; });
 		this.addImageObject(drawSpectrogram);
 		NotificationCenter.notify(this, \viewsInited);
 		this.front;
@@ -129,47 +126,46 @@ Spectrograph : UniqueWindow {
 
 	addImageObject { | object | imageObjects = imageObjects add: object }
 
-	start { 
-//		this.rebuildScreen; // rebuildScreen does not work yet  
-		ServerPrep(server).addAction({ this.prStart });
-	}
-
 	rebuildScreen { // does not seem to work? 
 		if (scroll.notNil) { scroll.initImageData; };
 		if (drawSpectrogram.notNil) { drawSpectrogram.initImageData; }
 	}
 
+	start { 
+//		this.rebuildScreen; // rebuildScreen does not work yet  
+		ServerPrep(server).addAction({ this.prStart });
+	}
+
 	prStart {	
 		var poller;
 		postf("Spectrograph prStart server is: %\n", server);
-		poller = FFTsynthPoller(this.name, server).rate_(rate).bufSize_(bufsize);
-		poller addListener: this;
-		this onClose: { poller removeListener: this }; 
-		poller.addNotifier(this, this.removedMessage, { 
-			if (stopOnClose) { poller.stop; } });
+		//  key, server, rate = 0.04, bufSize = 1024, in = 0 
+		poller = PollFFT(this.name, server, rate, bufsize, 0);
+		poller addDependant: this;
+		this onClose: {
+			poller removeDependant: this;
+			if (stopPollerOnClose) { poller.free };
+		}; 
 		poller.addMessage(this, 'rate_');
-		poller.start;
 	}
-
 
 	rate_ { | argRate = 0.04 | this.notify('rate_', rate = argRate); }
-		
 
-	// Added for symmetry, but should only be used for debugging.
-	// (Normally you just close the Spectrograph window.)
-	*stop { if (current.notNil) { current.stop } }
-	stop { // only for debugging purposes. Normally just close the Spectrograph window.
-		var poller;
-		if ((poller = FFTsynthPoller.at(this.name, server)).notNil) { poller.stop; };
-	}
-
-	update { | argIndex, magnitudes, fftData |
-		{	// correct: in sync with data, and index protected
-			if (this.isOpen) {
+	update { | argIndex, fftData, magnitudes |
+		{
+			if (this.isOpen) { // if user has closed me during this defer, catch it here
 				argIndex = scroll.update(argIndex, image);
 				drawSpectrogram.update(argIndex, image, magnitudes);
 				userview.refresh;
 			};
 		}.defer;		
 	}
+		// Should only be used for debugging.
+	// Normally you just close the Spectrograph window.
+	*stopPoller { if (current.notNil) { current.stopPoller } }
+	stopPoller { // only for debugging purposes. Normally just close the Spectrograph window.
+		var poller;
+		if ((poller = PollFFT.at(this.name, server)).notNil) { poller.free; };
+	}
+
 }

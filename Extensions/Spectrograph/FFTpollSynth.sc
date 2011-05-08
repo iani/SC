@@ -1,14 +1,13 @@
 /* 
-A UniqueSynth which starts an FFT analysis synth on any audio input, polls the fft buffer at a steady rate, and sends the resulting buffer data to an FFTsignalPoller. 
+A UniqueSynth which starts an FFT analysis synth on any audio input, polls the fft buffer at a steady rate, and sends the resulting buffer data to any dependants. 
 
-It is started implicitly by FFTsynthPoller.
-
-It is not designed to be used on its own. 
+It is always running as long as its server is booted. It stops and removes itself when sent the messages free or remove. 
 
 */
 
-FFTpollSynth : UniqueObject {
-	var <server, <rate = 0.04, <synthdef, <buffer, <bufSize, <in = 0, <index = 0;
+PollFFT : UniqueObject {
+	var <server, <>rate = 0.04, <bufSize, <in = 0;
+	var <synthdef, <buffer, <index = 0;
 	var <dependants;
 	var <real, <imaginary, <magnitudes;	// also make and send the magnitudes of the spectrum
 
@@ -21,7 +20,7 @@ FFTpollSynth : UniqueObject {
 		rate = argRate;
 		bufSize = argBufSize;
 		in = argIn;
-		dependants = Set.new;
+		this.clearDependants;
 		ServerPrep(server).addToServerTree(this, { this.makeSynth }); // run as long as server is booted
 	}
 
@@ -48,10 +47,12 @@ FFTpollSynth : UniqueObject {
 	}
 	
 	addDependant { | object | dependants add: object }
+	removeDependant { | object | dependants remove: object }
+	clearDependants { dependants = Set.new }
 	
 	free { this.remove }
 	remove {
-		dependants = Set.new;
+		dependants = nil;
 		this.freeSynthAndBuffer;
 		super.remove;	
 	}
