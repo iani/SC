@@ -10,7 +10,6 @@
 		NotificationCenter.unregister(notifier, message, this);
 	}
 	
-	// Experimental =========================================
 	addNotifier { | notifier, message, action |
 	// add self to do action when receiving message from notifier
 	// if either object (notifier or self) closes, remove the notication connection
@@ -36,8 +35,10 @@
 	onClose { | action | this.onRemove(UniqueID.next, action) } 
 	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
 	doOnceOn { | message, receiver, func |
-		NotificationCenter.registerOneShot(this, message, receiver, { func.(this) });
+		this.registerOneShot(message, receiver, { func.(this) });
 	}
+	registerOneShot { | message, receiver, func |
+		NotificationCenter.registerOneShot(this, message, receiver, func);	}
 
 	addToServerTree { | function, server |
 		ServerPrep(server).addToServerTree(this, function);

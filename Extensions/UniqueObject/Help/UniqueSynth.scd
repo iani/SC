@@ -93,7 +93,7 @@ postf("Synths on server are: %\n", UniqueSynth.onServer);
 		0.1.wait;
 		synth.set(\freq, 200 rrand: 400);
 	};
-	synth.release;
+	synth.release(2);
 });
 
 2.wait;

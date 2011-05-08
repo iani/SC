@@ -1,6 +1,6 @@
 
 /* 
-Rewriting UniqueSynth to use ServerReady for booting synth, and ensure SynthDefs and Buffers are loaded
+Rewriting UniqueSynth to use ServerReady for booting synth and thereby ensure SynthDefs and Buffers are loaded
 before it starts.
 */
 
@@ -39,11 +39,6 @@ UniqueSynth : AbstractUniqueServerObject {
 	prMakeObject { | target, defName, args, addAction |
 		object = Synth(defName, args, target, addAction);
 	}
-
-	synthStarted {
-		object.isPlaying = true; // set status to playing when missed because started on boot time
-		NotificationCenter.notify(this, \synthStarted, this);
-	}
  
 	registerObject {
 		object addDependant: { | me, what |
@@ -58,6 +53,11 @@ UniqueSynth : AbstractUniqueServerObject {
 			);
 		};
 		object.register;
+	}
+
+	synthStarted {
+		object.isPlaying = true; // set status to playing when missed because started on boot time
+		NotificationCenter.notify(this, \synthStarted, this);
 	}
 
 	synth { ^object }						// synonym

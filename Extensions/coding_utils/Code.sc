@@ -3,7 +3,7 @@ Select and execute code in a doc by typing command keys.
 */
 
 Code {
-	classvar <>autoBoot = true;	// if true, forking a string from code will call WaitForServer.new
+	classvar <>autoBoot = true;	// if true, forking a string from code will boot the server
 	var <doc, <string, <canEvaluate = true;
 	var <headers, <positions; // , <functions, <keys;
 	
@@ -16,8 +16,9 @@ Code {
 		var func;
 		func = string.compile;
 		clock = clock ? AppClock;
-		if (autoBoot) { 		// include WaitForServer for safety. 
-				ServerPrep(Server.default).addAction({ func.fork(clock); });				if (Server.default.serverRunning.not) { Server.default.boot };
+		if (autoBoot) { 
+			ServerPrep(Server.default).addRoutine({ func.fork(clock) });
+			if (Server.default.serverRunning.not) { Server.default.boot };
 		}{
 			func.fork(clock);
 		}

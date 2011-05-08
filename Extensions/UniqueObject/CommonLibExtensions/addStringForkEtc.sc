@@ -1,7 +1,4 @@
-/*
-Add UniqueObject support plus support for a number of UniqueSupport subclasses.
-
-*/
+/* Add support for Code, UniqueObject and a number of its subclasses. */
 
 + Server { asKey { ^this } }
 

@@ -16,8 +16,7 @@ UniqueObject {
 
 	*new { | key, makeFunc ... otherArgs |
 		var object;
-		key = this.makeKey(key ? 'u', makeFunc, *otherArgs); // server objects include the server in the key
-		object = this.atKey(key);
+		key = this.makeKey(key ? this.name, makeFunc, *otherArgs);		object = this.atKey(key);
 		if (object.isNil) {
 			object = this.newCopyArgs(key).init(makeFunc, *otherArgs);
 			objects.putAtPath(key, object);

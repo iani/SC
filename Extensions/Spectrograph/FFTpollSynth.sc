@@ -8,23 +8,20 @@ It is not designed to be used on its own.
 */
 
 FFTpollSynth : UniqueObject {
-	var <poller, <server, <rate = 0.025, <synthdef, <buffer, <bufSize, <index = 0;
-	var <in = 0;
+	var <server, <rate = 0.04, <synthdef, <buffer, <bufSize, <in = 0, <index = 0;
+	var <dependants;
+	var <real, <imaginary, <magnitudes;	// also make and send the magnitudes of the spectrum
 
-	// TODO: List of timestamps recorded since starting the synth
-	// Useful for displaying the time of a certain frame on mouseover: 
-//	var <frames; // ... TODO
-	*new { | poller, server, rate = 0.04, bufSize = 1024, in = 0 |
-		^super.new((poller ? 'test').asKey, server, rate, bufSize, in, poller)
+	*new { | key, server, rate = 0.04, bufSize = 1024, in = 0 |
+		^super.new(key ? 'fft_poll', server, rate, bufSize, in);
 	}
 
-	init { | argServer, argRate, argBufSize, argIn = 0, argPoller |
+	init { | argServer, argRate, argBufSize, argIn = 0 |
 		server = argServer.asTarget.server;
 		rate = argRate;
 		bufSize = argBufSize;
 		in = argIn;
-		poller = argPoller;
-//		frames = Frames.new;
+		dependants = Set.new;
 		ServerPrep(server).addToServerTree(this, { this.makeSynth }); // run as long as server is booted
 	}
 
@@ -34,46 +31,27 @@ FFTpollSynth : UniqueObject {
 			FFT(buf, InFeedback.ar(in));
 		}, server: server);
 		object = UniqueSynth(\fft, \fft, [\in, in, \buf, buffer.object.bufnum], server, \addToTail);
-		object.rsynca({
+		object.onStart({ this.notify(\synthStarted); });
+		object.rsyncs({
 			var fftbuf;
 			fftbuf = buffer.object;
 			loop {
 				fftbuf.getn(0, bufSize, { | buf |
-//					frames.add;
-					poller.update(index, buf);
+					#real, imaginary = buf.clump(2).flop;
+					magnitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
+					dependants do: _.update(index, buf, magnitudes);
 					index = index + 1;
 				});
 				rate.wait;
 			};
 		});
-		this.connectToPoller;
-		// test tones, to be removed!
-		\test.play({ SinOsc.ar(LFNoise0.kr(20).range(100, 5000), 0, 0.01) });
-//		\default.play; // test tone. to be removed
 	}
-
-/* 
-The advantage of notifying via NotifiationCenter using a symbol as key is that 
-other objects (clients) can register for notification from this Poller, based on its key, 
-even before the FFTsynthPoller or the FFTpollSynth are created. 
-*/
-	connectToPoller {
-		var asKey;
-		asKey = poller.asKey;
-		this.addNotifier(asKey, \stop, { this.free });
-		this.addNotifier(asKey, \rate, { | argRate | rate = argRate });
-		this.addNotifier(asKey, \bufSize, { | argBufSize |
-			if (argBufSize != bufSize) {
-				bufSize = argBufSize;
-				this.freeSynthAndBuffer;
-				this.makeSynth;
-			};
-		});
-		poller.addNotifier(asKey, \makeFFTpollSynth, { poller.makeFFTpollSynth });
-	}
+	
+	addDependant { | object | dependants add: object }
 	
 	free { this.remove }
 	remove {
+		dependants = Set.new;
 		this.freeSynthAndBuffer;
 		super.remove;	
 	}

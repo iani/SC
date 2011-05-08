@@ -16,6 +16,8 @@ ServerPrep {
 		^new; 
 	}
 
+	/* ===== Internal stuff. See "Use these methods" section below for usage ===== */
+
 	init {
 		bufs = BufLoader(this, server);			
 		defs = DefLoader(this, server);			
@@ -36,46 +38,50 @@ ServerPrep {
 			bufs.addAllUniqueBuffers;	// add all UniqueBuffers stored in this session
 		};
 		this.loadAllObjects;			// load all objects added to the tree, in order
-		this.notifyTree;	// add any functions from addToServerTree to actions
-		// ensuring that their SynthDefs etc. will be started in the right order. 
+		this.notifyTree;	/* add any functions from addToServerTree to actions
+		ensuring that their SynthDefs etc. will be started in the right order. */
 	}
 
-	notifyTree {
-	// any object can add any action to initTree using addToServerTree
-		this.notify(this.serverTreeMessage);
-	}
+	// Allow any object to add any action to initTree using addToServerTree below.
+	notifyTree { this.notify(this.serverTreeMessage); }
 
 	serverTreeMessage { ^\serverTree }
 
-	addToServerTree { | object, action |
-		// use NotificationCenter to attach any action to any object to perform on serverTree
-		this.addListener(object, this.serverTreeMessage, {
-			// perform this action after the previous load object chain has finished
-			// this ensures that any SynthDefs, Buffers, Synths, Routines added by the action
-			// will load in the correct order in a new loadAllObjects chain. 
-//			this addAction: { action.defer(0.000001) };  // this is safest so far
-// Now experimenting with new scheme where actions examines if the chain needs restarting
-			this addAction: action;
-		});
-	}
+	// bufs load defs when done, defs load synths when done etc
+	loadAllObjects { bufs.loadAllObjects; }
 
-	addBuffer { | buffer | bufs add: buffer }
-	addDef { | def | defs add: def }
-	addSynth { | action | synths add: action }
-	addRoutine { | action | routines add: action }
-	addAction { | action | actions add: action }
-
-	loadAllObjects { 
-		bufs.loadAllObjects; // bufs load defs when done, defs load synths when done etc.
-	}
-
-	loadDefs {
-		// received from bufs (BufLoader) when done.
-		// proceed with loading defs (SynthDefs in DefLoader), then synths, routines, actions
-		defs.loadAllObjects;
-	}
+	/* loadDefs is received from bufs (BufLoader) when done.
+	proceed with loading defs (SynthDefs in DefLoader), then synths, routines, actions */
+	loadDefs { defs.loadAllObjects; }
 	loadSynths { synths.loadAllObjects; }
 	loadRoutines { routines.loadAllObjects; }
 	loadActions { actions.loadAllObjects; }
+
+	/* ===== Use these methods to add objects to ServerPrep: ===== */
+
+	addToServerTree { | object, action |
+/* 	Use NotificationCenter to attach any action to any object to perform on serverTree.
+	This action is performed after the previous load object chain has finished
+	this ensures that any SynthDefs, Buffers, Synths, Routines added by the action
+	will load in the correct order in a new loadAllObjects chain. */
+		this.addListener(object, this.serverTreeMessage, { this addAction: action; });
+		// Execute immediately if the server is already running:
+		if (server.serverRunning) { this.notifyTree; };
+/*	Very rarely, buffers could not be allocated on time. One may add a delay to the above 
+	addActions by using the followig istead of { this addAction: action; }: 
+			this addAction: { action.defer(0.000001); };  
+*/
+	}
+
+	*addBuffer { | ubuf | this.new addBuffer: ubuf }
+	addBuffer { | ubuf | bufs add: ubuf }
+	*addDef { | udef | this.new addDef: udef }
+	addDef { | udef | defs add: udef }
+	*addSynth { | func | this.new addSynth: func }
+	addSynth { | func | synths add: func }
+	*addRoutine { | func | this.new addRoutine: func }
+	addRoutine { | func | routines add: func }
+	*addAction { | func | this.new addAction: func }
+	addAction { | func | actions add: func }
 
 }
