@@ -1,8 +1,9 @@
 
-PenObjectTest {
+MouseXYDisplay {
 	var <model;
-	var <info = "-----", <userview;
-	var rect;
+	var <info = "-----";
+	var <userview;
+	var <>rect, <x, <y;
 	*new { | model |
 		^this.newCopyArgs(model).init;
 	}
@@ -10,20 +11,27 @@ PenObjectTest {
 	init {
 		rect = Rect(5.5, 5.5, 400, 20);
 		model.addListener(this, \viewsInited, {
-			model.object.view.mouseOverAction = { | v, x, y |
-				[v, x, y].postln;	
-			};
 			userview = model.userview;
 			model.object.acceptsMouseOver = true;
-			userview.mouseOverAction = { | v, x, y |
-				info = format("X: %, Y: %", x, y);
-				userview.refreshInRect(rect);
+			userview.mouseOverAction = { | v, argX, argY |
+				x = argX; y = argY;
+				this.display;
 			};
+			this.display;
 		});
 		model.onClose({
 			NotificationCenter.unregister(model, \viewsInited, this);
 		});
 	}
+
+	display {
+		this.makeInfo;
+		this.refreshUserView;
+	}
+
+	makeInfo { info = format("X: %, Y: %", x, y); }
+
+	refreshUserView { userview.refreshInRect(rect); }
 
 	update {
 		Pen.use {
@@ -35,4 +43,14 @@ PenObjectTest {
 			info.drawAtPoint(10@10, Font.default, Color.white);
 		}
 	}	
+}
+
+SpectrographInfoDisplay : MouseXYDisplay {
+	init {
+		super.init;
+		model.addListener(this, \rate_, { this.display; });
+	}
+	makeInfo {
+		info = format("X: %, Y: %, rate: %", x, y, model.rate);
+	}
 }

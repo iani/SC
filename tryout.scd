@@ -7,4 +7,4 @@ ServerPrep.addToServerTree({ \default.play });
 PollFFT.all;
 PollFFT.dependants;
 
-Spect
+Spectrograph.current.rate = 1;

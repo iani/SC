@@ -1,7 +1,4 @@
-/* 
-
-!!!!!!!!!!!!!!! UNDER DEVELOPMENT !!!!!!!!!!!!!!!!
-
+/*
 Inspired by Spectrogram Quark of Thor Magnusson and Dan Stowell. 
 
 This here is a redo using UniqueObject subclasses to simplify the 
@@ -17,7 +14,7 @@ Getting of buffers with larger sizes is documented in SC Help, but for spectrogr
 Spectrograph : UniqueWindow {
 	classvar <current;
 	classvar <minWidth = 400, <>backgroundColor, <>binColor;
-	var <bounds, <server, <rate, <bufsize, <>stopPollerOnClose = false;
+	var <bounds, <server, <rate = 0.04, <bufsize, <>stopPollerOnClose = true;
 	var <userview, <image, <imgWidth, <imgHeight;
 	var <scrollWidth; // , scrollImage, clearImage;
 	var <index;	// running count of the currently polled fft frame. 
@@ -35,20 +32,21 @@ Spectrograph : UniqueWindow {
 		binColor = Color.white;
 	}
 
-
 	*big { | server |
-		if (this.current.isNil) { ^this.start(nil, nil, server ? Server.default); };
+		if (this.current.isNil) { ^this.new(nil, nil, server ? Server.default); };
 		^this.current.bounds_(Window.centeredWindowBounds(1000)).front;
 	}
 
 	*small { | server |
 		if (this.current.isNil) { 
-			^this.start(nil, this.smallBounds, server: server ? Server.default);
+			^this.new(nil, this.smallBounds, server: server ? Server.default);
 		};
 		^this.current.bounds_(this.smallBounds).front;
 	}
 	
-	*smallBounds { ^Rect(0, 0, 570, 200) }
+//	*smallBounds { ^Rect(0, 0, 570, 200) }
+	*smallBounds { ^Rect(Window.screenBounds.width - 570, 0, 570, 200) }
+	*bigBounds { ^Window.centeredWindowBounds(1000) }
 
 	*background_ { | color |
 		color = color ? Color.black;
@@ -59,12 +57,7 @@ Spectrograph : UniqueWindow {
 	*onServer { | server |
 		server = server ? Server.default;
 		^this.all.select({ | s | s.server == server }) // .do(_.front);
-	}
-
-	*start { | name, bounds, server, rate = 0.04, bufsize = 1024 |
-		^this.new(name, bounds, server ? Server.default, rate, bufsize = 1024).start.front;
-	}
-	
+	}	
 	
 	*new { | name, bounds, server, rate = 0.04, bufsize = 1024 |
 		name = format("%:%", name = name ? "Spectrograph", server = server ? Server.default).asSymbol;
@@ -75,7 +68,7 @@ Spectrograph : UniqueWindow {
 	
 	init { | argBounds, argServer, argRate, argBufsize |
 		var window; // just for naming convenience
-		bounds = argBounds ?? { Window.centeredWindowBounds(1000) };
+		bounds = argBounds ?? { this.class.bigBounds };
 		bounds.width = bounds.width max: minWidth;
 		server = argServer;
 		rate = argRate;
@@ -87,13 +80,34 @@ Spectrograph : UniqueWindow {
 		this.addWindowOnCloseAction;
 		this.addImageObject(drawSpectrogram);
 		NotificationCenter.notify(this, \viewsInited);
+		this.initPoller;
 		this.front;
 	}
+	
+	toggle {
+		if (this.object.bounds.height != this.class.bigBounds.height) {
+			this.big;
+		}{
+			this.small;
+		}
+	}
+	
+	big { this.object.bounds = this.class.bigBounds; }
+	small { this.object.bounds = this.class.smallBounds; }
 
 	initViews {
+		object.view.keyDownAction = { | view, char |
+			switch (char,
+				$t, { this.toggle },
+				$s, { this.small },
+				$b, { this.big },
+				$<, { this.rate = this.rate - 0.01 max: 0.01 }, 
+				$>, { this.rate = this.rate + 0.01 min: 0.2 }
+			)
+		};
 		imageObjects = Set.new;
 		penObjects = Set.new;
-		penObjects add: PenObjectTest(this);
+		penObjects add: SpectrographInfoDisplay(this);
 		userview = UserView(object, object.view.bounds)
 			.resize_(5)
 			.focus(true)
@@ -131,15 +145,8 @@ Spectrograph : UniqueWindow {
 		if (drawSpectrogram.notNil) { drawSpectrogram.initImageData; }
 	}
 
-	start { 
-//		this.rebuildScreen; // rebuildScreen does not work yet  
-		ServerPrep(server).addAction({ this.prStart });
-	}
-
-	prStart {	
+	initPoller {	
 		var poller;
-		postf("Spectrograph prStart server is: %\n", server);
-		//  key, server, rate = 0.04, bufSize = 1024, in = 0 
 		poller = PollFFT(this.name, server, rate, bufsize, 0);
 		poller addDependant: this;
 		this onClose: {
