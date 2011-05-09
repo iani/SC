@@ -4,7 +4,7 @@ Redo of UniqueBuffer to work with new version of ServerReady, so that buffers ar
 UniqueBuffer : AbstractUniqueServerObject {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	classvar >current;
-	var <server, <path, <startFrame = 0, <numFrames, <numChannels = 1;
+	var <path, <startFrame = 0, <numFrames, <numChannels = 1;
 
 	*initClass {
 		current = IdentityDictionary.new;	
@@ -19,7 +19,7 @@ UniqueBuffer : AbstractUniqueServerObject {
 		^PathName(path).fileNameWithoutExtension.asSymbol;
 	}
 
-	*default { | server | ^this.new(server: server ? Server.default, path: defaultPath) }
+	*default { | server | ^this.new(nil, server ? Server.default, path: defaultPath) }
 	
 	*current { | server |
 		^current[server ? Server.default];
@@ -74,11 +74,11 @@ UniqueBuffer : AbstractUniqueServerObject {
 	// use it only to create buffers that do not read from a file
 	// to read buffers from file use *read
 	*new { | key, server, numFrames, numChannels = 1, path, startFrame = 0 |
-		^super.new(key, server ? Server.default, numFrames, numChannels, path, startFrame);
+		^super.new(key, (server ? Server.default), numFrames, numChannels, path, startFrame);
 	}
 
 	init { | argServer, argNumFrames, argNumChannels = 1, argPath, argStartFrame |
-		server = argServer;
+		super.init(argServer);
 		numFrames = argNumFrames;
 		numChannels = argNumChannels;
 		path = argPath;
@@ -88,14 +88,18 @@ UniqueBuffer : AbstractUniqueServerObject {
 		if (path.notNil) { current[server] = this; };
 	}
 
-	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
-		this.makePlayFunc(func).mplay(target, outbus = 0, fadeTime, addAction, args ++ [\bufnum, object]);
-		current[server] = this;
+	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
+		this.makePlayFunc(func).play(target ? server, outbus, fadeTime, 
+			addAction, args ++ [\bufnum, object], name
+		);
+		current[target.asTarget.server] = this;
 	}
 
 	makePlayFunc { | func |
 		if (func.notNil) { ^func };
-		^{ | bufnum | PlayBuf.ar(bufnum.numChannels, bufnum, 1, 0, 0, 0, 2); };
+		^{ | bufnum, rate = 1 | 
+			PlayBuf.ar(bufnum.numChannels, bufnum, rate * BufRateScale.kr(bufnum), 0, 0, 0, 2); 
+		};
 	}
 
 	sendTo {

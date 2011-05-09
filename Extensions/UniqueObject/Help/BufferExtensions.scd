@@ -1,8 +1,7 @@
 
 //:a playing the default buffer
 
-Server.default.quit; 	// works even if the server is not booted;
-Buffer.default.play;
+Buffer.default.play; // 
 
 //:b playing the default buffer on another server
 
@@ -16,18 +15,29 @@ Buffer.current.play;
 
 Buffer.play; 	// plays the current buffer - or the default
 
-//:e Play with custom function
+//:Play with custom arguments
 
-Buffer.play({ | b |  { | b | BufRd.ar(1, b, LFNoise1.ar(1) * BufFrames.ir(b)) }.play });
+10 do: { Buffer.play(args: [\rate, 0.75 + 1.0.rand]); };
 
-//:f Long form: Play with custom function
+//:Play with custom arguments, with a delay of 0.1 between each iteration
 
-// same as Buffer.play(....)
+10 do: { Buffer.play(args: [\rate, 0.75 + 1.0.rand]); 0.1.wait };
 
-UniqueBuffer.default.play({ | b |  { | b | BufRd.ar(1, b, LFNoise1.ar(1) * BufFrames.ir(b)) }.play });
+//:Play with custom function
 
-//:g playing the same buffer with the same function many times: 
+Buffer.play({ | bufnum | BufRd.ar(1, bufnum, LFNoise1.ar(1) * BufFrames.ir(bufnum)) });
+
+//:Long form: Play with custom function
+
+UniqueBuffer.default.play({ | bufnum | BufRd.ar(1, bufnum, LFNoise1.ar(1) * BufFrames.ir(bufnum)) });
+
+//:playing the same buffer with a custom function many times: 
 
 10 do: {
-	Buffer.play({ | b |  { | b | 0.1 * BufRd.ar(1, b, LFNoise1.ar(0.1.rrand(1)) * BufFrames.ir(b)) }.play });
+	Buffer.play({ | bufnum | BufRd.ar(1, bufnum, SinOsc.ar(0.02.rrand(0.09)) * BufFrames.ir(bufnum)) });
+};
+
+//:Variant
+10 do: {
+	Buffer.play({ | bufnum | BufRd.ar(1, bufnum, LFNoise1.ar(0.3).range(-1, 1) * BufFrames.ir(bufnum)) });
 };

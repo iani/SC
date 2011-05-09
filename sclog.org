@@ -410,3 +410,9 @@ If Code class variable autoBoot is set to true, then evaluating a code snippet w
      :END:
 
 Elemenbí (L. M.: N. B!)
+*** 2011-05-08 Sunday
+**** Completed Spectrograph simplification
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-08 Sun 16:38>
+     :END:
+

@@ -9,8 +9,9 @@
 		^UniqueBuffer.current(server ? Server.default);
 	}
 	
-	*play { | func, server |
-		this.current(server).play(func);
+	*play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
+		(this.current(target.asTarget.server) ?? { this.default(target.asTarget.server) })
+			.play(func, target, outbus, fadeTime, addAction, args, name);
 	}
 
 	*load { UniqueBuffer.load }	

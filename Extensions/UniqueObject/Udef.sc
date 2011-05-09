@@ -18,12 +18,17 @@ Udef {
 	}
 	
 	*new { | name, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
-		^super.new.init(name, ugenGraphFunc, rates, prependArgs, variants, metadata, server.asTarget.server);
+		^super.new.init(name, ugenGraphFunc, rates, prependArgs, variants, metadata, server);
 	}
 
 	init { | name, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
-		def = SynthDef(name, ugenGraphFunc, rates, prependArgs, variants, metadata);
-		all.putAtPath([server, name.asSymbol], this);
+		this.addDef(SynthDef(name, ugenGraphFunc, rates, prependArgs, variants, metadata), server);
+	}
+
+	addDef { | argDef, server |
+		def = argDef;
+		server = server.asTarget.server;
+		all.putAtPath([server, argDef.name.asSymbol], this);
 		ServerPrep(server).addDef(this);
 	}
 
@@ -36,5 +41,4 @@ Udef {
 		if (all.atPath(server).isNil) { ^[] };
 		^all.leaves(server);
 	}
-
 }

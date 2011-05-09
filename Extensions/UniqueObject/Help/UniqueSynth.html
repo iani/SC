@@ -43,6 +43,15 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6"><br></p>
 <p class="p5">*/</p>
 <p class="p7"><br></p>
+<p class="p8">//:symbol + playFunc</p>
+<p class="p7"><br></p>
+<p class="p8">\def.playFunc({ | freq = 400 | SinOsc.ar(freq, 0, 0.1) });</p>
+<p class="p8">1.wait;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// can call wait right from the selected code if executed with Cmd-shift-x</p>
+<p class="p8">\def.set(\freq, 800);</p>
+<p class="p8">1.wait;</p>
+<p class="p8">\def.release(2);</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
 <p class="p5">//:Can be started when the server is not running</p>
 <p class="p8"><span class="s3">\default</span>.play.onStart({ <span class="s4">| s |</span> postf(<span class="s5">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
@@ -119,9 +128,10 @@ span.Apple-tab-span {white-space:pre}
 <p class="p5">//:On start.<span class="Apple-converted-space"> </span></p>
 <p class="p5">// This example also shows the combined use of Symbol:play with Function:uplay.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\test</span>.play({ LFNoise2.ar(4000, 0.1) }).onStart({ <span class="s5">"hello"</span>.postln; });</p>
-<p class="p10">1.wait;</p>
-<p class="p8"><span class="s3">\test</span>.release;</p>
+<p class="p8"><span class="s3">\test</span>.playFunc({ LFNoise2.ar(4000, 0.1) });</p>
+<p class="p8"><span class="s3">\test</span>.synth.dur(1, 5);</p>
+<p class="p7"><br></p>
+<p class="p8">1.wait;</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s3">\default</span>.play.rsyncs({ <span class="s4">| synth |</span><span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>0.25.wait;</p>
@@ -134,12 +144,15 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7"><br></p>
 <p class="p8">1.5.wait;</p>
 <p class="p7"><br></p>
-<p class="p8">{ <span class="s4">| freq = 400 |</span> <span class="s4">LFNoise0</span>.ar(freq, 0.1) }.uplay.rsyncs({ <span class="s4">| synth |</span></p>
+<p class="p8">{ <span class="s4">| freq = 400 |</span> <span class="s4">LFNoise0</span>.ar(freq, 0.1) }.play.rsyncs({ <span class="s4">| synth |</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>50 do: { <span class="s4">| i |</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(i + 1).reciprocal.wait;</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth.set(<span class="s3">\freq</span>, 400 rrand: 10000);</p>
 <p class="p8"><span class="Apple-tab-span">	</span>};</p>
 <p class="p8"><span class="Apple-tab-span">	</span>synth.free;<span class="Apple-tab-span">	</span></p>
 <p class="p8">});</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
 </body>
 </html>

@@ -9,6 +9,10 @@ AbstractUniqueServerObject : UniqueObject {
 	*makeKey { | key, target |
 		^this.mainKey ++ [target.asTarget.server, key.asKey];
 	}
+	
+	init { | target |
+		server = target.asTarget.server;
+	}
 
 	*onServer { | server |
 		var path;
@@ -26,7 +30,7 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	init { | target, defName ... moreArgs |
-		server = target.asTarget.server;
+		super.init(target);
 		ServerPrep(server).addSynth({ this.makeObject(target, defName, *moreArgs); });
 		if (server.serverRunning.not) { server.boot };
 	}
@@ -72,17 +76,6 @@ UniqueSynth : AbstractUniqueServerObject {
 		}
 	}
 	onEnd { | func | this.onClose(func) }	// synonym
-
-	wait { | dtime = 0 |
-	/* wait dtime seconds after start of synth or after receiving wait, whichever is earlier
-	makes routines wait for server to boot before they start.
-	Can only be called inside a routine.
-	This includes running a code snippet by typing Command-Shift-x (see DocListWindow)
-	*/
-	// cannot use this.onStart({ dtime.wait }) because it calls .wait on a function, not a routine
-		while { this.isPlaying.not } { 0.01.wait };
-		dtime.wait;
-	}	
 	
 	rsync { | func, clock |
 		var routine;

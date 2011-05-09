@@ -1,16 +1,19 @@
 
-MouseXYDisplay {
-	var <model;
+Dependant {
+	var <>model;	
+	*new { | model | ^this.newCopyArgs(model).init; }
+	init { }
+	addMessage { | message, action | model.addListener(this, message, action); }
+}
+
+MouseXYDisplay : Dependant {
 	var <info = "-----";
 	var <userview;
 	var <>rect, <x, <y;
-	*new { | model |
-		^this.newCopyArgs(model).init;
-	}
 
 	init {
 		rect = Rect(5.5, 5.5, 400, 20);
-		model.addListener(this, \viewsInited, {
+		this.addMessage(\viewsInited, {
 			userview = model.userview;
 			model.object.acceptsMouseOver = true;
 			userview.mouseOverAction = { | v, argX, argY |
@@ -48,9 +51,7 @@ MouseXYDisplay {
 SpectrographInfoDisplay : MouseXYDisplay {
 	init {
 		super.init;
-		model.addListener(this, \rate_, { this.display; });
+		this.addMessage(\rate_, { this.display; });
 	}
-	makeInfo {
-		info = format("X: %, Y: %, rate: %", x, y, model.rate);
-	}
+	makeInfo { info = format("X: %, Y: %, rate: %", x, y, model.rate); }
 }

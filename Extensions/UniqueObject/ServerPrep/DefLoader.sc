@@ -45,10 +45,7 @@ DefLoader : ServerActionLoader {
 		this.loadNextObjectGroup;
 	}
 
-	loadNextObjectGroup {
-//		serverPrep.notifyTree; // CRASH!!!
-		serverPrep.loadSynths;
-	}
+	loadNextObjectGroup { serverPrep.loadSynths; }
 		
 	load { | object |
 		objects.remove(object);
@@ -65,19 +62,12 @@ BufLoader : DefLoader {
 
 	objectKind { ^"Buffers" }
 
-	responderPaths { ^[
-			['/done', '/b_allocRead'],
-			['/done', '/b_alloc'],			
-		]
-	}	
-	loadNextObjectGroup {
-//		{	// leave time for alloc buffers to initialize?
-			serverPrep.loadDefs;
-//		}.defer(0.5);
-	}
+	responderPaths { ^[['/done', '/b_allocRead'], ['/done', '/b_alloc']] }
+
+	loadNextObjectGroup { serverPrep.loadDefs; }
+
 	addAllUniqueBuffers {
 		/* Received from ServerPrep on Boot time. Done before loading process starts */
 		objects addAll: UniqueBuffer.onServer(server);
 	}
-	
 }

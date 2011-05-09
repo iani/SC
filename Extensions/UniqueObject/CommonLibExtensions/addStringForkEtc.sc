@@ -20,16 +20,12 @@
 	
 	// Start a unique synth if not already running.
 	// If args is a Function, play it, otherwise use this symbol as a synthDef name. 
-	play { | args, target, addAction ... moreArgs |
-		if (args isKindOf: Function) {
-			^this.playFunc(args, target, addAction, *moreArgs)
-		}{
-			^UniqueSynth(this, this, args, target, addAction ? \addToHead);
-		}
+	play { | args, target, addAction = \addToHead |
+		^this.playDef(this, args, target, addAction);
 	}
 
 	playFunc { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
-		^UniquePlay(func, target, outbus, fadeTime, addAction, args, this);
+		^func.play(target, outbus, fadeTime, addAction, args, this);
 	}	
 
 	// start a unique synth, use symbol as key for storing and first arg as name of SynthDef
@@ -37,6 +33,7 @@
 		^UniqueSynth(this, def ? this, args, target, addAction);
 	}
 
+	// to be tested!
 	playBuf { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
 		^UniqueBuffer(func, target, outbus, fadeTime, addAction, args, this);
 	}	
@@ -61,18 +58,16 @@
 }
 
 + Function {
+	play { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
+		target = target.asTarget;
+		this.asSynthDef(
+			fadeTime: fadeTime,
+			name: name = name ?? { SystemSynthDefs.generateTempName };
+		).addToServer(target.server);
+		^name.asSymbol.play([\i_out, outbus, \out, outbus] ++ args, target, addAction);
+	}
+
 	asKey { ^def.sourceCode.hash }
-	uplay { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
-		^UniquePlay(this, target, outbus, fadeTime, addAction, args);
-	}
-	// create new key to force creation of multiple UniquePlay instances
-	mplay { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, 
-			dur, fadeOut = 0.2, message = \release |
-		^("play" ++ UniqueID.next).asSymbol.playFunc(this, target, outbus, fadeTime, addAction, args)
-			.dur(dur, fadeOut, message);
-	}
-
-
 	doOnce { | ... args | ^UniqueFunction(this, *args) }
 	doOnceIn { | duration = 0.5 |
 		^TimedFunction(this, duration);
@@ -85,3 +80,7 @@
 	forkOnce { | clock ... args | ^UniqueRoutine(this, clock, *args); }
 }
 
++ SynthDef {
+	addToServer { | server | ServerPrep(server.asTarget.server).addDef(this); }
+	sendTo { | server | this.send(server.asTarget.server); }
+}

@@ -68,7 +68,7 @@ Spectrograph : UniqueWindow {
 	
 	init { | argBounds, argServer, argRate, argBufsize |
 		var window; // just for naming convenience
-		bounds = argBounds ?? { this.class.bigBounds };
+		bounds = argBounds ?? { this.class.smallBounds };
 		bounds.width = bounds.width max: minWidth;
 		server = argServer;
 		rate = argRate;
@@ -102,7 +102,8 @@ Spectrograph : UniqueWindow {
 				$s, { this.small },
 				$b, { this.big },
 				$<, { this.rate = this.rate - 0.01 max: 0.01 }, 
-				$>, { this.rate = this.rate + 0.01 min: 0.2 }
+				$>, { this.rate = this.rate + 0.01 min: 0.2 },
+				$d, { { LFNoise0.ar(5000, 0.05) }.play; }
 			)
 		};
 		imageObjects = Set.new;
@@ -167,7 +168,8 @@ Spectrograph : UniqueWindow {
 			};
 		}.defer;		
 	}
-		// Should only be used for debugging.
+	
+	// Should only be used for debugging.
 	// Normally you just close the Spectrograph window.
 	*stopPoller { if (current.notNil) { current.stopPoller } }
 	stopPoller { // only for debugging purposes. Normally just close the Spectrograph window.
