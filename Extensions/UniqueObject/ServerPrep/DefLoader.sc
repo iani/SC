@@ -45,7 +45,9 @@ DefLoader : ServerActionLoader {
 		this.loadNextObjectGroup;
 	}
 
-	loadNextObjectGroup { serverPrep.loadSynths; }
+	loadNextObjectGroup { 
+		serverPrep.loadSynths; 
+	}
 		
 	load { | object |
 		objects.remove(object);

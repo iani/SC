@@ -4,7 +4,8 @@ ServerPrep {
 	var <server;
 	var <bufs, <defs, <synths, <routines, <actions;
 	
-	var <cmdPeriod = false;
+	var <cmdPeriod = false; 		// distinguish server boot from cmd period;
+	var serverBootedResponder;		// Wait for server notification on boot: ['/done', '/notify']
 
 	*initClass { all = IdentityDictionary.new; }
 
@@ -19,6 +20,12 @@ ServerPrep {
 	/* ===== Internal stuff. See "Use these methods" section below for usage ===== */
 
 	init {
+		serverBootedResponder = OSCpathResponder(server.addr, ['/done', '/notify'], {
+			defs.addAllUdefs;
+			bufs.addAllUniqueBuffers;
+			this.loadAllObjects;
+			this.notifyTree;
+		}).add;
 		bufs = BufLoader(this, server);			
 		defs = DefLoader(this, server);			
 		synths = SynthLoader(this, server);
@@ -27,19 +34,14 @@ ServerPrep {
 		CmdPeriod.add(this);
 		ServerTree.add(this, server);	// on Server *boot*: load all registered Udefs and UniqueBuffers
 	}
-
-	doOnCmdPeriod { cmdPeriod = true; }
-
 	doOnServerTree {
 		if (cmdPeriod) {	// do not reload SynthDefs + Buffers on Server init tree
 			cmdPeriod = false;			
-		}{				// but always load them when the server boots
-			defs.addAllUdefs;			// add all Udefs stored in this session
-			bufs.addAllUniqueBuffers;	// add all UniqueBuffers stored in this session
-		};
-		this.loadAllObjects;			// load all objects added to the tree, in order
-		this.notifyTree;	/* add any functions from addToServerTree to actions
-		ensuring that their SynthDefs etc. will be started in the right order. */
+			this.loadAllObjects;			// load all objects added to the tree, in order
+			this.notifyTree;	/* add any functions from addToServerTree to actions
+			ensuring that their SynthDefs etc. will be started in the right order. */
+		}
+	/* Load of objects and tree notification at boot time triggered by serverBootedResponder */
 	}
 
 	// Allow any object to add any action to initTree using addToServerTree below.

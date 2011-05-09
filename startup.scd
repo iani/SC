@@ -17,8 +17,10 @@ CocoaMenuItem.addToMenu("Utils", "Toggle OSC input posting", ["O", true, true], 
 			if (msg[0].asString.contains("status.reply").not) {			postf("time: % sender: % message: %\n", time, addr, msg)
 			};
 		};
+		"OSC Posting is ON".postln;
 	}{
 		thisProcess.recvOSCfunc= nil;
+		"OSC Posting is OFF".postln;
 	}
 });
 

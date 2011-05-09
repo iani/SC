@@ -60,6 +60,7 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 
 	synthStarted {
+		postf("% : %\n", this.class.name, thisMethod.name); 
 		object.isPlaying = true; // set status to playing when missed because started on boot time
 		NotificationCenter.notify(this, \synthStarted, this);
 	}
@@ -84,17 +85,44 @@ UniqueSynth : AbstractUniqueServerObject {
 		});
 		this.onEnd({
 			routine.stop;	
-		});	
+		});
 	}
 
 	rsyncs { | func | this.rsync(func, SystemClock) }
 	rsynca { | func | this.rsync(func, AppClock) }
+
+	dur2 { | dtime = 1, fadeOut = 3.2, message |
+		"dur2 test: received".postln;
+		this.onStart({ 
+			"dur2 test --- how many times is this received?".postln;
+			{ 
+				"this is after dtime".postln;
+				this.perform(message ? \releaseDebug, fadeOut);
+//				this.releaseDebug(fadeOut);
+			}.defer(dtime);
+		});
+	}
+	
+	releaseDebug { | dtime |
+		"UniqueSynth releaseDebug performed".postln;
+		if (this.isPlaying ) { object.release(dtime) } 
+	}
 	
 	dur { | dtime = 1, fadeOut = 0.2, message |
-		this.onStart({ { this.perform(message ? \release, fadeOut) }.defer(dtime ? inf) }) }
+		this.onStart({
+			postf("DUR ONSTART DEBUG %, : dtime: %, fadeout:% \n", thisMethod.name, dtime, fadeOut).postln;
+
+//			{ 
+//				"Dur sending release".postln;
+//				this.perform(message ? \release, fadeOut)
+//			}.defer(dtime ? inf)
+		})
+
+		}
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
-	release { | dtime = 0.02 |
+	releaseSynth { | dtime = 0.02 |
+		postf("%: %, : dtime%\n", this.class.name, thisMethod.name, dtime).postln;
 		if (this.isPlaying ) { object.release(dtime) } 
 	}	
 }

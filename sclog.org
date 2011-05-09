@@ -415,4 +415,8 @@ Elemenbí (L. M.: N. B!)
      :PROPERTIES:
      :ENTERED_ON: <2011-05-08 Sun 16:38>
      :END:
-
+*** 2011-05-09 Monday
+**** Fixed ServerPrep, Spectrograph, UniqueBuffer, Function:play, Examples
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-09 Mon 12:18>
+     :END:

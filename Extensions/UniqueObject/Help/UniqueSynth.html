@@ -33,8 +33,6 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><span class="Apple-converted-space"> </span></p>
 <p class="p3">See also: [<span class="s1">UniqueObjectShortcuts.html</span>]</p>
 <p class="p4"><br></p>
-<p class="p4"><br></p>
-<p class="p4"><span class="Apple-converted-space"> </span></p>
 <p class="p5"><span class="s2"><span class="Apple-converted-space"> </span></span>/*</p>
 <p class="p5">To run an example, go anywhere after the //: mark that starts it, and press Command-Shift-x</p>
 <p class="p6"><br></p>
@@ -89,9 +87,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p5">// ========= Synchronizing a routine with the duration of a synth ========</p>
 <p class="p5">//:End of synth is stops the routine</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default</span>.play.dur(1, 2).rsyncs({</p>
+<p class="p8"><span class="s3">\default</span>.play.rsyncs({</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s4">inf</span> do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 80 rrand: 1800); 0.01.wait; };</p>
-<p class="p8">});</p>
+<p class="p8">}).dur(1, 1);</p>
 <p class="p7"><br></p>
 <p class="p5">//:Routine ends before the synth is freed</p>
 <p class="p7"><br></p>
@@ -135,8 +133,8 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7"><br></p>
 <p class="p5">//:Combined use of Symbol:play with Function:play.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\test</span>.playFunc({ LFNoise2.ar(4000, 0.1) });</p>
-<p class="p8"><span class="s3">\test</span>.synth.dur(1, 5);</p>
+<p class="p8"><span class="s3">\test</span>.playFunc({ LFNoise2.ar(4000, 0.5) });</p>
+<p class="p8"><span class="s3">\test</span>.synth.dur(0.01, 0.15);</p>
 <p class="p7"><br></p>
 <p class="p8">1.wait;</p>
 <p class="p7"><br></p>
