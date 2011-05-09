@@ -18,7 +18,7 @@ postf("Synths on server are: %\n", UniqueSynth.onServer);
 
 
 //:3
-[\default, \default2, \default3] do: _.release(1.5);
+[\default, \default2, \default3] do: _.releaseSynth(1.5);
 
 //:1a
 \default.play.onStart({ | s | postf("% started\n", s.synth); });
@@ -31,7 +31,7 @@ postf("Synths on server are: %\n", UniqueSynth.onServer);
 
 \default3.playDef(\default, [\freq, 660]).onStart({ | s | postf("% started\n", s.synth); });
 
-[\default, \default2, \default3] do: { | s | 0.5.wait; s.release; };
+[\default, \default2, \default3] do: { | s | 0.5.wait; s.releaseSynth; };
 
 //:4
 

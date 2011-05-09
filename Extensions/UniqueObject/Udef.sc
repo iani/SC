@@ -11,7 +11,7 @@ SynthDefs created while the server is running are sent immediately. ServerReady 
 
 Udef {
 	classvar <all;
-	var <def;
+	var <def, <name;
 	
 	*initClass {
 		all = MultiLevelIdentityDictionary.new;	
@@ -21,8 +21,9 @@ Udef {
 		^super.new.init(name, ugenGraphFunc, rates, prependArgs, variants, metadata, server);
 	}
 
-	init { | name, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
-		this.addDef(SynthDef(name, ugenGraphFunc, rates, prependArgs, variants, metadata), server);
+	init { | argName, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
+		this.addDef(SynthDef(argName, ugenGraphFunc, rates, prependArgs, variants, metadata), server);
+		name = argName.asSymbol;
 	}
 
 	addDef { | argDef, server |
@@ -30,6 +31,10 @@ Udef {
 		server = server.asTarget.server;
 		all.putAtPath([server, argDef.name.asSymbol], this);
 		ServerPrep(server).addDef(this);
+	}
+	
+	play { | args, target, addAction = \addToHead |
+		^name.play(args, target, addAction); // (name, args, target, addAction);
 	}
 
 	// using generic different name to be also used by UniqueBuffer

@@ -18,10 +18,15 @@
 	// access a unique synth if present, without starting it
 	synth { | server | ^UniqueSynth.at(this, server) }
 	
-	// Start a unique synth if not already running.
-	// If args is a Function, play it, otherwise use this symbol as a synthDef name. 
+	// Start a unique synth if not already running, using self as SynthDef name
 	play { | args, target, addAction = \addToHead |
 		^this.playDef(this, args, target, addAction);
+	}
+
+	// Start a synth using self as DefName, but on a unique id
+	// This allows starting a new instance before the old one has stopped
+	mplay { | args, target, addAction = \addToHead |
+		^UniqueSynth(UniqueID.next, this, args, target, addAction);
 	}
 
 	playFunc { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
@@ -48,17 +53,20 @@
 
 	free { | server | ^this.synth(server).free }
 	wait { | dtime, server | ^this.synth(server).wait(dtime) }
-	
+
 	set { | ... args | this.synth.object.set(*args) }
 	setn { | ... args | this.synth.object.setn(*args) }
-	release { | dur = 0.02, server | this.synth(server).release(dur) }
+	// Note: avoid overwriting release method from Object
+	releaseSynth { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
 	
 	window { | makeFunc | ^UniqueWindow(this, makeFunc) }
 	close { this.window.close }
 }
 
 + Function {
+	// Playing UGen functions as synths, as in standard Function:play
 	play { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
+		// rewriting Function:play to work with ServerPrep
 		target = target.asTarget;
 		this.asSynthDef(
 			fadeTime: fadeTime,

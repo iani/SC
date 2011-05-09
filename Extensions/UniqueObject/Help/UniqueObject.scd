@@ -1,5 +1,5 @@
 //:a
-UniqueWindow(\test).onClose({ |...args| { args.postln } ! 10; });
+UniqueWindow(\test).onClose({ "closed".postln; });
 //:b
 \test2.window.onClose({ ({ 10.rand } ! 10).postln });
 
@@ -40,7 +40,7 @@ r = {
 	};
 	"THE END".postln;
 }.fork(AppClock)
-Ԯ
+
 //:f UniqueFunction
 
 u = { | a, b, c | [a, b, c].sum.postln; }.doOnce(10, 20, 30);

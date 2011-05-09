@@ -14,15 +14,17 @@ p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0p
 p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
 p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
 p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
-p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
-p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
 span.s1 {text-decoration: underline}
 span.s2 {font: 12.0px Helvetica; color: #000000}
 span.s3 {color: #008323}
 span.s4 {color: #162bc4}
-span.s5 {color: #737373}
-span.s6 {color: #000000}
+span.s5 {color: #000000}
+span.s6 {color: #737373}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
@@ -32,6 +34,8 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><b>Inherits from: AbstractUniqueServerObject : UniqueObject : Object</b></p>
 <p class="p4"><span class="Apple-converted-space"> </span></p>
 <p class="p3">See also: [<span class="s1">UniqueObjectShortcuts.html</span>]</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>*new(key, defName, args, target, addAction *moreArgs)</p>
 <p class="p4"><br></p>
 <p class="p5"><span class="s2"><span class="Apple-converted-space"> </span></span>/*</p>
 <p class="p5">To run an example, go anywhere after the //: mark that starts it, and press Command-Shift-x</p>
@@ -44,118 +48,151 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7"><br></p>
 <p class="p8">//:symbol + playFunc</p>
 <p class="p7"><br></p>
-<p class="p8">\def.playFunc({ | freq = 400 | SinOsc.ar(freq, 0, 0.1) });</p>
-<p class="p8">1.wait;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// can call wait right from the selected code if executed with Cmd-shift-x</p>
-<p class="p8">\def.set(\freq, 800);</p>
-<p class="p8">1.wait;</p>
-<p class="p8">\def.release(2);</p>
+<p class="p9"><span class="s3">\def</span>.playFunc({ <span class="s4">| freq = 400 |</span> <span class="s4">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.1) });</p>
+<p class="p8"><span class="s5">1.wait;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// can call wait right from the selected code if executed with Cmd-shift-x</p>
+<p class="p9"><span class="s3">\def</span>.set(<span class="s3">\freq</span>, 800);</p>
+<p class="p9">1.wait;</p>
+<p class="p9"><span class="s3">\def</span>.releaseSynth(2);</p>
 <p class="p7"><br></p>
 <p class="p8">//:Adding the name as an argument</p>
-<p class="p9">{ Out.ar(0, Fade.kr * WhiteNoise.ar(Decay.kr(Impulse.kr(10, 0, 0.1)))) }.play(name: \test);</p>
+<p class="p9">{ <span class="s4">Out</span>.ar(0, <span class="s4">Fade</span>.kr.dup * <span class="s4">WhiteNoise</span>.ar(<span class="s4">Decay</span>.kr(<span class="s4">Impulse</span>.kr(10, 0, 0.1)))) }.play(name: <span class="s3">\test</span>);</p>
 <p class="p9">1.wait;</p>
-<p class="p9">\test.release(3);</p>
+<p class="p9"><span class="s3">\test</span>.releaseSynth(3);</p>
 <p class="p7"><br></p>
 <p class="p7"><br></p>
 <p class="p5">//:1 Try the next 3 examples in a row:</p>
-<p class="p8"><span class="s3">\default</span>.play.onStart({ <span class="s4">| s |</span> postf(<span class="s5">"% started\n"</span>, s.synth); });</p>
+<p class="p9"><span class="s3">\default</span>.play.onStart({ <span class="s4">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
 <p class="p5">//:2</p>
-<p class="p8"><span class="s3">\default2</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 550]).onStart({ <span class="s4">| s |</span> postf(<span class="s5">"% started\n"</span>, s.synth); });</p>
+<p class="p9"><span class="s3">\default2</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 550]).onStart({ <span class="s4">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default3</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 660]).onStart({ <span class="s4">| s |</span> postf(<span class="s5">"% started\n"</span>, s.synth); });</p>
+<p class="p9"><span class="s3">\default3</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 660]).onStart({ <span class="s4">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p9">postf("Synths on server are: %\n", UniqueSynth<span class="s6">.onServer);</span></p>
+<p class="p10">postf("Synths on server are: %\n", UniqueSynth<span class="s5">.onServer);</span></p>
 <p class="p7"><br></p>
 <p class="p7"><br></p>
 <p class="p5">//:3</p>
-<p class="p10"><span class="s6">[</span>\default<span class="s6">, </span>\default2<span class="s6">, </span>\default3<span class="s6">] do: </span><span class="s4">_</span><span class="s6">.release(1.5);</span></p>
+<p class="p9">[<span class="s3">\default</span>, <span class="s3">\default2</span>, <span class="s3">\default3</span>] do: <span class="s4">_</span>.releaseSynth(1.5);</p>
 <p class="p7"><br></p>
 <p class="p5">//:All together</p>
-<p class="p8"><span class="s3">\default</span>.play.onStart({ <span class="s4">| s |</span> postf(<span class="s5">"% started\n"</span>, s.synth); });</p>
+<p class="p9"><span class="s3">\default</span>.play.onStart({ <span class="s4">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p10">1.wait<span class="s6">;</span></p>
+<p class="p11">1.wait<span class="s5">;</span></p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default2</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 550]).onStart({ <span class="s4">| s |</span> postf(<span class="s5">"% started\n"</span>, s.synth); });</p>
+<p class="p9"><span class="s3">\default2</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 550]).onStart({ <span class="s4">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p8">1.wait;</p>
+<p class="p9">1.wait;</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default3</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 660]).onStart({ <span class="s4">| s |</span> postf(<span class="s5">"% started\n"</span>, s.synth); });</p>
+<p class="p9"><span class="s3">\default3</span>.playDef(<span class="s3">\default</span>, [<span class="s3">\freq</span>, 660]).onStart({ <span class="s4">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p8">[<span class="s3">\default</span>, <span class="s3">\default2</span>, <span class="s3">\default3</span>] do: { <span class="s4">| s |</span> 0.5.wait; s.release; };</p>
+<p class="p9">[<span class="s3">\default</span>, <span class="s3">\default2</span>, <span class="s3">\default3</span>] do: { <span class="s4">| s |</span> 0.5.wait; s.releaseSynth; };</p>
 <p class="p7"><br></p>
-<p class="p6"><br></p>
+<p class="p5">//:Generate concurrent synths with mplay. Plays until stopped with Cmd-.</p>
+<p class="p8"><span class="s5">{<span class="Apple-tab-span">	</span></span>/* a "riff" */</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p9"><span class="Apple-tab-span">	</span>[0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.4].choose;</p>
+<p class="p9">}.sched;</p>
+<p class="p7"><br></p>
 <p class="p5">// ========= Synchronizing a routine with the duration of a synth ========</p>
-<p class="p5">//:End of synth is stops the routine</p>
+<p class="p5">//:End of synth stops the routine</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default</span>.play.rsyncs({</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="s4">inf</span> do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 80 rrand: 1800); 0.01.wait; };</p>
-<p class="p8">}).dur(1, 1);</p>
+<p class="p9"><span class="s3">\default</span>.play.rsyncs({ | s |</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="s4">inf</span> do: { <span class="s3">s</span>.set(<span class="s3">\freq</span>, 80 rrand: 1800); 0.01.wait; };</p>
+<p class="p9">}).dur(1, 5);</p>
 <p class="p7"><br></p>
 <p class="p5">//:Routine ends before the synth is freed</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default</span>.play.dur(1.5, 2).rsyncs({</p>
-<p class="p8"><span class="Apple-tab-span">	</span>100 do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 80 rrand: 1800); 0.01.wait; };</p>
-<p class="p8">});</p>
+<p class="p9"><span class="s3">\default</span>.play.dur(1.5, 2).rsyncs({</p>
+<p class="p9"><span class="Apple-tab-span">	</span>100 do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 80 rrand: 1800); 0.01.wait; };</p>
+<p class="p9">});</p>
 <p class="p7"><br></p>
-<p class="p5">//:The routine releases the synth when it ends</p>
+<p class="p8">//:The routine releases the synth when it ends</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default</span>.play.rsyncs({ <span class="s4">| s |</span></p>
-<p class="p8"><span class="Apple-tab-span">	</span>20 do: { s.set(<span class="s3">\freq</span>, 80 rrand: 1800); 0.05.wait; };</p>
-<p class="p8"><span class="Apple-tab-span">	</span>(1..40) do: { <span class="s4">| i |</span> 0.1.wait; s.set(<span class="s3">\freq</span>, i * 100) };<span class="Apple-converted-space"> </span></p>
-<p class="p8"><span class="Apple-tab-span">	</span>s.release(3);</p>
-<p class="p8">});</p>
+<p class="p9"><span class="s3">\default</span>.play.rsyncs({ <span class="s4">| s |</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span>20 do: { s.set(<span class="s3">\freq</span>, 80 rrand: 1800); 0.05.wait; };</p>
+<p class="p9"><span class="Apple-tab-span">	</span>(1..40) do: { <span class="s4">| i |</span> 0.1.wait; s.set(<span class="s3">\freq</span>, i * 100) };<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="s5"><span class="Apple-tab-span">	</span>s.release(3); </span>// operating on the actual Synth, not the UniqueSynth</p>
+<p class="p9">});</p>
 <p class="p7"><br></p>
 <p class="p5">//:WRONG! The routine continues after the synth is freed</p>
-<p class="p10">\default<span class="s6">.play;</span></p>
+<p class="p11">\default<span class="s5">.play;</span></p>
 <p class="p7"><br></p>
-<p class="p8">{ <span class="s4">inf</span> do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 400 rrand: 4000); 0.025.wait; }; }.fork;</p>
+<p class="p9">{ <span class="s4">inf</span> do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 400 rrand: 4000); 0.025.wait; }; }.fork;</p>
 <p class="p7"><br></p>
-<p class="p10">2.wait;</p>
+<p class="p11">2.wait;</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default</span>.release(3);</p>
+<p class="p9"><span class="s3">\default</span>.releaseSynth(3);</p>
 <p class="p7"><br></p>
 <p class="p5">//:Right! The routine ends as soon as the synth is freed</p>
-<p class="p8"><span class="s3">\default</span>.play.rsynca({ <span class="s4">inf</span> do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 400 rrand: 4000); 0.025.wait; }; });</p>
+<p class="p9"><span class="s3">\default</span>.play.rsynca({ <span class="s4">inf</span> do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 400 rrand: 4000); 0.025.wait; }; });</p>
 <p class="p7"><br></p>
-<p class="p10">2.wait;</p>
+<p class="p11">2.wait;</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default</span>.release(3);</p>
+<p class="p9"><span class="s3">\default</span>.releaseSynth(3);</p>
 <p class="p7"><br></p>
 <p class="p5">//:More examples:<span class="Apple-converted-space"> </span></p>
-<p class="p10">\default<span class="s6">.play;</span></p>
-<p class="p8">0.1.wait;</p>
-<p class="p8"><span class="s3">\default</span>.set(<span class="s3">\freq</span>, 440 * 3/2);</p>
-<p class="p8">0.4.wait;</p>
-<p class="p8">15 do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, ((4..12) * 110).choose); 0.05.wait };</p>
-<p class="p8">(16..4) * 110 do: { <span class="s4">| i |</span> <span class="s3">\default</span>.set(<span class="s3">\freq</span>, i); 0.1.wait };</p>
-<p class="p8">0.5.wait;</p>
-<p class="p8"><span class="s3">\default</span>.release;<span class="Apple-converted-space"> </span></p>
+<p class="p11">\default<span class="s5">.play;</span></p>
+<p class="p9">0.1.wait;</p>
+<p class="p9"><span class="s3">\default</span>.set(<span class="s3">\freq</span>, 440 * 3/2);</p>
+<p class="p9">0.4.wait;</p>
+<p class="p9">15 do: { <span class="s3">\default</span>.set(<span class="s3">\freq</span>, ((4..12) * 110).choose); 0.05.wait };</p>
+<p class="p9">(16..4) * 110 do: { <span class="s4">| i |</span> <span class="s3">\default</span>.set(<span class="s3">\freq</span>, i); 0.1.wait };</p>
+<p class="p9">0.5.wait;</p>
+<p class="p9"><span class="s3">\default</span>.releaseSynth(1);<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p8">//:play a function multiple times, (server-boot-safe), for specified durations:<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s4">thisThread</span><span class="s5">.randSeed_(4);<span class="Apple-tab-span">	</span></span>// always play the same sequence</p>
+<p class="p9">52 do: {<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span>{ <span class="s4">SinOsc</span>.ar(exprand(400, 1800) * [1, 1.25], 0, 0.1) }.play.dur(0.01, exprand(0.01, 3));</p>
+<p class="p9"><span class="Apple-tab-span">	</span>exprand(0.02, 1).wait;</p>
+<p class="p9">};</p>
+<p class="p7"><br></p>
+<p class="p8">//:fun</p>
+<p class="p7"><br></p>
+<p class="p12">"hello "<span class="s5">.post;</span></p>
+<p class="p7"><br></p>
+<p class="p9">{ <span class="s4">WhiteNoise</span>.ar(<span class="s4">EnvGen</span>.kr(<span class="s4">Env</span>.perc(0.001, 0.7, 0.3), doneAction: 2)).dup }.play;</p>
+<p class="p7"><br></p>
+<p class="p9">0.2.wait;</p>
+<p class="p7"><br></p>
+<p class="p9">a = { <span class="s4">WhiteNoise</span>.ar(<span class="s4">LFTri</span>.kr([10, 11] + <span class="s4">LFNoise1</span>.kr(2, 3), 0, 0.2)) }.play.dur(5, 4);</p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s3">\default</span><span class="s5">.play.rsynca({ </span><span class="s4">| s |</span><span class="s5"> </span>// start synth with default SynthDef (See UniqueSynth).</p>
+<p class="p8"><span class="s5"><span class="Apple-tab-span">	</span></span><span class="s4">thisThread</span><span class="s5">.randSeed_(5);<span class="Apple-tab-span">	</span></span>// always play the same sequence</p>
+<p class="p9"><span class="Apple-tab-span">	</span>220 do: { <span class="s4">| i |</span> (i + 11 / 5).reciprocal.wait;<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>s.set(<span class="s3">\freq</span>, ((4..16) * 110) @@ ((i % 4).rand + (i / 20 % 60))); <span class="s6">"."</span>.post;</p>
+<p class="p9"><span class="Apple-tab-span">	</span>};</p>
+<p class="p9"><span class="Apple-tab-span">	</span>1.wait;</p>
+<p class="p9"><span class="Apple-tab-span">	</span>s.release;</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="s6">" there"</span>.postln;</p>
+<p class="p9">});</p>
 <p class="p7"><br></p>
 <p class="p5">//:Combined use of Symbol:play with Function:play.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\test</span>.playFunc({ LFNoise2.ar(4000, 0.5) });</p>
-<p class="p8"><span class="s3">\test</span>.synth.dur(0.01, 0.15);</p>
+<p class="p9"><span class="s3">\test</span>.playFunc({ LFNoise2.ar([4000, 6000], 0.05) });</p>
+<p class="p9"><span class="s3">\test</span>.synth.dur(4, 5);</p>
 <p class="p7"><br></p>
-<p class="p8">1.wait;</p>
+<p class="p9">1.wait;</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s3">\default</span>.play.rsyncs({ <span class="s4">| synth |</span><span class="Apple-converted-space"> </span></p>
-<p class="p8"><span class="Apple-tab-span">	</span>0.25.wait;</p>
-<p class="p8"><span class="Apple-tab-span">	</span>50 do: {</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.05.wait;</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth.set(<span class="s3">\freq</span>, 200 rrand: 400);</p>
-<p class="p8"><span class="Apple-tab-span">	</span>};</p>
-<p class="p8"><span class="Apple-tab-span">	</span>synth.release(1);</p>
-<p class="p8">});</p>
+<p class="p9"><span class="s3">\default</span>.play.rsyncs({ <span class="s4">| synth |</span><span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span>0.25.wait;</p>
+<p class="p9"><span class="Apple-tab-span">	</span>50 do: {</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.05.wait;</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth.set(<span class="s3">\freq</span>, 200 rrand: 400);</p>
+<p class="p9"><span class="Apple-tab-span">	</span>};</p>
+<p class="p9"><span class="Apple-tab-span">	</span>synth.release(3);</p>
+<p class="p9">});</p>
 <p class="p7"><br></p>
-<p class="p8">1.5.wait;</p>
+<p class="p9">1.5.wait;</p>
 <p class="p7"><br></p>
-<p class="p8">{ <span class="s4">| freq = 400 |</span> <span class="s4">LFNoise0</span>.ar(freq, 0.1) }.play.rsyncs({ <span class="s4">| synth |</span></p>
-<p class="p8"><span class="Apple-tab-span">	</span>50 do: { <span class="s4">| i |</span></p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(i + 1).reciprocal.wait;</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth.set(<span class="s3">\freq</span>, 400 rrand: 10000);</p>
-<p class="p8"><span class="Apple-tab-span">	</span>};</p>
-<p class="p8"><span class="Apple-tab-span">	</span>synth.free;<span class="Apple-tab-span">	</span></p>
-<p class="p8">});</p>
+<p class="p9">{ <span class="s4">| freq = 400 |</span> <span class="s4">LFNoise0</span>.ar(freq * [1, 1.1], 0.1) }.play.rsyncs({ <span class="s4">| synth |</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span>50 do: { <span class="s4">| i |</span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(i + 1).reciprocal.wait;</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth.set(<span class="s3">\freq</span>, 400 rrand: 10000);</p>
+<p class="p9"><span class="Apple-tab-span">	</span>};</p>
+<p class="p9"><span class="Apple-tab-span">	</span>synth.free;<span class="Apple-tab-span">	</span></p>
+<p class="p9">});</p>
 <p class="p7"><br></p>
 <p class="p7"><br></p>
 <p class="p7"><br></p>
