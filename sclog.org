@@ -567,3 +567,13 @@ An example application showing some of the features of this library. Creates a w
      :PROPERTIES:
      :ENTERED_ON: <2011-05-10 Tue 11:47>
      :END:
+**** Orgmode-SC integration via attachments		     :orgmode:ATTACH:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-10 Tue 19:13>
+     :ATTACH_DIR: ~/Library/Application Support/SuperCollider/Extensions/Examples
+     :Attachments: attachment_example.scd
+     :END:
+
+(With Aris Bezas)
+
+Added ./Extensions/Examples directory to master branch and attached it here to test orgmode link integration.
