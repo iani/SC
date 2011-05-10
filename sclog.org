@@ -420,3 +420,7 @@ Elemenbí (L. M.: N. B!)
      :PROPERTIES:
      :ENTERED_ON: <2011-05-09 Mon 12:18>
      :END:
+**** Added Pattern support: EventStream, UniqueStream, Function:sched. Also SynthPrep uses OSCpathResponder for exact boot timing
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-09 Mon 23:16>
+     :END:

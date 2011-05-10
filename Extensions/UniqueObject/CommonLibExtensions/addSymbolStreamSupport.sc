@@ -1,9 +1,9 @@
 /*
 Pattern and stream support for looping Functions
 
-UniqueStream to be phased out in favor of EnvirStream. 
+All of the below work with EventStream instead of UniqueStream. 
 
-All of the below to be changed to work with EventStream instead of UniqueStream. 
+UniqueStream to be phased out in favor of EnvirStream. 
 
 */
 
@@ -11,7 +11,7 @@ All of the below to be changed to work with EventStream instead of UniqueStream.
 	stream { | pattern | ^EventStream(this, pattern).next }
 	replaceStream { | pattern | ^EventStream(this).init(pattern) } // next not called!
 	resetStream { ^EventStream(this).reset } 	// next not called: design choice.
-	removeStream { ^UniqueStream(this).remove }
+	removeStream { ^EventStream(this).remove }
 
 /*
 	stream { | pattern | ^UniqueStream(this, pattern).next }
@@ -27,5 +27,6 @@ All of the below to be changed to work with EventStream instead of UniqueStream.
 	pwhite { | lo, hi, length = inf | ^this.stream(Pwhite(lo, hi, length)) }
 	prand { | array, repeats = inf | ^this.stream(Prand(array, repeats)) }
 	prand1 { | ... elements | ^this.stream(Prand(elements, inf)) }
+	pn { | pattern, repeats = 1 | ^this.stream(Pn(pattern, repeats)) }
 }
 

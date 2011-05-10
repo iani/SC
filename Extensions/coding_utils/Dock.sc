@@ -18,6 +18,9 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open / create class help", ["D", true, false], {
 				this.openCreateHelpFile;
 			}),
+			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
+				this.insertClassHelpTemplate;
+			}),	
 			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
 				{ 
 					var u;
@@ -31,7 +34,7 @@ Dock {
 					});
 					u.object.window.front;
 					// restart if server re-booted with scope on
-					ServerReady(Server.internal).addObjectAction(u, { u.object.run.postln });
+					ServerPrep(Server.internal).addObjectAction(u, { u.object.run });
 				}.fork(AppClock);
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
@@ -110,4 +113,71 @@ Dock {
 		});		
 	}
 
+
+	*insertClassHelpTemplate {
+		var doc, class;
+		doc = Document.current;
+		class = Document.current.name.splitext.first.asSymbol.asClass;
+		if (class.isNil) { ^this };
+		{
+			0.2.wait;
+			doc.string_(doc.string ++ format("%\n\n\Inherits from: %
+			
+Pupose
+
+Usage
+
+Related Classes
+
+Instance Creation
+
+Class variables
+
+%
+
+Instance variables
+
+%
+
+Class methods
+
+%
+
+Instance methods
+
+%
+
+Examples
+
+  ",
+				class.name.asString,
+				"".strcatList(class.superclasses collect: _.name),
+				"\t".strcatList((class.classVarNames ? [" -- "]).sort, " : \n\n\t"),
+				"\t".strcatList((class.instVarNames ? [" -- "]).sort, " : \n\n\t"),
+				"\t".strcatList((class.class.methods.collect(_.name) ? [" -- "]).sort, " : \n\n\t"),
+				"\t".strcatList((class.methods.collect(_.name) ? [" -- "]).sort, " : \n\n\t")			));
+			0.2.wait;
+			doc.selectLine(1);	 0.2.wait;
+			doc.font_(Font("Helvetica-Bold", 18), 
+				doc.selectionStart, doc.selectionSize);
+			0.2.wait;
+			doc.selectLine(2);		0.2.wait;
+			doc.font_(Font("Helvetica-Bold", 18), 
+				doc.selectionStart, doc.selectionSize); 0.2.wait;
+			doc.selectLine(3); 0.2.wait;
+			doc.font_(Font("Helvetica-Bold", 12), 
+				doc.selectionStart, doc.selectionSize); 
+			doc.selectLine(4); 0.2.wait;
+			doc.font_(Font("Helvetica", 12), 
+				doc.selectionStart, doc.selectionSize); 
+			doc.selectLine(5); 0.2.wait;
+			doc.selectLine(5); 0.2.wait;
+			doc.font_(Font("Helvetica", 12), 
+				doc.selectionStart, doc.selectionSize); 0.2.wait; 
+			doc.font_(Font("Helvetica-Bold", 12), 
+				doc.selectionStart, doc.string.size - doc.selectionStart); 
+		}.fork(AppClock);
+		
+		
+	}
 }
