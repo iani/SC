@@ -17,6 +17,7 @@
 # but stop committing new versions:
 *.sctxar
 archive.sctxar 
+tryout.scd
 
 Extensions\ \(archive\)
 Extensions\ \(disabled\)
