@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>sclog</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2011-05-10 14:03:37 EEST"/>
+<meta name="author" content="Ioannis Zannos"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">sclog</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Summary of ideas in this lib</a>
+<ul>
+<li><a href="#sec-1_1">1.1 ServerPrep </a></li>
+<li><a href="#sec-1_2">1.2 UniqueSynth </a></li>
+<li><a href="#sec-1_3">1.3 EventStream, Function:sched and Function:stream </a></li>
+<li><a href="#sec-1_4">1.4 Object methods for easy messaging via NotificationCenter </a></li>
+<li><a href="#sec-1_5">1.5 Code </a></li>
+<li><a href="#sec-1_6">1.6 Panes </a></li>
+<li><a href="#sec-1_7">1.7 Dock </a></li>
+<li><a href="#sec-1_8">1.8 Spectrograph </a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-5">
+<h5 id="sec-1"><span class="section-number-5">1</span> <span class="done DONE"> DONE</span> Summary of ideas in this lib &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doc">doc</span></span></h5>
+<div class="outline-text-5" id="text-1">
+
+<p><span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-10 Tue 13:55</span></span><br/>
+</p>
+
+</div>
+
+<div id="outline-container-1_1" class="outline-6">
+<h6 id="sec-1_1"><span class="section-number-6">1.1</span> ServerPrep </h6>
+<div class="outline-text-6" id="text-1_1">
+
+
+<ul>
+<li>
+Obviate the need to boot the server when starting synths
+</li>
+<li>
+Ensure that Buffers and SynthDefs are allocated / sent to the server
+before starting synths, efficiently. 
+</li>
+<li>
+Provide a safe way for starting synth and routine processes when the server boots
+or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first
+</li>
+</ul>
+
+
+<p>
+Classes involved: 
+</p>
+<ul>
+<li>
+ServerPrep
+</li>
+<li>
+ServerActionLoader
+</li>
+<li>
+SynthLoader
+</li>
+<li>
+DefLoader
+</li>
+<li>
+BufLoader
+</li>
+<li>
+RoutineLoader
+</li>
+<li>
+UniqueBuffer
+</li>
+<li>
+Udef
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1_2" class="outline-6">
+<h6 id="sec-1_2"><span class="section-number-6">1.2</span> UniqueSynth </h6>
+<div class="outline-text-6" id="text-1_2">
+
+
+<ul>
+<li>
+Simplify the creation and control of Synths by storing them in a dictionary
+for later access, and by providing utility methods for controlling the duration
+and release time, for synchronizing the execution and life time of routines 
+pertaining to a synth, and for attaching other objects that react to the 
+start and end of a synth. 
+</li>
+</ul>
+
+
+<p>
+Example of how UniqueSynth can simplify the code required: 
+</p>
+<p>
+Without Symbol:mplay 
+</p>
+
+
+
+<pre class="example">(
+{
+        loop {
+                {       var synth;
+                        synth = Synth(\default, [\freq, (25..50).choose.midicps]);
+                        0.1.wait;
+                        synth.release(exprand(0.01, 1.0));
+                }.fork;
+                [0.1, 0.2].choose.wait;
+        };
+}.fork;
+)
+
+</pre>
+
+
+
+
+<p>
+Using Symbol:mplay
+</p>
+
+
+
+<pre class="example">
+(
+{
+        loop {
+                \default.mplay([\freq, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));
+                [0.1, 0.2].choose.wait;
+        };
+}.fork;
+)
+#+BEGIN_EXAMPLE
+</pre>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1_3" class="outline-6">
+<h6 id="sec-1_3"><span class="section-number-6">1.3</span> EventStream, Function:sched and Function:stream </h6>
+<div class="outline-text-6" id="text-1_3">
+
+
+<p>
+Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
+</p>
+<p>
+Example: Simplify the above code even further, while enabling  control of dtime (and any other parameters) via patterns:
+</p>
+
+
+
+<pre class="example">(
+{       // Symbol:stream creates and / or accesses the stream as appropriate: 
+        \default.mplay([\freq, \freq.prand((25..50), inf).midicps]).dur(0.1, exprand(0.01, 1.0));
+        \duration.stream(Prand([0.1, 0.2], 20)); // play 20 events only
+}.stream;       
+)
+</pre>
+
+
+
+<p>
+Note: symbol.stream(Prand(&hellip;)) is equivalent to \symbol.prand(&hellip;)
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1_4" class="outline-6">
+<h6 id="sec-1_4"><span class="section-number-6">1.4</span> Object methods for easy messaging via NotificationCenter </h6>
+<div class="outline-text-6" id="text-1_4">
+
+
+<p>
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. 
+</p>
+<p>
+One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1_5" class="outline-6">
+<h6 id="sec-1_5"><span class="section-number-6">1.5</span> Code </h6>
+<div class="outline-text-6" id="text-1_5">
+
+
+<p>
+Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
+</p>
+<p>
+Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
+</p>
+<p>
+Shortcuts provided are: 
+</p>
+<p>
+Command-shift-x: Evaluate the code in an AppClock routine, after booting the default server if needed
+Command-shift-alt-x: Evaluate the code in a SystemClock routine, after booting the default server if needed
+Command-shift-v: Evaluate and post the results of the code, without routine or server booting
+Command-shift-j: Select the next code part
+Command-shift-k: Select the previous code part
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1_6" class="outline-6">
+<h6 id="sec-1_6"><span class="section-number-6">1.6</span> Panes </h6>
+<div class="outline-text-6" id="text-1_6">
+
+
+<p>
+Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1_7" class="outline-6">
+<h6 id="sec-1_7"><span class="section-number-6">1.7</span> Dock </h6>
+<div class="outline-text-6" id="text-1_7">
+
+
+<p>
+Provide some useful shortcuts for common tasks: 
+browseUserClasses :     Open a list of all classes defined in the user's Application Support 
+directory. Typing return on a selected item opens the code file with the definition of this class. 
+</p>
+<p>
+insertClassHelpTemplate : Insert a template for documenting a class named after the name of the
+document. Inserts listings of superclasses, class and instance variables and methods. 
+</p>
+<p>
+openCreateHelpFile : Open a help file for a selected user class. Automatic creation of the file 
+is reserved to code residing outside the distribution files of this library. 
+</p>
+<p>
+showDocListWindow :  An auto-updating window listing all open Documents, with selection by mouse click
+or by text search.
+</p>
+<p>
+closeDocListWindow : Close the document list window
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-1_8" class="outline-6">
+<h6 id="sec-1_8"><span class="section-number-6">1.8</span> Spectrograph </h6>
+<div class="outline-text-6" id="text-1_8">
+
+
+<p>
+An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
+</p></div>
+</div>
+</div>
+<div id="postamble">
+<p class="author"> Author: Ioannis Zannos
+</p>
+<p class="date"> Date: 2011-05-10 14:03:37 EEST</p>
+<p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
+</div>
+</div>
+</body>
+</html>

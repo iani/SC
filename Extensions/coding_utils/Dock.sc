@@ -123,7 +123,7 @@ Dock {
 			0.2.wait;
 			doc.string_(doc.string ++ format("%\n\n\Inherits from: %
 			
-Pupose
+Purpose
 
 Usage
 

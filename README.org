@@ -431,13 +431,12 @@ Elemenbí (L. M.: N. B!)
      :PROPERTIES:
      :ENTERED_ON: <2011-05-10 Tue 11:27>
      :END:
-**** DONE Summary of ideas in this lib					:doc:
-     CLOSED: [2011-05-10 Tue 13:55]
-     :PROPERTIES:
-     :ENTERED_ON: <2011-05-10 Tue 11:41>
-     :END:
+* Summary of ideas in this lib						:doc:
+  :PROPERTIES:
+  :ENTERED_ON: <2011-05-10 Tue 11:41>
+  :END:
 
-***** ServerPrep
+** ServerPrep
 
 - Obviate the need to boot the server when starting synths
 - Ensure that Buffers and SynthDefs are allocated / sent to the server
@@ -456,7 +455,7 @@ Classes involved:
 - UniqueBuffer
 - Udef
 
-***** UniqueSynth
+** UniqueSynth
 
 - Simplify the creation and control of Synths by storing them in a dictionary
   for later access, and by providing utility methods for controlling the duration
@@ -500,7 +499,7 @@ Using Symbol:mplay
 #+BEGIN_EXAMPLE
 #+END_EXAMPLE
 
-***** EventStream, Function:sched and Function:stream
+** EventStream, Function:sched and Function:stream
 
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
 
@@ -517,13 +516,13 @@ Example: Simplify the above code even further, while enabling  control of dtime 
 
 Note: symbol.stream(Prand(...)) is equivalent to \symbol.prand(...)
 
-***** Object methods for easy messaging via NotificationCenter
+** Object methods for easy messaging via NotificationCenter
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. 
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 
-***** Code
+** Code
 
 Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
 
@@ -537,11 +536,11 @@ Command-shift-v: Evaluate and post the results of the code, without routine or s
 Command-shift-j: Select the next code part
 Command-shift-k: Select the previous code part
 
-***** Panes
+** Panes
 
 Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
 
-***** Dock
+** Dock
 
 Provide some useful shortcuts for common tasks: 
 	browseUserClasses : 	Open a list of all classes defined in the user's Application Support 
@@ -559,7 +558,7 @@ Provide some useful shortcuts for common tasks:
 	closeDocListWindow : Close the document list window
 
 
-***** Spectrograph
+** Spectrograph
 
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
 
