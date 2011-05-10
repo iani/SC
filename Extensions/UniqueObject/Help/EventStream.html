@@ -56,12 +56,21 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6">With EventStream.</p>
 <p class="p6">The time between function evaluations is the value returned by the function if the value is other than a number, scheduling stops (See Clock:sched)</p>
 <p class="p10"><b></b><br></p>
-<p class="p9">(</p>
+<p class="p11">// using Symbol:stream</p>
+<p class="p8">(</p>
+<p class="p11"><span class="s2">{ </span>// also infinite 'riff'</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p11"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1">\duration</span><span class="s2">.stream(Prand([0.1, 0.2], </span><span class="s3">inf)</span><span class="s2">); </span>// Create EventStream and store it<span class="Apple-converted-space"> </span></p>
+<p class="p8">}.stream;<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
+<p class="p8">)</p>
+<p class="p10"><b></b><br></p>
+<p class="p11"><span class="s2"><span class="Apple-converted-space"> </span></span>// using shortcut Symbol:prand</p>
+<p class="p8">(</p>
 <p class="p11"><span class="s2">{ </span>// also infinite 'riff'</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
 <p class="p11"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1">\duration</span><span class="s2">.prand([0.1, 0.2], </span><span class="s3">inf</span><span class="s2">); </span>// Create EventStream and store it<span class="Apple-converted-space"> </span></p>
 <p class="p8">}.stream;<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
-<p class="p9">)</p>
+<p class="p8">)</p>
 <p class="p10"><b></b><br></p>
 <p class="p6">One can limit the number of repeats to the end of the stream made by the pattern.<span class="Apple-converted-space"> </span></p>
 <p class="p6">Note: Function:stream creates a new event to store the EventStream instances so a new \duration stream will be created here:<span class="Apple-converted-space"> </span></p>
@@ -69,7 +78,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">(</p>
 <p class="p8">{</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="s1">\duration</span>.prand([0.1, 0.2], 20); <span class="s4">// play only 10 events</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s1">\duration</span>.prand([0.1, 0.2], 20); <span class="s4">// play only 20 events</span></p>
 <p class="p8">}.stream;</p>
 <p class="p9"><span class="s2">)</span><span class="Apple-tab-span">	</span></p>
 <p class="p4"><b></b><br></p>
