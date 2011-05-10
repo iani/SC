@@ -1,1 +1,0 @@
-"".Document.methods.collect(_.name).sort.asCompileString;
