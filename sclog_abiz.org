@@ -1,0 +1,3 @@
+* <2011-05-10 Tue> Start this log
+* <2011-05-10 Tue> Organize SC git folder
+Create <of> folder inside Extensions for openFrameworks projects.\\ 
