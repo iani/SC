@@ -7,12 +7,10 @@
 <meta name="Generator" content="Cocoa HTML Writer">
 <meta name="CocoaVersion" content="1038.35">
 <style type="text/css">
-p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
-p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
 p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
-p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
-p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 span.s1 {color: #008323}
 span.s2 {color: #162bc4}
 span.s3 {color: #000000}
@@ -26,7 +24,20 @@ span.Apple-tab-span {white-space:pre}
 <p class="p2">Function:sched vs. Function:fork for looping:<span class="Apple-converted-space"> </span></p>
 <p class="p1"><br></p>
 <p class="p1"><br></p>
-<p class="p3">//:Play an infinite riff using Function:fork with loop:<span class="Apple-converted-space"> </span></p>
+<p class="p3">//:Without mplay. Play an infinite riff using Function:fork with loop:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">{</p>
+<p class="p2"><span class="Apple-tab-span">	</span>loop {</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="Apple-tab-span">	</span>var synth;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth = <span class="s1">Synth(</span>\default, [<span class="s1">\freq</span>, (25..50).choose.midicps]);</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-converted-space">  <span class="Apple-tab-span">	</span></span>0.1.wait;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-converted-space">  <span class="Apple-tab-span">	</span></span>synth.release(exprand(0.01, 1.0));</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.fork;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[0.1, 0.2].choose.wait;</p>
+<p class="p2"><span class="Apple-tab-span">	</span>};</p>
+<p class="p2">}.fork;</p>
+<p class="p1"><br></p>
+<p class="p3">//:Using mplay. Play an infinite riff using Function:fork with loop</p>
 <p class="p1"><br></p>
 <p class="p2">{</p>
 <p class="p2"><span class="Apple-tab-span">	</span>loop {</p>
@@ -69,21 +80,21 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">//:Scheduling functions in parallel with the same symbols bound to different streams<span class="Apple-converted-space"> </span></p>
 <p class="p3">// Use Function:stream instead of Function:sched</p>
 <p class="p3">// Function:stream evaluates the scheduled function in a private environment.<span class="Apple-converted-space"> </span></p>
-<p class="p5"><br></p>
-<p class="p6">Udef(\simple, { | freq = 440 |</p>
-<p class="p6"><span class="Apple-tab-span">	</span>Out.ar(0, Fade.kr * SinOsc.ar(freq, 0, 0.1.dup))</p>
-<p class="p6">});</p>
 <p class="p1"><br></p>
-<p class="p6">{</p>
-<p class="p6"><span class="Apple-tab-span">	</span>\simple.mplay([\freq, \melody.pser1(60, 62, 65, 67).next.midicps]).dur(0.01, exprand(0.1, 0.2));</p>
-<p class="p6"><span class="Apple-tab-span">	</span>\rhythm.stream(<span class="s2">Pser</span>([0.25, 0.5, 0.5, 1.0] / 3, 20)).next;</p>
-<p class="p6">}.stream;</p>
-<p class="p5"><br></p>
-<p class="p5"><br></p>
-<p class="p6">{</p>
-<p class="p6"><span class="Apple-tab-span">	</span>\simple.mplay([\freq, \melody.pser1(50, 55).next.midicps]).dur(0.1, exprand(0.1, 0.5));</p>
-<p class="p6"><span class="Apple-tab-span">	</span>\rhythm.stream(<span class="s2">Pser</span>([1.25, 1] / 3.0, 10)).next;</p>
-<p class="p6">}.stream;</p>
-<p class="p5"><br></p>
+<p class="p2">Udef(\simple, { | freq = 440 |</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Out.ar(0, Fade.kr * SinOsc.ar(freq, 0, 0.1.dup))</p>
+<p class="p2">});</p>
+<p class="p1"><br></p>
+<p class="p2">{</p>
+<p class="p2"><span class="Apple-tab-span">	</span>\simple.mplay([\freq, \melody.pser1(60, 62, 65, 67).next.midicps]).dur(0.01, exprand(0.1, 0.2));</p>
+<p class="p2"><span class="Apple-tab-span">	</span>\rhythm.stream(<span class="s2">Pser</span>([0.25, 0.5, 0.5, 1.0] / 3, 20)).next;</p>
+<p class="p2">}.stream;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">{</p>
+<p class="p2"><span class="Apple-tab-span">	</span>\simple.mplay([\freq, \melody.pser1(50, 55).next.midicps]).dur(0.1, exprand(0.1, 0.5));</p>
+<p class="p2"><span class="Apple-tab-span">	</span>\rhythm.stream(<span class="s2">Pser</span>([1.25, 1] / 3.0, 10)).next;</p>
+<p class="p2">}.stream;</p>
+<p class="p1"><br></p>
 </body>
 </html>

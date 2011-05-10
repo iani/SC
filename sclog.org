@@ -109,7 +109,8 @@ Lower values: peaks smear more, lower magnitudes are displayed
      :ENTERED_ON: <2011-04-19 Tue 20:28>
      :END:
 *** 2011-04-20 Wednesday
-**** TODO simplify additional process mechanism using dependants vars  :spectrogram:
+**** DONE simplify additional process mechanism using dependants vars :spectrogram:
+     CLOSED: [2011-05-10 Tue 11:50]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 02:28>
      :END:
@@ -308,7 +309,8 @@ Symbol:ubuf(func) -> get the UniqueBuffer registered at the default buffer under
      :ENTERED_ON: <2011-04-29 Fri 09:42>
      :END:
 *** 2011-04-30 Saturday
-**** TODO decouple coloring scheme from Panes and add it to non-gittable private startup file  :panes:
+**** CANCELLED decouple coloring scheme from Panes and add it to non-gittable private startup file :panes:
+     CLOSED: [2011-05-10 Tue 11:49]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-30 Sat 13:02>
      :END:
@@ -423,4 +425,61 @@ Elemenbí (L. M.: N. B!)
 **** Added Pattern support: EventStream, UniqueStream, Function:sched. Also SynthPrep uses OSCpathResponder for exact boot timing
      :PROPERTIES:
      :ENTERED_ON: <2011-05-09 Mon 23:16>
+     :END:
+*** 2011-05-10 Tuesday
+**** improved help template, added some doc, especially on EventStream and UniqueSynth
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-10 Tue 11:27>
+     :END:
+**** TODO Summary of ideas in this lib					:doc:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-10 Tue 11:41>
+     :END:
+
+***** ServerPrep
+
+- Obviate the need to boot the server when starting synths
+- Ensure that Buffers and SynthDefs are allocated / sent to the server
+  before starting synths, efficiently. 
+
+***** UniqueSynth
+
+Example of how UniqueSynth can simplify the code required: 
+
+Without Symbol:mplay 
+(
+{
+	loop {
+		{ 	var synth;
+			synth = Synth(\default, [\freq, (25..50).choose.midicps]);
+		  	0.1.wait;
+		  	synth.release(exprand(0.01, 1.0));
+		}.fork;
+		[0.1, 0.2].choose.wait;
+	};
+}.fork;
+)
+
+
+Using Symbol:mplay
+
+(
+{
+	loop {
+		\default.mplay([\freq, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));
+		[0.1, 0.2].choose.wait;
+	};
+}.fork;
+)
+
+***** EventStream
+
+***** Code
+
+***** Panes
+
+***** Dock
+**** TODO Devise scheme for chaining scheduled function execution  :eventstream:functionsched:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-10 Tue 11:47>
      :END:
