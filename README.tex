@@ -1,43 +1,82 @@
-Lilt2/Elemenb\'i (/Look Ma, No Boot/)
+% Created 2011-05-11 Wed 01:33
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{soul}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\providecommand{\alert}[1]{\textbf{#1}}
+\begin{document}
+
+
+
+\title{Lilt2/Elemenb\'i (\emph{Look Ma, No Boot})}
+\author{Ioannis Zannos}
+\date{11 May 2011}
+\maketitle
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+\vspace*{1cm}
 
 By Ioannis Zannos, March-May 2011
 
-Download from: https://github.com/iani/SC
+Download from: \href{https://github.com/iani/SC}{https://github.com/iani/SC}
 or:
- : git clone git://github.com/iani/SC.git
+\begin{verbatim}
+  git clone git://github.com/iani/SC.git
+\end{verbatim}
 
-*Summary of ideas in this Library*
+
+\textbf{Summary of ideas in this Library}
 
 
-* Class ServerPrep
+\section{Class ServerPrep}
+\label{sec-1}
 
-- Obviate the need to boot the server manually before starting synths.
-- Ensure that Buffers and SynthDefs are allocated / sent to the server
-  before starting synths, efficiently. 
-- Provide a safe way for registering synth and routine processes to start automatically when the server boots
+
+\begin{itemize}
+\item Obviate the need to boot the server manually before starting synths.
+\item Ensure that Buffers and SynthDefs are allocated / sent to the server
+  before starting synths, efficiently.
+\item Provide a safe way for registering synth and routine processes to start automatically when the server boots
   or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first.
+\end{itemize}
 
 Classes involved: 
 
-- ServerPrep
-- ServerActionLoader
-- SynthLoader
-- DefLoader
-- BufLoader
-- RoutineLoader
-- UniqueBuffer
-- Udef
+\begin{itemize}
+\item ServerPrep
+\item ServerActionLoader
+\item SynthLoader
+\item DefLoader
+\item BufLoader
+\item RoutineLoader
+\item UniqueBuffer
+\item Udef
+\end{itemize}
+\section{Class UniqueSynth}
+\label{sec-2}
 
-* Class UniqueSynth
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
 controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
 
 Example of how UniqueSynth can simplify the code required: 
 
-/Without Symbol:mplay/
+\emph{Without Symbol:mplay}
 
-#+BEGIN_SRC emacs-lisp
+\begin{verbatim}
 (
 {
    loop {
@@ -50,11 +89,11 @@ Example of how UniqueSynth can simplify the code required:
    };
 }.fork;
 )
-#+END_SRC emacs-lisp
+\end{verbatim}
 
-/Using Symbol:mplay/
+\emph{Using Symbol:mplay}
 
-#+BEGIN_SRC emacs-lisp
+\begin{verbatim}
 
 (
 {
@@ -65,15 +104,16 @@ Example of how UniqueSynth can simplify the code required:
    };
 }.fork;
 )
-#+END_SRC emacs-lisp
+\end{verbatim}
+\section{Class EventStream, Function:sched and Function:stream}
+\label{sec-3}
 
-* Class EventStream, Function:sched and Function:stream
 
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
 
 Example: Simplify the above code even further, while enabling  control of dtime (and any other parameters) via patterns:
 
-#+BEGIN_SRC emacs-lisp
+\begin{verbatim}
 (
 {   // Symbol:stream creates and / or accesses the stream as appropriate: 
    \default.mplay([\freq, \freq.prand((25..50), inf).midicps])
@@ -82,35 +122,41 @@ Example: Simplify the above code even further, while enabling  control of dtime 
    \duration.stream(Prand([0.1, 0.2], 20)); 
 }.stream;    
 )
-#+END_SRC emacs-lisp
+\end{verbatim}
 
-Note: symbol.stream(Prand(...)) is equivalent to symbol.prand(...)
+Note: symbol.stream(Prand(\ldots{})) is equivalent to symbol.prand(\ldots{})
+\section{Object methods for easy messaging via NotificationCenter}
+\label{sec-4}
 
-* Object methods for easy messaging via NotificationCenter
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+\section{Class Code}
+\label{sec-5}
 
-* Class Code
 
-Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
+Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in \{ \}.fork or Routine(\{ \}). 
 
 Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
 
 Shortcuts provided are: 
 
-- Command-shift-x: Evaluate the code in an AppClock routine, after booting the default server if needed
-- Command-shift-alt-x: Evaluate the code in a SystemClock routine, after booting the default server if needed
-- Command-shift-v: Evaluate and post the results of the code, without routine or server booting
-- Command-shift-j: Select the next code part
-- Command-shift-k: Select the previous code part
+\begin{itemize}
+\item Command-shift-x: Evaluate the code in an AppClock routine, after booting the default server if needed
+\item Command-shift-alt-x: Evaluate the code in a SystemClock routine, after booting the default server if needed
+\item Command-shift-v: Evaluate and post the results of the code, without routine or server booting
+\item Command-shift-j: Select the next code part
+\item Command-shift-k: Select the previous code part
+\end{itemize}
+\section{Class Panes}
+\label{sec-6}
 
-* Class Panes
 
 Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
+\section{Class Dock}
+\label{sec-7}
 
-* Class Dock
 
 Provide some useful shortcuts for common tasks: 
    browseUserClasses :    Open a list of all classes defined in the user's Application Support 
@@ -126,12 +172,12 @@ Provide some useful shortcuts for common tasks:
                or by text search.
 
    closeDocListWindow : Close the document list window
+\section{Class Spectrograph}
+\label{sec-8}
 
-
-* Class Spectrograph
 
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
 
 This class was inspired by the Spectrogram Quark by Thor Magnusson and Dan Stowell, and is a rewrite to show how the code can be made clearer (and the behavior safer and more consistent regarding boot/quit of the server and open/close of the spectrogram window). 
 
-
+\end{document}

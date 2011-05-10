@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 lang="en" xml:lang="en">
 <head>
-<title>README</title>
+<title>Lilt2/Elemenbí (/Look Ma, No Boot/)</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-05-10 14:08:50 EEST"/>
+<meta name="generated" content="2011-05-11 01:02:11 EEST"/>
 <meta name="author" content="Ioannis Zannos"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -81,53 +81,57 @@ lang="en" xml:lang="en">
 <body>
 <div id="content">
 
-<h1 class="title">README</h1>
+<h1 class="title">Lilt2/Elemenbí (<i>Look Ma, No Boot</i>)</h1>
 
+<p>By Ioannis Zannos, March-May 2011
+</p>
+<p>
+Download from: <a href="https://github.com/iani/SC">https://github.com/iani/SC</a>
+or:
+</p>
+
+
+<pre class="example">git clone git://github.com/iani/SC.git
+</pre>
+
+
+
+<p>
+<b>Summary of ideas in this Library</b>
+</p>
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 Summary of ideas in this lib</a>
-<ul>
-<li><a href="#sec-1_1">1.1 ServerPrep </a></li>
-<li><a href="#sec-1_2">1.2 UniqueSynth </a></li>
-<li><a href="#sec-1_3">1.3 EventStream, Function:sched and Function:stream </a></li>
-<li><a href="#sec-1_4">1.4 Object methods for easy messaging via NotificationCenter </a></li>
-<li><a href="#sec-1_5">1.5 Code </a></li>
-<li><a href="#sec-1_6">1.6 Panes </a></li>
-<li><a href="#sec-1_7">1.7 Dock </a></li>
-<li><a href="#sec-1_8">1.8 Spectrograph </a></li>
-</ul>
-</li>
+<li><a href="#sec-1">1 Class ServerPrep </a></li>
+<li><a href="#sec-2">2 Class UniqueSynth </a></li>
+<li><a href="#sec-3">3 Class EventStream, Function:sched and Function:stream </a></li>
+<li><a href="#sec-4">4 Object methods for easy messaging via NotificationCenter </a></li>
+<li><a href="#sec-5">5 Class Code </a></li>
+<li><a href="#sec-6">6 Class Panes </a></li>
+<li><a href="#sec-7">7 Class Dock </a></li>
+<li><a href="#sec-8">8 Class Spectrograph </a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Summary of ideas in this lib &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doc">doc</span></span></h2>
-<div class="outline-text-2" id="text-1">
-
-
-
-</div>
-
-<div id="outline-container-1_1" class="outline-3">
-<h3 id="sec-1_1"><span class="section-number-3">1.1</span> ServerPrep </h3>
-<div class="outline-text-3" id="text-1_1">
+<div id="outline-container-1" class="outline-3">
+<h3 id="sec-1"><span class="section-number-3">1</span> Class ServerPrep </h3>
+<div class="outline-text-3" id="text-1">
 
 
 <ul>
 <li>
-Obviate the need to boot the server when starting synths
+Obviate the need to boot the server manually before starting synths.
 </li>
 <li>
 Ensure that Buffers and SynthDefs are allocated / sent to the server
 before starting synths, efficiently. 
 </li>
 <li>
-Provide a safe way for starting synth and routine processes when the server boots
-or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first
+Provide a safe way for registering synth and routine processes to start automatically when the server boots
+or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first.
 </li>
 </ul>
 
@@ -167,27 +171,20 @@ Udef
 
 </div>
 
-<div id="outline-container-1_2" class="outline-3">
-<h3 id="sec-1_2"><span class="section-number-3">1.2</span> UniqueSynth </h3>
-<div class="outline-text-3" id="text-1_2">
+<div id="outline-container-2" class="outline-3">
+<h3 id="sec-2"><span class="section-number-3">2</span> Class UniqueSynth </h3>
+<div class="outline-text-3" id="text-2">
 
 
-<ul>
-<li>
-Simplify the creation and control of Synths by storing them in a dictionary
-for later access, and by providing utility methods for controlling the duration
-and release time, for synchronizing the execution and life time of routines 
-pertaining to a synth, and for attaching other objects that react to the 
-start and end of a synth. 
-</li>
-</ul>
-
-
+<p>
+Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
+controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
+</p>
 <p>
 Example of how UniqueSynth can simplify the code required: 
 </p>
 <p>
-Without Symbol:mplay 
+<i>Without Symbol:mplay</i>
 </p>
 
 
@@ -204,14 +201,12 @@ Without Symbol:mplay
         };
 }.fork;
 )
-
 </pre>
 
 
 
-
 <p>
-Using Symbol:mplay
+<i>Using Symbol:mplay</i>
 </p>
 
 
@@ -225,7 +220,6 @@ Using Symbol:mplay
         };
 }.fork;
 )
-#+BEGIN_EXAMPLE
 </pre>
 
 
@@ -234,9 +228,9 @@ Using Symbol:mplay
 
 </div>
 
-<div id="outline-container-1_3" class="outline-3">
-<h3 id="sec-1_3"><span class="section-number-3">1.3</span> EventStream, Function:sched and Function:stream </h3>
-<div class="outline-text-3" id="text-1_3">
+<div id="outline-container-3" class="outline-3">
+<h3 id="sec-3"><span class="section-number-3">3</span> Class EventStream, Function:sched and Function:stream </h3>
+<div class="outline-text-3" id="text-3">
 
 
 <p>
@@ -259,19 +253,19 @@ Example: Simplify the above code even further, while enabling  control of dtime 
 
 
 <p>
-Note: symbol.stream(Prand(&hellip;)) is equivalent to \symbol.prand(&hellip;)
+Note: symbol.stream(Prand(&hellip;)) is equivalent to symbol.prand(&hellip;)
 </p>
 </div>
 
 </div>
 
-<div id="outline-container-1_4" class="outline-3">
-<h3 id="sec-1_4"><span class="section-number-3">1.4</span> Object methods for easy messaging via NotificationCenter </h3>
-<div class="outline-text-3" id="text-1_4">
+<div id="outline-container-4" class="outline-3">
+<h3 id="sec-4"><span class="section-number-3">4</span> Object methods for easy messaging via NotificationCenter </h3>
+<div class="outline-text-3" id="text-4">
 
 
 <p>
-Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. 
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 </p>
 <p>
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
@@ -280,9 +274,9 @@ One beneficial effect of this is that it is no longer needed to check whether an
 
 </div>
 
-<div id="outline-container-1_5" class="outline-3">
-<h3 id="sec-1_5"><span class="section-number-3">1.5</span> Code </h3>
-<div class="outline-text-3" id="text-1_5">
+<div id="outline-container-5" class="outline-3">
+<h3 id="sec-5"><span class="section-number-3">5</span> Class Code </h3>
+<div class="outline-text-3" id="text-5">
 
 
 <p>
@@ -294,20 +288,32 @@ Also ensure that the code will run after the default server is booted and the Bu
 <p>
 Shortcuts provided are: 
 </p>
-<p>
+<ul>
+<li>
 Command-shift-x: Evaluate the code in an AppClock routine, after booting the default server if needed
+</li>
+<li>
 Command-shift-alt-x: Evaluate the code in a SystemClock routine, after booting the default server if needed
+</li>
+<li>
 Command-shift-v: Evaluate and post the results of the code, without routine or server booting
+</li>
+<li>
 Command-shift-j: Select the next code part
+</li>
+<li>
 Command-shift-k: Select the previous code part
-</p>
-</div>
+</li>
+</ul>
+
 
 </div>
 
-<div id="outline-container-1_6" class="outline-3">
-<h3 id="sec-1_6"><span class="section-number-3">1.6</span> Panes </h3>
-<div class="outline-text-3" id="text-1_6">
+</div>
+
+<div id="outline-container-6" class="outline-3">
+<h3 id="sec-6"><span class="section-number-3">6</span> Class Panes </h3>
+<div class="outline-text-3" id="text-6">
 
 
 <p>
@@ -317,9 +323,9 @@ Arrange Document windows on the screen conveniently for maximum view area on the
 
 </div>
 
-<div id="outline-container-1_7" class="outline-3">
-<h3 id="sec-1_7"><span class="section-number-3">1.7</span> Dock </h3>
-<div class="outline-text-3" id="text-1_7">
+<div id="outline-container-7" class="outline-3">
+<h3 id="sec-7"><span class="section-number-3">7</span> Class Dock </h3>
+<div class="outline-text-3" id="text-7">
 
 
 <p>
@@ -347,20 +353,24 @@ closeDocListWindow : Close the document list window
 
 </div>
 
-<div id="outline-container-1_8" class="outline-3">
-<h3 id="sec-1_8"><span class="section-number-3">1.8</span> Spectrograph </h3>
-<div class="outline-text-3" id="text-1_8">
+<div id="outline-container-8" class="outline-3">
+<h3 id="sec-8"><span class="section-number-3">8</span> Class Spectrograph </h3>
+<div class="outline-text-3" id="text-8">
 
 
 <p>
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
-</p></div>
+</p>
+<p>
+This class was inspired by the Spectrogram Quark by Thor Magnusson and Dan Stowell, and is a rewrite to show how the code can be made clearer (and the behavior safer and more consistent regarding boot/quit of the server and open/close of the spectrogram window). 
+</p>
+
 </div>
 </div>
 <div id="postamble">
 <p class="author"> Author: Ioannis Zannos
 </p>
-<p class="date"> Date: 2011-05-10 14:08:50 EEST</p>
+<p class="date"> Date: 2011-05-11 01:02:11 EEST</p>
 <p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
 </div>
 </div>
