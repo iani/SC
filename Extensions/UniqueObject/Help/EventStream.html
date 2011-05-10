@@ -72,7 +72,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6">(</p>
 <p class="p8"><span class="s2">{ </span>// also infinite 'riff'</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
-<p class="p8"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1">\duration</span><span class="s2">.stream(Prand([0.1, 0.2], </span><span class="s3">inf)</span><span class="s2">); </span>// Create EventStream and store it<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1">\duration</span><span class="s2">.stream(Prand([0.1, 0.2], </span><span class="s3">inf)</span><span class="s2">); </span>// Create EventStream, store it, access it<span class="Apple-converted-space"> </span></p>
 <p class="p6">}.stream;<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
 <p class="p6">)</p>
 <p class="p4"><br></p>
@@ -133,6 +133,8 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><b><span class="Apple-tab-span">	</span>stream</b></p>
 <p class="p4"><br></p>
 <p class="p3"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p3">The first examples here show how to translate an example step by step from using routine with loop to using mplay and function.stream with symbol.stream.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p8">//:Play an infinite riff using Function:fork with loop:<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>

@@ -15,22 +15,20 @@ p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
 p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; min-height: 17.0px}
 p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
 p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
-p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
 p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000; min-height: 14.0px}
-p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
-p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
-p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
-p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
-p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
 p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
 p.p18 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
 span.s1 {color: #162bc4}
 span.s2 {color: #008323}
-span.s3 {color: #000000}
-span.s4 {font: 12.0px Helvetica}
-span.s5 {font: 12.0px Helvetica; color: #000000}
-span.s6 {color: #737373}
+span.s3 {color: #737373}
+span.s4 {color: #000000}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
@@ -46,7 +44,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">Besides making the synth available to a symbol, UniqueSynth adds some other methods that help reduce the amount of code required to perform common tasks like freeing the synth after a time interval with a given release time, attaching routines to synths that stop when the synths stop and notifying other objects about starting and stopping through NotificationCenter.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p5"><b>Usage</b></p>
-<p class="p6"><b></b><br></p>
+<p class="p6"><br></p>
 <p class="p3">UniqueSynths are normally created by sending a symbol the mesage play, mplay, playDef, playFunc, or Function the message play. They are then accessed through the symbol by sending additional messages that control the behavior of the synth created.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3">Example of how UniqueSynth can simplify the code required to control a synth:</p>
@@ -75,10 +73,10 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>};</p>
 <p class="p8">}.fork;</p>
 <p class="p8">)</p>
-<p class="p6"><b></b><br></p>
-<p class="p6"><b></b><br></p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
 <p class="p5"><b>Instance creation</b></p>
-<p class="p6"><b></b><br></p>
+<p class="p6"><br></p>
 <p class="p3"><b>Class method new</b></p>
 <p class="p4"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>*new(key, defName, args, target, addAction *moreArgs)</b><span class="Apple-converted-space"> </span></p>
@@ -100,37 +98,62 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts only if no other UniqueSynth is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Server defaults to target.asTarget.server, which is Server.default. <span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p9"><span class="s2">\default</span>.play([\freq, 2000]);</p>
-<p class="p10"><br></p>
+<p class="p8"><span class="s2">\default</span>.play([\freq, 2000]);</p>
+<p class="p7"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>mplay(args, target, addAction)</b> : Create UniqueSynth using symbol as name of the SynthDef.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts even if another UniqueSynth is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
-<p class="p10"><br></p>
-<p class="p9">3 do: { <span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, 100 + 400.rand]) };</p>
-<p class="p10"><br></p>
+<p class="p7"><br></p>
+<p class="p8">3 do: { <span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, 100 + 400.rand]) };</p>
+<p class="p7"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>playDef(defname, args, target, addAction)</b> : Create UniqueSynth using defname as name of the SynthDef.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Store the UniqueSynth under symbol for later access.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts even if another UniqueSynth is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
-<p class="p10"><br></p>
-<p class="p11"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>playFunc(func, target, addAction)</b> : Create UniqueSynth bu playing func as a Ugen function.</p>
+<p class="p9">//:Start three synths on \default and release them later</p>
+<p class="p9">// Execute this example with Command-shift-x</p>
+<p class="p8"><span class="s2">\default</span>.play.onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s2">\test</span>.playFunc({ <span class="s1">WhiteNoise</span>.ar(0.1) });</p>
+<p class="p10">1.wait<span class="s4">;</span></p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s2">\default2</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 550]).onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
+<p class="p7"><br></p>
+<p class="p8">1.wait;</p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s2">\default3</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 660]).onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
+<p class="p7"><br></p>
+<p class="p8">[<span class="s2">\default</span>, <span class="s2">\default2</span>, <span class="s2">\default3</span>] do: { <span class="s1">| s |</span> 0.5.wait; s.releaseSynth; };</p>
+<p class="p8">//:---</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>playFunc(func, target, addAction)</b> : Create UniqueSynth by playing func as a Ugen function.</p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s2">\test</span>.playFunc({ Resonz.ar(<span class="s1">WhiteNoise</span>.ar(0.1), LFNoise2.kr(1).range(100, 4000)) });</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Instance creation with message play to function<span class="Apple-converted-space"> </span></b></p>
 <p class="p11"><br></p>
-<p class="p3"><b>Instance creation with message play to function<span class="Apple-converted-space"> </span></b></p>
-<p class="p11"><br></p>
-<p class="p12"><span class="s3">T</span>he standard Function:play has been modified to create a UniqueSynth instance.<span class="Apple-converted-space"> </span></p>
-<p class="p10"><br></p>
-<p class="p9">{ <span class="s1">WhiteNoise</span>.ar(0.1) }.play;</p>
+<p class="p12">The standard Function:play has been modified to create a UniqueSynth instance.<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p8">{ <span class="s1">SinOsc</span>.ar(1000, 0, 0.1) }.play;</p>
+<p class="p4"><br></p>
+<p class="p3">This provides Function:play with the additional features of UniqueSynth such as:<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p8">// Duration and fadeout</p>
+<p class="p8">{ <span class="s1">SinOsc</span>.ar(1000, 0, 0.1) }.play.dur(1, 5);</p>
+<p class="p4"><br></p>
+<p class="p13">//: rsync, rsyncs, rsynca<span class="Apple-converted-space"> </span></p>
+<p class="p14">{ <span class="s1">| freq = 400 |</span> <span class="s1">Resonz</span>.ar(<span class="s1">BrownNoise</span>.ar(0.2), freq * [1, 2]) }.play.dur(5, 5)</p>
+<p class="p14"><span class="Apple-tab-span">	</span>.rsyncs({ <span class="s1">| s |</span></p>
+<p class="p14"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>loop { s.set(<span class="s2">\freq</span>, 100.rrand(5000)); exprand(0.01, 0.1).wait; }</p>
+<p class="p14">});</p>
+<p class="p13">//:---</p>
 <p class="p4"><br></p>
 <p class="p5"><b>Class methods<span class="Apple-converted-space"> </span></b></p>
 <p class="p4"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>*onServer(server)</b>: Return all UniqueSynth instances currently registered on a server.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><span class="Apple-tab-span">	</span></p>
-<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span></span>{ <span class="s1">SinOsc</span>.ar(400 * [1, 1.1], 0, 0.1) }.play;</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s1">SinOsc</span>.ar(LFSaw.kr(0.5).range(500, 600) * [1, 1.1], 0, 0.1) }.play;</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s1">SinOsc</span>.ar(LFSaw.kr(0.25).range(200, 300) * [1, 1.1], 0, 0.1) }.play;</p>
-<p class="p13"><span class="s5"><span class="Apple-tab-span">	</span></span>postf("Synths on server are: %\n", UniqueSynth<span class="s3">.onServer);</span></p>
+<p class="p8">{ <span class="s1">SinOsc</span>.ar(400 * [1, 1.1], 0, 0.1) }.play;</p>
+<p class="p8">{ <span class="s1">SinOsc</span>.ar(LFSaw.kr(0.5).range(500, 600) * [1, 1.1], 0, 0.1) }.play;</p>
+<p class="p8">{ <span class="s1">SinOsc</span>.ar(LFSaw.kr(0.25).range(200, 300) * [1, 1.1], 0, 0.1) }.play;</p>
+<p class="p15">postf("Synths on server are: %\n", UniqueSynth<span class="s4">.onServer);</span></p>
 <p class="p4"><br></p>
 <p class="p4"><br></p>
 <p class="p5"><b><span class="Apple-tab-span">	</span>Instance methods:<span class="Apple-converted-space"> </span></b></p>
@@ -141,100 +164,113 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span><b>set(controlname, value)</b> : Works like Synth:set</p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>releaseSynth(duration)</b> : Works like Synth:release</p>
 <p class="p7"><br></p>
-<p class="p5"><b>Examples</b></p>
-<p class="p6"><b></b><br></p>
-<p class="p14">/*</p>
-<p class="p14">NOTE: To run an example, go anywhere after the //: mark that starts it, and press Command-Shift-x</p>
-<p class="p15"><br></p>
-<p class="p14">To select the next example, press Command-shift-j</p>
-<p class="p14">To select the previous example, press Command-shift-k</p>
-<p class="p15"><br></p>
-<p class="p14">All examples can be started when the server is not running by pressing Cmd-shift-x.</p>
-<p class="p14">*/</p>
-<p class="p7"><br></p>
-<p class="p12">//:UniqueSynth set and releaseSynth</p>
+<p class="p13">//:UniqueSynth set and releaseSynth (run with Command-Shift-x)</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\def</span>.playFunc({ <span class="s1">| freq = 400 |</span> <span class="s1">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.1) });</p>
-<p class="p12"><span class="s3">1.wait;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// can call wait right from the selected code if executed with Cmd-shift-x</p>
+<p class="p13"><span class="s4">1.wait;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// can call wait right from the selected code if executed with Cmd-shift-x</p>
 <p class="p8"><span class="s2">\def</span>.set(<span class="s2">\freq</span>, 800);</p>
 <p class="p8">1.wait;</p>
 <p class="p8"><span class="s2">\def</span>.releaseSynth(2);</p>
 <p class="p7"><br></p>
+<p class="p8">//:---</p>
 <p class="p7"><br></p>
-<p class="p14">//:1 Try the next 3 examples in a row:</p>
-<p class="p8"><span class="s2">\default</span>.play.onStart({ <span class="s1">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>dur(dtime, fadeOut, message)</b> : Stop the synth after dtime seconds, with fadeOut time.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dtime: the time after which to send the free or release message to the synth</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>fadeOut: the fadeOut time sent with the release message</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>message: the message sent<span class="Apple-converted-space">  </span>to the synth:<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\release : uses the fade out time</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\free : frees the synth immediately</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>default is \release.</p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p8">{ <span class="s1">GrayNoise</span>.ar(<span class="s1">LFNoise2</span>.kr([2, 3]).range(0.01, 0.1), 0, 0.2) }.play.dur(5, 4);</p>
 <p class="p7"><br></p>
-<p class="p14">//:2</p>
-<p class="p8"><span class="s2">\default2</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 550]).onStart({ <span class="s1">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s2">\default3</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 660]).onStart({ <span class="s1">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p14">//:3</p>
+<p class="p5"><b>Examples</b></p>
+<p class="p6"><br></p>
+<p class="p9">/*</p>
+<p class="p9">NOTE: To run an example, go anywhere after the //: mark that starts it, and press Command-Shift-x</p>
+<p class="p16"><br></p>
+<p class="p9">To select the next example, press Command-shift-j</p>
+<p class="p9">To select the previous example, press Command-shift-k</p>
+<p class="p16"><br></p>
+<p class="p9">All examples can be started when the server is not running by pressing Cmd-shift-x.</p>
+<p class="p9">*/</p>
+<p class="p7"><br></p>
+<p class="p9">//:1 Try the next 3 examples in a row:</p>
+<p class="p8"><span class="s2">\default</span>.play.onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
+<p class="p7"><br></p>
+<p class="p9">//:2</p>
+<p class="p8"><span class="s2">\default2</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 550]).onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
+<p class="p7"><br></p>
+<p class="p8"><span class="s2">\default3</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 660]).onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
+<p class="p7"><br></p>
+<p class="p9">//:3</p>
 <p class="p8">[<span class="s2">\default</span>, <span class="s2">\default2</span>, <span class="s2">\default3</span>] do: <span class="s1">_</span>.releaseSynth(1.5);</p>
 <p class="p7"><br></p>
-<p class="p14">//:All together</p>
-<p class="p8"><span class="s2">\default</span>.play.onStart({ <span class="s1">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
+<p class="p9">//:All together</p>
+<p class="p8"><span class="s2">\default</span>.play.onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
-<p class="p16">1.wait<span class="s3">;</span></p>
+<p class="p10">1.wait<span class="s4">;</span></p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s2">\default2</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 550]).onStart({ <span class="s1">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
+<p class="p8"><span class="s2">\default2</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 550]).onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
 <p class="p8">1.wait;</p>
 <p class="p7"><br></p>
-<p class="p8"><span class="s2">\default3</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 660]).onStart({ <span class="s1">| s |</span> postf(<span class="s6">"% started\n"</span>, s.synth); });</p>
+<p class="p8"><span class="s2">\default3</span>.playDef(<span class="s2">\default</span>, [<span class="s2">\freq</span>, 660]).onStart({ <span class="s1">| s |</span> postf(<span class="s3">"% started\n"</span>, s.synth); });</p>
 <p class="p7"><br></p>
 <p class="p8">[<span class="s2">\default</span>, <span class="s2">\default2</span>, <span class="s2">\default3</span>] do: { <span class="s1">| s |</span> 0.5.wait; s.releaseSynth; };</p>
 <p class="p7"><br></p>
-<p class="p12">//:Adding the name as an argument</p>
+<p class="p13">//:Adding the name as an argument</p>
 <p class="p8">{ <span class="s1">Out</span>.ar(0, <span class="s1">Fade</span>.kr.dup * <span class="s1">WhiteNoise</span>.ar(<span class="s1">Decay</span>.kr(<span class="s1">Impulse</span>.kr(10, 0, 0.1)))) }.play(name: <span class="s2">\test</span>);</p>
 <p class="p8">1.wait;</p>
 <p class="p8"><span class="s2">\test</span>.releaseSynth(3);</p>
-<p class="p15"><br></p>
-<p class="p14">//:Generate concurrent synths with mplay. Plays until stopped with Cmd-.</p>
-<p class="p12"><span class="s3">{<span class="Apple-tab-span">	</span></span>/* a "riff" */</p>
+<p class="p16"><br></p>
+<p class="p9">//:Generate concurrent synths with mplay. Plays until stopped with Cmd-.</p>
+<p class="p13"><span class="s4">{<span class="Apple-tab-span">	</span></span>/* a "riff" */</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
 <p class="p8"><span class="Apple-tab-span">	</span>[0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.4].choose;</p>
 <p class="p8">}.sched;</p>
 <p class="p7"><br></p>
-<p class="p14">// ========= Synchronizing a routine with the duration of a synth ========</p>
-<p class="p14">//:End of synth stops the routine</p>
+<p class="p9">// ========= Synchronizing a routine with the duration of a synth ========</p>
+<p class="p9">//:End of synth stops the routine</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\default</span>.play.rsyncs({ | s |</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s1">inf</span> do: { <span class="s2">s</span>.set(<span class="s2">\freq</span>, 80 rrand: 1800); 0.01.wait; };</p>
 <p class="p8">}).dur(1, 5);</p>
 <p class="p7"><br></p>
-<p class="p14">//:Routine ends before the synth is freed</p>
+<p class="p9">//:Routine ends before the synth is freed</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\default</span>.play.dur(1.5, 2).rsyncs({</p>
 <p class="p8"><span class="Apple-tab-span">	</span>100 do: { <span class="s2">\default</span>.set(<span class="s2">\freq</span>, 80 rrand: 1800); 0.01.wait; };</p>
 <p class="p8">});</p>
 <p class="p7"><br></p>
-<p class="p12">//:The routine releases the synth when it ends</p>
+<p class="p13">//:The routine releases the synth when it ends</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\default</span>.play.rsyncs({ <span class="s1">| s |</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>20 do: { s.set(<span class="s2">\freq</span>, 80 rrand: 1800); 0.05.wait; };</p>
 <p class="p8"><span class="Apple-tab-span">	</span>(1..40) do: { <span class="s1">| i |</span> 0.1.wait; s.set(<span class="s2">\freq</span>, i * 100) };<span class="Apple-converted-space"> </span></p>
-<p class="p12"><span class="s3"><span class="Apple-tab-span">	</span>s.release(3); </span>// operating on the actual Synth, not the UniqueSynth</p>
+<p class="p13"><span class="s4"><span class="Apple-tab-span">	</span>s.release(3); </span>// operating on the actual Synth, not the UniqueSynth</p>
 <p class="p8">});</p>
 <p class="p7"><br></p>
-<p class="p14">//:WRONG! The routine continues after the synth is freed</p>
-<p class="p16">\default<span class="s3">.play;</span></p>
+<p class="p9">//:WRONG! The routine continues after the synth is freed</p>
+<p class="p10">\default<span class="s4">.play;</span></p>
 <p class="p7"><br></p>
 <p class="p8">{ <span class="s1">inf</span> do: { <span class="s2">\default</span>.set(<span class="s2">\freq</span>, 400 rrand: 4000); 0.025.wait; }; }.fork;</p>
 <p class="p7"><br></p>
-<p class="p16">2.wait;</p>
+<p class="p10">2.wait;</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\default</span>.releaseSynth(3);</p>
 <p class="p7"><br></p>
-<p class="p14">//:Right! The routine ends as soon as the synth is freed</p>
+<p class="p9">//:Right! The routine ends as soon as the synth is freed</p>
 <p class="p8"><span class="s2">\default</span>.play.rsynca({ <span class="s1">inf</span> do: { <span class="s2">\default</span>.set(<span class="s2">\freq</span>, 400 rrand: 4000); 0.025.wait; }; });</p>
 <p class="p7"><br></p>
-<p class="p16">2.wait;</p>
+<p class="p10">2.wait;</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\default</span>.releaseSynth(3);</p>
 <p class="p7"><br></p>
-<p class="p14">//:More examples:<span class="Apple-converted-space"> </span></p>
-<p class="p16">\default<span class="s3">.play;</span></p>
+<p class="p9">//:More examples:<span class="Apple-converted-space"> </span></p>
+<p class="p10">\default<span class="s4">.play;</span></p>
 <p class="p8">0.1.wait;</p>
 <p class="p8"><span class="s2">\default</span>.set(<span class="s2">\freq</span>, 440 * 3/2);</p>
 <p class="p8">0.4.wait;</p>
@@ -243,35 +279,45 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">0.5.wait;</p>
 <p class="p8"><span class="s2">\default</span>.releaseSynth(1);<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
-<p class="p12">//:play a function multiple times, (server-boot-safe), for specified durations:<span class="Apple-converted-space"> </span></p>
+<p class="p13">//:play a function multiple times, (server-boot-safe), for specified durations:<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
-<p class="p12"><span class="s1">thisThread</span><span class="s3">.randSeed_(4);<span class="Apple-tab-span">	</span></span>// always play the same sequence</p>
+<p class="p13"><span class="s1">thisThread</span><span class="s4">.randSeed_(4);<span class="Apple-tab-span">	</span></span>// always play the same sequence</p>
 <p class="p8">52 do: {<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s1">SinOsc</span>.ar(exprand(400, 1800) * [1, 1.25], 0, 0.1) }.play.dur(0.01, exprand(0.01, 3));</p>
 <p class="p8"><span class="Apple-tab-span">	</span>exprand(0.02, 1).wait;</p>
 <p class="p8">};</p>
 <p class="p17"><br></p>
-<p class="p12">//:fun</p>
+<p class="p13">//:alternatively code the above with symbol.pfuncn</p>
+<p class="p13">/* Not possible to use a randSeed_setting *inside* function.stream,<span class="Apple-converted-space"> </span></p>
+<p class="p13"><span class="Apple-converted-space">   </span>but could be added as an optional init argument to Function:stream method (TODO) */</p>
 <p class="p7"><br></p>
-<p class="p18">"hello "<span class="s3">.post;</span></p>
+<p class="p8">{<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s1">SinOsc</span>.ar(exprand(400, 1800) * [1, 1.25], 0, 0.1) }.play.dur(0.01, exprand(0.01, 3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>\dur.pfuncn({ exprand(0.02, 1) }, 52);</p>
+<p class="p8">}.stream;</p>
+<p class="p17"><br></p>
+<p class="p17"><br></p>
+<p class="p13">//:fun</p>
+<p class="p7"><br></p>
+<p class="p18">"hello "<span class="s4">.post;</span></p>
 <p class="p7"><br></p>
 <p class="p8">{ <span class="s1">WhiteNoise</span>.ar(<span class="s1">EnvGen</span>.kr(<span class="s1">Env</span>.perc(0.001, 0.7, 0.3), doneAction: 2)).dup }.play;</p>
 <p class="p7"><br></p>
 <p class="p8">0.2.wait;</p>
 <p class="p7"><br></p>
-<p class="p8">a = { <span class="s1">WhiteNoise</span>.ar(<span class="s1">LFTri</span>.kr([10, 11] + <span class="s1">LFNoise1</span>.kr(2, 3), 0, 0.2)) }.play.dur(5, 4);</p>
+<p class="p8">{ <span class="s1">WhiteNoise</span>.ar(<span class="s1">LFTri</span>.kr([10, 10.01] + <span class="s1">LFNoise1</span>.kr(2, 3), 0, 0.2)) }.play.dur(5, 4);</p>
 <p class="p7"><br></p>
-<p class="p12"><span class="s2">\default</span><span class="s3">.play.rsynca({ </span><span class="s1">| s |</span><span class="s3"> </span>// start synth with default SynthDef (See UniqueSynth).</p>
-<p class="p12"><span class="s3"><span class="Apple-tab-span">	</span></span><span class="s1">thisThread</span><span class="s3">.randSeed_(5);<span class="Apple-tab-span">	</span></span>// always play the same sequence</p>
+<p class="p13"><span class="s2">\default</span><span class="s4">.play.rsynca({ </span><span class="s1">| s |</span><span class="s4"> </span>// start synth with default SynthDef (See UniqueSynth).</p>
+<p class="p13"><span class="s4"><span class="Apple-tab-span">	</span></span><span class="s1">thisThread</span><span class="s4">.randSeed_(5);<span class="Apple-tab-span">	</span></span>// always play the same sequence</p>
 <p class="p8"><span class="Apple-tab-span">	</span>220 do: { <span class="s1">| i |</span> (i + 11 / 5).reciprocal.wait;<span class="Apple-converted-space"> </span></p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>s.set(<span class="s2">\freq</span>, ((4..16) * 110) @@ ((i % 4).rand + (i / 20 % 60))); <span class="s6">"."</span>.post;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>s.set(<span class="s2">\freq</span>, ((4..16) * 110) @@ ((i % 4).rand + (i / 20 % 60))); <span class="s3">"."</span>.post;</p>
 <p class="p8"><span class="Apple-tab-span">	</span>};</p>
 <p class="p8"><span class="Apple-tab-span">	</span>1.wait;</p>
 <p class="p8"><span class="Apple-tab-span">	</span>s.release;</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="s6">" there"</span>.postln;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">" there"</span>.postln;</p>
 <p class="p8">});</p>
 <p class="p7"><br></p>
-<p class="p14">//:Combined use of Symbol:play with Function:play.<span class="Apple-converted-space"> </span></p>
+<p class="p9">//:Combined use of Symbol:play with Function:play.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\test</span>.playFunc({ LFNoise2.ar([4000, 6000], 0.05) });</p>
 <p class="p8"><span class="s2">\test</span>.synth.dur(4, 5);</p>

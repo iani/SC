@@ -64,5 +64,6 @@ Pattern and stream support for looping Functions
 	prand { | array, repeats = inf | ^this.stream(Prand(array, repeats)) }
 	prand1 { | ... elements | ^this.stream(Prand(elements, inf)) }
 	pn { | pattern, repeats = 1 | ^this.stream(Pn(pattern, repeats)) }
+	pfuncn { | func, repeats = 1 | ^this.stream(Pfuncn(func, repeats)) }
 }
 
