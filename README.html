@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>Lilt2/Elemenbí (/Look Ma, No Boot/)</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-05-11 01:02:11 EEST"/>
+<meta name="generated" content="2011-05-11 03:02:31 EEST"/>
 <meta name="author" content="Ioannis Zannos"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -88,17 +88,15 @@ lang="en" xml:lang="en">
 <p>
 Download from: <a href="https://github.com/iani/SC">https://github.com/iani/SC</a>
 or:
-</p>
-
-
-<pre class="example">git clone git://github.com/iani/SC.git
+</p><pre class="example">
+git clone git://github.com/iani/SC.git
 </pre>
-
 
 
 <p>
 <b>Summary of ideas in this Library</b>
 </p>
+
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -116,9 +114,9 @@ or:
 </div>
 </div>
 
-<div id="outline-container-1" class="outline-3">
-<h3 id="sec-1"><span class="section-number-3">1</span> Class ServerPrep </h3>
-<div class="outline-text-3" id="text-1">
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Class ServerPrep </h2>
+<div class="outline-text-2" id="text-1">
 
 
 <ul>
@@ -171,9 +169,9 @@ Udef
 
 </div>
 
-<div id="outline-container-2" class="outline-3">
-<h3 id="sec-2"><span class="section-number-3">2</span> Class UniqueSynth </h3>
-<div class="outline-text-3" id="text-2">
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Class UniqueSynth </h2>
+<div class="outline-text-2" id="text-2">
 
 
 <p>
@@ -191,14 +189,14 @@ Example of how UniqueSynth can simplify the code required:
 
 <pre class="example">(
 {
-        loop {
-                {       var synth;
-                        synth = Synth(\default, [\freq, (25..50).choose.midicps]);
-                        0.1.wait;
-                        synth.release(exprand(0.01, 1.0));
-                }.fork;
-                [0.1, 0.2].choose.wait;
-        };
+   loop {
+      {    var synth;
+         synth = Synth(\default, [\freq, (25..50).choose.midicps]);
+         0.1.wait;
+         synth.release(exprand(0.01, 1.0));
+      }.fork;
+      [0.1, 0.2].choose.wait;
+   };
 }.fork;
 )
 </pre>
@@ -214,10 +212,11 @@ Example of how UniqueSynth can simplify the code required:
 <pre class="example">
 (
 {
-        loop {
-                \default.mplay([\freq, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));
-                [0.1, 0.2].choose.wait;
-        };
+   loop {
+      \default.mplay([\freq, (25..50).choose.midicps])
+         .dur(0.1, exprand(0.01, 1.0));
+      [0.1, 0.2].choose.wait;
+   };
 }.fork;
 )
 </pre>
@@ -228,9 +227,9 @@ Example of how UniqueSynth can simplify the code required:
 
 </div>
 
-<div id="outline-container-3" class="outline-3">
-<h3 id="sec-3"><span class="section-number-3">3</span> Class EventStream, Function:sched and Function:stream </h3>
-<div class="outline-text-3" id="text-3">
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Class EventStream, Function:sched and Function:stream </h2>
+<div class="outline-text-2" id="text-3">
 
 
 <p>
@@ -243,10 +242,12 @@ Example: Simplify the above code even further, while enabling  control of dtime 
 
 
 <pre class="example">(
-{       // Symbol:stream creates and / or accesses the stream as appropriate: 
-        \default.mplay([\freq, \freq.prand((25..50), inf).midicps]).dur(0.1, exprand(0.01, 1.0));
-        \duration.stream(Prand([0.1, 0.2], 20)); // play 20 events only
-}.stream;       
+{   // Symbol:stream creates and / or accesses the stream as appropriate: 
+   \default.mplay([\freq, \freq.prand((25..50), inf).midicps])
+      .dur(0.1, exprand(0.01, 1.0));
+   // play 20 events only
+   \duration.stream(Prand([0.1, 0.2], 20)); 
+}.stream;    
 )
 </pre>
 
@@ -259,9 +260,9 @@ Note: symbol.stream(Prand(&hellip;)) is equivalent to symbol.prand(&hellip;)
 
 </div>
 
-<div id="outline-container-4" class="outline-3">
-<h3 id="sec-4"><span class="section-number-3">4</span> Object methods for easy messaging via NotificationCenter </h3>
-<div class="outline-text-3" id="text-4">
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Object methods for easy messaging via NotificationCenter </h2>
+<div class="outline-text-2" id="text-4">
 
 
 <p>
@@ -274,9 +275,9 @@ One beneficial effect of this is that it is no longer needed to check whether an
 
 </div>
 
-<div id="outline-container-5" class="outline-3">
-<h3 id="sec-5"><span class="section-number-3">5</span> Class Code </h3>
-<div class="outline-text-3" id="text-5">
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Class Code </h2>
+<div class="outline-text-2" id="text-5">
 
 
 <p>
@@ -311,9 +312,9 @@ Command-shift-k: Select the previous code part
 
 </div>
 
-<div id="outline-container-6" class="outline-3">
-<h3 id="sec-6"><span class="section-number-3">6</span> Class Panes </h3>
-<div class="outline-text-3" id="text-6">
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Class Panes </h2>
+<div class="outline-text-2" id="text-6">
 
 
 <p>
@@ -323,14 +324,14 @@ Arrange Document windows on the screen conveniently for maximum view area on the
 
 </div>
 
-<div id="outline-container-7" class="outline-3">
-<h3 id="sec-7"><span class="section-number-3">7</span> Class Dock </h3>
-<div class="outline-text-3" id="text-7">
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Class Dock </h2>
+<div class="outline-text-2" id="text-7">
 
 
 <p>
 Provide some useful shortcuts for common tasks: 
-browseUserClasses :     Open a list of all classes defined in the user's Application Support 
+browseUserClasses :    Open a list of all classes defined in the user's Application Support 
 directory. Typing return on a selected item opens the code file with the definition of this class. 
 </p>
 <p>
@@ -353,9 +354,9 @@ closeDocListWindow : Close the document list window
 
 </div>
 
-<div id="outline-container-8" class="outline-3">
-<h3 id="sec-8"><span class="section-number-3">8</span> Class Spectrograph </h3>
-<div class="outline-text-3" id="text-8">
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Class Spectrograph </h2>
+<div class="outline-text-2" id="text-8">
 
 
 <p>
@@ -370,7 +371,7 @@ This class was inspired by the Spectrogram Quark by Thor Magnusson and Dan Stowe
 <div id="postamble">
 <p class="author"> Author: Ioannis Zannos
 </p>
-<p class="date"> Date: 2011-05-11 01:02:11 EEST</p>
+<p class="date"> Date: 2011-05-11 03:02:31 EEST</p>
 <p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
 </div>
 </div>

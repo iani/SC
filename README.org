@@ -1,4 +1,4 @@
-Lilt2/Elemenb\'i (/Look Ma, No Boot/)
+Lilt2/Elemenbí (/Look Ma, No Boot/)
 
 By Ioannis Zannos, March-May 2011
 
@@ -43,8 +43,8 @@ Example of how UniqueSynth can simplify the code required:
    loop {
       {    var synth;
          synth = Synth(\default, [\freq, (25..50).choose.midicps]);
-           0.1.wait;
-           synth.release(exprand(0.01, 1.0));
+         0.1.wait;
+         synth.release(exprand(0.01, 1.0));
       }.fork;
       [0.1, 0.2].choose.wait;
    };
