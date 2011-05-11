@@ -98,7 +98,7 @@ postf("Synths on server are: %\n", UniqueSynth.onServer);
 
 2.wait;
 
-{ | freq = 400 | LFNoise0.ar(freq, 0.1) }.uplay.rsyncs({ | synth |
+{ | freq = 400 | LFNoise0.ar(freq, 0.1) }.play.rsyncs({ | synth |
 	50 do: { | i |
 		(i + 1).reciprocal.wait;
 		synth.set(\freq, 400 rrand: 10000);

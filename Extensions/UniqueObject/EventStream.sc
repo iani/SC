@@ -10,7 +10,7 @@ UniqueStream to be phased out in favor of EnvirStream.
 */
 
 EventStream {
-	var <key, <pattern, <stream;
+	var <key, <pattern, <stream, <value;
 	
 	*new { | key, pattern |
 		^currentEnvironment[key] ?? { this.newCopyArgs(key, pattern).init };
@@ -22,10 +22,9 @@ EventStream {
 	}
 	
 	next { 
-		var next;
-		next = stream.next;
-		if (next.isNil) { this.remove };
-		^next;
+		value = stream.next;
+		if (value.isNil) { this.remove };
+		^value;
 	}
 
 	reset { stream = pattern.asStream }
@@ -49,6 +48,7 @@ Pattern and stream support for looping Functions
 			envir use: {
 				var dur;
 				dur = this.(envir);
+//				dur = envir use: { this.(envir) };
 				if (dur.isNil) { onEnd.(envir) };
 				dur;
 			}

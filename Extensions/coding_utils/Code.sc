@@ -80,7 +80,9 @@ Code {
 				code = this.new(Document.current);
 				if (code.canEvaluate) {
 					ListWindow.front('Code Selector');
-					code.headers collect: { | h, i | (h[3..] + " ")->{ code.performCodeAt(i) } };
+					code.headers
+						.collect({ | h, i | (h[3..] + " ")->{ code.performCodeAt(i) } })
+						.select({ | h | h.key[0] != $  });
 				}{
 					["---"->{ }]
 				};

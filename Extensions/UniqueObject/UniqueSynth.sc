@@ -106,17 +106,17 @@ UniqueSynth : AbstractUniqueServerObject {
 	scheds { | func, dtime = 0 | this.sched(func, dtime, SystemClock) }
 	scheda { | func, dtime = 0 | this.sched(func, dtime, AppClock) }
 
-	stream { | func, envir, dtime = 0, clock |
+	stream { | func, envir, dtime = 0, clock, onEnd |
 		clock = clock ? AppClock;
 		this.onStart({
 			{ | envir | 
-				if (this.isPlaying) { func.(object, this, envir) }{ nil } 
-			}.schedEnvir(envir, dtime, clock);
+				if (this.isPlaying) { func.(object, this, envir) } { nil } 
+			}.schedEnvir(envir, dtime, clock, onEnd);
 		});
 	}
 
-	streams { | func, envir, dtime = 0 | this.stream(func, envir, dtime, SystemClock) }
-	streama { | func, envir, dtime = 0 | this.stream(func, envir, dtime, AppClock) }
+	streams { | func, envir, dtime = 0, onEnd | this.stream(func, envir, dtime, SystemClock, onEnd) }
+	streama { | func, envir, dtime = 0, onEnd | this.stream(func, envir, dtime, AppClock, onEnd) }
 	
 	releaseSynth { | dtime |
 		// Use  name releaseSynth in order not to mofify release method inherited from Object

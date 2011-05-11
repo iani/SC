@@ -33,11 +33,18 @@ span.Apple-tab-span {white-space:pre}
 <p class="p2"><br></p>
 <p class="p4">clock.sched(dtime, aFunction)</p>
 <p class="p2"><br></p>
-<p class="p4">aFunction.stream(dtime, clock);</p>
+<p class="p4">aFunction.stream(dtime, clock, onEnd);</p>
 <p class="p2"><br></p>
 <p class="p3">is equivalent to:<span class="Apple-converted-space"> </span></p>
 <p class="p2"><br></p>
-<p class="p4">clock.sched(dtime, { envir use: <span class="s1">aFunction</span> })</p>
+<p class="p4">clock.sched(dtime, {<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>envir use: {</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> dur;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dur = <span class="s1">this</span>.(envir);</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>if (dur.isNil) { onEnd.(envir) };</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dur;</p>
+<p class="p4"><span class="Apple-tab-span">	</span>}</p>
+<p class="p4">});</p>
 <p class="p2"><br></p>
 <p class="p3">Although the shortcuts are small, in terms of code writing it can lead to substantial simplifications, especially when combined with Function:play, Symbol:play, Symbol:mplay etc, and Symbol:stream. <span class="Apple-converted-space"> </span></p>
 <p class="p2"><br></p>

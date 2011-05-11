@@ -577,3 +577,21 @@ An example application showing some of the features of this library. Creates a w
 (With Aris Bezas)
 
 Added ./Extensions/Examples directory to master branch and attached it here to test orgmode link integration.
+*** 2011-05-11 Wednesday
+**** Code list ignores comments that have a space after the : ("//: ") :code:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-11 Wed 20:21>
+     :END:
+
+So you can write in a document this: 
+//:Example 1
+
+{ WhiteNoise.ar(0.1) }.play;
+
+//: End of above example
+
+Some text here. The part here will not be listed as a code snippet in the Code list window. (Cmd-})
+
+//:Next example
+
+\window.window;
