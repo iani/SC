@@ -41,11 +41,18 @@ Pattern and stream support for looping Functions
 	sched { | dtime = 0, clock | (clock ? SystemClock).sched(dtime, this); }
 
 	// nicer to use this shorter word, but semantically acceptable?
-	stream { | envir, dtime = 0, clock | this.schedEnvir(envir, dtime, clock) }
+	stream { | envir, dtime = 0, clock, onEnd | this.schedEnvir(envir, dtime, clock, onEnd) }
 
-	schedEnvir { | envir, dtime = 0, clock | 
+	schedEnvir { | envir, dtime = 0, clock, onEnd | 
 		envir = envir ?? { Event.new };
-		(clock ? SystemClock).sched(dtime, { envir use: this });
+		(clock ? SystemClock).sched(dtime, { 
+			envir use: {
+				var dur;
+				dur = this.(envir);
+				if (dur.isNil) { onEnd.(envir) };
+				dur;
+			}
+		});
 	}
 }
 

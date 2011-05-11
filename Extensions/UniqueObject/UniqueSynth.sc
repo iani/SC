@@ -77,9 +77,15 @@ UniqueSynth : AbstractUniqueServerObject {
 	}
 	onEnd { | func | this.onClose(func) }	// synonym
 	
+	dur { | dtime = 1, fadeOut = 0.2, message |
+		this.onStart({
+			{ this.perform(message ? \releaseSynth, fadeOut); nil; }.sched(dtime);
+		});
+	}
+
 	rsync { | func, clock |
 		var routine;
-		ServerPrep(server).addRoutine({
+		this.onStart({
 			routine = { func.(object, this) }.fork(clock ? AppClock);
 		});
 		this.onEnd({
@@ -90,16 +96,34 @@ UniqueSynth : AbstractUniqueServerObject {
 	rsyncs { | func | this.rsync(func, SystemClock) }
 	rsynca { | func | this.rsync(func, AppClock) }
 
-	dur { | dtime = 1, fadeOut = 0.2, message |
+
+	sched { | func, dtime = 0, clock |
+		clock = clock ? AppClock;
 		this.onStart({
-			{ this.perform(message ? \releaseSynth, fadeOut); nil; }.sched(dtime);
+			{ if (this.isPlaying) { func.(object, this) }{ nil } }.sched(dtime, clock);
+		})
+	}
+	scheds { | func, dtime = 0 | this.sched(func, dtime, SystemClock) }
+	scheda { | func, dtime = 0 | this.sched(func, dtime, AppClock) }
+
+	stream { | func, envir, dtime = 0, clock |
+		clock = clock ? AppClock;
+		this.onStart({
+			{ | envir | 
+				if (this.isPlaying) { func.(object, this, envir) }{ nil } 
+			}.schedEnvir(envir, dtime, clock);
 		});
 	}
+
+	streams { | func, envir, dtime = 0 | this.stream(func, envir, dtime, SystemClock) }
+	streama { | func, envir, dtime = 0 | this.stream(func, envir, dtime, AppClock) }
 	
 	releaseSynth { | dtime |
 		// Use  name releaseSynth in order not to mofify release method inherited from Object
 		if (this.isPlaying ) { object.release(dtime) } 
 	}
+
+	set { | ... args | if (this.isPlaying) { object.set(*args) } }
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
 }

@@ -36,6 +36,7 @@ UniqueWindow : UniqueObject {
 	
 	// shortcuts and synonyms
 	window { ^object }
+	view { ^object.view }
 	name { ^object.name }
 	bounds { ^object.bounds }
 	bounds_ { | rect | object.bounds = rect; }
