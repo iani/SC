@@ -44,7 +44,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6">{</p>
 <p class="p6"><span class="Apple-tab-span">	</span>loop {</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="Apple-tab-span">	</span>var synth;</p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth = <span class="s1">Synth(</span>\default, [<span class="s1">\freq</span>, (25..50).choose.midicps]);</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth = <span class="s1">Synth(</span>\default, [\amp, 0.3, <span class="s1">\freq</span>, (25..50).choose.midicps]);</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-converted-space">  <span class="Apple-tab-span">	</span></span>0.1.wait;</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-converted-space">  <span class="Apple-tab-span">	</span></span>synth.release(exprand(0.01, 1.0));</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.fork;</p>
@@ -59,7 +59,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6">(</p>
 <p class="p6">{ // infinite 'riff'</p>
 <p class="p6"><span class="Apple-tab-span">	</span>loop {</p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([\amp, 0.3, <span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
 <p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[0.1, 0.2].choose.wait;</p>
 <p class="p6"><span class="Apple-tab-span">	</span>};</p>
 <p class="p6">}.fork;</p>
@@ -71,17 +71,16 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">// using Symbol:stream</p>
 <p class="p6">(</p>
 <p class="p8"><span class="s2">{ </span>// also infinite 'riff'</p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
-<p class="p8"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1">\duration</span><span class="s2">.stream(Prand([0.1, 0.2], </span><span class="s3">inf)</span><span class="s2">); </span>// Create EventStream, store it, access it<span class="Apple-converted-space"> </span></p>
-<p class="p6">}.stream;<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([\amp, 0.3, <span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p8"><span class="s2"><span class="Apple-tab-span">	</span></span>// Create EventStream, store it, access it<span class="Apple-converted-space"> </span></p>
+<p class="p6">}.stream({ <span class="s1">\duration</span>.stream(Prand([0.1, 0.2], <span class="s3">inf)) }</span>);<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
 <p class="p6">)</p>
 <p class="p4"><br></p>
 <p class="p8">// using shortcut Symbol:prand</p>
 <p class="p6">(</p>
 <p class="p8"><span class="s2">{ </span>// also infinite 'riff'</p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
-<p class="p8"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1">\duration</span><span class="s2">.prand([0.1, 0.2], </span><span class="s3">inf</span><span class="s2">); </span>// Create EventStream and store it<span class="Apple-converted-space"> </span></p>
-<p class="p6">}.stream;<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([\amp, 0.3, <span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p6">}.stream({ <span class="s1">\duration</span>.stream(Prand([0.1, 0.2], <span class="s3">inf)) }</span>);<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
 <p class="p6">)</p>
 <p class="p4"><br></p>
 <p class="p3">One can limit the number of repeats to the end of the stream made by the pattern.<span class="Apple-converted-space"> </span></p>
@@ -89,9 +88,8 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p6">(</p>
 <p class="p6">{</p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([<span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
-<p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\duration</span>.prand([0.1, 0.2], 20); <span class="s4">// play only 20 events</span></p>
-<p class="p6">}.stream;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s1">\default</span>.mplay([\amp, 0.3, <span class="s1">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p6">}.stream({ <span class="s1">\duration</span>.prand([0.1, 0.2], 20) }); <span class="s4">// play only 20 events</span></p>
 <p class="p6">)<span class="Apple-tab-span">	</span></p>
 <p class="p4"><br></p>
 <p class="p5"><b>Related Classes</b></p>

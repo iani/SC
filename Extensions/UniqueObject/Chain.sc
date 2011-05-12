@@ -31,6 +31,32 @@ Chain {
 	}
 }
 
+ChainLink { 
+	var <>func, <>times, <envir, onEnd;
+	
+	*new { | func, times, envir |
+		^this.newCopyArgs(func, times, envir ?? { () });
+	}
+	
+	onEnd { | argEnd | onEnd = argEnd }
+	
+	sched { | dtime = 0, clock |
+		(clock ? SystemClock).sched(dtime, { 
+			envir use: {
+				var dur;
+				dur = times.(envir);
+				if (dur.isNil) {
+					onEnd.(envir); // { envir use: { onEnd.(envir) } }
+				}{
+					func.(envir);	// envir use: { func.(envir) };
+				}; 
+				dur;
+			}
+		});
+	}
+}
+
+/*
 ChainLink { // has bug, plays one more time
 	var <>func, <envir, onEnd;
 	
@@ -51,7 +77,7 @@ ChainLink { // has bug, plays one more time
 		});
 	}
 }
-
+*/
 ChainLink2 { 
 	var <>func, <>times, <envir, onEnd;
 	
@@ -82,8 +108,11 @@ ChainLink2 {
 // Help for coding chains
 + Function {
 	/* transform a function into a function that makes an EventStream */
-	chain { | envir, dtime = 0, clock | 
-		^{ this.stream(envir.value, dtime.value, clock.value) } 
+//	chain { | envir, dtime = 0, clock | 
+//		^{ this.stream(envir.value, dtime.value, clock.value) } 
+//	}
+	chain { | times, envir, dtime = 0, clock | 
+		^{ this.stream2(times, envir.value, dtime.value, clock.value) } 
 	}
 	chain2 { | times, envir, dtime = 0, clock | 
 		^{ this.stream2(times, envir.value, dtime.value, clock.value) } 

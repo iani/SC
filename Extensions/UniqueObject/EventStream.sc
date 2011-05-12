@@ -42,10 +42,17 @@ Pattern and stream support for looping Functions
 /* buggy : see versions 2 below */
 	// nicer to use this shorter word, but semantically acceptable?
 	// has bug: Plays last time while timer stream has ended
-	stream { | envir, dtime = 0, clock, onEnd | ^this.schedEnvir(envir, dtime, clock, onEnd) }
+/*	stream { | envir, dtime = 0, clock, onEnd | ^this.schedEnvir(envir, dtime, clock, onEnd) }
 
 	schedEnvir { | envir, dtime = 0, clock, onEnd |
 		^ChainLink(this, envir).sched(dtime, clock).onEnd(onEnd);
+	}
+*/
+
+	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
+
+	schedEnvir { | times, envir, dtime = 0, clock, onEnd |
+		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);
 	}
 
 	stream2 { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir2(times, envir, dtime, clock, onEnd) }

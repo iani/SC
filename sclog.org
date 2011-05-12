@@ -595,3 +595,12 @@ Some text here. The part here will not be listed as a code snippet in the Code l
 //:Next example
 
 \window.window;
+*** 2011-05-12 Thursday
+**** Chain / EventStream debugged :chain:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-12 Thu 11:41>
+     :END:
+**** TODO Debug environment evaluation in Chain, EventStream, remove .next from EventStream new.  :chain:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-12 Thu 11:41>
+     :END:
