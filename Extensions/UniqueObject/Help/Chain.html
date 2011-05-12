@@ -98,10 +98,10 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>{</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">NetAddr</span>.localAddr.sendMsg(*[<span class="s2">\test1</span>, \count.pseries(101)].postln);</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\default.mplay([\freq, 30.rrand(100).midicps]).dur(0.1, 0.1);<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
-<p class="p8"><span class="Apple-tab-span">	</span>}.chain2({ <span class="s2">\dur</span>.pn(0.1, 5) });,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">\dur</span>.pn(0.1, 5) });,</p>
 <p class="p8"><span class="Apple-tab-span">	</span>{</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">NetAddr</span>.localAddr.sendMsg(*[<span class="s2">\test2</span>, \count.pseries(1) * 10].postln);</p>
-<p class="p8"><span class="Apple-tab-span">	</span>}.chain2({ <span class="s2">\dur</span>.pn(1, 3) });</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">\dur</span>.pn(1, 3) });</p>
 <p class="p8"><span class="Apple-tab-span">	</span>],</p>
 <p class="p8"><span class="Apple-tab-span">	</span>30</p>
 <p class="p8">)</p>

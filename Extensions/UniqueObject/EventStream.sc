@@ -39,26 +39,12 @@ Pattern and stream support for looping Functions
 + Function {
 	sched { | dtime = 0, clock | (clock ? SystemClock).sched(dtime, this); }
 
-/* buggy : see versions 2 below */
 	// nicer to use this shorter word, but semantically acceptable?
-	// has bug: Plays last time while timer stream has ended
-/*	stream { | envir, dtime = 0, clock, onEnd | ^this.schedEnvir(envir, dtime, clock, onEnd) }
-
-	schedEnvir { | envir, dtime = 0, clock, onEnd |
-		^ChainLink(this, envir).sched(dtime, clock).onEnd(onEnd);
-	}
-*/
 
 	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
 
 	schedEnvir { | times, envir, dtime = 0, clock, onEnd |
 		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);
-	}
-
-	stream2 { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir2(times, envir, dtime, clock, onEnd) }
-
-	schedEnvir2 { | times, envir, dtime = 0, clock, onEnd |
-		^ChainLink2(this, times, envir).sched(dtime, clock).onEnd(onEnd);
 	}
 }
 
