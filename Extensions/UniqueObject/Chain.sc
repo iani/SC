@@ -51,3 +51,37 @@ ChainLink {
 		});
 	}
 }
+
+// Help for coding chains
++ Function {
+	/* transform a function into a function that makes an EventStream */
+	chain { | envir, dtime = 0, clock | 
+		^{ this.stream(envir.value, dtime.value, clock.value) } 
+	}
+}
+
+// Note: The following actually do enable simpler coding and are therefore removed: 
+/*
++ Function {
+	/* transform a function into a function that makes a UniqueSynth  */
+	chainSynth { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name, dur |
+		var releaseTime;
+		#dur, releaseTime = dur.asArray;
+		dur = dur ? 1;
+		releaseTime = releaseTime ? 0.02;
+		^{ this.play(target.value, outbus.value, fadeTime.value, addAction.value, args.value, name.value)
+			.dur(dur, releaseTime)
+		}
+	}
+}
+
++ Symbol {
+	/* transform a symbol into a a function that makes a UniqueSynth */
+	chain { | args, target, addAction, dur | 
+		var releaseTime;
+		#dur, releaseTime = dur.asArray;
+		dur = dur ? 1;
+		^{ this.mplay(args.value, target.value, addAction.value).dur(dur, releaseTime) } 
+	}
+}
+*/

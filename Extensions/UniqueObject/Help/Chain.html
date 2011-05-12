@@ -7,35 +7,34 @@
 <meta name="Generator" content="Cocoa HTML Writer">
 <meta name="CocoaVersion" content="1038.35">
 <style type="text/css">
-p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
-p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
-p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; color: #000000}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; color: #000000; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; color: #000000}
 p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
 p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
 p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
 p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
-p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 span.s1 {color: #000000}
 span.s2 {color: #008323}
 span.s3 {color: #162bc4}
-span.s4 {color: #1327b4}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
 <body>
 <p class="p1"><b>Chain</b></p>
-<p class="p2"><b></b><br></p>
+<p class="p2"><br></p>
 <p class="p3"><b>Inherits from: Object</b></p>
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p5"><b>Purpose</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3">Play a pattern producing fuctions whose values are objects that respond to onEnd (UniqueSynths, EventStreams), by chaining each next element so as to start playing when the previous element ends.<span class="Apple-converted-space"> </span></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p5"><b>Usage</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p6">//:Chain example</p>
 <p class="p7">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>{</p>
@@ -45,7 +44,20 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.stream;</p>
 <p class="p8"><span class="Apple-tab-span">	</span>},</p>
 <p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.2], 0, 0.2) }</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space"> </span><span class="s1"> </span><span class="s3">\freq.pseq</span><span class="s1">((4..12), </span><span class="s3">inf</span><span class="s1">)</span> * 100]).dur(0.1 rrand: 1, 0.05 rrand: 1.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space">  </span><span class="s2">\freq</span>.pseq((4..20), <span class="s3">inf</span>) * 100]).dur(0.1 rrand: 1, 0.5 rrand: 2.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p8"><span class="Apple-tab-span">	</span>30</p>
+<p class="p8">));</p>
+<p class="p9"><br></p>
+<p class="p6">//:The nested function of the first element in chain above can be simplified as:<span class="Apple-converted-space"> </span></p>
+<p class="p7">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\hocketus</span>.stream(<span class="s3">Prand</span>([0.06, 0.07, 0.14], 10 rrand: 20));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.2], 0, 0.2) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space">  </span><span class="s2">\freq</span>.pseq((4..20), <span class="s3">inf</span>) * 100]).dur(0.1 rrand: 1, 0.5 rrand: 2.5)<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>}</p>
 <p class="p8"><span class="Apple-tab-span">	</span>],</p>
 <p class="p8"><span class="Apple-tab-span">	</span>30</p>
@@ -53,73 +65,105 @@ span.Apple-tab-span {white-space:pre}
 <p class="p9"><br></p>
 <p class="p6">//:Second chain example</p>
 <p class="p7">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
-<p class="p10"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span></p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>stream {</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ Klang.ar(`[ <span class="s4">Array</span>.rand(3, 100.0, 110.0) * \inc.prand((2..10), inf)]) * 0.1 }</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play.dur(0.1, 0.3);</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\dur.pn(0.1, 10);</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
-<p class="p10"><span class="Apple-tab-span">	</span>},</p>
-<p class="p10"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.2], 0, 0.2) }</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space">  </span><span class="s3">\freq.pseq</span>((4..12), <span class="s3">inf</span>) * 100]).dur(0.01 rrand: 1, 0.05 rrand: 2.5)<span class="Apple-converted-space"> </span></p>
-<p class="p10"><span class="Apple-tab-span">	</span>}</p>
-<p class="p10"><span class="Apple-tab-span">	</span>],</p>
-<p class="p10"><span class="Apple-tab-span">	</span>30</p>
-<p class="p10">));</p>
-<p class="p11">//: Second chain example</p>
-<p class="p4"><b></b><br></p>
-<p class="p4"><b></b><br></p>
+<p class="p6"><span class="s1"><span class="Apple-tab-span">	</span>chain {<span class="Apple-tab-span">	</span></span>// chain message can also been written before the function like in loop, while etc.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">Klang</span>.ar(`[ <span class="s3">Array</span>.rand(3, 100.0, 125.0) * <span class="s2">\inc</span>.prand((5..7), <span class="s3">inf</span>)]) * 0.05 }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play.dur(0.1, 0.3);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\dur</span>.pn(0.1, 5);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>},</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.2) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space">  </span><span class="s2">\freq</span>.pseq((1..25), <span class="s3">inf</span>) * 100]).dur(0.01 rrand: 0.1, 0.05 rrand: 0.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p8"><span class="Apple-tab-span">	</span>35</p>
+<p class="p8">));</p>
+<p class="p9"><br></p>
+<p class="p10">//:Second chain example with Pseq instead of Prand</p>
+<p class="p7">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>chain {<span class="Apple-tab-span">	</span></span>// chain message can also been written before the function like in loop, while etc.</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">Klang</span>.ar(`[ <span class="s3">Array</span>.rand(3, 100.0, 125.0) * <span class="s2">\inc</span>.prand((5..7), <span class="s3">inf</span>)]) * 0.05 }</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play.dur(0.1, 0.3);</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\dur</span>.pn(0.1, 5);</p>
+<p class="p11"><span class="Apple-tab-span">	</span>},</p>
+<p class="p11"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.2) }</p>
+<p class="p11"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space">  </span><span class="s2">\freq</span>.pseq((1..25), <span class="s3">inf</span>) * 100]).dur(0.01 rrand: 0.1, 0.05 rrand: 0.5)<span class="Apple-converted-space"> </span></p>
+<p class="p11"><span class="Apple-tab-span">	</span>}</p>
+<p class="p11"><span class="Apple-tab-span">	</span>],</p>
+<p class="p11"><span class="Apple-tab-span">	</span>25</p>
+<p class="p11">));</p>
+<p class="p9"><br></p>
+<p class="p6">//: End second chain example</p>
+<p class="p9"><br></p>
+<p class="p3">Using chain to send sequences of OSC messages.<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p6">//:Third chain example</p>
+<p class="p7">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>stream {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">NetAddr</span>.localAddr.sendMsg(*[<span class="s2">\test1</span>, 1, 2, 3, 4, 5].postln);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\dur</span>.pn(0.1, 5);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>},</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>stream {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">NetAddr</span>.localAddr.sendMsg(*[<span class="s2">\test2</span>, <span class="s2">\a</span>, <span class="s2">\b</span>].postln);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\dur</span>.pn(1, 5);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p8"><span class="Apple-tab-span">	</span>30</p>
+<p class="p8">));</p>
+<p class="p6">//: End third chain example</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
 <p class="p5"><b>Related Classes</b></p>
 <p class="p4"><br></p>
 <p class="p3">See also: EventStream, UniqueSynth, ChainLink</p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p5"><b>Instance Creation</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>*new(pattern, envir) : </b>Create a new instance of Chain and start it</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>pattern: A pattern producing functions that when evaluated create objects that respond to onEnd.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>envir: an Environment or Event.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The functions are evaluated using envir as environment. Default is an empty event.<span class="Apple-converted-space"> </span></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p5"><b>Class variables</b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span> --<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>--<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Instance variables</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>current : </b>The currently playing element in the stream chain</p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>envir : </b>The<span class="Apple-converted-space"> </span></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>pattern :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>stream</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Class methods</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>new</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Instance methods</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>current :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>envir :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>isRunning :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>next :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>pattern :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>pattern_ :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>reset :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>start :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>stream</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Examples</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
 </body>
 </html>

@@ -97,6 +97,11 @@ Dock {
 	
 	*openCreateHelpFile {
 		var windowName = 'Select Class to open Help';
+		var class;
+		class = this.findClassFromSelection;
+		if (class.notNil) {
+			^class.openHelpFileLocally;	
+		};
 		ListWindow(windowName, nil, {
 			Class.allClasses.select({ | c |
 				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
@@ -113,6 +118,29 @@ Dock {
 		});		
 	}
 
+	*findClassFromSelection { // taken from Process class
+		var string, class, method, words;
+		string = Document.current.selectedString;
+		Document.current.selectedString.postln;
+		if (string includes: $:) {
+			string.removeAllSuchThat(_.isSpace);
+			words = string.delimit({ arg c; c == $: });
+			class = words.at(0).asSymbol.asClass;
+			if (class.notNil, {
+				method = class.findMethod(words.at(1).asSymbol);
+				if (method.notNil, {
+					method.filenameSymbol.asString.openTextFile(method.charPos, -1);
+				});
+			});
+			^nil;
+		}{
+			class = string.asSymbol.asClass;
+			if (class.notNil, {
+				class = class.classRedirect;
+				^class;
+			});
+		};
+	}
 
 	*insertClassHelpTemplate {
 		var doc, class;
