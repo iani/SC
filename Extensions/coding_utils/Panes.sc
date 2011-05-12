@@ -43,7 +43,7 @@ Panes {
 			CocoaMenuItem.addToMenu("Utils", "2-pane doc arrangement", [">", false, false], {
 				this.doRestoreTop({ this.arrange2Panes; });
 			}),
-			CocoaMenuItem.addToMenu("Utils", "switch window pos", ["<", true, false], {
+			CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", ["<", true, false], {
 				currentPositionAction.(Document.current);
 			}),
 		]

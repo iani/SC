@@ -182,7 +182,7 @@ Examples
 				"".strcatList(class.superclasses collect: _.name),
 				"\t".strcatList((class.classVarNames ? [" -- "]).sort, " : \n\n\t"),
 				"\t".strcatList((class.instVarNames ? [" -- "]).sort, " : \n\n\t"),
-				"\t".strcatList((class.class.methods.collect(_.name) ? [" -- "]).sort, " : \n\n\t"),
+				"\t*".strcatList((class.class.methods.collect(_.name) ? [" -- "]).sort, " : \n\n\t*"),
 				"\t".strcatList((class.methods.collect(_.name) ? [" -- "]).sort, " : \n\n\t")			));
 			0.2.wait;
 			doc.selectLine(1);	 0.2.wait;
