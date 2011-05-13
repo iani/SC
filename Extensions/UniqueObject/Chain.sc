@@ -102,6 +102,10 @@ Pattern and stream support for looping Functions
 // Help for coding chains
 + Function {
 	/* transform a function into a function that makes an EventStream */
+	once { | dur = 0, times, envir, dtime = 0, clock |
+//		this.chain()	
+	}
+
 	chain { | times, envir, dtime = 0, clock | 
 		^{ this.stream(times, envir.value, dtime.value, clock.value) } 
 	}
