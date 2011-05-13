@@ -31,6 +31,25 @@ Chain {
 	}
 }
 
+SynthLink { 
+	var <>func, <envir, <synth, onEnd;
+	
+	*new { | func, envir |
+		^this.newCopyArgs(func, envir ?? { () }).init;
+	}
+	
+	// inherit environment from the Chain
+	init {
+		envir.parent = currentEnvironment;
+		synth = envir use: func;
+		synth.onStart({ synth.onEnd(onEnd) });
+	}
+	
+	onEnd { | argEnd | 
+		onEnd = argEnd;
+	}	
+}
+
 ChainLink { 
 	var <>func, <>times, <envir, onEnd;
 	
@@ -59,7 +78,6 @@ ChainLink {
 			}
 		});
 	}
-
 }
 /*
 Pattern and stream support for looping Functions
@@ -67,6 +85,12 @@ Pattern and stream support for looping Functions
 
 // Help for coding chains
 + Function {
+	/* 	transform a function that creates a synth into a form that will accept 
+		onEnd for use in Chain */
+	s { 	| envir |
+		^{ SynthLink(this, envir) };	
+	}	
+	
 	/* transform a function into a function that makes an EventStream */
 	chain { | timePat, envir, dtime = 0, clock, key = \dur | 
 		^{ this.stream({ 

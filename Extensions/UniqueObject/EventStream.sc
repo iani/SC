@@ -24,12 +24,20 @@ EventStream {
 
 	reset { stream = pattern.asStream }
 
-	remove { currentEnvironment[key] = nil }		
+	remove { currentEnvironment[key] = nil }	
+	
+	toParent {
+		currentEnvironment.parent[key] = this;	
+		currentEnvironment[key] = nil;
+	}
+		
 }
 
 + Symbol {
 	stream { | pattern | ^EventStream(this, pattern) }
-	next { ^EventStream(this).next }
+	// avoid overwriting Symbol:next, it may interfere with 
+	// the standard Event/Pattern/Pbind mechanism. Therefore: enext.
+	enext { ^EventStream(this).next }
 	this { ^EventStream(this).value }
 	replaceStream { | pattern | ^EventStream(this).init(pattern) } // next not called!
 	resetStream { ^EventStream(this).reset } 	// next not called: design choice.
