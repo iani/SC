@@ -27,22 +27,6 @@ EventStream {
 	remove { currentEnvironment[key] = nil }		
 }
 
-/*
-Pattern and stream support for looping Functions
-*/
-
-+ Function {
-	sched { | dtime = 0, clock | (clock ? SystemClock).sched(dtime, this); }
-
-	// nicer to use this shorter word, but semantically acceptable?
-
-	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
-
-	schedEnvir { | times, envir, dtime = 0, clock, onEnd |
-		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);
-	}
-}
-
 + Symbol {
 	stream { | pattern | ^EventStream(this, pattern).next }
 	replaceStream { | pattern | ^EventStream(this).init(pattern) } // next not called!
@@ -60,5 +44,6 @@ Pattern and stream support for looping Functions
 	pn { | pattern, repeats = 1 | ^this.stream(Pn(pattern, repeats)) }
 	pfuncn { | func, repeats = 1 | ^this.stream(Pfuncn(func, repeats)) }
 	pseries { | start = 0, step = 1, length = inf | ^this.stream(Pseries(start, step, length)) }
+	once { | dur = 0 | ^this.stream(r { dur.yield }) }
 }
 

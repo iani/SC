@@ -20,11 +20,23 @@ Chain {
 	reset {
 		stream = pattern.asStream;			
 	}
-	
+
+/* // previous
+
+    next {
+        current = stream.next;
+        if (current.notNil) {
+            envir.use({ current.value }).onEnd({ this.next });
+        }{
+            stream = nil;   
+        }
+    }
+   
+*/
 	next {
 		current = stream.next;
 		if (current.notNil) {
-			envir.use({ current.value }).onEnd({ this.next });
+			envir.use({ current.(envir) }).onEnd({ this.next });
 		}{
 			stream = nil;	
 		}
@@ -43,6 +55,7 @@ ChainLink {
 	
 	onEnd { | argEnd | onEnd = argEnd }
 	
+	// how to introduce method 'once'???
 	sched { | dtime = 0, clock |
 		(clock ? SystemClock).sched(dtime, { 
 			envir use: {
@@ -59,7 +72,32 @@ ChainLink {
 			}
 		});
 	}
+
+
+/* /// Not right!!!
+    sched { | dtime = 0, clock |
+        var timeStream;
+        timeStream = envir.use({ times.(envir) }).asStream;
+        (clock ? SystemClock).sched(dtime, { 
+            envir use: {
+                var dur;
+                dur = timeStream.next.(envir); // envir.use({ times.(envir) }); // !!!!!
+                if (dur.isNil) {
+//                  envir use: { onEnd.(envir) } // onEnd.(envir); // 
+                    onEnd.(envir);
+                }{
+//                  envir use: { func.(envir) }; // 
+                    func.(envir);
+                }; 
+                dur;
+            }
+        });
+    }
+*/
 }
+/*
+Pattern and stream support for looping Functions
+*/
 
 // Help for coding chains
 + Function {
@@ -75,6 +113,7 @@ ChainLink {
 		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);
 	}
 
+	// Not used by Chain but useful as shortcut for scheduling
 	sched { | dtime = 0, clock | (clock ? SystemClock).sched(dtime, this); }
 }
 
