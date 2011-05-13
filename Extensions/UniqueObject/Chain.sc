@@ -35,8 +35,11 @@ ChainLink {
 	var <>func, <>times, <envir, onEnd;
 	
 	*new { | func, times, envir |
-		^this.newCopyArgs(func, times, envir ?? { () });
+		^this.newCopyArgs(func, times, envir ?? { () }).init;
 	}
+	
+	// inherit environment from the Chain
+	init { envir.parent = currentEnvironment }
 	
 	onEnd { | argEnd | onEnd = argEnd }
 	
@@ -44,11 +47,13 @@ ChainLink {
 		(clock ? SystemClock).sched(dtime, { 
 			envir use: {
 				var dur;
-				dur = times.(envir);
+				dur = times.(envir); // envir.use({ times.(envir) }); // !!!!!
 				if (dur.isNil) {
-					onEnd.(envir); // { envir use: { onEnd.(envir) } }
+//					envir use: { onEnd.(envir) } // onEnd.(envir); // 
+					onEnd.(envir);
 				}{
-					func.(envir);	// envir use: { func.(envir) };
+//					envir use: { func.(envir) }; // 
+					func.(envir);
 				}; 
 				dur;
 			}
@@ -62,9 +67,18 @@ ChainLink {
 	chain { | times, envir, dtime = 0, clock | 
 		^{ this.stream(times, envir.value, dtime.value, clock.value) } 
 	}
+
+	// nicer to use this shorter word, but semantically acceptable?
+	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
+
+	schedEnvir { | times, envir, dtime = 0, clock, onEnd |
+		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);
+	}
+
+	sched { | dtime = 0, clock | (clock ? SystemClock).sched(dtime, this); }
 }
 
-// Note: The following actually do enable simpler coding and are therefore removed: 
+// Note: The following do not simplify coding and are therefore removed: 
 /*
 + Function {
 	/* transform a function into a function that makes a UniqueSynth  */

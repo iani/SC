@@ -1,12 +1,7 @@
 /* 
-Better: The Stream stores itself in the current environment, that way each environment can have its own namespace, and name reuse becomes possible 
-*/
-
-/*
 Pattern and stream support for looping Functions
 
-UniqueStream to be phased out in favor of EnvirStream. 
-
+The Stream stores itself in the current environment, that way each environment can have its own namespace, and name reuse becomes possible 
 */
 
 EventStream {

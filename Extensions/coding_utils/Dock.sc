@@ -121,7 +121,7 @@ Dock {
 	*findClassFromSelection { // taken from Process class
 		var string, class, method, words;
 		string = Document.current.selectedString;
-		Document.current.selectedString.postln;
+		Document.current.selectedString;
 		if (string includes: $:) {
 			string.removeAllSuchThat(_.isSpace);
 			words = string.delimit({ arg c; c == $: });
