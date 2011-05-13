@@ -21,18 +21,6 @@ Chain {
 		stream = pattern.asStream;			
 	}
 
-/* // previous
-
-    next {
-        current = stream.next;
-        if (current.notNil) {
-            envir.use({ current.value }).onEnd({ this.next });
-        }{
-            stream = nil;   
-        }
-    }
-   
-*/
 	next {
 		current = stream.next;
 		if (current.notNil) {
@@ -51,7 +39,9 @@ ChainLink {
 	}
 	
 	// inherit environment from the Chain
-	init { envir.parent = currentEnvironment }
+	init {
+		envir.parent = currentEnvironment;
+	}
 	
 	onEnd { | argEnd | onEnd = argEnd }
 	
@@ -59,7 +49,9 @@ ChainLink {
 		(clock ? SystemClock).sched(dtime, { 
 			envir use: {
 				var dur;
-				dur = times.(envir);
+				times.postln;
+				envir.postln;
+				dur = times.(envir).next;
 				if (dur.isNil) {
 					onEnd.(envir);
 				}{
@@ -78,8 +70,8 @@ Pattern and stream support for looping Functions
 // Help for coding chains
 + Function {
 	/* transform a function into a function that makes an EventStream */
-	once { | dur = 0, envir, dtime = 0, clock |
-		^{ this.stream({ \dur.once(dur) }, envir.value, dtime.value, clock.value) } 
+	pchain { | timePattern, envir, dtime = 0, clock, key = \dur |
+		^this.chain({ key.stream(timePattern.value ?? { Pn(0, 1) }) }, envir, dtime, clock)
 	}
 
 	chain { | times, envir, dtime = 0, clock | 
@@ -89,6 +81,10 @@ Pattern and stream support for looping Functions
 	// nicer to use this shorter word, but semantically acceptable?
 	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
 
+	once { | dur = 0, envir, dtime = 0, clock |
+		^{ this.stream({ \dur.once(dur) }, envir.value, dtime.value, clock.value) } 
+	}
+
 	schedEnvir { | times, envir, dtime = 0, clock, onEnd |
 		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);
 	}
@@ -97,28 +93,3 @@ Pattern and stream support for looping Functions
 	sched { | dtime = 0, clock | (clock ? SystemClock).sched(dtime, this); }
 }
 
-// Note: The following do not simplify coding and are therefore removed: 
-/*
-+ Function {
-	/* transform a function into a function that makes a UniqueSynth  */
-	chainSynth { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name, dur |
-		var releaseTime;
-		#dur, releaseTime = dur.asArray;
-		dur = dur ? 1;
-		releaseTime = releaseTime ? 0.02;
-		^{ this.play(target.value, outbus.value, fadeTime.value, addAction.value, args.value, name.value)
-			.dur(dur, releaseTime)
-		}
-	}
-}
-
-+ Symbol {
-	/* transform a symbol into a a function that makes a UniqueSynth */
-	chain { | args, target, addAction, dur | 
-		var releaseTime;
-		#dur, releaseTime = dur.asArray;
-		dur = dur ? 1;
-		^{ this.mplay(args.value, target.value, addAction.value).dur(dur, releaseTime) } 
-	}
-}
-*/
