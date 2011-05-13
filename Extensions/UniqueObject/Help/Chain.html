@@ -164,6 +164,33 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">);</p>
 <p class="p6">//: End third chain example</p>
 <p class="p4"><br></p>
+<p class="p7">//:An old style electronic game gone crazy</p>
+<p class="p7">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ postf("sequence repeat no: %, i pat: %\n", \count.next, \i.next); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s3">Prand</span>([0.06, 0.07, 0.14], 3 rrand: 15) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, [60, 62, 64, 65, 70, 72].choose.midicps])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ Pn(0.25, 8.rand) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>postf("10 counts: %\n", \count2.pseries(1).next);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([\amp, 0.3, <span class="s2">\freq</span>, (\i.this + \f.prand((0..2)).next).midicps])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.03, exprand(0.01, 0.03));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain(Pn(0.05, 10)),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([\amp, 0.3, <span class="s2">\freq</span>, (\i.this + \f.pser([0, 4, 7]).next).midicps])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.03, exprand(0.01, 0.03));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ Pn(0.05, 25.rand) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.2], 0, 0.2) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space">  </span><span class="s2">\freq</span>.pseq((4..20), <span class="s3">inf</span>).next * 100])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(1 rrand: 2.5, 1.25 rrand: 3.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p8"><span class="Apple-tab-span">	</span>inf</p>
+<p class="p8">), () make: { \count.pseries(1); \i.pwhite(40, 100) }</p>
+<p class="p8">);</p>
+<p class="p9"><br></p>
+<p class="p8">//: End of examples</p>
 <p class="p4"><br></p>
 <p class="p5"><b>Related Classes</b></p>
 <p class="p4"><br></p>

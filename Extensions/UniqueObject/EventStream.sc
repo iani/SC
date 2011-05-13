@@ -38,7 +38,7 @@ EventStream {
 	// Shortcuts for creating all kinds of patterns can be added.
 	pseq { | array, repeats = 1 | ^this.stream(Pseq(array, repeats)); }
 	pseq1 { | ... elements | ^this.pseq(elements, 1); }
-	pser { | array, repeats = 1 | ^this.stream(Pser(array, repeats)); }
+	pser { | array, repeats = inf | ^this.stream(Pser(array, repeats)); }
 	pser1 { | ... elements | ^this.stream(Pser(elements, inf)); }
 	pwhite { | lo, hi, length = inf | ^this.stream(Pwhite(lo, hi, length)) }
 	prand { | array, repeats = inf | ^this.stream(Prand(array, repeats)) }

@@ -49,8 +49,6 @@ ChainLink {
 		(clock ? SystemClock).sched(dtime, { 
 			envir use: {
 				var dur;
-				times.postln;
-				envir.postln;
 				dur = times.(envir).next;
 				if (dur.isNil) {
 					onEnd.(envir);
@@ -70,20 +68,15 @@ Pattern and stream support for looping Functions
 // Help for coding chains
 + Function {
 	/* transform a function into a function that makes an EventStream */
-	pchain { | timePattern, envir, dtime = 0, clock, key = \dur |
-		^this.chain({ key.stream(timePattern.value ?? { Pn(0, 1) }) }, envir, dtime, clock)
-	}
-
-	chain { | times, envir, dtime = 0, clock | 
-		^{ this.stream(times, envir.value, dtime.value, clock.value) } 
+	chain { | timePat, envir, dtime = 0, clock, key = \dur | 
+		^{ this.stream({ 
+			key.stream(timePat.value ?? { Pn(0, 1) }) }, 
+			envir.value, dtime.value, clock.value) 
+		} 
 	}
 
 	// nicer to use this shorter word, but semantically acceptable?
 	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
-
-	once { | dur = 0, envir, dtime = 0, clock |
-		^{ this.stream({ \dur.once(dur) }, envir.value, dtime.value, clock.value) } 
-	}
 
 	schedEnvir { | times, envir, dtime = 0, clock, onEnd |
 		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);
