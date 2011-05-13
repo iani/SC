@@ -29,6 +29,9 @@ EventStream {
 
 + Symbol {
 	stream { | pattern | ^EventStream(this, pattern).next }
+	getStream { ^EventStream.at(this) }
+	next { ^EventStream.at(this).next }
+	this { ^EventStream.at(this).value }
 	replaceStream { | pattern | ^EventStream(this).init(pattern) } // next not called!
 	resetStream { ^EventStream(this).reset } 	// next not called: design choice.
 	removeStream { ^EventStream(this).remove }

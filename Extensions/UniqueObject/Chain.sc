@@ -55,17 +55,14 @@ ChainLink {
 	
 	onEnd { | argEnd | onEnd = argEnd }
 	
-	// how to introduce method 'once'???
 	sched { | dtime = 0, clock |
 		(clock ? SystemClock).sched(dtime, { 
 			envir use: {
 				var dur;
-				dur = times.(envir); // envir.use({ times.(envir) }); // !!!!!
+				dur = times.(envir);
 				if (dur.isNil) {
-//					envir use: { onEnd.(envir) } // onEnd.(envir); // 
 					onEnd.(envir);
 				}{
-//					envir use: { func.(envir) }; // 
 					func.(envir);
 				}; 
 				dur;
@@ -73,27 +70,6 @@ ChainLink {
 		});
 	}
 
-
-/* /// Not right!!!
-    sched { | dtime = 0, clock |
-        var timeStream;
-        timeStream = envir.use({ times.(envir) }).asStream;
-        (clock ? SystemClock).sched(dtime, { 
-            envir use: {
-                var dur;
-                dur = timeStream.next.(envir); // envir.use({ times.(envir) }); // !!!!!
-                if (dur.isNil) {
-//                  envir use: { onEnd.(envir) } // onEnd.(envir); // 
-                    onEnd.(envir);
-                }{
-//                  envir use: { func.(envir) }; // 
-                    func.(envir);
-                }; 
-                dur;
-            }
-        });
-    }
-*/
 }
 /*
 Pattern and stream support for looping Functions
