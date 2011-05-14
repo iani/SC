@@ -106,17 +106,22 @@ UniqueSynth : AbstractUniqueServerObject {
 	scheds { | func, dtime = 0 | this.sched(func, dtime, SystemClock) }
 	scheda { | func, dtime = 0 | this.sched(func, dtime, AppClock) }
 
-	stream { | func, envir, dtime = 0, clock, onEnd |
+	stream { | func, times, envir, dtime = 0, clock, onEnd, key = \dur |
 		clock = clock ? AppClock;
 		this.onStart({
-			{ | envir | 
-				if (this.isPlaying) { func.(object, this, envir) } { nil } 
-			}.schedEnvir(envir, dtime, clock, onEnd);
+			{ | envir |
+				currentEnvironment[key].postln;
+				if (this.isPlaying) { envir use: { func.(object, this, envir) } } { nil } 
+			}.schedEnvir({ key.stream(times.value ?? { Pn(0, 1) }) }, envir, dtime, clock, onEnd);
 		});
 	}
 
-	streams { | func, envir, dtime = 0, onEnd | this.stream(func, envir, dtime, SystemClock, onEnd) }
-	streama { | func, envir, dtime = 0, onEnd | this.stream(func, envir, dtime, AppClock, onEnd) }
+	streams { | func, times, envir, dtime = 0, onEnd | 
+		this.stream(func, times, envir, dtime, SystemClock, onEnd)
+	}
+	streama { | func, times, envir, dtime = 0, onEnd |
+		this.stream(func, times, envir, dtime, AppClock, onEnd)
+	}
 	
 	releaseSynth { | dtime |
 		// Use  name releaseSynth in order not to mofify release method inherited from Object

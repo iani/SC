@@ -31,9 +31,10 @@ Chain {
 	}
 }
 
+// TODO: IMPORTANT: Test combining SynthLinks with ChainLinks in the same chain
 SynthLink { 
 	var <>func, <envir, <synth, onEnd;
-	
+
 	*new { | func, envir |
 		^this.newCopyArgs(func, envir ?? { () }).init;
 	}
@@ -93,12 +94,20 @@ Pattern and stream support for looping Functions
 	
 	/* transform a function into a function that makes an EventStream */
 	chain { | timePat, envir, dtime = 0, clock, key = \dur | 
-		^{ this.stream({ 
-			key.stream(timePat.value ?? { Pn(0, 1) }) }, 
+		^{ this.stream(
+			{ key.stream(timePat.value ?? { Pn(0, 1) }) }, // still to be debugged
+			envir.value, dtime.value, clock.value) 
+		}
+	}
+
+	once { | dur = 0, envir, dtime = 0, clock | 
+		^{ this.stream(
+			{ UniqueID.next.asSymbol.stream(Pn(0, 1)) }, 
 			envir.value, dtime.value, clock.value) 
 		} 
 	}
 
+	/* Schedule functions for repeated evaluation in time, within Chain or otherwise */
 	// nicer to use this shorter word, but semantically acceptable?
 	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
 

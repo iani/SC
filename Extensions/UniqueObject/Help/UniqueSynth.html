@@ -144,9 +144,8 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">(</p>
 <p class="p8">{<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="s2"><span class="Apple-tab-span">	</span>\test</span>.playFunc({ | rate = 1 | <span class="s1">WhiteNoise</span>.ar(Decay.kr(Impulse.kr(rate.dup) * 0.1)) });</p>
-<p class="p8"><span class="Apple-tab-span">	</span>\test.set(\rate, \rate.pseq((1..15)));</p>
-<p class="p8"><span class="Apple-tab-span">	</span>\dur.pn(1, 15);</p>
-<p class="p8">}.stream(onEnd: {</p>
+<p class="p8"><span class="Apple-tab-span">	</span>\test.set(\rate, \rate.pseq((1..15)).next);</p>
+<p class="p8">}.stream({ \dur.pn(1, 15) }, onEnd: {</p>
 <p class="p8"><span class="Apple-tab-span">	</span>\test.releaseSynth(3);</p>
 <p class="p8"><span class="Apple-tab-span">	</span>{ Resonz.ar(<span class="s1">WhiteNoise</span>.ar(0.1.dup), LFNoise2.kr(1).range(100, 4000)) }.play.dur(2, 3);</p>
 <p class="p8">});</p>
@@ -173,6 +172,15 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s6">Klang</span>.ar(`[ <span class="s6">Array</span>.rand(12, 600.0, 1000.0)], 1, 0) * 0.05 }.play.dur(2, 3);</p>
 <p class="p8"><span class="Apple-tab-span">	</span>})</p>
 <p class="p8">});</p>
+<p class="p8">)</p>
+<p class="p4"><br></p>
+<p class="p11">// This can be written more simply as:<span class="Apple-converted-space"> </span></p>
+<p class="p8">(</p>
+<p class="p8">Chain(Pseq([</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s1">SinOsc</span>.ar(1000 + 100.rand, 0, 0.1) }.play.dur(1, 0.5) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s2">\default</span>.play.dur(1, 0.1) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s6">Klang</span>.ar(`[ <span class="s6">Array</span>.rand(12, 600.0, 1000.0)], 1, 0) * 0.05 }.play.dur(2, 3); }</p>
+<p class="p8">]));</p>
 <p class="p8">)</p>
 <p class="p4"><br></p>
 <p class="p11">// Running a routine for the duration of the Synth with rsync, rsyncs, or rsynca<span class="Apple-converted-space"> </span></p>
@@ -281,28 +289,34 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">}).onClose({ 'WINDOW'.close });</p>
 <p class="p8">)</p>
 <p class="p7"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>stream(func, envir, dtime, clock)</b> : Schedule a function with Function:stream,</p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>stream(func, times, envir, dtime, clock, onEnd)</b> : Schedule a function with Function:stream,</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>using clock as clock.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>func: a function to be scheduled</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>times: a Pattern or a function producing a pattern, which produces values to be used<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>as durations for scheduling successive evaluations of func.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>envir: an environment to run EventStreams in (default is a new empty Event)</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dtime: the time to delay before scheduling. Default is 0.<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>clock: a clock. Default is AppClock.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>onEnd: A function to evaluate when the stream ends. Default is nil (no function). <span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Use the short forms streams and streama to specify the SystemClock or AppClock:</p>
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p7"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>streams(func, envir, dtime)</b> : Schedule a function with Function:stream,</p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>streams(func, times, envir, dtime, onEnd)</b> : Schedule a function with Function:stream,</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>using SystemClock as clock.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>func: a function to be scheduled</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>times: a Pattern or a function producing a pattern, which produces values to be used<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>as durations for scheduling successive evaluations of func.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>envir: an environment to run EventStreams in (default is a new empty Event)</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dtime: the time to delay before scheduling. Default is 0.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>onEnd: A function to evaluate when the stream ends. Default is nil (no function). <span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p8">(</p>
 <p class="p8">{ <span class="s1">| freq = 400 |</span> <span class="s1">Resonz</span>.ar(<span class="s1">BrownNoise</span>.ar(2), freq * [1, 2], 0.01) }.play.dur(10, 15)</p>
-<p class="p8"><span class="Apple-tab-span">	</span>.streams({ <span class="s1">| s |</span><span class="Apple-converted-space"> </span></p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>s.set(<span class="s2">\freq</span>, \freq.pseq((2..15).pyramid(5), inf) * 100);<span class="Apple-converted-space"> </span></p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\dur.pseq((2..15).pyramid(5), inf) / 50;</p>
-<p class="p8"><span class="Apple-tab-span">	</span>});</p>
+<p class="p8"><span class="Apple-tab-span">	</span>.streams(</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s1">| s |</span> s.set(<span class="s2">\freq</span>, \freq.pseq((2..15).pyramid(5), inf).next * 100); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Pseq((2..15).pyramid(5) / 50, inf)</p>
+<p class="p8"><span class="Apple-tab-span">	</span>);</p>
 <p class="p8">)</p>
 <p class="p7"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>streama(func, envir, dtime, onEnd)</b> : Schedule a function with Function:stream,</p>

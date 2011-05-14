@@ -16,7 +16,7 @@ EventStream {
 		this.reset;
 	}
 	
-	next { 
+	next {
 		value = stream.next;
 		if (value.isNil) { this.remove };
 		^value;
@@ -38,6 +38,7 @@ EventStream {
 	// avoid overwriting Symbol:next, it may interfere with 
 	// the standard Event/Pattern/Pbind mechanism. Therefore: enext.
 	enext { ^EventStream(this).next }
+	n { ^EventStream(this).next }		// shorte synonym for enext
 	this { ^EventStream(this).value }
 	replaceStream { | pattern | ^EventStream(this).init(pattern) } // next not called!
 	resetStream { ^EventStream(this).reset } 	// next not called: design choice.
