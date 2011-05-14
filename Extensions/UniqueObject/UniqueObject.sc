@@ -63,4 +63,7 @@ UniqueObject {
 	printOn { arg stream;
 		stream << this.class.name << "(" <<* [key.last, object] <<")";
 	}
+	
+	// ====== chain and other process support =======
+	stop { object.stop; this.remove; }
 }

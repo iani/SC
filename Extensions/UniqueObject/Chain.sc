@@ -7,11 +7,9 @@ Chain {
 		^this.newCopyArgs(pattern, envir ? ()).init.start;
 	}
 	
-	init { CmdPeriod.doOnce(this); }
+	init { CmdPeriod.doOnceFirst(this); }
 
-	cmdPeriod { 	// ensure stopping on Command Period
-		this.stop;
-	}	
+	cmdPeriod { this.stop; }	
 
 	start { if (this.isRunning) { } { this.reset.next } } 
 	
@@ -30,7 +28,8 @@ Chain {
 			envir use: { onEnd.(envir) };
 		}
 	}
-	stop { if (this.isRunning) { link.stopLink; }	}
+	stop {
+		if (this.isRunning) { stream = nil; link.stopLink; }	}
 	
 	// Chaining chains
 	onEnd { | argOnEnd | onEnd = argOnEnd }
@@ -57,6 +56,7 @@ SynthLink {
 	}
 
 	stopLink {
+		onEnd = nil;
 		synth.removeAllNotifications;
 		if (synth.isPlaying) { synth.free };
 	}
@@ -128,5 +128,21 @@ Pattern and stream support for looping Functions
 
 	// Not used by Chain but useful as shortcut for scheduling
 	sched { | dtime = 0, clock | (clock ? SystemClock).sched(dtime, this); }
+}
+
++ Symbol {
+	chain { | pattern, envir |
+		^UniqueObject(this, { Chain(pattern, envir).onEnd({ UniqueObject(this).remove }) })
+	}
+	chainSeq { | ... links |
+		^UniqueObject(this, { Chain(Pseq(links, 1)).onEnd({ UniqueObject(this).remove }) })
+	}
+}
+
++ CmdPeriod {
+	*doOnceFirst { arg object;
+		var f = { this.remove(f); object.doOnCmdPeriod  };
+		objects.addFirst(f);
+	}
 }
 

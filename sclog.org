@@ -601,7 +601,8 @@ Some text here. The part here will not be listed as a code snippet in the Code l
      :PROPERTIES:
      :ENTERED_ON: <2011-05-12 Thu 11:41>
      :END:
-**** TODO Debug environment evaluation in Chain, EventStream, remove .next from EventStream new.  :chain:
+**** DONE Debug environment evaluation in Chain, EventStream, remove .next from EventStream new. :chain:
+     CLOSED: [2011-05-14 Sat 23:05]
      :PROPERTIES:
      :ENTERED_ON: <2011-05-12 Thu 11:41>
      :END:
@@ -631,4 +632,12 @@ Reset ServerReady if an Exception occurs, to enable restarting the next time tha
 **** SynthLink added, timing mechanism + EventStream modified :chain:
      :PROPERTIES:
      :ENTERED_ON: <2011-05-14 Sat 18:18>
+     :END:
+**** Tested nested chains, added chain stop, Symbol:chain, chainSeq :chain:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-14 Sat 23:05>
+     :END:
+**** TODO Debug stopping in chains: Sometimes synths continue 	      :chain:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-14 Sat 23:06>
      :END:

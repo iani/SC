@@ -133,7 +133,10 @@ UniqueSynth : AbstractUniqueServerObject {
 	
 	// Chain support
 	stopLink {
-		if (this.isPlaying) { this.removeAllNotifications };
-		this.free;	
+		if (this.isPlaying) {
+			this.removeAllNotifications;
+			object.release;
+			this.free;	
+		};
 	}
 }
