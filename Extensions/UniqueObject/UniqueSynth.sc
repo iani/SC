@@ -96,7 +96,6 @@ UniqueSynth : AbstractUniqueServerObject {
 	rsyncs { | func | this.rsync(func, SystemClock) }
 	rsynca { | func | this.rsync(func, AppClock) }
 
-
 	sched { | func, dtime = 0, clock |
 		clock = clock ? AppClock;
 		this.onStart({
@@ -131,4 +130,10 @@ UniqueSynth : AbstractUniqueServerObject {
 	set { | ... args | if (this.isPlaying) { object.set(*args) } }
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
+	
+	// Chain support
+	stopLink {
+		if (this.isPlaying) { this.removeAllNotifications };
+		this.free;	
+	}
 }

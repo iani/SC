@@ -1,7 +1,7 @@
 
 
 Chain {
-	var <>pattern, <envir, <stream, <current;
+	var <>pattern, <envir, <stream, <currentFunc, <link;
 	
 	*new { | pattern, envir |
 		^this.newCopyArgs(pattern, envir ? ()).init.start;
@@ -22,17 +22,19 @@ Chain {
 	}
 
 	next {
-		current = stream.next;
-		if (current.notNil) {
-			envir.use({ current.(envir) }).onEnd({ this.next });
+		currentFunc = stream.next;
+		if (currentFunc.notNil) {
+			link = envir.use({ currentFunc.(envir) }).onEnd({ this.next });
 		}{
 			stream = nil;	
 		}
 	}
+	
+	stop { if (this.isRunning) { link.stopLink; }	}
 }
 
 // TODO: IMPORTANT: Test combining SynthLinks with ChainLinks in the same chain
-SynthLink { 
+SynthLink {
 	var <>func, <envir, <synth, onEnd;
 
 	*new { | func, envir |
@@ -45,15 +47,21 @@ SynthLink {
 		synth = envir use: func;
 		synth.onStart({ synth.onEnd(onEnd) });
 	}
-	
+
 	onEnd { | argEnd | 
 		onEnd = argEnd;
-	}	
+	}
+
+	stopLink {
+		synth.removeAllNotifications;
+		if (synth.isPlaying) { synth.free };
+	}
+
 }
 
-ChainLink { 
+ChainLink {
 	var <>func, <>times, <envir, onEnd;
-	
+
 	*new { | func, times, envir |
 		^this.newCopyArgs(func, times, envir ?? { () }).init;
 	}
@@ -78,6 +86,12 @@ ChainLink {
 				dur;
 			}
 		});
+	}
+	
+	stopLink {
+		onEnd = nil;
+		times = nil;
+		func = nil;	
 	}
 }
 /*

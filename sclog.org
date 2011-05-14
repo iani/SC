@@ -104,7 +104,8 @@ This resulted in magnitude values below 1 producing negative values after log10,
 Default: 0.5. Tested between: 0.01 and 1
 Higher values: peaks show clearer, lower magnitudes may disappear
 Lower values: peaks smear more, lower magnitudes are displayed
-**** TODO is var windowparent necessary? perhaps window is enough :spectrogram:
+**** DONE is var windowparent necessary? perhaps window is enough :spectrogram:
+     CLOSED: [2011-05-14 Sat 18:16]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-19 Tue 20:28>
      :END:
@@ -603,4 +604,31 @@ Some text here. The part here will not be listed as a code snippet in the Code l
 **** TODO Debug environment evaluation in Chain, EventStream, remove .next from EventStream new.  :chain:
      :PROPERTIES:
      :ENTERED_ON: <2011-05-12 Thu 11:41>
+     :END:
+*** 2011-05-14 Saturday
+**** Modified Meta_Exception:new to reset ServerPrep, resuming evaluation with Cmd-Shift-X :serverprep:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-14 Sat 18:17>
+     :END:
+
+/*
+
+Reset ServerReady if an Exception occurs, to enable restarting the next time that ServerReady is needed. 
+
+*/
+
++ Exception {
+
+	*new { arg what;
+		var backtrace;
+	// permit to use Cmd-Shift-X for evaluating code again. See classes Code and ServerPrep
+		ServerPrep.initClass;
+		if (debug) { backtrace = this.getBackTrace.caller };
+		^super.newCopyArgs(what ? this.name, backtrace)
+	}
+	
+}
+**** SynthLink added, timing mechanism + EventStream modified :chain:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-14 Sat 18:18>
      :END:

@@ -84,7 +84,7 @@ ServerPrep {
 	}
 
 	*addBuffer { | ubuf | this.new addBuffer: ubuf }
-	addBuffer { | ubuf | \addBuffer.postln; ubuf.postln; bufs add: ubuf }
+	addBuffer { | ubuf | bufs add: ubuf }
 	*addDef { | udef | this.new addDef: udef }
 	addDef { | udef | defs add: udef }
 	*addSynth { | func | this.new addSynth: func }

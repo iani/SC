@@ -1,3 +1,4 @@
+
 /* 
 Shortcuts for establishing messaging communication between objects via NotificationCenter.
 */
@@ -41,6 +42,11 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	
 	objectClosed {	// remove all notifiers and listeners
 		NotificationCenter.notify(this, this.removedMessage);
+		this.removeAllNotifications;
+	}
+	
+	removeAllNotifications {
+		NotificationCenter.removeAll(this);
 	}
 
 	removedMessage { ^\objectClosed }
@@ -51,7 +57,8 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		this.registerOneShot(message, receiver, { func.(this) });
 	}
 	registerOneShot { | message, receiver, func |
-		NotificationCenter.registerOneShot(this, message, receiver, func);	}
+		NotificationCenter.registerOneShot(this, message, receiver, func);
+	}
 
 	addToServerTree { | function, server |
 		ServerPrep(server).addToServerTree(this, function);
@@ -59,4 +66,10 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	removeFromServerTree { | function, server |
 		ServerPrep(server).removeFromServerTree(this);
 	}
+}
+
++ NotificationCenter {
+	*removeAll { | object |
+		registrations.removeEmptyAtPath([object]);
+	}	
 }
