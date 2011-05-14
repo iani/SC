@@ -58,3 +58,6 @@ EventStream {
 	once { | dur = 0 | ^this.stream(r { dur.yield }) }
 }
 
++ SimpleNumber {
+	once { ^Pn(this, 1) }
+}

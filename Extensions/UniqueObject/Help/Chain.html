@@ -76,7 +76,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
 <p class="p9"><span class="Apple-tab-span">	</span>{</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="Apple-converted-space"> </span></p>
-<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">Klang</span>.ar(`[ <span class="s3">Array</span>.rand(3, 100.0, 125.0) * <span class="s2">\inc</span>.prand((5..7), <span class="s3">inf</span>).next]) * 0.05<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">Klang</span>.ar(`[ <span class="s3">Array</span>.rand(3, 100.0, 125.0) * <span class="s2">\inc</span>.prand((5..7), <span class="s3">inf</span>).next]).dup * 0.05<span class="Apple-converted-space"> </span></p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.play.dur(0.1, 0.3);</p>
 <p class="p9"><span class="Apple-tab-span">	</span>}.chain(<span class="s3">Pn</span>(0.1, 5)),</p>
 <p class="p9"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.3) }</p>
@@ -97,7 +97,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">Prand</span>((1..4), <span class="s3">inf</span>),</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">Prand</span>((9..12), <span class="s3">inf</span>)</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>], <span class="s3">inf</span>)).next</p>
-<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>]) * 0.07<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>]).dup * 0.07<span class="Apple-converted-space"> </span></p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.play.dur(0.1, 0.3);</p>
 <p class="p9"><span class="Apple-tab-span">	</span>}.chain(<span class="s3">Pn</span>(0.1, 15)),</p>
 <p class="p9"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.3) }</p>
@@ -109,7 +109,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p9">));</p>
 <p class="p6"><br></p>
 <p class="p6"><br></p>
-<p class="p7">//:Third Variant: Second chain example with Pseq instead of Prand</p>
+<p class="p7">//:Third Variant: Second chain example with Pseq instead of Prand + occasional clusters</p>
 <p class="p8">Chain<span class="s1">(</span></p>
 <p class="p8"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
 <p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>/* <span class="Apple-tab-span">	</span>Restart the frequency series at each repeat */</p>
@@ -123,9 +123,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">Prand</span>((7..12), <span class="s3">inf</span>),</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">Prand</span>((12..20), <span class="s3">inf</span>)</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>], <span class="s3">inf</span>)).next</p>
-<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>]) * 0.07<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>]).dup * 0.07<span class="Apple-converted-space"> </span></p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.play.dur(0.1, 0.3);</p>
-<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain(<span class="s3">Pn</span>(0.1, 5)),</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain({ Prand([<span class="s3">Pn</span>(0.5.rand, 5), Pn(0, 5)]) }),</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.3) }</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s2">\freq</span>,<span class="Apple-converted-space">  </span><span class="s2">\freq</span>.enext * 100])</p>
 <p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.01 rrand: 0.1, 0.05 rrand: 0.5)<span class="Apple-converted-space"> </span></p>

@@ -1,16 +1,16 @@
 
 
 Chain {
-	var <>pattern, <envir, <stream, <currentFunc, <link;
+	var <>pattern, <envir, <stream, <currentFunc, <link, onEnd;
 	
 	*new { | pattern, envir |
 		^this.newCopyArgs(pattern, envir ? ()).init.start;
 	}
 	
-	init { CmdPeriod.add(this);	}
+	init { CmdPeriod.doOnce(this); }
 
 	cmdPeriod { 	// ensure stopping on Command Period
-		stream = nil;
+		this.stop;
 	}	
 
 	start { if (this.isRunning) { } { this.reset.next } } 
@@ -26,11 +26,15 @@ Chain {
 		if (currentFunc.notNil) {
 			link = envir.use({ currentFunc.(envir) }).onEnd({ this.next });
 		}{
-			stream = nil;	
+			stream = nil;
+			envir use: { onEnd.(envir) };
 		}
 	}
-	
 	stop { if (this.isRunning) { link.stopLink; }	}
+	
+	// Chaining chains
+	onEnd { | argOnEnd | onEnd = argOnEnd }
+	stopLink { this.stop }
 }
 
 // TODO: IMPORTANT: Test combining SynthLinks with ChainLinks in the same chain
@@ -112,13 +116,6 @@ Pattern and stream support for looping Functions
 			{ key.stream(timePat.value ?? { Pn(0, 1) }) }, // still to be debugged
 			envir.value, dtime.value, clock.value) 
 		}
-	}
-
-	once { | dur = 0, envir, dtime = 0, clock | 
-		^{ this.stream(
-			{ UniqueID.next.asSymbol.stream(Pn(0, 1)) }, 
-			envir.value, dtime.value, clock.value) 
-		} 
 	}
 
 	/* Schedule functions for repeated evaluation in time, within Chain or otherwise */
