@@ -33,8 +33,6 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p5">Note: The Spectrograph may occasionally crash SuperCollider if it is running on a MacBook with battery power. I have not been able to trace the source of the problem so far but suspect this is due to fast Image updates causing problems with the Graphics Card.</p>
 <p class="p4"><br></p>
-<p class="p4"><br></p>
-<p class="p4"><br></p>
 <p class="p3">A Spectrograph instance is identified by its name and server. That is, if you call Spectrograph.new with the same name and Server as that of an already existing Spectrograph instance, the old Spectrograph instance will be returned.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>*new(name, bounds, server, rate, bufsize) </b>: Create a Spectrograph window</p>
@@ -80,7 +78,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p9"><span class="s3">\default</span>.play rsyncs: { loop { 0.25.rand.wait; <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 100 + 10000.rand) } };</p>
 <p class="p8"><br></p>
 <p class="p6">//:stop the examples</p>
-<p class="p9">[<span class="s3">\test</span>, <span class="s3">\test2</span>, <span class="s3">\default</span>] do: <span class="s4">_</span>.release;</p>
+<p class="p9">[<span class="s3">\test</span>, <span class="s3">\test2</span>, <span class="s3">\default</span>] do: <span class="s4">_</span>.releaseSynth;</p>
 <p class="p8"><br></p>
 <p class="p6">//:-</p>
 <p class="p8"><br></p>
@@ -104,12 +102,12 @@ span.Apple-tab-span {white-space:pre}
 <p class="p9"><span class="s4">Spectrograph</span>.current.close;</p>
 <p class="p8"><br></p>
 <p class="p6">//:Stop the test sound</p>
-<p class="p9"><span class="s3">\test3</span>.release;</p>
+<p class="p9"><span class="s3">\test3</span>.releaseSynth;</p>
 <p class="p10"><br></p>
 <p class="p10"><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>stopPollerOnClose_(boolean)</b> : If true, the PollFFT synth will stop when the Spectrograph window closes</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>If false, it the PollFFT synth will remain active.</p>
-<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>stopPollerOnClose_(boolean)</b> : If <i>true</i>, the PollFFT synth will stop when the Spectrograph window closes.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>If <i>false</i>, it the PollFFT synth will remain active.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Default is <i>true</i>.</p>
 <p class="p4"><br></p>
 <p class="p3"><b>Keyboard commands on the Spectrograph window</b></p>
 <p class="p4"><br></p>
