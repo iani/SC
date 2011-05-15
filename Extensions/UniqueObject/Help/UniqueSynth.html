@@ -18,12 +18,12 @@ p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
 p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
 p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
-p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4; min-height: 12.0px}
-p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
-p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #ff1b1e}
-p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #ff1b1e; min-height: 14.0px}
-p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
-p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4; min-height: 12.0px}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #ff1b1e}
+p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #ff1b1e; min-height: 14.0px}
+p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
 p.p18 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
 span.s1 {color: #162bc4}
 span.s2 {color: #008323}
@@ -185,6 +185,16 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">]));</p>
 <p class="p8">)</p>
 <p class="p4"><br></p>
+<p class="p11">// Or as:<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p11">(</p>
+<p class="p11">\example.chainSeq(</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s1">SinOsc</span>.ar(1000 + 100.rand, 0, 0.1) }.play.dur(1, 0.5) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s2">\default</span>.play.dur(1, 0.1) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s6">Klang</span>.ar(`[ <span class="s6">Array</span>.rand(12, 600.0, 1000.0)], 1, 0) * 0.05 }.play.dur(2, 3); }</p>
+<p class="p8">)</p>
+<p class="p8">)</p>
+<p class="p4"><br></p>
 <p class="p11">// Running a routine for the duration of the Synth with rsync, rsyncs, or rsynca<span class="Apple-converted-space"> </span></p>
 <p class="p8">(</p>
 <p class="p8">{ <span class="s1">| freq = 400 |</span> <span class="s1">Resonz</span>.ar(<span class="s1">BrownNoise</span>.ar(0.2), freq * [1, 2]) }.play.dur(5, 5)</p>
@@ -210,12 +220,12 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">{ <span class="s1">SinOsc</span>.ar(LFSaw.kr(0.5).range(500, 600) * [1, 1.1], 0, 0.1) }.play;</p>
 <p class="p7"><br></p>
 <p class="p8">{ <span class="s1">SinOsc</span>.ar(LFSaw.kr(0.25).range(200, 300) * [1, 1.1], 0, 0.1) }.play;</p>
-<p class="p12"><br></p>
-<p class="p13">postf("Synths on server are: %\n", UniqueSynth<span class="s4">.onServer);</span></p>
-<p class="p12"><br></p>
+<p class="p13"><br></p>
+<p class="p14">postf("Synths on server are: %\n", UniqueSynth<span class="s4">.onServer);</span></p>
+<p class="p13"><br></p>
 <p class="p8"><span class="s1">UniqueSynth</span>.onServer do: { | s | s.releaseSynth(1 + 5.rand) };</p>
 <p class="p4"><br></p>
-<p class="p13">postf("Synths on server are: %\n", UniqueSynth<span class="s4">.onServer);</span></p>
+<p class="p14">postf("Synths on server are: %\n", UniqueSynth<span class="s4">.onServer);</span></p>
 <p class="p4"><br></p>
 <p class="p5"><b><span class="Apple-tab-span">	</span>Instance methods:<span class="Apple-converted-space"> </span></b></p>
 <p class="p4"><br></p>
@@ -260,9 +270,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>.onClose({ <span class="s2">\window.close;</span> })</p>
 <p class="p8">)</p>
 <p class="p7"><br></p>
-<p class="p14"><b>Following 6 methods use Function:sched, Function:stream and EventStream.</b></p>
-<p class="p14"><b>See EventStream.html and FunctionSched.html for info.<span class="Apple-converted-space"> </span></b></p>
-<p class="p15"><br></p>
+<p class="p15"><b>Following 6 methods use Function:sched, Function:stream and EventStream.</b></p>
+<p class="p15"><b>See EventStream.html and FunctionSched.html for info.<span class="Apple-converted-space"> </span></b></p>
+<p class="p16"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>sched(func, dtime, clock)</b> : Schedule a function with Function:sched,</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>using clock as clock.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>func: a function to be scheduled</p>
@@ -329,14 +339,14 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>onEnd: if given, function to perform when the function stops repeating.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p8">(</p>
-<p class="p13"><span class="s4">{ </span>| freq = 400, q = 0.1, r = 2 |<span class="s4"> </span>Resonz<span class="s4">.ar(</span>BrownNoise<span class="s4">.ar(2), freq * [1, r], q) }.play</span></p>
+<p class="p14"><span class="s4">{ </span>| freq = 400, q = 0.1, r = 2 |<span class="s4"> </span>Resonz<span class="s4">.ar(</span>BrownNoise<span class="s4">.ar(2), freq * [1, r], q) }.play</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>.dur(10, 17)</p>
-<p class="p13"><span class="s4"><span class="Apple-tab-span">	</span>.streama({ </span>| s, u, env |</p>
-<p class="p8"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>env[\pos] = </span>\pen.pseq((2..15).pyramid(5), inf);</p>
+<p class="p14"><span class="s4"><span class="Apple-tab-span">	</span>.streama({ </span>| s, u, env |</p>
+<p class="p8"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>env[\pos] = </span>\pen.pseq((2..15).pyramid(5), inf).next;</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>s.set(</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\freq</span>, \freq.pseq((2..15).pyramid(5), inf) * 100,</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\q, \q.pfuncn({ 0.001 exprand: 0.3 }, inf),</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\r, \r.prand([0.5, 0.75, 1, 1.5, 2, 2.5, 3], inf)</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\freq</span>, \freq.pseq((2..15).pyramid(5), inf).next * 100,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\q, \q.pfuncn({ 0.001 exprand: 0.3 }, inf).next,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\r, \r.prand([0.5, 0.75, 1, 1.5, 2, 2.5, 3], inf).next</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>);</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>'Another Window'.window({</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>var w, u;</p>
@@ -354,8 +364,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>w.front;</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}).view.refresh;</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\dur.pseq((2..15).pyramid(5), inf) / 50;</p>
-<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}, Pseq((2..15).pyramid(5) / 50, inf);</p>
 <p class="p8">).onClose({ 'Another Window'.close });</p>
 <p class="p8">)</p>
 <p class="p7"><br></p>
@@ -407,10 +416,10 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6"><br></p>
 <p class="p9">/*</p>
 <p class="p9">NOTE: To run an example, go anywhere after the //: mark that starts it, and press Command-Shift-x</p>
-<p class="p16"><br></p>
+<p class="p17"><br></p>
 <p class="p9">To select the next example, press Command-shift-j</p>
 <p class="p9">To select the previous example, press Command-shift-k</p>
-<p class="p16"><br></p>
+<p class="p17"><br></p>
 <p class="p9">All examples can be started when the server is not running by pressing Cmd-shift-x.</p>
 <p class="p9">*/</p>
 <p class="p7"><br></p>
@@ -480,7 +489,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s1">SinOsc</span>.ar(exprand(400, 1800) * [1, 1.25], 0, 0.1) }.play.dur(0.01, exprand(0.01, 3));</p>
 <p class="p8"><span class="Apple-tab-span">	</span>exprand(0.02, 1).wait;</p>
 <p class="p8">};</p>
-<p class="p17"><br></p>
+<p class="p12"><br></p>
 <p class="p11">//:alternatively code the above with symbol.pfuncn</p>
 <p class="p11">/* Not possible to use a randSeed_setting *inside* function.stream,<span class="Apple-converted-space"> </span></p>
 <p class="p11"><span class="Apple-converted-space">   </span>but could be added as an optional init argument to Function:stream method (TODO) */</p>
@@ -489,8 +498,8 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s1">SinOsc</span>.ar(exprand(400, 1800) * [1, 1.25], 0, 0.1) }.play.dur(0.01, exprand(0.01, 3));</p>
 <p class="p8"><span class="Apple-tab-span">	</span>\dur.pfuncn({ exprand(0.02, 1) }, 52);</p>
 <p class="p8">}.stream;</p>
-<p class="p17"><br></p>
-<p class="p17"><br></p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
 <p class="p11">//:fun</p>
 <p class="p7"><br></p>
 <p class="p18">"hello "<span class="s4">.post;</span></p>

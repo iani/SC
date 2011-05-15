@@ -46,33 +46,6 @@ Chain {
 	stopLink { this.stop }
 }
 
-// TODO: IMPORTANT: Test combining SynthLinks with ChainLinks in the same chain
-SynthLink {
-	var <>func, <envir, <synth, onEnd;
-
-	*new { | func, envir |
-		^this.newCopyArgs(func, envir ?? { () }).init;
-	}
-	
-	// inherit environment from the Chain
-	init {
-		envir.parent = currentEnvironment;
-		synth = envir use: func;
-		synth.onStart({ synth.onEnd(onEnd) });
-	}
-
-	onEnd { | argEnd | 
-		onEnd = argEnd;
-	}
-
-	stopLink {
-		onEnd = nil;
-		synth.removeAllNotifications;
-		if (synth.isPlaying) { synth.free };
-	}
-
-}
-
 ChainLink {
 	var <>func, <>times, <envir, onEnd;
 

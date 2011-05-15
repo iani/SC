@@ -16,8 +16,7 @@ p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
 p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
 p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
-p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
-p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
 span.s1 {color: #000000}
 span.s2 {color: #008323}
 span.s3 {color: #162bc4}
@@ -26,11 +25,11 @@ span.Apple-tab-span {white-space:pre}
 </head>
 <body>
 <p class="p1"><b>SynthLink</b></p>
-<p class="p2"><b></b><br></p>
+<p class="p2"><br></p>
 <p class="p3"><b>Inherits from: Object</b></p>
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p5"><b>Purpose</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3">Encapsulate a Function that creates a UniqueSynth so that it can be evaluated within the environment of a Chain.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3"><b>Eplanation</b></p>
@@ -50,60 +49,60 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6">(</p>
 <p class="p6">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
 <p class="p9"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>/* note: ~freq.next and \freq.n are equivalent */</p>
-<p class="p10"><span class="Apple-tab-span">	</span>{ <span class="s2">\default</span>.play([<span class="s2">\freq</span>, ~freq.next]).dur(~dur.next, ~fade.next); }.s,</p>
-<p class="p10"><span class="Apple-tab-span">	</span>{ { <span class="s3">Resonz</span>.ar(<span class="s3">WhiteNoise</span>.ar(5), <span class="s2">\freq</span>.n, 0.01) }.play.dur(<span class="s2">\dur</span>.n, <span class="s2">\fade</span>.n); }.s,</p>
-<p class="p10"><span class="Apple-tab-span">	</span>{ { <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq, 0, 0.1) }.play(args: [<span class="s2">\freq</span>, <span class="s2">\freq</span>.n]).dur(<span class="s2">\dur</span>.n, <span class="s2">\fade</span>.n); }.s,</p>
-<p class="p10">], 20),<span class="Apple-tab-span">	</span></p>
-<p class="p11"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store the shared patterns in the global environment:</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="s2">\dur</span>.pseq([0.1, 0.2], <span class="s3">inf</span>);</p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="s2">\fade</span>.pseq([0.1, 0.2, 1], <span class="s3">inf</span>);<span class="Apple-converted-space"> </span></p>
-<p class="p10"><span class="Apple-tab-span">	</span><span class="s2">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s3">inf</span>)<span class="Apple-converted-space"> </span></p>
-<p class="p10">});</p>
+<p class="p7"><span class="Apple-tab-span">	</span>{ <span class="s2">\default</span>.play([<span class="s2">\freq</span>, ~freq.next]).dur(~dur.next, ~fade.next); },</p>
+<p class="p7"><span class="Apple-tab-span">	</span>{ { <span class="s3">Resonz</span>.ar(<span class="s3">WhiteNoise</span>.ar(5), <span class="s2">\freq</span>.n, 0.01) }.play.dur(<span class="s2">\dur</span>.n, <span class="s2">\fade</span>.n); },</p>
+<p class="p7"><span class="Apple-tab-span">	</span>{ { <span class="s3">| freq = 400 |</span> <span class="s3">SinOsc</span>.ar(freq, 0, 0.1) }.play(args: [<span class="s2">\freq</span>, <span class="s2">\freq</span>.n]).dur(<span class="s2">\dur</span>.n, <span class="s2">\fade</span>.n); },</p>
+<p class="p7">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store the shared patterns in the global environment:</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s2">\dur</span>.pseq([0.1, 0.2], <span class="s3">inf</span>);</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s2">\fade</span>.pseq([0.1, 0.2, 1], <span class="s3">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s2">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s3">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p7">});</p>
 <p class="p6">)</p>
 <p class="p4"><br></p>
 <p class="p4"><br></p>
 <p class="p5"><b>Usage</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3">A SynthLink instance is created from a Function that returns a UniqueSynth instance when evaluated, by sending that function the message s.<span class="Apple-converted-space"> </span></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Related Classes</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Instance Creation</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Class variables</b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span> --<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>--<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Instance variables</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>envir :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>func :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>onEnd :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>synth</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Class methods</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>*new</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Instance methods</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>envir :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>func :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>func_ :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>init :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>onEnd :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>synth</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3"><b>Examples</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
 </body>
 </html>
