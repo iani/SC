@@ -109,7 +109,6 @@ UniqueSynth : AbstractUniqueServerObject {
 		clock = clock ? AppClock;
 		this.onStart({
 			{ | envir |
-				currentEnvironment[key].postln;
 				if (this.isPlaying) { envir use: { func.(object, this, envir) } } { nil } 
 			}.schedEnvir({ key.stream(times.value ?? { Pn(0, 1) }) }, envir, dtime, clock, onEnd);
 		});
@@ -132,11 +131,14 @@ UniqueSynth : AbstractUniqueServerObject {
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
 	
 	// Chain support
-	stopLink {
-		if (this.isPlaying) {
-			this.removeAllNotifications;
-			object.release;
+	stopLink { /* this.free; */ }
+
+/*	stopLink {
+	if (this.isPlaying) {
+//			this.removeAllNotifications;
+//			object.releaseDependants;
 			this.free;	
 		};
 	}
+*/
 }

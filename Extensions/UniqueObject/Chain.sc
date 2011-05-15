@@ -28,8 +28,18 @@ Chain {
 			envir use: { onEnd.(envir) };
 		}
 	}
-	stop {
+	stop {	// does not release any current synth
 		if (this.isRunning) { stream = nil; link.stopLink; }	}
+	
+	free {	// stop and free synth if appropriate
+		link.postln.free;	// currently works only with UniqueSynth as link
+		this.stop;
+	}
+
+	release { | fadeout = 0.02 |
+		this.stop;
+		link.releaseSynth(fadeout);	// currently works only with UniqueSynth as link
+	}
 	
 	// Chaining chains
 	onEnd { | argOnEnd | onEnd = argOnEnd }
