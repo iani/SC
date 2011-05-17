@@ -1,4 +1,4 @@
-                 Lilt2/Elemenb√≠ (/Look Ma, No Boot/)
+                 Lilt2/Elemenbí (/Look Ma, No Boot/)
                  ===================================
 
 Author: Ioannis Zannos
@@ -144,7 +144,7 @@ Other example:
 4 Object methods for easy messaging via NotificationCenter 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shortening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 

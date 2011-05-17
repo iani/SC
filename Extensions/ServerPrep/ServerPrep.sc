@@ -4,7 +4,7 @@ ServerPrep {
 	var <server;
 	var <bufs, <defs, <synths, <routines, <actions;
 	
-	var cmdPeriod = false; 		// distinguish server boot from cmd period;
+	var cmdPeriod = false; 			// distinguish server boot from cmd period;
 	var serverBootedResponder;		// Wait for server notification on boot: ['/done', '/notify']
 
 	*initClass { all = IdentityDictionary.new; }
@@ -38,10 +38,9 @@ ServerPrep {
 	cmdPeriod { cmdPeriod = true }
 
 	doOnServerTree {
-		if (cmdPeriod) {	// do not reload SynthDefs + Buffers on Server init tree
+		if (cmdPeriod) {			// do not reload SynthDefs + Buffers on Server init tree
 			cmdPeriod = false;
-			
-			this.loadAllObjects;			// load all objects added to the tree, in order
+			this.loadAllObjects;	// load all objects added to the tree, in order
 			this.notifyTree;	/* add any functions from addToServerTree to actions
 			ensuring that their SynthDefs etc. will be started in the right order. */
 		}

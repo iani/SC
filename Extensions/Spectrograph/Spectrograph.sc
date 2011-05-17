@@ -16,7 +16,7 @@ Spectrograph : UniqueWindow {
 	classvar <minWidth = 400, <>backgroundColor, <>binColor;
 	var <bounds, <server, <rate = 0.04, <bufsize, <>stopPollerOnClose = true;
 	var <userview, <image, <imgWidth, <imgHeight;
-	var <scrollWidth; // , scrollImage, clearImage;
+	var <scrollWidth; 
 	var <index;	// running count of the currently polled fft frame. 
 				// received from FFTsynthPoller. Cached for asynchronous use by penObjects
 	var <windowIndex;	// index of x pixel on image where current frame is being drawn

@@ -32,7 +32,7 @@ Chain {
 		if (this.isRunning) { stream = nil; link.stopLink; }	}
 	
 	free {	// stop and free synth if appropriate
-		link.postln.free;	// currently works only with UniqueSynth as link
+		link.free;	// currently works only with UniqueSynth as link
 		this.stop;
 	}
 
@@ -87,16 +87,11 @@ Pattern and stream support for looping Functions
 
 // Help for coding chains
 + Function {
-	/* 	transform a function that creates a synth into a form that will accept 
-		onEnd for use in Chain */
-	s { 	| envir |
-		^{ SynthLink(this, envir) };	
-	}	
 	
 	/* transform a function into a function that makes an EventStream */
 	chain { | timePat, envir, dtime = 0, clock, key = \dur | 
 		^{ this.stream(
-			{ key.stream(timePat.value ?? { Pn(0, 1) }) }, // still to be debugged
+			{ key.stream(timePat.value ?? { Pn(0, 1) }) }, 
 			envir.value, dtime.value, clock.value) 
 		}
 	}

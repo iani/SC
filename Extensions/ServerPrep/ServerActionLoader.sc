@@ -23,7 +23,7 @@ ServerActionLoader {
 
 	loadAllObjects {
 		var array;
-		if (isLoading) { ^this };	// may be still in previous loading loop
+		if (isLoading) { ^this };	// leave if still in previous loading loop
 		isLoading = true;
 		if (verbose and: { objects.size > 0 }) {
 			postf("Loading % % to %\n", objects.size, this.objectKind, server);
