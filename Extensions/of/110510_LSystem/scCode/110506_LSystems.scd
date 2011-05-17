@@ -66,15 +66,6 @@ e[\theta] = 60;
 e[\length] = 20;
 e[\doos] = 4;
 
-//:H system
-e[\addr] = NetAddr("127.0.0.1", 12345);  //localhost, oF port
-e[\initString] = "[F]--F";
-e[\subString] = "|[+F][-F]-F";
-e[\theta] = 0;
-e[\length] = 40;
-e[\doos] = 3;
-e[\thetaStep]=1;
-
 //:Twig
 e[\addr] = NetAddr("127.0.0.1", 12345);  //localhost, oF port
 e[\initString] = "F";

@@ -9,7 +9,7 @@ DocThemes {
 	}
 
 	*toggle {
-		if (currentTheme === \default) {
+		if (currentTheme === \default) {  // edit by ari (/default)
 			this setTheme: defaultCustomTheme;
 		}{
 			this.resetToSCdefault;

@@ -61,6 +61,8 @@ PollFFT : UniqueObject {
 		object.free;
 		buffer.free;
 	}
+	
+	isPlaying { ^object.isPlaying }
 
 }
 
