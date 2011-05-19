@@ -7,7 +7,7 @@ Dock.browseUserClasses:
 */
 
 Dock {
-	classvar <>width = 150;
+	classvar <>width = 160;
 	*menuItems { ^[
 			CocoaMenuItem.addToMenu("Utils", "show doc list window", ["\"", false, false], {
 				this.showDocListWindow;

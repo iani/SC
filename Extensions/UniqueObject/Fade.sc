@@ -23,3 +23,18 @@ Fade {
 	}
 }
 
+// A curved fadeout sounds better than a linear one 
+
+FadeOut {
+	*ar { | attack = 0.01, doneAction = 2 |
+		var env;
+		env = Env.new([0, 1, 0], [attack, 1], -5, 1);
+		^EnvGen.ar(env, \gate.kr(1), timeScale: \fadeout.kr(1), doneAction: doneAction)
+	}
+	*kr { | attack = 0.01, doneAction = 2 |
+		var env;
+		env = Env.new([0, 1, 0], [0.0, 1], -5, 1);
+		^EnvGen.kr(env, \gate.kr(1), timeScale: \fadeout.kr(1), doneAction: doneAction)
+	}
+}
+
