@@ -45,6 +45,8 @@ class testApp : public ofBaseApp{
 		ofxXmlSettings settings;
 		
 		ofTrueTypeFont		font;
+		
+		float	data[1024];
 
 	private:
 		ofxOscReceiver	receiver;

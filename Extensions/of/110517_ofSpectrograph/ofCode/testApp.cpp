@@ -34,13 +34,15 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
 
 		// check for mouse moved message
-		if ( m.getAddress() == "test" )
+		if ( m.getAddress() == "data" )
 		{
 			// both the arguments are int32's
-			mouseX = m.getArgAsInt32( 0 );
-			mouseY = m.getArgAsInt32( 1 );
+			for (int i=0; i<512; i++)	{
+				data[i] = m.getArgAsFloat( i );
+				cout << data[i] << endl;
+			}
 		}
-
+/*
 		else
 		{
 			// unrecognized message: display on the bottom of the screen
@@ -69,6 +71,7 @@ void testApp::update(){
 			// clear the next line
 			msg_strings[current_msg_string] = "";
 		}
+		*/
 
 	}
 }

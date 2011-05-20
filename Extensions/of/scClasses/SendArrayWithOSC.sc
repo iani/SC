@@ -32,13 +32,12 @@ SendArrayWithOSC {
 		if (default.isNil) { default = this.new };
 		//format("here I will send message % with args %", message, args).postln;
 		
-		args[0].size.postln;
-		
-//		format("OF.%%", message, args).postln;
-//		default.send(message.asString, args);
+		//format("OF.%%", message, args).postln;
+		default.send(message.asString, args);
 	}
 	
-//	send { | message, args |
-//		addr.sendMsg(message.asString, *args);
-//	}
+	send { | message, args |
+		addr.sendMsg(message.asString, *args[0]);
+		//addr.sendBundle(0.2, args[]);		
+	}
 }

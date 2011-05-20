@@ -34,4 +34,4 @@ PollFFT('of') addDependant: { | ... data | data.postln; }
 //:Other stuff
 n = NetAddr("127.0.0.1", 57120);
 n.sendMsg();
-OF.test
+OF.data
