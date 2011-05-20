@@ -11,7 +11,7 @@ Getting of buffers with larger sizes is documented in SC Help, but for spectrogr
 
 */
 
-Spectrograph : UniqueWindow {
+SpectrographData : UniqueWindow {
 	classvar <current;
 	classvar <minWidth = 400, <>backgroundColor, <>binColor;
 	var <bounds, <server, <rate = 0.04, <bufsize, <>stopPollerOnClose = true;
@@ -75,8 +75,8 @@ Spectrograph : UniqueWindow {
 		bufsize = argBufsize;
 		window = object = Window(this.name, bounds);
 		this.initViews;
-		drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, binColor, backgroundColor);
-		//drawSpectrogram = SendSpectrogramData(bufsize, 64, 0.5, 1, binColor, backgroundColor);
+		//drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, binColor, backgroundColor);
+		drawSpectrogram = SendSpectrogramData(bufsize, 64, 0.5, 1, binColor, backgroundColor);
 		scroll = Scroll(image, (bounds.width / 4).round(1).asInteger, backgroundColor);
 		this.addWindowOnCloseAction;
 		this.addImageObject(drawSpectrogram);

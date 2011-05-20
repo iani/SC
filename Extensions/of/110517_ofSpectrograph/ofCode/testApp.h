@@ -13,6 +13,10 @@
 #include "ofxVectorMath.h"
 #include "ofxXmlSettings.h"
 
+// listen on port 12345
+#define PORT 12345
+#define NUM_MSG_STRINGS 20
+
 class testApp : public ofBaseApp{
 
 	public:
@@ -39,6 +43,17 @@ class testApp : public ofBaseApp{
 		ofxOscSender osc_sender;
 		ofxThread thread;
 		ofxXmlSettings settings;
+		
+		ofTrueTypeFont		font;
+
+	private:
+		ofxOscReceiver	receiver;
+
+		int				current_msg_string;
+		string			msg_strings[NUM_MSG_STRINGS];
+		float			timers[NUM_MSG_STRINGS];
+		string			mouseButtonState;
+	
 
 };
 
