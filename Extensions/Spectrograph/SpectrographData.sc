@@ -166,6 +166,9 @@ SpectrographData : UniqueWindow {
 				argIndex = scroll.update(argIndex, image);
 				drawSpectrogram.update(argIndex, image, magnitudes);
 				userview.refresh;
+				//magnitudes.postln;
+				OF.fftData(magnitudes[0],magnitudes[1],magnitudes[2],magnitudes[3],magnitudes[4],magnitudes[5],magnitudes[6],magnitudes[7],magnitudes[8],magnitudes[9],
+						  magnitudes[10],magnitudes[11],magnitudes[12],magnitudes[13],magnitudes[14],magnitudes[15],magnitudes[16],magnitudes[17],magnitudes[18],magnitudes[19]);
 			};
 		}.defer;		
 	}

@@ -32,26 +32,32 @@ SendSpectrogramData : DrawSpectrogram {
 		this.makeColors;
 	}
 
-	makeFFTimageArray { fftImageArray = Int32Array.fill(binSize / 2, 0); }
-
+	makeFFTimageArray { fftImageArray = Int32Array.fill(binSize / 2, 0);}
+/*
 	makeColors {
 		colors = (1..colorSize).pow(colorScaleExponent).normalize 
 		collect: { | blendFactor |
 			Image colorToPixel: background.blend(binColor, blendFactor);
-			//blendFactor.postln; // Add by Aris Bezas Thu, 19 May 2011, 22:11
 		};
-
+	}
+*/
+	makeColors {
+		colors = (1..64).pow(colorScaleExponent).normalize
+		collect: { | blendFactor |
+			Image colorToPixel: background.blend(binColor, blendFactor);
+			//blendFactor.postln;
+				
+		};
 	}
 
 	// Called by Spectrograph. Draw 1 fft frame magnitudes as pixeled colors on image
 	update { | windowIndex, image, magnitudes |
-		(1 + magnitudes.reverse).log10.clip(0, 1) * intensity
-		do: { | val, i |
+		(1 + magnitudes.reverse).log10.clip(0, 1) * intensity do: { | val, i |
 			fftImageArray[i] = colors.clipAt((val * colorSize).round);
 		};
-		OF.data(fftImageArray); // Add by Aris Bezas Thu, 19 May 2011, 21:30
 		image.setPixels(fftImageArray, Rect(windowIndex, 0, 1, fftImageArray.size));
 	}	
+
 
 	// Setting customization variables. Update the required internal variables
 

@@ -1,7 +1,8 @@
 /*
 SpectrographData.new
 \test3.playFunc({ LFSaw.ar(LFNoise2.kr(0.1).range(100, 10000), 0, 0.005) });
-
+Array
+OF
 Aris Bezas Tue, 17 May 2011, 18:19
 */
 
