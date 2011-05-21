@@ -3,6 +3,8 @@ A UniqueSynth which starts an FFT analysis synth on any audio input, polls the f
 
 It is always running as long as its server is booted. It stops and removes itself when sent the messages free or remove. 
 
+TODO: Should be UniqueServerObject?
+
 */
 
 PollFFT : UniqueObject {
