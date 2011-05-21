@@ -80,6 +80,12 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	
+	for (int i=0; i<512; i++)	{
+		printf("%f,", data[i]);
+	}
+	printf("\n");
+	/*
 	string buf;
 	buf = "listening for osc messages on port" + ofToString( PORT );
 	ofDrawBitmapString( buf, 10, 20 );
@@ -93,6 +99,8 @@ void testApp::draw(){
 	{
 		ofDrawBitmapString( msg_strings[i], 10, 40+15*i );
 	}
+	
+	*/
 
 
 
