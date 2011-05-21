@@ -15,7 +15,7 @@ DrawSpectrogram {
 	*new { | binSize = 1024, colorSize = 64, colorScaleExponent = 0.5, 
 		intensity = 1, binColor, background |
 		^this.newCopyArgs(binSize, colorSize, colorScaleExponent, 
-			intensity = 1, binColor, background
+			intensity, binColor, background
 		).init;
 	}
 	
