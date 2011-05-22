@@ -34,7 +34,7 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
 
 		// check for mouse moved message
-		if ( m.getAddress() == "data" )
+		if ( m.getAddress() == "fft" )
 		{
 			// both the arguments are int32's
 			for (int i=0; i<512; i++)	{
@@ -84,7 +84,7 @@ void testApp::draw(){
 	for (int i=0; i<512; i++)	{
 		printf("%f,", data[i]);
 	}
-	printf("\n");
+	printf("\n NEW LINE \n");
 	/*
 	string buf;
 	buf = "listening for osc messages on port" + ofToString( PORT );
