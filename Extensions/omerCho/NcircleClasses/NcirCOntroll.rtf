@@ -1,0 +1,63 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red0\green0\blue0;\red0\green0\blue191;
+\red0\green115\blue0;\red0\green115\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf2 \
+(\
+RastMakam\cf3 .load;\
+\
+\cf2 NcircGroups\cf3 .load;\
+\cf2 NcircBusses\cf3 .load;\
+\
+\cf2 ChClean\cf3 .load;\
+\cf2 ChReverb\cf3 .load;\
+\cf2 ChDelay\cf3 .load;\
+\cf2 ChRlpf\cf3 .load;\
+\cf2 ChWah\cf3 .load;\
+\cf2 ChFlow\cf3 .load;\
+)\
+\cf2 NcircFXSynths\cf3 .load;\
+\
+\pard\pardeftab560\ql\qnatural
+\cf3 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf4 GtrReceive\cf0 .load;\cf3 \
+\pard\pardeftab560\ql\qnatural
+\cf2 Pdef\cf3 (\cf5 \\bufRand\cf3 ).play;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 Pdef\cf3 (\cf5 \\gtrA01\cf3 ).play;\
+(\
+\cf2 Pdef\cf3 (\cf5 \\gtrA01\cf3 , \cf2 Posc\cf3 (\
+	[\cf5 \\msg\cf3 , \cf5 \\dur\cf3  ], \
+	\cf2 Pseq\cf3 ([ \
+		[\cf5 \\gtr1\cf3 , 2], [\cf5 \\gtr2\cf3 , 2], [\cf5 \\gtr3\cf3 , 6], [\cf5 \\gtr4\cf3 , 2], [\cf5 \\gtr5\cf3 , 4]\
+	], \cf2 inf\cf3 )\
+	)\
+);\
+)\
+\
+\
+\cf2 KlankReceive\cf3 .load;\
+\cf2 Pdef\cf3 (\cf5 \\klkA01\cf3 ).play;\
+(\
+\cf2 Pdef\cf3 (\cf5 \\klkA01\cf3 , \cf2 Posc\cf3 (\
+	[\cf5 \\msg\cf3 , \cf5 \\dur\cf3  ], \
+	\cf2 Pseq\cf3 ([ \
+		[\cf5 \\klk1\cf3 , 3], [\cf5 \\klk2\cf3 , 3], [\cf5 \\klk3\cf3 , 3], [\cf5 \\klk4\cf3 , 3], [\cf5 \\klk5\cf3 , 3]\
+	], \cf2 inf\cf3 )\
+	)\
+);\
+)\
+\
+\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf4 Pdef\cf0 (\cf6 \\gtrA01\cf0 ).stop;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 Pdef\cf3 (\cf5 \\klkA01\cf3 ).stop;\
+\
+\
+\
+\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+\cf3 s.queryAllNodes;}
