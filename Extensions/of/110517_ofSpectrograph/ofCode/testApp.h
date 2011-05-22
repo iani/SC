@@ -44,9 +44,12 @@ class testApp : public ofBaseApp{
 		ofxThread thread;
 		ofxXmlSettings settings;
 		
+		ofTexture		texScreen;
+		
 		ofTrueTypeFont		font;
 		
 		float	data[1024];
+		float		countX;
 
 	private:
 		ofxOscReceiver	receiver;

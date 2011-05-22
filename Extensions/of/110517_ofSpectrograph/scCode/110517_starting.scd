@@ -6,6 +6,18 @@ OF
 Aris Bezas Tue, 17 May 2011, 18:19
 */
 
+
+
+
+//:Use new stuff
+PollFFT('of') addDependant: SendSpectrogramData.new;
+
+\test.playFunc({ LFSaw.ar(LFNoise2.kr(0.5).range(100, 1000), 0, 0.1) });
+
+n = NetAddr("127.0.0.1", 57120); // the url should be the one of computer of app 2 (or nil)
+o = OSCresponderNode(n, '/b_setn', { |t, r, msg| ("time:" + t).postln; msg[1].postln }).add;
+
+
 //:Run lola
 s.boot;
 2.wait;
@@ -33,5 +45,10 @@ PollFFT('of') addDependant: { | ... data | data.postln; }
 
 //:Other stuff
 n = NetAddr("127.0.0.1", 57120);
+OSCresponder
+
+n = NetAddr("127.0.0.1", 57120); // the url should be the one of computer of app 2 (or nil)
+o = OSCresponderNode(n, '/chat', { |t, r, msg| ("time:" + t).postln; msg[1].postln }).add;
+
 n.sendMsg();
 OF.data

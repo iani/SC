@@ -8,6 +8,13 @@ testApp::testApp(){
 
 //--------------------------------------------------------------
 void testApp::setup(){
+	ofSetBackgroundAuto(false);
+	ofEnableSmoothing();
+	ofEnableAlphaBlending();
+	ofBackground(0,0,0);
+	
+	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
+
 	// listen on the given port
 	cout << "listening for osc messages on port " << PORT << "\n";
 	receiver.setup( PORT );
@@ -34,45 +41,17 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
 
 		// check for mouse moved message
-		if ( m.getAddress() == "fft" )
+		if ( m.getAddress() == "/fft" )
 		{
+//			float giveme;
+//			giveme = m.getArgAsFloat( 10 );
+//			cout << giveme << endl;
 			// both the arguments are int32's
 			for (int i=0; i<512; i++)	{
 				data[i] = m.getArgAsFloat( i );
-				cout << data[i] << endl;
+				//cout << data[i] << endl;
 			}
 		}
-/*
-		else
-		{
-			// unrecognized message: display on the bottom of the screen
-			string msg_string;
-			msg_string = m.getAddress();
-			msg_string += ": ";
-			for ( int i=0; i<m.getNumArgs(); i++ )
-			{
-				// get the argument type
-				msg_string += m.getArgTypeName( i );
-				msg_string += ":";
-				// display the argument - make sure we get the right type
-				if( m.getArgType( i ) == OFXOSC_TYPE_INT32 )
-					msg_string += ofToString( m.getArgAsInt32( i ) );
-				else if( m.getArgType( i ) == OFXOSC_TYPE_FLOAT )
-					msg_string += ofToString( m.getArgAsFloat( i ) );
-				else if( m.getArgType( i ) == OFXOSC_TYPE_STRING )
-					msg_string += m.getArgAsString( i );
-				else
-					msg_string += "unknown";
-			}
-			// add to the list of strings to display
-			msg_strings[current_msg_string] = msg_string;
-			timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
-			current_msg_string = ( current_msg_string + 1 ) % NUM_MSG_STRINGS;
-			// clear the next line
-			msg_strings[current_msg_string] = "";
-		}
-		*/
-
 	}
 }
 
@@ -82,27 +61,38 @@ void testApp::update(){
 void testApp::draw(){
 	
 	for (int i=0; i<512; i++)	{
-		printf("%f,", data[i]);
-	}
-	printf("\n NEW LINE \n");
-	/*
-	string buf;
-	buf = "listening for osc messages on port" + ofToString( PORT );
-	ofDrawBitmapString( buf, 10, 20 );
-
-	// draw mouse state
-	buf = "mouse: " + ofToString( mouseX, 4) +  " " + ofToString( mouseY, 4 );
-	ofDrawBitmapString( buf, 430, 20 );
-	ofDrawBitmapString( mouseButtonState, 580, 20 );
-
-	for ( int i=0; i<NUM_MSG_STRINGS; i++ )
-	{
-		ofDrawBitmapString( msg_strings[i], 10, 40+15*i );
+		//printf("%f,", data[i]);
+		glColor3f(data[i],data[i],data[i]);
+		ofEllipse(ofGetWidth(),512-i,2,2);
+		//ofPoint(i,i,0);
 	}
 	
-	*/
 
+	texScreen.loadScreenData(ofGetWidth(),0,2, ofGetHeight());	//1280, 1024   ofGetWidth(), ofGetHeight()
+	glPushMatrix();
+	//glTranslatef(feedbackSpeedX,feedbackSpeedY,0);
+	glTranslatef(-0.3,0,0);
+		//glColor3f(1.0,1.0,1.0);
+		ofSetColor(0xffffff);
+		//ofSetColor(255,255,255,253);		
+		//ofSetColor(2505,255,255,100);		
+		
+	texScreen.draw(0,0,ofGetWidth()-1, ofGetHeight());  //  ofGetWidth(), ofGetHeight()
+	glPopMatrix();
+	
+/*
+	texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());							//1280, 1024   ofGetWidth(), ofGetHeight()
+	glPushMatrix();
+	//glTranslatef(feedbackSpeedX,feedbackSpeedY,0);
+	glTranslatef(-0.7,0,0);
+		ofSetColor(0xffffff);
+		//ofSetColor(0,0,0,1);		
+		//ofSetColor(255,255,255,100);		
+		
+	texScreen.draw(0,0,ofGetWidth(), ofGetHeight());  //  ofGetWidth(), ofGetHeight()
+	glPopMatrix();
 
+*/
 
 }
 
