@@ -12,6 +12,7 @@ void testApp::setup(){
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
 	ofBackground(0,0,0);
+	ofSetFrameRate(30);
 	
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
 
@@ -52,6 +53,7 @@ void testApp::update(){
 				//cout << data[i] << endl;
 			}
 		}
+		//if ( m.getAddress() == "/backTrue" ) 	ofSetBackgroundAuto(true);
 	}
 }
 
@@ -59,7 +61,7 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	
+
 	for (int i=0; i<512; i++)	{
 		//printf("%f,", data[i]);
 		glColor3f(data[i],data[i],data[i]);
@@ -67,18 +69,22 @@ void testApp::draw(){
 		//ofPoint(i,i,0);
 	}
 	
+	//glPushMatrix();	
+	texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());	//1280, 1024   ofGetWidth(), ofGetHeight()
 
-	texScreen.loadScreenData(ofGetWidth(),0,2, ofGetHeight());	//1280, 1024   ofGetWidth(), ofGetHeight()
-	glPushMatrix();
 	//glTranslatef(feedbackSpeedX,feedbackSpeedY,0);
-	glTranslatef(-0.3,0,0);
+	//glTranslatef(-0.5,0,0);
+//	if (countX == 1000) countX = 0;
+//	countX = countX + 0.5;
 		//glColor3f(1.0,1.0,1.0);
 		ofSetColor(0xffffff);
 		//ofSetColor(255,255,255,253);		
 		//ofSetColor(2505,255,255,100);		
-		
-	texScreen.draw(0,0,ofGetWidth()-1, ofGetHeight());  //  ofGetWidth(), ofGetHeight()
-	glPopMatrix();
+//	for (int i = 0; i < 400; i++)	{
+		texScreen.draw(-1,0,ofGetWidth(), ofGetHeight());  //  ofGetWidth(), ofGetHeight()
+//	}	
+//		
+	//glPopMatrix();
 	
 /*
 	texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());							//1280, 1024   ofGetWidth(), ofGetHeight()
