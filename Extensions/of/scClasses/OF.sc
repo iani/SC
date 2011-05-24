@@ -31,8 +31,8 @@ OF {
 	}
 	
 	send { | message, args |
-		//addr.sendMsg(message.asString, *args);
+		addr.sendMsg(message.asString, *args);
 		//addr.sendBundle(0.2, ["/good/news", 1, 1.3, 77]);
-		addr.sendBundle(0.2, args);		
+		//addr.sendBundle(0.2, args);		
 	}
 }

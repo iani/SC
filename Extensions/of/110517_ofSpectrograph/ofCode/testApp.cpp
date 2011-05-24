@@ -13,7 +13,7 @@ void testApp::setup(){
 	ofEnableAlphaBlending();
 	ofBackground(0,0,0);
 	ofSetFrameRate(30);
-	
+	ofSetWindowTitle("ofSpectrogram");
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
 
 	// listen on the given port
@@ -21,7 +21,9 @@ void testApp::setup(){
 	receiver.setup( PORT );
 
 	current_msg_string = 0;
-
+	
+	iv["textureRed"] = 255;
+	iv["textureAlpha"] = 255;
 }
 
 //--------------------------------------------------------------
@@ -37,69 +39,29 @@ void testApp::update(){
 	// check for waiting messages
 	while( receiver.hasWaitingMessages() )
 	{
-		// get the next message
 		ofxOscMessage m;
 		receiver.getNextMessage( &m );
 
-		// check for mouse moved message
-		if ( m.getAddress() == "/fft" )
-		{
-//			float giveme;
-//			giveme = m.getArgAsFloat( 10 );
-//			cout << giveme << endl;
-			// both the arguments are int32's
+		if ( m.getAddress() == "/fft" )		{
 			for (int i=0; i<512; i++)	{
 				data[i] = m.getArgAsFloat( i );
-				//cout << data[i] << endl;
 			}
+		} 
+		// map implementation
+		if ( m.getAddress() == "int" )	{
+			iv[m.getArgAsString(0)] = m.getArgAsInt32(1);			
 		}
-		//if ( m.getAddress() == "/backTrue" ) 	ofSetBackgroundAuto(true);
 	}
 }
-
-
-
 //--------------------------------------------------------------
 void testApp::draw(){
-
 	for (int i=0; i<512; i++)	{
-		//printf("%f,", data[i]);
 		glColor3f(data[i],data[i],data[i]);
 		ofEllipse(ofGetWidth(),512-i,2,2);
-		//ofPoint(i,i,0);
 	}
-	
-	//glPushMatrix();	
-	texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());	//1280, 1024   ofGetWidth(), ofGetHeight()
-
-	//glTranslatef(feedbackSpeedX,feedbackSpeedY,0);
-	//glTranslatef(-0.5,0,0);
-//	if (countX == 1000) countX = 0;
-//	countX = countX + 0.5;
-		//glColor3f(1.0,1.0,1.0);
-		ofSetColor(0xffffff);
-		//ofSetColor(255,255,255,253);		
-		//ofSetColor(2505,255,255,100);		
-//	for (int i = 0; i < 400; i++)	{
-		texScreen.draw(-1,0,ofGetWidth(), ofGetHeight());  //  ofGetWidth(), ofGetHeight()
-//	}	
-//		
-	//glPopMatrix();
-	
-/*
-	texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());							//1280, 1024   ofGetWidth(), ofGetHeight()
-	glPushMatrix();
-	//glTranslatef(feedbackSpeedX,feedbackSpeedY,0);
-	glTranslatef(-0.7,0,0);
-		ofSetColor(0xffffff);
-		//ofSetColor(0,0,0,1);		
-		//ofSetColor(255,255,255,100);		
-		
-	texScreen.draw(0,0,ofGetWidth(), ofGetHeight());  //  ofGetWidth(), ofGetHeight()
-	glPopMatrix();
-
-*/
-
+	texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
+	ofSetColor(iv["textureRed"],255,255,iv["textureAlpha"]);
+	texScreen.draw(-1,0,ofGetWidth(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
