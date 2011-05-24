@@ -31,3 +31,11 @@ SynthLink {
 	}
 
 }
+
++ Function {
+	/* 	transform a function that creates a synth into a form that will accept 
+		onEnd for use in Chain */
+	s { 	| envir |
+		^{ SynthLink(this, envir) };	
+	}
+}

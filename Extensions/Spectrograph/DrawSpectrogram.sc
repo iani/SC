@@ -11,12 +11,11 @@ DrawSpectrogram {
 	// internal variables
 	var <colors; // Integer array holding colors for coloring pixels on the image
 	var <fftImageArray; // image representing one FFT frame, colored via colors
-	// track the iteration of polling bus values and its relative position in the window: 
 	
 	*new { | binSize = 1024, colorSize = 64, colorScaleExponent = 0.5, 
 		intensity = 1, binColor, background |
 		^this.newCopyArgs(binSize, colorSize, colorScaleExponent, 
-			intensity = 1, binColor, background
+			intensity, binColor, background
 		).init;
 	}
 	

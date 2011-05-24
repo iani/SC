@@ -3,6 +3,8 @@ A UniqueSynth which starts an FFT analysis synth on any audio input, polls the f
 
 It is always running as long as its server is booted. It stops and removes itself when sent the messages free or remove. 
 
+TODO: Should be UniqueServerObject?
+
 */
 
 PollFFT : UniqueObject {
@@ -20,8 +22,8 @@ PollFFT : UniqueObject {
 		rate = argRate;
 		bufSize = argBufSize;
 		in = argIn;
-		this.clearDependants;
-		ServerPrep(server).addToServerTree(this, { this.makeSynth }); // run as long as server is booted
+		this.clearDependants;		// run as long as server is booted:
+		ServerPrep(server).addToServerTree(this, { this.makeSynth }); 
 	}
 
 	makeSynth {
@@ -37,7 +39,8 @@ PollFFT : UniqueObject {
 			loop {
 				fftbuf.getn(0, bufSize, { | buf |
 					#real, imaginary = buf.clump(2).flop;
-					magnitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
+					magnitudes = Complex(Signal.newFrom(real),
+						Signal.newFrom(imaginary)).magnitude;
 					dependants do: _.update(index, buf, magnitudes);
 					index = index + 1;
 				});

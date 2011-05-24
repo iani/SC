@@ -3,10 +3,10 @@ Arrange Document windows conveniently for a laptop-sized monitor screen.
 */
 
 Panes {
-	classvar <>listenerY = 300, <>onePaneListenerWidth = 500, <>twoPaneListenerHeight = 300;
+	classvar <>listenerY = 300, <>onePaneListenerWidth = 640, <>twoPaneListenerHeight = 300;
 	classvar <>panePos;
 	classvar <>listenerPos, <>tryoutPos;
-	classvar <session;					// for saving / restoring doc positions and doc texts to archive
+	classvar <session;		// for saving / restoring doc positions and doc texts to archive
 	classvar <currentPositionAction;
 	classvar <>tryoutName = "tryout.scd";
 
@@ -23,7 +23,8 @@ Panes {
 		Document.allDocuments do: this.setDocActions(_);
 		this.arrange1Pane;
 //		this.arrange2Panes;
-		{ this.openTryoutWindow; }.defer(0.5); // confuses post and Untitled windows if not deferred on startup
+		// confuses post and Untitled windows if not deferred on startup:
+		{ this.openTryoutWindow; }.defer(0.5); 
 	}
 
 	*stop { this.deactivate } // synonym
@@ -37,10 +38,10 @@ Panes {
 	}
 
 	*menuItems { ^[
-			CocoaMenuItem.addToMenu("Utils", "1-pane doc arrangement", ["<", false, false], {
+			CocoaMenuItem.addToMenu("Utils", "single-pane doc arrangement", ["<", false, false], {
 				this.doRestoreTop({ this.arrange1Pane; });
 			}),
-			CocoaMenuItem.addToMenu("Utils", "2-pane doc arrangement", [">", false, false], {
+			CocoaMenuItem.addToMenu("Utils", "multi-pane doc arrangement", [">", false, false], {
 				this.doRestoreTop({ this.arrange2Panes; });
 			}),
 			CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", ["<", true, false], {
@@ -71,9 +72,10 @@ Panes {
 	*arrange1Pane {
 		var width;
 		width = Dock.width;
-		listenerPos = Rect(0, listenerY, this.twoPaneWidth - width, Window.screenBounds.height - listenerY);
-		tryoutPos = Rect(0, 0, this.twoPaneWidth - width, listenerY - 28);
-		panePos = Rect(this.twoPaneWidth - width, 0, this.twoPaneWidth, Window.screenBounds.height);
+		listenerPos = Rect(0, listenerY, this.twoPaneWidth, 
+			Window.screenBounds.height - listenerY);
+		tryoutPos = Rect(0, 0, this.twoPaneWidth, listenerY - 28);
+		panePos = Rect(this.twoPaneWidth, 0, this.twoPaneWidth, Window.screenBounds.height);
 		this changeArrangement: { | doc | this.placeDoc(doc) };
 		Dock.showDocListWindow;
 	}
@@ -93,7 +95,7 @@ Panes {
 		Document.listener.front;
 	}
 
-	*twoPaneWidth { ^Window.screenBounds.width / 2 }
+	*twoPaneWidth { ^min(640, Window.screenBounds.width / 2) }
 
 	*changeArrangement { | arrangeFunc |
 		currentPositionAction = arrangeFunc;
@@ -107,7 +109,13 @@ Panes {
 	}
 
 	*next2Pane {
-		panePos.left = this.twoPaneWidth + panePos.left % Window.screenBounds.width;
+		var left;
+		left = this.twoPaneWidth + panePos.left;
+		if ((left + this.twoPaneWidth) > Window.screenBounds.width) {
+			panePos.left = 0;
+		}{
+			panePos.left = left
+		};
 		if (panePos.left == 0) {
 			panePos.top = twoPaneListenerHeight;
 			panePos.height = Window.screenBounds.height - twoPaneListenerHeight;

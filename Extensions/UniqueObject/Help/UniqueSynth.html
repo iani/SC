@@ -338,6 +338,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dtime: the time to delay before scheduling. Default is 0.<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>onEnd: if given, function to perform when the function stops repeating.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
+<p class="p8">//:Graphics example</p>
 <p class="p8">(</p>
 <p class="p14"><span class="s4">{ </span>| freq = 400, q = 0.1, r = 2 |<span class="s4"> </span>Resonz<span class="s4">.ar(</span>BrownNoise<span class="s4">.ar(2), freq * [1, r], q) }.play</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>.dur(10, 17)</p>
@@ -367,6 +368,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>}, Pseq((2..15).pyramid(5) / 50, inf);</p>
 <p class="p8">).onClose({ 'Another Window'.close });</p>
 <p class="p8">)</p>
+<p class="p8">//: ---</p>
 <p class="p7"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>rsync(func, clock)</b> : Create a routine with function, using clock as clock.</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>func: a function to be scheduled</p>
@@ -490,15 +492,12 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>exprand(0.02, 1).wait;</p>
 <p class="p8">};</p>
 <p class="p12"><br></p>
-<p class="p11">//:alternatively code the above with symbol.pfuncn</p>
+<p class="p11">//:alternatively code the above with Function:stream</p>
 <p class="p11">/* Not possible to use a randSeed_setting *inside* function.stream,<span class="Apple-converted-space"> </span></p>
 <p class="p11"><span class="Apple-converted-space">   </span>but could be added as an optional init argument to Function:stream method (TODO) */</p>
 <p class="p7"><br></p>
-<p class="p8">{<span class="Apple-converted-space"> </span></p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s1">SinOsc</span>.ar(exprand(400, 1800) * [1, 1.25], 0, 0.1) }.play.dur(0.01, exprand(0.01, 3));</p>
-<p class="p8"><span class="Apple-tab-span">	</span>\dur.pfuncn({ exprand(0.02, 1) }, 52);</p>
-<p class="p8">}.stream;</p>
-<p class="p12"><br></p>
+<p class="p8">{{ <span class="s1">SinOsc</span>.ar(exprand(400, 1800) * [1, 1.25], 0, 0.1) }.play.dur(0.01, exprand(0.01, 3)); }</p>
+<p class="p8"><span class="Apple-tab-span">	</span>.stream({ Pfuncn({ exprand(0.02, 1) }, 52).asStream });</p>
 <p class="p12"><br></p>
 <p class="p11">//:fun</p>
 <p class="p7"><br></p>
