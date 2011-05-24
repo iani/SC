@@ -42,9 +42,10 @@ void testApp::update(){
 		ofxOscMessage m;
 		receiver.getNextMessage( &m );
 
-		if ( m.getAddress() == "/fft" )		{
+		if ( m.getAddress() == "/fftpixels" )		{
 			for (int i=0; i<512; i++)	{
 				data[i] = m.getArgAsFloat( i );
+				//cout << "test" << endl;
 			}
 			for (int i=0; i<512; i++)	{
 				glColor3f(data[i],data[i],data[i]);

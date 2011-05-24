@@ -56,6 +56,7 @@ USendSpectrogramData : AbstractUniqueServerObject {
 		intensity = aIntensity;
 		this.makeColors;
 		ofAddress = NetAddr("127.0.0.1", 12345);
+		//ofAddress = NetAddr("127.0.0.1", 57120);		
 		this.connectToPoller;	// do this last: be ready to send
 	}
 
