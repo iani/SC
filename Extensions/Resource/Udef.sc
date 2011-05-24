@@ -5,7 +5,7 @@ store synthdefs in a global pool and make them available to synths on any server
 
 Does not store separate synthdef copies for different servers, just one global pool. 
 
-SynthDefs created while the server is running are sent immediately. ServerReady ensures that they will be sent before starting any further instance of UniqueSynth. 
+SynthDefs created while the server is running are sent immediately. ServerReady ensures that they will be sent before starting any further instance of SynthResource. 
 
 */
 

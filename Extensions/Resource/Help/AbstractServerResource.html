@@ -38,9 +38,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p3">BufferResource.onServer; <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// all BufferResources on the default server. <span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3">Udef.onServer(Server.internal); <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// All Udefs ("UniqueSynthDefs") on the internal server.</p>
+<p class="p3">Udef.onServer(Server.internal); <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// All Udefs ("SynthResourceDefs") on the internal server.</p>
 <p class="p4"><br></p>
-<p class="p3">UniqueSynth.onServer(Server.local);<span class="Apple-tab-span">	</span>// all UniqueSynths in the local server.<span class="Apple-converted-space"> </span></p>
+<p class="p3">SynthResource.onServer(Server.local);<span class="Apple-tab-span">	</span>// all SynthResources in the local server.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3">Instances of subclasses of AbstractUniqueServerObject can access their server by the method server.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
@@ -48,7 +48,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p5"><b>Related Classes</b></p>
 <p class="p4"><br></p>
-<p class="p3">Subclasses: UniqueSynth, PrivateBusSynth, BufferResource</p>
+<p class="p3">Subclasses: SynthResource, PrivateBusSynth, BufferResource</p>
 <p class="p4"><br></p>
 <p class="p5"><b>Instance Creation</b></p>
 <p class="p4"><br></p>
@@ -81,7 +81,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p6"><span class="s1">BufferResource</span><span class="s2">.onServer; <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// all BufferResources on the default server. <span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
-<p class="p6"><span class="s1">UniqueSynth</span><span class="s2">.onServer(</span><span class="s1">Server</span><span class="s2">.local);<span class="Apple-tab-span">	</span></span>// all UniqueSynths in the local server.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="s1">SynthResource</span><span class="s2">.onServer(</span><span class="s1">Server</span><span class="s2">.local);<span class="Apple-tab-span">	</span></span>// all SynthResources in the local server.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p6"><span class="s3">\default</span><span class="s2">.play.server;<span class="Apple-tab-span">	</span></span>// Access the server of the Synth started by \default.play</p>
 <p class="p4"><br></p>

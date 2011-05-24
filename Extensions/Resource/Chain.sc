@@ -32,13 +32,13 @@ Chain {
 		if (this.isRunning) { stream = nil; link.stopLink; }	}
 	
 	free {	// stop and free synth if appropriate
-		link.free;	// currently works only with UniqueSynth as link
+		link.free;	// currently works only with SynthResource as link
 		this.stop;
 	}
 
 	release { | fadeout = 0.02 |
 		this.stop;
-		link.releaseSynth(fadeout);	// currently works only with UniqueSynth as link
+		link.releaseSynth(fadeout);	// currently works only with SynthResource as link
 	}
 	
 	// Chaining chains
@@ -98,7 +98,9 @@ Pattern and stream support for looping Functions
 
 	/* Schedule functions for repeated evaluation in time, within Chain or otherwise */
 	// nicer to use this shorter word, but semantically acceptable?
-	stream { | times, envir, dtime = 0, clock, onEnd | ^this.schedEnvir(times, envir, dtime, clock, onEnd) }
+	stream { | times, envir, dtime = 0, clock, onEnd | 
+		^this.schedEnvir(times, envir, dtime, clock, onEnd)
+	}
 
 	schedEnvir { | times, envir, dtime = 0, clock, onEnd |
 		^ChainLink(this, times, envir).sched(dtime, clock).onEnd(onEnd);

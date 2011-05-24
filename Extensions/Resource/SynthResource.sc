@@ -1,6 +1,6 @@
 
 /* 
-Rewriting UniqueSynth to use ServerReady for booting synth and thereby ensure SynthDefs and Buffers are loaded
+Uses ServerReady for booting synth and thereby ensure SynthDefs and Buffers are loaded
 before it starts.
 */
 
@@ -23,7 +23,7 @@ AbstractServerResource : Resource {
 }
 
 SynthResource : AbstractServerResource {
-	*mainKey { ^[SynthResource] } // subclasses store instances under UniqueSynth
+	*mainKey { ^[SynthResource] } // subclasses store instances under SynthResource
 
 	*new { | key, defName, args, target, addAction=\addToHead ... moreArgs |
 		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);

@@ -33,7 +33,7 @@ span.s4 {color: #000000}
 <p class="p6">//:Executes whenever the server boots or Cmd-. is entered:<span class="Apple-converted-space"> </span></p>
 <p class="p7"><span class="s1">ServerPrep</span>.new.addToServerTree(<span class="s2">\test</span>, { <span class="s3">"SERVER TREE"</span>.postln });</p>
 <p class="p4"><br></p>
-<p class="p3">ServerPrep is used by UniqueSynth, BufferResource, Function:play, Code, and other parts of this lib to ensure correct order the loading of Buffers, SynthDefs and Synths at any time.<span class="Apple-converted-space"> </span></p>
+<p class="p3">ServerPrep is used by SynthResource, BufferResource, Function:play, Code, and other parts of this lib to ensure correct order the loading of Buffers, SynthDefs and Synths at any time.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p8">//:Start a new sound each time Cmd-. is pressed, or the Server is booted. <span class="Apple-converted-space"> </span></p>
 <p class="p9"><span class="s2">\test</span><span class="s4">.addToServerTree({ </span>{ [LFNoise0, LFNoise2].choose.ar(500 rrand: 5000, 0.1)<span class="s4"> }.play });</span></p>

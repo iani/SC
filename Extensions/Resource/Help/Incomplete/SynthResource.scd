@@ -14,7 +14,7 @@ To select the previous example, press Command-shift-k
 
 \default3.playDef(\default, [\freq, 660]).onStart({ | s | postf("% started\n", s.synth); });
 
-postf("Synths on server are: %\n", UniqueSynth.onServer);
+postf("Synths on server are: %\n", SynthResource.onServer);
 
 
 //:3

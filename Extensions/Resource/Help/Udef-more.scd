@@ -6,8 +6,8 @@ See LoadSynthDefs Class
  
 
 
-UniqueSynthDef : AbstractUniqueServerObject {
-	*mainKey { ^[UniqueSynthDef] /* ^[\objects] */ }
+SynthDefResource : AbstractServerResource {
+	*mainKey { ^[SynthDefResource] /* ^[\objects] */ }
 
 	*new { | name, ugenGraphFunc, rates, prependArgs, variants, metadata, server |
 		^super.new(name.asSymbol, server.asTarget.server, 
@@ -60,7 +60,7 @@ UniqueSynthDef : AbstractUniqueServerObject {
 		});
 		
 */
-//		UniqueSynthDef(server).doWhenLoaded({ buffers.first.makeObject });
+//		SynthDefResource(server).doWhenLoaded({ buffers.first.makeObject });
 //		synthDefs.last
 	}
 
@@ -68,7 +68,7 @@ UniqueSynthDef : AbstractUniqueServerObject {
 		/* 	do any actions that require synthdefs to be sent before they can be successful
 			Used by BufferResource to load its buffers, because some of them may want to play right away
 			using some synthdef sent here. 
-			UniqueSynthDef.doWhenLoaded({ buffers.first.makeObject });
+			SynthDefResource.doWhenLoaded({ buffers.first.makeObject });
 		*/
 		NotifyOnce(this.server, \synthDefsLoaded, this, func);
 		
@@ -76,5 +76,5 @@ UniqueSynthDef : AbstractUniqueServerObject {
 }
 
 
-Udef : UniqueSynthDef {} // synonym for UniqueSynthDef 
+Udef : SynthDefResource {} // synonym for SynthDefResource 
 

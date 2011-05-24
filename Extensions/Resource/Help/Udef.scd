@@ -5,13 +5,13 @@ Store synthdefs in a global pool and make them available to synths on any server
 
 Does not store separate synthdef copies for different servers, just one global pool. 
 
-SynthDefs created while the server is running are sent immediately. ServerReady ensures that they will be sent before starting any further instance of UniqueSynth. 
+SynthDefs created while the server is running are sent immediately. ServerReady ensures that they will be sent before starting any further instance of SynthResource. 
 
 */
 
 //:test 1
 Udef(\test1, { Out.ar(0, WhiteNoise.ar(0.1)) });
-UniqueSynth(\test1)
+SynthResource(\test1)
 
 //:test 2
 Udef(\test1, { Out.ar(0, SinOsc.ar(2000, 0, 0.1)) });

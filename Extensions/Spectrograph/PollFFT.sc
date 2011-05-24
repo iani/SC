@@ -1,5 +1,5 @@
 /* 
-A UniqueSynth which starts an FFT analysis synth on any audio input, polls the fft buffer at a steady rate, and sends the resulting buffer data to any dependants. 
+A SynthResource which starts an FFT analysis synth on any audio input, polls the fft buffer at a steady rate, and sends the resulting buffer data to any dependants. 
 
 It is always running as long as its server is booted. It stops and removes itself when sent the messages free or remove. 
 
@@ -29,7 +29,8 @@ PollFFT : Resource {
 		synthdef = Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
 		}, server: server);
-		object = UniqueSynth(\fft, \fft, [\in, in, \buf, buffer.object.bufnum], server, \addToTail);
+		object = SynthResource(\fft, \fft, [\in, in, \buf, buffer.object.bufnum], 
+			server, \addToTail);
 		object.onStart({ this.notify(\synthStarted); });
 		object.rsyncs({
 			var fftbuf;
