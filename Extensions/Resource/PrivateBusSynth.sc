@@ -1,5 +1,5 @@
 
-PrivateBusSynth : UniqueSynth {
+PrivateBusSynth : SynthResource {
 	var <bus;
 	
 	*new { | key, defName, args, target, addAction=\adTohead,  numChannels = 1, rate = \audio  ... moreArgs |

@@ -26,7 +26,7 @@ Dock {
 					var u;
 					Server.default = Server.internal;
 					WaitForServer(Server.internal);
-					u = UniqueObject('stethoscope', { 
+					u = Resource('stethoscope', { 
 						var s; 
 						s = Stethoscope(Server.internal);
 						s.window.onClose_(s.window.onClose addFunc: { u.remove });
@@ -152,7 +152,7 @@ Dock {
 		if (class.isNil) { ^this };
 		{
 			0.2.wait;
-			doc.string_(doc.string ++ format("%\n\n\Inherits from: %
+			doc.string_(doc.string ++ format("%\n\nInherits from: %
 			
 Purpose
 

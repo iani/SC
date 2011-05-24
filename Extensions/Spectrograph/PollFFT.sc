@@ -5,7 +5,7 @@ It is always running as long as its server is booted. It stops and removes itsel
 
 */
 
-PollFFT : UniqueObject {
+PollFFT : Resource {
 	var <server, <>rate = 0.04, <bufSize, <in = 0;
 	var <synthdef, <buffer, <index = 0;
 	var <dependants;

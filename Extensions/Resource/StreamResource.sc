@@ -4,7 +4,7 @@ Will be replaced by EventStream.
 
 */
 
-UniqueStream : UniqueObject {
+StreamResource : Resource {
 	var <pattern;
 	init { | argPattern |
 		pattern = argPattern;

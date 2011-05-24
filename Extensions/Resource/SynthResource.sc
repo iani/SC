@@ -4,7 +4,7 @@ Rewriting UniqueSynth to use ServerReady for booting synth and thereby ensure Sy
 before it starts.
 */
 
-AbstractUniqueServerObject : UniqueObject {
+AbstractServerResource : Resource {
 	var <server;
 	*makeKey { | key, target |
 		^this.mainKey ++ [target.asTarget.server, key.asKey];
@@ -22,8 +22,8 @@ AbstractUniqueServerObject : UniqueObject {
 	}	
 }
 
-UniqueSynth : AbstractUniqueServerObject {
-	*mainKey { ^[UniqueSynth] } // subclasses store instances under UniqueSynth
+SynthResource : AbstractServerResource {
+	*mainKey { ^[SynthResource] } // subclasses store instances under UniqueSynth
 
 	*new { | key, defName, args, target, addAction=\addToHead ... moreArgs |
 		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);

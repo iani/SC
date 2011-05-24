@@ -1,5 +1,5 @@
 
-ListWindow : UniqueWindow {
+ListWindow : WindowResource {
 
 	*new { | key = 'list', bounds, getItemsAction, getIndexAction, notifier, messages, title, delay = 0.0 |
 		^super.new(key, {

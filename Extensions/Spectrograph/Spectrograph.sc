@@ -11,7 +11,7 @@ Getting of buffers with larger sizes is documented in SC Help, but for spectrogr
 
 */
 
-Spectrograph : UniqueWindow {
+Spectrograph : WindowResource {
 	classvar <current;
 	classvar <minWidth = 400, <>backgroundColor, <>binColor;
 	var <bounds, <server, <rate = 0.04, <bufsize, <>stopPollerOnClose = true;

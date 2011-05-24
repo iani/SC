@@ -35,23 +35,23 @@ span.Apple-tab-span {white-space:pre}
 </style>
 </head>
 <body>
-<p class="p1"><b>UniqueSynth</b></p>
+<p class="p1"><b>SynthResource</b></p>
 <p class="p2"><br></p>
-<p class="p3"><b>Inherits from: AbstractUniqueServerObject : UniqueObject : Object</b></p>
+<p class="p3"><b>Inherits from: AbstractServerResource : Resource : Object</b></p>
 <p class="p4"><br></p>
 <p class="p5"><b>Purpose</b></p>
 <p class="p4"><span class="Apple-converted-space"> </span></p>
-<p class="p3">UniqueSynth creates an instance of Synth and stores it in a MultiLevelIdentityDictionary under a symbol key so that it can be addressed later by sending messages to that symbol. It also takes care of Booting the server if needed and of loading any currently defined Udefs before starting the synth (This is done through ServerPrep, Udef, SynthLoader).<span class="Apple-converted-space"> </span></p>
+<p class="p3">SynthResource creates an instance of Synth and stores it in a MultiLevelIdentityDictionary under a symbol key so that it can be addressed later by sending messages to that symbol. It also takes care of Booting the server if needed and of loading any currently defined Udefs before starting the synth (This is done through ServerPrep, Udef, SynthLoader).<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3">Besides making the synth available to a symbol, UniqueSynth adds some other methods that help reduce the amount of code required to perform common tasks like freeing the synth after a time interval with a given release time, attaching routines to synths that stop when the synths stop and notifying other objects about starting and stopping through NotificationCenter.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Besides making the synth available to a symbol, SynthResource adds some other methods that help reduce the amount of code required to perform common tasks like freeing the synth after a time interval with a given release time, attaching routines to synths that stop when the synths stop and notifying other objects about starting and stopping through NotificationCenter.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3">UniqueSynth together with the Chain class provide an alternative for coding live generators of sound and behavior patterns, using Functions, and with access to the power of Patterns and Streams.<span class="Apple-converted-space"> </span></p>
+<p class="p3">SynthResource together with the Chain class provide an alternative for coding live generators of sound and behavior patterns, using Functions, and with access to the power of Patterns and Streams.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p5"><b>Usage</b></p>
 <p class="p6"><br></p>
-<p class="p3">UniqueSynths are normally created by sending a symbol the mesage play, mplay, playDef, playFunc, or Function the message play. They are then accessed through the symbol by sending additional messages that control the behavior of the synth created.<span class="Apple-converted-space"> </span></p>
+<p class="p3">SynthResources are normally created by sending a symbol the mesage play, mplay, playDef, playFunc, or Function the message play. They are then accessed through the symbol by sending additional messages that control the behavior of the synth created.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3">Example of how UniqueSynth can simplify the code required to control a synth:</p>
+<p class="p3">Example of how SynthResource can simplify the code required to control a synth:</p>
 <p class="p7"><br></p>
 <p class="p3">Controlling the duration and release time of a synth without Symbol:mplay<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
@@ -82,7 +82,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p6"><br></p>
 <p class="p5"><b>Related classes</b></p>
 <p class="p6"><br></p>
-<p class="p3">Chain, UniqueBuffer</p>
+<p class="p3">Chain, BufferResource</p>
 <p class="p6"><br></p>
 <p class="p5"><b>Instance creation</b></p>
 <p class="p6"><br></p>
@@ -90,33 +90,33 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>*new(key, defName, args, target, addAction *moreArgs)</b><span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Create an instance of UniqueSynth, start the Synth, and store the UniqueSynth under [UniqueSynth, server, key]</p>
+<p class="p3"><span class="Apple-tab-span">	</span>Create an instance of SynthResource, start the Synth, and store the SynthResource under [SynthResource, server, key]</p>
 <p class="p3"><span class="Apple-tab-span">	</span>for later access.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><span class="Apple-tab-span">	</span></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>key: <span class="Apple-tab-span">	</span></b>A symbol. The instance will be stored under that symbol. If a UniqueSynth instance already<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>key: <span class="Apple-tab-span">	</span></b>A symbol. The instance will be stored under that symbol. If a SynthResource instance already<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>exists under that key, it will be returned instead.<span class="Apple-converted-space"> </span></p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>When the synth ends, UniqueSynth removes itself from the key.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>When the synth ends, SynthResource removes itself from the key.<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>defName, args, target, addAction *moreArgs: </b>These arguments are identical to the arguments sent to<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>the Synth *new method.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3">It is not necessary or recommended to create UniqeuSynth instancs with UniqueSynth.new. As a shortcut, UniqueSynth instances can be created by sending a symbol the messages play, mplay, or playFunc or by sending a function the message play. (Modified from the default behavior of Function:play).<span class="Apple-converted-space"> </span></p>
+<p class="p3">It is not necessary or recommended to create UniqeuSynth instancs with SynthResource.new. As a shortcut, SynthResource instances can be created by sending a symbol the messages play, mplay, or playFunc or by sending a function the message play. (Modified from the default behavior of Function:play).<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3"><b>Instance creation through messages to symbols</b></p>
 <p class="p4"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>play(args, target, addAction)</b> : Create UniqueSynth using symbol as name of the SynthDef.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts only if no other UniqueSynth is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>play(args, target, addAction)</b> : Create SynthResource using symbol as name of the SynthDef.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts only if no other SynthResource is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Server defaults to target.asTarget.server, which is Server.default. <span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p8"><span class="s2">\default</span>.play([\freq, 2000]);</p>
 <p class="p7"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>mplay(args, target, addAction)</b> : Create UniqueSynth using symbol as name of the SynthDef.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts even if another UniqueSynth is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>mplay(args, target, addAction)</b> : Create SynthResource using symbol as name of the SynthDef.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts even if another SynthResource is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p8">3 do: { <span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, (2..7).choose * 100]) };</p>
 <p class="p7"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>playDef(defname, args, target, addAction)</b> : Create UniqueSynth using defname as name of the SynthDef.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Store the UniqueSynth under symbol for later access.</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts even if another UniqueSynth is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>playDef(defname, args, target, addAction)</b> : Create SynthResource using defname as name of the SynthDef.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Store the SynthResource under symbol for later access.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Starts even if another SynthResource is already registered at this symbol for this server.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p9">//:Start three synths on \default and release them later</p>
 <p class="p9">/* <span class="Apple-tab-span">	</span>To run the example, go anywhere in the code below and press</p>
@@ -135,9 +135,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">[<span class="s2">\default</span>, <span class="s2">\default2</span>, <span class="s2">\default3</span>] do: { <span class="s1">| s |</span> 0.5.wait; s.releaseSynth; };</p>
 <p class="p9"><span class="s5">//: E</span>xecute the example above with Command-shift-x<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>playFunc(func, target, addAction)</b> : Create UniqueSynth by playing func as a Ugen function.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>playFunc(func, target, addAction)</b> : Create SynthResource by playing func as a Ugen function.</p>
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Stores the resulting UniqueSynth in [UniqueSynth, server, symbol] for later access.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Stores the resulting SynthResource in [SynthResource, server, symbol] for later access.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\test</span>.playFunc({ Resonz.ar(<span class="s1">WhiteNoise</span>.ar(0.1), LFNoise2.kr(1).range(100, 4000)) });</p>
 <p class="p4"><br></p>
@@ -155,14 +155,14 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p5"><b>Instance creation with message play to function<span class="Apple-converted-space"> </span></b></p>
 <p class="p4"><br></p>
-<p class="p3">The standard Function:play has been modified to create a UniqueSynth instance.<span class="Apple-converted-space"> </span></p>
+<p class="p3">The standard Function:play has been modified to create a SynthResource instance.<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p8">{ <span class="s1">SinOsc</span>.ar(1000, 0, 0.1) }.play;</p>
 <p class="p7"><br></p>
 <p class="p3">The arguments remain the same as in the current release of SuperCollider:<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span>Function:<b>play(target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name)</b><span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
-<p class="p3">This provides Function:play with the additional features of UniqueSynth such as:<span class="Apple-converted-space"> </span></p>
+<p class="p3">This provides Function:play with the additional features of SynthResource such as:<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
 <p class="p11">// Controlling duration and fadeout time with the dur message</p>
 <p class="p8">{ <span class="s1">SinOsc</span>.ar(1000, 0, 0.1) }.play.dur(2, 3);</p>
@@ -211,7 +211,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p5"><b>Class methods<span class="Apple-converted-space"> </span></b></p>
 <p class="p4"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span><b>*onServer(server)</b>: Return all UniqueSynth instances currently registered on a server.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*onServer(server)</b>: Return all SynthResource instances currently registered on a server.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p11">// Evaluate these one at a time:<span class="Apple-converted-space"> </span></p>
 <p class="p7"><br></p>
@@ -221,21 +221,21 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7"><br></p>
 <p class="p8">{ <span class="s1">SinOsc</span>.ar(LFSaw.kr(0.25).range(200, 300) * [1, 1.1], 0, 0.1) }.play;</p>
 <p class="p13"><br></p>
-<p class="p14">postf("Synths on server are: %\n", UniqueSynth<span class="s4">.onServer);</span></p>
+<p class="p14">postf("Synths on server are: %\n", SynthResource<span class="s4">.onServer);</span></p>
 <p class="p13"><br></p>
-<p class="p8"><span class="s1">UniqueSynth</span>.onServer do: { | s | s.releaseSynth(1 + 5.rand) };</p>
+<p class="p8"><span class="s1">SynthResource</span>.onServer do: { | s | s.releaseSynth(1 + 5.rand) };</p>
 <p class="p4"><br></p>
-<p class="p14">postf("Synths on server are: %\n", UniqueSynth<span class="s4">.onServer);</span></p>
+<p class="p14">postf("Synths on server are: %\n", SynthResource<span class="s4">.onServer);</span></p>
 <p class="p4"><br></p>
 <p class="p5"><b><span class="Apple-tab-span">	</span>Instance methods:<span class="Apple-converted-space"> </span></b></p>
 <p class="p4"><br></p>
-<p class="p3"><span class="Apple-tab-span">	</span>Following instance methods are also available to Symbol, so that existing UniqueSynth instances<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>Following instance methods are also available to Symbol, so that existing SynthResource instances<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span>can be accessed easily:<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>set(controlname, value)</b> : Works like Synth:set</p>
 <p class="p3"><span class="Apple-tab-span">	</span><b>releaseSynth(duration)</b> : Works like Synth:release</p>
 <p class="p7"><br></p>
-<p class="p11">//:UniqueSynth set and releaseSynth methods</p>
+<p class="p11">//:SynthResource set and releaseSynth methods</p>
 <p class="p11">// Run this example by pressing Command-Shift-x with the cursor anywhere in the example</p>
 <p class="p7"><br></p>
 <p class="p8"><span class="s2">\def</span>.playFunc({ <span class="s1">| freq = 400 |</span> <span class="s1">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.1) });</p>
@@ -403,7 +403,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Use this method if you are calling GUI primitives and do not want to use { ... }.defer on them.</p>
 <p class="p7"><br></p>
 <p class="p8">(</p>
-<p class="p11"><span class="s2">\default</span><span class="s4">.play.rsynca({ </span><span class="s1">| s |</span><span class="s4"> </span>// start synth with default SynthDef (See UniqueSynth).</p>
+<p class="p11"><span class="s2">\default</span><span class="s4">.play.rsynca({ </span><span class="s1">| s |</span><span class="s4"> </span>// start synth with default SynthDef (See SynthResource).</p>
 <p class="p11"><span class="s4"><span class="Apple-tab-span">	</span></span><span class="s1">thisThread</span><span class="s4">.randSeed_(5);<span class="Apple-tab-span">	</span></span>// always play the same sequence</p>
 <p class="p8"><span class="Apple-tab-span">	</span>220 do: { <span class="s1">| i |</span> (i + 11 / 5).reciprocal.wait;<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>s.set(<span class="s2">\freq</span>, ((4..16) * 110) @@ ((i % 4).rand + (i / 20 % 60)));</p>
@@ -455,7 +455,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="s2">\default</span>.play.rsyncs({ <span class="s1">| s |</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>20 do: { s.set(<span class="s2">\freq</span>, 80 rrand: 1800); 0.05.wait; };</p>
 <p class="p8"><span class="Apple-tab-span">	</span>(1..40) do: { <span class="s1">| i |</span> 0.1.wait; s.set(<span class="s2">\freq</span>, i * 100) };<span class="Apple-converted-space"> </span></p>
-<p class="p11"><span class="s4"><span class="Apple-tab-span">	</span>s.release(3); </span>// operating on the actual Synth, not the UniqueSynth</p>
+<p class="p11"><span class="s4"><span class="Apple-tab-span">	</span>s.release(3); </span>// operating on the actual Synth, not the SynthResource</p>
 <p class="p8">});</p>
 <p class="p7"><br></p>
 <p class="p9">//:WRONG! The routine continues after the synth is freed</p>
@@ -509,7 +509,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p7"><br></p>
 <p class="p8">{ <span class="s1">WhiteNoise</span>.ar(<span class="s1">LFTri</span>.kr([10, 10.01] + <span class="s1">LFNoise1</span>.kr(2, 3), 0, 0.2)) }.play.dur(5, 4);</p>
 <p class="p7"><br></p>
-<p class="p11"><span class="s2">\default</span><span class="s4">.play.rsynca({ </span><span class="s1">| s |</span><span class="s4"> <span class="Apple-converted-space">  </span></span>// start synth with default SynthDef (See UniqueSynth).</p>
+<p class="p11"><span class="s2">\default</span><span class="s4">.play.rsynca({ </span><span class="s1">| s |</span><span class="s4"> <span class="Apple-converted-space">  </span></span>// start synth with default SynthDef (See SynthResource).</p>
 <p class="p11"><span class="s4"><span class="Apple-tab-span">	</span></span><span class="s1">thisThread</span><span class="s4">.randSeed_(5);<span class="Apple-converted-space">  </span></span>// always play the same sequence</p>
 <p class="p8"><span class="Apple-tab-span">	</span>220 do: { <span class="s1">| i |</span> (i + 11 / 5).reciprocal.wait;<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>s.set(<span class="s2">\freq</span>, ((4..16) * 110) @@ ((i % 4).rand + (i / 20 % 60))); <span class="s3">"."</span>.post;</p>

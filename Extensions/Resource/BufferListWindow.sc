@@ -30,7 +30,7 @@ BufferListWindow : ListWindow {
 // A better version, with load button and text field for trying algorithms
 // Under development:
 
-BufferListWindow2 : UniqueWindow {
+BufferListWindow2 : WindowResource {
 	*new { | server |
 		var key;
 		server = server ? Server.default;

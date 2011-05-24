@@ -1,30 +1,30 @@
 //:a
-UniqueWindow(\test).onClose({ "closed".postln; });
+WindowResource(\test).onClose({ "closed".postln; });
 //:b
 \test2.window.onClose({ ({ 10.rand } ! 10).postln });
 
 //:w simple unique window
 
-UniqueWindow(\simple) onClose: { | me | postf("The window named '%' was closed\n", me.name) };
+WindowResource(\simple) onClose: { | me | postf("The window named '%' was closed\n", me.name) };
 
 //:y does not reopen: 
 
 {
 	8 do: { 
-		UniqueWindow(\repeatsimple).onClose({ | me | postf("The window named '%' was closed\n", me.name) })
+		WindowResource(\repeatsimple).onClose({ | me | postf("The window named '%' was closed\n", me.name) })
 			.window.view.background  = Color.rand;
 		"It's still the same window".postln;
 		0.5.wait;
 	};
 	3.wait;
-	UniqueWindow(\repeatsimple).window.close;
+	WindowResource(\repeatsimple).window.close;
 }.fork(AppClock);
 
 //:c
 
 r = {
 	5 do: { | i |
-		UniqueWindow(\otherWindow, {
+		WindowResource(\otherWindow, {
 			var w;
 			w = Window.new("MyWindow", Rect(*Array.rand(4, 250, 400)));
 			w.view.background = Color.rand(0.5, 1);
@@ -41,7 +41,7 @@ r = {
 	"THE END".postln;
 }.fork(AppClock)
 
-//:f UniqueFunction
+//:f FunctionResource
 
 u = { | a, b, c | [a, b, c].sum.postln; }.doOnce(10, 20, 30);
 u.onRemove({ | uf | ({ uf.value } ! 5).postln; });

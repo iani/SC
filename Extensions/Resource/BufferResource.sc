@@ -1,7 +1,7 @@
 /* 
-Redo of UniqueBuffer to work with new version of ServerReady, so that buffers are always loaded before any synths are started. 
+Redo of UniqueBuffer to work with new version of ServerPrep, so that buffers are always loaded before any synths are started. 
 */
-UniqueBuffer : AbstractUniqueServerObject {
+BufferResource : AbstractServerResource {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	classvar >current;
 	var <path, <startFrame = 0, <numFrames, <numChannels = 1;
@@ -128,7 +128,7 @@ UniqueBuffer : AbstractUniqueServerObject {
 
 	freed {
 		object = nil;
-		NotificationCenter.notify(UniqueBuffer, \free, this);
+		NotificationCenter.notify(this.class, \free, this);
 		if (current[server] === this) { current[server] = nil; /* this.class.default */ };
 	}
 
