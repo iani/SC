@@ -126,19 +126,22 @@ Dock {
 			string.removeAllSuchThat(_.isSpace);
 			words = string.delimit({ arg c; c == $: });
 			class = words.at(0).asSymbol.asClass;
-			if (class.notNil, {
+			if (class.notNil) {
 				method = class.findMethod(words.at(1).asSymbol);
-				if (method.notNil, {
+				if (method.notNil) {
 					method.filenameSymbol.asString.openTextFile(method.charPos, -1);
-				});
-			});
-			^nil;
+				};
+			}{
+				^nil;
+			}
 		}{
 			class = string.asSymbol.asClass;
-			if (class.notNil, {
+			if (class.notNil) {
 				class = class.classRedirect;
 				^class;
-			});
+			}{
+				^nil
+			};
 		};
 	}
 
