@@ -37,7 +37,7 @@ Udef {
 		^name.play(args, target, addAction); // (name, args, target, addAction);
 	}
 
-	// using generic different name to be also used by UniqueBuffer
+	// using generic different name to be also used by BufferResource
 	sendTo { | server | def.send(server) }
 	
 	*at { | server | ^this.onServer(server) }

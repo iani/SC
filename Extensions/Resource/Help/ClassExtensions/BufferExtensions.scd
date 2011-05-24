@@ -29,7 +29,7 @@ Buffer.play({ | bufnum | BufRd.ar(1, bufnum, LFNoise1.ar(1) * BufFrames.ir(bufnu
 
 //:Long form: Play with custom function
 
-UniqueBuffer.default.play({ | bufnum | BufRd.ar(1, bufnum, LFNoise1.ar(1) * BufFrames.ir(bufnum)) });
+BufferResource.default.play({ | bufnum | BufRd.ar(1, bufnum, LFNoise1.ar(1) * BufFrames.ir(bufnum)) });
 
 //:playing the same buffer with a custom function many times: 
 

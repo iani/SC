@@ -1,7 +1,7 @@
 /* 
 Upon receiving a notification, evaluate an array of functions once.
 
-Example of an application, see UniqueBuffer:play. Code there: 
+Example of an application, see BufferResource:play. Code there: 
 			NotifyOnce(key, \loaded, this, { this.playNow(play) });
 
 Usage: 

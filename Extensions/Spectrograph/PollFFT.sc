@@ -25,7 +25,7 @@ PollFFT : Resource {
 	}
 
 	makeSynth {
-		buffer = UniqueBuffer(key[2], server, bufSize);
+		buffer = BufferResource(key[2], server, bufSize);
 		synthdef = Udef(\fft, { | in = 0, buf = 0 |
 			FFT(buf, InFeedback.ar(in));
 		}, server: server);

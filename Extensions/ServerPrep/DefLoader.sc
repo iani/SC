@@ -68,8 +68,8 @@ BufLoader : DefLoader {
 
 	loadNextObjectGroup { serverPrep.loadDefs; }
 
-	addAllUniqueBuffers {
+	addAllBufferResources {
 		/* Received from ServerPrep on Boot time. Done before loading process starts */
-		objects addAll: UniqueBuffer.onServer(server);
+		objects addAll: BufferResource.onServer(server);
 	}
 }
