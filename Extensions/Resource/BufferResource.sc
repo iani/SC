@@ -1,5 +1,5 @@
 /* 
-Redo of UniqueBuffer to work with new version of ServerPrep, so that buffers are always loaded before any synths are started. 
+Works with ServerPrep, so that buffers are always loaded before any synths are started. 
 */
 BufferResource : AbstractServerResource {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
@@ -66,7 +66,7 @@ BufferResource : AbstractServerResource {
 	*play { | func, name |
 		var ubuf;
 		if (name.isNil) { ubuf = this.current } { ubuf = this.getObject(this.makeKey(name)); };
-		if (ubuf.isNil) { ^postf("Could not find a UniqueBuffer named: %\n", name); };
+		if (ubuf.isNil) { ^postf("Could not find a BufferResource named: %\n", name); };
 		ubuf.play(func);
 	}
 
@@ -84,7 +84,7 @@ BufferResource : AbstractServerResource {
 		path = argPath;
 		startFrame = argStartFrame;
 		ServerPrep(server).addBuffer(this);
-		NotificationCenter.notify(UniqueBuffer, \created, this);
+		NotificationCenter.notify(BufferResource, \created, this);
 		if (path.notNil) { current[server] = this; };
 	}
 
@@ -117,7 +117,7 @@ BufferResource : AbstractServerResource {
 	loaded { | b |
 		numFrames = b.numFrames;
 		numChannels = b.numChannels;
-		NotificationCenter.notify(UniqueBuffer, \loaded, this);
+		NotificationCenter.notify(BufferResource, \loaded, this);
 	}
 
 	free {

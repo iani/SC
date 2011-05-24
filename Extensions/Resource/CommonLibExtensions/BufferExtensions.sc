@@ -2,11 +2,11 @@
 + Buffer {
 	
 	*default { | server |
-		^UniqueBuffer.default(server ? Server.default);
+		^BufferResource.default(server ? Server.default);
 	}
 
 	*current { | server |
-		^UniqueBuffer.current(server ? Server.default);
+		^BufferResource.current(server ? Server.default);
 	}
 	
 	*play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
@@ -14,10 +14,10 @@
 			.play(func, target, outbus, fadeTime, addAction, args, name);
 	}
 
-	*load { UniqueBuffer.load }	
+	*load { BufferResource.load }	
 	
-	*saveList { UniqueBuffer.saveList }
-	*loadList { UniqueBuffer.loadList }
+	*saveList { BufferResource.saveList }
+	*loadList { BufferResource.loadList }
 	*list { BufferListWindow.new }
 }
 

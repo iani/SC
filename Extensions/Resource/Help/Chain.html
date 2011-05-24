@@ -38,7 +38,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
 <p class="p5"><b>Purpose</b></p>
 <p class="p4"><br></p>
-<p class="p3">Play a pattern producing fuctions whose values are objects that respond to onEnd (UniqueSynths, EventStreams), by chaining each next element so as to start playing when the previous element ends.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Play a pattern producing fuctions whose values are objects that respond to onEnd (SynthResources, EventStreams), by chaining each next element so as to start playing when the previous element ends.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
 <p class="p3">Chain is quite a powerful tool for writing algorithms that generate patterns of sound. It<span class="Apple-converted-space">  </span>can also be useful in combining the sending of OSC messages to external applications as well as drawing graphics in the same generative process that makes the sound in sync with the sound events.<span class="Apple-converted-space"> </span></p>
 <p class="p4"><br></p>
@@ -111,7 +111,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p12"><br></p>
 <p class="p3"><b>Playing SynthDefs by name instead of Functions<span class="Apple-converted-space"> </span></b></p>
 <p class="p12"><br></p>
-<p class="p3">To create synths from a previously defined SynthDef, send the message play to the symbol corresponding to the name of the SynthDef. The arguments to method play are the same as those for Synth:play minus the name of the SynthDef, which is provided by the Symbol. (For more details, see class UniqueSynth).</p>
+<p class="p3">To create synths from a previously defined SynthDef, send the message play to the symbol corresponding to the name of the SynthDef. The arguments to method play are the same as those for Synth:play minus the name of the SynthDef, which is provided by the Symbol. (For more details, see class SynthResource).</p>
 <p class="p12"><br></p>
 <p class="p8"><span class="s2">Chain</span>(<span class="s2">Pn</span>({ \default.play([\freq, 400 + 400.rand]).dur(0.02, 0.05) }, 25) );</p>
 <p class="p12"><br></p>
@@ -469,7 +469,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><br></p>
 <p class="p5"><b>Related Classes</b></p>
 <p class="p4"><br></p>
-<p class="p3">See also: EventStream, UniqueSynth, ChainLink, SynthLink</p>
+<p class="p3">See also: EventStream, SynthResource, ChainLink, SynthLink</p>
 <p class="p4"><br></p>
 <p class="p5"><b>Instance Creation</b></p>
 <p class="p4"><br></p>

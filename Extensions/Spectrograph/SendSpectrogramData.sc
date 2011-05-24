@@ -1,5 +1,5 @@
 
-
+/*
 SendSpectrogramData : DrawSpectrogram {
 	var <ofAddress;
 	
@@ -25,13 +25,13 @@ SendSpectrogramData : DrawSpectrogram {
 	}	
 
 }
-
+*/
 /* 
 Redo of SendSpectrogramData as UniqueObject to prevent double instances from being added 
 to the same PollFFT
 */
 
-USendSpectrogramData : AbstractServerResource {
+SendSpectrogramData : AbstractServerResource {
 
 	// fft data and display customization: 
 	var <binSize = 1024, <colorSize = 64, <colorScaleExponent = 0.5, <intensity = 1;
@@ -84,5 +84,6 @@ USendSpectrogramData : AbstractServerResource {
 	colorSize_ { | size = 64 | colorSize = size; this.makeColors; }
 	colorScaleExponent_ { | exp = 64 | colorScaleExponent = exp; this.makeColors; }
 	intensity_ { | factor = 64 | intensity = factor; this.makeColors; }
+	rate_ { | rate = 0.04 | pollFFT.rate = rate; }	
 
 }

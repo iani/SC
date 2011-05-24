@@ -22,7 +22,7 @@ ServerPrep {
 	init {
 		serverBootedResponder = OSCpathResponder(server.addr, ['/done', '/notify'], {
 			defs.addAllUdefs;
-			bufs.addAllUniqueBuffers;
+			bufs.addAllBufferResources;
 			this.loadAllObjects;
 			this.notifyTree;
 		}).add;
@@ -32,7 +32,8 @@ ServerPrep {
 		routines = RoutineLoader(this, server);
 		actions = ServerActionLoader(this, server);
 		CmdPeriod.add(this);
-		ServerTree.add(this, server);	// on Server *boot*: load all registered Udefs and UniqueBuffers
+		// on Server *boot*: load all registered Udefs and BufferResources
+		ServerTree.add(this, server);
 	}
 
 	cmdPeriod { cmdPeriod = true }

@@ -25,7 +25,7 @@ Resource {
 	}
 
 	*makeKey { | key |
-		/* server-related subclasses UniqueSynth etc. compose the key to include the server */
+		/* server-related subclasses SynthResource etc. compose the key to include the server */
 		^this.mainKey ++ key.asKey;
 	}
 
