@@ -13,6 +13,8 @@
 #include "ofxVectorMath.h"
 #include "ofxXmlSettings.h"
 
+#include "ofx3DUtils.h"
+
 // listen on port 12345
 #define PORT 12345
 #define NUM_MSG_STRINGS 20
@@ -54,6 +56,7 @@ class testApp : public ofBaseApp{
 		float	data[1024];
 		float		countX;
 
+		
 	private:
 		ofxOscReceiver	receiver;
 

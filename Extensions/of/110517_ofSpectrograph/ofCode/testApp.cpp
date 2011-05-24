@@ -46,6 +46,14 @@ void testApp::update(){
 			for (int i=0; i<512; i++)	{
 				data[i] = m.getArgAsFloat( i );
 			}
+			for (int i=0; i<512; i++)	{
+				glColor3f(data[i],data[i],data[i]);
+				ofEllipse(ofGetWidth(),512-i,2,2);
+			}
+			texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
+			ofSetColor(iv["textureRed"],255,255,iv["textureAlpha"]);
+			texScreen.draw(-1,0,ofGetWidth(), ofGetHeight());
+
 		} 
 		// map implementation
 		if ( m.getAddress() == "int" )	{
@@ -55,13 +63,6 @@ void testApp::update(){
 }
 //--------------------------------------------------------------
 void testApp::draw(){
-	for (int i=0; i<512; i++)	{
-		glColor3f(data[i],data[i],data[i]);
-		ofEllipse(ofGetWidth(),512-i,2,2);
-	}
-	texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
-	ofSetColor(iv["textureRed"],255,255,iv["textureAlpha"]);
-	texScreen.draw(-1,0,ofGetWidth(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
