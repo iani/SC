@@ -1,4 +1,4 @@
-Lilt2/Elemenbí (/Look Ma, No Boot/)
+Lilt2/Elemenb\'i (/Look Ma, No Boot/)
 
 By Ioannis Zannos, March-May 2011
 
@@ -7,7 +7,6 @@ or:
  : git clone git://github.com/iani/SC.git
 
 *Summary of ideas in this Library*
-
 
 * Class ServerPrep
 
@@ -28,12 +27,12 @@ Classes involved:
 - UniqueBuffer
 - Udef
 
-* Class UniqueSynth
+* Class SynthResource
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
 controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
 
-Example of how UniqueSynth can simplify the code required: 
+Example of how SynthResource can simplify the code required: 
 
 /Without Symbol:mplay/
 

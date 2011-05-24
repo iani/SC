@@ -19,7 +19,7 @@ Panes {
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;
-		UniqueBuffer.addMenu;
+		BufferResource.addMenu;
 		Document.allDocuments do: this.setDocActions(_);
 		this.arrange1Pane;
 //		this.arrange2Panes;
@@ -34,7 +34,7 @@ Panes {
 		this.removeMenu;
 		Code.removeMenu;
 		Dock.removeMenu.closeDocListWindow;
-		UniqueBuffer.removeMenu;
+		BufferResource.removeMenu;
 	}
 
 	*menuItems { ^[

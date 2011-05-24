@@ -15,7 +15,7 @@ NotificationCenter.notify(sender, message, listener);
 */
 
 
-NotifyOnce : UniqueObject {
+NotifyOnce : Resource {
 
 	*mainKey { ^\chains }
 

@@ -1,8 +1,8 @@
-                 Lilt2/Elemenb’ (/Look Ma, No Boot/)
+                 Lilt2/Elemenbí (/Look Ma, No Boot/)
                  ===================================
 
 Author: Ioannis Zannos
-Date: 2011-05-15 21:37:40 EEST
+Date: 2011-05-24 12:21:32 EEST
 
 
 By Ioannis Zannos, March-May 2011
@@ -13,11 +13,10 @@ or:
 
 *Summary of ideas in this Library*
 
-
 Table of Contents
 =================
 1 Class ServerPrep 
-2 Class UniqueSynth 
+2 Class SynthResource 
 3 Class Chain, EventStream, Function:sched and Function:stream 
 4 Object methods for easy messaging via NotificationCenter 
 5 Class Code 
@@ -46,13 +45,13 @@ Classes involved:
 - UniqueBuffer
 - Udef
 
-2 Class UniqueSynth 
-~~~~~~~~~~~~~~~~~~~~
+2 Class SynthResource 
+~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
 controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
 
-Example of how UniqueSynth can simplify the code required: 
+Example of how SynthResource can simplify the code required: 
 
 /Without Symbol:mplay/
 
@@ -144,7 +143,7 @@ Other example:
 4 Object methods for easy messaging via NotificationCenter 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shortening and clarifying the code required to use NotificationCenter.
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 

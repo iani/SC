@@ -1,4 +1,4 @@
-% Created 2011-05-15 Sun 20:26
+% Created 2011-05-24 Tue 12:22
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -22,7 +22,7 @@
 
 \title{Lilt2/Elemenb\'i (\emph{Look Ma, No Boot})}
 \author{Ioannis Zannos}
-\date{15 May 2011}
+\date{24 May 2011}
 \maketitle
 
 \setcounter{tocdepth}{3}
@@ -39,7 +39,6 @@ or:
 
 
 \textbf{Summary of ideas in this Library}
-
 
 \section{Class ServerPrep}
 \label{sec-1}
@@ -65,14 +64,14 @@ Classes involved:
 \item UniqueBuffer
 \item Udef
 \end{itemize}
-\section{Class UniqueSynth}
+\section{Class SynthResource}
 \label{sec-2}
 
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
 controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
 
-Example of how UniqueSynth can simplify the code required: 
+Example of how SynthResource can simplify the code required: 
 
 \emph{Without Symbol:mplay}
 

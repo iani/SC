@@ -1,4 +1,3 @@
-
 #+SEQ_TODO: TODO(t) BUG(b) | DONE(d) CANCELLED(c) DEFERRED(f)
 
 * 2011
@@ -640,4 +639,9 @@ Reset ServerReady if an Exception occurs, to enable restarting the next time tha
 **** TODO Debug stopping in chains: Sometimes synths continue 	      :chain:
      :PROPERTIES:
      :ENTERED_ON: <2011-05-14 Sat 23:06>
+     :END:
+*** 2011-05-22 Sunday
+**** TODO Rename UniqueObject class to Resource
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-22 Sun 21:59>
      :END:

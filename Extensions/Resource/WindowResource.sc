@@ -1,4 +1,4 @@
-UniqueWindow : UniqueObject {
+WindowResource : Resource {
 //	*mainKey { ^[UniqueWindow] } // all subclasses store instances under UniqueWindow
 //	*removedMessage { ^\closed }
 	classvar defaultBounds;

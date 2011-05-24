@@ -26,7 +26,7 @@ Dock {
 					var u;
 					Server.default = Server.internal;
 					WaitForServer(Server.internal);
-					u = UniqueObject('stethoscope', { 
+					u = Resource('stethoscope', { 
 						var s; 
 						s = Stethoscope(Server.internal);
 						s.window.onClose_(s.window.onClose addFunc: { u.remove });
@@ -126,19 +126,22 @@ Dock {
 			string.removeAllSuchThat(_.isSpace);
 			words = string.delimit({ arg c; c == $: });
 			class = words.at(0).asSymbol.asClass;
-			if (class.notNil, {
+			if (class.notNil) {
 				method = class.findMethod(words.at(1).asSymbol);
-				if (method.notNil, {
+				if (method.notNil) {
 					method.filenameSymbol.asString.openTextFile(method.charPos, -1);
-				});
-			});
-			^nil;
+				};
+			}{
+				^nil;
+			}
 		}{
 			class = string.asSymbol.asClass;
-			if (class.notNil, {
+			if (class.notNil) {
 				class = class.classRedirect;
 				^class;
-			});
+			}{
+				^nil
+			};
 		};
 	}
 
@@ -149,7 +152,7 @@ Dock {
 		if (class.isNil) { ^this };
 		{
 			0.2.wait;
-			doc.string_(doc.string ++ format("%\n\n\Inherits from: %
+			doc.string_(doc.string ++ format("%\n\nInherits from: %
 			
 Purpose
 

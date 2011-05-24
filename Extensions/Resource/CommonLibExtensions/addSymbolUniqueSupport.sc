@@ -16,7 +16,7 @@
 + Symbol {
 	asKey { ^this }
 	// access a unique synth if present, without starting it
-	synth { | server | ^UniqueSynth.at(this, server) }
+	synth { | server | ^SynthResource.at(this, server) }
 	
 	// Start a unique synth if not already running, using self as SynthDef name
 	play { | args, target, addAction = \addToHead |
@@ -26,7 +26,7 @@
 	// Start a synth using self as DefName, but on a unique id
 	// This allows starting a new instance before the old one has stopped
 	mplay { | args, target, addAction = \addToHead |
-		^UniqueSynth(UniqueID.next, this, args, target, addAction);
+		^SynthResource(UniqueID.next, this, args, target, addAction);
 	}
 
 	playFunc { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
@@ -35,19 +35,19 @@
 
 	// start a unique synth, use symbol as key for storing and first arg as name of SynthDef
 	playDef { | def, args, target, addAction=\addToHead |
-		^UniqueSynth(this, def ? this, args, target, addAction);
+		^SynthResource(this, def ? this, args, target, addAction);
 	}
 
 	// to be tested!
 	playBuf { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
-		^UniqueBuffer(func, target, outbus, fadeTime, addAction, args, this);
+		^BufferResource(func, target, outbus, fadeTime, addAction, args, this);
 	}	
 
 	buffer { | target |
 		^switch (this, 
-			\default, { UniqueBuffer.default(target.asTarget.server) },
-			\current, { UniqueBuffer.current(target.asTarget.server) },
-			{ UniqueBuffer(this, target.asTarget.server) }
+			\default, { BufferResource.default(target.asTarget.server) },
+			\current, { BufferResource.current(target.asTarget.server) },
+			{ BufferResource(this, target.asTarget.server) }
 		)
 	}
 
@@ -59,7 +59,7 @@
 	// Note: avoid overwriting release method from Object
 	releaseSynth { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
 	
-	window { | makeFunc | ^UniqueWindow(this, makeFunc) }
+	window { | makeFunc | ^WindowResource(this, makeFunc) }
 	close { this.window.close }
 }
 
@@ -83,9 +83,9 @@
 
 	// Function methods yet to test! : 
 	// NOT YET TESTED
-	remove {	^UniqueFunction.removeAtKey(this.asKey) }
+	remove {	^FunctionResource.removeAtKey(this.asKey) }
 	// NOT YET TESTED
-	forkOnce { | clock ... args | ^UniqueRoutine(this, clock, *args); }
+	forkOnce { | clock ... args | ^RoutineResource(this, clock, *args); }
 }
 
 + SynthDef {

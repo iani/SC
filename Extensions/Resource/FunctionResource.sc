@@ -6,7 +6,7 @@
 
 // Somewhat similar to Thunk, but not the same
 
-UniqueFunction : UniqueObject {
+FunctionResource : Resource {
 	var <value;
 
 //	*mainKey { ^[\functions] }
@@ -24,7 +24,7 @@ UniqueFunction : UniqueObject {
 	function { ^object }
 }
 
-UniqueRoutine : UniqueObject {
+RoutineResource : Resource {
 
 //	*mainKey { ^[\routines] }
 //	*removedMessage { ^\routineReset }
@@ -50,7 +50,7 @@ UniqueRoutine : UniqueObject {
 
 
 // DRAFT!!!!!
-UniqueCodeString : UniqueObject {
+CodeStringResource : Resource {
 	classvar <>uniqueCodeStringKey = \uniqueCodeStrings;
 	*new { | string |
 		var hash;

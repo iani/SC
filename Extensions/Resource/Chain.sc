@@ -110,10 +110,10 @@ Pattern and stream support for looping Functions
 
 + Symbol {
 	chain { | pattern, envir |
-		^UniqueObject(this, { Chain(pattern, envir).onEnd({ UniqueObject(this).remove }) })
+		^Resource(this, { Chain(pattern, envir).onEnd({ Resource(this).remove }) })
 	}
 	chainSeq { | ... links |
-		^UniqueObject(this, { Chain(Pseq(links, 1)).onEnd({ UniqueObject(this).remove }) })
+		^Resource(this, { Chain(Pseq(links, 1)).onEnd({ Resource(this).remove }) })
 	}
 }
 

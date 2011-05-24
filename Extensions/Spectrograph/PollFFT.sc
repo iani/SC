@@ -7,7 +7,7 @@ TODO: Should be UniqueServerObject?
 
 */
 
-PollFFT : UniqueObject {
+PollFFT : Resource {
 	var <server, <>rate = 0.04, <bufSize, <in = 0;
 	var <synthdef, <buffer, <index = 0;
 	var <dependants;

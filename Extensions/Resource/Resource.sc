@@ -1,4 +1,4 @@
-UniqueObject {
+Resource {
 	classvar <objects;
 	var <key, <object;
 

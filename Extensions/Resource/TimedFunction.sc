@@ -27,7 +27,7 @@ fork {
 
 */
 
-TimedFunction : UniqueFunction {
+TimedFunction : FunctionResource {
 	
 	*new { | func, duration = 0.5 | // just renaming the arguments for clarity
 		^super.new(func, duration);	
