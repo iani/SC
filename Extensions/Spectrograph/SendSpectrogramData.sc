@@ -31,7 +31,7 @@ Redo of SendSpectrogramData as UniqueObject to prevent double instances from bei
 to the same PollFFT
 */
 
-USendSpectrogramData : AbstractUniqueServerObject {
+USendSpectrogramData : AbstractServerResource {
 
 	// fft data and display customization: 
 	var <binSize = 1024, <colorSize = 64, <colorScaleExponent = 0.5, <intensity = 1;

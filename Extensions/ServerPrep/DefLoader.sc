@@ -70,6 +70,6 @@ BufLoader : DefLoader {
 
 	addAllUniqueBuffers {
 		/* Received from ServerPrep on Boot time. Done before loading process starts */
-		objects addAll: UniqueBuffer.onServer(server);
+		objects addAll: BufferResource.onServer(server);
 	}
 }

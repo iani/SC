@@ -52,3 +52,6 @@ Panes.activate;
 //:developer specials - should not be on git because they create files that interfere with pull: 
 
 (Platform.userAppSupportDir ++ "/dev_only/*.scd").pathMatch do: _.load;
+
+//: My Synths
+MySynths.load;
