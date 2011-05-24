@@ -54,4 +54,4 @@ Panes.activate;
 (Platform.userAppSupportDir ++ "/dev_only/*.scd").pathMatch do: _.load;
 
 //: My Synths
-MySynths.load;
+MySynths.sendToServer;

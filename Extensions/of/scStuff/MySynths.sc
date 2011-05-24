@@ -1,5 +1,6 @@
+//: Create a class for auto send 
 MySynths {
-	*load {
+	*sendToServer {
 	
 	Udef("pure_clarinet",	
 		{
@@ -8,6 +9,7 @@ MySynths {
 			Out.ar(0, in);
 		}		
 	);
+	
 	Udef(\foubuf, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, windowSize = 0.5, pitchRatio = 1 |
 	        Out.ar(out,
 	                Pan2.ar( 
@@ -28,5 +30,11 @@ MySynths {
 	        )
 	});
 
+	//:PV start synth
+	Udef(\pv0, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, in |
+		in =  PlayBuf.ar(1, bufnum, rate, trigger, 0, loop);
+	     Out.ar(out,Pan2.ar( in, pos,level))
+	});
+	 
 	}
 }
