@@ -16,7 +16,7 @@ Chain {
 	isRunning { ^stream.notNil }
 	
 	reset {
-		stream = pattern.asStream;			
+		stream = envir.use { pattern.asStream; };
 	}
 
 	next {
