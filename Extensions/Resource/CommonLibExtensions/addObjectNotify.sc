@@ -7,7 +7,9 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	notify { | message, args | NotificationCenter.notify(this, message, args); }
 	
 	addMessage { | notifier, message |
-		NotificationCenter.register(notifier, message, this, { | ... args | this.performList(message, args) });
+		NotificationCenter.register(notifier, message, this, { | ... args | 
+			this.performList(message, args)
+		});
 	}
 
 	removeMessage { | notifier, message |

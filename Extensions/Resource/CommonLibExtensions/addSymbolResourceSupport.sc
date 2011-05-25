@@ -17,7 +17,7 @@
 	asKey { ^this }
 	// access a unique synth if present, without starting it
 	synth { | server | ^SynthResource.at(this, server) }
-	
+
 	// Start a unique synth if not already running, using self as SynthDef name
 	play { | args, target, addAction = \addToHead |
 		^this.playDef(this, args, target, addAction);
@@ -38,17 +38,42 @@
 		^SynthResource(this, def ? this, args, target, addAction);
 	}
 
-	// to be tested!
+	// ====== Buffer support ======
 	playBuf { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
-		^BufferResource(func, target, outbus, fadeTime, addAction, args, this);
-	}	
+		/* Play a buffer by name with a function */
+		^BufferResource(this, target.asTarget.server).play(
+			func, target, outbus, fadeTime, addAction, args
+		);
+	}
+	playBufd { | defName, args, target, addAction=\addToHead, name |
+		/* Play a buffer by name with a synthdef */
+		^(name ? this).playDef(defName,
+			[\buf, BufferResource(this, target.asTarget.server).object] ++ args,
+			target, addAction
+		);
+	}
 
-	buffer { | target |
-		^switch (this, 
+	buffer { | target | ^this.bufr(target).object; }
+
+	bufr { | target |
+		^switch (this,
 			\default, { BufferResource.default(target.asTarget.server) },
 			\current, { BufferResource.current(target.asTarget.server) },
 			{ BufferResource(this, target.asTarget.server) }
 		)
+	}
+	
+	// ====== Bus support ======
+	audio { | numChannels = 1, server |
+		^BusResource.audio(this, numChannels, server)
+	}
+
+	control { | numChannels = 1, server |
+		^BusResource.control(this, numChannels, server)
+	}
+	
+	index { | numChannels = 1, server |
+		^this.control(numChannels, server).index;
 	}
 
 	free { | server | ^this.synth(server).free }
@@ -58,7 +83,7 @@
 	setn { | ... args | this.synth.object.setn(*args) }
 	// Note: avoid overwriting release method from Object
 	releaseSynth { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
-	
+
 	window { | makeFunc | ^WindowResource(this, makeFunc) }
 	close { this.window.close }
 }

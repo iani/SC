@@ -12,7 +12,7 @@ void testApp::setup(){
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
 	ofBackground(0,0,0);
-	ofSetFrameRate(30);
+	ofSetFrameRate(60);
 	ofSetWindowTitle("ofSpectrogram");
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
 
