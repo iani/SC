@@ -38,8 +38,10 @@ BufferResource : AbstractServerResource {
 	}
 	
 	*load {
-		Dialog.getPaths({ | paths | paths do: this.read(_); });
+		Dialog.getPaths({ | paths | this.loadPaths(paths) });
 	}
+	
+	*loadPaths { | paths | paths do: this.read(_);	}
 	
 	*saveList {
 		Dialog.savePanel({ | path |
@@ -61,7 +63,11 @@ BufferResource : AbstractServerResource {
 			soundPaths do: this.read(_);
 		});			
 	}
+
 	*list { BufferListWindow.new }
+
+	*postAll { this.onServer.postln }
+	*postNames { this.onServer.collect(_.name).asCompileString.postln }
 
 	*play { | func, name |
 		var ubuf;
@@ -90,23 +96,23 @@ BufferResource : AbstractServerResource {
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
 		this.makePlayFunc(func).play(target ? server, outbus, fadeTime, 
-			addAction, args ++ [\bufnum, object], name
+			addAction, args ++ [\buf, object], name
 		);
 		current[target.asTarget.server] = this;
 	}
 
 	makePlayFunc { | func |
 		if (func.notNil) { ^func };
-		^{ | bufnum, rate = 1 | 
-			PlayBuf.ar(bufnum.numChannels, bufnum, rate * BufRateScale.kr(bufnum), 0, 0, 0, 2); 
+		^{ | buf, rate = 1 | 
+			PlayBuf.ar(buf.numChannels, buf, rate * BufRateScale.kr(buf), 0, 0, 0, 2); 
 		};
 	}
 
 	sendTo {
 		if (path.isNil) {
-			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, completionMessage: { | b | 
-				this.loaded(b);
-			});
+			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, 
+				completionMessage: { | b | this.loaded(b); }
+			);
 		}{
 			object = Buffer.read(server, path, startFrame, numFrames, { | b | 
 				this.loaded(b);
@@ -135,6 +141,8 @@ BufferResource : AbstractServerResource {
 	isLoaded { ^object.notNil }
 	
 	bufnum { if (object.notNil) { ^object.bufnum } { ^nil } }
+	
+	name { ^key.last }
 
 	*menuItems {
 		^[

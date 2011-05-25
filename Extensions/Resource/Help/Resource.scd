@@ -11,7 +11,7 @@ WindowResource(\simple) onClose: { | me | postf("The window named '%' was closed
 
 {
 	8 do: { 
-		WindowResource(\repeatsimple).onClose({ | me | postf("The window named '%' was closed\n", me.name) })
+		WindowResource(\repeatsimple)
 			.window.view.background  = Color.rand;
 		"It's still the same window".postln;
 		0.5.wait;

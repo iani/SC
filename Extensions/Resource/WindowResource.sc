@@ -19,7 +19,7 @@ WindowResource : Resource {
 		};
 		^defaultBounds;
 	}
-	
+
 	addWindowOnCloseAction {
 		object.onClose = {
 			this.remove;
@@ -33,7 +33,7 @@ WindowResource : Resource {
 		window = this.at(windowName);
 		if (window.notNil) { window.front };
 	}
-	
+
 	// shortcuts and synonyms
 	window { ^object }
 	view { ^object.view }
@@ -41,7 +41,8 @@ WindowResource : Resource {
 	bounds { ^object.bounds }
 	bounds_ { | rect | object.bounds = rect; }
 	front { object.front }
-	close { { object.close }.defer(0.01); /* prevent crashing when closing from keyboard on window */ }
+	/* prevent crashing when closing from keyboard on window */
+	close { { object.close }.defer(0.01); }
 	isOpen { ^object.notNil }
 }
 
