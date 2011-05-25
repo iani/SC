@@ -45,9 +45,9 @@
 			func, target, outbus, fadeTime, addAction, args
 		);
 	}
-	playBufd { | defName, args, target, addAction=\addToHead |
+	playBufd { | defName, args, target, addAction=\addToHead, name |
 		/* Play a buffer by name with a synthdef */
-		^defName.mplay(
+		^(name ? this).playDef(defName,
 			[\buf, BufferResource(this, target.asTarget.server).object] ++ args,
 			target, addAction
 		);

@@ -95,10 +95,12 @@ BufferResource : AbstractServerResource {
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
-		this.makePlayFunc(func).play(target ? server, outbus, fadeTime, 
+		var synthResource;
+		synthResource = this.makePlayFunc(func).play(target ? server, outbus, fadeTime, 
 			addAction, args ++ [\buf, object], name
 		);
 		current[target.asTarget.server] = this;
+		^synthResource;
 	}
 
 	makePlayFunc { | func |

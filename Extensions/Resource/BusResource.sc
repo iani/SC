@@ -16,3 +16,4 @@ BusResource : AbstractServerResource {
 	
 	set { | value | object.set(value) }
 }
+
