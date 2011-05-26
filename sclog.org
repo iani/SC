@@ -645,3 +645,12 @@ Reset ServerReady if an Exception occurs, to enable restarting the next time tha
      :PROPERTIES:
      :ENTERED_ON: <2011-05-22 Sun 21:59>
      :END:
+*** 2011-05-26 Thursday
+**** TODO Keyboard shortcuts for Class, Buffer and SynthDef lists  :shortcuts:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-26 Thu 03:19>
+     :END:
+
+Cmd-Ctl-C: Class list
+Cmd-Ctl-S: Synthdef List
+Cmd-Ctl-B: Buffer list

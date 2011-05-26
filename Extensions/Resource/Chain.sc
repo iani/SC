@@ -1,5 +1,4 @@
 
-
 Chain {
 	var <>pattern, <envir, <stream, <currentFunc, <link, onEnd;
 	
@@ -14,7 +13,7 @@ Chain {
 	start { if (this.isRunning) { } { this.reset.next } } 
 	
 	isRunning { ^stream.notNil }
-	
+
 	reset {
 		stream = envir.use { pattern.asStream; };
 	}
