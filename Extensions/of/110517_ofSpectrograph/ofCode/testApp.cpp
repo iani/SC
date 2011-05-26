@@ -47,6 +47,7 @@ void testApp::update(){
 				data[i] = m.getArgAsFloat( i );
 				glColor3f(data[i],data[i],data[i]);
 				ofEllipse(iv["reverseEllipse"],512-i,2,2);
+				ofEllipse(iv["reverseEllipse"],512+i,2,2);				
 			}
 			texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
 			ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
@@ -78,6 +79,14 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){
+	if(key == 'v' or key == 'V'){
+		full = !full;
+		if(full){
+			ofSetFullscreen(true);
+		} else {
+			ofSetFullscreen(false);
+		}
+	}	
 
 }
 

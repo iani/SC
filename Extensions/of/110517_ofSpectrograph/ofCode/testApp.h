@@ -55,6 +55,8 @@ class testApp : public ofBaseApp{
 
 		float	data[1024];
 		float		countX;
+		
+		bool full;
 
 		
 	private:

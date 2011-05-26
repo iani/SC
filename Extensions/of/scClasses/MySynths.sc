@@ -1,7 +1,7 @@
 //: Create a class for auto send 
 MySynths {
 	*sendToServer {
-	
+	//:Use microphone
 	Udef("pure_clarinet",	
 		{
 			var in;
@@ -9,8 +9,22 @@ MySynths {
 			Out.ar(0, in);
 		}		
 	);
-	
-	Udef(\foubuf, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, windowSize = 0.5, pitchRatio = 1 |
+	//:Play Buffer v.1
+	Udef(\foubuf, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, windowSize = 0.5, pitchRatio = 1, in , cutoffFreq = 400|
+		in = Pan2.ar(PitchShift.ar(                  
+	          		PlayBuf.ar(1, bufnum, rate, trigger, 0, loop),
+	                  	windowSize,
+	                  	pitchRatio
+	                 ),
+	          	pos,
+	             	level
+	        	);
+	      in = LPF.ar(in, cutoffFreq);
+	      Out.ar(out, in);
+	});
+
+	//:Play Buffer
+	Udef(\foubuf_0, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, windowSize = 0.5, pitchRatio = 1 |
 	        Out.ar(out,
 	                Pan2.ar( 
 	                        PitchShift.ar(                  
@@ -35,6 +49,15 @@ MySynths {
 		in =  PlayBuf.ar(1, bufnum, rate, trigger, 0, loop);
 	     Out.ar(out,Pan2.ar( in, pos,level))
 	});
+	//:PV_MagSquared
+	Udef(\pv_magSquared, {  |out=0, bufnum=0, soundBufnum=2|
+		var in, chain;
+		in = PlayBuf.ar(1, soundBufnum, BufRateScale.kr(soundBufnum), loop: 1);
+		chain = FFT(LocalBuf(2048), in);
+		chain = PV_MagSquared(chain); 
+		Out.ar(out, 0.003 * IFFT(chain).dup); 
+	});
+	
 	//:PV_RectComb synth with SinOsc Buffer as in
 	Udef(\pv_rectcombSinBuf, {
 		|out =0, in, bufnum = 0, rate = 1, trigger = 1, loop = 1, chain, pos = 0, level = 1, numTeeth = 1, sinPhaseFreq = 0, sinPhaseMul = 0, sinWidthMul = 0, sinWidthFreq = 0, sinPhasePhase = 0, sinWidthPhase = 0, sinPhaseAdd = 0.5, sinWidthAdd = 0.5 | 

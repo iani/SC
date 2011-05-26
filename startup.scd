@@ -57,8 +57,8 @@ Panes.activate;
 MySynths.sendToServer;
 Udef.all;
 //: My Buffers
-MyBuffers.sketch;
-//MyBuffers.conet;
+//MyBuffers.sketch;
+MyBuffers.seals;
 BufferResource.list;
 //:SendSpectrogramData
 SendSpectrogramData.new;
