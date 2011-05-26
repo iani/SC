@@ -35,6 +35,21 @@ MySynths {
 		in =  PlayBuf.ar(1, bufnum, rate, trigger, 0, loop);
 	     Out.ar(out,Pan2.ar( in, pos,level))
 	});
+	//:PV_RectComb synth with SinOsc Buffer as in
+	Udef(\pv_rectcombSinBuf, {
+		|out =0, in, bufnum = 0, rate = 1, trigger = 1, loop = 1, chain, pos = 0, level = 1, numTeeth = 1, sinPhaseFreq = 0, sinPhaseMul = 0, sinWidthMul = 0, sinWidthFreq = 0, sinPhasePhase = 0, sinWidthPhase = 0, sinPhaseAdd = 0.5, sinWidthAdd = 0.5 | 
+		in = PlayBuf.ar(1, bufnum, rate, trigger, 0, loop);
+		in = WhiteNoise.ar(0.2);
+		chain = FFT(LocalBuf(2048), in);
+		chain = PV_RectComb(chain, 
+							numTeeth, 
+							SinOsc.kr(sinPhaseFreq, sinPhasePhase, sinPhaseMul, 0.5), 
+							SinOsc.kr(sinWidthFreq, sinWidthPhase, sinWidthMul, 0.5)
+		);
+	     Out.ar(out,Pan2.ar( IFFT(chain).dup, pos,level));	 
+	
+	});
+
 	
 	//:PV_RectComb synth with SinOsc
 	Udef(\pv_rectcombSin, {

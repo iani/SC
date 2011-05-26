@@ -55,3 +55,12 @@ Panes.activate;
 
 //: My Synths
 MySynths.sendToServer;
+Udef.all;
+//: My Buffers
+MyBuffers.sketch;
+//MyBuffers.conet;
+BufferResource.list;
+//:SendSpectrogramData
+SendSpectrogramData.new;
+
+s.boot;

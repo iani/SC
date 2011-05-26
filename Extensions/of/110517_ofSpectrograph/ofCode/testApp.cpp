@@ -22,8 +22,8 @@ void testApp::setup(){
 
 	current_msg_string = 0;
 	
-	iv["textureRed"] = 255;
-	iv["textureAlpha"] = 255;
+	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
+	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
 }
 
 //--------------------------------------------------------------
@@ -45,21 +45,31 @@ void testApp::update(){
 		if ( m.getAddress() == "/fftpixels" )		{
 			for (int i=0; i<512; i++)	{
 				data[i] = m.getArgAsFloat( i );
-				//cout << "test" << endl;
-			}
-			for (int i=0; i<512; i++)	{
 				glColor3f(data[i],data[i],data[i]);
-				ofEllipse(ofGetWidth(),512-i,2,2);
+				ofEllipse(iv["reverseEllipse"],512-i,2,2);
 			}
 			texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
-			ofSetColor(iv["textureRed"],255,255,iv["textureAlpha"]);
-			texScreen.draw(-1,0,ofGetWidth(), ofGetHeight());
+			ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
+			texScreen.draw(iv["reverseTexture"],0,ofGetWidth(), ofGetHeight());
 
 		} 
 		// map implementation
 		if ( m.getAddress() == "int" )	{
 			iv[m.getArgAsString(0)] = m.getArgAsInt32(1);			
 		}
+		if ( m.getAddress() == "reverse" )	{
+			if (iv["reverseEllipse"] == 0) {
+				iv["reverseEllipse"] = ofGetWidth();
+			}	else	{
+				iv["reverseEllipse"] = 0;
+			}
+			if (iv["reverseTexture"] == 1) {
+				iv["reverseTexture"] = -1;
+			}	else	{
+				iv["reverseTexture"] = 1;
+			}
+		}
+
 	}
 }
 //--------------------------------------------------------------

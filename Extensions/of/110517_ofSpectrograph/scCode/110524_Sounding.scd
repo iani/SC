@@ -5,11 +5,28 @@ Let's start play music:
 MySynths.load //	Create class for my Synths
 Udef.all 		//	View all Synhs
 
+MyBuffers
+
 Aris Bezas Tue, 24 May 2011, 18:26
 */
+
+//:110525
+{ | i | format("mySynths%", i).asSymbol.playDef(\foubuf, [\bufnum, i]) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2 rrand: 0.3) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\pitchRatio, 0.1 rrand: 2.12) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\loop, 0) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\level, 0.0) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.free } ! 13;
+
+//:Change variables
+OF.reverse
 //:SendSpectrogramData
 SendSpectrogramData.new;
-
+SendSpectrogramData('fft').rate = 0.046
 \pv_rectcomb_0.playDef(\pv_rectcomb).rsync({	| s |
 		loop {
 			//s.set(\lftWidthMul, 400 rrand: 4000);
@@ -22,14 +39,15 @@ SendSpectrogramData.new;
 		}
 	});
 \pv_rectcomb_0.playDef(\pv_rectcombSin);	
-\pv_rectcomb_0.set(\numTeeth, 1);	
-\pv_rectcomb_0.set(\sinPhaseFreq, 0);	
+\pv_rectcomb_0.set(\numTeeth, 20);	
+\pv_rectcomb_0.set(\sinPhaseFreq, 0.1);	
 \pv_rectcomb_0.set(\sinWidthFreq, 0);	
-\pv_rectcomb_0.set(\sinPhasePhase, 1);
+\pv_rectcomb_0.set(\sinPhasePhase, 0);
 \pv_rectcomb_0.set(\sinWidthPhase, 1);
 \pv_rectcomb_0.set(\sinPhaseMul, 0);
 \pv_rectcomb_0.set(\sinWidthMul, 0);
-
+\pv_rectcomb_0.set(\level, 0)
+\pv_rectcomb_0.free
 //:Usefull commants
 ~synthArray = [\pvBuf0, \pvBuf1, \pvBuf2, \pvBuf3, \pvBuf4, \pvBuf5, \pvBuf6, \pvBuf7];
 ~synthArray do: _.playDef(\pv0);

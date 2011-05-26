@@ -14,6 +14,7 @@ SendSpectrogramData.new
 //:OF change variables
 OF.int("textureAlpha",255);
 OF.int("textureRed",255);
+OF.reverse;
 
 //:Set
 k.set(\bufnum, 7)
