@@ -24,11 +24,11 @@ void testApp::setup(){
 	
 	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
 	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
+	iv["mirrorMode"] = 3;
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-
 	// hide old messages
 	for ( int i=0; i<NUM_MSG_STRINGS; i++ )
 	{
@@ -43,15 +43,46 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
 
 		if ( m.getAddress() == "/fftpixels" )		{
-			for (int i=0; i<512; i++)	{
-				data[i] = m.getArgAsFloat( i );
-				glColor3f(data[i],data[i],data[i]);
-				ofEllipse(iv["reverseEllipse"],512-i,2,2);
-				ofEllipse(iv["reverseEllipse"],512+i,2,2);				
-			}
-			texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
-			ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
-			texScreen.draw(iv["reverseTexture"],0,ofGetWidth(), ofGetHeight());
+			switch ( iv["mirrorMode"] )
+			  {
+				 case 0:
+					for (int i=0; i<512; i++)	{
+						data[i] = m.getArgAsFloat( i );
+						glColor3f(data[i],data[i],data[i]);
+						ofEllipse(iv["reverseEllipse"],512-i,2,2);
+					}
+					texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
+					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
+					texScreen.draw(iv["reverseTexture"],0,ofGetWidth(), ofGetHeight());
+					break;
+				 case 1:
+					for (int i=0; i<512; i++)	{
+						data[i] = m.getArgAsFloat( i );
+						glColor3f(data[i],data[i],data[i]);
+						ofEllipse(iv["reverseEllipse"],512-i,2,2);
+						ofEllipse(iv["reverseEllipse"],512+i,2,2);				
+					}
+					texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
+					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
+					texScreen.draw(iv["reverseTexture"],0,ofGetWidth(), ofGetHeight());
+					break;
+				 case 3:
+					for (int i=0; i<512; i++)	{
+						data[i] = m.getArgAsFloat( i );
+						glColor3f(data[i],data[i],data[i]);
+						ofEllipse(ofGetWidth()/2,512-i,2,2);
+						ofEllipse(ofGetWidth()/2,512+i,2,2);						
+					}
+					texScreen.loadScreenData(0,0,ofGetWidth()/2, ofGetHeight());
+					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);					
+					texScreen.draw(-1,0,ofGetWidth()/2, ofGetHeight());					
+					texScreen.loadScreenData(ofGetWidth()/2, 0,ofGetWidth(), ofGetHeight());
+					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);					
+					texScreen.draw(ofGetWidth()/2 +1,0,ofGetWidth(), ofGetHeight());					
+					break;
+				 default:
+					printf("%d", iv["mirrorMode"]);
+			  }
 
 		} 
 		// map implementation

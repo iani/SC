@@ -26,7 +26,8 @@ SendSpectrogramData : DrawSpectrogram {
 
 }
 */
-/* 
+/*
+SendSpectrogramData('fft').free 
 Redo of SendSpectrogramData as UniqueObject to prevent double instances from being added 
 to the same PollFFT
 */

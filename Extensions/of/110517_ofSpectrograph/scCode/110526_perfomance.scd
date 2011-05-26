@@ -9,16 +9,55 @@ MyBuffers
 
 Aris Bezas Tue, 24 May 2011, 18:26
 */
+//:WidthFreq
+\pv_rectcomb_0.set(\sinWidthFreq, 0);		
+//:--
+{
+	\pv_rectcomb_0.playDef(\pv_rectcombSin);	
+	0.9.wait;
+	\pv_rectcomb_0.set(\sinWidthFreq, 0);		
+}.fork
+//:--
+{
+	50.do { |i|
+		\pv_rectcomb_0.set(\numTeeth, i);
+		0.1.wait;			
+	};
+	50.do { |i|
+		\pv_rectcomb_0.set(\numTeeth, 50-i);
+		0.1.wait;			
+	}
+	
+}.fork
+//:PhaseFreq
+{
+	50.do { |i|
+		\pv_rectcomb_0.set(\sinPhaseFreq, i/50);
+		0.1.wait;			
+	};
+	50.do { |i|
+		\pv_rectcomb_0.set(\sinPhaseFreq, 1-(50-i)/50);
+		0.1.wait;			
+	}
+	
+}.fork
+//:Fade out
+{
+	50.do { |i|
+		\pv_rectcomb_0.set(\level, 1-((i+1)/50));
+		0.1.wait;			
+	};	
+}.fork
 
 //:110525
 { | i | format("mySynths%", i).asSymbol.playDef(\foubuf, [\bufnum, i]) } ! 13;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2 rrand: 0.3) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2 rrand: 0.5) } ! 13;
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\pitchRatio, 0.1 rrand: 2.12) } ! 13;
-{ | i | format("mySynths%", i).asSymbol.set(\loop, 0) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\loop, 1) } ! 13;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\level, 0.0) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\level, 1.3) } ! 13;
 //:--
 { | i | format("mySynths%", i).asSymbol.free } ! 13;
 //:GUI
@@ -31,7 +70,8 @@ a = Slider(w, Rect(50, 20, 300, 40))
 		{ | i | format("mySynths%", i).asSymbol.set(\level, a.value) } ! 13;
 	});
 //:Change variables
-OF.reverse
+OF.reverse;
+OF.int("mirrorMode", 3);
 //:SendSpectrogramData
 SendSpectrogramData.new;
 SendSpectrogramData('fft').rate = 0.046
@@ -47,14 +87,14 @@ SendSpectrogramData('fft').rate = 0.046
 		}
 	});
 \pv_rectcomb_0.playDef(\pv_rectcombSin);	
-\pv_rectcomb_0.set(\numTeeth, 20);	
+\pv_rectcomb_0.set(\numTeeth, 1);	
 \pv_rectcomb_0.set(\sinPhaseFreq, 0.1);	
 \pv_rectcomb_0.set(\sinWidthFreq, 0);	
 \pv_rectcomb_0.set(\sinPhasePhase, 0);
 \pv_rectcomb_0.set(\sinWidthPhase, 1);
 \pv_rectcomb_0.set(\sinPhaseMul, 0);
 \pv_rectcomb_0.set(\sinWidthMul, 0);
-\pv_rectcomb_0.set(\level, 0)
+\pv_rectcomb_0.set(\level, 1)
 \pv_rectcomb_0.free
 //:Usefull commants
 ~synthArray = [\pvBuf0, \pvBuf1, \pvBuf2, \pvBuf3, \pvBuf4, \pvBuf5, \pvBuf6, \pvBuf7];
