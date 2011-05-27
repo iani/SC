@@ -117,12 +117,12 @@ void testApp::update(){
 					}
 					ofSetColor(255,255,255,255);
 					texScreen.loadScreenData(0,0,ofGetWidth()/4, ofGetHeight());
-					texScreen.draw(-1,0,ofGetWidth()/4, ofGetHeight());					
+					texScreen.draw(-1,0);					
 					texScreen.loadScreenData(ofGetWidth()/4, 0,ofGetWidth()/4, ofGetHeight());
-					texScreen.draw(ofGetWidth()/4 +1,0);					
+					texScreen.draw(ofGetWidth()/4 + 1,0);					
 										
 					texScreen.loadScreenData(ofGetWidth()/4, 0,ofGetWidth()/4, ofGetHeight());
-					texScreen.draw(3*ofGetWidth()/4 + 1,0,ofGetWidth()/4, ofGetHeight());					
+					texScreen.draw(3*ofGetWidth()/4 + 1,0);					
 //
 					texScreen.loadScreenData(ofGetWidth()/2, 0, ofGetWidth()/4, ofGetHeight());
 					texScreen.draw(ofGetWidth()/2 - 1,0);
@@ -172,7 +172,14 @@ void testApp::keyPressed  (int key){
 	if(key == 'b' or key == 'B'){
 		ofBackground(0,0,0);
 	}	
-
+	if(key == 't' or key == 'T'){
+		//ofEllipse(100,100,100,100);
+		for (int i = 0; i < 10; i++)	{
+			ofSetColor(255,255,255,255);
+			texScreen.loadScreenData(int(ofRandom(0,500)),int(ofRandom(0,500)),int(ofRandom(100,500)),int(ofRandom(100,500)));
+			texScreen.draw(int(ofRandom(0,1400)),int(ofRandom(0,1400)),100,100);			
+		}		
+	}	
 }
 
 //--------------------------------------------------------------

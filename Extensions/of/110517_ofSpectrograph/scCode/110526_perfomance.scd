@@ -7,40 +7,49 @@ Udef.all 		//	View all Synhs
 
 MyBuffers
 
+Chain
 Aris Bezas Tue, 24 May 2011, 18:26
 */
 //:110525 multirate
-
+//:--
+\pure_clarinet.playDef
+//:--
 
 { | i | format("mySynths%", i).asSymbol.playDef(\foubuf, 
-	[\bufnum, \weddell123436.buffer, \rate, i * 0.001 + 1]) 
+	[\bufnum, \file0002GOOD_L.buffer, \rate, i * 0.001 + 1]) 
+} ! 10;
+//:--
+{ | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, 
+	[\bufnum, \leo_wed.buffer, \rate, i * 0.001 + 1]) 
 } ! 10;
 
 //:-----
+{ | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, [\bufnum, i]) } ! 10;
+//:--
 
-{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\rate, 1) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 1) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\level, 0.15) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\level, 0.15) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\stretch, 100 rrand:200) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\stretch, 100 rrand:200) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\bufnum, (0 rrand: 30).round) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\bufnum, (0 rrand: 30).round) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\loop, 1) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\loop, 1) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\level, 1.5) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\level, 1.5) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.free } ! 13;
+{ | i | format("mySynths%", i).asSymbol.free } ! 10;
 //:--
 {
 	500.do{|g|
-	{ | i | format("mySynths%", i).asSymbol.set(\stretch, g) } ! 13;
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, g) } ! 10;
 	0.01.wait;	
 	};
 	500.do{|k|
-	{ | i | format("m	ySynths%", i).asSymbol.set(\stretch, 500-k) } ! 13;
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 500-k) } ! 10;
 	0.01.wait	;
 	};
 }.fork
@@ -48,12 +57,12 @@ Aris Bezas Tue, 24 May 2011, 18:26
 {
 	5.do{
 	150.do{|g|
-	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*g) } ! 13;
-	0.002.wait;	
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*g) } ! 10;
+	0.001.wait;	
 	};	
 	150.do{|k|
-	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*(150-k)) } ! 13;
-	0.002.wait	
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*(150-k)) } ! 10;
+	0.001.wait	
 	};
 	};
 }.fork
@@ -72,7 +81,7 @@ Aris Bezas Tue, 24 May 2011, 18:26
 {SinOsc.ar(2000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)))}.play;
 }.fork
 //:WidthFreq
-\pv_rectcomb_0.set(\sinWidthFreq, 0.0);		
+\pv_rectcomb_0.set(\sinWidthFreq, 0.2);		
 //:PhaseFreq
 \pv_rectcomb_0.set(\sinPhaseFreq, 2);		
 
@@ -138,7 +147,7 @@ a = Slider(w, Rect(50, 20, 300, 40))
 	});
 //:Change variables
 OF.reverse;
-OF.int("mirrorMode", 1);
+OF.int("mirrorMode", 3);
 OF.float("spectroRed", 1);
 OF.float("spectroGreen", 1);
 OF.float("spectroBlue", 1);

@@ -13,9 +13,6 @@
 #include "ofxVectorMath.h"
 #include "ofxXmlSettings.h"
 
-#include "renderManager.h"
-#include "ofFBOTexture.h"
-
 #include "ofx3DUtils.h"
 
 // listen on port 12345

@@ -55,7 +55,7 @@ Panes.activate;
 
 //:OSC Responders
 SpectroTouchOSC.makeResponders;
-//: My Synths
+ 	//: My Synths
 MySynths.sendToServer;
 Udef.all;
 //: My Buffers
