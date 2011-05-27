@@ -9,8 +9,18 @@ MyBuffers
 
 Aris Bezas Tue, 24 May 2011, 18:26
 */
-//:110525
-{ | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, [\bufnum, i]) } ! 13;
+//:110525 multirate
+
+
+{ | i | format("mySynths%", i).asSymbol.playDef(\foubuf, 
+	[\bufnum, \weddell123436.buffer, \rate, i * 0.001 + 1]) 
+} ! 10;
+
+//:-----
+
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 1) } ! 13;
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\level, 0.15) } ! 13;
 //:--
@@ -30,8 +40,8 @@ Aris Bezas Tue, 24 May 2011, 18:26
 	0.01.wait;	
 	};
 	500.do{|k|
-	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 500-k) } ! 13;
-	0.01.wait	
+	{ | i | format("m	ySynths%", i).asSymbol.set(\stretch, 500-k) } ! 13;
+	0.01.wait	;
 	};
 }.fork
 //:--
@@ -39,11 +49,11 @@ Aris Bezas Tue, 24 May 2011, 18:26
 	5.do{
 	150.do{|g|
 	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*g) } ! 13;
-	0.001.wait;	
-	};
+	0.002.wait;	
+	};	
 	150.do{|k|
 	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*(150-k)) } ! 13;
-	0.001.wait	
+	0.002.wait	
 	};
 	};
 }.fork
@@ -106,7 +116,7 @@ Aris Bezas Tue, 24 May 2011, 18:26
 //:110525
 { | i | format("mySynths%", i).asSymbol.playDef(\foubuf, [\bufnum, i]) } ! 13;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2 rrand: 0.5) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.1 rrand: 0.3) } ! 13;
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\pitchRatio, 0.1 rrand: 2.12) } ! 13;
 //:--
@@ -128,10 +138,10 @@ a = Slider(w, Rect(50, 20, 300, 40))
 	});
 //:Change variables
 OF.reverse;
-OF.int("mirrorMode", 3);
+OF.int("mirrorMode", 1);
 OF.float("spectroRed", 1);
 OF.float("spectroGreen", 1);
-OF.float("spectroBlue", 0);
+OF.float("spectroBlue", 1);
 OF.float("spectroRedUp", 1);
 OF.float("spectroGreenUp", 1);
 OF.float("spectroBlueUp", 1);
@@ -180,80 +190,3 @@ SendSpectrogramData('fft').rate = 0.046
 ~synthArray do: _.releaseSynth(1.5);
 (1..10) do: { | i | ~synthArray[i].set(\bufnum, i);i.postln}
 
-//:PV start synth
-Udef(\pv_diffuser, {
-	| out = 0, bufnum = 11, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, in, chain |
-	in =  PlayBuf.ar(1, bufnum, rate, trigger, 0, loop);
-	chain = FFT(LocalBuf(2048), in);
-	chain = PV_Diffuser(chain, MouseY.kr > 0.5 ); 
-	Out.ar(out, 0.5 * IFFT(chain).dup);
-     Out.ar(out,Pan2.ar( in, pos,level))
-});
-\pv_diffuser.playDef;
-\pv_diffuser.set(\bufnum, 1);
-\pv_diffuser.free
-
-//:PV BrickWall
-Udef(\pv_brickwall, {
-	| out = 0, bufnum = 11, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, in, chain, wipeFreq =  1 |
-	in =  PlayBuf.ar(1, bufnum, rate, trigger, 0, loop);
-	chain = FFT(LocalBuf(2048), in);
-	chain = PV_BrickWall(chain, SinOsc.kr(wipeFreq)); 
-     Out.ar(out,Pan2.ar( IFFT(chain).dup, pos,level))
-});
-//:Play
-
-\pv_brickwall.playDef;
-\pv_brickwall.set(\wipeFreq, 0.1);
-\pv_brickwall.releaseSynth(2)
-\pv_brickwall.free
-
-
-\pv_brickwall_0.playDef(\pv_brickwall);
-\pv_brickwall_1.playDef(\pv_brickwall);
-\pv_brickwall_2.playDef(\pv_brickwall);
-
-//:PV_RectComb
-//:Create Synths
-Udef(\pv_rectcomb, {
-	|out =0, in, chain, pos = 0, level = 1, numTeeth = 8, lftPhaseFreq = 0.097, lftPhaseMul = 0.4, lftWidthMul = -0.5, lftWidthFreq = 0.24, lftPhasePhase = 0, lftWidthPhase = 0 | 
-	in = WhiteNoise.ar(0.2);
-	chain = FFT(LocalBuf(2048), in);
-	chain = PV_RectComb(chain, 
-						numTeeth, 
-						SinOsc.kr(lftPhaseFreq, lftPhasePhase, lftPhaseMul, 0.5), 
-						SinOsc.kr(lftWidthFreq, lftWidthPhase, lftWidthMul, 0.5)
-	);
-     Out.ar(out,Pan2.ar( IFFT(chain).dup, pos,level));	 
-
-});
-//:Play
-2.wait;
-\pv_rectcomb_0.playDef(\pv_rectcomb);
-\pv_rectcomb_0.set(\numTeeth, 2);
-\pv_rectcomb_0.set(\lftPhaseFreq, 1);
-\pv_rectcomb_0.set(\lftWidthMul, 0.5);
-\pv_rectcomb_0.set(\lftPhaseMul, 1);
-
-
-	
-//: Examples from documentation
-(
-{
-	var in, chain;
-	in = WhiteNoise.ar(0.2);
-	chain = FFT(LocalBuf(2048), in);
-	chain = PV_RectComb(chain, 8, LFTri.kr(0.097, 0, 0.4, 0.5), 
-		LFTri.kr(0.24, 0, -0.5, 0.5)); 
-	IFFT(chain).dup;
-}.play;
-)
-
-(
-{	var in, chain;
-	in = WhiteNoise.ar(0.2);
-	chain = FFT(LocalBuf(2048), in);
-	chain = PV_RectComb(chain,  MouseX.kr(0, 32), MouseY.kr, 0.2); 
-	IFFT(chain).dup;
-}.play;
-)

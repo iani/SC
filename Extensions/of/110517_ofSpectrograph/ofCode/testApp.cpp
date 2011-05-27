@@ -15,7 +15,7 @@ void testApp::setup(){
 	ofSetFrameRate(60);
 	ofSetWindowTitle("ofSpectrogram");
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
-	ofSetFullscreen(true);
+	//ofSetFullscreen(true);
 
 	// listen on the given port
 	cout << "listening for osc messages on port " << PORT << "\n";
@@ -25,7 +25,7 @@ void testApp::setup(){
 	
 	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
 	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
-	iv["mirrorMode"] = 3;
+	iv["mirrorMode"] = 4;
 	fv["spectroRed"] = fv["spectroGreen"] = fv["spectroBlue"] = 1;
 }
 
@@ -97,6 +97,37 @@ void testApp::update(){
 					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);					
 					texScreen.draw(ofGetWidth()/2 +1,0,ofGetWidth(), ofGetHeight());					
 					break;
+				 case 4:
+					for (int i=0; i<512; i++)	{
+						data[i] = m.getArgAsFloat( i );
+						glColor3f(fv["spectroRed"]*data[i],fv["spectroGreen"]*data[i],fv["spectroBlue"]*data[i]);
+
+						ofEllipse(ofGetWidth()/4,256-i/2,2,2);
+						ofEllipse(ofGetWidth()/4,256+i/2,2,2);						
+
+						ofEllipse(ofGetWidth()/4,776-i/2,2,2);
+						ofEllipse(ofGetWidth()/4,776+i/2,2,2);						
+
+						ofEllipse(3*ofGetWidth()/4,256-i/2,2,2);
+						ofEllipse(3*ofGetWidth()/4,256+i/2,2,2);						
+
+						ofEllipse(3*ofGetWidth()/4,776-i/2,2,2);
+						ofEllipse(3*ofGetWidth()/4,776+i/2,2,2);						
+
+					}
+					ofSetColor(255,255,255,255);
+					texScreen.loadScreenData(0,0,ofGetWidth()/4, ofGetHeight());
+					texScreen.draw(-1,0,ofGetWidth()/4, ofGetHeight());					
+					texScreen.loadScreenData(ofGetWidth()/4, 0,ofGetWidth()/4, ofGetHeight());
+					texScreen.draw(ofGetWidth()/4 +1,0);					
+										
+					texScreen.loadScreenData(ofGetWidth()/4, 0,ofGetWidth()/4, ofGetHeight());
+					texScreen.draw(3*ofGetWidth()/4 + 1,0,ofGetWidth()/4, ofGetHeight());					
+//
+					texScreen.loadScreenData(ofGetWidth()/2, 0, ofGetWidth()/4, ofGetHeight());
+					texScreen.draw(ofGetWidth()/2 - 1,0);
+					
+					break;
 				 default:
 					printf("%d", fv["mirrorMode"]);
 			  }
@@ -137,6 +168,9 @@ void testApp::keyPressed  (int key){
 		} else {
 			ofSetFullscreen(false);
 		}
+	}	
+	if(key == 'b' or key == 'B'){
+		ofBackground(0,0,0);
 	}	
 
 }

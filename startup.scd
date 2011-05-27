@@ -59,12 +59,10 @@ SpectroTouchOSC.makeResponders;
 MySynths.sendToServer;
 Udef.all;
 //: My Buffers
-//MyBuffers.sketch;
-MyBuffers.seals;
+MyBuffers.osmoFull;
+//MyBuffers.seals;
 BufferResource.list;
 //:SendSpectrogramData
 SendSpectrogramData.new;
-//:OSC Responders
-SpectroTouchOSC.makeResponders;
 
 s.boot;

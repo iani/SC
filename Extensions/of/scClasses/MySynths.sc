@@ -22,9 +22,9 @@ MySynths {
 	      Out.ar(out, in);
 	});
 	//:PV_BinShift
-	Udef("pv_binShift", {  | out=0, bufnum=2, stretch = 1, shift = 0, level = 0.5 |
+	Udef("pv_binShift", {  | out=0, bufnum=2, stretch = 1, shift = 0, level = 0.5, rate = 1 |
 		var in, chain;
-		in = PlayBuf.ar(1, bufnum, BufRateScale.kr(bufnum), loop: 1);
+		in = PlayBuf.ar(1, bufnum, rate, loop: 1);
 		chain = FFT(LocalBuf(2048), in);
 		chain = PV_BinShift(chain, 1, stretch ); 
 		Out.ar(out, level * IFFT(chain).dup);

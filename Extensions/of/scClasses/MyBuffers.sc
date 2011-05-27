@@ -1,4 +1,13 @@
+
+/*
 //:Create class for load buffers to Server
+
+
+MyBuffers.seals
+
+
+//: -----
+*/
 
 MyBuffers {
 	*seals	{
@@ -11,6 +20,10 @@ MyBuffers {
 	
 	*sketch	{
 		BufferResource loadPaths: UserPath("Extensions/of/scStuff/BuffferList/sketch.txt").load;
+	}
+	
+	*osmoFull {
+		BufferResource loadPaths: (UserPath("Extensions/of/scStuff/BuffferList/osmoFull.txt").load);
 	}
 
 }

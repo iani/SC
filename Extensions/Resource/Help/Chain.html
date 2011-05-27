@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Style-Type" content="text/css">
 <title></title>
 <meta name="Generator" content="Cocoa HTML Writer">
-<meta name="CocoaVersion" content="1038.35">
+<meta name="CocoaVersion" content="949.54">
 <style type="text/css">
 p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
 p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
@@ -13,21 +13,21 @@ p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
 p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
 p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
 p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; min-height: 17.0px}
-p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b82317}
 p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
-p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
-p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #1730bd}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b72317}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b82317; min-height: 12.0px}
 p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
-p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c; min-height: 12.0px}
-p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4; min-height: 12.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b72317; min-height: 12.0px}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #1730bd; min-height: 12.0px}
 p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
 span.s1 {color: #000000}
-span.s2 {color: #162bc4}
-span.s3 {color: #008323}
+span.s2 {color: #1730bd}
+span.s3 {color: #367f2c}
 span.s4 {color: #737373}
-span.s5 {color: #d00c0c}
-span.s6 {color: #cf0c0c}
+span.s5 {color: #b82317}
+span.s6 {color: #b72317}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
@@ -286,6 +286,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Klang</span>.ar(`[ <span class="s2">Array</span>.rand(3, 100.0, 125.0) * <span class="s3">\inc</span>.prand((5..7), <span class="s2">inf</span>).next]).dup * 0.02<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.play.dur(0.1, 0.3);</p>
 <p class="p8"><span class="Apple-tab-span">	</span>}.chain(<span class="s2">Pn</span>(0.1, 5)),</p>
+<p class="p12"><br></p>
 <p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s2">| freq = 400 |</span> <span class="s2">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.1) }</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s3">\freq</span>,<span class="Apple-converted-space">  </span><span class="s3">\freq</span>.pseries(4).next * 100])</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.01 rrand: 0.1, 0.05 rrand: 0.5)<span class="Apple-converted-space"> </span></p>
@@ -393,6 +394,18 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p8">0.2.wait;</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps * 1.25, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
 <p class="p8">});</p>
 <p class="p8">0.2.wait;</p>
 <p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
@@ -587,7 +600,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currentEnvironment.postln;</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currentEnvironment.parent.postln;</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currentEnvironment.parent[\freq] = <span class="s2">Pseq</span>([60, 65].midicps / 2, <span class="s2">inf</span>).asStream;</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span> }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain,</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Pn({ \default.play([\freq, ~freq.next]).dur(0.01, 0.05) }, 25),</p>
 <p class="p8">//<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ \freq.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) },</p>
 <p class="p8"><span class="Apple-tab-span">	</span>], inf),</p>
