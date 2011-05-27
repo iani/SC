@@ -15,6 +15,7 @@ void testApp::setup(){
 	ofSetFrameRate(60);
 	ofSetWindowTitle("ofSpectrogram");
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
+	ofSetFullscreen(true);
 
 	// listen on the given port
 	cout << "listening for osc messages on port " << PORT << "\n";
@@ -25,6 +26,7 @@ void testApp::setup(){
 	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
 	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
 	iv["mirrorMode"] = 3;
+	fv["spectroRed"] = fv["spectroGreen"] = fv["spectroBlue"] = 1;
 }
 
 //--------------------------------------------------------------
@@ -48,17 +50,20 @@ void testApp::update(){
 				 case 0:
 					for (int i=0; i<512; i++)	{
 						data[i] = m.getArgAsFloat( i );
-						glColor3f(data[i],data[i],data[i]);
+						glColor3f(fv["spectroRed"]*data[i],fv["spectroGreen"]*data[i],fv["spectroBlue"]*data[i]);
 						ofEllipse(iv["reverseEllipse"],512-i,2,2);
+						glColor3f(0,0,0);
+						ofEllipse(iv["reverseEllipse"],512+i,2,2);				
 					}
 					texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
 					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
 					texScreen.draw(iv["reverseTexture"],0,ofGetWidth(), ofGetHeight());
+					
 					break;
 				 case 1:
 					for (int i=0; i<512; i++)	{
 						data[i] = m.getArgAsFloat( i );
-						glColor3f(data[i],data[i],data[i]);
+						glColor3f(fv["spectroRed"]*data[i],fv["spectroGreen"]*data[i],fv["spectroBlue"]*data[i]);
 						ofEllipse(iv["reverseEllipse"],512-i,2,2);
 						ofEllipse(iv["reverseEllipse"],512+i,2,2);				
 					}
@@ -66,10 +71,22 @@ void testApp::update(){
 					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
 					texScreen.draw(iv["reverseTexture"],0,ofGetWidth(), ofGetHeight());
 					break;
+				 case 2:
+					for (int i=0; i<512; i++)	{
+						data[i] = m.getArgAsFloat( i );
+						glColor3f(fv["spectroRed"]*data[i],fv["spectroGreen"]*data[i],fv["spectroBlue"]*data[i]);
+						ofEllipse(0,512-i,2,2);
+						ofEllipse(0,512+i,2,2);				
+					}
+					texScreen.loadScreenData(0,0,ofGetWidth(), ofGetHeight());
+					ofSetColor(iv["textureRed"],iv["textureGreen"],iv["textureBlue"],iv["textureAlpha"]);
+					texScreen.draw(iv["reverseTexture"],0,ofGetWidth(), ofGetHeight());
+					break;
+
 				 case 3:
 					for (int i=0; i<512; i++)	{
 						data[i] = m.getArgAsFloat( i );
-						glColor3f(data[i],data[i],data[i]);
+						glColor3f(fv["spectroRed"]*data[i],fv["spectroGreen"]*data[i],fv["spectroBlue"]*data[i]);
 						ofEllipse(ofGetWidth()/2,512-i,2,2);
 						ofEllipse(ofGetWidth()/2,512+i,2,2);						
 					}
@@ -81,13 +98,16 @@ void testApp::update(){
 					texScreen.draw(ofGetWidth()/2 +1,0,ofGetWidth(), ofGetHeight());					
 					break;
 				 default:
-					printf("%d", iv["mirrorMode"]);
+					printf("%d", fv["mirrorMode"]);
 			  }
 
 		} 
 		// map implementation
 		if ( m.getAddress() == "int" )	{
 			iv[m.getArgAsString(0)] = m.getArgAsInt32(1);			
+		}
+		if ( m.getAddress() == "float" )	{
+			fv[m.getArgAsString(0)] = m.getArgAsFloat(1);			
 		}
 		if ( m.getAddress() == "reverse" )	{
 			if (iv["reverseEllipse"] == 0) {

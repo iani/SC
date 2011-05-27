@@ -10,7 +10,7 @@ MySynths {
 		}		
 	);
 	//:Play Buffer v.1
-	Udef(\foubuf, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, windowSize = 0.5, pitchRatio = 1, in , cutoffFreq = 400|
+	Udef(\foubuf, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, windowSize = 0.5, pitchRatio = 1, in , cutoffFreq = 0|
 		in = Pan2.ar(PitchShift.ar(                  
 	          		PlayBuf.ar(1, bufnum, rate, trigger, 0, loop),
 	                  	windowSize,
@@ -19,36 +19,17 @@ MySynths {
 	          	pos,
 	             	level
 	        	);
-	      in = LPF.ar(in, cutoffFreq);
 	      Out.ar(out, in);
 	});
-
-	//:Play Buffer
-	Udef(\foubuf_0, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, windowSize = 0.5, pitchRatio = 1 |
-	        Out.ar(out,
-	                Pan2.ar( 
-	                        PitchShift.ar(                  
-	                                PlayBuf.ar(1, 
-	                                        bufnum, 
-	                                        rate, 
-	                                        trigger, 
-	                                        0, 
-	                                        loop
-	                                ),
-	                                windowSize,
-	                                pitchRatio
-	                        ),
-	                        pos,
-	                        level
-	                )
-	        )
+	//:PV_BinShift
+	Udef("pv_binShift", {  | out=0, bufnum=2, stretch = 1, shift = 0, level = 0.5 |
+		var in, chain;
+		in = PlayBuf.ar(1, bufnum, BufRateScale.kr(bufnum), loop: 1);
+		chain = FFT(LocalBuf(2048), in);
+		chain = PV_BinShift(chain, 1, stretch ); 
+		Out.ar(out, level * IFFT(chain).dup);
 	});
-
-	//:PV start synth
-	Udef(\pv0, {| out = 0, bufnum = 0, rate = 1, trigger = 1, loop = 1, pos = 0, level = 1, in |
-		in =  PlayBuf.ar(1, bufnum, rate, trigger, 0, loop);
-	     Out.ar(out,Pan2.ar( in, pos,level))
-	});
+	
 	//:PV_MagSquared
 	Udef(\pv_magSquared, {  |out=0, bufnum=0, soundBufnum=2|
 		var in, chain;

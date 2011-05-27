@@ -9,8 +9,63 @@ MyBuffers
 
 Aris Bezas Tue, 24 May 2011, 18:26
 */
+//:110525
+{ | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, [\bufnum, i]) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\level, 0.15) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\stretch, 100 rrand:200) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\bufnum, (0 rrand: 30).round) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\loop, 1) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\level, 1.5) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.free } ! 13;
+//:--
+{
+	500.do{|g|
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, g) } ! 13;
+	0.01.wait;	
+	};
+	500.do{|k|
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 500-k) } ! 13;
+	0.01.wait	
+	};
+}.fork
+//:--
+{
+	5.do{
+	150.do{|g|
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*g) } ! 13;
+	0.001.wait;	
+	};
+	150.do{|k|
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*(150-k)) } ! 13;
+	0.001.wait	
+	};
+	};
+}.fork
+//:--
+{
+{SinOsc.ar(2000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)))}.play;
+5.wait;
+{SinOsc.ar(4000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)))}.play;
+5.wait;
+{SinOsc.ar(8000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)))}.play;
+20.wait;
+{SinOsc.ar(8000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)))}.play;
+5.wait;
+{SinOsc.ar(4000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)))}.play;
+5.wait;
+{SinOsc.ar(2000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)))}.play;
+}.fork
 //:WidthFreq
-\pv_rectcomb_0.set(\sinWidthFreq, 0);		
+\pv_rectcomb_0.set(\sinWidthFreq, 0.0);		
+//:PhaseFreq
+\pv_rectcomb_0.set(\sinPhaseFreq, 2);		
+
 //:--
 {
 	\pv_rectcomb_0.playDef(\pv_rectcombSin);	
@@ -18,7 +73,7 @@ Aris Bezas Tue, 24 May 2011, 18:26
 	\pv_rectcomb_0.set(\sinWidthFreq, 0);		
 }.fork
 //:--
-{
+{	
 	50.do { |i|
 		\pv_rectcomb_0.set(\numTeeth, i);
 		0.1.wait;			
@@ -39,7 +94,6 @@ Aris Bezas Tue, 24 May 2011, 18:26
 		\pv_rectcomb_0.set(\sinPhaseFreq, 1-(50-i)/50);
 		0.1.wait;			
 	}
-	
 }.fork
 //:Fade out
 {
@@ -55,23 +109,47 @@ Aris Bezas Tue, 24 May 2011, 18:26
 { | i | format("mySynths%", i).asSymbol.set(\rate, 0.2 rrand: 0.5) } ! 13;
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\pitchRatio, 0.1 rrand: 2.12) } ! 13;
+//:--
+{ | i | format("mySynths%", i).asSymbol.set(\bufnum, (0 rrand: 30).round) } ! 13;
+//:--
 { | i | format("mySynths%", i).asSymbol.set(\loop, 1) } ! 13;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\level, 1.3) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\level, 1.5) } ! 13;
 //:--
 { | i | format("mySynths%", i).asSymbol.free } ! 13;
 //:GUI
 w = Window.new("Level",Rect(300,Window.screenBounds.height-300,400,100)).front;
 a = Slider(w, Rect(50, 20, 300, 40))
-	.value_(0.5)
+	.value_(1)
 	.step_(0.005)
 	.focus
 	.action_({
-		{ | i | format("mySynths%", i).asSymbol.set(\level, a.value) } ! 13;
+		{ | i | format("mySynths%", i).asSymbol.set(\level, 2*a.value) } ! 13;
 	});
 //:Change variables
 OF.reverse;
 OF.int("mirrorMode", 3);
+OF.float("spectroRed", 1);
+OF.float("spectroGreen", 1);
+OF.float("spectroBlue", 0);
+OF.float("spectroRedUp", 1);
+OF.float("spectroGreenUp", 1);
+OF.float("spectroBlueUp", 1);
+
+//:--
+{
+	200.do { |i|
+		OF.float("spectroRedUp", i/200);
+		OF.float("spectXXroRedDown", i/200);
+		OF.float("spectroGreenUp", i/200);
+		OF.float("spectroGreenDown", i/200);
+		OF.float("spectroBlueUp", i/200);
+		OF.float("spectroBlueDown", i/200);
+		0.01.wait;
+
+	}
+}.fork
+
 //:SendSpectrogramData
 SendSpectrogramData.new;
 SendSpectrogramData('fft').rate = 0.046
