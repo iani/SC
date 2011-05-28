@@ -5,7 +5,11 @@ Select and execute code in a doc by typing command keys.
 Code {
 	classvar <>autoBoot = true;	// if true, forking a string from code will boot the server
 	var <doc, <string, <canEvaluate = true;
-	var <headers, <positions; // , <functions, <keys;
+	var <positions; // , <functions, <keys;
+	var <snippetstart, <snippetend;
+	var <prevsnippetstart, <prevsnippetend;
+	var <thissnippetstart, <thissnippetend;
+	var <nextsnippetstart, <nextsnippetend;
 	
 	*new { | doc |
 		^this.newCopyArgs(doc).init;	
@@ -27,15 +31,11 @@ Code {
 	init {
 		var prItems;
 		string = doc.string;
-		// REMOVED: note: [^ ] means: ignore whitespace after the ":"
-		#positions, headers = string.findRegexp("^//:[^\n]*").flop;
-		if (positions.size == 0) {
-			// prevent evaluation of non-.scd documents with no snippets:
-			if ( doc.name.splitext.last != "scd" ) { canEvaluate = false; };
-			positions = [0];
-			headers = ["//:" ++ doc.getSelectedLines(0, 1)];
-		};
-		positions = positions add: (string.size + 1);
+		positions = string.findRegexp("^//:");
+	}
+	
+	headers {
+		^string.findRegexp("^//:[^\n]*").slice(nil, 1);
 	}
 
 	*menuItems {
@@ -81,7 +81,7 @@ Code {
 				if (code.canEvaluate) {
 					ListWindow.front('Code Selector');
 					code.headers
-						.collect({ | h, i | (h[3..] + " ")->{ code.performCodeAt(i) } })
+						.collect({ | h, i | (h[3..] + " ")->{ code.performCodeAt(i + 1) } })
 						.select({ | h | h.key[0] != $  });
 				}{
 					["---"->{ }]
@@ -104,10 +104,25 @@ Code {
 		this.performCodeAt(this.findIndexOfSnippet(doc), \fork, clock);
 	}
 
+	findIndexOfSnippet {
+		var selectionStart, pos;
+		selectionStart = doc.selectionStart;
+		pos = positions.detect({ | p | selectionStart < p[0] });
+		if (pos.isNil) { ^positions.size } { ^positions.indexOf(pos) };
+	}
+
 	performCodeAt { | index = 0, message = \fork, clock |
-		if (index.isNil or: { canEvaluate.not }) { ^this };
-		(string[positions[index]..(positions[index + 1] - 1)] ?? { { } })
-			.perform(message, clock ? AppClock);
+		var snippet;
+		var start, end;
+		#start, end = this.getSnippetAt(index);
+		(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
+	}
+
+	getSnippetAt { | index |
+		if (positions.size == 0) { ^[0, string.size - 1] };
+		if (index <= 0) { ^[0, positions[0][0] - 1] };
+		if (index >= positions.size) { ^[positions.last[0], string.size - 1] };
+		^[positions[index - 1][0], positions[index][0] - 1];
 	}
 
 	*evalPostCurrentSnippet {
@@ -126,26 +141,50 @@ Code {
 		^this.new(Document.current).selectPreviousSnippet;
 	}
 
-	findIndexOfSnippet {
-		var selectionStart;
-		selectionStart = doc.selectionStart;		
-		^positions.indexOf(positions.detect({ | n | selectionStart < n })) - 1
-	}
-
 	selectNextSnippet {
 		var start, length;
-		#start, length = positions[
-			[0, 1] + (this.findIndexOfSnippet(doc) + 1).min(headers.size - 1)
-		].differentiate;
-		doc.selectRange(start, length); // - 1
+		this.findSnippets;
+		start = nextsnippetstart;
+		length = nextsnippetend - nextsnippetstart;
+//		string[nextsnippetstart..nextsnippetend].postln;
+		doc.selectRange(start, length);
 	}
 
 	selectPreviousSnippet {
 		var start, length;
-		#start, length = positions[
-			[0, 1] + (this.findIndexOfSnippet(doc) - 1).max(0)
-		].differentiate;
-		doc.selectRange(start, length); // - 1
-	}	
+		this.findSnippets;
+		start = prevsnippetstart;
+		length = prevsnippetend - prevsnippetstart;
+//		string[prevsnippetstart..prevsnippetend].postln;
+		doc.selectRange(start, length);
+	}
 	
+	findSnippets {
+		var curpos;
+		var prevend, curend, nextend;
+		if (positions.size == 0) {
+			prevsnippetstart = thissnippetstart = nextsnippetstart = 0;
+			prevsnippetend = thissnippetstart = thissnippetend = string.size;
+			^this;
+		};
+		curpos = doc.selectionStart;
+		curend = positions indexOf: positions.detect({ | p | p[0] > curpos });
+		if (curend.isNil) { 	// we are at the last snippet
+			#thissnippetstart, thissnippetend = this.getSnippetAt(positions.size);
+			#prevsnippetstart, prevsnippetend = this.getSnippetAt(positions.size - 1);
+							// wrap to first snippet
+			#nextsnippetstart, nextsnippetend = this.getSnippetAt(0);
+			^this;
+		};
+		if (curend == 0) { 	// we are at the first snippet
+			#thissnippetstart, thissnippetend = this.getSnippetAt(0);
+							// wrap to last snippet
+			#prevsnippetstart, prevsnippetend = this.getSnippetAt(positions.size);
+			#nextsnippetstart, nextsnippetend = this.getSnippetAt(1);
+			^this;
+		};
+		#thissnippetstart, thissnippetend = this.getSnippetAt(curend);
+		#prevsnippetstart, prevsnippetend = this.getSnippetAt(curend - 1);
+		#nextsnippetstart, nextsnippetend = this.getSnippetAt(curend + 1);
+	}
 }
