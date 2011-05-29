@@ -727,7 +727,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(3 rrand: 10, 50, 100).midicps, <span class="s2">inf</span>)); }.chain,</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{}.chain((0.09 / 2).once) <span class="s5">// going out of phase</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{}.chain((0.09 / 8).once) <span class="s5">// going out of phase</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
 <p class="p8"><span class="Apple-tab-span">	</span>() make: { <span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
 <p class="p8">);</p>

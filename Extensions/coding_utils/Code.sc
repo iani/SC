@@ -43,6 +43,9 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "snippet list view", [/*{*/ "}", false, false], {
 				this.showCodeListWindow;
 			}),
+			CocoaMenuItem.addToMenu("Code", "snippet buttons", [/*{*/ "}", true, false], {
+				this.showCodeButtonsWindow;
+			}),
 			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
 				this.selectNextSnippet;
 			}),
@@ -96,6 +99,8 @@ Code {
 		NotificationCenter.notify(this, \openedCodeListWindow, listWindow);
 	}
 
+	*showCodeButtonsWindow { ^CodeButtons(Document.current); }
+
 	*forkCurrentSnippet { | clock |
 		^this.new(Document.current).forkCurrentSnippet(clock);
 	}
@@ -115,7 +120,7 @@ Code {
 		var snippet;
 		var start, end;
 		#start, end = this.getSnippetAt(index);
-		postf("indexstart: %, end: %, snippet: %\n", start, end, string[start..end]);
+		postf("snippet: %\n", string[start..end]);
 		(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
 	}
 
