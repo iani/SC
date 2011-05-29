@@ -16,7 +16,12 @@ CodeButtons : WindowResource {
 			window = Window(doc.name, bounds);
 			window.addFlowLayout(5@5, 5@5);
 			window;
-		}).initSnippets(code).front;
+		}, Code(doc)).front;
+	}
+
+	init { | windowFunc, code |
+		super.init(windowFunc);
+		this.initSnippets(code);	
 	}
 
 	initSnippets { | argCode |
