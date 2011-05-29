@@ -120,7 +120,9 @@ Code {
 		var snippet;
 		var start, end;
 		#start, end = this.getSnippetAt(index);
-		postf("snippet: %\n", string[start..end]);
+		snippet = string[start..end];
+		postf("snippet: %\n", snippet);
+		this.notify(\snippet, snippet);
 		(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
 	}
 

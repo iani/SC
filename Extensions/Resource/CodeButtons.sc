@@ -1,7 +1,6 @@
 
-
 CodeButtons : WindowResource {
-	var code, snippets;
+	var code, snippets, historyview;
 	*new { | doc, bounds |
 		var code;
 		doc = doc ?? { Document.current };
@@ -21,17 +20,14 @@ CodeButtons : WindowResource {
 
 	init { | windowFunc, code |
 		super.init(windowFunc);
-		this.initSnippets(code);	
+		this.initSnippets(code);
 	}
 
 	initSnippets { | argCode |
 		var view, rgb, bcolor, tcolor, numbuttons, height, bounds;
 		view = object.view;
-//		view.background = Color(*Array.rand(3, 0.7, 1.0));
 		view.background = Color(*Array.rand(3, 0.07, 0.3));
-//		tcolor = Color(1.0, 0.975, 0.735);
 		tcolor = Color.red(0.7);
-//		bcolor = Color(0.0, 0.45, 0.42);
 		bcolor = Color.white;
 		code = argCode;
 		numbuttons = 0;
@@ -51,5 +47,10 @@ CodeButtons : WindowResource {
 		bounds.left = Window.screenBounds.width - bounds.width;
 		bounds.top = Window.screenBounds.height - bounds.height;
 		object.bounds = bounds;
+		historyview = EZListView(bounds: Rect(0, 800, 300, 200), label: "History: " ++ object.name);
+//		historyview.items.postln;
+		this.addNotifier(code, \snippet, { | snippet |
+			historyview.addItem(snippet, { snippet.postln; });
+		});
 	}	
 }
