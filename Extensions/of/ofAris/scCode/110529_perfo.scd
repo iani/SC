@@ -7,26 +7,33 @@ Udef.all 		//	View all Synhs
 
 MyBuffers
 
-SpectroTouchOSC
-SendSpectrogramData.new
-SendSpectrogramData('fft').intensity = 10;
 Chain
 Aris Bezas Tue, 24 May 2011, 18:26
 */
+//:OSC Responders
+SpectroTouchOSC.makeResponders;
+//: My Synths
+MySynths.sendToServer;
+//: My Buffers
+//MyBuffers.osmoFull;
+MyBuffers.seals;
+//MyBuffers.sketch;
+BufferResource.postNames;
+//:SendSpectrogramData
+SendSpectrogramData.new;
+//SendSpectrogramData('fft').free;
+s.boot;
+
 //:Mirrow mode
-OF.int("mirrorMode", 0);
-b//:Sound In
+OF.int("ofSpectro", 1);
+OF.int("mirrorMode", 4);
+//:Sound In
 \pure_clarinet.playDef;
-\pure_clarinet.free;
-//:PV_BinSfift one buffer
+//:PV_BinSfift
 { | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, 
 	[\bufnum, \elephant_seal2.buffer, \rate, i * 0.001 + 1]) 
 } ! 10;
-//:PV_BinSfift many buffer
-{ | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, 
-	[\bufnum, (0 rrand:13).round, \rate, i * 0.001 + 1]) 
-} ! 10;
-//:fouBuf Definition with Rate
+//:fouBuf Definition
 { | i | format("mySynths%", i).asSymbol.free;} ! 10;
 0.1.wait;
 { | i | format("mySynths%", i).asSymbol.playDef(\foubuf, 
@@ -34,7 +41,7 @@ b//:Sound In
 } ! 10;
 //:Buffer edit
 { | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, [\bufnum, (0 rrand:42).round]) } ! 10;
-ttttt//:Rate play
+//:Rate play
 { | i | format("mySynths%", i).asSymbol.set(\rate, 1) } ! 10;
 //:Level
 { | i | format("mySynths%", i).asSymbol.set(\level, 0) } ! 10;
@@ -68,7 +75,7 @@ ttttt//:Rate play
 	};	
 	150.do{|k|
 	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*(150-k)) } ! 10;
-	0.006.wait	
+	0.001.wait	
 	};
 	};
 }.fork
@@ -141,7 +148,7 @@ ttttt//:Rate play
 //:110525
 { | i | format("mySynths%", i).asSymbol.playDef(\foubuf, [\bufnum, i]) } ! 13;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.1 rrand: 0.3) } ! 13;
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.1 rrand: 10.3) } ! 13;
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\pitchRatio, 0.1 rrand: 2.12) } ! 13;
 //:--

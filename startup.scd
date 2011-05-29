@@ -53,18 +53,19 @@ Panes.activate;
 
 (Platform.userAppSupportDir ++ "/dev_only/*.scd").pathMatch do: _.load;
 
+
 //:OSC Responders
 SpectroTouchOSC.makeResponders;
- 	//: My Synths
+//: My Synths
 MySynths.sendToServer;
-Udef.all;
 //: My Buffers
 //MyBuffers.osmoFull;
 MyBuffers.seals;
 //MyBuffers.sketch;
 BufferResource.postNames;
-BufferResource.list;
 //:SendSpectrogramData
-SendSpectrogramData.new;
-
+//SendSpectrogramData.new;v
+//SendSpectrogramData('fft').free;
 s.boot;
+
+

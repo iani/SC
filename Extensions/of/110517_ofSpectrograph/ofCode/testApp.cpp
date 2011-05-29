@@ -176,7 +176,7 @@ void testApp::keyPressed  (int key){
 		//ofEllipse(100,100,100,100);
 		for (int i = 0; i < 10; i++)	{
 			ofSetColor(255,255,255,255);
-			texScreen.loadScreenData(int(ofRandom(0,500)),int(ofRandom(0,500)),int(ofRandom(100,500)),int(ofRandom(100,500)));
+			texScreen.loadScreenData(int(ofRandom(0,1200)),int(ofRandom(0,1200)),int(ofRandom(100,500)),int(ofRandom(100,500)));
 			texScreen.draw(int(ofRandom(0,1400)),int(ofRandom(0,1400)),100,100);			
 		}		
 	}	
