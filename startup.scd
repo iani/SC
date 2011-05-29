@@ -19,7 +19,7 @@ CocoaMenuItem.addToMenu("Utils", "Toggle OSC input posting", ["O", true, true], 
 		};
 		"OSC Posting is ON".postln;
 	}{
-		thisProcess.recvOSCfunc= nil;
+		thisProcess.recvOSCfunc = nil;
 		"OSC Posting is OFF".postln;
 	}
 });

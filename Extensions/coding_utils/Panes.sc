@@ -21,8 +21,9 @@ Panes {
 		Dock.addMenu;
 		BufferResource.addMenu;
 		Document.allDocuments do: this.setDocActions(_);
-		this.arrange1Pane;
-//		this.arrange2Panes;
+//		this.arrange1Pane;
+		this.arrange2Panes;
+		Dock.showDocListWindow;
 		// confuses post and Untitled windows if not deferred on startup:
 		{ this.openTryoutWindow; }.defer(0.5); 
 	}
@@ -44,7 +45,7 @@ Panes {
 			CocoaMenuItem.addToMenu("Utils", "multi-pane doc arrangement", [">", false, false], {
 				this.doRestoreTop({ this.arrange2Panes; });
 			}),
-			CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", ["<", true, false], {
+			CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", [">", true, false], {
 				currentPositionAction.(Document.current);
 			}),
 		]

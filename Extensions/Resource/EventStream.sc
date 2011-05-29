@@ -21,6 +21,11 @@ EventStream {
 		if (value.isNil) { this.remove };
 		^value;
 	}
+	
+	pattern_ { | argPattern |
+		pattern = argPattern;
+		this.reset;	
+	}
 
 	reset { stream = pattern.asStream }
 
@@ -40,7 +45,7 @@ EventStream {
 	enext { ^EventStream(this).next }
 	n { ^EventStream(this).next }		// shorte synonym for enext
 	this { ^EventStream(this).value }
-	replaceStream { | pattern | ^EventStream(this).init(pattern) } // next not called!
+	replaceStream { | pattern | ^EventStream(this).pattern = pattern; }
 	resetStream { ^EventStream(this).reset } 	// next not called: design choice.
 	removeStream { ^EventStream(this).remove }
 
