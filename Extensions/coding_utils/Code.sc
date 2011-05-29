@@ -115,6 +115,7 @@ Code {
 		var snippet;
 		var start, end;
 		#start, end = this.getSnippetAt(index);
+		postf("indexstart: %, end: %, snippet: %\n", start, end, string[start..end]);
 		(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
 	}
 

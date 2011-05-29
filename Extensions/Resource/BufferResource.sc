@@ -116,7 +116,9 @@ BufferResource : AbstractServerResource {
 				completionMessage: { | b | this.loaded(b); }
 			);
 		}{
-			object = Buffer.read(server, path, startFrame, numFrames, { | b | 
+			object = Buffer.read(server, path, startFrame, numFrames, { | b |
+				postf("Loaded buffer (%) '%' (% seconds)\n", 
+					b.bufnum, b.path.basename, (b.numFrames / b.sampleRate).round(0.01));
 				this.loaded(b);
 			});
 		};

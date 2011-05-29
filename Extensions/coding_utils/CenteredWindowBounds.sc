@@ -8,4 +8,8 @@
 		centerY = screenBounds.height - itemsHeight / 2;
 		^Rect(centerX - (width / 2), centerY, width, itemsHeight);
 	}
+	
+	*fullScreenBounds { 
+		^Rect(0, 0, Window.screenBounds.width, Window.screenBounds.height);
+	}
 }
