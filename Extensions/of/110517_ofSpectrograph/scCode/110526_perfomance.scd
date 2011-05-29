@@ -10,24 +10,19 @@ MyBuffers
 Chain
 Aris Bezas Tue, 24 May 2011, 18:26
 */
-//:110525 multirate
-//:--
-\pure_clarinet.playDef
-//:--
-
-{ | i | format("mySynths%", i).asSymbol.playDef(\foubuf, 
-	[\bufnum, \file0002GOOD_L.buffer, \rate, i * 0.001 + 1]) 
-} ! 10;
-//:--
+//:Mirrow mode
+OF.int("mirrorMode", 4);
+//:Sound In
+\pure_clarinet.playDef;
+//:PV_BinSfift
 { | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, 
-	[\bufnum, \leo_wed.buffer, \rate, i * 0.001 + 1]) 
+	[\bufnum, \weddell123436.buffer, \rate, i * 0.001 + 1]) 
 } ! 10;
-
 //:-----
 { | i | format("mySynths%", i).asSymbol.playDef(\pv_binShift, [\bufnum, i]) } ! 10;
 //:--
 
-{ | i | format("mySynths%", i).asSymbol.set(\rate, 0.2) } ! 10;
+{ | i | format("mySynths%", i).asSymbol.set(\rate, 1) } ! 10;
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\rate, 1) } ! 10;
 //:--
@@ -35,7 +30,7 @@ Aris Bezas Tue, 24 May 2011, 18:26
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\stretch, 100 rrand:200) } ! 10;
 //:--
-{ | i | format("mySynths%", i).asSymbol.set(\bufnum, (0 rrand: 30).round) } ! 10;
+{ | i | format("mySynths%", i).asSymbol.set(\bufnum, 5 } ! 10;
 //:--
 { | i | format("mySynths%", i).asSymbol.set(\loop, 1) } ! 10;
 //:--
@@ -57,7 +52,7 @@ Aris Bezas Tue, 24 May 2011, 18:26
 {
 	5.do{
 	150.do{|g|
-	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*g) } ! 10;
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 2*g) } ! 10;
 	0.001.wait;	
 	};	
 	150.do{|k|
@@ -67,23 +62,38 @@ Aris Bezas Tue, 24 May 2011, 18:26
 	};
 }.fork
 //:--
+//:--
 {
-{SinOsc.ar(2000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)))}.play;
-5.wait;
-{SinOsc.ar(4000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)))}.play;
-5.wait;
-{SinOsc.ar(8000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)))}.play;
-20.wait;
-{SinOsc.ar(8000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)))}.play;
-5.wait;
-{SinOsc.ar(4000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)))}.play;
-5.wait;
-{SinOsc.ar(2000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)))}.play;
+	5.do{
+	150.do{|g|
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 2*g) } ! 10;
+	0.001.wait;	
+	};	
+	150.do{|k|
+	{ | i | format("mySynths%", i).asSymbol.set(\stretch, 5*(150-k)) } ! 10;
+	0.001.wait	
+	};
+	};
+}.fork
+//:--
+
+{
+{SinOsc.ar(2000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)), mul:0.5)}.play;
+1.wait;
+{SinOsc.ar(4000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)), mul:0.5)}.play;
+1.wait;
+{SinOsc.ar(8000*SinOsc.kr(XLine.kr(0.001,0.5,20, doneAction:2)), mul:0.5)}.play;
+10.wait;
+{SinOsc.ar(8000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)), mul:0.5)}.play;
+1.wait;
+{SinOsc.ar(4000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)), mul:0.5)}.play;
+1.wait;
+{SinOsc.ar(2000*SinOsc.kr(XLine.kr(0.5,0.001,20, doneAction:2)), mul:0.5)}.play;
 }.fork
 //:WidthFreq
-\pv_rectcomb_0.set(\sinWidthFreq, 0.2);		
+\pv_rectcomb_0.set(\sinWidthFreq, 0);		
 //:PhaseFreq
-\pv_rectcomb_0.set(\sinPhaseFreq, 2);		
+\pv_rectcomb_0.set(\sinPhaseFreq, 0.2);		
 
 //:--
 {
@@ -147,7 +157,7 @@ a = Slider(w, Rect(50, 20, 300, 40))
 	});
 //:Change variables
 OF.reverse;
-OF.int("mirrorMode", 3);
+OF.int("mirrorMode", 4);
 OF.float("spectroRed", 1);
 OF.float("spectroGreen", 1);
 OF.float("spectroBlue", 1);

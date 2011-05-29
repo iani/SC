@@ -3,7 +3,10 @@
 //:Create class for load buffers to Server
 
 
-MyBuffers.seals
+MyBuffers.seals;
+MyBuffers.sketch;
+MyBuffers.conet;
+MyBuffers.osmoFull;
 
 
 //: -----

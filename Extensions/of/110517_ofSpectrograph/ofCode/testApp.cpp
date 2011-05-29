@@ -15,7 +15,7 @@ void testApp::setup(){
 	ofSetFrameRate(60);
 	ofSetWindowTitle("ofSpectrogram");
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
-	//ofSetFullscreen(true);
+	ofSetFullscreen(true);
 
 	// listen on the given port
 	cout << "listening for osc messages on port " << PORT << "\n";
