@@ -1,10 +1,10 @@
 BusResource : AbstractServerResource {
 	*control { | name = \control, numChannels = 1, server |
-		^super.new(name, server, numChannels, \control);
+		^super.new(name.asSymbol, server, numChannels, \control);
 	}
 
 	*audio { | name = \audio, numChannels = 1, server |
-		^super.new(name, server, numChannels, \audio);
+		^super.new(name.asSymbol, server, numChannels, \audio);
 	}
 
 	init { | target, numChannels, rate |

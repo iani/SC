@@ -1,6 +1,6 @@
 
 /* 
-Uses ServerReady for booting synth and thereby ensure SynthDefs and Buffers are loaded
+Use ServerPrep for booting synth and thereby ensure SynthDefs and Buffers are loaded
 before it starts.
 */
 
@@ -127,10 +127,23 @@ SynthResource : AbstractServerResource {
 	}
 
 	set { | ... args | if (this.isPlaying) { object.set(*args) } }
-	map { | param, bus |
+	map { | param, index |
 		/* map parameter to bus. Make sure that the synth has started, otherwise map won't work */
-		this.onStart({ object.map(param, bus /*.index */) })
+		index = index ?? { this.getParamBus(param).index }; 
+		this.onStart({ object.map(param, index) });
 	}
+
+	getParamBus { | param |
+		^BusResource.control(this.key.last ++ '_' ++ param, 1, server);
+	}
+/*
+	mapDef { | param, defname, args |
+		var index;
+		index = this.getParamBus(param).index;
+		this.map(param, index);
+		;	
+	}
+*/	
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
 	
