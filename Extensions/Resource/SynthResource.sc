@@ -129,7 +129,7 @@ SynthResource : AbstractServerResource {
 	set { | ... args | if (this.isPlaying) { object.set(*args) } }
 	map { | param, bus |
 		/* map parameter to bus. Make sure that the synth has started, otherwise map won't work */
-		this.onStart({ object.map(param, bus.index) })
+		this.onStart({ object.map(param, bus /*.index */) })
 	}
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed

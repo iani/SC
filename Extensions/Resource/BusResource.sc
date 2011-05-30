@@ -15,5 +15,7 @@ BusResource : AbstractServerResource {
 	index { ^object.index }
 	
 	set { | value | object.set(value) }
+	
+	get { | action | ^object.get(action); }
+	getn { | count, action | ^object.getn(count, action); }
 }
-
