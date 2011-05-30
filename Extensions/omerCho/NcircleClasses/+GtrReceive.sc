@@ -57,7 +57,7 @@ SynthDef(\bufPat, { | out=0, vol = 0.5, bufnum = 0, gate = 1.0, rate = 1, startP
 				\rls,		Prand([ (1.0..3.8) ], inf),
 				\pan,  		Prand([ (-3.0..3.0) ], inf),
 				\group,		~piges,
-				\out, 		Pseq([[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus, ~flowBus]], inf),
+				\out, 		Pseq([~mainBus], inf),
 				\bufnum,		Pseq([ ~gtr1 ], inf)
 			
 			])
@@ -85,7 +85,7 @@ SynthDef(\bufPat, { | out=0, vol = 0.5, bufnum = 0, gate = 1.0, rate = 1, startP
 				\rls,		Prand([ (1.0..3.8) ], inf),
 				\pan,  		Prand([ (-3.0..3.0) ], inf),
 				\group,		~piges,
-				\out, 		Pseq([[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus, ~flowBus]], inf),
+				\out, 		Pseq([~mainBus], inf),
 				\bufnum,		Pseq([ ~gtr1 ], inf)
 			
 			])
@@ -113,7 +113,7 @@ SynthDef(\bufPat, { | out=0, vol = 0.5, bufnum = 0, gate = 1.0, rate = 1, startP
 				\rls,		Prand([ (1.0..3.8) ], inf),
 				\pan,  		Prand([ (-3.0..3.0) ], inf),
 				\group,		~piges,
-				\out, 		Pseq([[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus, ~flowBus]], inf),
+				\out, 		Pseq([~mainBus], inf),
 				\bufnum,		Pseq([ ~gtr1 ], inf)
 			
 			])
@@ -141,7 +141,7 @@ SynthDef(\bufPat, { | out=0, vol = 0.5, bufnum = 0, gate = 1.0, rate = 1, startP
 				\rls,		Prand([ (1.0..3.8) ], inf),
 				\pan,  		Prand([ (-3.0..3.0) ], inf),
 				\group,		~piges,
-				\out, 		Pseq([[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus, ~flowBus]], inf),
+				\out, 		Pseq([~mainBus], inf),
 				\bufnum,		Pseq([ ~gtr1 ], inf)
 			
 			])
@@ -169,7 +169,7 @@ SynthDef(\bufPat, { | out=0, vol = 0.5, bufnum = 0, gate = 1.0, rate = 1, startP
 				\rls,		Prand([ (1.0..3.8) ], inf),
 				\pan,  		Prand([ (-3.0..3.0) ], inf),
 				\group,		~piges,
-				\out, 		Pseq([[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus, ~flowBus]], inf),
+				\out, 		Pseq([~mainBus], inf),
 				\bufnum,		Pseq([ ~gtr1 ], inf)
 			
 			])

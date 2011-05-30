@@ -10,11 +10,11 @@ ChClean {
 	var s;
 	s = Server.default;
 	
-		SynthDef("limiter",{ arg out=0, in = 0, lvl = 0.9, durt = 0.01;
+		SynthDef("limiter",{ arg out=0, in = 0, lvl = 0.0, durt = 0.01;
 			var src;
 			src = Limiter.ar( In.ar(in, 2), lvl, durt);
 			src = PanAz.ar(
-					2, 						// numChans
+					4, 						// numChans
 					src, 					// in
 					SinOsc.kr(MouseX.kr(0.02, 8, 'exponential')), // pos
 					0.5,						// level
@@ -27,7 +27,7 @@ ChClean {
 		
 		~limlevF = OSCresponderNode(nil, '/outs/limlev', { |t,r,m| 
 			var n1;
-			n1 = (m[1]) ;
+			n1 = (m[1]*2) ;
 			~lim.set(\lvl, n1);
 		}).add;
 		~limdurtF = OSCresponderNode(nil, '/outs/limdurt', { |t,r,m| 
@@ -40,8 +40,12 @@ ChClean {
 	
 	}
 	
-	*unLoad{
-	
+	*play{
+		~lim = Synth.after(~piges, "limiter",
+			[ \in ,~limBus, \out, 0,  
+			\lvl, 0.9, \durt, 0.01
+			]
+		);
 	
 	}
 	

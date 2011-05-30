@@ -11,7 +11,7 @@ KlankReceive {
 var s;
 s = Server.default;
 
-SynthDef("klkOver", {|out1 = 0, out2 = 0,  out3 = 0, out4 = 0, out5 = 0, 
+SynthDef("klkOver", {|out = 0, 
 	att = 5, sus = 8, rls = 5, lvl = 0.8, pan = 0,
 	freqs = #[0,0,0,0,0,0,0,0,0,0,0,0],
 	rings = #[0,0,0,0,0,0,0,0,0,0,0,0]|
@@ -23,7 +23,7 @@ SynthDef("klkOver", {|out1 = 0, out2 = 0,  out3 = 0, out4 = 0, out5 = 0,
 		`[freqs, nil, rings],	// specs
 		i					// input
 	);
-	Out.ar([out1, out2, out3, out4, out5], Pan2.ar(z*e, pan));
+	Out.ar(out, Pan2.ar(z*e, pan));
 }).send(s);
 
 
@@ -40,7 +40,7 @@ SynthDef("klkOver", {|out1 = 0, out2 = 0,  out3 = 0, out4 = 0, out5 = 0,
 			\freqs,  {~rastA7}.dup(12),
 			\rings, {0.1.rrand(3)}.dup(12),
 			
-			[\out1, \out2, \out3, \out4, \out5], 		[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus]
+			\out, 		~mainBus
 		]);
 		},
 	\klk2 -> {
@@ -52,7 +52,7 @@ SynthDef("klkOver", {|out1 = 0, out2 = 0,  out3 = 0, out4 = 0, out5 = 0,
 			\freqs,  {~rastB4}.dup(12),
 			\rings, {0.1.rrand(3)}.dup(12),
 			
-			[\out1, \out2, \out3, \out4, \out5], 		[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus]
+			\out, 		~mainBus
 		]);
 		},
 	\klk3 -> {
@@ -64,7 +64,7 @@ SynthDef("klkOver", {|out1 = 0, out2 = 0,  out3 = 0, out4 = 0, out5 = 0,
 			\freqs,  {~rastC1}.dup(12),
 			\rings, {0.1.rrand(3)}.dup(12),
 			
-			[\out1, \out2, \out3, \out4, \out5], 		[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus]
+			\out, 		~mainBus
 		]);
 		},
 	\klk4 -> {
@@ -76,7 +76,7 @@ SynthDef("klkOver", {|out1 = 0, out2 = 0,  out3 = 0, out4 = 0, out5 = 0,
 			\freqs,  {~rastD2}.dup(12),
 			\rings, {0.1.rrand(3)}.dup(12),
 			
-			[\out1, \out2, \out3, \out4, \out5], 		[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus]
+			\out, 		~mainBus
 		]);
 		},
 	\klk5 -> {
@@ -87,7 +87,7 @@ SynthDef("klkOver", {|out1 = 0, out2 = 0,  out3 = 0, out4 = 0, out5 = 0,
 			
 			\freqs,  {~rastB1}.dup(12),
 			\rings, {0.1.rrand(3)}.dup(12),
-			[\out1, \out2, \out3, \out4, \out5], 		[~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus]
+			\out, 		~mainBus
 		]);
 		}
 ).play;

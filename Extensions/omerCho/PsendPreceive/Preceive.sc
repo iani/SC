@@ -94,7 +94,7 @@ Preceive : Event {
 	*clear { event = this.new }
 	
 	*setEvent { | piece |
-//		piece.postln;
+		piece.postln;
 		if (piece.isNil) { ^this.getEvent };
 		event = this.getEvent[piece] ? piece;
 		[this, thisMethod.name, event].postln;

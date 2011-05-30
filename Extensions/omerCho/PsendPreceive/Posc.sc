@@ -50,7 +50,7 @@ Posc : Pbind {
 	*initClass {
 		Class.initClassTree(Event);
 		Event.addEventType(\osc, {
-//			~msg.postln;
+			~msg.postln;
 			this.broadcastMessageWithBeat(~dest, ~msg, ~beat, ~latency);
 		});
 	}

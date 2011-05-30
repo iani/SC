@@ -65,6 +65,7 @@ NcircBusses {
 	*load {
 		
 		
+		~mainBus = Bus.new(\audio, 22, 2);
 		
 		~limBus = Bus.new(\audio, 24, 2);
 		~revBus = Bus.new(\audio, 26, 2);

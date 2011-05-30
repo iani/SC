@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue191;\red191\green0\blue0;
+\red0\green115\blue0;\red96\green96\blue96;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf2 \
+(\
+\cf3 RastMakam\cf2 .load;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf3 Globals\cf2 .tempo;\
+\cf3 Globals\cf2 .scales;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 NcircGroups\cf2 .load;\
+\cf3 NcircBusses\cf2 .load;\
+\cf3 NcMainVol\cf2 .load;\
+)\
+(\
+\cf3 ChClean\cf2 .load;\
+\cf3 ChReverb\cf2 .load;\
+\cf3 ChDelay\cf2 .load;\
+\cf3 ChRlpf\cf2 .load;\
+\cf3 ChWah\cf2 .load;\
+\cf3 ChFlow\cf2 .load;\
+)\
+(\
+\cf3 NcMainVol\cf2 .play;\
+\cf3 ChClean\cf2 .play;\
+)\
+\pard\pardeftab560\ql\qnatural
+\cf4 //----Gtr1\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 GtrReceive\cf2 .load;\
+\pard\pardeftab560\ql\qnatural
+\cf3 Pdef\cf2 (\cf5 \\bufRand\cf2 ).play(~clock1 ?? \{ \cf3 TempoClock\cf2 .new \}, quant: [1, 0, 0]);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 Pdef\cf2 (\cf5 \\gtrA01\cf2 ).play(~clock1 ?? \{ \cf3 TempoClock\cf2 .new \}, quant: [1, 0, 0]);\
+(\
+\cf3 Pdef\cf2 (\cf5 \\gtrA01\cf2 , \cf3 Posc\cf2 (\
+	[\cf5 \\msg\cf2 , \cf5 \\dur\cf2  ], \
+	\cf3 Pseq\cf2 ([ \
+		[\cf5 \\gtr1\cf2 , 2], [\cf5 \\gtr2\cf2 , 2], [\cf5 \\gtr3\cf2 , 6], [\cf5 \\gtr4\cf2 , 2], [\cf5 \\gtr5\cf2 , 4]\
+	], \cf3 inf\cf2 )\
+	)\
+);\
+)\
+\cf3 Pdef\cf2 (\cf5 \\gtrA01\cf2 ).stop;\
+\
+\cf4 //------Klank\cf2 \
+\cf3 KlankReceive\cf2 .load;\
+\cf3 Pdef\cf2 (\cf5 \\klkA01\cf2 ).play(~clock1 ?? \{ \cf3 TempoClock\cf2 .new \}, quant: [1, 0, 0]);\
+(\
+\cf3 Pdef\cf2 (\cf5 \\klkA01\cf2 , \cf3 Posc\cf2 (\
+	[\cf5 \\msg\cf2 , \cf5 \\dur\cf2  ], \
+	\cf3 Pseq\cf2 ([ \
+		[\cf5 \\klk1\cf2 , 3], [\cf5 \\klk2\cf2 , 3], [\cf5 \\klk3\cf2 , 3], [\cf5 \\klk4\cf2 , 3], [\cf5 \\klk5\cf2 , 3]\
+	], \cf3 inf\cf2 )\
+	)\
+);\
+)\
+\cf3 Pdef\cf2 (\cf5 \\klkA01\cf2 ).stop;\
+\
+\cf4 //------Disk1\cf2 \
+\pard\pardeftab560\ql\qnatural
+\cf2 (\
+~avosL = \cf3 Buffer\cf2 .cueSoundFile(s, \cf6 "sounds/_Evfer/avostosL.aif"\cf2 , 0, 1);\
+\
+\
+\cf3 SynthDef\cf2 (\cf6 "diskMono"\cf2 , \{ \cf3 |out=0, bufnum=0, loop=1, pan=0|\cf2 \
+	\cf3 var\cf2  din;\
+	\
+	din = \cf3 DiskIn\cf2 .ar(1, bufnum, loop);\
+	din = \cf3 Pan2\cf2 .ar(din, pan);\
+	\
+	\cf3 Out\cf2 .ar(out, din);\
+\}).send(s);\
+)\
+(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf2 ~disk1 = \cf3 Synth\cf2 .head(~piges, \cf6 "diskMono"\cf2 , \
+			[\
+			 \cf5 \\out\cf2 , ~mainBus, \
+			 \cf5 \\bufnum\cf2 , ~avosL\
+			]\
+		);\
+)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 \
+\
+\cf4 //------Rithm\cf2 \
+\
+\cf3 RthmReceive\cf2 .load;\
+\cf3 Pdef\cf2 (\cf5 \\kick1def\cf2 ).play(~clock1 ?? \{ \cf3 TempoClock\cf2 .new \}, quant: [1, 0, 0]);\
+\cf3 Pdef\cf2 (\cf5 \\cir1def\cf2 ).play(~clock1 ?? \{ \cf3 TempoClock\cf2 .new \}, quant: [1, 0, 0]);\
+\
+(\
+\cf3 Pdef\cf2 (\cf5 \\kick1def\cf2 , \cf3 Posc\cf2 (\
+	\cf5 \\msg\cf2 , \cf3 Pseq\cf2 ([\cf5 \\dum1\cf2 , \cf5 \\tek1\cf2 , \cf5 \\nil\cf2 , 	\cf5 \\dum1\cf2 , \cf5 \\nil\cf2 , \cf5 \\dum1\cf2 , \cf5 \\nil\cf2 , \cf5 \\nil\cf2 , \cf5 \\tek2\cf2 , \cf5 \\nil\cf2 ], \cf3 inf\cf2 ),\
+	\cf5 \\dur\cf2 , \cf3 Pseq\cf2 ([1, 0.5,2], \cf3 inf\cf2 )/4\
+	)\
+);\
+\
+\cf3 Pdef\cf2 (\cf5 \\cir1def\cf2 , \cf3 Posc\cf2 (\
+	\cf5 \\msg\cf2 , \cf3 Pseq\cf2 ([\cf5 \\cir2\cf2 , \cf5 \\nil\cf2 , \cf5 \\cir4\cf2 , 	\cf5 \\nil\cf2 , \cf5 \\nil\cf2 , \cf5 \\nil\cf2 , \cf5 \\nil\cf2 , \cf5 \\nil\cf2 , \cf5 \\cir1\cf2 , \cf5 \\nil\cf2 ], \cf3 inf\cf2 ),\
+	\cf5 \\dur\cf2 , \cf3 Pseq\cf2 ([1.5], \cf3 inf\cf2 )/4\
+	)\
+);\
+)\
+\
+\cf3 Pdef\cf2 (\cf5 \\kick1def\cf2 ).stop;\
+\cf3 Pdef\cf2 (\cf5 \\cir1def\cf2 ).stop;\
+\
+\
+\
+\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+\cf2 s.queryAllNodes;\
+\
+\
+}

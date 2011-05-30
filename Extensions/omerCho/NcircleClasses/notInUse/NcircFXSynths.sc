@@ -8,11 +8,20 @@ NcircFXSynths {
 	classvar <action;
 	*load {
 
+/*
 		~lim = Synth.after(~piges, "limiter",
 			[ \in ,~limBus, \out, 0,  
 			\lvl, 0.9, \durt, 0.01
 			]
 		);
+
+		~main = Synth.tail(~piges, "mainVolCtrl",
+			[ 
+			\in ,~mainBus, 
+			[\out1, \out2, \out3, \out4, \out5, \out6],  [~limBus, ~revBus, ~dlyBus, ~rlpBus, ~wahBus, ~flowBus]
+			]
+		);
+
 
 		~rev = Synth.after(~piges,"reverb", 
 			[
@@ -34,7 +43,7 @@ NcircFXSynths {
 			[\in,  ~wahBus, \out, 0]
 		);
 
-/*
+
 		~flow = Synth.after(~piges,"flower", 
 			[ \in, ~flowBus, \out, 0 ]
 		);
