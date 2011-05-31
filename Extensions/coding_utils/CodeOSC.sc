@@ -14,14 +14,12 @@ CodeOSC {
 	init {
 		code.doc.name.postln;
 		headers = code.headers;
-		headers.postln;
 		oscnames = headers collect: { | h | h.findRegexp("[^/: ]+").first; };
-		oscnames.postln;
 		responders = oscnames collect: this.makeResponder(_, _);
-		historyview = EZListView(bounds: Rect(0, 0, 300, 200),
+		historyview = EZListView(bounds: Rect(0, 0, 300, 800),
 			label: "History: " ++ code.doc.name);
-		historyview.addNotifier(this, \snippet, { | snippet |
-			{ historyview.addItem(snippet, { snippet.postln; }); }.defer;
+		historyview.addNotifier(this, \snippet, { | msg, snippet |
+			{ historyview.addItem(msg.asString, { snippet.postln; }); }.defer;
 		});
 		postf("OSC responders generated: %\n", oscnames.flop[1]);
 	}
@@ -33,7 +31,7 @@ CodeOSC {
 		compiledSnippet = snippet.compile;
 		^OSCresponder(nil, (name ? [nil, "---"])[1].asSymbol, { | time, addr, msg |
 			(msg: msg) use: { compiledSnippet.fork };
-			this.notify(\snippet, snippet);
+			this.notify(\snippet, [msg.asString, snippet]);
 		}).add;
 	}
 }
