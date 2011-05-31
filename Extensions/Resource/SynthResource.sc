@@ -5,13 +5,18 @@ before it starts.
 */
 
 AbstractServerResource : Resource {
-	var <server;
+	var <target, <server;
 	*makeKey { | key, target |
 		^this.mainKey ++ [target.asTarget.server, key.asKey];
 	}
 	
-	init { | target |
-		server = target.asTarget.server;
+	init { | argTarget |
+		this.initTarget(argTarget);
+	}
+	
+	initTarget { | argTarget |
+		target = argTarget.asTarget;
+		server = target.server;
 	}
 
 	*onServer { | server |
@@ -29,8 +34,12 @@ SynthResource : AbstractServerResource {
 		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);
 	}
 
-	init { | target, defName ... moreArgs |
-		super.init(target);
+	init { | argTarget, defName ... moreArgs |
+		super.initTarget(argTarget);
+		this.makeSynth(defName, moreArgs);
+	}
+
+	makeSynth { | defName, moreArgs |
 		ServerPrep(server).addSynth({ this.makeObject(target, defName, *moreArgs); });
 		if (server.serverRunning.not) { server.boot };
 	}
@@ -51,8 +60,7 @@ SynthResource : AbstractServerResource {
 					this.synthStarted
 				},
 				\n_end, {
-					this.remove;
-					object.releaseDependants; // clean up synth's dependants
+					this.synthEnded
 				}
 			);
 		};
@@ -62,6 +70,11 @@ SynthResource : AbstractServerResource {
 	synthStarted {
 		object.isPlaying = true; // set status to playing when missed because started on boot time
 		NotificationCenter.notify(this, \synthStarted, this);
+	}
+	
+	synthEnded {
+		this.remove;
+		object.releaseDependants; // clean up synth's dependants
 	}
 
 	synth { ^object }						// synonym

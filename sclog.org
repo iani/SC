@@ -682,4 +682,3 @@ Like above, but start a synth with the defname and args and send its output to t
 \symbol.mapFunc(\param, function, args) -> 
 
 Like above, but start a synth with the function and args and send its output to the bus.
-

@@ -46,6 +46,9 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "snippet buttons", [/*{*/ "}", true, false], {
 				this.showCodeButtonsWindow;
 			}),
+			CocoaMenuItem.addToMenu("Code", "make osc snippet commands", [/*{*/ "}", true, true], {
+				this.makeCodeOSC;
+			}),
 			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
 				this.selectNextSnippet;
 			}),
@@ -101,6 +104,8 @@ Code {
 
 	*showCodeButtonsWindow { ^CodeButtons(Document.current); }
 
+	*makeCodeOSC { ^CodeOSC(Document.current); }
+
 	*forkCurrentSnippet { | clock |
 		^this.new(Document.current).forkCurrentSnippet(clock);
 	}
@@ -131,6 +136,12 @@ Code {
 		if (index <= 0) { ^[0, positions[0][0] - 1] };
 		if (index >= positions.size) { ^[positions.last[0], string.size - 1] };
 		^[positions[index - 1][0], positions[index][0] - 1];
+	}
+
+	getSnippetStringAt { | index |
+		var begin, end;
+		#begin, end = this.getSnippetAt(index);
+		^string[begin..end];
 	}
 
 	*evalPostCurrentSnippet {
