@@ -4,7 +4,7 @@
 
 + Magnitude { asKey { ^this } }
 
-+ String { 
++ String {
 	asKey { ^this.hash }
 	fork { | clock | Code.fork(this, clock); }
 	evalPost { | clock | this.eval.postln; }
