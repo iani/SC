@@ -1,17 +1,22 @@
 
 /* 
-Uses ServerReady for booting synth and thereby ensure SynthDefs and Buffers are loaded
+Use ServerPrep for booting synth and thereby ensure SynthDefs and Buffers are loaded
 before it starts.
 */
 
 AbstractServerResource : Resource {
-	var <server;
+	var <target, <server;
 	*makeKey { | key, target |
 		^this.mainKey ++ [target.asTarget.server, key.asKey];
 	}
 	
-	init { | target |
-		server = target.asTarget.server;
+	init { | argTarget |
+		this.initTarget(argTarget);
+	}
+	
+	initTarget { | argTarget |
+		target = argTarget.asTarget;
+		server = target.server;
 	}
 
 	*onServer { | server |
@@ -29,8 +34,12 @@ SynthResource : AbstractServerResource {
 		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);
 	}
 
-	init { | target, defName ... moreArgs |
-		super.init(target);
+	init { | argTarget, defName ... moreArgs |
+		super.initTarget(argTarget);
+		this.makeSynth(defName, moreArgs);
+	}
+
+	makeSynth { | defName, moreArgs |
 		ServerPrep(server).addSynth({ this.makeObject(target, defName, *moreArgs); });
 		if (server.serverRunning.not) { server.boot };
 	}
@@ -51,8 +60,7 @@ SynthResource : AbstractServerResource {
 					this.synthStarted
 				},
 				\n_end, {
-					this.remove;
-					object.releaseDependants; // clean up synth's dependants
+					this.synthEnded
 				}
 			);
 		};
@@ -62,6 +70,11 @@ SynthResource : AbstractServerResource {
 	synthStarted {
 		object.isPlaying = true; // set status to playing when missed because started on boot time
 		NotificationCenter.notify(this, \synthStarted, this);
+	}
+	
+	synthEnded {
+		this.remove;
+		object.releaseDependants; // clean up synth's dependants
 	}
 
 	synth { ^object }						// synonym
@@ -127,10 +140,23 @@ SynthResource : AbstractServerResource {
 	}
 
 	set { | ... args | if (this.isPlaying) { object.set(*args) } }
-	map { | param, bus |
+	map { | param, index |
 		/* map parameter to bus. Make sure that the synth has started, otherwise map won't work */
-		this.onStart({ object.map(param, bus.index) })
+		index = index ?? { this.getParamBus(param).index }; 
+		this.onStart({ object.map(param, index) });
 	}
+
+	getParamBus { | param |
+		^BusResource.control(this.key.last ++ '_' ++ param, 1, server);
+	}
+/*
+	mapDef { | param, defname, args |
+		var index;
+		index = this.getParamBus(param).index;
+		this.map(param, index);
+		;	
+	}
+*/	
 
 	free { if (this.isPlaying ) { object.free } }	// safe free: only runs if not already freed
 	

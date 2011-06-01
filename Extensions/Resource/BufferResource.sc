@@ -47,7 +47,7 @@ BufferResource : AbstractServerResource {
 		Dialog.savePanel({ | path |
 			var file;
 			file = File.open(path, "w");
-			file.putString(this.onServer.collect(_.path).asCompileString);
+			file.putString(this.onServer.collect(_.path).select(_.notNil).asCompileString);
 			file.close;
 		});	
 	}

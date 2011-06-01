@@ -46,18 +46,22 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "snippet buttons", [/*{*/ "}", true, false], {
 				this.showCodeButtonsWindow;
 			}),
+			CocoaMenuItem.addToMenu("Code", "make osc snippet commands", [/*{*/ "}", true, true], {
+				this.makeCodeOSC;
+			}),
 			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
 				this.selectNextSnippet;
 			}),
 			CocoaMenuItem.addToMenu("Code", "next snippet", ["K", false, false], {
 				this.selectPreviousSnippet;
 			}),
-			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false], {
-				this.forkCurrentSnippet(AppClock);
-			}),
-			CocoaMenuItem.addToMenu("Code", "fork current snippet (SystemClock)", ["X", true, false], {
-				this.forkCurrentSnippet(SystemClock);
-			}),
+			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false],
+				{ this.forkCurrentSnippet(AppClock); }
+			),
+			CocoaMenuItem.addToMenu("Code", "fork current snippet (SystemClock)", 
+				["X", true, false], 
+				{ this.forkCurrentSnippet(SystemClock); }
+			),
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
 			}),
@@ -101,6 +105,8 @@ Code {
 
 	*showCodeButtonsWindow { ^CodeButtons(Document.current); }
 
+	*makeCodeOSC { ^CodeOSC(Document.current); }
+
 	*forkCurrentSnippet { | clock |
 		^this.new(Document.current).forkCurrentSnippet(clock);
 	}
@@ -131,6 +137,12 @@ Code {
 		if (index <= 0) { ^[0, positions[0][0] - 1] };
 		if (index >= positions.size) { ^[positions.last[0], string.size - 1] };
 		^[positions[index - 1][0], positions[index][0] - 1];
+	}
+
+	getSnippetStringAt { | index |
+		var begin, end;
+		#begin, end = this.getSnippetAt(index);
+		^string[begin..end];
 	}
 
 	*evalPostCurrentSnippet {

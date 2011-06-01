@@ -4,7 +4,7 @@
 
 + Magnitude { asKey { ^this } }
 
-+ String { 
++ String {
 	asKey { ^this.hash }
 	fork { | clock | Code.fork(this, clock); }
 	evalPost { | clock | this.eval.postln; }
@@ -38,7 +38,43 @@
 		^SynthResource(this, def ? this, args, target, addAction);
 	}
 
-	// ====== Buffer support ======
+	// ====== (More) Synth support ======
+
+	free { | server | ^this.synth(server).free }
+ 
+	releaseSynth { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
+	// Note: avoid overwriting release method from Object ?? Do we want to have the method below?
+	release { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
+
+	set { | ... args | this.synth.object.set(*args) }
+	setn { | ... args | this.synth.object.setn(*args) }
+	
+	// ====== Bus support ======
+	audio { | numChannels = 1, server |
+		^BusResource.audio(this, numChannels, server)
+	}
+
+	control { | numChannels = 1, server |
+		^BusResource.control(this, numChannels, server)
+	}
+	
+	index { | numChannels = 1, server |
+		^this.control(numChannels, server).index;
+	}
+
+	map { | param, bus |
+		this.synth.map(param, bus);	
+	}
+
+	mapDef { | param, defname, args |
+		this.synth.mapDef(param, defname, args);	
+	}
+
+	mapFunc { | param, func, args |
+		this.synth.mapFunc(param, func, args);	
+	}
+	
+		// ====== Buffer support ======
 	playBuf { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
 		/* Play a buffer by name with a function */
 		^BufferResource(this, target.asTarget.server).play(
@@ -62,28 +98,8 @@
 			{ BufferResource(this, target.asTarget.server) }
 		)
 	}
-	
-	// ====== Bus support ======
-	audio { | numChannels = 1, server |
-		^BusResource.audio(this, numChannels, server)
-	}
 
-	control { | numChannels = 1, server |
-		^BusResource.control(this, numChannels, server)
-	}
-	
-	index { | numChannels = 1, server |
-		^this.control(numChannels, server).index;
-	}
-
-	free { | server | ^this.synth(server).free }
-	wait { | dtime, server | ^this.synth(server).wait(dtime) }
-
-	set { | ... args | this.synth.object.set(*args) }
-	setn { | ... args | this.synth.object.setn(*args) }
-	// Note: avoid overwriting release method from Object
-	releaseSynth { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
-
+	// ====== Window support ======
 	window { | makeFunc | ^WindowResource(this, makeFunc) }
 	close { this.window.close }
 }

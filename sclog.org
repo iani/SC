@@ -654,3 +654,31 @@ Reset ServerReady if an Exception occurs, to enable restarting the next time tha
 Cmd-Ctl-C: Class list
 Cmd-Ctl-S: Synthdef List
 Cmd-Ctl-B: Buffer list
+*** 2011-05-30 Monday
+**** TODO Panes and DocTheme activation should be per kbd command, not per default  :panes:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-30 Mon 13:14>
+     :END:
+**** TODO sort out symbol buffer and other playing syntax  :bufresource:resource:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-30 Mon 13:15>
+     :END:
+
+Should be simplified. Try to follow one principle: the symbol that gets the message is the one that stores the resulting new resource. 
+**** TODO simplify synthresource mapping mechanism		:busresource:synthresource
+     :PROPERTIES:
+     :ENTERED_ON: <2011-05-30 Mon 13:18>
+     :END:
+
+
+\symbol.map(\param, optional: symbol) -> 
+
+symbol.synth.map(param, symbol ?? (symbol ++ _ ++ param).control.index )
+
+\symbol.mapDef(\param, defname, args (target???) ) -> 
+
+Like above, but start a synth with the defname and args and send its output to the bus.
+
+\symbol.mapFunc(\param, function, args) -> 
+
+Like above, but start a synth with the function and args and send its output to the bus.

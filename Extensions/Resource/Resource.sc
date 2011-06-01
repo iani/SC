@@ -39,7 +39,7 @@ Resource {
 		^objects.leaves(this.mainKey);
 	}	// could also use objects.leaves.select({ | o | o.isKindOf ... }) ...
 
-	init { | makeFunc | object = makeFunc.value; }
+	init { | makeFunc | object = makeFunc.(this); }
 
 	// ====== removing objects ======
 
@@ -68,5 +68,4 @@ Resource {
 	stop { object.stop; this.remove; }
 	free { object.free; this.remove; }
 	release { | fadeout = 0.2 | object.release(fadeout); this.remove; }
-
 }

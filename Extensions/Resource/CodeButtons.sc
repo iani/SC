@@ -1,3 +1,8 @@
+/* Given a document with snippets defined by //: comments, create a window with buttons, where each buttons triggers one of the snippets in that Document.
+
+See Code, CodeOSC 
+
+*/
 
 CodeButtons : WindowResource {
 	var code, snippets, historyview;
