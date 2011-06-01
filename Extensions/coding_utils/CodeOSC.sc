@@ -44,7 +44,9 @@ CodeOSC : WindowResource {
 		snippet = code.getSnippetStringAt(index + 1);
 		compiledSnippet = snippet.compile;
 		responders = responders add: OSCresponder(nil, name[1].asSymbol, { | time, addr, msg |
-			(msg: msg) use: { compiledSnippet.fork };
+			currentEnvironment[\msg] = msg;
+//			(msg: msg) use: { compiledSnippet.fork };
+			compiledSnippet.fork;
 			this.notify(\snippet, [msg.asString, snippet]);
 		}).add;
 	}
