@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+span.s1 {color: #008323}
+span.s2 {color: #162bc4}
+span.s3 {font: 12.0px Helvetica}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Code</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Pupose</b></p>
+<p class="p4"><br></p>
+<p class="p3">Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). Define keyboard shortcuts the execution of the segment in which the cursor is located, and for moving to the next and previous segment.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded.</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><br></p>
+<p class="p3">Code works by by finding code segments in a Document separated by comments followed by semicolon like this:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6">//:Start of a code segment<span class="Apple-converted-space"> </span></p>
+<p class="p6">// the next 2 lines belong to one code segment and can be evaluated with Cmd-Shift-V or<span class="Apple-converted-space"> </span></p>
+<p class="p6">// Cmd-Shift X or Cmd-Shift-Alt-X</p>
+<p class="p7"><span class="s1">\default</span>.play.dur(1, 1); <span class="Apple-converted-space"> </span></p>
+<p class="p8"><br></p>
+<p class="p6">//:Start of next code segment;<span class="Apple-converted-space"> </span></p>
+<p class="p8"><br></p>
+<p class="p7"><span class="s1">\default</span>.play([<span class="s1">\freq</span>, 880]).dur(1, 2);</p>
+<p class="p8"><br></p>
+<p class="p6">//: End of code. A space after //: precludes this heading from being included in the code list pane</p>
+<p class="p4"><br></p>
+<p class="p3">Shortcuts provided are:</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>•<span class="Apple-tab-span">	</span>Command-shift-x: Evaluate the code in an AppClock routine. Booting the default server if needed</p>
+<p class="p3"><span class="Apple-tab-span">	</span>•<span class="Apple-tab-span">	</span>Command-shift-alt-x: Evaluate the code in a SystemClock routine Boot default server if needed</p>
+<p class="p3"><span class="Apple-tab-span">	</span>•<span class="Apple-tab-span">	</span>Command-shift-v: Evaluate and post the results of the code, without routine or server booting</p>
+<p class="p3"><span class="Apple-tab-span">	</span>•<span class="Apple-tab-span">	</span>Command-shift-j: Select the next code part</p>
+<p class="p3"><span class="Apple-tab-span">	</span>•<span class="Apple-tab-span">	</span>Command-shift-k: Select the previous code part</p>
+<p class="p3"><span class="Apple-tab-span">	</span>•<span class="Apple-tab-span">	</span>Command-shift-} open a list of the code segments of the current window<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">To add the Code menus and activate the shortcuts evaluate:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p7"><span class="s2">Code</span>.addMenus;</p>
+<p class="p4"><br></p>
+<p class="p3">To remove the menus evaluate:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p7"><span class="s2">Code</span>.removeMenus;</p>
+<p class="p4"><br></p>
+<p class="p3">The menus can also be activated together with the other menus of this library by evaluating:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p7"><span class="s2">Panes</span>.activate;<span class="s3"><span class="Apple-tab-span">	</span></span></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3">Panes, Dock.</p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance Creation</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>autoBoot</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>canEvaluate :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>doc :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>headers :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>positions :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>string</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>autoBoot :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>autoBoot_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>evalPostCurrentSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>fork :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>forkCurrentSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>menuItems :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>new :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>selectNextSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>selectPreviousSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>showCodeListWindow</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>canEvaluate :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>doc :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>evalPostCurrentSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>findIndexOfSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>forkCurrentSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>headers :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>init :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>performCodeAt :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>positions :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>selectNextSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>selectPreviousSnippet :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>string</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>

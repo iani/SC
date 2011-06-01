@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+span.s3 {color: #000000}
+span.s4 {color: #d00c0c}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Methods sched and stream for Function</b></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">The methods sched and stream for Function are shortcuts for the following:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p4">aFunction.sched(dtime, clock);</p>
+<p class="p2"><br></p>
+<p class="p3">is equivalent to:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p4">clock.sched(dtime, aFunction)</p>
+<p class="p2"><br></p>
+<p class="p4">aFunction.stream(dtime, clock, onEnd);</p>
+<p class="p2"><br></p>
+<p class="p3">is equivalent to:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p4">clock.sched(dtime, {<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>envir use: {</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> dur;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dur = <span class="s1">this</span>.(envir);</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>if (dur.isNil) { onEnd.(envir) };</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>dur;</p>
+<p class="p4"><span class="Apple-tab-span">	</span>}</p>
+<p class="p4">});</p>
+<p class="p2"><br></p>
+<p class="p3">Although the shortcuts are small, in terms of code writing it can lead to substantial simplifications, especially when combined with Function:play, Symbol:play, Symbol:mplay etc, and Symbol:stream. <span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">Examples:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">Function:sched vs. Function:fork for looping:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6">//:Without mplay. Play an infinite riff using Function:fork with loop:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span>loop {</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="Apple-tab-span">	</span>var synth;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>synth = <span class="s2">Synth(</span>\default, [\amp, 0.5, <span class="s2">\freq</span>, (25..50).choose.midicps]);</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-converted-space">  <span class="Apple-tab-span">	</span></span>0.1.wait;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-converted-space">  <span class="Apple-tab-span">	</span></span>synth.release(exprand(0.01, 1.0));</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.fork;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[0.1, 0.2].choose.wait;</p>
+<p class="p4"><span class="Apple-tab-span">	</span>};</p>
+<p class="p4">}.fork;</p>
+<p class="p5"><br></p>
+<p class="p6">//:Using mplay. Play an infinite riff using Function:fork with loop</p>
+<p class="p5"><br></p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span>loop {</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([\amp, 0.5, <span class="s2">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[0.1, 0.2].choose.wait;</p>
+<p class="p4"><span class="Apple-tab-span">	</span>};</p>
+<p class="p4">}.fork;</p>
+<p class="p5"><br></p>
+<p class="p6">//:The same riff with Function:sched</p>
+<p class="p5"><br></p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([\amp, 0.5, <span class="s2">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p4"><span class="Apple-tab-span">	</span>[0.1, 0.2].choose;</p>
+<p class="p4">}.sched;</p>
+<p class="p5"><br></p>
+<p class="p6">//:Additional advantage: Use a stream to control the extent of the loop:</p>
+<p class="p5"><br></p>
+<p class="p4">a = <span class="s1">Prand</span>([0.1, 0.2], 50).asStream;</p>
+<p class="p5"><br></p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([\amp, 0.5, <span class="s2">\freq</span>, (25..50).choose.midicps]).dur(0.1, exprand(0.01, 1.0));</p>
+<p class="p4"><span class="Apple-tab-span">	</span>a.next;</p>
+<p class="p4">}.sched;</p>
+<p class="p5"><br></p>
+<p class="p6">//:The above as Pbind (approximation: legato is not the same as specifying fadeout time directly)</p>
+<p class="p7">Pbind<span class="s3">(</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\midinote</span>, <span class="s1">Pwhite</span>(25, 50, <span class="s1">inf</span>),<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\amp</span>, <span class="s1">0.5</span>,</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\dur</span>, <span class="s1">Prand</span>([0.1, 0.2], 50),</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\legato</span>, <span class="s1">Pfunc</span>({ exprand(0.1, 2.0) }) <span class="s4">// approximation</span></p>
+<p class="p4">).play;</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6">//:Even better: store the stream as unique object</p>
+<p class="p5"><br></p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\default</span>.mplay([<span class="s2">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">\hocketus</span>.stream(<span class="s1">Prand</span>([0.06, 0.07, 0.14], 150));</p>
+<p class="p4">}.sched;</p>
+<p class="p5"><br></p>
+<p class="p6">//:Scheduling functions in parallel with the same symbols bound to different streams<span class="Apple-converted-space"> </span></p>
+<p class="p6">// Use Function:stream instead of Function:sched</p>
+<p class="p6">// Function:stream evaluates the scheduled function in a private environment.<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p4">Udef(\simple, { | freq = 440 |</p>
+<p class="p4"><span class="Apple-tab-span">	</span>Out.ar(0, Fade.kr * SinOsc.ar(freq, 0, 0.1.dup))</p>
+<p class="p4">});</p>
+<p class="p5"><br></p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span>\simple.mplay([\freq, \melody.pser1(60, 62, 65, 67).next.midicps]).dur(0.01, exprand(0.1, 0.2));</p>
+<p class="p4"><span class="Apple-tab-span">	</span>\rhythm.stream(<span class="s1">Pser</span>([0.25, 0.5, 0.5, 1.0] / 3, 20)).next;</p>
+<p class="p4">}.stream;</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span>\simple.mplay([\freq, \melody.pser1(50, 55).next.midicps]).dur(0.1, exprand(0.1, 0.5));</p>
+<p class="p4"><span class="Apple-tab-span">	</span>\rhythm.stream(<span class="s1">Pser</span>([1.25, 1] / 3.0, 10)).next;</p>
+<p class="p4">}.stream;</p>
+<p class="p5"><br></p>
+</body>
+</html>

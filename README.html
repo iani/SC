@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>Lilt2/Elemenbí (/Look Ma, No Boot/)</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2011-05-24 12:21:25 EEST"/>
+<meta name="author" content="Ioannis Zannos"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">Lilt2/Elemenbí (<i>Look Ma, No Boot</i>)</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Class ServerPrep </a></li>
+<li><a href="#sec-2">2 Class SynthResource </a></li>
+<li><a href="#sec-3">3 Class Chain, EventStream, Function:sched and Function:stream </a></li>
+<li><a href="#sec-4">4 Object methods for easy messaging via NotificationCenter </a></li>
+<li><a href="#sec-5">5 Class Code </a></li>
+<li><a href="#sec-6">6 Class Panes </a></li>
+<li><a href="#sec-7">7 Class Dock </a></li>
+<li><a href="#sec-8">8 Class Spectrograph </a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Class ServerPrep </h2>
+<div class="outline-text-2" id="text-1">
+
+
+<ul>
+<li>
+Obviate the need to boot the server manually before starting synths.
+</li>
+<li>
+Ensure that Buffers and SynthDefs are allocated / sent to the server
+before starting synths, efficiently. 
+</li>
+<li>
+Provide a safe way for registering synth and routine processes to start automatically when the server boots
+or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first.
+</li>
+</ul>
+
+
+<p>
+Classes involved: 
+</p>
+<ul>
+<li>
+ServerPrep
+</li>
+<li>
+ServerActionLoader
+</li>
+<li>
+SynthLoader
+</li>
+<li>
+DefLoader
+</li>
+<li>
+BufLoader
+</li>
+<li>
+RoutineLoader
+</li>
+<li>
+UniqueBuffer
+</li>
+<li>
+Udef
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Class SynthResource </h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
+controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
+</p>
+<p>
+Example of how SynthResource can simplify the code required: 
+</p>
+<p>
+<i>Without Symbol:mplay</i>
+</p>
+
+
+
+<pre class="example">(
+{
+   loop {
+      {    var synth;
+         synth = Synth(\default, [\freq, (25..50).choose.midicps]);
+         0.1.wait;
+         synth.release(exprand(0.01, 1.0));
+      }.fork;
+      [0.1, 0.2].choose.wait;
+   };
+}.fork;
+)
+</pre>
+
+
+
+<p>
+<i>Using Symbol:mplay</i>
+</p>
+
+
+
+<pre class="example">
+(
+{
+   loop {
+      \default.mplay([\freq, (25..50).choose.midicps])
+         .dur(0.1, exprand(0.01, 1.0));
+      [0.1, 0.2].choose.wait;
+   };
+}.fork;
+)
+</pre>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Class Chain, EventStream, Function:sched and Function:stream </h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
+</p>
+<p>
+Example: Simplify the above code even further, while enabling  control of dtime (and any other parameters) via patterns:
+</p>
+
+
+
+<pre class="example">(
+{   // Symbol:stream creates and / or accesses the stream as appropriate: 
+   \default.mplay([\freq, \freq.prand((25..50), inf).midicps])
+      .dur(0.1, exprand(0.01, 1.0));
+   // play 20 events only
+   \duration.stream(Prand([0.1, 0.2], 20)); 
+}.stream;    
+)
+</pre>
+
+
+
+<p>
+Note: symbol.stream(Prand(&hellip;)) is equivalent to symbol.prand(&hellip;)
+</p>
+<p>
+Also chain timed sequential execution of functions, with sound or not, in a manner more direct than Pbind.
+</p>
+
+
+
+<pre class="example">(
+//:3 different synth functions sharing patterns. 
+Chain(Pseq([
+        { \default.play([\amp, 0.05, \freq, ~freq.next]).dur(~dur2.next, ~fade.next); },
+        { { Resonz.ar(WhiteNoise.ar(2.5), \freq.n.dup, 0.01) }.play.dur(\dur2.n, \fade.n); },
+        { { SinOsc.ar(\freq.n.dup / 2, 0, 0.07) }.play.dur(\dur2.n, \fade.n); },
+], 20), 
+() make: {      // store shared patterns in the global environment of the Chain:
+        \dur2.pseq([0.1, 0.2], inf);
+        \fade.pseq([0.1, 0.2, 1], inf); 
+        \freq.pseq([80, 85, 87, 90, 92].midicps, inf) 
+});
+//: ---
+)
+</pre>
+
+
+
+<p>
+Other example: 
+</p>
+
+
+
+<pre class="example">(
+//:Example combining a single synth and a chain of synths.
+Chain(Prand([ // choose from the following at random:
+        {       // Play a series of events
+                \default.mplay([\freq, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));
+                // The number and timing of the events is defined through arguments to the chain message
+        }.chain({ Prand([0.06, 0.07, 0.14], 10 rrand: 20) }),
+        {       // Play a single synth.
+                { | freq = 400 | SinOsc.ar(freq * [1, 1.2], 0, 0.02) }
+                        .play(args: [\freq,  \freq.pseries(4).next * 100])
+                        .dur(0.1 rrand: 1, 0.5 rrand: 2.5) 
+        }
+], 30
+));
+//: ---
+)
+</pre>
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Object methods for easy messaging via NotificationCenter </h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
+</p>
+<p>
+One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Class Code </h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
+</p>
+<p>
+Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
+</p>
+<p>
+Shortcuts provided are: 
+</p>
+<ul>
+<li>
+Command-shift-x: Evaluate the code in an AppClock routine, after booting the default server if needed
+</li>
+<li>
+Command-shift-alt-x: Evaluate the code in a SystemClock routine, after booting the default server if needed
+</li>
+<li>
+Command-shift-v: Evaluate and post the results of the code, without routine or server booting
+</li>
+<li>
+Command-shift-j: Select the next code part
+</li>
+<li>
+Command-shift-k: Select the previous code part
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Class Panes </h2>
+<div class="outline-text-2" id="text-6">
+
+
+<p>
+Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Class Dock </h2>
+<div class="outline-text-2" id="text-7">
+
+
+<p>
+Provide some useful shortcuts for common tasks: 
+browseUserClasses :    Open a list of all classes defined in the user's Application Support 
+directory. Typing return on a selected item opens the code file with the definition of this class. 
+</p>
+<p>
+insertClassHelpTemplate : Insert a template for documenting a class named after the name of the
+document. Inserts listings of superclasses, class and instance variables and methods. 
+</p>
+<p>
+openCreateHelpFile : Open a help file for a selected user class. Automatic creation of the file 
+is reserved to code residing outside the distribution files of this library. 
+</p>
+<p>
+showDocListWindow :  An auto-updating window listing all open Documents, with selection by mouse click
+or by text search.
+</p>
+<p>
+closeDocListWindow : Close the document list window
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Class Spectrograph </h2>
+<div class="outline-text-2" id="text-8">
+
+
+<p>
+An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
+</p>
+<p>
+This class was inspired by the Spectrogram Quark by Thor Magnusson and Dan Stowell, and is a rewrite to show how the code can be made clearer (and the behavior safer and more consistent regarding boot/quit of the server and open/close of the spectrogram window). 
+</p>
+<p>
+Note: The Spectrograph may occasionally crash SuperCollider if it is running on a MacBook with battery power. I have not been able to trace the source of the problem so far but suspect this is due to fast Image updates causing problems with the Graphics Card.
+</p>
+</div>
+</div>
+<div id="postamble">
+<p class="author"> Author: Ioannis Zannos
+</p>
+<p class="date"> Date: 2011-05-24 12:21:25 EEST</p>
+<p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
+</div>
+</div>
+</body>
+</html>
