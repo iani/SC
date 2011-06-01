@@ -35,7 +35,7 @@ Code {
 	}
 	
 	headers {
-		^string.findRegexp("^//:[^\n]*").slice(nil, 1);
+		^string.findRegexp("^//:[^\n]*").flop[1];
 	}
 
 	*menuItems {
