@@ -30,22 +30,22 @@ AbstractServerResource : Resource {
 SynthResource : AbstractServerResource {
 	*mainKey { ^[SynthResource] } // subclasses store instances under SynthResource
 
-	*new { | key, defName, args, target, addAction=\addToHead ... moreArgs |
-		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction, *moreArgs);
+	*new { | key, defName, args, target, addAction=\addToHead |
+		^super.new(key, target.asTarget, defName ?? { key.asSymbol }, args, addAction);
 	}
 
-	init { | argTarget, defName ... moreArgs |
+	init { | argTarget, defName, args, addAction |
 		super.initTarget(argTarget);
-		this.makeSynth(defName, moreArgs);
+		this.makeSynth(defName, args, addAction);
 	}
 
-	makeSynth { | defName, moreArgs |
-		ServerPrep(server).addSynth({ this.makeObject(target, defName, *moreArgs); });
+	makeSynth { | defName, args, addAction |
+		ServerPrep(server).addSynth({ this.makeObject(target, defName, args, addAction); });
 		if (server.serverRunning.not) { server.boot };
 	}
 
-	makeObject { | target, defName, args, addAction ... otherArgs |
-		this.prMakeObject(target, defName, args, addAction, *otherArgs);
+	makeObject { | target, defName, args, addAction |
+		this.prMakeObject(target, defName, args, addAction);
 		this.registerObject;
 	}
 
@@ -133,10 +133,9 @@ SynthResource : AbstractServerResource {
 	streama { | func, times, envir, dtime = 0, onEnd |
 		this.stream(func, times, envir, dtime, AppClock, onEnd)
 	}
-	
 	releaseSynth { | dtime |
 		// Use  name releaseSynth in order not to mofify release method inherited from Object
-		if (this.isPlaying ) { object.release(dtime) } 
+		if (this.isPlaying ) { object.release(dtime ? 0.02) } 
 	}
 
 	set { | ... args | if (this.isPlaying) { object.set(*args) } }

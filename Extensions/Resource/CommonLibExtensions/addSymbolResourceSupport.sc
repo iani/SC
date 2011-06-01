@@ -15,6 +15,22 @@
 
 + Symbol {
 	asKey { ^this }
+	
+	// ========== FadeSynth support ===========
+	-< { | func | ^FadeSynth(this) -< func; }
+	
+	ar { | in = 0, out = 0, fadeTime = 0.02, target, addAction = \addToHead | 
+		^FadeSynth(this, in, out, fadeTime, target, addAction);
+	}
+	
+	fadeTime_ { | ft = 0.02 |
+		^FadeSynth(this).fadeTime_(ft);
+	}
+	
+	remove { | fadeTime | ^FadeSynth(this).releaseSynth(fadeTime).remove }
+	
+	// ====== Synth support ======
+
 	// access a unique synth if present, without starting it
 	synth { | server | ^SynthResource.at(this, server) }
 
@@ -38,13 +54,11 @@
 		^SynthResource(this, def ? this, args, target, addAction);
 	}
 
-	// ====== (More) Synth support ======
-
 	free { | server | ^this.synth(server).free }
  
-	releaseSynth { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
+	releaseSynth { | dur, server | this.synth(server).releaseSynth(dur) }
 	// Note: avoid overwriting release method from Object ?? Do we want to have the method below?
-	release { | dur = 0.02, server | this.synth(server).releaseSynth(dur) }
+	release { | dur, server | this.releaseSynth(dur, server) }
 
 	set { | ... args | this.synth.object.set(*args) }
 	setn { | ... args | this.synth.object.setn(*args) }

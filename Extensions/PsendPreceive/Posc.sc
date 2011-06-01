@@ -45,7 +45,6 @@ Posc : Pbind {
 	*initClass {
 		Class.initClassTree(Event);
 		Event.addEventType(\osc, {
-//			~msg.postln;
 			this.broadcastMessageWithBeat(~dest, ~msg, ~beat, ~latency);
 		});
 	}
@@ -59,15 +58,7 @@ Posc : Pbind {
 	}
 
 	init {
-		// store name and destinations in variables, for use when broadcasting by Psend
-//		var nameIndex;
 		dest = patternpairs[patternpairs.indexOf(\dest) + 1].asArray;
-//		nameIndex = patternpairs.indexOf(\name);
-//		if (nameIndex.isNil) {
-//			name = \phrase;
-//		}{
-//			name = patternpairs[nameIndex + 1];
-//		}
 	}
 
 	*broadcast { | msg | posc.broadcast(msg) }
@@ -102,7 +93,6 @@ Posc : Pbind {
 		posc = this;
 		^super.play(clock, protoEvent, quant);
 	}
-
 }
 
 /*
