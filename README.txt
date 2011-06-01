@@ -1,11 +1,12 @@
                  Lilt2/Elemenbí (/Look Ma, No Boot/)
                  ===================================
 
+
 Author: Ioannis Zannos
 Date: 2011-05-24 12:21:32 EEST
 
-
 By Ioannis Zannos, March-May 2011
+
 
 Download from: [https://github.com/iani/SC]
 or:
@@ -193,4 +194,5 @@ An example application showing some of the features of this library. Creates a w
 This class was inspired by the Spectrogram Quark by Thor Magnusson and Dan Stowell, and is a rewrite to show how the code can be made clearer (and the behavior safer and more consistent regarding boot/quit of the server and open/close of the spectrogram window). 
 
 Note: The Spectrograph may occasionally crash SuperCollider if it is running on a MacBook with battery power. I have not been able to trace the source of the problem so far but suspect this is due to fast Image updates causing problems with the Graphics Card.
+
 

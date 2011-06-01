@@ -69,3 +69,4 @@ MySynths.sendToServer;
 //s.boot;
 
 
+(Platform.userAppSupportDir ++ "/startupOC/*").pathMatch do: _.load;

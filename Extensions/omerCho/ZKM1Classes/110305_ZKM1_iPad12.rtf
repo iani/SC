@@ -1,0 +1,321 @@
+{\rtf1\ansi\ansicpg1253\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red0\green115\blue0;\red0\green38\blue169;
+\red191\green0\blue0;\red3\green38\blue163;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf0 \
+\
+(\
+\cf2 ZKM1Buffers\cf0 .load;\
+\cf2 ZKM1SynthDefs\cf0 .load;\
+\cf2 )\
+\
+(\
+ZKM1Groups\cf0 .load;\
+\cf2 ZKM1Busses\cf0 .load;\
+\cf2 ZKM1Synths\cf0 .load;\
+\cf2 ZKM1Osc\cf0 .load;\
+)\
+\
+(\
+\cf2 SynthDef\cf0 (\cf3 \\playBuf1\cf0 , \{ \cf2 | out=0, vol = 0.5, bufnum = 0, gate = 1.5, rate = 1, startPos = 0, amp = 1.0, \
+	att = 0.1, dec = 0.5, sus = 1, rls = 0.5, lvl=0.8,\
+	pan = 0, loop = 0|\cf0 \
+	\cf2 var\cf0  audio, env;\
+	env = \cf2 EnvGen\cf0 .ar(\cf2 Env\cf0 .perc(att, rls, lvl), 1.5, timeScale: sus, doneAction: 2);\
+	//env = \cf2 EnvGen\cf0 .ar(\cf2 Env\cf0 .adsr(att, dec, sus, rls, lvl, -1), gate, doneAction: 2);\
+	//env = \cf2 EnvGen\cf0 .ar(\cf4 Env\cf0 .linen(att, sus, rls, lvl), gate, doneAction: 2);\
+	\
+	rate = rate * \cf2 BufRateScale\cf0 .kr(bufnum);\
+	startPos = startPos * \cf2 BufFrames\cf0 .kr(bufnum);\
+	\
+	audio = \cf2 BufRd\cf0 .ar(1, bufnum, \cf2 Phasor\cf0 .ar(1, rate, startPos, \cf2 BufFrames\cf0 .ir(bufnum)), 0, 4);\
+	audio = env * audio;\
+	audio = \cf2 Pan2\cf0 .ar(audio, pan, amp*4*vol);\
+	\cf2 Out\cf0 .ar(out, audio);\
+\}).add;\
+\
+)\
+\
+(\
+\cf5 /*\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf2 (\
+Pdef\cf0 (\cf3 \\buf1\cf0 , \cf2 Pbind\cf0 (\
+\pard\pardeftab560\ql\qnatural
+\cf0 			\
+			\cf3 \\instrument\cf0 ,	\cf3 \\playBuf1\cf0 ,\
+			\cf3 \\vol\cf0 ,		~volA ,\
+			\cf3 \\amp\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiAmp], \cf2 inf\cf0 ).sin*1 * p \{ inf.do \{ ([0.4, 1].choose + [0.1, 0.5].choose + [0.3, 1.0].choose).postln.yield \} \},\
+			\cf3 \\dur\cf0 ,		\cf2 Prand\cf0 ([0.05,0.1,0.01, 0.03, 0.1], \cf2 inf\cf0 ).sin**2*2,\
+			\cf3 \\startPos\cf0 ,	~positionA,\
+			\cf3 \\rate\cf0 ,		\cf6 PdegreeToKey\cf0 (\cf6 \
+\cf0 							\cf6 Prand\cf0 ([1, 2, 3, 2, 5, 4, 3, 4, 2, 1], inf),\
+							#[0, 2, 3, 6, 7, 9],\
+							53\
+						).abs/8*~rateA,\
+			\cf3 \\att\cf0 ,		0.1*~randA,\
+			\cf3 \\dec\cf0 ,		0.5,\
+			\cf3 \\sus\cf0 ,		\cf2 Pseq\cf0 ([ (4..1),2 ], \cf2 inf\cf0 ),\
+			\cf3 \\rls\cf0 ,		\cf2 Pseq\cf0 ([ (0.1..2.5),\cf2 inf\cf0  ], \cf2 inf\cf0 ).tanh,\
+			\cf3 \\lvl\cf0 ,		0.9,\
+			\cf3 \\pan\cf0 ,  		\cf2 Pseq\cf0 ([ (-3..3),\cf2 inf\cf0  ], \cf2 inf\cf0 ).tanh,\
+			\cf3 \\bufnum\cf0 ,		 \cf2 Pseq\cf0 ([~bufA], \cf2 inf\cf0 ),\
+			\cf3 \\group\cf0 , 		~piges,\
+			\cf3 \\out\cf0 ,		[~limBus, ~revBus, ~dlyBus]\
+	\
+		));\cf5 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf5 )\
+*/\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 ~toggleA=\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/togA'\cf0 , \{\'a0|t,r,m|\'a0\
+\pard\pardeftab720\ql\qnatural
+\cf0 	if (~pat1.isNil or: \{ ~pat1.isPlaying.not\}) \{\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 		~pat1 = \cf2 Pdef\cf0 (\cf3 \\buf1\cf0 , \cf2 Pbind\cf0 (\
+\pard\pardeftab560\ql\qnatural
+\cf0 			\
+			\cf3 \\instrument\cf0 ,	\cf3 \\playBuf1\cf0 ,\
+			\cf3 \\vol\cf0 ,		~volA ,\
+			\cf3 \\amp\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiAmp], \cf2 inf\cf0 ),\
+			\cf3 \\dur\cf0 ,		\cf2 Prand\cf0 ([0.5,0.1,0.01], \cf2 inf\cf0 ).sin**1.1*4,\
+			\cf3 \\startPos\cf0 ,	~positionA,\
+			\cf3 \\rate\cf0 ,		\cf2 Pwhite\cf0 (0.1, 4).abs/8*~rateA,\
+			\cf3 \\att\cf0 ,		0.001,\
+			\cf3 \\dec\cf0 ,		0.5,\
+			\cf3 \\sus\cf0 ,		\cf2 Pseq\cf0 ([ (4..1),2 ], \cf2 inf\cf0 ),\
+			\cf3 \\rls\cf0 ,		2.5,\
+			\cf3 \\lvl\cf0 ,		0.9,\
+			\cf3 \\pan\cf0 ,  		\cf2 Pseq\cf0 ([ (-3..3),\cf2 inf\cf0  ], \cf2 inf\cf0 ).tanh,\
+			\cf3 \\bufnum\cf0 ,		 \cf2 Pseq\cf0 ([~bufA], \cf2 inf\cf0 ),\
+			\cf3 \\group\cf0 , 		~piges,\
+			\cf3 \\out\cf0 ,		[~limBus, ~revBus, ~dlyBus]\
+	\
+		)).play( quant: [4, 0, 0]);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 	\}\{\
+		~pat1.stop;\
+		~pat1 = \cf2 nil\cf0 ;\
+	\}\
+\pard\pardeftab720\ql\qnatural
+\cf0 \}).add;\
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 \
+\
+\
+\
+\
+~volA = \cf2 PatternProxy\cf0  ( \cf2 Pn\cf0 (1.0, \cf2 inf\cf0 ) );\
+\
+~durationA = \cf2 PatternProxy\cf0  ( \cf2 Pn\cf0 (1.0, \cf2 inf\cf0 ) );\
+~durationASpec = \cf2 ControlSpec\cf0 (1.0, 3, \cf3 \\lin\cf0 );\
+\
+\
+~positionA = \cf2 PatternProxy\cf0  ( \cf2 Pn\cf0 (0, \cf2 inf\cf0 ) );\
+~positionASpec = \cf2 ControlSpec\cf0 (0, 1, \cf3 \\lin\cf0 );\
+\
+~rateA = \cf2 PatternProxy\cf0  ( \cf2 Pn\cf0 (0.5, \cf2 inf\cf0 ) );\
+~rateASpec = \cf2 ControlSpec\cf0 (0.1, 8, \cf3 \\lin\cf0 );\
+\
+~randA = \cf2 PatternProxy\cf0  ( \cf2 Pn\cf0 (0.5, \cf2 inf\cf0 ) );\
+~randASpec = \cf2 ControlSpec\cf0 (0.001, 2, \cf3 \\lin\cf0 );\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf5 /*\
+~attA = PatternProxy ( Pn(0.1, inf) );\
+~attASpec = ControlSpec(0.05, 2, \\lin);\
+\
+~decA = PatternProxy ( Pn(0.5, inf) );\
+~decASpec = ControlSpec(0.3, 1.5, \\lin);\
+\
+~susA = PatternProxy ( Pn(1, inf) );\
+~susASpec = ControlSpec(0.5, 2, \\lin);\
+\
+\
+~rlsA = PatternProxy ( Pn(1, inf) );\
+~rlsASpec = ControlSpec(0.4, 2, \\lin);\
+\
+~lvlA = PatternProxy ( Pn(0.8, inf) );\
+~lvlASpec = ControlSpec(0, 1, \\lin);\
+*/\cf0 \
+\
+\
+\
+\pard\pardeftab720\ql\qnatural
+\cf0 ~vol1 =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/volA'\cf0 , \{\'a0|t,r,m|\'a0\
+	~volA.source = (m[1]);	 \
+\}).add;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 \
+\pard\pardeftab720\ql\qnatural
+\cf0 ~dur1 =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/durA'\cf0 , \{\'a0|t,r,m|\'a0\
+	\
+	~durationA.source = (m[1]);	 \
+	\
+	\}).add;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 \
+\pard\pardeftab720\ql\qnatural
+\cf0 ~xy1 =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/xyA'\cf0 , \{\'a0|t,r,m|\'a0\
+	\cf2 var\cf0 \'a0n1, n2;\
+	n1\'a0= (m[1]);\
+	n2\'a0= (m[2]);\
+	\
+	~rateA.source = ~rateASpec.map(n1);\
+	~positionA.source = ~positionASpec.map(n2);\
+	 \
+	\}).add;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 \
+\pard\pardeftab720\ql\qnatural
+\cf0 ~randomA =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/randA'\cf0 , \{\'a0|t,r,m|\'a0\
+	\cf2 var\cf0  n1;\
+	n1\'a0= (m[1]);\
+	~randA.source = ~randASpec.map(n1);\
+	\}).add;\
+\pard\pardeftab720\ql\qnatural
+\cf5 /*\
+~envAatt =\'a0OSCresponderNode(nil,\'a0'/bufP/envA/1', \{\'a0|t,r,m|\'a0\
+	var n1;\
+	n1\'a0= (m[1]);\
+	~attA.source = ~attASpec.map(n1);\
+	\}).add;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf5 \
+\pard\pardeftab720\ql\qnatural
+\cf5 ~envAdec =\'a0OSCresponderNode(nil,\'a0'/bufP/envA/2', \{\'a0|t,r,m|\'a0\
+	var n1;\
+	n1\'a0= (m[1]);\
+	~decA.source = ~decASpec.map(n1);\
+	\}).add;\
+\
+~envAsus =\'a0OSCresponderNode(nil,\'a0'/bufP/envA/3', \{\'a0|t,r,m|\'a0\
+	var n1;\
+	n1\'a0= (m[1]);\
+	~susA.source = ~susASpec.map(n1);\
+	\}).add;\
+\
+~envArls =\'a0OSCresponderNode(nil,\'a0'/bufP/envA/4', \{\'a0|t,r,m|\'a0\
+	var n1;\
+	n1\'a0= (m[1]);\
+	~rlsA.source = ~rlsASpec.map(n1);\
+	\}).add;\
+\
+~envAlvl =\'a0OSCresponderNode(nil,\'a0'/bufP/envA/5', \{\'a0|t,r,m|\'a0\
+	var n1;\
+	n1\'a0= (m[1]);\
+	~lvlA.source = ~lvlASpec.map(n1);\
+	\}).add;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf5 \
+*/\cf0 \
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 ~pushA1 =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/push1A'\cf0 , \{\'a0|t,r,m|\'a0\
+\pard\pardeftab720\ql\qnatural
+\cf0 	[\
+	~pat1 = \cf2 Pdef\cf0 (\cf3 \\buf1\cf0 , \cf2 Pbind\cf0 (\
+\pard\pardeftab560\ql\qnatural
+\cf0 			\
+			\cf3 \\instrument\cf0 ,	\cf3 \\playBuf1\cf0 ,\
+			\cf3 \\vol\cf0 ,		~volA ,\
+			\cf3 \\amp\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiAmp], \cf2 inf\cf0 ),\
+			\cf3 \\dur\cf0 ,		\cf2 Pseq\cf0 ([ 0.7, 0.3, 0.5, 0.6, 1], \cf2 inf\cf0 )*~durationA,\
+			\cf3 \\startPos\cf0 ,	~positionA,\
+			\cf3 \\rate\cf0 ,		~rateA,\
+			\cf3 \\att\cf0 ,		~attA,\
+			\cf3 \\dec\cf0 ,		~decA,\
+			\cf3 \\sus\cf0 ,		~susA,\
+			\cf3 \\rls\cf0 ,		~rlsA,\
+			\cf3 \\lvl\cf0 ,		~lvlA,\
+			\cf3 \\pan\cf0 ,  		\cf2 Pseq\cf0 ([ 0], \cf2 inf\cf0 ),\
+			\cf3 \\bufnum\cf0 ,		 \cf2 Pseq\cf0 ([~bufA], \cf2 inf\cf0 )\
+	\
+		));\
+\pard\pardeftab720\ql\qnatural
+\cf0 	]\
+	\}).add;\
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 ~pushA2 =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/push2A'\cf0 , \{\'a0|t,r,m|\'a0\
+\pard\pardeftab720\ql\qnatural
+\cf0 	[\
+	~pat1 = \cf2 Pdef\cf0 (\cf3 \\buf1\cf0 , \cf2 Pbind\cf0 (\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\
+		\cf3 \\instrument\cf0 ,	\cf3 \\playBuf1\cf0 ,\
+		\cf3 \\amp\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiAmp]*2, \cf2 inf\cf0 ),\
+		\cf3 \\dur\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiDur]/2.sin/6, \cf2 inf\cf0 ),\
+		\cf3 \\legato\cf0 ,		\cf2 Pseq\cf0 ([ 10, 1, 0, 0, 1], \cf2 inf\cf0 )*8.abs.cos,\
+		\cf3 \\startPos\cf0 ,	~positionA.sin*2,\
+		\cf3 \\rate\cf0 ,		~rateA.sin,\
+		\cf3 \\sustain\cf0 ,		\cf2 Pseq\cf0 ([ 1.0, 0.5, 1.sin,2 ], \cf2 inf\cf0 ),\
+		\cf3 \\pan\cf0 ,  		\cf2 Prand\cf0 ([ 0, -0.9, -0.4, 0.2, 0.9], \cf2 inf\cf0 ),\
+		\cf3 \\bufnum\cf0 ,		 \cf2 Pseq\cf0 ([~bufA], \cf2 inf\cf0 )\
+	\
+	));\
+\pard\pardeftab720\ql\qnatural
+\cf0 	]\
+	\}).add;\
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 ~pushA3 =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/push3A'\cf0 , \{\'a0|t,r,m|\'a0\
+\pard\pardeftab720\ql\qnatural
+\cf0 	[\
+	~pat1 = \cf2 Pdef\cf0 (\cf3 \\buf1\cf0 , \cf2 Pbind\cf0 (\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\
+		\cf3 \\instrument\cf0 ,	\cf3 \\playBuf1\cf0 ,\
+		\cf3 \\amp\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiAmp]*2, \cf2 inf\cf0 ),\
+		\cf3 \\dur\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiDur]/2.sin/8, \cf2 inf\cf0 ),\
+		\cf3 \\legato\cf0 ,		\cf2 Pseq\cf0 ([ 10, 1, 0, 0, 1], \cf2 inf\cf0 )*8.abs,\
+		\cf3 \\startPos\cf0 ,	~positionA.sin,\
+		\cf3 \\rate\cf0 ,		~rateA.sin,\
+		\cf3 \\sustain\cf0 ,		\cf2 Pseq\cf0 ([ 1.0, 0.5, 1 ], \cf2 inf\cf0 ),\
+		\cf3 \\pan\cf0 ,  		\cf2 Prand\cf0 ([ 0, -0.9, -0.4, 0.2, 0.9], \cf2 inf\cf0 ),\
+		\cf3 \\bufnum\cf0 ,		 \cf2 Pseq\cf0 ([~bufA], \cf2 inf\cf0 )\
+	\
+	));\
+\pard\pardeftab720\ql\qnatural
+\cf0 	]\
+	\}).add;\
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 ~pushA4 =\'a0\cf2 OSCresponderNode\cf0 (\cf2 nil\cf0 ,\'a0\cf3 '/bufP/push4A'\cf0 , \{\'a0|t,r,m|\'a0\
+\pard\pardeftab720\ql\qnatural
+\cf0 	[\
+	~pat1 = \cf2 Pdef\cf0 (\cf3 \\buf1\cf0 , \cf2 Pbind\cf0 (\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\
+		\cf3 \\instrument\cf0 ,	\cf3 \\playBuf1\cf0 ,\
+		\cf3 \\amp\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiAmp]*2, \cf2 inf\cf0 ),\
+		\cf3 \\dur\cf0 ,		\cf2 Pseq\cf0 ([~turkAksagiDur]/2.sin/6, \cf2 inf\cf0 ),\
+		\cf3 \\legato\cf0 ,		\cf2 Pseq\cf0 ([ 10, 1, 0, 0, 1], \cf2 inf\cf0 )*8.abs.cos,\
+		\cf3 \\startPos\cf0 ,	~positionA.sin*2,\
+		\cf3 \\rate\cf0 ,		~rateA.sin,\
+		\cf3 \\sustain\cf0 ,		\cf2 Pseq\cf0 ([ 1.0, 0.5, 1.sin,2 ], \cf2 inf\cf0 ),\
+		\cf3 \\pan\cf0 ,  		\cf2 Prand\cf0 ([ 0, -0.9, -0.4, 0.2, 0.9], \cf2 inf\cf0 ),\
+		\cf3 \\bufnum\cf0 ,		 \cf2 Pseq\cf0 ([~bufA], \cf2 inf\cf0 )\
+	\
+	));\
+\pard\pardeftab720\ql\qnatural
+\cf0 	]\
+	\}).add;\
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\
+)}

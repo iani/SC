@@ -26,6 +26,7 @@ CodeOSC : WindowResource {
 		this.clearResponders;
 		code = Code(argDoc);
 		headers = code.headers;
+		code.headers.postln;
 		oscnames = headers collect: { | h | h.findRegexp("^//:([A-Za-z0-9_/]+)")[1]; };
 		oscnames do: this.makeResponder(_, _);
 		postf("OSC responders generated: %\n", responders collect: _.cmdName);
@@ -43,7 +44,9 @@ CodeOSC : WindowResource {
 		snippet = code.getSnippetStringAt(index + 1);
 		compiledSnippet = snippet.compile;
 		responders = responders add: OSCresponder(nil, name[1].asSymbol, { | time, addr, msg |
-			(msg: msg) use: { compiledSnippet.fork };
+			currentEnvironment[\msg] = msg;
+//			(msg: msg) use: { compiledSnippet.fork };
+			compiledSnippet.fork;
 			this.notify(\snippet, [msg.asString, snippet]);
 		}).add;
 	}
