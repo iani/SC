@@ -24,6 +24,7 @@ WindowResource : Resource {
 		object.onClose = {
 			this.remove;
 			object.releaseDependants;
+			object.objectClosed;
 			object = nil;	
 		};
 	}

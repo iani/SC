@@ -39,7 +39,7 @@ Resource {
 		^objects.leaves(this.mainKey);
 	}	// could also use objects.leaves.select({ | o | o.isKindOf ... }) ...
 
-	init { | makeFunc | object = makeFunc.value; }
+	init { | makeFunc | object = makeFunc.(this); }
 
 	// ====== removing objects ======
 

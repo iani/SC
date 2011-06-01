@@ -4,32 +4,45 @@ See Code, CodeButtons
 
 */
 
-CodeOSC : /*Window*/Resource {
-	var <code, <headers, <oscnames, <responders, <snippets, <historyview;
+CodeOSC : WindowResource {
+	var <code, <headers, <oscnames, <responders, <snippets;
 	*new { | doc |
 		doc = doc ?? { Document.current };
-		^super.new(doc.name, doc).initOSC;
+		^super.new(doc.name, { | cosc | this.makeWindow(cosc, doc) }).initOSC(doc);
 	}
 
-	initOSC {
-		code = Code(object);
-		code.doc.name.postln;
-		headers = code.headers;
-		oscnames = headers collect: { | h | h.findRegexp("[^/: ]+").first; };
-		responders = oscnames collect: this.makeResponder(_, _);
-		historyview = EZListView(bounds: Rect(0, 0, 300, 800),
-			label: "History: " ++ code.doc.name);
-		historyview.addNotifier(this, \snippet, { | msg, snippet |
+	*makeWindow { | self, doc |
+		var window, historyview;
+		window = Window("History: " ++ doc.name, Rect(0, 0, 300, 800));
+		historyview = EZListView(window.view, Rect(0, 0, 300, 800));
+		window.addNotifier(self, \snippet, { | msg, snippet |
+			"window codeOSC received snippet".postln;
 			{ historyview.addItem(msg.asString, { snippet.postln; }); }.defer;
 		});
-		postf("OSC responders generated: %\n", oscnames.flop[1]);
+		^window;
+	}
+
+	initOSC { | argDoc |
+		this.clearResponders;
+		code = Code(argDoc);
+		headers = code.headers;
+		oscnames = headers collect: { | h | h.findRegexp("^//:([A-Za-z0-9_/]+)")[1]; };
+		oscnames do: this.makeResponder(_, _);
+		postf("OSC responders generated: %\n", responders collect: _.cmdName);
+		object.front;
+	}
+
+	clearResponders {
+		responders do: _.remove;
+		responders = nil;	
 	}
 
 	makeResponder { | name, index |
 		var snippet, compiledSnippet;
+		if (name.isNil) { ^this };
 		snippet = code.getSnippetStringAt(index + 1);
 		compiledSnippet = snippet.compile;
-		^OSCresponder(nil, (name ? [nil, "---"])[1].asSymbol, { | time, addr, msg |
+		responders = responders add: OSCresponder(nil, name[1].asSymbol, { | time, addr, msg |
 			(msg: msg) use: { compiledSnippet.fork };
 			this.notify(\snippet, [msg.asString, snippet]);
 		}).add;
