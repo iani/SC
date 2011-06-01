@@ -1,6 +1,8 @@
 /* 
 Dispatcher of messages as well as model for an ObjectFrameworks application 
 
+OF./test("alpha",255)
+
 101203: Problem with SC 3.4
 SendArrayWithOSC
 */

@@ -1,0 +1,132 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf540
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue0;\red0\green0\blue191;
+\red96\green96\blue96;\red0\green0\blue191;\red96\green96\blue96;\red0\green115\blue0;\red0\green115\blue0;
+}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf2 /*\
+Prepering Aferesi performance\
+\
+Aris Bezas Wed, 01 June 2011, 23:24\
+*/\cf3 \
+\
+\cf2 //:mirrow effect\cf3 \
+\cf4 OF\cf3 .img(\cf5 "af2"\cf3 );\
+\cf4 OF\cf3 .int(\cf5 "yPosImage"\cf3 , 100)\
+\cf4 OF\cf3 .int(\cf5 "xPosImage"\cf3 , 100)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf6 OF\cf0 .int(\cf7 "wImg"\cf0 , 100 rrand: 500)\cf3 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf4 OF\cf3 .int(\cf5 "mirrorMode"\cf3 ,0);\
+\
+//:Play with width and height\
+k = \{\
+	inf.do	\{\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf6 	OF\cf0 .int(\cf7 "wImg"\cf0 , 100 rrand: 1500);\
+\cf6 	OF\cf0 .int(\cf7 "hImg"\cf0 , 100 rrand: 1500);	\cf3 		\
+	0.3.wait\
+	\}\
+	\
+\}.fork;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 //:Play with width and height\
+k = \{\
+	inf.do	\{ |i|\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf6 	OF\cf0 .int(\cf7 "wImg"\cf0 , i);\
+\cf6 	OF\cf0 .int(\cf7 "hImg"\cf0 , i);			\
+	0.3.wait\
+	\}\
+	\
+\}.fork;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 \
+\cf2 //:Precieve\cf3 \
+\cf4 Preceive\cf3 (\
+	\cf8 'af1'\cf3  -> \{\
+		\cf4 OF\cf3 .img(\cf5 "af1"\cf3 );\
+\pard\pardeftab560\ql\qnatural
+\cf3 		\},\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 	\cf8 'af2'\cf3  -> \{\
+		\cf4 OF\cf3 .img(\cf5 "af2"\cf3 );\
+\pard\pardeftab560\ql\qnatural
+\cf3 		\},\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf9 'af3'\cf0  -> \{\
+		\cf6 OF\cf0 .img(\cf7 "af3"\cf0 );\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\},\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf9 'af4'\cf0  -> \{\
+		\cf6 OF\cf0 .img(\cf7 "af4"\cf0 );\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\},\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf9 'af5'\cf0  -> \{\
+		\cf6 OF\cf0 .img(\cf7 "af5"\cf0 );\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\},\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf9 'af6'\cf0  -> \{\
+		\cf6 OF\cf0 .img(\cf7 "af6"\cf0 );\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\},\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 	\cf9 'af7'\cf0  -> \{\
+		\cf6 OF\cf0 .img(\cf7 "af7"\cf0 );\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\},\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 	\cf8 '2'\cf3  -> \{\
+\pard\pardeftab560\ql\qnatural
+\cf3 		~klk = \cf4 Synth\cf3 (\cf5 "over"\cf3 , [\
+			\cf8 \\atk\cf3 , 0.5,\
+			\cf8 \\sus\cf3 , 1,\
+			\cf8 \\rel\cf3 , 4,\
+			\cf8 \\pan\cf3 , 1.0.rand2,\
+			\cf8 \\freqs\cf3 ,  \{6000.0.linrand+80\}.dup(12),\
+			\cf8 \\rings\cf3 , \{0.1.rrand(3)\}.dup(12)\
+		]);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 		\}\
+).play;\
+\
+\
+\cf2 //:Play Pdef\cf3 \
+\cf4 Pdef\cf3 (\cf8 \\klank\cf3 ).play;	\
+\cf2 //:Duyek\cf3 \
+a = \cf4 Pdef\cf3 (\cf8 \\klank\cf3 , \cf4 Posc\cf3 (\
+		\cf8 \\msg\cf3 , \cf4 Pseq\cf3 ([\cf8 \\af1\cf3 , \cf8 \\af2, \\af3, \cf9 \\af4\cf0 , \cf9 \\af5, \\af6, \\af7\cf3 ], \cf4 inf\cf3 ),\
+		\cf8 \\dur\cf3 , \cf4 Pseq\cf3 ([~duyekDur]*0.1, \cf4 inf\cf3 ),\
+		\cf8 \\dest\cf3 ,  [\cf4 NetAddr\cf3 .localAddr, \cf4 NetAddr\cf3 (\cf5 "localhost"\cf3 , 12345)]\
+		)\
+	);\
+\cf2 //:duyekKudDur\cf3 \
+\cf4 Pdef\cf3 (\cf8 \\klank\cf3 , \cf4 Posc\cf3 (\
+		\cf8 \\msg\cf3 , \cf4 Pseq\cf3 ([\cf8 \\af1\cf3 , \cf8 \\af2\cf3 ], \cf4 inf\cf3 ),\
+		\cf8 \\dur\cf3 , \cf4 Pseq\cf3 ([~duyekKudDur]*0.5, \cf4 inf\cf3 ),\
+		\cf8 \\dest\cf3 ,  [\cf4 NetAddr\cf3 .localAddr, \cf4 NetAddr\cf3 (\cf5 "localhost"\cf3 , 12345)]\
+		)\
+	);\
+\
+\cf2 //:Posc with predefine TempoClock\cf3 \
+\cf4 Pdef\cf3 (\cf8 \\klank\cf3 , \cf4 Posc\cf3 (\
+		\cf8 \\msg\cf3 , \cf4 Pseq\cf3 ([\\1, \\2, \\3, \\4], \cf4 inf\cf3 ),\
+		\cf8 \\dur\cf3 , \cf4 Pseq\cf3 ([~duyekDur]*4, \cf4 inf\cf3 ),\
+		\cf8 \\dest\cf3 ,  [\cf4 NetAddr\cf3 .localAddr, \cf4 NetAddr\cf3 (\cf5 "localhost"\cf3 , 12345)]\
+		)\
+	).play(~clock1);\
+\cf2 //:Other\cf3 \
+\
+\cf4 Posc\cf3 .play(\
+	[0,1,2,3,4],\
+	\cf8 \\dur\cf3 , 2\
+	\
+);\
+\cf2 //:--\cf3 \
+\
+\
+}

@@ -1,6 +1,7 @@
 
 /*
 Globals.load;
+Globals.tempo;
 */
 
 Globals {
