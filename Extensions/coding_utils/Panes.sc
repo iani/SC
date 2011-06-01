@@ -10,19 +10,24 @@ Panes {
 	classvar <currentPositionAction;
 	classvar <>tryoutName = "tryout.scd";
 
+	*initClass { StartUp.add(this); }
+
+	*doOnStartUp {
+		this.addMenu;
+		Code.addMenu;
+		Dock.addMenu;
+		BufferResource.addMenu;
+	}
+
 	*start { this.activate } // synonym
 	*activate {
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
 			NotificationCenter.notify(this, \docOpened, doc);  
 		};
-		this.addMenu;
-		Code.addMenu;
-		Dock.addMenu;
-		BufferResource.addMenu;
 		Document.allDocuments do: this.setDocActions(_);
-//		this.arrange1Pane;
-		this.arrange2Panes;
+		this.arrange1Pane;
+//		this.arrange2Panes;
 		Dock.showDocListWindow;
 		// confuses post and Untitled windows if not deferred on startup:
 		{ this.openTryoutWindow; }.defer(0.5); 
@@ -32,13 +37,16 @@ Panes {
 	*deactivate {
 		NotificationCenter.unregister(this, \docOpened, this);
 		Document.initAction = { | doc | doc.front; };
-		this.removeMenu;
-		Code.removeMenu;
-		Dock.removeMenu.closeDocListWindow;
-		BufferResource.removeMenu;
+//		this.removeMenu;
+//		Code.removeMenu;
+//		Dock.removeMenu.closeDocListWindow;
+//		BufferResource.removeMenu;
 	}
 
 	*menuItems { ^[
+			CocoaMenuItem.addToMenu("Utils", "activate pane placement", nil, {
+				this.activate;
+			}),
 			CocoaMenuItem.addToMenu("Utils", "single-pane doc arrangement", ["<", false, false], {
 				this.doRestoreTop({ this.arrange1Pane; });
 			}),

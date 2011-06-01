@@ -166,7 +166,6 @@ Code {
 		this.findSnippets;
 		start = nextsnippetstart;
 		length = nextsnippetend - nextsnippetstart;
-//		string[nextsnippetstart..nextsnippetend].postln;
 		doc.selectRange(start, length);
 	}
 
@@ -175,7 +174,6 @@ Code {
 		this.findSnippets;
 		start = prevsnippetstart;
 		length = prevsnippetend - prevsnippetstart;
-//		string[prevsnippetstart..prevsnippetend].postln;
 		doc.selectRange(start, length);
 	}
 	

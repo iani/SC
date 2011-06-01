@@ -57,8 +57,8 @@ DocThemes {
 		// also add background color and post color:
 		Document.themes[\pinkString][\background] = Color(0.1, 0.1, 0.1, 1);
 		Document.themes[\pinkString][\postColor] = Color(0.6, 0.6, 0.6);
-		Document.themes[\default][\background] = Color.white;
-		Document.themes[\default][\postColor] =Color.black;
-		defaultCustomTheme = \pinkString;
+//		Document.themes[\default][\background] = Color.white;
+//		Document.themes[\default][\postColor] = Color.black;
+//		defaultCustomTheme = \pinkString;
 	}
 }

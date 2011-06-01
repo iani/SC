@@ -46,7 +46,7 @@ Dock {
 	*showDocListWindow {
 		var listwin;
 		listwin = ListWindow('Documents', 
-			Rect(Window.screenBounds.width - width, 0, width, Window.screenBounds.height), 
+			Rect(Window.screenBounds.width - width, 85, width, Window.screenBounds.height - 85), 
 			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
 				d.name->{
 					d.front; 
