@@ -26,7 +26,6 @@ CodeOSC : WindowResource {
 		this.clearResponders;
 		code = Code(argDoc);
 		headers = code.headers;
-		code.headers.postln;
 		oscnames = headers collect: { | h | h.findRegexp("^//:([A-Za-z0-9_/]+)")[1]; };
 		oscnames do: this.makeResponder(_, _);
 		postf("OSC responders generated: %\n", responders collect: _.cmdName);
