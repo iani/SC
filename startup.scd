@@ -60,12 +60,12 @@ SpectroTouchOSC.makeResponders;
 MySynths.sendToServer;
 //: My Buffers
 //MyBuffers.osmoFull;
-MyBuffers.seals;
+//MyBuffers.seals;
 //MyBuffers.sketch;
-BufferResource.postNames;
+//BufferResource.postNames;
 //:SendSpectrogramData
-//SendSpectrogramData.new;v
+//SendSpectrogramData.new;
 //SendSpectrogramData('fft').free;
-s.boot;
+//s.boot;
 
 

@@ -25,7 +25,7 @@ void testApp::setup(){
 	
 	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
 	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
-	iv["mirrorMode"] = 4;
+	iv["mirrorMode"] = 0;
 	fv["spectroRed"] = fv["spectroGreen"] = fv["spectroBlue"] = 1;
 }
 
