@@ -68,5 +68,4 @@ Resource {
 	stop { object.stop; this.remove; }
 	free { object.free; this.remove; }
 	release { | fadeout = 0.2 | object.release(fadeout); this.remove; }
-
 }

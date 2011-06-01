@@ -4,14 +4,15 @@ See Code, CodeButtons
 
 */
 
-CodeOSC {
-	var <doc, <code, <headers, <oscnames, <responders, <snippets, <historyview;
+CodeOSC : /*Window*/Resource {
+	var <code, <headers, <oscnames, <responders, <snippets, <historyview;
 	*new { | doc |
 		doc = doc ?? { Document.current };
-		^this.newCopyArgs(doc, Code(doc)).init;
+		^super.new(doc.name, doc).initOSC;
 	}
 
-	init {
+	initOSC {
+		code = Code(object);
 		code.doc.name.postln;
 		headers = code.headers;
 		oscnames = headers collect: { | h | h.findRegexp("[^/: ]+").first; };
@@ -23,8 +24,7 @@ CodeOSC {
 		});
 		postf("OSC responders generated: %\n", oscnames.flop[1]);
 	}
-	
-	
+
 	makeResponder { | name, index |
 		var snippet, compiledSnippet;
 		snippet = code.getSnippetStringAt(index + 1);
