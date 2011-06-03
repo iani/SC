@@ -7,15 +7,19 @@
 
 */
 
-Bummer : Buffer {
+	Bummer : Buffer {
 	
 	var <>bout = 0, <>batt = 0.1, <>bsus = 2.0, <>brls = 2.5, <>bmul = 1.0, <>bloop = true;
 	var <>btrig = 0, <>brate = 1.0, <>bstart = 0, <>bend = 1, <>breset = 0, <>bpan = 0;
 
 	play { arg loop = false;
 		^{ var player;
-			player = PlayBuf.ar(numChannels,bufnum,BufRateScale.kr(bufnum),
-				loop: loop.binaryValue);
+			player = PlayBuf.ar(
+				numChannels,
+				bufnum,
+				BufRateScale.kr(bufnum),
+				loop: loop.binaryValue
+			);
 			loop.not.if(FreeSelfWhenDone.kr(player));
 			player * bmul;
 		}.play(Server.default);
@@ -52,7 +56,11 @@ Bummer : Buffer {
 		
 		^{ var player, panlayer, env;
 			
-			env =  EnvGen.ar(Env.new([0, 1, 0.8,  0], [batt, bsus, brls], 'linear', releaseNode: nil), 1, doneAction: 2);
+			env =  EnvGen.ar(
+				Env.new([0, 1, 0.8,  0], [batt, bsus, brls], 'linear', releaseNode: nil), 
+				1, 
+				doneAction: 2
+			);
 			player = BufRd.ar(
 						numChannels,
 						bufnum, 

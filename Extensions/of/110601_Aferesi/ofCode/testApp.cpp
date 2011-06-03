@@ -20,20 +20,21 @@ void testApp::setup(){
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
 
 	{
-		af1.loadImage("/Users/fou/images/aferesi/af1.png");
-		af2.loadImage("/Users/fou/images/aferesi/af2.png");		
-		af3.loadImage("/Users/fou/images/aferesi/af3.png");				
-		af4.loadImage("/Users/fou/images/aferesi/af4.png");				
-		af5.loadImage("/Users/fou/images/aferesi/af5.png");				
-		af6.loadImage("/Users/fou/images/aferesi/af6.png");				
-		af7.loadImage("/Users/fou/images/aferesi/af7.png");												
+		af1.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af1.png");
+		af2.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af2.png");		
+		af3.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af3.png");				
+		af4.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af4.png");				
+		af5.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af5.png");				
+		af6.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af6.png");				
+		af7.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af7.png");												
 	}	//load DATA
-	// listen on the given port
+	
+    // listen on the given port
 	cout << "listening for osc messages on port " << PORT << "\n";
 	receiver.setup( PORT );
-
-	current_msg_string = 0;
-	{
+    current_msg_string = 0;
+	
+    {
 	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
 	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
 	iv["mirrorMode"] = 0;
@@ -73,10 +74,15 @@ void testApp::update(){
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // GL_SRC_ALPHA_SATURATE,GL_ONE     GL_SRC_ALPHA, GL_ONE
 			//glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
 			ofFill();
-			ofSetColor(0xFFFFFF);				
-			if	(m.getArgAsString( 0 ) == "af1")	{		
-				//af1.draw(ofGetWidth()/2 - af1.width/2, ofGetHeight()/2 - af1.height/2);	
-				af1.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
+			//ofSetColor(0xFFFFFF);				
+            ofSetColor(255,255,255,100);				
+			
+            if	(m.getArgAsString( 0 ) == "af1")	{		
+				iv["xPosImg"] = m.getArgAsInt32(1);
+				iv["yPosImg"] = m.getArgAsInt32(2);
+				iv["wImg"] = m.getArgAsInt32(3);
+                iv["hImg"] = m.getArgAsInt32(4);
+                af1.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
 			}	else	if (m.getArgAsString( 0 ) == "af2")	{
 
 				//af2.draw(ofGetWidth()/2 - af2.width/2, ofGetHeight()/2 - af2.height/2);	
@@ -154,7 +160,7 @@ void testApp::draw(){
 			
 			break;
 		 default:
-			printf("%d", fv["mirrorMode"]);
+			printf("%d", iv["mirrorMode"]);
 	  }
 }
 
