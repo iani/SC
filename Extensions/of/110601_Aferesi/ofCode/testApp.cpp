@@ -20,13 +20,14 @@ void testApp::setup(){
 	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
 
 	{
-		af1.loadImage("/Users/fou/images/aferesi/af1.png");
-		af2.loadImage("/Users/fou/images/aferesi/af2.png");		
-		af3.loadImage("/Users/fou/images/aferesi/af3.png");				
-		af4.loadImage("/Users/fou/images/aferesi/af4.png");				
-		af5.loadImage("/Users/fou/images/aferesi/af5.png");				
-		af6.loadImage("/Users/fou/images/aferesi/af6.png");				
-		af7.loadImage("/Users/fou/images/aferesi/af7.png");												
+		af0.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af0.png");
+		af1.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af1.png");
+		af2.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af2.png");
+		af3.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af3.png");
+		af4.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af4.png");
+		af5.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af5.png");
+		af6.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af6.png");
+		af7.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af7.png");												
 	}	//load DATA
 	// listen on the given port
 	cout << "listening for osc messages on port " << PORT << "\n";
@@ -39,10 +40,10 @@ void testApp::setup(){
 	iv["mirrorMode"] = 0;
 	fv["spectroRed"] = fv["spectroGreen"] = fv["spectroBlue"] = 1;
 	
-	iv["xPosImg"] = ofGetWidth()/2 - af1.width/2;
-	iv["yPosImg"] = ofGetHeight()/2 - af1.height/2;
+	fv["xPosImg"] = ofGetWidth()/2 - af1.width/2;
+	fv["yPosImg"] = ofGetHeight()/2 - af1.height/2;
 	
-	iv["wImg"] = af1.width; iv["hImg"] = af1.height;
+	fv["wImg"] = af1.width; fv["hImg"] = af1.height;
 	}	//Initial value
 }
 
@@ -70,48 +71,13 @@ void testApp::update(){
 			fv[m.getArgAsString(0)] = m.getArgAsFloat(1);			
 		}
 		if ( m.getAddress() == "img" )	{
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // GL_SRC_ALPHA_SATURATE,GL_ONE     GL_SRC_ALPHA, GL_ONE
-			//glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
-			ofFill();
-			ofSetColor(0xFFFFFF);				
-			if	(m.getArgAsString( 0 ) == "af1")	{		
-				//af1.draw(ofGetWidth()/2 - af1.width/2, ofGetHeight()/2 - af1.height/2);	
-				af1.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-			}	else	if (m.getArgAsString( 0 ) == "af2")	{
-
-				//af2.draw(ofGetWidth()/2 - af2.width/2, ofGetHeight()/2 - af2.height/2);	
-				af2.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-
-			}	else	if (m.getArgAsString( 0 ) == "af3")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af3.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af4")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af4.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af5")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af5.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af6")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af6.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af7")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af7.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}
-
-			//cout << "ok" << endl;
-		}
+			printFoto(int(m.getArgAsFloat(0)), m.getArgAsFloat(1), m.getArgAsFloat(2),m.getArgAsFloat(3),m.getArgAsFloat(4));			
+		}				
 	}
 }
 //--------------------------------------------------------------
 void testApp::draw(){
-	switch ( iv["mirrorMode"] )
-	  {
+	switch ( iv["mirrorMode"] )	{
 		case 0:
 		break;
 		 case 1:
@@ -155,7 +121,7 @@ void testApp::draw(){
 			break;
 		 default:
 			printf("%d", fv["mirrorMode"]);
-	  }
+		}	// mirrowMode
 }
 
 void testApp::keyPressed  (int key){
@@ -180,27 +146,23 @@ void testApp::keyPressed  (int key){
 	}	
 }
 
-void testApp::keyReleased(int key){
-
-}
-
-void testApp::mouseMoved(int x, int y ){
-
-}
-
-void testApp::mouseDragged(int x, int y, int button){
-
-}
-
-void testApp::mousePressed(int x, int y, int button){
-
-}
-
-void testApp::mouseReleased(int x, int y, int button){
-
-}
-
-void testApp::resized(int w, int h){
-
+void testApp::printFoto(int photoID, float xPosImg, float yPosImg, float wImg, float hImg)	{
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // GL_SRC_ALPHA_SATURATE,GL_ONE     GL_SRC_ALPHA, GL_ONE
+	ofFill();
+	ofSetColor(0xFFFFFF);				
+	fv["xPosImg"] = xPosImg;
+	fv["yPosImg"] = yPosImg;
+	fv["wImg"] = wImg;
+	fv["hImg"] = hImg;			
+	switch ( photoID )	{
+		case 0:	af0.draw(fv["xPosImg"],fv["yPosImg"], fv["wImg"], fv["hImg"]);	break;
+		case 1:	af1.draw(fv["xPosImg"],fv["yPosImg"], fv["wImg"], fv["hImg"]);	break;
+		case 2:	af2.draw(fv["xPosImg"],fv["yPosImg"], fv["wImg"], fv["hImg"]);	break;
+		case 3:	af3.draw(fv["xPosImg"],fv["yPosImg"], fv["wImg"], fv["hImg"]);	break;
+		case 4:	af4.draw(fv["xPosImg"],fv["yPosImg"], fv["wImg"], fv["hImg"]);	break;
+		case 5:	af5.draw(fv["xPosImg"],fv["yPosImg"], fv["wImg"], fv["hImg"]);	break;
+		case 6:	af6.draw(fv["xPosImg"],fv["yPosImg"], fv["wImg"], fv["hImg"]);	break;
+		//default: //printf("No foto found\n");
+	}
 }
 

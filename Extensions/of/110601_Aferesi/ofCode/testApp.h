@@ -27,12 +27,7 @@ class testApp : public ofBaseApp{
 		void draw();
 
 		void keyPressed  (int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void resized(int w, int h);
+		void printFoto(int photoID, float xPosImg, float yPosImg, float wImg, float hImg);
 		
 		ofxCvGrayscaleImage cvGray;
 		ofx3DModelLoader modelLoader;
@@ -46,7 +41,7 @@ class testApp : public ofBaseApp{
 		
 		ofTexture		texScreen;
 		
-		ofImage af1, af2, af3,af4,af5,af6,af7;
+		ofImage af0, af1, af2, af3,af4,af5,af6,af7;
 		
 		ofTrueTypeFont		font;
 		
