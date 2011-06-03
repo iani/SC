@@ -2,20 +2,13 @@
 #define _TEST_APP
 
 #include "ofMain.h"
-
-#include "ofx3DModelLoader.h"
-#include "ofxDirList.h"
-#include "ofxNetwork.h"
-#include "ofxOpenCv.h"
+#include "ofSketch.h"
 #include "ofxOsc.h"
-#include "ofxThread.h"
-#include "ofxVectorGraphics.h"
-#include "ofxVectorMath.h"
-#include "ofxXmlSettings.h"
 
 // listen on port 12345
 #define PORT 12345
 #define NUM_MSG_STRINGS 20
+#define MAX_SKETCHES 100
 
 class testApp : public ofBaseApp{
 
@@ -27,23 +20,16 @@ class testApp : public ofBaseApp{
 		void draw();
 
 		void keyPressed  (int key);
+		void mouseDragged(int x, int y, int button);
+		void mousePressed(int x, int y, int button);
+		void mouseReleased(int x, int y, int button);		
 		void printFoto(int photoID, float xPosImg, float yPosImg, float wImg, float hImg);
 		
-		ofxCvGrayscaleImage cvGray;
-		ofx3DModelLoader modelLoader;
-		ofxDirList dirList;
-		ofxVec2f p;
-		ofxTCPClient client;
-		ofxTCPServer server;
-		ofxOscSender osc_sender;
-		ofxThread thread;
-		ofxXmlSettings settings;
-		
+		ofxOscSender	osc_sender;		
 		ofTexture		texScreen;
-		
-		ofImage af0, af1, af2, af3,af4,af5,af6,af7;
-		
-		ofTrueTypeFont		font;
+		ofImage			af0, af1, af2, af3,af4,af5,af6,af7;		
+		ofTrueTypeFont	font;
+		ofSketch		sketch[MAX_SKETCHES];
 		
 		map<string, int> iv;
 		map<string, float> fv;		

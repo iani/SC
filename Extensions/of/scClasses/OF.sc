@@ -27,7 +27,7 @@ OF {
 	*doesNotUnderstand { | message ... args |
 		if (default.isNil) { default = this.new };
 		//format("here I will send message % with args %", message, args).postln;
-		format("OF.%%", message, args).postln;
+		//format("OF.%%", message, args).postln;
 		default.send(message.asString, args);
 		
 	}

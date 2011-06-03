@@ -8,17 +8,19 @@ testApp::testApp(){
 
 //--------------------------------------------------------------
 void testApp::setup(){
-	//ofSetFullscreen(true);
-	
-	ofSetBackgroundAuto(false);
-	ofEnableSmoothing();
-	ofEnableAlphaBlending();
-	ofBackground(0,0,0);
-	ofSetFrameRate(60);
-	ofSetWindowTitle("Aferesi");
-	
-	texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
-
+	{
+		//ofSetFullscreen(true);
+		
+		ofSetBackgroundAuto(false);
+		ofEnableSmoothing();
+		ofEnableAlphaBlending();
+		ofBackground(0,0,0);
+		ofSetFrameRate(60);
+		ofSetWindowTitle("reAfesi");
+	}	//Screen
+	{
+		texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
+	}	//Texture
 	{
 		af0.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af0.png");
 		af1.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af1.png");
@@ -29,11 +31,16 @@ void testApp::setup(){
 		af6.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af6.png");
 		af7.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af7.png");												
 	}	//load DATA
-	// listen on the given port
-	cout << "listening for osc messages on port " << PORT << "\n";
-	receiver.setup( PORT );
-
-	current_msg_string = 0;
+	{
+		cout << "listening for osc messages on port " << PORT << "\n";
+		receiver.setup( PORT );
+		current_msg_string = 0;
+	}	//OSC
+	{		
+		for (int i = 0; i < MAX_SKETCHES; i++){
+			sketch[i].init(ofRandom(0.01, 0.99), ofRandom(0.01, 0.99));
+		}
+	}	//sketch
 	{
 	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
 	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
@@ -49,7 +56,7 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-	// hide old messages
+	{
 	for ( int i=0; i<NUM_MSG_STRINGS; i++ )
 	{
 		if ( timers[i] < ofGetElapsedTimef() )
@@ -74,6 +81,7 @@ void testApp::update(){
 			printFoto(int(m.getArgAsFloat(0)), m.getArgAsFloat(1), m.getArgAsFloat(2),m.getArgAsFloat(3),m.getArgAsFloat(4));			
 		}				
 	}
+	}	//OSC
 }
 //--------------------------------------------------------------
 void testApp::draw(){
@@ -122,6 +130,11 @@ void testApp::draw(){
 		 default:
 			printf("%d", fv["mirrorMode"]);
 		}	// mirrowMode
+		
+	for( int i=0; i<100; i++ ) {
+		sketch[i].draw(mouseX, mouseY, 0, 255,255,255,50, 1);	
+	}		
+	
 }
 
 void testApp::keyPressed  (int key){
@@ -145,6 +158,11 @@ void testApp::keyPressed  (int key){
 		}		
 	}	
 }
+void testApp::mouseDragged(int x, int y, int button){}
+void testApp::mousePressed(int x, int y, int button)	{
+
+}
+void testApp::mouseReleased(int x, int y, int button){}
 
 void testApp::printFoto(int photoID, float xPosImg, float yPosImg, float wImg, float hImg)	{
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // GL_SRC_ALPHA_SATURATE,GL_ONE     GL_SRC_ALPHA, GL_ONE
