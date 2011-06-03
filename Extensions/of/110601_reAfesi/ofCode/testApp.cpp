@@ -9,7 +9,6 @@ testApp::testApp(){
 //--------------------------------------------------------------
 void testApp::setup(){
 	{
-<<<<<<< HEAD:Extensions/of/110601_reAfesi/ofCode/testApp.cpp
 		//ofSetFullscreen(true);
 		
 		ofSetBackgroundAuto(false);
@@ -21,6 +20,7 @@ void testApp::setup(){
 	}	//Screen
 	{
 		texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
+		grayImage.allocate(50,50);
 	}	//Texture
 	{
 		af0.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af0.png");
@@ -43,23 +43,6 @@ void testApp::setup(){
 		}
 	}	//sketch
 	{
-=======
-		af1.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af1.png");
-		af2.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af2.png");		
-		af3.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af3.png");				
-		af4.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af4.png");				
-		af5.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af5.png");				
-		af6.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af6.png");				
-		af7.loadImage("/Users/omerchatziserif/Dropbox/Aris-Omer/AferesiDB/images/af7.png");												
-	}	//load DATA
-	
-    // listen on the given port
-	cout << "listening for osc messages on port " << PORT << "\n";
-	receiver.setup( PORT );
-    current_msg_string = 0;
-	
-    {
->>>>>>> 2ada020e583feed83ee3fabaf5fbc089cda9a62c:Extensions/of/110601_Aferesi/ofCode/testApp.cpp
 	iv["textureRed"] = iv["textureGreen"] = iv["textureBlue"] = iv["textureAlpha"] = 255;
 	iv["reverseEllipse"] = ofGetWidth();	iv["reverseTexture"] = -1;
 	iv["mirrorMode"] = 0;
@@ -96,52 +79,8 @@ void testApp::update(){
 			fv[m.getArgAsString(0)] = m.getArgAsFloat(1);			
 		}
 		if ( m.getAddress() == "img" )	{
-<<<<<<< HEAD:Extensions/of/110601_reAfesi/ofCode/testApp.cpp
 			printFoto(int(m.getArgAsFloat(0)), m.getArgAsFloat(1), m.getArgAsFloat(2),m.getArgAsFloat(3),m.getArgAsFloat(4));			
 		}				
-=======
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // GL_SRC_ALPHA_SATURATE,GL_ONE     GL_SRC_ALPHA, GL_ONE
-			//glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
-			ofFill();
-			//ofSetColor(0xFFFFFF);				
-            ofSetColor(255,255,255,100);				
-			
-            if	(m.getArgAsString( 0 ) == "af1")	{		
-				iv["xPosImg"] = m.getArgAsInt32(1);
-				iv["yPosImg"] = m.getArgAsInt32(2);
-				iv["wImg"] = m.getArgAsInt32(3);
-                iv["hImg"] = m.getArgAsInt32(4);
-                af1.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-			}	else	if (m.getArgAsString( 0 ) == "af2")	{
-
-				//af2.draw(ofGetWidth()/2 - af2.width/2, ofGetHeight()/2 - af2.height/2);	
-				af2.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-
-			}	else	if (m.getArgAsString( 0 ) == "af3")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af3.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af4")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af4.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af5")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af5.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af6")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af6.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}	else	if (m.getArgAsString( 0 ) == "af7")	{
-				//af3.draw(ofGetWidth()/2 - af3.width/2, ofGetHeight()/2 - af3.height/2);	
-				af7.draw(iv["xPosImg"],iv["yPosImg"], iv["wImg"], iv["hImg"]);					
-				
-			}
-
-			//cout << "ok" << endl;
-		}
->>>>>>> 2ada020e583feed83ee3fabaf5fbc089cda9a62c:Extensions/of/110601_Aferesi/ofCode/testApp.cpp
 	}
 	}	//OSC
 }
@@ -190,18 +129,10 @@ void testApp::draw(){
 			
 			break;
 		 default:
-<<<<<<< HEAD:Extensions/of/110601_reAfesi/ofCode/testApp.cpp
 			printf("%d", fv["mirrorMode"]);
 		}	// mirrowMode
 		
-	for( int i=0; i<100; i++ ) {
-		sketch[i].draw(mouseX, mouseY, 0, 255,255,255,50, 1);	
-	}		
 	
-=======
-			printf("%d", iv["mirrorMode"]);
-	  }
->>>>>>> 2ada020e583feed83ee3fabaf5fbc089cda9a62c:Extensions/of/110601_Aferesi/ofCode/testApp.cpp
 }
 
 void testApp::keyPressed  (int key){
@@ -225,8 +156,23 @@ void testApp::keyPressed  (int key){
 		}		
 	}	
 }
-void testApp::mouseDragged(int x, int y, int button){}
+void testApp::mouseDragged(int x, int y, int button){
+	unsigned char * pixels = grayImage.getPixels();
+	for (int i = 0; i < grayImage.height; i+=1){
+		for (int j = 0; j < grayImage.width; j+=1){		
+			int red 	= pixels[(i * grayImage.width) + j * 1];
+			ofSetColor(red,red,red,255);//,green,blue);					
+		}
+	}
+
+
+	for( int i=0; i<100; i++ ) {
+
+		sketch[i].draw(mouseX, mouseY, 0, 255,255,255,50, 1);	
+	}		
+}
 void testApp::mousePressed(int x, int y, int button)	{
+
 
 }
 void testApp::mouseReleased(int x, int y, int button){}

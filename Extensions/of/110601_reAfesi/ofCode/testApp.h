@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "ofSketch.h"
 #include "ofxOsc.h"
+#include "ofxOpenCv.h"
 
 // listen on port 12345
 #define PORT 12345
@@ -27,9 +28,10 @@ class testApp : public ofBaseApp{
 		
 		ofxOscSender	osc_sender;		
 		ofTexture		texScreen;
-		ofImage			af0, af1, af2, af3,af4,af5,af6,af7;		
+		ofImage			af0, af1, af2, af3,af4,af5,af6,af7, screen;		
 		ofTrueTypeFont	font;
 		ofSketch		sketch[MAX_SKETCHES];
+		ofxCvGrayscaleImage 	grayImage;
 		
 		map<string, int> iv;
 		map<string, float> fv;		
