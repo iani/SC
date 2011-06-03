@@ -161,12 +161,16 @@ void testApp::mouseDragged(int x, int y, int button){
 	for (int i = 0; i < grayImage.height; i+=1){
 		for (int j = 0; j < grayImage.width; j+=1){		
 			int red 	= pixels[(i * grayImage.width) + j * 1];
-			ofSetColor(red,red,red,255);//,green,blue);					
+			int green 	= pixels[(i * grayImage.width) + j * 2];
+			int blue 	= pixels[(i * grayImage.width) + j * 3];			
+			ofSetColor(red,green,blue,255);//,green,blue);	
+			//printf("%d\n", red);	
+						
 		}
 	}
 
 
-	for( int i=0; i<100; i++ ) {
+	for( int i=0; i<10; i++ ) {
 
 		sketch[i].draw(mouseX, mouseY, 0, 255,255,255,50, 1);	
 	}		
