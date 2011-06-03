@@ -1,23 +1,144 @@
 
 
-Bummer : Buffer {
+/*
+~int1 = Bummer.read(s, "sounds/_Evfer/int01.aif");
+
+~int1.brate_(-1).play0(0.001, 0.5, 0.1);
+
+*/
+
+	Bummer : Buffer {
 	
-	var <>out = 0, <>att = 0.1, <>sus = 2.0, <>rls = 3.9, <>mul = 1;
-	var <>trig = 0, <>rate = 1, <>start = 0, <>end = 1, <>reset = 0, <>pan = 0;
+	var <>bout = 0, <>batt = 0.1, <>bsus = 2.0, <>brls = 2.5, <>bmul = 1.0, <>bloop = true;
+	var <>btrig = 0, <>brate = 1.0, <>bstart = 0, <>bend = 1, <>breset = 0, <>bpan = 0;
 
 	play { arg loop = false;
 		^{ var player;
-			player = PlayBuf.ar(numChannels,bufnum,BufRateScale.kr(bufnum),
-				loop: loop.binaryValue);
+			player = PlayBuf.ar(
+				numChannels,
+				bufnum,
+				BufRateScale.kr(bufnum),
+				loop: loop.binaryValue
+			);
 			loop.not.if(FreeSelfWhenDone.kr(player));
-			player * mul;
+			player * bmul;
 		}.play(Server.default);
 	}
 
-	play0 { arg loop = true;
+	play0 { arg  att, sus, rls, mul, trig, rate, start, end, reset, loop, pan, out;
+
+/*		if (att.notNil) { batt = att };
+		if (sus.notNil) { bsus = sus };
+		if (rls.notNil) { brls = rls };
+		if (mul.notNil) { bmul = mul };
+		if (trig.notNil) { btrig = trig };
+		if (rate.notNil) { brate = rate };
+		if (end.notNil) { bend = end };
+		if (reset.notNil) { breset = reset };
+		if (pan.notNil) { bpan = pan };
+		if (out.notNil) { bout = out };
+		if (loop.notNil) { bloop = loop };
+*/		
+		//SHORTCUTS
+
+		batt = att ? batt;
+		bsus = sus ? bsus;
+		brls = rls ? brls;
+		bmul = mul ? bmul;
+		btrig = trig ? btrig;
+		brate = rate ? brate;
+		bstart = start ? bstart;
+		bend = end ? bend;
+		breset = reset ? breset;
+		bpan = pan ? bpan;
+		bout = out ? bout;
+		bloop = loop ? bloop;
+		
 		^{ var player, panlayer, env;
 			
-			env =  EnvGen.ar(Env.new([0, 1, 0.8,  0], [att, sus, rls], 'linear', releaseNode: nil), 1, doneAction: 2);
+			env =  EnvGen.ar(
+				Env.new([0, 1, 0.8,  0], [batt, bsus, brls], 'linear', releaseNode: nil), 
+				1, 
+				doneAction: 2
+			);
+			player = BufRd.ar(
+						numChannels,
+						bufnum, 
+						Phasor.ar(
+							btrig, 
+							BufRateScale.kr(bufnum) * brate, 
+							BufFrames.kr(bufnum) * bstart, 
+							BufFrames.kr(bufnum) * bend, 
+							BufFrames.kr(bufnum) * breset
+						),
+						loop: bloop.binaryValue
+					);
+			panlayer = Pan2.ar(player, bpan);
+			Out.ar(bout, panlayer * bmul *env);
+		}.play(Server.default);
+	}
+
+
+
+
+/*
+	play0 { arg  att, sus, rls, mul, trig, rate, start, end, reset, loop, pan, out;
+		
+		//if (att.notNil) { batt = att }; ->
+		// SHORTCUT: 
+		
+		batt = att ? batt;
+		bsus = sus ? bsus;
+		brls = rls ? brls;
+		bmul = mul ? bmul;
+		btrig = trig ? btrig;
+		brate = rate ? brate;
+		bstart = start ? bstart;
+		bend = end ? bend;
+		breset = reset ? breset;
+		bpan = pan ? bpan;
+		bout = out ? bout;
+		bloop = loop ? bloop;
+		
+		^{ var player, panlayer, env;
+			
+			env =  EnvGen.ar(Env.new([0, 1, 0.8,  0], [batt, bsus, brls], 'linear', releaseNode: nil), 1, doneAction: 2);
+			player = BufRd.ar(
+						numChannels,
+						bufnum, 
+						Phasor.ar(
+							btrig, 
+							BufRateScale.kr(bufnum) * brate, 
+							bstart * BufFrames.kr(bufnum), 
+							BufFrames.kr(bufnum) * bend, 
+							BufFrames.kr(bufnum) * breset
+						),
+						loop: bloop
+					);
+			loop.not.if(FreeSelfWhenDone.kr(player));
+			panlayer = Pan4.ar(player, FSinOsc.kr(bpan), FSinOsc.kr(pan), 0.3);
+			Out.ar(bout, panlayer * bmul *env);
+		}.play(Server.default);
+	}
+*/
+
+/*	play0 { arg  att = 0.1, sus = 2.0, rls = 3.9, mul = 1, trig = 0, rate = 1, start = 0, end = 1, reset = 0, loop = true, pan = 0, out = 0 ;
+		
+		batt = att;
+		bsus = sus;
+		brls = rls;
+		bmul = mul;
+		btrig = trig;
+		brate = rate;
+		bstart = start;
+		bend = end;
+		breset = reset;
+		bpan = pan;
+		bout = out;
+		
+		^{ var player, panlayer, env;
+			
+			env =  EnvGen.ar(Env.new([0, 1, 0.8,  0], [batt, bsus, brls], 'linear', releaseNode: nil), 1, doneAction: 2);
 			player = BufRd.ar(
 						numChannels,
 						bufnum, 
@@ -34,8 +155,8 @@ Bummer : Buffer {
 			panlayer =Pan4.ar(player, FSinOsc.kr(pan), FSinOsc.kr(pan), 0.3);
 			Out.ar(out, panlayer * mul *env);
 		}.play(Server.default);
-	}
-
+	}*/
+/*
 	playUp { arg loop = true;
 		^{ var player, panlayer, env;
 			
@@ -103,7 +224,7 @@ Bummer : Buffer {
 	}
 
 
-
+*/
 /*
 ~ats1 = Bummer.read(s, "sounds/_Evfer/ates01.aif");
 ~ats2 = Bummer.read(s, "sounds/_Evfer/ates02.aif");
@@ -305,67 +426,6 @@ Bummer : Buffer {
 		}.play(Server.default);
 	}
 
-
-//ascending-descending plays
-	play_ascend1 { arg loop = false, mul = 1, rate = 1;
-		^{ var player, rate;
-			rate = BufRateScale.kr(bufnum)*XLine.kr(0.1, 1.9, 2);
-			player = PlayBuf.ar(numChannels,bufnum, rate*rateSet,
-				loop: loop.binaryValue)!2;
-			loop.not.if(FreeSelfWhenDone.kr(player));
-			player * mul;
-		}.play(Server.default);
-	}
-
-	play_ascend2 { arg loop = false, mul = 1, rate = 1;
-		^{ var player, rate;
-			rate = BufRateScale.kr(bufnum)*XLine.kr(0.1, 1.9, 4);
-			player = PlayBuf.ar(numChannels,bufnum, rate*rateSet,
-				loop: loop.binaryValue)!2;
-			loop.not.if(FreeSelfWhenDone.kr(player));
-			player * mul;
-		}.play(Server.default);
-	}
-
-	play_ascend3 { arg loop = false, mul = 1, rate = 1;
-		^{ var player, rate;
-			rate = BufRateScale.kr(bufnum)*XLine.kr(0.1, 1.9, 6);
-			player = PlayBuf.ar(numChannels,bufnum, rate*rateSet,
-				loop: loop.binaryValue)!2;
-			loop.not.if(FreeSelfWhenDone.kr(player));
-			player * mul;
-		}.play(Server.default);
-	}
-
-	play_descend1 { arg loop = false, mul = 1, rate = 1;
-		^{ var player, rate;
-			rate = BufRateScale.kr(bufnum)*XLine.kr(1.9, 0.1, 2);
-			player = PlayBuf.ar(numChannels,bufnum, rate*rateSet,
-				loop: loop.binaryValue)!2;
-			loop.not.if(FreeSelfWhenDone.kr(player));
-			player * mul;
-		}.play(Server.default);
-	}
-
-	play_descend2 { arg loop = false, mul = 1, rate = 1;
-		^{ var player, rate;
-			rate = BufRateScale.kr(bufnum)*XLine.kr(1.9, 0.1, 4);
-			player = PlayBuf.ar(numChannels,bufnum, rate*rateSet,
-				loop: loop.binaryValue)!2;
-			loop.not.if(FreeSelfWhenDone.kr(player));
-			player * mul;
-		}.play(Server.default);
-	}
-
-	play_descend3 { arg loop = false, mul = 1, rate = 1;
-		^{ var player, rate;
-			rate = BufRateScale.kr(bufnum)*XLine.kr(1.9, 0.1, 6);
-			player = PlayBuf.ar(numChannels,bufnum, rate*rateSet,
-				loop: loop.binaryValue)!2;
-			loop.not.if(FreeSelfWhenDone.kr(player));
-			player * mul;
-		}.play(Server.default);
-	}
 */
 
 
