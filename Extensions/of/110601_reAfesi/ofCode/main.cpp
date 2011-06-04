@@ -7,7 +7,7 @@ int main( ){
 
     ofAppGlutWindow window;
 
-	//ofSetupOpenGL(&window, 1024, 512, OF_WINDOW);			// <-------- setup the GL context
+	//ofSetupOpenGL(&window, 1024, 512, OF_WINDOW);			// <-------- setup the GL context 2
 	ofSetupOpenGL(&window, 1280, 1024, OF_WINDOW);	// LG Monitor, hp vp6321	
 		
 	ofSetWindowPosition(1440,0);
