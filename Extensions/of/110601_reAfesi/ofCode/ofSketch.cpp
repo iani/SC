@@ -11,7 +11,7 @@
 #include "ofSketch.h"
 
 void ofSketch::init(float elast, float aposv) {	
-	sender.setup( HOST, PORT );	
+	sender.setup( HOST, PORT_SC );	
 	for (int i=0; i<stoixeia; i++){
 		elastikotita[i] = (elast)*(.07*(i+1));// 0.05  kai 0.005
 		aposbesi[i] = aposv-(0.02 *i);

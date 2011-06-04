@@ -20,7 +20,8 @@ void testApp::setup(){
 	}	//Screen
 	{
 		texScreen.allocate(ofGetWidth(), ofGetHeight(),GL_RGB);// GL_RGBA); 
-		grayImage.allocate(50,50);
+		//screen.allocate(50,50);
+		
 	}	//Texture
 	{
 		af0.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af0.png");
@@ -30,7 +31,9 @@ void testApp::setup(){
 		af4.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af4.png");
 		af5.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af5.png");
 		af6.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af6.png");
-		af7.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af7.png");												
+		af7.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af7.png");
+		
+		af1.allocate(600,600,OF_IMAGE_COLOR);												
 	}	//load DATA
 	{
 		cout << "listening for osc messages on port " << PORT << "\n";
@@ -39,7 +42,7 @@ void testApp::setup(){
 	}	//OSC
 	{		
 		for (int i = 0; i < MAX_SKETCHES; i++){
-			sketch[i].init(ofRandom(0.01, 0.99), ofRandom(0.01, 0.99));
+			sketch[i].init(ofRandom(0.01, 0.29), ofRandom(0.01, 0.29));
 		}
 	}	//sketch
 	{
@@ -52,6 +55,7 @@ void testApp::setup(){
 	fv["yPosImg"] = ofGetHeight()/2 - af1.height/2;
 	fv["wImg"] = af1.width; fv["hImg"] = af1.height;
 	iv["sketch"] = 0;
+	iv["alphaSketch"] = 10;
 	}	//Initial value
 }
 
@@ -132,21 +136,26 @@ void testApp::draw(){
 			printf("%d", fv["mirrorMode"]);
 		}	// mirrowMode
 		
-	
-	if (iv["sketch"] == 1)	{
-		unsigned char * pixels = grayImage.getPixels();
-		int widthOfLine = grayImage.width * 1024;  // how long is a line of pixels
-		int red 	= pixels[(mouseY * widthOfLine) + mouseX * 3    ];
-		int green 	= pixels[(mouseY * widthOfLine) + mouseX * 3 + 1];
-		int blue 	= pixels[(mouseY * widthOfLine) + mouseX * 3 + 2];
-		printf("%d,%d,%d\n", red, green, blue);	
+	if (iv["sketch"] == 1)	{	
+//		unsigned char * pixels = af1.getPixels();
+//		int index = mouseY*600*3 + mouseX*3;
+//		iv["redSketch"] = pixels[index];
+//		iv["greenSketch"] = pixels[index+1];
+//		iv["blueSketch"] = pixels[index+2];
 
-		for( int i=0; i<10; i++ ) {
+//		ofSetColor(iv["redSketch"], iv["greenSketch"], iv["blueSketch"], iv["alphaSketch"]);
+//		ofLine(0,0,mouseX, mouseY);
+//		ofLine(0,ofGetHeight(),mouseX, mouseY);
+//		ofLine(ofGetWidth(),0,mouseX, mouseY);
+//		ofLine(ofGetWidth(), ofGetHeight(),mouseX, mouseY);				
+//		ofEllipse(mouseX, mouseY, 10,10);
+		for( int i=0; i<MAX_SKETCHES; i++ ) {
 
-			sketch[i].draw(mouseX, mouseY, 0, red,green,blue, 50, 0);	
+			sketch[i].draw(mouseX, mouseY, 0, iv["redSketch"], iv["greenSketch"], iv["blueSketch"], iv["alphaSketch"], 0);	
 		}		
+
+
 	}
-		
 	
 }
 
@@ -162,6 +171,41 @@ void testApp::keyPressed  (int key){
 	if(key == 'b' or key == 'B'){
 		ofBackground(0,0,0);
 	}	
+	
+	if(key == 'c' or key == 'C')	{
+	{
+		int trans= ofRandom(0,500);
+		unsigned char * pixels = af1.getPixels();
+		for (int y=0; y<600; y++){
+			for(int x=0; x<600; x++){
+				// the index of the pixel:
+				int index = y*600*3 + x*3;
+				int red = pixels[index];
+				int green = pixels[index+1];
+				int blue = pixels[index+2];
+				//printf("%d,%d,%d\n", red, green , blue);	
+				ofSetColor(red,green,blue);
+				ofLine(x,y,300,300);
+				//ofEllipse(trans+x,y,2,2);
+				// ok, so this example does not actually DO anything...
+			}
+		}
+	}	//Working
+	}
+	if(key == 'k' or key == 'K')	{
+	{
+
+		unsigned char * pixels = af0.getPixels();
+		int index = mouseY*af0.width*3 + mouseX*3;
+		iv["redSketch"] = pixels[index];
+		iv["greenSketch"] = pixels[index+1];
+		iv["blueSketch"] = pixels[index+2];
+		ofSetColor(iv["redSketch"],iv["greenSketch"],iv["blueSketch"]);
+		ofEllipse(mouseX, mouseY,10,10);
+		
+	}	//Working
+	}
+
 	if(key == 't' or key == 'T'){
 		//ofEllipse(100,100,100,100);
 		for (int i = 0; i < 10; i++)	{
@@ -174,9 +218,25 @@ void testApp::keyPressed  (int key){
 void testApp::mouseDragged(int x, int y, int button){
 //pixel (100,20):
 }
+void testApp::mouseMoved(int x, int y ){
+		/*
+		unsigned char * pixels = grayImage.getPixels();
+		int widthOfLine = grayImage.width * 1024;  // how long is a line of pixels
+		iv["redSketch"] 	= pixels[(mouseY * widthOfLine) + mouseX * 3    ];
+		iv["greenSketch"] 	= pixels[(mouseY * widthOfLine) + mouseX * 3 + 1];
+		iv["blueSketch"] 	= pixels[(mouseY * widthOfLine) + mouseX * 3 + 2];
+		iv["alphaSketch"] 	= pixels[(mouseY * widthOfLine) + mouseX * 3 + 3];
+		printf("%d,%d,%d,%d\n", iv["redSketch"], iv["greenSketch"], iv["blueSketch"], iv["alphaSketch"]);	
+		ofSetColor(iv["redSketch"], iv["greenSketch"], iv["blueSketch"], iv["alphaSketch"]);
+		ofLine(0,0,mouseX, mouseY);
+		ofLine(0,ofGetHeight(),mouseX, mouseY);
+		ofLine(ofGetWidth(),0,mouseX, mouseY);
+		ofLine(ofGetWidth(), ofGetHeight(),mouseX, mouseY);				
+		ofEllipse(mouseX, mouseY, 10,10);
+		*/
+
+}
 void testApp::mousePressed(int x, int y, int button)	{
-
-
 
 }
 void testApp::mouseReleased(int x, int y, int button){}

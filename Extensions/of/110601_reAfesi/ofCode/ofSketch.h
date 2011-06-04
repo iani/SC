@@ -18,7 +18,7 @@
 #define MAX_N_PTS			150
 
 #define HOST				"localhost"
-#define PORT				57120
+#define PORT_SC				57120
 
 class ofSketch {
 public:	

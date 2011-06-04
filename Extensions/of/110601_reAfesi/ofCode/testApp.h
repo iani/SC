@@ -9,7 +9,7 @@
 // listen on port 12345
 #define PORT 12345
 #define NUM_MSG_STRINGS 20
-#define MAX_SKETCHES 100
+#define MAX_SKETCHES 500
 
 class testApp : public ofBaseApp{
 
@@ -21,6 +21,7 @@ class testApp : public ofBaseApp{
 		void draw();
 
 		void keyPressed  (int key);
+		void mouseMoved(int x, int y );
 		void mouseDragged(int x, int y, int button);
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);		
@@ -31,7 +32,7 @@ class testApp : public ofBaseApp{
 		ofImage			af0, af1, af2, af3,af4,af5,af6,af7, screen;		
 		ofTrueTypeFont	font;
 		ofSketch		sketch[MAX_SKETCHES];
-		ofxCvGrayscaleImage 	grayImage;
+
 		
 		map<string, int> iv;
 		map<string, float> fv;		

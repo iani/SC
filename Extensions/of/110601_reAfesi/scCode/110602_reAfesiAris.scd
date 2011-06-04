@@ -6,21 +6,23 @@ Aris Bezas Wed, 01 June 2011, 23:24
 ["af1","af2","af3","af4","af5","af6","af7"].choose
 (0..60).choose
 //:mirrow effect
-OF.img(1,0,0,1280,1024)
-OF.int("sketch",1)
-//:Many images
+OF.img(0,0,0,1280,1024);
+OF.img(1,0,0,600,600);
+k	
+OF.int("sketch",1);
+k//:Many images
 k = {
-	~delayTime = 0.21;
+	~delayTime = 0.1;
 	~countX = 0; 
 	~countY = 0;
 	~screenWidth = 1280;
 	~screenHeight = 1024;
-	~fotoWidth = ~fotoHeight = ~screenWidth/10;
+	~fotoWidth = ~fotoHeight = ~screenWidth/5;
 	~fotoHeight = ~fotoWidth;
 	
 	inf.do{ |i|
 				
-		OF.img((0..60).choose.round, ~countX, ~countY, ~fotoWidth, ~fotoHeight);
+		OF.img((0..6).choose.round, ~countX, ~countY, ~fotoWidth, ~fotoHeight);
 		~countX = ~countX + ~fotoWidth;
 		if (~countX>~screenWidth, {~countX = 0;~countY = ~countY + ~fotoHeight});
 		if (~countY>~screenHeight, {~countY = 0;});
