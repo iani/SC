@@ -23,14 +23,14 @@ void testApp::setup(){
 		grayImage.allocate(50,50);
 	}	//Texture
 	{
-		af0.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af0.png");
-		af1.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af1.png");
-		af2.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af2.png");
-		af3.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af3.png");
-		af4.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af4.png");
-		af5.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af5.png");
-		af6.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af6.png");
-		af7.loadImage("/Users/fou/Dropbox/ArisOmer/AferesiDB/aferesi/af7.png");												
+		af0.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af0.png");
+		af1.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af1.png");
+		af2.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af2.png");
+		af3.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af3.png");
+		af4.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af4.png");
+		af5.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af5.png");
+		af6.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af6.png");
+		af7.loadImage("/Users/fou/Dropbox/AB-/ArisOmer/AferesiDB/aferesi/af7.png");												
 	}	//load DATA
 	{
 		cout << "listening for osc messages on port " << PORT << "\n";
@@ -50,8 +50,8 @@ void testApp::setup(){
 	
 	fv["xPosImg"] = ofGetWidth()/2 - af1.width/2;
 	fv["yPosImg"] = ofGetHeight()/2 - af1.height/2;
-	
 	fv["wImg"] = af1.width; fv["hImg"] = af1.height;
+	iv["sketch"] = 0;
 	}	//Initial value
 }
 
@@ -133,6 +133,21 @@ void testApp::draw(){
 		}	// mirrowMode
 		
 	
+	if (iv["sketch"] == 1)	{
+		unsigned char * pixels = grayImage.getPixels();
+		int widthOfLine = grayImage.width * 1024;  // how long is a line of pixels
+		int red 	= pixels[(mouseY * widthOfLine) + mouseX * 3    ];
+		int green 	= pixels[(mouseY * widthOfLine) + mouseX * 3 + 1];
+		int blue 	= pixels[(mouseY * widthOfLine) + mouseX * 3 + 2];
+		printf("%d,%d,%d\n", red, green, blue);	
+
+		for( int i=0; i<10; i++ ) {
+
+			sketch[i].draw(mouseX, mouseY, 0, red,green,blue, 50, 0);	
+		}		
+	}
+		
+	
 }
 
 void testApp::keyPressed  (int key){
@@ -157,25 +172,10 @@ void testApp::keyPressed  (int key){
 	}	
 }
 void testApp::mouseDragged(int x, int y, int button){
-	unsigned char * pixels = grayImage.getPixels();
-	for (int i = 0; i < grayImage.height; i+=1){
-		for (int j = 0; j < grayImage.width; j+=1){		
-			int red 	= pixels[(i * grayImage.width) + j * 1];
-			int green 	= pixels[(i * grayImage.width) + j * 2];
-			int blue 	= pixels[(i * grayImage.width) + j * 3];			
-			ofSetColor(red,green,blue,255);//,green,blue);	
-			//printf("%d\n", red);	
-						
-		}
-	}
-
-
-	for( int i=0; i<10; i++ ) {
-
-		sketch[i].draw(mouseX, mouseY, 0, 255,255,255,50, 1);	
-	}		
+//pixel (100,20):
 }
 void testApp::mousePressed(int x, int y, int button)	{
+
 
 
 }

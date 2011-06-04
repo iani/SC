@@ -6,10 +6,11 @@ Aris Bezas Wed, 01 June 2011, 23:24
 ["af1","af2","af3","af4","af5","af6","af7"].choose
 (0..60).choose
 //:mirrow effect
-OF.img(1,0.1,0.1,200.1,200.1);
+OF.img(1,0,0,1280,1024)
+OF.int("sketch",1)
 //:Many images
 k = {
-	~delayTime = 01;
+	~delayTime = 0.21;
 	~countX = 0; 
 	~countY = 0;
 	~screenWidth = 1280;
