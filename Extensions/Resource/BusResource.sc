@@ -18,4 +18,10 @@ BusResource : AbstractServerResource {
 	
 	get { | action | ^object.get(action); }
 	getn { | count, action | ^object.getn(count, action); }
+	
+	free {
+		object.free;
+		object = nil;
+		this.remove;	
+	}
 }

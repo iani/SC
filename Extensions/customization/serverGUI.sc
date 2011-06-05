@@ -67,7 +67,17 @@
 			thisProcess.interpreter.s = this;
 			Server.default = this;
 		};
-
+		this.addDependant({ | server, message |
+			if (message === \default) {
+				if (Server.default === this) {
+					makeDefault.states = [["d", green, Color.green(0.5)]];
+				}{
+					makeDefault.states = [["d", green, Color.clear]];
+				};
+				makeDefault.refresh;				
+			}
+		});
+ 
 		//w.view.decorator.nextLine;
 		
 		recorder = SCButton(w, Rect(0,0, 15, 15));

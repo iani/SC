@@ -138,13 +138,16 @@ Enable the selection of parts of a SuperCollider document separated by comments 
 
 Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
 
-Shortcuts provided are: 
+Shortcuts provided are:
 
-- Command-shift-x: Evaluate the code in an AppClock routine, after booting the default server if needed
-- Command-shift-alt-x: Evaluate the code in a SystemClock routine, after booting the default server if needed
+- Command-shift-x: Evaluate the code in an AppClock routine. Booting the default server if needed
+- Command-shift-alt-x: Evaluate the code in a SystemClock routine Boot default server if needed
 - Command-shift-v: Evaluate and post the results of the code, without routine or server booting
 - Command-shift-j: Select the next code part
 - Command-shift-k: Select the previous code part
+- Command-shift-}: open a list of the code segments of the current Document
+- Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
+- Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
 
 * Class Panes
 

@@ -15,14 +15,33 @@
 
 + Symbol {
 	asKey { ^this }
+	// ========== Ndef support ===========
+	ndef { | object |
+		// create / access an Ndef and play it, booting server if needed
+		var ndef, server;
+		ndef = Ndef(this, object);
+		server = ndef.server;
+		if (ndef.rate == \audio) {
+			ServerPrep(server).addSynth({ ndef.play });
+			if (server.serverRunning.not) { server.boot };
+		};
+		^ndef;
+	}
 	
 	// ========== FadeSynth support ===========
 	-< { | func | ^FadeSynth(this) -< func; }
-	
-	ar { | in = 0, out = 0, fadeTime = 0.02, target, addAction = \addToHead | 
-		^FadeSynth(this, in, out, fadeTime, target, addAction);
+
+
+	// occupied by JITlib: 	
+//	ar { | in = 0, out = 0, fadeTime = 0.02, target, addAction = \addToHead | 
+//		^FadeSynth(this, in, out, fadeTime, target, addAction);
+//	}
+
+	// (fadeTime_ occupied by JITlib)
+	fadetime_ { | ft = 0.02 |
+		^FadeSynth(this).fadeTime_(ft);
 	}
-	
+
 	fadeTime_ { | ft = 0.02 |
 		^FadeSynth(this).fadeTime_(ft);
 	}
@@ -71,7 +90,11 @@
 	control { | numChannels = 1, server |
 		^BusResource.control(this, numChannels, server)
 	}
-	
+
+	k { | numChannels = 1, server |
+		^this.control(numChannels, server);		
+	}
+
 	index { | numChannels = 1, server |
 		^this.control(numChannels, server).index;
 	}
