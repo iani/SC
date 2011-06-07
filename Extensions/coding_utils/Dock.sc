@@ -46,7 +46,7 @@ Dock {
 	*showDocListWindow {
 		var listwin;
 		listwin = ListWindow('Documents', 
-			Rect(Window.screenBounds.width - width, 85, width, Window.screenBounds.height - 85), 
+			Rect(Window.screenBounds.width - width, 87, width, Window.screenBounds.height - 87), 
 			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
 				d.name->{
 					d.front; 
@@ -87,7 +87,10 @@ Dock {
 				c.name.asSymbol->{ 
 					{ 
 						c.openCodeFile;
-						{ if (ListWindow.at(windowName).notNil) { ListWindow.at(windowName).close; }; 
+						{ 
+							if (ListWindow.at(windowName).notNil) { 
+								ListWindow.at(windowName).close;
+							}; 
 						}.defer(0.5)
 					}.doOnceIn(0.75);
 				}
@@ -110,7 +113,10 @@ Dock {
 				c.name.asSymbol->{ 
 					{ 
 						c.openHelpFileLocally;
-						{ if (ListWindow.at(windowName).notNil) { ListWindow.at(windowName).close; }; 
+						{
+							if (ListWindow.at(windowName).notNil) {
+								ListWindow.at(windowName).close;
+							}; 
 						}.defer(0.5)
 					}.doOnceIn(0.75);
 				}

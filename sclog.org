@@ -682,3 +682,126 @@ Like above, but start a synth with the defname and args and send its output to t
 \symbol.mapFunc(\param, function, args) -> 
 
 Like above, but start a synth with the function and args and send its output to the bus.
+** 2011-06 June
+*** 2011-06-06 Monday
+**** List of machine listening / feature UGens with notes :features:ml:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-06-06 Mon 05:47>
+     :END:
+
+***** UGens that output 0-1 changes
+
+
+****** Onsets		Onset detector (0-1)
+
+	Onsets.kr(chain, threshold, odftype)
+
+An onset detector for musical audio signals - detects the beginning of notes/drumbeats/etc. Outputs a control-rate trigger signal which is 1 when an onset is detected, and 0 otherwise.
+
+chain - an FFT chain
+threshold - the detection threshold, typically between 0 and 1, although in rare cases you may find values outside this range useful
+odftype - the function used to analyse the signal (options described below; OK to leave this at its default value)
+
+****** DetectSilence *ar(input, amp, time, doneAction) (0-1)
+****** PV_HainsworthFoote
+
+FFT onset detector based on work described in 
+
+Hainsworth, S. (2003) Techniques for the Automated Analysis of Musical Audio. PhD, University of Cambridge engineering dept. See especially p128. The Hainsworth metric is a modification of the Kullback Liebler distance. 
+
+The onset detector has general ability to spot spectral change, so may have some ability to track chord changes  aside from obvious transient jolts, but there's no guarantee it won't be confused by frequency modulation artifacts.   
+
+Hainsworth metric on it's own gives good results but Foote might be useful in some situations: experimental. 
+
+
+*ar(buffer, proph=0.0, propf=0.0, threshold=1.0, waittime=0.04)
+
+
+****** PV_JensenAndersen
+
+FFT feature detector for onset detection based on work described in 
+
+Jensen,K. & Andersen, T. H. (2003). Real-time Beat Estimation Using Feature Extraction. 
+In Proceedings of the Computer Music Modeling and Retrieval Symposium, Lecture Notes in Computer Science. Springer Verlag.
+
+First order derivatives of the features are taken. Threshold may need to be set low to pick up on changes. 
+
+*ar(buffer, propsc=0.25, prophfe=0.25, prophfc=0.25, propsf=0.25, threshold=1.0, waittime=0.04)
+
+buffer- FFT buffer to read from.
+
+propsc- Proportion of spectral centroid feature.
+
+prophfe- Proportion of high frequency energy feature.
+
+prophfc- Proportion of high frequency content feature.
+
+propsf- Proportion of spectral flux feature.
+
+threshold- Threshold level for allowing a detection
+
+waittime- If triggered, minimum wait until a further frame can cause another spot (useful to stop multiple detects on heavy signals)
+
+***** UGens that output continuous values
+
+****** Amplitude.kr(in, attackTime, releaseTime, mul, add) 
+
+****** Loudness sones = Loudness.kr(chain, smask=0.25, tmask=6)
+
+chain [fft] - Audio input to track, which has been pre-analysed by the FFT UGen; see examples below for the expected FFT size
+smask [sk] - Spectral masking param: lower bins mask higher bin power within ERB bands, with a power falloff (leaky integration multiplier) of smask per bin
+tmask [sk] - Temporal masking param: the phon level let through in an ERB band is the maximum of the new measurement, and the previous minus tmask phons
+
+****** Peak Peak.ar(in, trig)
+Outputs the peak amplitude of the signal received at the input. 
+
+****** PeakFollower.ar(in, decay)
+Outputs the peak amplitude of the signal received at the input. 
+if level is below maximum, the level decreases by the factor given in decay.
+
+
+****** Pitch						autocorrelation pitch follower
+
+#freq, hasFreq = Pitch.kr(in, initFreq, minFreq, maxFreq, execFreq, maxBinsPerOctave, median, ampThreshold, peakThreshold, downSample, clar)
+
+****** ZeroCrossing		zero crossing frequency follower
+
+ZeroCrossing.ar(in)
+
+****** MFCC mel frequency cepstral coefficients *MULTICHANNEL* !!!!!
+
+#coeff1, coeff2, ... = MFCC.kr(chain, numcoeff=13)
+// coeffn -> kr signal. (OutputProxy). 
+
+
+****** Slope		slope of signal
+
+Slope.ar(in, mul, add)
+Slope.kr(in, mul, add)
+
+Measures the rate of change per second of a signal.
+Formula implemented is:
+
+out[i] = (in[i] - in[i-1]) * sampling_rate
+
+****** SpecCentroid		Spectral centroid
+
+	SpecCentroid.kr(chain)
+
+Given an FFT chain, this measures the spectral centroid, which is the weighted mean frequency, or the "centre of mass" of the spectrum. (DC is ignored.)
+
+This can be a useful indicator of the perceptual brightness of a signal.
+
+****** SpecFlatness	Spectral Flatness measure
+
+	SpecFlatness.kr(chain)
+
+Given an FFT chain this calculates the Spectral Flatness measure, defined as a power spectrum's geometric mean divided by its arithmetic mean. This gives a measure which ranges from approx 0 for a pure sinusoid, to approx 1 for white noise.
+
+****** SpecPcile	Find a percentile of FFT magnitude spectrum
+
+	SpecPcile.kr(chain, fraction)
+
+Given an FFT chain this calculates the cumulative distribution of the frequency spectrum, and outputs the frequency value which corresponds to the desired percentile.
+
+

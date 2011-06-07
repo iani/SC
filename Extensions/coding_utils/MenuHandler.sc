@@ -14,7 +14,7 @@ MenuHandler {
 		menuItems = IdentityDictionary.new;	
 	}
 	
-	*addMenu { | object |		
+	*addMenu { | object |
 		menuItems[object] = object.menuItems;
 	}
 
