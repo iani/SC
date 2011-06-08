@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>sclog</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-05-10 14:03:37 EEST"/>
+<meta name="generated" content="2011-06-08 16:13:01 EEST"/>
 <meta name="author" content="Ioannis Zannos"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -88,35 +88,729 @@ lang="en" xml:lang="en">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 Summary of ideas in this lib</a>
+<li><a href="#sec-1">1 2011 </a>
 <ul>
-<li><a href="#sec-1_1">1.1 ServerPrep </a></li>
-<li><a href="#sec-1_2">1.2 UniqueSynth </a></li>
-<li><a href="#sec-1_3">1.3 EventStream, Function:sched and Function:stream </a></li>
-<li><a href="#sec-1_4">1.4 Object methods for easy messaging via NotificationCenter </a></li>
-<li><a href="#sec-1_5">1.5 Code </a></li>
-<li><a href="#sec-1_6">1.6 Panes </a></li>
-<li><a href="#sec-1_7">1.7 Dock </a></li>
-<li><a href="#sec-1_8">1.8 Spectrograph </a></li>
+<li><a href="#sec-1_1">1.1 2011-04 April </a>
+<ul>
+<li><a href="#sec-1_1_1">1.1.1 2011-04-19 Tuesday </a></li>
+<li><a href="#sec-1_1_2">1.1.2 2011-04-20 Wednesday </a></li>
+<li><a href="#sec-1_1_3">1.1.3 2011-04-21 Thursday </a></li>
+<li><a href="#sec-1_1_4">1.1.4 2011-04-23 Saturday </a></li>
+<li><a href="#sec-1_1_5">1.1.5 2011-04-29 Friday </a></li>
+<li><a href="#sec-1_1_6">1.1.6 2011-04-30 Saturday </a></li>
+</ul>
+</li>
+<li><a href="#sec-1_2">1.2 2011-05 May </a>
+<ul>
+<li><a href="#sec-1_2_1">1.2.1 2011-05-01 Sunday </a></li>
+<li><a href="#sec-1_2_2">1.2.2 2011-05-02 Monday </a></li>
+<li><a href="#sec-1_2_3">1.2.3 2011-05-04 Wednesday </a></li>
+<li><a href="#sec-1_2_4">1.2.4 2011-05-05 Thursday </a></li>
+<li><a href="#sec-1_2_5">1.2.5 2011-05-06 Friday </a></li>
+<li><a href="#sec-1_2_6">1.2.6 2011-05-07 Saturday </a></li>
+<li><a href="#sec-1_2_7">1.2.7 2011-05-08 Sunday </a></li>
+<li><a href="#sec-1_2_8">1.2.8 2011-05-09 Monday </a></li>
+<li><a href="#sec-1_2_9">1.2.9 2011-05-10 Tuesday </a></li>
+<li><a href="#sec-1_2_10">1.2.10 2011-05-11 Wednesday </a></li>
+<li><a href="#sec-1_2_11">1.2.11 2011-05-12 Thursday </a></li>
+<li><a href="#sec-1_2_12">1.2.12 2011-05-14 Saturday </a></li>
+<li><a href="#sec-1_2_13">1.2.13 2011-05-22 Sunday </a></li>
+<li><a href="#sec-1_2_14">1.2.14 2011-05-26 Thursday </a></li>
+<li><a href="#sec-1_2_15">1.2.15 2011-05-30 Monday </a></li>
+</ul>
+</li>
+<li><a href="#sec-1_3">1.3 2011-06 June </a>
+<ul>
+<li><a href="#sec-1_3_1">1.3.1 2011-06-06 Monday </a></li>
+<li><a href="#sec-1_3_2">1.3.2 2011-06-08 Wednesday </a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-1" class="outline-5">
-<h5 id="sec-1"><span class="section-number-5">1</span> <span class="done DONE"> DONE</span> Summary of ideas in this lib &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doc">doc</span></span></h5>
-<div class="outline-text-5" id="text-1">
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 2011 </h2>
+<div class="outline-text-2" id="text-1">
 
-<p><span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-10 Tue 13:55</span></span><br/>
-</p>
 
 </div>
 
-<div id="outline-container-1_1" class="outline-6">
-<h6 id="sec-1_1"><span class="section-number-6">1.1</span> ServerPrep </h6>
-<div class="outline-text-6" id="text-1_1">
+<div id="outline-container-1_1" class="outline-3">
+<h3 id="sec-1_1"><span class="section-number-3">1.1</span> 2011-04 April </h3>
+<div class="outline-text-3" id="text-1_1">
 
+
+</div>
+
+<div id="outline-container-1_1_1" class="outline-4">
+<h4 id="sec-1_1_1"><span class="section-number-4">1.1.1</span> 2011-04-19 Tuesday </h4>
+<div class="outline-text-4" id="text-1_1_1">
+
+<ul>
+<li id="sec-1_1_1_1">fixing the scaling of the fft magnitude &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+
+<p>
+The original was: 
+complexarray = ((((Complex( 
+Signal.newFrom( magarray[0] ), 
+Signal.newFrom( magarray[1] ) 
+).magnitude.reverse)).log10) * 80).clip(0, 255); 
+</p>
+<p>
+This resulted in magnitude values below 1 producing negative values after log10, which were then clipped away. 
+</p>
+<ul>
+<li id="sec-1_1_1_1_1">Correction attempt (needs more testing after re setting fft buffer size to 1024) <br/>
+this clipped the higher frequencies away at fft buffer size 2048 or more, but the same was for the original algorithm
+
+<p>
+complexarray = (
+(Complex(Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])).magnitude.reverse + 1).log10
+</p><ul>
+<li>
+80
+</li>
+</ul>
+
+<p>).clip(0, 255);
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_1_1_2">minimum necessary change: <br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-04-19 Tue 17:27</span></span><br/>
+complexarray = ((((Complex( 
+Signal.newFrom( magarray[0] ), 
+Signal.newFrom( magarray[1] ) 
+).magnitude.reverse) + 1).log10) * 80).clip(0, 255); 
+
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_1_1_3">Debug tries: <br/>
+complexarray = Complex(
+Signal.newFrom( magarray[0] ), 
+Signal.newFrom( magarray[1] ) 
+).magnitude.reverse + 1; // prevent items &lt; 0 producing negative values at log10
+
+<p>
+["min, max before log10", complexarray.minItem, complexarray.maxItem].postln;
+complexarray = complexarray.log10;
+["min, max after log10", complexarray.minItem, complexarray.maxItem].postln;
+complexarray = complexarray * 160;
+["max after * 160", complexarray.maxItem].postln;
+</p>
+<p>
+complexarray = complexarray.clip(0, 255);
+["max after clip", complexarray.maxItem].postln;
+</p>
+
+<p>
+/*                                      complexarray = (80 * Complex( 
+Signal.newFrom( magarray[0] ), 
+Signal.newFrom( magarray[1] ) 
+).magnitude.reverse.log10).clip(0, 255);
+*/
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_1_1_4"><span class="done DONE"> DONE</span> Introduce more color gradations and tweak the accessing of these <br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-04-19 Tue 18:23</span></span><br/>
+
+<p>
+use: 
+classvar &lt;&gt;defaultFFTBufSize = 1024, &lt;&gt;colorSize = 64;
+</p>
+<p>
+recalcGradient {
+var colors;
+</p>
+<p>
+//              colors = (0..16).collect({ | val | blend(background, color, val / 16)});
+// <span style="text-decoration:underline;">THIS:</span>
+colors = (0..colorSize).collect({ | val | blend(background, color, val / colorSize)});
+//              colors = (1..64).pow(0.01).normalize.collect(blend(background, color, _));
+colints = colors.collect({ | col | Image colorToPixel: col });
+}
+</p>
+<p>
+futhermore: 
+</p>
+<ul>
+<li id="sec-1_1_1_1_4_1">the intensity multiplier variable and the multiplication by 80 need to be tweaked. <br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_1_1_4_2">The colors could be graded with a bias for low values as follows: <br/>
+colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
+
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_1_1_5">Better solution (introduces <span style="text-decoration:underline;">much</span> more detail in low energy regions <br/>
+<ul>
+<li>
+Note taken on <span class="timestamp-wrapper"> <span class="timestamp">2011-04-19 Tue 18:26</span></span> <br/>
+The power exponent in calcGradient could be reduced to 0.1 or other values
+</li>
+</ul>
+
+<ul>
+<li id="sec-1_1_1_1_5_1">recalcGradient <br/>
+recalcGradient {
+var colors;
+colors = (1..colorSize).pow(0.01).normalize.collect(blend(background, color, _));
+colints = colors.collect({ | col | Image colorToPixel: col });
+}
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_1_1_5_2">spectrum magnitude scaling in startruntask <br/>
+complexarray  = log10(
+1 + 
+Complex(
+Signal.newFrom(magarray[0]), Signal.newFrom(magarray[1])
+).magnitude.reverse;
+).clip(0, 1) * intensity;
+
+<p>
+complexarray.do({ | val, i |
+fftDataArray[i] = colints.clipAt((val * colorSize).round);
+});
+</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_1_2">added scaleable exponent for color mapping &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+
+<p>
+Default: 0.5. Tested between: 0.01 and 1
+Higher values: peaks show clearer, lower magnitudes may disappear
+Lower values: peaks smear more, lower magnitudes are displayed
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_1_3"><span class="done DONE"> DONE</span> is var windowparent necessary? perhaps window is enough &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-14 Sat 18:16</span></span><br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_1_2" class="outline-4">
+<h4 id="sec-1_1_2"><span class="section-number-4">1.1.2</span> 2011-04-20 Wednesday </h4>
+<div class="outline-text-4" id="text-1_1_2">
+
+<ul>
+<li id="sec-1_1_2_1"><span class="done DONE"> DONE</span> simplify additional process mechanism using dependants vars &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-10 Tue 11:50</span></span><br/>
+
+<p>
+Define vars in Spectrogram2: 
+</p>
+<ol>
+<li>
+imageObjects: objects that draw on the image (before it is sent to pen)
+</li>
+<li>
+penObjects: objects that draw with pen (after image is sent to pen) 
+</li>
+</ol>
+
+
+<p>
+An object that wants to draw, must add itself to one of those two lists. 
+Spectrogram2 will send all objects stored in imageObects the message drawImage, and all the objects stored in penObjects the image drawPen. 
+</p>
+<p>
+An object can add itself to start drawing or remove itself to stop drawing. This is simpler than going via NotificationCenter. 
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_2_2">fft buffer sizes &gt; 1024 are not supported &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+
+<p>
+This is because buf.getn can only fetch up to 1024 values (OSC limit?). 
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_2_3">removed frombin - tobin as I find little use for zooming in to part of a spectrum and it complicates the code &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_2_4">added toggle tryout.sc + make code palette w. key shortcuts &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doclistwindow">doclistwindow</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_2_5">DocSession:load provides new session if not found in archive &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doclistwindow">doclistwindow</span></span><br/>
+
+<p>
+This is important when installing lilt2 to a new computer that does not have any sessions stored. 
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_2_6"><span class="done DONE"> DONE</span> code parser should ignore lines where //: is followed by spce &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doclistwindow">doclistwindow</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-04-20 Wed 18:01</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_2_7"><span class="done CANCELLED"> CANCELLED</span> PerformanceWindow should re-parse code on changing docs &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doclistwindow">doclistwindow</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-02 Mon 01:01</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_2_8"><span class="done DONE"> DONE</span> add 'doOnce' message to Function &nbsp;&nbsp;&nbsp;<span class="tag"><span class="idea">idea</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-02 Mon 01:01</span></span><br/>
+
+<p>
+Function registers itself to notifier and does not reevaluate. 
+</p>
+<p>
+Important for booting servers / scopes only once. 
+</p>
+<p>
+! marked items in DocListWindow type files can use this automatically. Something like: 
+</p>
+<p>
+{ codeString.interpret }.doOnce 
+instead of: 
+{ codeString.interpret }.value 
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_2_9"><span class="done DONE"> DONE</span> code item pane does not refresh properly &nbsp;&nbsp;&nbsp;<span class="tag"><span class="performancewindow">performancewindow</span>&nbsp;<span class="bug">bug</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-02 Mon 01:01</span></span><br/>
+
+<p>
+At some point the older items remain on the pane together with the newly selecte ones. 
+</p>
+<p>
+Could not remedy that.  Suggestion: Try using EZListView instead.
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_1_3" class="outline-4">
+<h4 id="sec-1_1_3"><span class="section-number-4">1.1.3</span> 2011-04-21 Thursday </h4>
+<div class="outline-text-4" id="text-1_1_3">
+
+<ul>
+<li id="sec-1_1_3_1">added load, play, loadDefault methods to Buffer class &nbsp;&nbsp;&nbsp;<span class="tag"><span class="buffer">buffer</span></span><br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_1_4" class="outline-4">
+<h4 id="sec-1_1_4"><span class="section-number-4">1.1.4</span> 2011-04-23 Saturday </h4>
+<div class="outline-text-4" id="text-1_1_4">
+
+<ul>
+<li id="sec-1_1_4_1">function hashKey is taken from def.sourceCode, not def.code &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniquefunction">uniquefunction</span></span><br/>
+
+<p>
+This is because, for example: 
+</p>
+<p>
+{ WhiteNoise.ar(0.2) }
+and
+{ WhiteNoise.ar(0.1) }
+</p>
+<p>
+have the same code: 
+</p>
+<p>
+Int8Array[ 0, 0, 64, -80, -62, 52, -14 ]
+</p>
+<p>
+So now, in order for a function to be treated as "unique" by UniqueFunction, it must have exactly the same source code string. 
+</p>
+<p>
+Note: function.hashKey is used by UniquePlay. 
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_4_2"><span class="done DONE"> DONE</span> add chain, Udef, Ubuf to load synthdefs and buffers before creating a synth &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniqueobject">uniqueobject</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-02 Mon 01:01</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_4_3">Design of UniqueBuffer &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniquebuffer">uniquebuffer</span></span><br/>
+
+<ul>
+<li id="sec-1_1_4_3_1">Templates from existing classes to consider <br/>
+BUFFER:
+*new { arg server, numFrames, numChannels, bufnum;}
+*alloc(server, numFrames, numChannels, completionMessage, bufnum)
+*read { arg server, path, startFrame = 0, numFrames = -1, action, bufnum; }
+*read(server, path, startFrame, numFrames, action, bufnum)
+
+<p>
+UNIQUESYNTH:
+*new { | key, defName, args, target, addAction=\addToHead | 
+^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
+</p>
+
+<p>
+}
+init { | what, args, target, addAction &hellip; moreArgs | }
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_1_4_3_2">Interface for UniqueBuffer: Class methods, synonyms, utilities <br/>
+<ul>
+<li id="sec-1_1_4_3_2_1">Methods modeled after Buffer class methods <br/>
+
+<p>
+MODIFIED, works like Buffer:alloc
+*new { | key, server, numFrames, numChannels, action | }
+like Buffer:alloc, with action executed as soon as info is received, no bufnum
+allocates immediately, boots buffer if needed
+</p>
+<p>
+*read { | key, server, path, startFrame = 0, numFrames = -1, action | }
+read from file. Boot buffer if needed. Store in library at [buffers, server:key]
+</p>
+<p>
+NOT USED:
+*alloc( | key, server, numFrames, numChannels, completionMessage, bufnum | )
+allocate immediately. Boot server if needed. 
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_4_3_2_2">Methods for convenient use <br/>
+
+<p>
+*play { | func, args | }
+play last selected buffer or default buffer if none selected
+</p>
+<p>
+*load { | func, args | }
+load with file open dialog window, play if func is given
+</p>
+<p>
+*select { | func, args | }
+open list of buffers, select one and execute func if provided.
+selected buffer stays for next calls of "play" or spectrogram. 
+</p>
+<p>
+*spectrogram { | func, args | }
+</p>
+<p>
+*clear { | server | }
+clear all UniqueBuffers on server
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_4_3_2_3">Synonyms of convenient methods on Buffer class <br/>
+
+<p>
+*play { | func, args | }
+play last selected buffer or default buffer if none selected
+</p>
+<p>
+*load { | func, args | }
+load from file and play if given func
+</p>
+<p>
+*select { | func, args | }
+</p>
+<p>
+*spectrogram { | func, args | }
+</p>
+<p>
+*clear { | server | }
+clear all UniqueBuffers on server
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_4_3_2_4">UniqueBuffer access methods for String and symbol <br/>
+
+<p>
+String:ubuf(func) -&gt; get / load the UniqueBuffer corresponding to this path, on the default server
+if func is provided, it is used to play the buffer
+</p>
+<p>
+Symbol:ubuf(func) -&gt; get the UniqueBuffer registered at the default buffer under this string
+if func is provided, it is used to play the buffer
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_4_3_2_5">Designing the code: argument massage <br/>
+
+<p>
+*new { | key, server, numFrames, numChannels, bufnum |
+^super.new(key, defName ?? { key.asSymbol }, args, target, addAction);
+}
+</p>
+<p>
+*alloc {
+</p>
+<p>
+}
+</p>
+<p>
+<b>/ **</b>  2011-04-26 Tuesday 
+</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_5_1"><span class="done DONE"> DONE</span> add doOnce and forkOnce methods to function &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniquefunction">uniquefunction</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-02 Mon 01:00</span></span><br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_1_5" class="outline-4">
+<h4 id="sec-1_1_5"><span class="section-number-4">1.1.5</span> 2011-04-29 Friday </h4>
+<div class="outline-text-4" id="text-1_1_5">
+
+<ul>
+<li id="sec-1_1_6_1"><span class="done DONE"> DONE</span> add Symbol:playDef &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniquesynth">uniquesynth</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-04-29 Fri 09:43</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_6_2">UniqueObject *mainKey now returns [this] &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniqueobject">uniqueobject</span></span><br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_1_6" class="outline-4">
+<h4 id="sec-1_1_6"><span class="section-number-4">1.1.6</span> 2011-04-30 Saturday </h4>
+<div class="outline-text-4" id="text-1_1_6">
+
+<ul>
+<li id="sec-1_1_7_1"><span class="done CANCELLED"> CANCELLED</span> decouple coloring scheme from Panes and add it to non-gittable private startup file &nbsp;&nbsp;&nbsp;<span class="tag"><span class="panes">panes</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-10 Tue 11:49</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_1_7_2"><span class="done DONE"> DONE</span> debug Symbol:synth method &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniquesynth">uniquesynth</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-01 Sun 10:05</span></span><br/>
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1_2" class="outline-3">
+<h3 id="sec-1_2"><span class="section-number-3">1.2</span> 2011-05 May </h3>
+<div class="outline-text-3" id="text-1_2">
+
+
+</div>
+
+<div id="outline-container-1_2_1" class="outline-4">
+<h4 id="sec-1_2_1"><span class="section-number-4">1.2.1</span> 2011-05-01 Sunday </h4>
+<div class="outline-text-4" id="text-1_2_1">
+
+<ul>
+<li id="sec-1_2_1_1">UniqueBuffer:play crashes on multiple starts, using mplay instead &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniquebuffer">uniquebuffer</span>&nbsp;<span class="buq">buq</span></span><br/>
+
+<p>
+UniqueBuffer:play therefore now uses Function:mplay. This is not a major handicap.
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_2" class="outline-4">
+<h4 id="sec-1_2_2"><span class="section-number-4">1.2.2</span> 2011-05-02 Monday </h4>
+<div class="outline-text-4" id="text-1_2_2">
+
+<ul>
+<li id="sec-1_2_2_1"><span class="done DONE"> DONE</span> UniqueBuffer:load loads also the default buffer if not loaded &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniquebuffer">uniquebuffer</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-07 Sat 13:26</span></span><br/>
+
+<p>
+A minor glitch, but should be looked into. 
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_2_2_2"><span class="done CANCELLED"> CANCELLED</span> PrivateBusSynth, SignalPoller &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-07 Sat 13:25</span></span><br/>
+
+<p>
+Extend UniqueSynth class with subclasses: 
+</p>
+<p>
+PrivateBusSynth: adds a private Bus and redirects the output of the synth to it. For analysis synths, effects etc.
+The bus gets freed as soon as the UniqueSynth stops. 
+</p>
+<p>
+SignalPoller: 
+Adds a synchronized routine (rsynca) that polls the output of the synth to the private bus, or an anasysis buffer, and shares the data via a list of functions with other processes.
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_3" class="outline-4">
+<h4 id="sec-1_2_3"><span class="section-number-4">1.2.3</span> 2011-05-04 Wednesday </h4>
+<div class="outline-text-4" id="text-1_2_3">
+
+<ul>
+<li id="sec-1_2_3_1">alternative names for UniqueObject? &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniqueobject">uniqueobject</span></span><br/>
+
+<p>
+ObjectService? 
+ObjectRegistry? 
+ObjectServer? 
+</p>
+<p>
+PersistentObject?
+LibObject?
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_2_3_2">Many small bugs have been removed. Library is ready for alpha testing <br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_3_3">Added WaitForServer.new to String:fork. Snippets don't need it any more &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniqueobject">uniqueobject</span></span><br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_4" class="outline-4">
+<h4 id="sec-1_2_4"><span class="section-number-4">1.2.4</span> 2011-05-05 Thursday </h4>
+<div class="outline-text-4" id="text-1_2_4">
+
+<ul>
+<li id="sec-1_2_4_1">added toggle server auto boot for code evaluation &nbsp;&nbsp;&nbsp;<span class="tag"><span class="code">code</span></span><br/>
+
+<p>
+If Code class variable autoBoot is set to true, then evaluating a code snippet with Cmd-shift-x will call WaitForServer.new, thereby ensuring that any calls to 'wait' will be in sync with the server booted.
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_5" class="outline-4">
+<h4 id="sec-1_2_5"><span class="section-number-4">1.2.5</span> 2011-05-06 Friday </h4>
+<div class="outline-text-4" id="text-1_2_5">
+
+<ul>
+<li id="sec-1_2_5_1">Spectrograph alpha version complete, added Pen Object Test &nbsp;&nbsp;&nbsp;<span class="tag"><span class="spectrogram">spectrogram</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_5_2">Added theme switching with DocThemes class &nbsp;&nbsp;&nbsp;<span class="tag"><span class="panes">panes</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_5_3"><a name="ID-DC7BD27A-F893-4750-9A8D-B22AC3B2C960" id="ID-DC7BD27A-F893-4750-9A8D-B22AC3B2C960"></a>Added addListener method &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniqueobject">uniqueobject</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_5_4">Merged lilt2 to master, added tag v1.0alpha &nbsp;&nbsp;&nbsp;<span class="tag"><span class="lilt2">lilt2</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_5_5"><span class="todo TODO"> TODO</span> Add doWhen to UniqueObject to do when object is initialized &nbsp;&nbsp;&nbsp;<span class="tag"><span class="uniqueobject">uniqueobject</span></span><br/>
+
+<p>
+doWhen { | condition, action | 
+// Some objects created by makeFunc may need time to initialize
+{
+while { condition.(this).not } { 0.1.wait };
+action.(this);
+}.fork(AppClock)
+}
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_6" class="outline-4">
+<h4 id="sec-1_2_6"><span class="section-number-4">1.2.6</span> 2011-05-07 Saturday </h4>
+<div class="outline-text-4" id="text-1_2_6">
+
+<ul>
+<li id="sec-1_2_6_1">" &hellip; and her name was Elemenbí. " <br/>
+
+<p>
+Elemenbí (L. M.: N. B!)
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_7" class="outline-4">
+<h4 id="sec-1_2_7"><span class="section-number-4">1.2.7</span> 2011-05-08 Sunday </h4>
+<div class="outline-text-4" id="text-1_2_7">
+
+<ul>
+<li id="sec-1_2_7_1">Completed Spectrograph simplification <br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_8" class="outline-4">
+<h4 id="sec-1_2_8"><span class="section-number-4">1.2.8</span> 2011-05-09 Monday </h4>
+<div class="outline-text-4" id="text-1_2_8">
+
+<ul>
+<li id="sec-1_2_8_1">Fixed ServerPrep, Spectrograph, UniqueBuffer, Function:play, Examples <br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_8_2">Added Pattern support: EventStream, UniqueStream, Function:sched. Also SynthPrep uses OSCpathResponder for exact boot timing <br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_9" class="outline-4">
+<h4 id="sec-1_2_9"><span class="section-number-4">1.2.9</span> 2011-05-10 Tuesday </h4>
+<div class="outline-text-4" id="text-1_2_9">
+
+<ul>
+<li id="sec-1_2_9_1">improved help template, added some doc, especially on EventStream and UniqueSynth <br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2"><span class="done DONE"> DONE</span> Summary of ideas in this lib &nbsp;&nbsp;&nbsp;<span class="tag"><span class="doc">doc</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-10 Tue 13:55</span></span><br/>
+
+<ul>
+<li id="sec-1_2_9_2_1">ServerPrep <br/>
 
 <ul>
 <li>
@@ -164,14 +858,10 @@ Udef
 </ul>
 
 
-</div>
-
-</div>
-
-<div id="outline-container-1_2" class="outline-6">
-<h6 id="sec-1_2"><span class="section-number-6">1.2</span> UniqueSynth </h6>
-<div class="outline-text-6" id="text-1_2">
-
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2_2">UniqueSynth <br/>
 
 <ul>
 <li>
@@ -231,14 +921,10 @@ Using Symbol:mplay
 
 
 
-</div>
-
-</div>
-
-<div id="outline-container-1_3" class="outline-6">
-<h6 id="sec-1_3"><span class="section-number-6">1.3</span> EventStream, Function:sched and Function:stream </h6>
-<div class="outline-text-6" id="text-1_3">
-
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2_3">EventStream, Function:sched and Function:stream <br/>
 
 <p>
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
@@ -262,14 +948,10 @@ Example: Simplify the above code even further, while enabling  control of dtime 
 <p>
 Note: symbol.stream(Prand(&hellip;)) is equivalent to \symbol.prand(&hellip;)
 </p>
-</div>
-
-</div>
-
-<div id="outline-container-1_4" class="outline-6">
-<h6 id="sec-1_4"><span class="section-number-6">1.4</span> Object methods for easy messaging via NotificationCenter </h6>
-<div class="outline-text-6" id="text-1_4">
-
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2_4">Object methods for easy messaging via NotificationCenter <br/>
 
 <p>
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. 
@@ -277,14 +959,10 @@ Simplify the connection of objects for sending messages to each other via Notifi
 <p>
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 </p>
-</div>
-
-</div>
-
-<div id="outline-container-1_5" class="outline-6">
-<h6 id="sec-1_5"><span class="section-number-6">1.5</span> Code </h6>
-<div class="outline-text-6" id="text-1_5">
-
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2_5">Code <br/>
 
 <p>
 Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
@@ -302,26 +980,18 @@ Command-shift-v: Evaluate and post the results of the code, without routine or s
 Command-shift-j: Select the next code part
 Command-shift-k: Select the previous code part
 </p>
-</div>
-
-</div>
-
-<div id="outline-container-1_6" class="outline-6">
-<h6 id="sec-1_6"><span class="section-number-6">1.6</span> Panes </h6>
-<div class="outline-text-6" id="text-1_6">
-
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2_6">Panes <br/>
 
 <p>
 Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
 </p>
-</div>
-
-</div>
-
-<div id="outline-container-1_7" class="outline-6">
-<h6 id="sec-1_7"><span class="section-number-6">1.7</span> Dock </h6>
-<div class="outline-text-6" id="text-1_7">
-
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2_7">Dock <br/>
 
 <p>
 Provide some useful shortcuts for common tasks: 
@@ -344,24 +1014,450 @@ or by text search.
 closeDocListWindow : Close the document list window
 </p>
 
-</div>
-
-</div>
-
-<div id="outline-container-1_8" class="outline-6">
-<h6 id="sec-1_8"><span class="section-number-6">1.8</span> Spectrograph </h6>
-<div class="outline-text-6" id="text-1_8">
-
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_2_8">Spectrograph <br/>
 
 <p>
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
-</p></div>
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_3"><span class="todo TODO"> TODO</span> Devise scheme for chaining scheduled function execution &nbsp;&nbsp;&nbsp;<span class="tag"><span class="eventstream">eventstream</span>&nbsp;<span class="functionsched">functionsched</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_9_4">Orgmode-SC integration via attachments &nbsp;&nbsp;&nbsp;<span class="tag"><span class="orgmode">orgmode</span>&nbsp;<span class="ATTACH">ATTACH</span></span><br/>
+
+<p>
+(With Aris Bezas)
+</p>
+<p>
+Added ./Extensions/Examples directory to master branch and attached it here to test orgmode link integration.
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_10" class="outline-4">
+<h4 id="sec-1_2_10"><span class="section-number-4">1.2.10</span> 2011-05-11 Wednesday </h4>
+<div class="outline-text-4" id="text-1_2_10">
+
+<ul>
+<li id="sec-1_2_10_1">Code list ignores comments that have a space after the : ("//: ") &nbsp;&nbsp;&nbsp;<span class="tag"><span class="code">code</span></span><br/>
+
+<p>
+So you can write in a document this: 
+//:Example 1
+</p>
+<p>
+{ WhiteNoise.ar(0.1) }.play;
+</p>
+<p>
+//: End of above example
+</p>
+<p>
+Some text here. The part here will not be listed as a code snippet in the Code list window. (Cmd-})
+</p>
+<p>
+//:Next example
+</p>
+<p>
+\window.window;
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_11" class="outline-4">
+<h4 id="sec-1_2_11"><span class="section-number-4">1.2.11</span> 2011-05-12 Thursday </h4>
+<div class="outline-text-4" id="text-1_2_11">
+
+<ul>
+<li id="sec-1_2_11_1">Chain / EventStream debugged &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chain">chain</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_11_2"><span class="done DONE"> DONE</span> Debug environment evaluation in Chain, EventStream, remove .next from EventStream new. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chain">chain</span></span><br/>
+<span class="timestamp-wrapper"><span class="timestamp-kwd">CLOSED: </span> <span class="timestamp">2011-05-14 Sat 23:05</span></span><br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_12" class="outline-4">
+<h4 id="sec-1_2_12"><span class="section-number-4">1.2.12</span> 2011-05-14 Saturday </h4>
+<div class="outline-text-4" id="text-1_2_12">
+
+<ul>
+<li id="sec-1_2_12_1">Modified Meta_Exception:new to reset ServerPrep, resuming evaluation with Cmd-Shift-X &nbsp;&nbsp;&nbsp;<span class="tag"><span class="serverprep">serverprep</span></span><br/>
+
+<p>
+/*
+</p>
+<p>
+Reset ServerReady if an Exception occurs, to enable restarting the next time that ServerReady is needed. 
+</p>
+<p>
+*/
+</p>
+<ul>
+<li>
+Exception {
+
+<p>
+*new { arg what;
+var backtrace;
+// permit to use Cmd-Shift-X for evaluating code again. See classes Code and ServerPrep
+ServerPrep.initClass;
+if (debug) { backtrace = this.getBackTrace.caller };
+^super.newCopyArgs(what ? this.name, backtrace)
+}
+</p></li>
+</ul>
+
+
+<p>
+}
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_2_12_2">SynthLink added, timing mechanism + EventStream modified &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chain">chain</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_12_3">Tested nested chains, added chain stop, Symbol:chain, chainSeq &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chain">chain</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_12_4"><span class="todo TODO"> TODO</span> Debug stopping in chains: Sometimes synths continue &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chain">chain</span></span><br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_13" class="outline-4">
+<h4 id="sec-1_2_13"><span class="section-number-4">1.2.13</span> 2011-05-22 Sunday </h4>
+<div class="outline-text-4" id="text-1_2_13">
+
+<ul>
+<li id="sec-1_2_13_1"><span class="todo TODO"> TODO</span> Rename UniqueObject class to Resource <br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_14" class="outline-4">
+<h4 id="sec-1_2_14"><span class="section-number-4">1.2.14</span> 2011-05-26 Thursday </h4>
+<div class="outline-text-4" id="text-1_2_14">
+
+<ul>
+<li id="sec-1_2_14_1"><span class="todo TODO"> TODO</span> Keyboard shortcuts for Class, Buffer and SynthDef lists &nbsp;&nbsp;&nbsp;<span class="tag"><span class="shortcuts">shortcuts</span></span><br/>
+
+<p>
+Cmd-Ctl-C: Class list
+Cmd-Ctl-S: Synthdef List
+Cmd-Ctl-B: Buffer list
+</p></li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_2_15" class="outline-4">
+<h4 id="sec-1_2_15"><span class="section-number-4">1.2.15</span> 2011-05-30 Monday </h4>
+<div class="outline-text-4" id="text-1_2_15">
+
+<ul>
+<li id="sec-1_2_15_1"><span class="todo TODO"> TODO</span> Panes and DocTheme activation should be per kbd command, not per default &nbsp;&nbsp;&nbsp;<span class="tag"><span class="panes">panes</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_2_15_2"><span class="todo TODO"> TODO</span> sort out symbol buffer and other playing syntax &nbsp;&nbsp;&nbsp;<span class="tag"><span class="bufresource">bufresource</span>&nbsp;<span class="resource">resource</span></span><br/>
+
+<p>
+Should be simplified. Try to follow one principle: the symbol that gets the message is the one that stores the resulting new resource. 
+</p></li>
+</ul>
+<ul>
+<li id="sec-1_2_15_3"><span class="todo TODO"> TODO</span> simplify synthresource mapping mechanism              :busresource:synthresource <br/>
+
+
+<p>
+\symbol.map(\param, optional: symbol) -&gt; 
+</p>
+<p>
+symbol.synth.map(param, symbol ?? (symbol ++ _ ++ param).control.index )
+</p>
+<p>
+\symbol.mapDef(\param, defname, args (target???) ) -&gt; 
+</p>
+<p>
+Like above, but start a synth with the defname and args and send its output to the bus.
+</p>
+<p>
+\symbol.mapFunc(\param, function, args) -&gt; 
+</p>
+<p>
+Like above, but start a synth with the function and args and send its output to the bus.
+</p></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1_3" class="outline-3">
+<h3 id="sec-1_3"><span class="section-number-3">1.3</span> 2011-06 June </h3>
+<div class="outline-text-3" id="text-1_3">
+
+
+</div>
+
+<div id="outline-container-1_3_1" class="outline-4">
+<h4 id="sec-1_3_1"><span class="section-number-4">1.3.1</span> 2011-06-06 Monday </h4>
+<div class="outline-text-4" id="text-1_3_1">
+
+<ul>
+<li id="sec-1_3_1_1">List of machine listening / feature UGens with notes &nbsp;&nbsp;&nbsp;<span class="tag"><span class="features">features</span>&nbsp;<span class="ml">ml</span></span><br/>
+
+<ul>
+<li id="sec-1_3_1_1_1">UGens that output 0-1 changes <br/>
+
+
+<ul>
+<li id="sec-1_3_1_1_1_1">Onsets           Onset detector (0-1) <br/>
+
+<p>
+Onsets.kr(chain, threshold, odftype)
+</p>
+<p>
+An onset detector for musical audio signals - detects the beginning of notes/drumbeats/etc. Outputs a control-rate trigger signal which is 1 when an onset is detected, and 0 otherwise.
+</p>
+<p>
+chain - an FFT chain
+threshold - the detection threshold, typically between 0 and 1, although in rare cases you may find values outside this range useful
+odftype - the function used to analyse the signal (options described below; OK to leave this at its default value)
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_1_2">DetectSilence *ar(input, amp, time, doneAction) (0-1) <br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_1_3">PV_HainsworthFoote <br/>
+
+<p>
+FFT onset detector based on work described in 
+</p>
+<p>
+Hainsworth, S. (2003) Techniques for the Automated Analysis of Musical Audio. PhD, University of Cambridge engineering dept. See especially p128. The Hainsworth metric is a modification of the Kullback Liebler distance. 
+</p>
+<p>
+The onset detector has general ability to spot spectral change, so may have some ability to track chord changes  aside from obvious transient jolts, but there's no guarantee it won't be confused by frequency modulation artifacts.   
+</p>
+<p>
+Hainsworth metric on it's own gives good results but Foote might be useful in some situations: experimental. 
+</p>
+
+<p>
+*ar(buffer, proph=0.0, propf=0.0, threshold=1.0, waittime=0.04)
+</p>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_1_4">PV_JensenAndersen <br/>
+
+<p>
+FFT feature detector for onset detection based on work described in 
+</p>
+<p>
+Jensen,K. &amp; Andersen, T. H. (2003). Real-time Beat Estimation Using Feature Extraction. 
+In Proceedings of the Computer Music Modeling and Retrieval Symposium, Lecture Notes in Computer Science. Springer Verlag.
+</p>
+<p>
+First order derivatives of the features are taken. Threshold may need to be set low to pick up on changes. 
+</p>
+<p>
+*ar(buffer, propsc=0.25, prophfe=0.25, prophfc=0.25, propsf=0.25, threshold=1.0, waittime=0.04)
+</p>
+<p>
+buffer- FFT buffer to read from.
+</p>
+<p>
+propsc- Proportion of spectral centroid feature.
+</p>
+<p>
+prophfe- Proportion of high frequency energy feature.
+</p>
+<p>
+prophfc- Proportion of high frequency content feature.
+</p>
+<p>
+propsf- Proportion of spectral flux feature.
+</p>
+<p>
+threshold- Threshold level for allowing a detection
+</p>
+<p>
+waittime- If triggered, minimum wait until a further frame can cause another spot (useful to stop multiple detects on heavy signals)
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2">UGens that output continuous values <br/>
+
+<ul>
+<li id="sec-1_3_1_1_2_1">Amplitude.kr(in, attackTime, releaseTime, mul, add) <br/>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_2">Loudness sones = Loudness.kr(chain, smask=0.25, tmask=6) <br/>
+
+<p>
+chain [fft] - Audio input to track, which has been pre-analysed by the FFT UGen; see examples below for the expected FFT size
+smask [sk] - Spectral masking param: lower bins mask higher bin power within ERB bands, with a power falloff (leaky integration multiplier) of smask per bin
+tmask [sk] - Temporal masking param: the phon level let through in an ERB band is the maximum of the new measurement, and the previous minus tmask phons
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_3">Peak Peak.ar(in, trig) <br/>
+Outputs the peak amplitude of the signal received at the input. 
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_4">PeakFollower.ar(in, decay) <br/>
+Outputs the peak amplitude of the signal received at the input. 
+if level is below maximum, the level decreases by the factor given in decay.
+
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_5">Pitch                                            autocorrelation pitch follower <br/>
+
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_6">ZeroCrossing             zero crossing frequency follower <br/>
+
+<p>
+ZeroCrossing.ar(in)
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_7">MFCC mel frequency cepstral coefficients <b>MULTICHANNEL</b> !!!!! <br/>
+
+<p>
+// coeffn -&gt; kr signal. (OutputProxy). 
+</p>
+
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_8">Slope            slope of signal <br/>
+
+<p>
+Slope.ar(in, mul, add)
+Slope.kr(in, mul, add)
+</p>
+<p>
+Measures the rate of change per second of a signal.
+Formula implemented is:
+</p>
+<p>
+out[i] = (in[i] - in[i-1]) * sampling_rate
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_9">SpecCentroid             Spectral centroid <br/>
+
+<p>
+SpecCentroid.kr(chain)
+</p>
+<p>
+Given an FFT chain, this measures the spectral centroid, which is the weighted mean frequency, or the "centre of mass" of the spectrum. (DC is ignored.)
+</p>
+<p>
+This can be a useful indicator of the perceptual brightness of a signal.
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_10">SpecFlatness     Spectral Flatness measure <br/>
+
+<p>
+SpecFlatness.kr(chain)
+</p>
+<p>
+Given an FFT chain this calculates the Spectral Flatness measure, defined as a power spectrum's geometric mean divided by its arithmetic mean. This gives a measure which ranges from approx 0 for a pure sinusoid, to approx 1 for white noise.
+</p>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_1_1_2_11">SpecPcile        Find a percentile of FFT magnitude spectrum <br/>
+
+<p>
+SpecPcile.kr(chain, fraction)
+</p>
+<p>
+Given an FFT chain this calculates the cumulative distribution of the frequency spectrum, and outputs the frequency value which corresponds to the desired percentile.
+</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-1_3_2" class="outline-4">
+<h4 id="sec-1_3_2"><span class="section-number-4">1.3.2</span> 2011-06-08 Wednesday </h4>
+<div class="outline-text-4" id="text-1_3_2">
+
+<ul>
+<li id="sec-1_3_2_1"><span class="todo TODO"> TODO</span> Debug Chain help parallel examples crash when triggered from button window &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chain">chain</span></span><br/>
+</li>
+</ul>
+<ul>
+<li id="sec-1_3_2_2">Started reorganizing code in quarks, following mc method &nbsp;&nbsp;&nbsp;<span class="tag"><span class="quarks">quarks</span></span><br/>
+
+<p>
+Local Quark folders to use: 
+</p>
+<p>
+quarks.local.core : Core library parts
+quarks.local.projects : Project code
+</p></li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble">
 <p class="author"> Author: Ioannis Zannos
 </p>
-<p class="date"> Date: 2011-05-10 14:03:37 EEST</p>
+<p class="date"> Date: 2011-06-08 16:13:01 EEST</p>
 <p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
 </div>
 </div>

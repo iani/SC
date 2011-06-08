@@ -1,4 +1,5 @@
 #+SEQ_TODO: TODO(t) BUG(b) | DONE(d) CANCELLED(c) DEFERRED(f)
+#+OPTIONS: ^:{} f:nil
 
 * 2011
 ** 2011-04 April
@@ -144,7 +145,7 @@ This is because buf.getn can only fetch up to 1024 values (OSC limit?).
      :END:
 
 This is important when installing lilt2 to a new computer that does not have any sessions stored. 
-**** DONE code parser should ignore lines where //: is followed by spece :doclistwindow:
+**** DONE code parser should ignore lines where //: is followed by spce  :doclistwindow:
      CLOSED: [2011-04-20 Wed 18:01]
      :PROPERTIES:
      :ENTERED_ON: <2011-04-20 Wed 17:38>
@@ -683,7 +684,7 @@ Like above, but start a synth with the defname and args and send its output to t
 
 Like above, but start a synth with the function and args and send its output to the bus.
 ** 2011-06 June
-*** 2011-06-06 Monday
+*** 2011-06-06 Mobnday
 **** List of machine listening / feature UGens with notes :features:ml:
      :PROPERTIES:
      :ENTERED_ON: <2011-06-06 Mon 05:47>
@@ -803,5 +804,17 @@ Given an FFT chain this calculates the Spectral Flatness measure, defined as a p
 	SpecPcile.kr(chain, fraction)
 
 Given an FFT chain this calculates the cumulative distribution of the frequency spectrum, and outputs the frequency value which corresponds to the desired percentile.
+*** 2011-06-08 Wednesday
+**** TODO Debug Chain help parallel examples crash when triggered from button window  :chain:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-06-08 Wed 16:02>
+     :END:
+**** Started reorganizing code in quarks, following mc method :quarks:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-06-08 Wed 16:11>
+     :END:
 
+Local Quark folders to use: 
 
+quarks.local.core : Core library parts
+quarks.local.projects : Project code
