@@ -6,7 +6,18 @@ Download from: https://github.com/iani/SC
 or:
  : git clone git://github.com/iani/SC.git
 
-*Summary of ideas in this Library*
+* Installation
+
+As of 2011-06-08 The library is being reorganized to a modular plugin-form using quarks (thanks MC).  To open up a GUI that lists local quarks for installing or removing evaluate an appropriately modified version of the following statement: 
+
+#+BEGIN_EXAMPLE -t -w 100
+Quarks(localPath: Platform.userAppSupportDir +/+ "quarks.local").gui;
+#+END_EXAMPLE
+
+Note: In this library =quarks.local= is the top level directory for all modules in quark form. 
+
+
+
 
 * Class ServerPrep
 

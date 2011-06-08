@@ -1,0 +1,14 @@
+(
+	\name: "my1stquark",
+	\path: "my1stquarkdir",
+	\summary: "test only.",
+	\helpdoc: "Help/AmbIEM.html",
+	\author: "asdfasdfasdf",
+	\version: 1.0,
+	\organization: "Institute of Electronic Music and Acoustics, Graz",
+	\country: "Austria",
+	\since: "2005",
+	\url: "http://sonenvir.at/downloads/sc3/ambiem/",
+	\dependencies: ["MathLib"]
+)
+
