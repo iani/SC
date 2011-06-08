@@ -11,13 +11,17 @@
 # ignore zipped files
 *.zip
 
-#other files and folders that should be ignored
-# we are using this file to store files of work sessions with DocSessions
-# but it gets in the way because of auto-save. So just leave an example version,
-# but stop committing new versions:
-*.sctxar
+# Ignore default SuperCollider object text archive
+archive.sctxar
 
-archive.sctxar 
+
+# Ignore Latex to pdf auxiliary file output
+*.log
+*.synctex.gz
+*.out
+*.toc
+*.aux
+
 tryout.scd
 
 Extensions\ \(archive\)
@@ -32,4 +36,8 @@ synthdefs
 
 dev_only
 
+# Do include quarks, because you want to preserve compatibility
+# Of all versions of your lib, even when quarks are modified at later time
+!quarks
 !Extensions/quarks
+!Extensions/quarks.local

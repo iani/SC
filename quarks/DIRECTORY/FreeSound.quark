@@ -1,0 +1,14 @@
+(
+	\name: "FreeSound",
+	\path: "FreeSound",
+	\summary: "A class that searches and downloads samples from freesound ( http://www.freesound.org ) database. It needs cURL installed on your machine (included in OS X and most Linux distros), not tested on Windows.",
+	\author: "Batuhan Bozkurt",
+	\country: "Turkey",
+	\version: 1.2,
+	\since: "2009",
+	\helpdoc: "FreeSound.html",
+	\ext_dependancy: "Needs the XML quark to function.",
+	\url: "http://www.earslap.com",
+	\dependencies: ["XML"]
+)
+	

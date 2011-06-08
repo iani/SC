@@ -45,7 +45,7 @@ CocoaMenuItem.addToMenu("Utils", "Open log file in orgmode", ["l", true, true], 
 });
 
 //:rest
-// Panes.activate;
+Panes.activate;
 
 { Document.listener.front }.defer(0.5);
 

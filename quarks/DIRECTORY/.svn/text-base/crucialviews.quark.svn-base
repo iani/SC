@@ -1,0 +1,7 @@
+(
+	\name: "crucialviews",
+	\path: "crucialviews", 
+	\summary: "Views, user views and layout tools ",
+	\author: "felix",
+	\helpdoc: "Help/crucialviews.htm"
+)

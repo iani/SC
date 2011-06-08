@@ -1,0 +1,10 @@
+(
+	\name: "Ktl",
+	\path: "Ktl",
+	\summary: "Classes for using various controllers. Do not install this quark simultaneously with JITMIDIKtl.",
+	\helpdoc: "Ktl.html",
+	\author: "Alberto de Campo, Marije Baalman",
+	\version: 1.0,
+	\country: "Germany, Netherlands",
+	\since: "2010"
+)

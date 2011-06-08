@@ -1,0 +1,12 @@
+(
+	\name: "AllGui",
+	\path: "AllGui",
+	\summary: "Ambisonic enconder/decoder up to 3rd order and binaural. Also including a simple headtracker for webcams.",
+	\helpdoc: "Help/AllGui.scd",
+	\author: "Alberto de Campo",
+	\version: 1.0,
+	\organization: "UdK Berlin",
+	\country: "Germany",
+	\since: "2011"
+)
+

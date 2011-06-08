@@ -3,7 +3,8 @@
 	
 gui {
 		var	window, caption, explanation, views, resetButton, saveButton, warning,
-			scrollview, scrB, flowLayout, /* quarksflow, */ height, maxPerPage, nextButton, prevButton;
+			scrollview, scrB, flowLayout, /* quarksflow, */ height, maxPerPage, 
+			nextButton, prevButton;
 		var	quarks;
 		var pageStart = 0, fillPage = { |start|
 			scrollview.visible = false;
@@ -102,7 +103,8 @@ gui {
 
 		window.view.decorator.nextLine;
 		explanation = GUI.staticText.new(window, Rect(20,15,500,20));
-		explanation.string = "\"+\" -> installed, \"-\" -> not installed, \"*\" -> marked to install, \"x\" -> marked to uninstall";
+		explanation.string = "\"+\" -> installed, \"-\" -> not installed, " 
+			++ "\"*\" -> marked to install, \"x\" -> marked to uninstall";
 		window.view.decorator.nextLine;
 
 		warning = GUI.staticText.new(window, Rect(20,15,400,30));

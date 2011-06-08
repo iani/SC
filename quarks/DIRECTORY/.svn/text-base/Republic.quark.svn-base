@@ -1,0 +1,9 @@
+(
+	\name: 			"Republic",
+	\path: 			"Republic",
+	\summary:		"Simplify synchronisation of networks and make it easy to join and quit a running session.",
+	\author: 		"Alberto de Campo, Julian Rohrhuber",
+	\helpdoc:		"Republic.html",
+	\since: 		"2009",
+	\version:		"0.1"
+)
