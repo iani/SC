@@ -1,4 +1,0 @@
-TEST { 
-	
-	*new { "testing".postln; }	
-}
