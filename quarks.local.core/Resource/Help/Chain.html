@@ -260,7 +260,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p12"><br></p>
 <p class="p3">The next example shows the difference in a more striking manner. <span class="Apple-converted-space"> </span></p>
 <p class="p12"><br></p>
-<p class="p7">//:Variation<span class="Apple-converted-space">  </span>Insert some staccato chord/clusters, and 30-note fast passages</p>
+<p class="p7">//:Variation: Insert some staccato chord/clusters, and 30-note fast passages</p>
 <p class="p9">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
 <p class="p8"><span class="Apple-tab-span">	</span>{</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
@@ -385,9 +385,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p13"><br></p>
 <p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
 <p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
 <p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
 <p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
@@ -397,9 +397,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">0.2.wait;</p>
 <p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
 <p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
 <p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
 <p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
@@ -416,9 +416,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p13"><br></p>
 <p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
 <p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n + 0.01); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n + 0.01); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
 <p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
 <p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
@@ -428,9 +428,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">0.2.wait;</p>
 <p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
 <p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
 <p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
 <p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
 <p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
@@ -443,9 +443,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">{</p>
 <p class="p9"><span class="Apple-tab-span">	</span>Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
 <p class="p10"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
-<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n + 0.01); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n + 0.01); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
 <p class="p8"><span class="Apple-tab-span">	</span>], 20),<span class="Apple-tab-span">	</span></p>
 <p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
 <p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
@@ -455,9 +455,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8"><span class="Apple-tab-span">	</span>0.2.wait;</p>
 <p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
 <p class="p10"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
-<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
-<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
 <p class="p8"><span class="Apple-tab-span">	</span>], 20),<span class="Apple-tab-span">	</span></p>
 <p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
 <p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>

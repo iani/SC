@@ -8,7 +8,7 @@ Chain {
 	
 	init { CmdPeriod.doOnceFirst(this); }
 
-	cmdPeriod { this.stop; }	
+	cmdPeriod { this.stop; }
 
 	start { if (this.isRunning) { } { this.reset.next } } 
 	
