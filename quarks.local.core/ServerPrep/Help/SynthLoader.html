@@ -16,21 +16,25 @@ span.Apple-tab-span {white-space:pre}
 </style>
 </head>
 <body>
-<p class="p1"><b>DefLoader</b></p>
+<p class="p1"><b>SynthLoader</b></p>
 <p class="p2"><b></b><br></p>
 <p class="p3"><b>Inherits from: ServerActionLoader : Object</b></p>
 <p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
-<p class="p5"><b>Purpose</b></p>
+<p class="p3"><b>Purpose</b></p>
 <p class="p4"><b></b><br></p>
-<p class="p3">Ensure that all SynthDefs collected as instances of Udef, in Udef.all are loaded on a server before any Synths are created, and before any other dependant actions are executed.<span class="Apple-converted-space"> </span></p>
-<p class="p4"><b></b><br></p>
+<p class="p3">Ensure that<span class="Apple-converted-space">  </span>Synth instances are always created after any waiting SynthDefs or Buffers have been loaded on a server and before any other dependant actions are executed.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
 <p class="p5"><b>Usage</b></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p3">Used by ServerPrep. Not to be used directly.<span class="Apple-converted-space"> </span></p>
-<p class="p4"><b></b><br></p>
+<p class="p4"><br></p>
 <p class="p5"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3">ServerPrep, DefLoader, BufLoader, RoutineLoader</p>
 <p class="p4"><b></b><br></p>
-<p class="p3">ServerPrep, BufLoader, SynthLoader, RoutineLoader</p>
+<p class="p3"><b>Usage</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Related Classes</b></p>
 <p class="p4"><b></b><br></p>
 <p class="p3"><b>Instance Creation</b></p>
 <p class="p4"><b></b><br></p>
@@ -54,27 +58,9 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4"><b></b><br></p>
 <p class="p3"><b>Instance methods</b></p>
 <p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>addAllUdefs :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
 <p class="p3"><b><span class="Apple-tab-span">	</span>done :<span class="Apple-converted-space"> </span></b></p>
 <p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>init :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>load :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>loadAllObjects :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>loadNextObjectGroup :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>makeResponder :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>makeResponders :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>next :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>objectKind :<span class="Apple-converted-space"> </span></b></p>
-<p class="p4"><b></b><br></p>
-<p class="p3"><b><span class="Apple-tab-span">	</span>responderPaths</b></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>objectKind</b></p>
 <p class="p4"><b></b><br></p>
 <p class="p3"><b>Examples</b></p>
 <p class="p4"><b></b><br></p>
