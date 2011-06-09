@@ -53,7 +53,6 @@ CodeButtons : WindowResource {
 		bounds.top = Window.screenBounds.height - bounds.height;
 		object.bounds = bounds;
 		historyview = EZListView(bounds: Rect(0, 800, 300, 200), label: "History: " ++ object.name);
-//		historyview.items.postln;
 		this.addNotifier(code, \snippet, { | snippet |
 			historyview.addItem(snippet, { snippet.postln; });
 		});
