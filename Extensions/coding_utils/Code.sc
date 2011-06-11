@@ -56,10 +56,10 @@ Code {
 				this.makeCodeOSC;
 			}),
 			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
-				this.selectNextSnippet;
+				this.selectPreviousSnippet;
 			}),
 			CocoaMenuItem.addToMenu("Code", "next snippet", ["K", false, false], {
-				this.selectPreviousSnippet;
+				this.selectNextSnippet;
 			}),
 			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false],
 				{ this.forkCurrentSnippet(AppClock); }
