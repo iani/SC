@@ -44,7 +44,7 @@ Code {
 				Quarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.core").gui;
 			}),
 			CocoaMenuItem.addToMenu("Code", "Configure project quarks", nil, {
-				Quarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.project").gui;
+				Quarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.projects").gui;
 			}),
 			CocoaMenuItem.addToMenu("Code", "snippet list view", [/*{*/ "}", false, false], {
 				this.showCodeListWindow;
@@ -58,7 +58,7 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
 				this.selectPreviousSnippet;
 			}),
-			CocoaMenuItem.addToMenu("Code", "next snippet", ["K", false, false], {
+			CocoaMenuItem.addToMenu("Code", "nextz snippet", ["K", false, false], {
 				this.selectNextSnippet;
 			}),
 			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false],

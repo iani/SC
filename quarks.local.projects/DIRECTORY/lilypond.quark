@@ -1,0 +1,15 @@
+(
+	\name: "lilypond",
+	\path: "lilypond",
+	\summary: "Create scores in lilypond format from patterns, chains etc",
+	\helpdoc: "Help/lilypond.html",
+	\author: "Ioannis Zannos",
+	\version: 0.01,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+
