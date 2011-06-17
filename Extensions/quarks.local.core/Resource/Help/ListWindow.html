@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+span.s3 {color: #737373}
+span.s4 {color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>ListWindow</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: UniqueWindow : UniqueObject : Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Purpose</b></p>
+<p class="p4"><br></p>
+<p class="p3">Facilitate the creation of a window with a list of items to select from and an action attached to each item. Provides following features:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">The list can update itself based on a function that obtains objects from an object, when receiving any one from a list of messages from that object.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">The list can find out the index of the chosen item based on a function, for example, a function that returns the current Document.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">The window provides a text field at the top, for searching in the list incrementally by typing the beginning of an item's name.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><br></p>
+<p class="p3">See examples in class methods showDocListWindow and browseUserClasses of class Dock.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">The code for browseUserClasses is a simple example:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>*browseUserClasses {</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> windowName = <span class="s2">'User Classes'</span>;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">ListWindow</span>(windowName, <span class="s1">nil</span>, {</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Class</span>.allClasses.select({ <span class="s1">| c |</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">"SuperCollider/Extensions/"</span>.matchRegexp(c.filenameSymbol.asString)</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>and: { <span class="s3">"Meta*"</span>.matchRegexp(c.name.asString).not }</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}).collect({ <span class="s1">| c |</span><span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>c.name.asSymbol-&gt;{<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>c.openCodeFile;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ if (<span class="s1">ListWindow</span>.at(windowName).notNil) { <span class="s1">ListWindow</span>.at(windowName).close; };<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.defer(0.5)</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.doOnceIn(0.75);</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>});</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>});</p>
+<p class="p4"><br></p>
+<p class="p3">The code for showDocListWindow shows how to add the additional features of auto-update of the list when Documents are added or removed from the current SuperCollider session, and of<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>*showDocListWindow {</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> listwin;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>listwin = <span class="s1">ListWindow</span>(<span class="s2">'Documents'</span>,<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Rect</span>(<span class="s1">Window</span>.screenBounds.width - width, 0, width, <span class="s1">Window</span>.screenBounds.height),<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// This function creates the list of items and actions for the list view:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s1">Document</span>.allDocuments.sort({ <span class="s1">| a, b |</span> a.name &lt; b.name }) collect: { <span class="s1">| d |</span><span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>d.name-&gt;{</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>d.front;<span class="Apple-converted-space"> </span></p>
+<p class="p9">// sending a document to front does not make it current. Therefore compensate here:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Document</span>.current = d;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} };</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>},</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// This function tells the ListView how to update which item is selected<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// whenever certain messages are received vie NotificationCenter (see next item here)</p>
+<p class="p10"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ </span>| items |</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> doc;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>doc = <span class="s1">Document</span>.current.name;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>items.indexOf(items detect: { <span class="s1">| d |</span> d.key == doc });</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>},</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// The next two arguments tell the ListView to listen to messages sent from<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// the Panes class, and to update whenever receiving the messages<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// \docOpened, \docToFront, \docClosed</p>
+<p class="p11"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s1">Panes</span><span class="s4">, [</span>\docOpened<span class="s4">, </span>\docToFront<span class="s4">, </span>\docClosed<span class="s4">],</span></p>
+<p class="p9"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>delay: 0.1; </span>// leave some time for Documents to update their name etc.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// These additional messages tell the ListWindow to change its bounds whenever</p>
+<p class="p8"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// the messages \openedCodeListWindow and \closedCodeListWindow are received from Code.</p>
+<p class="p11"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.addNotifier(</span><span class="s1">Code</span><span class="s4">, </span>\openedCodeListWindow<span class="s4">, {</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>listwin.window.bounds = listwin.window.bounds.height = <span class="s1">Window</span>.screenBounds.height / 2 - 70;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p11"><span class="s4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.addNotifier(</span><span class="s1">Code</span><span class="s4">, </span>\closedCodeListWindow<span class="s4">, {</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>listwin.window.bounds = listwin.window.bounds.height = <span class="s1">Window</span>.screenBounds.height;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>});</p>
+<p class="p6"><span class="Apple-tab-span">	</span>}</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3">UniqueWindow. Examples of usage are found in Dock class.</p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance Creation</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>--<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>key :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>object</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>new</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>addMessages</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>

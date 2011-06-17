@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008323}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+span.s3 {color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Fade</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-converted-space"> </span></p>
+<p class="p3">Add release to any synthdef to avoid clipping.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Provide a simple linear envelope (Linen) to simplify the adding of a fade-in and fade-out envelope to a SynthDef, thereby preventing clips at start and end of the synth and also enabling synth.release with adjustable release time.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>FadeOut</b> is similar to Fade but provides a curved fadeout envelope that sounds smoother, especially towards the end.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Here is a comparison of synths with and without Fade, showing the clipping:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p7">//:clips:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p8"><span class="s1">SynthDef</span>(<span class="s2">\test</span>, { <span class="s1">Out</span>.ar(0, <span class="s1">SinOsc</span>.ar(<span class="s1">Rand</span>(400, 4000), 0, 0.2)) }).send(<span class="s1">Server</span>.default);</p>
+<p class="p6"><br></p>
+<p class="p8">10 do: { 0.1.wait; <span class="s2">\test</span>.play; 0.1.wait; <span class="s2">\test</span>.free };</p>
+<p class="p6"><br></p>
+<p class="p7">//:does not clip:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p8"><span class="s1">SynthDef</span>(<span class="s2">\test</span>, { <span class="s1">Out</span>.ar(0, <span class="s1">SinOsc</span>.ar(<span class="s1">Rand</span>(400, 4000), 0, 0.2 * <span class="s1">Fade</span>.kr)) }).send(<span class="s1">Server</span>.default);</p>
+<p class="p6"><br></p>
+<p class="p8">10 do: { 0.1.wait; <span class="s2">\test</span>.play; 0.1.wait; <span class="s2">\test</span>.releaseSynth; };</p>
+<p class="p6"><br></p>
+<p class="p8">//: --</p>
+<p class="p4"><br></p>
+<p class="p3">The Fade instance creates a gate control input ugen, so that it need not be written explicitly in the SynthDef's arguments.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">The following 2 SynthDefs are equivalent, but the second one which uses Fade is one line shorter and<span class="Apple-converted-space"> </span></p>
+<p class="p3">needs one argument less.</p>
+<p class="p6"><br></p>
+<p class="p9">//:without Fade class def: Needs Linen and 3 arguments.</p>
+<p class="p10">SynthDef<span class="s3">(</span><span class="s2">\withoutFade</span><span class="s3">, { </span>| attack = 0.5, gate = 1, doneAction = 2 |</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s1">var</span> fade;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>fade = <span class="s1">Linen</span>.kr(gate, attack, 1, 0.02, doneAction);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(0, fade * <span class="s1">SinOsc</span>.ar(800, 0, 0.1));</p>
+<p class="p8">}).send(<span class="s1">Server</span>.default);</p>
+<p class="p6"><br></p>
+<p class="p9">//:create synth</p>
+<p class="p11"><span class="s3">a = </span><span class="s1">Synth</span><span class="s3">(</span>\withoutFade<span class="s3">);</span></p>
+<p class="p6"><br></p>
+<p class="p9">//:release synth</p>
+<p class="p8">a.release(1.7);</p>
+<p class="p6"><br></p>
+<p class="p9">//==============================================================================</p>
+<p class="p6"><br></p>
+<p class="p9">//:with Fade class def. One argument less, shorter code.</p>
+<p class="p10">SynthDef<span class="s3">(</span><span class="s2">\withFade</span><span class="s3">, { </span>| attack = 0.5, doneAction = 2 |</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(0, <span class="s1">Fade</span>.kr(attack, doneAction: doneAction) * <span class="s1">SinOsc</span>.ar(800, 0, 0.1));</p>
+<p class="p8">}).send(<span class="s1">Server</span>.default);</p>
+<p class="p6"><br></p>
+<p class="p9">//:create fade synth</p>
+<p class="p11"><span class="s3">b = </span><span class="s1">Synth</span><span class="s3">(</span>\withFade<span class="s3">);</span></p>
+<p class="p6"><br></p>
+<p class="p9">//:release the fade synth</p>
+<p class="p8">b.release(1.7);</p>
+<p class="p6"><br></p>
+<p class="p7">//==============================================================================</p>
+<p class="p6"><br></p>
+<p class="p8">//:Simpler usage</p>
+<p class="p6"><br></p>
+<p class="p11"><span class="s1">SynthDef</span><span class="s3">(</span>\simpleFade<span class="s3">, {</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(0, <span class="s1">Fade</span>.kr * <span class="s1">SinOsc</span>.ar(800, 0, 0.1));</p>
+<p class="p8">}).send(<span class="s1">Server</span>.default);</p>
+<p class="p6"><br></p>
+<p class="p7">//:create fade synth</p>
+<p class="p11"><span class="s3">c = </span><span class="s1">Synth</span><span class="s3">(</span>\simpleFade<span class="s3">);</span></p>
+<p class="p6"><br></p>
+<p class="p7">//:release the fade synth</p>
+<p class="p8">c.release(1.7);</p>
+<p class="p6"><br></p>
+<p class="p7">//==============================================================================</p>
+<p class="p6"><br></p>
+<p class="p8">//:Simpler usage, with Function:play (Elemenbi/Lilt2 version)</p>
+<p class="p6"><br></p>
+<p class="p8">// Play for 1 second, then add a fadeout of 0.5 seconds</p>
+<p class="p8">{ <span class="s1">Out</span>.ar(0, <span class="s1">Fade</span>.kr * <span class="s1">SinOsc</span>.ar(1000, 0, 0.1)); }.play.dur(1, 3.5);</p>
+<p class="p6"><br></p>
+<p class="p8">//:With Udef and SynthResource</p>
+<p class="p6"><br></p>
+<p class="p8"><span class="s1">Udef</span>(<span class="s2">\uDefFade</span>, { <span class="s1">Out</span>.ar(0, <span class="s1">Fade</span>.kr * <span class="s1">SinOsc</span>.ar(1000, 0, 0.1)); });</p>
+<p class="p6"><br></p>
+<p class="p8">// Play for 1 second, then add a fadeout of 1.7 seconds</p>
+<p class="p8"><span class="s2">\uDefFade</span>.play.dur(1, 1.7);</p>
+</body>
+</html>

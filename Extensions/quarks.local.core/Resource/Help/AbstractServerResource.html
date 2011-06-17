@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+span.s1 {color: #162bc4}
+span.s2 {color: #000000}
+span.s3 {color: #008323}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>AbstractUniqueServerObject</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: UniqueObject : Object</b></p>
+<p class="p4"><b><span class="Apple-converted-space"> </span></b></p>
+<p class="p5"><b>Pupose</b></p>
+<p class="p4"><br></p>
+<p class="p3">An abstract superclass for all classes whose instances represents objects on a server. All classes that inherit from this class store their instances under the server to which these instances belong, following this scheme:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">If &lt;Class&gt; is the class of an instance, &lt;key&gt; is the main key (name) of the instance and &lt;server&gt; is the server where the server object represented by the instance resides, then the instance is stored under the path: [&lt;Class&gt;, &lt;server&gt;, &lt;key&gt;]</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><br></p>
+<p class="p3">All instances of an AbstractUniqueServerObject subclass that reside on a server can be retrieved by the class method onServer.<span class="Apple-converted-space"> </span></p>
+<p class="p3">For example:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">BufferResource.onServer; <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// all BufferResources on the default server. <span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Udef.onServer(Server.internal); <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// All Udefs ("SynthResourceDefs") on the internal server.</p>
+<p class="p4"><br></p>
+<p class="p3">SynthResource.onServer(Server.local);<span class="Apple-tab-span">	</span>// all SynthResources in the local server.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Instances of subclasses of AbstractUniqueServerObject can access their server by the method server.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">\default.play.server;<span class="Apple-tab-span">	</span>// Access the server of the Synth started by \default.play</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3">Subclasses: SynthResource, PrivateBusSynth, BufferResource</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Instance Creation</b></p>
+<p class="p4"><br></p>
+<p class="p3">This is an abstract class, not intended for direct creation of intances.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Class variables: none</b></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Instance variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>key : </b>A symbol or number under which the object is stored in UniqueObject.objects.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The can be accessed<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>object : </b>A Synth, or Buffer, depending on the subclass.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>server : </b>The Server where the object resides.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>makeKey : <span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>onServer :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>init :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>server : </b>Access the server<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p6"><span class="s1">BufferResource</span><span class="s2">.onServer; <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// all BufferResources on the default server. <span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p6"><span class="s1">SynthResource</span><span class="s2">.onServer(</span><span class="s1">Server</span><span class="s2">.local);<span class="Apple-tab-span">	</span></span>// all SynthResources in the local server.<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p6"><span class="s3">\default</span><span class="s2">.play.server;<span class="Apple-tab-span">	</span></span>// Access the server of the Synth started by \default.play</p>
+<p class="p4"><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>

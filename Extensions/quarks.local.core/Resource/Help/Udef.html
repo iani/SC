@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Udef</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-converted-space"> </span></p>
+<p class="p3">Store synthdefs in a global pool and make them available to synths on any server by sending them to the server at boot time, before starting any synth.</p>
+<p class="p4"><br></p>
+<p class="p3">SynthDefs created while the server is running are sent immediately. ServerReady ensures that they will be sent before starting any further instance of SynthResource.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class Methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*new( name, ugenGraphFunc, rates, prependArgs, variants, metadata, server)</b> :<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Create a SynthDef in the same manner as in SynthDef new and store it for loading to server.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The arguments are the same as those of the new method of SynthDef.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>server defaults to Server.default.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>If the server is booted, the SynthDef is sent immediately to it, and any synths sent at the same time</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>wait until it is loaded before they start.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>If the server is not booted, the Udef will be sent as soon as it boots.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Udefs created for one server during one work session remain stored in class variable all of Udef.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>They are always loaded immediately after the server boots on each subsequent session.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class Variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>all : </b>MultiLevelIdentityDictionary.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Level 1 keys: the servers that have Udefs defined on them.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Level 2 keys: The names of the Udefs defined for this server.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>values: The Udefs defined for this server.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>All Udefs for a server are sent to the server as soon as it boots.</p>
+<p class="p4"><span class="Apple-converted-space">    </span></p>
+</body>
+</html>
