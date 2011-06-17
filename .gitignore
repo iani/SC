@@ -11,6 +11,16 @@
 # ignore zipped files
 *.zip
 
+<<<<<<< HEAD
+# ignore Xcode project
+*.xcodeproj
+
+#other files and folders that should be ignored
+# we are using this file to store files of work sessions with DocSessions
+# but it gets in the way because of auto-save. So just leave an example version,
+# but stop committing new versions:
+*.sctxar
+=======
 # Ignore default SuperCollider object text archive
 archive.sctxar
 
@@ -21,6 +31,7 @@ archive.sctxar
 *.out
 *.toc
 *.aux
+>>>>>>> 04033f698193d91c0ebe7a13532b66d70c48524e
 
 tryout.scd
 

@@ -1,0 +1,100 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green115\blue0;}
+\deftab560
+\pard\pardeftab560\ql\qnatural
+
+\f0\fs18 \cf0 (\
+\cf2 // Variables de redimensionnage\cf0 \
+\cf3 var\cf0  durNewSample = 30;\
+\cf2 // Variables de stockages
+\fs22 \cf0 \
+
+\fs18 \cf3 var\cf0  liFOs, routPlay, modRec = 0;\
+\cf2 // Variables de declarations des widgets\cf0 \
+\cf3 var\cf0  w, bClear, mFOs, bFOs, bPlay, bRec; \
+\
+\cf2 // Creation de la liste des IBuffers\cf0 \
+liFOs = \cf3 IBuffers\cf0 .new;\
+\
+\cf2 // Sampler
+\fs14 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+
+\fs18 \cf3 SynthDef\cf0 .new(\
+	\cf4 "LecteurFade"\cf0 ,\
+	\{\cf3 arg\cf0  buf, amp;\
+	\cf3 var\cf0  lecteur, env, multi, sortie;\
+		lecteur = \cf3 PlayBuf\cf0 .ar(2, buf, 1, doneAction: 2);\
+		env = \cf3 EnvGen\cf0 .ar(\cf3 Env\cf0 .new([1, 1, 0], [durNewSample - 0.010, 0.010])); \cf2 // Enveloppe a appliquer a l echantillon\cf0 \
+		multi = lecteur * env;\
+		sortie = \cf3 Out\cf0 .ar(0, multi);\
+\}).send(s);\
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+	\
+\cf2 // Interface
+\fs14 \cf0 \
+
+\fs18 w = \cf3 Window\cf0 .new(\cf4 "LecteurFade"\cf0 , \cf3 Rect\cf0 (50, 50, 214, 130));\
+w.view.decorator = \cf3 FlowLayout\cf0 (w.view.bounds, 5@5, 2@4);\
+\
+\cf2 // Vider la liste de IBuffers\cf0 \
+bClear = \cf3 Button\cf0 (w, \cf3 Rect\cf0 (0, 0, 50, 20));\
+bClear.states_([[\cf4 "Clear"\cf0 ]]);\
+bClear.action_(\{\
+	liFOs.clear; \
+	mFOs.items = liFOs.collect(\{\cf3 arg\cf0  dico; dico.at(\cf5 \\Nom\cf0 );\});\});\
+\
+\cf2 // Rajouter des enchantillons dans la liste des IBuffers\cf0 \
+bFOs = \cf3 Button\cf0 (w, \cf3 Rect\cf0 (0, 0, 100, 20));\
+bFOs.states_([[\cf4 "Open FO"\cf0 ]]);\
+bFOs.action_(\{\
+	liFOs.loadDialog;\
+	mFOs.items = liFOs.collect(\{\cf3 arg\cf0  dico; dico.at(\cf5 \\Nom\cf0 );\});\});\
+\
+\cf2 // Jouer la sequence\cf0 \
+bPlay = \cf3 Button\cf0 (w, \cf3 Rect\cf0 (0, 0, 50, 20));\
+bPlay.states_([[\cf4 "Play"\cf0 ]]);\
+bPlay.action_(\{\
+	\cf2 // Jeu de la sequence et enregistrement\cf0 \
+	routPlay = \{\
+		liFOs.size.do(\{\
+			\cf3 arg\cf0  i;\
+			if (modRec == 1) \
+				\{\cf3 Server\cf0 .default.prepareForRecord(liFOs.at(i).at(\cf5 \\Path\cf0 ));\
+				3.wait;\
+				\cf3 Server\cf0 .default.record;\
+				\};\
+			\cf3 Synth\cf0 (\cf4 "LecteurFade"\cf0 ,\
+				[\cf5 \\buf\cf0 , liFOs.at(i).at(\cf5 \\Buffer\cf0 )]);\
+			(durNewSample + 1).wait;\
+			if (modRec == 1)\
+				\{\cf3 Server\cf0 .default.stopRecording;\
+				2.wait;\
+				\};\
+		\});\
+	\}.fork;\
+\});\
+\
+\cf2 // Menu de selection des echantillons		\cf0 \
+w.view.decorator.nextLine;\
+mFOs = \cf3 PopUpMenu\cf0 (w,\cf3 Rect\cf0 (0, 0, 204, 20));\
+\
+\
+\cf2 // Enregistrement de la sequence\cf0 \
+w.view.decorator.nextLine;\
+bRec = \cf3 Button\cf0 (w, \cf3 Rect\cf0 (0, 0, 204, 20));\
+bRec.states_([	\
+	[\cf4 "Record Off"\cf0 ],\
+	[\cf4 "Record On"\cf0 , \cf3 Color\cf0 .black, \cf3 Color\cf0 .red]]);\
+bRec.action_(\{\
+	\cf3 arg\cf0  etat;\
+	modRec = etat.value;\
+\});\
+\
+\
+w.front;	\
+)\
+}

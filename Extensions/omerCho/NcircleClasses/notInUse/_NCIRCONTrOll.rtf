@@ -1,0 +1,124 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red191\green0\blue0;\red0\green115\blue0;
+\red96\green96\blue96;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf0 \
+(\
+\cf2 RastMakam\cf0 .load;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 Globals.load;\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 NcircGroups\cf0 .load;\
+\cf2 NcircBusses\cf0 .load;\
+\cf2 NcMainVol\cf0 .load;\
+)\
+(\
+\cf2 ChClean\cf0 .load;\
+\cf2 ChReverb\cf0 .load;\
+\cf2 ChDelay\cf0 .load;\
+\cf2 ChRlpf\cf0 .load;\
+\cf2 ChWah\cf0 .load;\
+\cf2 ChFlow\cf0 .load;\
+\cf2 )\
+(\
+NcMainVol\cf0 .play;\cf2 \
+ChClean\cf0 .play;\
+)\
+\pard\pardeftab560\ql\qnatural
+\cf3 //----Gtr1\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 GtrReceive\cf0 .load;\
+\pard\pardeftab560\ql\qnatural
+\cf2 Pdef\cf0 (\cf4 \\bufRand\cf0 ).play;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 Pdef\cf0 (\cf4 \\gtrA01\cf0 ).play;\
+(\
+\cf2 Pdef\cf0 (\cf4 \\gtrA01\cf0 , \cf2 Posc\cf0 (\
+	[\cf4 \\msg\cf0 , \cf4 \\dur\cf0  ], \
+	\cf2 Pseq\cf0 ([ \
+		[\cf4 \\gtr1\cf0 , 2], [\cf4 \\gtr2\cf0 , 2], [\cf4 \\gtr3\cf0 , 6], [\cf4 \\gtr4\cf0 , 2], [\cf4 \\gtr5\cf0 , 4]\
+	], \cf2 inf\cf0 )\
+	)\
+);\
+)\
+\cf2 Pdef\cf0 (\cf4 \\gtrA01\cf0 ).stop;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 //------Klank\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 KlankReceive\cf0 .load;\
+\cf2 Pdef\cf0 (\cf4 \\klkA01\cf0 ).play;\
+(\
+\cf2 Pdef\cf0 (\cf4 \\klkA01\cf0 , \cf2 Posc\cf0 (\
+	[\cf4 \\msg\cf0 , \cf4 \\dur\cf0  ], \
+	\cf2 Pseq\cf0 ([ \
+		[\cf4 \\klk1\cf0 , 3], [\cf4 \\klk2\cf0 , 3], [\cf4 \\klk3\cf0 , 3], [\cf4 \\klk4\cf0 , 3], [\cf4 \\klk5\cf0 , 3]\
+	], \cf2 inf\cf0 )\
+	)\
+);\
+)\
+\cf2 Pdef\cf0 (\cf4 \\klkA01\cf0 ).stop;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 //------Disk1\cf0 \
+\pard\pardeftab560\ql\qnatural
+\cf2 (\
+\pard\pardeftab560\ql\qnatural
+\cf0 ~avosL = \cf2 Buffer\cf0 .cueSoundFile(s, \cf5 "sounds/_Evfer/avostosL.aif"\cf0 , 0, 1);\cf2 \
+\
+\
+SynthDef\cf0 (\cf5 "diskMono"\cf0 , \{ \cf2 |out=0, bufnum=0, loop=1, pan=0|\cf0 \
+	\cf2 var\cf0  din;\
+	\
+	din = \cf2 DiskIn\cf0 .ar(1, bufnum, loop);\
+	din = Pan2.ar(din, pan);\
+	\
+	\cf2 Out\cf0 .ar(out, din);\
+\}).send(s);\
+)\
+(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 ~disk1 = \cf2 Synth\cf0 .head(~piges, \cf5 "diskMono"\cf0 , \
+			[\
+			 \cf4 \\out\cf0 , ~mainBus, \
+			 \cf4 \\bufnum\cf0 , ~avosL\
+			]\
+		);\
+)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 //------Rithm\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 \
+RthmReceive\cf0 .load;\
+\cf2 Pdef\cf0 (\cf4 \\kick1def\cf0 ).play;\
+\cf2 Pdef\cf0 (\cf4 \\cir1def\cf0 ).play;\
+\
+(\
+\cf2 Pdef\cf0 (\cf4 \\kick1def\cf0 , \cf2 Posc\cf0 (\
+	\cf4 \\msg\cf0 , \cf2 Pseq\cf0 ([\cf4 \\dum1\cf0 , \cf4 \\tek1\cf0 , \cf4 \\nil\cf0 , 	\cf4 \\dum1\cf0 , \cf4 \\nil\cf0 , \cf4 \\dum1\cf0 , \cf4 \\nil\cf0 , \cf4 \\nil\cf0 , \cf4 \\tek2\cf0 , \cf4 \\nil\cf0 ], \cf2 inf\cf0 ),\
+	\cf4 \\dur\cf0 , \cf2 Pseq\cf0 ([1, 0.5,2], \cf2 inf\cf0 )/4\
+	)\
+);\
+\
+\cf2 Pdef\cf0 (\cf4 \\cir1def\cf0 , \cf2 Posc\cf0 (\
+	\cf4 \\msg\cf0 , \cf2 Pseq\cf0 ([\cf4 \\cir2\cf0 , \cf4 \\nil\cf0 , \cf4 \\cir4\cf0 , 	\cf4 \\nil\cf0 , \cf4 \\nil\cf0 , \cf4 \\nil\cf0 , \cf4 \\nil\cf0 , \cf4 \\nil\cf0 , \cf4 \\cir1\cf0 , \cf4 \\nil\cf0 ], \cf2 inf\cf0 ),\
+	\cf4 \\dur\cf0 , \cf2 Pseq\cf0 ([1.5], \cf2 inf\cf0 )/4\
+	)\
+);\
+)\
+\
+\cf2 Pdef\cf0 (\cf4 \\kick1def\cf0 ).stop;\
+\cf2 Pdef\cf0 (\cf4 \\cir1def\cf0 ).stop;\
+\
+\
+\
+\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+\cf0 s.queryAllNodes;\
+\
+\
+}

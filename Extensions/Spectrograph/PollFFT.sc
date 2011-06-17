@@ -20,8 +20,8 @@ PollFFT : Resource {
 		rate = argRate;
 		bufSize = argBufSize;
 		in = argIn;
-		this.clearDependants;		// run as long as server is booted:
-		ServerPrep(server).addToServerTree(this, { this.makeSynth }); 
+		this.clearDependants;
+		ServerPrep(server).addToServerTree(this, { this.makeSynth }); // run as long as server is booted
 	}
 
 	makeSynth {
@@ -38,8 +38,7 @@ PollFFT : Resource {
 			loop {
 				fftbuf.getn(0, bufSize, { | buf |
 					#real, imaginary = buf.clump(2).flop;
-					magnitudes = Complex(Signal.newFrom(real),
-						Signal.newFrom(imaginary)).magnitude;
+					magnitudes = Complex(Signal.newFrom(real), Signal.newFrom(imaginary)).magnitude;
 					dependants do: _.update(index, buf, magnitudes);
 					index = index + 1;
 				});
@@ -63,6 +62,8 @@ PollFFT : Resource {
 		object.free;
 		buffer.free;
 	}
+	
+	isPlaying { ^object.isPlaying }
 
 }
 

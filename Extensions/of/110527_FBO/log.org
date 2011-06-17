@@ -1,0 +1,4 @@
+- Create OSC interafce for frame buffer objects (FBO) manipulation
+- Automation for adding FBO
+
+Aris Bezas Fri, 10 June 2011, 10:32

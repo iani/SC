@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+span.s1 {color: #000000}
+span.s2 {color: #008323}
+span.s3 {color: #162bc4}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>SendSpectrogramData</b></p>
+<p class="p2"><b></b><br></p>
+<p class="p3"><b>Inherits from: DrawSpectrogram : Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><b>Purpose</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3">Send fft magnitude array polled by PollFFT to openFrameworks for display of fft data.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Scalling of fft data should be done in openFrameworks???</p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Usage</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3">Add an instance of SendSpectrogramData as dependant to PollFFT.<span class="Apple-converted-space"> </span></p>
+<p class="p3">PollFFT starts working as soon as the server boots and stops when the server stops.<span class="Apple-converted-space"> </span></p>
+<p class="p3">Example:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5">//:Testing only:<span class="Apple-converted-space"> </span></p>
+<p class="p6">PollFFT<span class="s1">(</span><span class="s2">'of'</span><span class="s1">) addDependant: </span>SendSpectrogramData<span class="s1">.new;</span></p>
+<p class="p7"><br></p>
+<p class="p8">\test.playFunc({ LFSaw.ar(LFNoise2.kr(0.5).range(100, 1000), 0, 0.1) });</p>
+<p class="p7"><br></p>
+<p class="p5">//:Starts automatically when the server starts</p>
+<p class="p8"><span class="s3">// Server</span>.default.boot;</p>
+<p class="p7"><br></p>
+<p class="p5">//:stops only when the server quites</p>
+<p class="p8"><span class="s3">Server</span>.default.quit;</p>
+<p class="p4"><b></b><br></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Related Classes</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance Creation</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Class variables</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span> --<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>background :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>binColor :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>binSize :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>colorScaleExponent :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>colorSize :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>colors :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>fftImageArray :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>intensity :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>ofAddress</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>* --<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>init :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>ofAddress :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>update</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>

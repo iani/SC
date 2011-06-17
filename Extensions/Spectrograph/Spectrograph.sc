@@ -76,6 +76,7 @@ Spectrograph : WindowResource {
 		window = object = Window(this.name, bounds);
 		this.initViews;
 		drawSpectrogram = DrawSpectrogram(bufsize, 64, 0.5, 1, binColor, backgroundColor);
+		//drawSpectrogram = SendSpectrogramData(bufsize, 64, 0.5, 1, binColor, backgroundColor);
 		scroll = Scroll(image, (bounds.width / 4).round(1).asInteger, backgroundColor);
 		this.addWindowOnCloseAction;
 		this.addImageObject(drawSpectrogram);

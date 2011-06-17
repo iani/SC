@@ -1,0 +1,51 @@
+{\rtf1\ansi\ansicpg1253\cocoartf1038
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red0\green115\blue0;\red96\green96\blue96;
+\red191\green0\blue0;}
+\deftab560
+\pard\pardeftab560\ql\qnatural
+
+\f0\fs18 \cf0 s.boot;\
+\
+(\
+\cf2 SynthDef\cf0 (\cf3 \\buf\cf0 , \{ \cf2 | out=0, bufnum = 0, rate = 1, startPos = 0, amp = 1.0, sustain = 1, pan = 0, loop = 1|\cf0 \
+	\cf2 var\cf0  audio;\
+	rate = rate * \cf2 BufRateScale\cf0 .kr(bufnum);\
+	startPos = startPos * \cf2 BufFrames\cf0 .kr(bufnum);\
+	\
+	audio = \cf2 BufRd\cf0 .ar(1, bufnum, \cf2 Phasor\cf0 .ar(50, rate, startPos, \cf2 BufFrames\cf0 .ir(bufnum)), 1, 2);\
+	audio = \cf2 EnvGen\cf0 .ar(\cf2 Env\cf0 .sine, 2.5, timeScale: sustain, doneAction: 2) * audio;\
+	audio = \cf2 Pan2\cf0 .ar(audio, pan, amp*4);\
+	\cf2 OffsetOut\cf0 .ar(out, audio);\
+\}).add;\
+\
+a = \cf2 Pproto\cf0 (\{\
+	~newgroup = (type:	\cf3 \\group\cf0 ).yield;\
+	~tbFok1 =  \cf2 SoundFile\cf0 (\cf4 "sounds/_trans-beings/tb01.aif"\cf0 ).asEvent.yield;\
+	~tbFok2 =  \cf2 SoundFile\cf0 (\cf4 "sounds/_trans-beings/tb02.aif"\cf0 ).asEvent.yield;\
+	~tbFok3 =  \cf2 SoundFile\cf0 (\cf4 "sounds/_trans-beings/tb03.aif"\cf0 ).asEvent.yield;\
+	~tbFok4 =  \cf2 SoundFile\cf0 (\cf4 "sounds/_trans-beings/tb04.aif"\cf0 ).asEvent.yield;\
+	~tbFok5 =  \cf2 SoundFile\cf0 (\cf4 "sounds/_trans-beings/tb05.aif"\cf0 ).asEvent.yield;\
+	~tbFok6 =  \cf2 SoundFile\cf0 (\cf4 "sounds/_trans-beings/tb06.aif"\cf0 ).asEvent.yield;\
+\
+	\
+\pard\pardeftab560\ql\qnatural
+\cf5 //	(type: \\on).yield\cf0 \
+\},	\
+	\cf2 Pbind\cf0 (*[\
+		\cf3 \\instrument\cf0 ,	\cf3 \\buf\cf0 ,\
+		\cf3 \\dur\cf0 ,		\cf2 Prand([1,2,0.5, 0.9, 0.05], inf).sin**10.7.abs*5\cf0 ,\
+		\cf3 \\legato\cf0 ,		Pseq([ (1..8), 1, 0.1, 0.001 ], inf),\
+		\cf3 \\startPos\cf0 ,	\cf2 0\cf0 ,\
+		\cf3 \\rate\cf0 ,		\cf2 Pwhite\cf0 (0.1, 18).abs/8,\
+		\\sustain,		Pseq([ (8..0.5), (0.8..0.1) ], inf).sin.abs*8,\
+		\\pan,  		Pseq([ (-4..4), 1, 0, -1 ], inf),\
+		\cf3 \\group\cf0 ,		\cf2 Pkey\cf0 (\cf3 \\newgroup\cf0 ),\
+		\cf3 \\bufnum\cf0 ,		\cf2 Pkey\cf0 (\cf3 \\\cf0 tbFok6)\
+	\
+	])\
+);\
+Pdef(\\buf, a).play;\
+)\
+\
+}

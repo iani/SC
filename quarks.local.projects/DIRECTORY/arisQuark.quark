@@ -1,0 +1,15 @@
+(
+	\name: "arisQuark",
+	\path: "arisQuark",
+	\summary: "Aris classes ...",
+	\helpdoc: "Help/arisQuark.html",
+	\author: "Aris Bezas",
+	\version: 0.001,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+

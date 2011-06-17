@@ -1,0 +1,251 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green115\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf0 \
+\cf2 /* \
+\
+OC  April 21, 2011: 14:41 PM\
+\
+*/\cf0 \
+\
+\cf2 // =======================================================================\cf0 \
+\{\
+\
+	\cf3 var\cf0  g, a, midiResponders;\
+	g = \cf3 SCMenuGroup\cf0 (\cf3 nil\cf0 , \cf4 "omerCho"\cf0 , 11);\
+\pard\pardeftab560\ql\qnatural
+\cf0 	a = \cf3 SCMenuItem\cf0 (g, \cf4 "open startup file"\cf0 );\
+	a.action = \{ (\cf3 Platform\cf0 .userAppSupportDir ++ \cf4 "/startupOC/omerChoStartup1.rtf"\cf0 ).openTextFile; \};\
+	a.setShortCut(\cf4 "s"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-s\cf0 \
+	\
+	f = \{ \cf3 | server, name, startcolor, donecolor |\cf0 \
+		\cf3 var\cf0  w;\
+		w = \cf3 Window\cf0 (name ++ \cf4 " server booting!"\cf0 , \cf3 Rect\cf0 (0, 0, 300, 400));\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 		w.front.view.background = startcolor;\
+		server.doWhenBooted(\{\
+\pard\pardeftab560\ql\qnatural
+\cf0 			w.name = name ++ \cf4 " server booted"\cf0 ;\
+			w.view.background = donecolor;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 			\{ w.close \}.defer(1.5);\
+		\});\
+		if (server.serverRunning.not) \{ server.boot \}\
+\pard\pardeftab560\ql\qnatural
+\cf0 	\};\
+	\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "boot local server"\cf0 );\
+	a.action = \{ f.(\cf3 Server\cf0 .local, \cf4 "Local"\cf0 , \cf3 Color\cf0 .white, \cf3 Color\cf0 .red) \};\
+	a.setShortCut(\cf4 "l"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-l\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "quit local server"\cf0 );\
+	a.action = \{ \cf3 Server\cf0 .local.quit \};\
+	a.setShortCut(\cf4 "l"\cf0 , \cf3 true\cf0 ); \cf2 //////  // Cmd-alt-l\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "boot internal server"\cf0 );\
+	a.action = \{ f.(\cf3 Server\cf0 .internal, \cf4 "Internal"\cf0 , \cf3 Color\cf0 .black, \cf3 Color\cf0 .green) \};\
+	a.setShortCut(\cf4 "i"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-i\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "quit internal server"\cf0 );\
+	a.action = \{ \cf3 Server\cf0 .internal.quit \};\
+	a.setShortCut(\cf4 "i"\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-alt-i\cf0 \
+	\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "reread help directory from disk"\cf0 );\
+	a.action = \{ \cf3 Help\cf0 .updateTree; \};\
+	a.setShortCut(\cf4 "r"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-r\cf0 \
+	\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "post work sound root directory"\cf0 );\
+	a.action = \{ (\cf3 Platform\cf0 .userAppSupportDir ++ \cf4 "/sounds/"\cf0 ).asCompileString.postln; \};\
+	a.setShortCut(\cf4 "S"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-S\cf0 \
+	\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "'load buffers by code' dialog"\cf0 );\
+	a.action = \{\
+		\cf3 CocoaDialog\cf0 .getPaths(\{ \cf3 | paths |\cf0 \
+			\cf4 "(\
+	b = ["\cf0 .postln;\
+			paths do: \{ \cf3 | p |\cf0 \
+				postf(\cf4 "\\t \\"%\\",\\n"\cf0 , p);\
+			\};\
+			\cf4 "] collect: Buffer.readChannel(Server.default, _, channels: [0], action: _.updateInfo);\
+	)"\cf0 .postln;\
+		\}, \{ \}, \cf3 true\cf0 );\
+	\};\
+	a.setShortCut(\cf4 "b"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-b\cf0 \
+	\
+	\
+	\
+	\cf2 //------------------------- OSC -------------------------\cf0 \
+	\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "post all incoming OSC messages"\cf0 );\
+	a.action = \{  \cf3 thisProcess\cf0 .recvOSCfunc = \{ \cf3 | ... args |\cf0  args.postln \}; \};\
+	a.setShortCut(\cf4 "o"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-o\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "stop posting incoming OSC messages"\cf0 );\
+	a.action = \{  \cf3 thisProcess\cf0 .recvOSCfunc = \cf3 nil\cf0  \};\
+	a.setShortCut(\cf4 "O"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-shift-o\cf0 \
+	\
+	\
+	\
+	\
+	\
+	\
+	\cf2 //------------------------- MIDI -------------------------\cf0 \
+	\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "post all incoming MIDI messages"\cf0 );\
+	a.action = \{\
+		\cf3 var\cf0  window, list;\
+		\cf3 MIDIClient\cf0 .init;	\cf2 // scan all midi sources\cf0 \
+		\cf3 MIDIClient\cf0 .sources do: \{ \cf3 | s, i |\cf0  \cf3 MIDIIn\cf0 .connect(i, s) \}; \cf2 // connect all midi sources\cf0 \
+		window = \cf3 Window\cf0 (\cf4 "MIDI sources"\cf0 , \cf3 Rect\cf0 (100, 100, 400, 200));\
+		list = \cf3 ListView\cf0 (window, window.view.bounds.insetBy(5, 5));\
+		list.font = \cf3 Font\cf0 (\cf4 "Arial"\cf0 , 10);\
+		list.items = \cf3 MIDIClient\cf0 .sources collect: \{ \cf3 | s |\cf0  format(\cf4 "%:% (%)"\cf0 , s.device, s.name, s.uid) \};\
+		window.front;\
+\cf2 //		\{ window.close \}.defer(5);\cf0 \
+		if (midiResponders.isNil) \{\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 			midiResponders = [\cf3 CCResponder\cf0 , \cf3 NoteOnResponder\cf0 , \cf3 NoteOffResponder\cf0 , \cf3 BendResponder\cf0 , \cf3 TouchResponder\cf0 ] collect: \
+\pard\pardeftab560\ql\qnatural
+\cf0 				\{ \cf3 | r |\cf0  r.new(\{ \cf3 | ... args |\cf0  [r.name, args].postln \}, install: \cf3 false\cf0 ) \};\
+		\};\
+		midiResponders do: \{ \cf3 | r |\cf0  r.class.add(r) \};\
+		\cf4 "MIDI posting activated"\cf0 .postln;\
+	\};\
+	a.setShortCut(\cf4 "m"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-m\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "stop posting incoming MIDI messages"\cf0 );\
+	a.action = \{\
+		midiResponders do: \cf3 _\cf0 .remove;\
+		\cf4 "MIDI posting deactivated"\cf0 .postln;\
+	\};\
+	a.setShortCut(\cf4 "M"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-shift-m\cf0 \
+\
+	\
+	\
+	\
+	\
+	\cf2 // ---------------------- SynthDescs -------------------------\cf0 \
+\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Browse SynthDescs"\cf0 );\
+	a.action = \{\
+		if (\cf3 SynthDescLib\cf0 .global.synthDescs.size <= 1) \{\
+			\cf4 "Reading SynthDescs from synthdef directory"\cf0 .postln;\
+			\cf3 SynthDescLib\cf0 .read;\
+		\};\
+		\cf3 SynthDescLib\cf0 .global.browse\
+	\};\
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Load SynthDescs from synthdef directory"\cf0 );\
+	a.action = \{ \cf3 SynthDescLib\cf0 .read \};\
+\
+	\
+	\
+	\
+	\
+	\
+	\cf2 // ------------------------- LILT -------------------------\cf0 \
+	\cf2 //a = SCMenuItem(g, "Open Lilt Browser");\cf0 \
+\cf2 //	a.action = \{ ScriptBrowser.startup; \};\cf0 \
+\cf2 //	a.setShortCut("l", false, false, true); // Cmd-ctrl-alt-shift-l\cf0 \
+\
+	\cf2 // ------------------------- SAVE ALL DOCUMENT POSITIONS -----------------------\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Save document paths and windows"\cf0 );\
+	a.action = \{\
+		\cf3 Archive\cf0 .global.put(\cf5 \\myDocuments\cf0 , \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 			\cf3 Document\cf0 .allDocuments collect: \{ \cf3 | d |\cf0  \
+			(name: d.name, bounds: d.bounds, path: d.path)\
+		\});\
+		\cf4 "Document positions and paths saved"\cf0 .postln;\
+	\};\
+\pard\pardeftab560\ql\qnatural
+\cf0 	a.setShortCut(\cf4 "d"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-d\cf0 \
+	\cf2 // ------------------------- LOAD SAVED DOCUMENTS  -----------------------\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Load saved documents"\cf0 );\
+	a.action = \{\
+		\cf3 var\cf0  session;\
+		session = \cf3 Archive\cf0 .global.at(\cf5 \\myDocuments\cf0 );\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 		session do: \{ \cf3 | d |\cf0 \
+			if (d.path.isNil) \{\
+			if (d.name != \cf4 " post "\cf0 ) \{\
+				\cf3 Document\cf0 (d.name).bounds_(d.bounds)\
+			\}\{\
+				\cf3 Document\cf0 .allDocuments.detect(\{ \cf3 | d |\cf0  d.name == \cf4 " post "\cf0  \}).bounds_(d.bounds);\
+			\}\
+		\}\{\
+			\cf3 Document\cf0 .open(d.path).bounds_(d.bounds)\
+		\}\
+		\};\
+	\};\
+\pard\pardeftab560\ql\qnatural
+\cf0 	a.setShortCut(\cf4 "D"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \cf2 // Cmd-ctrl-alt-d\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\
+\pard\pardeftab560\ql\qnatural
+\cf0 	\
+	\cf2 //------------------------- Colorize by Igoumeninja Nov 2010 -------------------------//\cf0 \
+	\cf3 Document\cf0 .themes.put(\cf5 \\omerChoTheme\cf0 , \
+\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+\cf0 		(\
+			classColor: \cf3 Color\cf0 .new255(105, 105, 255),\
+			textColor: \cf3 Color\cf0 .new255(255, 255, 255),\
+			stringColor: \cf3 Color\cf0 .new255(148, 149, 155),\
+			commentColor: \cf3 Color\cf0 .new255(255,100,79),\
+			symbolColor: \cf3 Color\cf0 .new255(90, 255, 90),\
+			numberColor: \cf3 Color\cf0 .new255(250,248,227)\
+		)\
+	);\
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Colorize"\cf0 );\
+	a.action = \{ \
+\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+\cf0 		\cf2 //putting a custom color theme into Document.themes\cf0 \
+		\cf3 Document\cf0 .setTheme(\cf5 'omerChoTheme'\cf0 );\
+		\cf3 Document\cf0 .theme;\
+\pard\pardeftab560\ql\qnatural
+\cf0 		\cf3 Document\cf0 .current.background = \cf3 Color\cf0 (0, 0, 0, 0.94);\
+	\};\
+	a.setShortCut(\cf4 "c"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \
+	a = \cf3 SCMenuItem\cf0 (g, \cf4 "Reset Colorize"\cf0 );\
+	a.action = \{ \
+		\cf3 Document\cf0 .setTheme(\cf5 'default'\cf0 );\
+		\cf3 Document\cf0 .current.background = \cf3 Color\cf0 (255,255,255, 1);\
+	\};\
+	a.setShortCut(\cf4 "C"\cf0 , \cf3 true\cf0 , \cf3 true\cf0 ); \
+\
+	\
+	\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\pard\pardeftab560\ql\qnatural
+\cf0 \
+\
+\}.value;\
+\
+	\cf2 // ------------------------  PostColorized ---------------------------//\cf0 \
+\
+\
+\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+\cf3 // Document\cf0 .listener.bounds = \cf3 Rect\cf0 (900,4,540,874);\
+\pard\pardeftab560\ql\qnatural
+\cf3 Document\cf0 .listener.background = \cf3 Color\cf0 (0, 0, 0, 0.91);\
+\cf3 Document\cf0 .listener.stringColor = \cf3 Color\cf0 (1,1,1);\
+\cf3 Document\cf0 .listener.stringColor_(\cf3 Color\cf0 .white); \
+\cf3 Document\cf0 .postColor_(\cf3 Color\cf0 .white);\
+\
+\
+\cf2 /*\
+\
+CocoaDialog.getPaths(\{ | paths |\
+	"(\
+b = [".postln;\
+	paths do: \{ | p |\
+		postf("\\t \\"%\\",\\n", p);\
+	\};\
+	"] collect: \{ | p | \
+	Buffer.readChannel(Server.default, p, channels: [0], action: \{ | b | b.updateInfo \});\
+\}\
+)".postln\
+\}, \{ \}, true);\
+\
+*/}
