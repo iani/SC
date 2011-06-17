@@ -1,0 +1,773 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b82317}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #1730bd}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b72317}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b82317; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #b72317; min-height: 12.0px}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #1730bd; min-height: 12.0px}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+span.s1 {color: #000000}
+span.s2 {color: #1730bd}
+span.s3 {color: #367f2c}
+span.s4 {color: #737373}
+span.s5 {color: #b82317}
+span.s6 {color: #b72317}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Chain</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Purpose</b></p>
+<p class="p4"><br></p>
+<p class="p3">Play a pattern producing fuctions whose values are objects that respond to onEnd (SynthResources, EventStreams), by chaining each next element so as to start playing when the previous element ends.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Chain is quite a powerful tool for writing algorithms that generate patterns of sound. It<span class="Apple-converted-space">  </span>can also be useful in combining the sending of OSC messages to external applications as well as drawing graphics in the same generative process that makes the sound in sync with the sound events.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Starting a chain</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*new(pattern, envir) : </b>Create a new instance of Chain and start it</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>pattern: A pattern producing functions that when evaluated create objects that respond to onEnd.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>envir: an Environment or Event.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The functions are evaluated using envir as environment. Default is an empty event.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p3">A Chain instance "plays" the functions produced by a pattern by evaluating each next function produced by the pattern a certain time interval after the previous one. The time interval is determined by the function itself. In the simplest case, it is the duration of the synth produced by the function.</p>
+<p class="p4"><br></p>
+<p class="p7">//:Repeat a Synth-making function 10 times<span class="Apple-converted-space"> </span></p>
+<p class="p8">(</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur(0.1, 0.1) }, 10)<span class="Apple-converted-space"> </span></p>
+<p class="p8">);</p>
+<p class="p8">)</p>
+<p class="p10">//: End of example</p>
+<p class="p11"><br></p>
+<p class="p3">Note that the Chain plays each new element from the Pattern as soon as the previous one has finished. So the timing changes as the duration of each element changes:</p>
+<p class="p4"><span class="Apple-converted-space"> </span></p>
+<p class="p10">//:Each next synth starts exactly at the end of the previous one<span class="Apple-converted-space"> </span></p>
+<p class="p8">(</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur([0.1, 0.2, 0.4].choose, 0.1) }, 10)<span class="Apple-converted-space"> </span></p>
+<p class="p8">);</p>
+<p class="p8">)</p>
+<p class="p10">//: End of example</p>
+<p class="p12"><br></p>
+<p class="p3"><b>Stopping a chain</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>stop : </b>Stop a playing Chain instance</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p10">//:Start and stop a chain<span class="Apple-converted-space"> </span></p>
+<p class="p8">(</p>
+<p class="p8">{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">var</span> chain;</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>chain = </span><span class="s2">Chain</span><span class="s1">(<span class="Apple-tab-span">	</span></span>// Pn repeats infinitely per default</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur([0.05, 0.01].choose, 0.05) })<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>rrand(2.0, 3).wait;</p>
+<p class="p8"><span class="Apple-tab-span">	</span>chain.stop;</p>
+<p class="p8">}.fork</p>
+<p class="p8">)</p>
+<p class="p12"><br></p>
+<p class="p7">//:Start and stop a chain - shorter coding using implicit routine<span class="Apple-converted-space"> </span></p>
+<p class="p7">// Run this with Command-shift-x or Command-shift-alt-x</p>
+<p class="p8"><span class="s2">var</span> chain;</p>
+<p class="p8">chain = <span class="s2">Chain</span>(</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur([0.05, 0.01].choose, 0.05) })<span class="Apple-converted-space"> </span></p>
+<p class="p8">);</p>
+<p class="p8">rrand(2.0, 3).wait;</p>
+<p class="p8">chain.stop;</p>
+<p class="p12"><br></p>
+<p class="p10">//: End of examples</p>
+<p class="p4"><br></p>
+<p class="p3"><b>Storing a chain as UniqueObject</b></p>
+<p class="p12"><br></p>
+<p class="p3">One can simplify the code even further by storing a chain as a UniqueObject which is accessibe through messages to a symbol.<span class="Apple-converted-space"> </span></p>
+<p class="p3">To do this, one sends the symbol the message 'chain':<span class="Apple-converted-space"> </span></p>
+<p class="p13"><br></p>
+<p class="p10">//:Start and stop a chain as UniqueObject (run with Command-shift-x)</p>
+<p class="p8"><span class="s3">\simple</span>.chain(<span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur(0.01, 0.05) }) );</p>
+<p class="p8">1.5.wait;</p>
+<p class="p8"><span class="s3">\simple</span>.chain.stop;</p>
+<p class="p10">//: End of example</p>
+<p class="p12"><br></p>
+<p class="p3"><b>Playing SynthDefs by name instead of Functions<span class="Apple-converted-space"> </span></b></p>
+<p class="p12"><br></p>
+<p class="p3">To create synths from a previously defined SynthDef, send the message play to the symbol corresponding to the name of the SynthDef. The arguments to method play are the same as those for Synth:play minus the name of the SynthDef, which is provided by the Symbol. (For more details, see class SynthResource).</p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Chain</span>(<span class="s2">Pn</span>({ \default.play([\freq, 400 + 400.rand]).dur(0.02, 0.05) }, 25) );</p>
+<p class="p12"><br></p>
+<p class="p3"><b>Using Patterns as data generators in a Chain</b></p>
+<p class="p11"><br></p>
+<p class="p3">Chain evaluates all its functions inside an environment which can be provided in the second argument to the new method. Any environment variables that are set in this environment thus become available to all the functions played by the Chain. In this way, streams created from patterns, or other data and data generating objects can be passed to the functions of the chain.<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p7">//:Passing a frequency pattern to the functions in a Chain</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(~freq.next, 0, 0.1.dup) }.play.dur(0.01, 0.05) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>(freq: <span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>).asStream)</p>
+<p class="p8">);</p>
+<p class="p7">//: End of example</p>
+<p class="p12"><br></p>
+<p class="p3"><b>Using messages to symbol as stream generators</b></p>
+<p class="p12"><br></p>
+<p class="p3">This library defines several methods in Symbol as shortcuts for storing streams created from patterns in an environment. The most general of these is the method stream:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>aSymbol.stream(pattern)</b> : Create a stream from pattern and store it in the environment variable aSymbol<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Using this, the above example can be written as follows:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p10">//:Example of Symbol:stream</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(~freq.next, 0, 0.1.dup) }.play.dur(0.01, 0.05) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { \freq.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p10">//: ---</p>
+<p class="p12"><br></p>
+<p class="p3">The code above is longer than in the example before, but it can be shortened by using pseq, one of the speciallized methods for binding pattern streams to symbols:<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p10">//:Example of Symbol:pseq</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(~freq.next, 0, 0.1.dup) }.play.dur(0.01, 0.05) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { \freq.pseq([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>) }</p>
+<p class="p8">);</p>
+<p class="p10">//: ---</p>
+<p class="p12"><br></p>
+<p class="p3">One may access the stream-storing objects in the environment by sending them the messages 'this' to obtain the current value and 'n' to obtain the next value. Thus the above example becomes:<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p10">//:Accessing a stream's next value in the environment via Symbol:n</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(\freq.n, 0, 0.1.dup) }.play.dur(0.01, 0.05) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { \freq.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p10">//: ---</p>
+<p class="p12"><br></p>
+<p class="p3">Here is an example of accessing the current value and the next value:</p>
+<p class="p12"><br></p>
+<p class="p7">//:Accessing a stream's current value in the environment via Symbol:this</p>
+<p class="p7"><span class="s2">Chain</span><span class="s1">(<span class="Apple-tab-span">	</span></span>// call freq.n to initialize the value of the stream when the chain starts</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\freq</span>.n; { <span class="s2">SinOsc</span>.ar([<span class="s3">\freq</span>.<span class="s2">this</span> * 2, <span class="s3">\freq</span>.n], 0, 0.1) }.play.dur(0.01, 0.2) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { <span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p10">//: ---</p>
+<p class="p12"><br></p>
+<p class="p3">The convenience of the expression () make: { ... } becomes more evident when defining several patterns for the Chain:</p>
+<p class="p12"><br></p>
+<p class="p7">//:A Chain with several streams in its environment</p>
+<p class="p8">Chain(</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar([\freq1.n, \freq2.n], 0, 0.1) }.play.dur(\dur.n, 0.05) }, 100),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\freq1.pseq([60, 65, 63, 67, 70, 72].midicps, inf);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\freq2.pseq([80, 87, 80, 82, 87, 80, 90].midicps, inf);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\dur.pseq([1, 1, 2, 4] / 40, inf);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8">);</p>
+<p class="p13"><br></p>
+<p class="p10">//: ---</p>
+<p class="p13"><br></p>
+<p class="p3">Here is an example of 3 different synth functions sharing data from the Chain environment</p>
+<p class="p13"><br></p>
+<p class="p10">//:3 different synth functions sharing patterns.<span class="Apple-converted-space"> </span></p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.play([\amp, 0.05, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5), <span class="s3">\freq</span>.n.dup, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup / 2, 0, 0.07) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p7">//: ---</p>
+<p class="p13"><br></p>
+<p class="p11"><br></p>
+<p class="p3"><b>Chaining functions with the chain message</b></p>
+<p class="p4"><br></p>
+<p class="p3">The functions of the Chain do not have to return synths. They can contain any actions.<span class="Apple-converted-space"> </span></p>
+<p class="p3">To make a function which does not return a synth playable by the Chain, send it the message chain:<span class="Apple-converted-space"> </span></p>
+<p class="p14"><br></p>
+<p class="p7">//:Including a non-sound function in a chain</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p15"><span class="s1"><span class="Apple-tab-span">	</span>{ <span class="Apple-tab-span">	</span>postf(</span>"counting start of sequence repetition: %\n"<span class="s1">, </span><span class="s3">\count</span><span class="s1">.n) }.chain,</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span></span>// Play a single synth.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">\default</span>.play([\freq, 500 + 1500.rand]).dur(0.1, 0.1)</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>},<span class="Apple-tab-span">	</span></span>// The chain continues as soon as the synth finishes playing</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span></span>// Play another synth.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s2">SinOsc</span>.ar(400 + 400.rand, 0, 0.1) }.play.dur(0.1, 0.1)</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>}<span class="Apple-tab-span">	</span></span>// The chain continues as soon as the synth finishes playing</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>5<span class="Apple-tab-span">	</span></span>// repeat 5 times</p>
+<p class="p8">), () make: { <span class="s3">\count</span>.pseries(1) }</p>
+<p class="p8">);</p>
+<p class="p7">//: ---</p>
+<p class="p12"><br></p>
+<p class="p3">If a function needs to wait for an interval before proceeding to the next one,<span class="Apple-converted-space">  </span>then this is indicated in the first argument of chain, like this:<span class="Apple-converted-space"> </span></p>
+<p class="p14"><br></p>
+<p class="p7">//:Make a function wait for a given time interval</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s4">"waiting for 1 second"</span>.postln }.chain(1.once),<span class="Apple-tab-span">	</span><span class="s5">// wait 1 second once</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.play([<span class="s3">\freq</span>, 500 + 1500.rand]).dur(0.1, 0.1) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(400 + 400.rand, 0, 0.1) }.play.dur(0.1, 0.1) }</p>
+<p class="p8">], 5</p>
+<p class="p8">));</p>
+<p class="p10">//: ---</p>
+<p class="p12"><br></p>
+<p class="p3">One can pass a pattern as duration argument to Function:chain. In this case, the function will repeat its evaluation with each next duration provided by the pattern's stream, until the stream ends.</p>
+<p class="p4"><span class="Apple-converted-space"> </span></p>
+<p class="p7">//:Passing a pattern as duration argument to Function-chain</p>
+<p class="p12"><br></p>
+<p class="p7"><span class="s2">Chain</span><span class="s1">(</span><span class="s2">Pseq</span><span class="s1">([<span class="Apple-tab-span">	</span></span>// play the first function 3 times, with an interval of 0.5 seconds:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ postf(<span class="s4">"waiting % seconds, counting: %\n"</span>, ~dur.value, <span class="s3">\count</span>.pseries(1).next) }.chain(<span class="s2">Pn</span>(0.5, 3)),<span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(400 + 400.rand, 0, 0.1) }.play.dur(0.1, 0.1) }</p>
+<p class="p8">], 5</p>
+<p class="p8">));</p>
+<p class="p12"><br></p>
+<p class="p7">//: --</p>
+<p class="p12"><br></p>
+<p class="p3">Functions that are played with the chain message can execute any statements, including the creation of synths. Therefore, one can use Function:chain together with a pattern as duration argument to play a sequence of sounds with the same function. The duration argument can also be a function returning the duration. In this case, the function is evaluated each time that the function is sent the message chain. This means that the funtion can be played with a different pattern each time that it is encountered in the sequence of functions played by Chain. In the example below, this is used to play event sequences of different lengths each time.<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p7">//:Example combining a single synth and a chain of synths.</p>
+<p class="p7"><span class="s2">Chain</span><span class="s1">(</span><span class="s2">Prand</span><span class="s1">([ </span>// choose from the following at random:</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span></span>// Play a series of events</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// The number and timing of the events is defined through arguments to the chain message</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">Prand</span>([0.06, 0.07, 0.14], 10 rrand: 20) }),</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span></span>// Play a single synth.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s2">| freq = 400 |</span> <span class="s2">SinOsc</span>.ar(freq * [1, 1.2], 0, 0.02) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s3">\freq</span>,<span class="Apple-converted-space">  </span><span class="s3">\freq</span>.pseries(4).next * 100])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.1 rrand: 1, 0.5 rrand: 2.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8">], 30</p>
+<p class="p8">));</p>
+<p class="p7">//: ---</p>
+<p class="p12"><br></p>
+<p class="p3">The next example shows the difference in a more striking manner. <span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p7">//:Variation: Insert some staccato chord/clusters, and 30-note fast passages</p>
+<p class="p9">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p12"><br></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>}.chain({ </span><span class="s2">Prand</span><span class="s1">([<span class="Apple-tab-span">	</span></span>// choose at random between chord, fast passage and rhythm</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Prand</span>([0.06, 0.07, 0.14] * 1.5, 10 rrand: 20),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>(0.0, 5 + 5.rand),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>(0.05, 30)</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>], 1)</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s2">| freq = 400 |</span> <span class="s2">SinOsc</span>.ar(freq * [1, 1.2], 0, 0.02) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s3">\freq</span>,<span class="Apple-converted-space">  </span><span class="s3">\freq</span>.pseries(4).next * 100])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.1 rrand: 1, 0.5 rrand: 2.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p8"><span class="Apple-tab-span">	</span>30</p>
+<p class="p8">));</p>
+<p class="p12"><br></p>
+<p class="p7">//: Another chain example</p>
+<p class="p9">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Klang</span>.ar(`[ <span class="s2">Array</span>.rand(3, 100.0, 125.0) * <span class="s3">\inc</span>.prand((5..7), <span class="s2">inf</span>).next]).dup * 0.02<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.play.dur(0.1, 0.3);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain(<span class="s2">Pn</span>(0.1, 5)),</p>
+<p class="p12"><br></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s2">| freq = 400 |</span> <span class="s2">SinOsc</span>.ar(freq * [1, 1.1], 0, 0.1) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s3">\freq</span>,<span class="Apple-converted-space">  </span><span class="s3">\freq</span>.pseries(4).next * 100])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.01 rrand: 0.1, 0.05 rrand: 0.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p8"><span class="Apple-tab-span">	</span>30</p>
+<p class="p8">));</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p7">//:Variant: Introduce occasional clusters and change the range of the Klang synth</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>/* <span class="Apple-tab-span">	</span>Restart the frequency series at each repeat */</p>
+<p class="p8"><span class="Apple-converted-space"> <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>{ <span class="s3">\freq</span>.pseries(4).reset.toParent; }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pseq</span>([</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Klang</span>.ar(`[ <span class="s2">Array</span>.rand(3, 100.0, 125.0) *<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\inc</span>.stream(<span class="s2">Prand</span>([</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Prand</span>((1..5), <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Prand</span>((7..12), <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Prand</span>((12..20), <span class="s2">inf</span>)</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>)).next</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>]).dup * 0.03<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.play.dur(0.1, 0.3);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain({ Prand([<span class="s2">Pn</span>(exprand(0.1, 0.5), 5), Pn(0, 5)]) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s2">| freq = 400 |</span> Mix(<span class="s2">SinOsc</span>.ar(freq * (1, 1.05 + 0.2.rand .. 2), 0, 0.02)).dup }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s3">\freq</span>,<span class="Apple-converted-space">  </span><span class="s3">~freq</span>.next * 100])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.01 rrand: 0.1, 0.05 rrand: 0.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}]</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>, 50 // can change this</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>)</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>)</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//: End second chain example</p>
+<p class="p12"><br></p>
+<p class="p3"><b>Using chain to send sequences of OSC messages.<span class="Apple-converted-space"> </span></b></p>
+<p class="p12"><br></p>
+<p class="p7">//:Third chain example</p>
+<p class="p7">// Activate OSC input posting from the Utils menu of this library</p>
+<p class="p7">// To see post the OSC messages sent here</p>
+<p class="p9">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">NetAddr</span>.localAddr.sendMsg(*[<span class="s3">\test1</span>, <span class="s3">\count</span>.pseries(101).next, ~globalcount.next].postln);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, 30.rrand(100).midicps]).dur(0.1, 0.1);<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain(Pn(0.1, 5));,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">NetAddr</span>.localAddr.sendMsg(*[<span class="s3">\test2</span>, <span class="s3">\count</span>.pseries(1).next * 10, ~globalcount.next].postln);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain(Pn(1, 3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p8"><span class="Apple-tab-span">	</span>30</p>
+<p class="p8">), (globalcount: <span class="s2">Pseries</span>(1).asStream)</p>
+<p class="p8">);</p>
+<p class="p4"><br></p>
+<p class="p10">//:Chaining single Synth generating functions with multiple synth ones.<span class="Apple-converted-space"> </span></p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.play([\amp, 0.05, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span></span>// Multiple synth (a chain of 10 to 20 synths):</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">Prand</span>([0.06, 0.07, 0.14], 10 rrand: 20) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.play([<span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5), <span class="s3">\freq</span>.n.dup, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(\freq.n.dup / 2, 0, 0.07) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p12"><br></p>
+<p class="p4"><br></p>
+<p class="p7">//:Getting crazier</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.02, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.02, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">Prand</span>([0.06, 0.07, 0.14], 10 rrand: 20) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">| freq = 400 |</span> <span class="s2">SinOsc</span>.ar(freq.dup, 0, 0.1) }.play(args: [<span class="s3">\freq</span>, <span class="s3">\freq</span>.n]).dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p8">() make: {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p4"><br></p>
+<p class="p7">//:<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p3"><b>Playing chains in parallel</b></p>
+<p class="p13"><br></p>
+<p class="p10">//:Playing chains in parallel</p>
+<p class="p13"><br></p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p8">0.2.wait;</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps * 1.25, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p8">0.2.wait;</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.5).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); }.s,</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps * 1.5, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p12"><br></p>
+<p class="p8">//: ---</p>
+<p class="p12"><br></p>
+<p class="p12"><br></p>
+<p class="p3"><b>Sending the chains out of phase by lengthening the links' duration</b></p>
+<p class="p13"><br></p>
+<p class="p10">//:Sending the chains out of phase by lengthening the links</p>
+<p class="p13"><br></p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n + 0.01); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p8">0.2.wait;</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8">], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1">() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps * 1.25, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8">});</p>
+<p class="p12"><br></p>
+<p class="p7">//:The above example with the Routine explicitly added</p>
+<p class="p12"><br></p>
+<p class="p8">{</p>
+<p class="p9"><span class="Apple-tab-span">	</span>Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n + 0.01); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>});</p>
+<p class="p8"><span class="Apple-tab-span">	</span>0.2.wait;</p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// Single synth. When it ends, the next link in the chain starts:</p>
+<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span>{ <span class="s3">\default</span>.mplay([\amp, 0.01, <span class="s3">\freq</span>, ~freq.next]).dur(~dur2.next, ~fade.next); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">Resonz</span>.ar(<span class="s2">WhiteNoise</span>.ar(2.0).dup, <span class="s3">\freq</span>.n, 0.01) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(<span class="s3">\freq</span>.n.dup, 0, 0.02) }.play.dur(<span class="s3">\dur2</span>.n, <span class="s3">\fade</span>.n); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], 20),<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>() make: {<span class="Apple-tab-span">	</span></span>// store shared patterns in the global environment of the Chain:</p>
+<p class="p8"><span class="s6"><span class="Apple-tab-span">	</span></span><span class="Apple-tab-span">	</span><span class="s3">\dur2</span>.pseq([0.1, 0.2], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\fade</span>.pseq([0.1, 0.2, 1], <span class="s2">inf</span>);<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.pseq([80, 85, 87, 90, 92].midicps * 1.25, <span class="s2">inf</span>)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>});</p>
+<p class="p8">}.fork</p>
+<p class="p7">//: ----</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3">See also: EventStream, SynthResource, ChainLink, SynthLink</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Instance Creation</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*new(pattern, envir) : </b>Create a new instance of Chain and start it</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>pattern: A pattern producing functions that when evaluated create objects that respond to onEnd.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>envir: an Environment or Event.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The functions are evaluated using envir as environment. Default is an empty event.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Class variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>--<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>currentFunc : </b>The function that created the currently playing element in the stream chain</p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>link : </b>The currently playing element in the stream chain.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>To stop, the Chain sends this link the message stopLink.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>envir : </b>The<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>pattern :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>stream</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>new</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>current :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>envir :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>isRunning :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>next :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>pattern :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>pattern_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>reset :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>start :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>stop : <span class="Apple-tab-span">	</span></b>Stop the chain from playing, by stopping its currently playing link.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>The chain sends the message stopLink to the current link.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Any running synths do not free immediately, but run until their currently scheduled duration.</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>free : <span class="Apple-tab-span">	</span></b>Stop the chain from playing and free the synth stored in instance variable link.</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Currently does not support ChainLink</p>
+<p class="p4"><br></p>
+<p class="p8">//:Free the synth of a chain when stopping</p>
+<p class="p8"><span class="s2">\simple.chain</span>(<span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur(0.01, 0.1) }));</p>
+<p class="p8">2.wait;</p>
+<p class="p8">\simple.chain.free;</p>
+<p class="p7">//: End of Example</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>release(fadeout) :<span class="Apple-converted-space"> </span></b> Stop the chain from playing and release the synth stored in instance variable link,</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>using fadeout as release time. Default value of fadeout is 0.2.</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Currently does not support SynthLink and Chainlink.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Only works if the current synth has not already been released by 'dur'!</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8">//:Release the synth of a chain when stopping</p>
+<p class="p8"><span class="s2">\simple.chain</span>(<span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur(0.1, 0.5) }));</p>
+<p class="p8">2.wait;</p>
+<p class="p8">\simple.chain.release(3);</p>
+<p class="p7">//: End of Example</p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>stream</b></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Examples</b></p>
+<p class="p14"><br></p>
+<p class="p4"><br></p>
+<p class="p7">//:An old electronic game and one-armed bandit gone crazy</p>
+<p class="p9">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p15"><span class="s1"><span class="Apple-tab-span">	</span>{ postf(</span>"sequence repeat no: %, random increment: %\n"<span class="s1">, </span><span class="s3">\count</span><span class="s1">.enext, </span><span class="s3">\i</span><span class="s1">.enext); }.chain,</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, (50..80).choose.midicps]).dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">Prand</span>([0.06, 0.07, 0.14], 3 rrand: 15) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, [60, 62, 64, 65, 70, 72].choose.midicps])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.03, exprand(0.01, 0.3));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">Pn</span>(0.25, 8.rand) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>postf(<span class="s4">"10 counts: %\n"</span>, <span class="s3">\count2</span>.pseries(1).next);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\amp</span>, 0.3, <span class="s3">\freq</span>, (<span class="s3">\i</span>.<span class="s2">this</span> + <span class="s3">\f</span>.prand((0..2)).next).midicps])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.03, exprand(0.01, 0.03));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain(<span class="s2">Pn</span>(0.05, 10)),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span><span class="s3">\default</span>.mplay([<span class="s3">\amp</span>, 0.3, <span class="s3">\freq</span>, (<span class="s3">\i</span>.<span class="s2">this</span> + <span class="s3">\f</span>.pser([0, 4, 7]).next).midicps])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(0.03, exprand(0.01, 0.03));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}.chain({ <span class="s2">Pn</span>(0.05, 25.rand) }),</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span></span>// Here is where it meditates and tries to transcend reality</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{<span class="Apple-tab-span">	</span>{ <span class="s2">| freq = 400 |</span> <span class="s2">SinOsc</span>.ar(freq * [1, 1.2], 0, 0.2) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.play(args: [<span class="s3">\freq</span>,<span class="Apple-converted-space">  </span><span class="s3">\freq</span>.pseq((4..20), <span class="s2">inf</span>).next * 100])</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.dur(1 rrand: 2.5, 1.25 rrand: 3.5)<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8"><span class="Apple-tab-span">	</span>],</p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>inf</p>
+<p class="p8">), () make: { <span class="s3">\count</span>.pseries(1); <span class="s3">\i</span>.pwhite(40, 100) }</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<<<<<<< HEAD
+<p class="p8">//:Substituting a new pattern in a stream while the chain is playing</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Pn({ { <span class="s2">SinOsc</span>.ar(~freq.next, 0, 0.1.dup) }.play.dur(0.01, 0.05) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// \freq.replaceStream(<span class="s2">Pseq</span>([60, 65].midicps / 2, <span class="s2">inf</span>)).toParent;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// ~freq.postln;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// ~freq = <span class="s2">Pseq</span>([60, 65].midicps / 2, <span class="s2">inf</span>).asStream;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currentEnvironment.postln;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currentEnvironment.parent.postln;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currentEnvironment.parent[\freq] = <span class="s2">Pseq</span>([60, 65].midicps / 2, <span class="s2">inf</span>).asStream;</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Pn({ \default.play([\freq, ~freq.next]).dur(0.01, 0.05) }, 25),</p>
+<p class="p8">//<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ \freq.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], inf),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { \freq.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p8">//: ---</p>
+<p class="p12"><br></p>
+=======
+<p class="p7">//:Substituting a new pattern in a stream while the chain is playing</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(~freq.next, 0, 0.1.dup) }.play.dur(0.01, 0.05) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(3 rrand: 10, 50, 100).midicps, <span class="s2">inf</span>)); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\default</span>.play([<span class="s3">\freq</span>, ~freq.next]).dur(0.01, 0.05) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { <span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//:The above with a Udef instead of playing a function.<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Udef</span>(<span class="s3">'ping'</span>, { <span class="s2">| freq = 400 |</span> <span class="s2">Out</span>.ar(0, <span class="s2">Fade</span>.kr * <span class="s2">SinOsc</span>.ar(freq * [1, 1.01], 0, 0.1)); });</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(3 rrand: 10, 50, 100).midicps, <span class="s2">inf</span>)); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { <span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//:Varying the lengths of the patterns of events in the chains<span class="Apple-converted-space"> </span></p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Udef</span>(<span class="s3">'ping'</span>, { <span class="s2">| freq = 400 |</span> <span class="s2">Out</span>.ar(0, <span class="s2">Fade</span>.kr * <span class="s2">SinOsc</span>.ar(freq * [1, 1.01], 0, 0.1)); });</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 1 + 25.rand) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(3 rrand: 10, 50, 100).midicps, <span class="s2">inf</span>)); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 1 + 25.rand) })</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { <span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//:Letting both Pn patterns have the same length</p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Udef</span>(<span class="s3">'ping'</span>, { <span class="s2">| freq = 400 |</span> <span class="s2">Out</span>.ar(0, <span class="s2">Fade</span>.kr * <span class="s2">SinOsc</span>.ar(freq * [1, 1.01], 0, 0.1)); });</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next / 2]).dur(0.02, 0.07) }, ~numnotes.value) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next * 2]).dur(0.02, 0.07) }, ~numnotes.value) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(~numnotes.next, 70, 82).midicps, <span class="s2">inf</span>)); }</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.chain(0.125.once),<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// leave some silence before the next repeat</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\numnotes</span>.pser((1..16), <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>));</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//:Also mirroring the rhythm of the patterns</p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Udef</span>(<span class="s3">'ping'</span>, { <span class="s2">| freq = 400 |</span> <span class="s2">Out</span>.ar(0, <span class="s2">Fade</span>.kr * <span class="s2">SinOsc</span>.ar(freq * [1, 1.01], 0, 0.1)); });</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next / 2]).dur(0.02, ~d.next) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>~numnotes.value) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next * 2]).dur(0.02, ~d.next) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>~numnotes.value) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(~numnotes.next, 70, 82).midicps, <span class="s2">inf</span>));<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\d</span>.replaceStream(<span class="s2">Pseq</span>({ [0.035, 0.07, 0.14, 0.28].choose } ! ~numnotes.value, <span class="s2">inf</span>));<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain(0.125.once),<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// leave some silence before the next repeat</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\numnotes</span>.pser((1..16), <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\d</span>.pseq([0.07], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//:Using wchoose to bias short values for the rhythm</p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Udef</span>(<span class="s3">'ping'</span>, { <span class="s2">| freq = 400 |</span> <span class="s2">Out</span>.ar(0, <span class="s2">Fade</span>.kr * <span class="s2">SinOsc</span>.ar(freq * [1, 1.01], 0, 0.1)); });</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next / 2]).dur(0.02, ~d.next) },</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>~numnotes.value) }),<span class="Apple-tab-span">	</span></span>// diminish duration range in the repetition:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next * 2]).dur(0.02, (~d.next + 1).log10 ** 0.25) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>~numnotes.value) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[0.5, 0.75, 1, 1.25, 2].choose * <span class="s2">Array</span>.rand(~numnotes.next, 70, 82).midicps, <span class="s2">inf</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>));<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\d</span>.replaceStream(<span class="s2">Pseq</span>(</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ [0.035, 0.07, 0.14, 0.28].wchoose([0.5, 0.125, 0.125, 0.25]) } ! ~numnotes.value</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* [1, 1.25, 1.5, 2, 4].choose,<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">inf</span>)</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>); <span class="Apple-tab-span">	</span></span>// leave some silence before the next repeat</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain(<span class="s2">Pfuncn</span>({ [0.125, 0.25, 0.5, 1, 2].choose }, 1)),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\numnotes</span>.pser((1..16), <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\d</span>.pseq([0.07], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//:Using a non-chromatic pitch set</p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Udef</span>(<span class="s3">'ping'</span>, { <span class="s2">| freq = 400 |</span> <span class="s2">Out</span>.ar(0, <span class="s2">Fade</span>.kr * <span class="s2">SinOsc</span>.ar(freq * [1, 1.01], 0, 0.1)); });</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next / 2]).dur(0.02, ~d.next) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>~numnotes.value) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Plazy</span>({ <span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next * 2]).dur(0.02, ~d.next) },</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>~numnotes.value) }),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.replaceStream(</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pseq</span>(({</p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(</span>[63, 65, 70, 72, 73, 75, 78, 79, 80])<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.wchoose([1, 2, 3, 4, 5, 4, 3, 2, 1].normalizeSum);<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} ! <span class="s1">~numnotes.next + </span>[-12, -7, -5, 0, 2, 5].choose<span class="s1">).midicps, </span>inf<span class="s1">));<span class="Apple-converted-space"> </span></span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\d</span>.replaceStream(<span class="s2">Pseq</span>(</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ [0.035, 0.07, 0.14, 0.28].wchoose([0.5, 0.125, 0.125, 0.25]) } ! ~numnotes.value</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* [1, 1.25, 1.5, 2, 4].choose,<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">inf</span>)</p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>); <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// leave some silence before the next repeat:</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}.chain(Pfuncn({ [0.125, 0.25, 0.5, 1, 2].choose }, 1)),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: {</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\numnotes</span>.pser((1..16), <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>));</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">\d</span>.pseq([0.07], <span class="s2">inf</span>);</p>
+<p class="p8"><span class="Apple-tab-span">	</span>}</p>
+<p class="p8">);</p>
+<p class="p12"><br></p>
+<p class="p7">//:Note: When starting many chains together, use mplay instead of play</p>
+<p class="p7">//Generally: Synths will not be started twice if a SynthResource is already bound to a symbol.</p>
+<p class="p12"><br></p>
+<p class="p8"><span class="s2">Udef</span>(<span class="s3">'ping'</span>, { <span class="s2">| freq = 400 |</span> <span class="s2">Out</span>.ar(0, <span class="s2">Fade</span>.kr * <span class="s2">SinOsc</span>.ar(freq * [1, 1.01], 0, 0.1)); });</p>
+<p class="p12"><br></p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(3 rrand: 10, 50, 100).midicps, <span class="s2">inf</span>)); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { <span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+<p class="p9">Chain<span class="s1">(</span></p>
+<p class="p9"><span class="s1"><span class="Apple-tab-span">	</span></span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\ping</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">\freq</span>.replaceStream(<span class="s2">Pseq</span>(<span class="s2">Array</span>.rand(3 rrand: 10, 50, 100).midicps, <span class="s2">inf</span>)); }.chain,</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">Pn</span>({ <span class="s3">\default</span>.mplay([<span class="s3">\freq</span>, ~freq.next]).dur(0.02, 0.07) }, 25),</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{}.chain((0.09 / 8).once) <span class="s5">// going out of phase</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>], <span class="s2">inf</span>),</p>
+<p class="p8"><span class="Apple-tab-span">	</span>() make: { <span class="s3">\freq</span>.stream(<span class="s2">Pseq</span>([60, 65, 63, 67, 70, 72].midicps, <span class="s2">inf</span>)) }</p>
+<p class="p8">);</p>
+>>>>>>> 926b0865fe21d2bdc6277a13f60959683a882142
+<p class="p12"><br></p>
+</body>
+</html>

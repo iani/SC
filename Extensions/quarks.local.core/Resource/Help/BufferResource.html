@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+span.s1 {font: 12.0px Helvetica}
+span.s2 {color: #162bc4}
+span.s3 {color: #000000}
+span.s4 {color: #008323}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>BufferResource</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: AbstractServerResource : Resource : Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Purpose</b></p>
+<p class="p4"><br></p>
+<p class="p3">Encapsulate the creation and access of buffers. Main purpose is to enable access of busses via symbols with methods:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">&lt;aSymbol&gt;.buffer;</p>
+<p class="p3">&lt;aSymbol&gt;.audio;</p>
+<p class="p3">&lt;aSymbol&gt;.index;</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><br></p>
+<p class="p3">Work notes to be organized better soon:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Post a list of names of buffers registered to be the default server when it boots, or already on it if it is booted:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">BufferResource.postNames;</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p3">Choose one of them to test:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">\weddel2.playBuf;</p>
+<p class="p4"><br></p>
+<p class="p3">Another one:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6"><span class="s1">\</span>tcp_d1_11_5_note_version_czech_lady_irdial.playBuf;</p>
+<p class="p4"><br></p>
+<p class="p3">List of useful methods to send to symbol for playing buffers:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>buffer(<span class="s2">target)</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>return the actual Buffer instance under that name for server target.</p>
+<p class="p9"><br></p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.buffer.inspect;</p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.buffer.play;</p>
+<p class="p9"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>bufr(target)</p>
+<p class="p9"><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>return the buffer resource under that name for server target.</p>
+<p class="p4"><br></p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.bufr.inspect;</p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.bufr.play;</p>
+<p class="p9"><br></p>
+<p class="p8"><span class="s3"><span class="Apple-tab-span">	</span>playBuf(</span>func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args)</p>
+<p class="p10"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>Play a buffer by name with a UGen function</p>
+<p class="p9"><br></p>
+<p class="p6">a = \tcp_d1_11_5_note_version_czech_lady_irdial.playBuf({ | buf = 0, rate = 1 |</p>
+<p class="p6"><span class="Apple-tab-span">	</span>Out.ar(0, PlayBuf.ar(1, buf, rate))<span class="Apple-tab-span">	</span></p>
+<p class="p6">});</p>
+<p class="p9"><br></p>
+<p class="p6">a.set(\rate, 0.5);</p>
+<p class="p9"><br></p>
+<p class="p6">a.scheds({ | s | s.set(\rate, -2 rrand: 2.0); 0.1 rrand: 5 });</p>
+<p class="p9"><br></p>
+<p class="p6">//: ---<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p6">But better to use a symbol for creating the synthresource, and send it the buffer as argument to the function played. For this, user Symbol:play, Symbol:playDef, in the usual way, providing the buffer as argument in the usual way one would do to Function:play, or use Symbol:playBufd:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p6">Udef to play with:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p8">Udef<span class="s3">(</span><span class="s4">'playbuf'</span><span class="s3">, { </span>| buf, rate = 1, trigger = 1, startPos = 0, loop = 0 |</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s2">var</span> source;</p>
+<p class="p6"><span class="Apple-tab-span">	</span>source = <span class="s2">PlayBuf</span>.ar(1, buf, rate, trigger, startPos, loop, 2);</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s2">Out</span>.ar(0, source);</p>
+<p class="p6">});</p>
+<p class="p9"><br></p>
+<p class="p6">Using it:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.playBufd(\playbuf);</p>
+<p class="p9"><br></p>
+<p class="p9"><span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.set(\buf, 10);</p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.set(\rate, 1);</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p6">//:----</p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.synth.streams({ | s |</p>
+<p class="p6"><span class="Apple-tab-span">	</span>s.set(\rate, \c_rate.pser([-1, 0.5, -0.5, 1, 2], inf).next)</p>
+<<<<<<< HEAD
+<p class="p6">}, Pser([1, 2, 3, 1, 5], inf)</p>
+<p class="p6">);</p>
+<p class="p9"><br></p>
+=======
+<p class="p6">}, Pser([1, 2, 3, 1, 5] * 5, inf)</p>
+<p class="p6">);</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p6">//:--- the above streams<span class="Apple-converted-space">  </span>in one go;</p>
+<p class="p6">\tcp_d1_11_5_note_version_czech_lady_irdial.playBufd(\playbuf).streams({ | s |</p>
+<p class="p6"><span class="Apple-tab-span">	</span>s.set(\rate, \c_rate.pser([-1, 0.5, -0.5, 1, 2], inf).next)</p>
+<p class="p6">}, Pser([1, 2, 3, 1, 5] * 5, inf)</p>
+<p class="p6">);</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+>>>>>>> 926b0865fe21d2bdc6277a13f60959683a882142
+<p class="p6">//: ------</p>
+<p class="p6">====</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p6">{ | i | format("default%", i).asSymbol.playDef(\default, [\freq, 200 rrand: 2000]) } ! 10;</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p6">\default0.free;</p>
+<p class="p6">\default2.free;</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p6">{ | i | format("default%", i).asSymbol.free } ! 10;</p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p9"><br></p>
+<p class="p8"><span class="s3"><span class="Apple-tab-span">	</span>playBufd { </span>| defName, args, target, addAction=\addToHead, name |</p>
+<p class="p10"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>/* Play a buffer by name with a synthdef */</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>^defName.mplay(</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[<span class="s4">\buf</span>, <span class="s2">BufferResource</span>(<span class="s2">this</span>, target.asTarget.server).object] ++ args,</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>target, addAction</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>);</p>
+<p class="p6"><span class="Apple-tab-span">	</span>}</p>
+<p class="p9"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3">Resource</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Instance Creation</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>current :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>defaultPath</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>key :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>numChannels :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>numFrames :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>object :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>path :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>server :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>startFrame</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*current :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*current_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*default :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*defaultPath :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*defaultPath_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*initClass :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*keyFromPath :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*list : </b>Open a window listing all loaded buffers. Click on any of these to play.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*load :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*loadList :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*makeKey :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*menuItems :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*new :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*play :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*read :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*saveList</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>bufnum :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>free :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>freed :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>init :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>isLoaded :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>loaded :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>makePlayFunc :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>numChannels :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>numFrames :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>path :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>play :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>sendTo :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>startFrame</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>
