@@ -61,8 +61,6 @@ GitQuarks : Quarks {
 		});
 
 		// install via copy -r to Extensions/<quarks-dir>
-		"fricskkingii -prsitscitingalllii".postln;
-		("cp -r " +  (local.path +/+ q.path).escapeChar($ ) +  (Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )).postln;
 		("cp -r " +  (local.path +/+ q.path).escapeChar($ ) +  (Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )).postln.systemCmd;
 		(q.name + "installed").inform;
 	}
