@@ -61,11 +61,11 @@ GitQuarks : Quarks {
 		});
 
 		// install via copy -r to Extensions/<quarks-dir>
-		("cp -r " +  (local.path +/+ q.path).escapeChar($ ) +  (Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )).postln.systemCmd;
+		("cp -r " +  (local.path +/+ q.path).escapeChar($ ) +  (Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )).systemCmd;
 		(q.name + "installed").inform;
 	}
 	
-		uninstall { | name |
+	uninstall { | name |
 		var q, deps, installed;
 		name = name.asString;
 		if(this.isInstalled(name).not,{
@@ -80,7 +80,7 @@ GitQuarks : Quarks {
 			).throw;
 		});
 
-		// install via symlink to Extensions/Quarks
+		// Uninstall by removing the folder recursively.
 		("rm -rf " +  (Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )).systemCmd;
 		(q.name + "uninstalled").inform;
 	}

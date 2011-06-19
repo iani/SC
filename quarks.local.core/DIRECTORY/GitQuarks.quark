@@ -1,0 +1,14 @@
+(
+	\name: "GitQuarks",
+	\path: "GitQuarks",
+	\summary: "Modifies Quarks behavior to copy instead of symlink folders, for compatibility with git / github",
+	\helpdoc: "Help/GitQuarks.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+)
+
