@@ -8,6 +8,7 @@ Aris Bezas Wed, 01 June 2011, 23:24
 //:mirrow effect
 OF.img(0,0,0,1280,1024);
 OF.img(1,0,0,600,600);
+OF.img(0,0,0,600,600);
 	
 OF.int("sketch",1);
 OF.int("pixelate",1);
@@ -38,6 +39,23 @@ OF.int("yPosImage", 100)
 OF.int("xPosImage", 100)
 OF.int("wImg", 100 rrand: 500)
 OF.int("mirrorMode",5);
+//:Create Synth from function
+a = SynthDef(\synthFunc, { |delayTime = 0.01, countX = 0, countY = 0, screenWidth = 1280, screenHeight = 1024, fotoWidth, fotoHeight|
+	
+	fotoWidth = screenWidth/20;
+	fotoHeight = screenWidth/20;
+	10.do{ |i|
+				
+//		OF.img((0..60).choose.round, countX, countY, fotoWidth, fotoHeight);
+//		countX = countX + fotoWidth;
+//		if (countX>screenWidth, {countX = 0;countY = countY + fotoHeight});
+//		if (countY>screenHeight, {countY = 0;});
+		//delayTime.wait;
+	}
+
+	
+	
+	}).send(s);
 
 //:Play with width and height
 k = {

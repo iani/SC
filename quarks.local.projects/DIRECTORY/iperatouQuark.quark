@@ -1,0 +1,15 @@
+(
+	\name: "iperatouQuark",
+	\path: "iperatouQuark",
+	\summary: "iperatou start make some quarks",
+	\helpdoc: "Help/iperatouQuark.html",
+	\author: "iperatou",
+	\version: 0.001,
+	\organization: "iperatou",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://iperatou.com",
+	\dependencies: []
+//	\dependencies: [""]
+)
+
