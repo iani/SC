@@ -1,7 +1,18 @@
 Lilypond {
+	classvar <notes, <alterations;
 	var <path, <source, <header;
 	var <file;
-	
+
+	*initClass {
+		notes = [$c, $c, $d, $d, $e, $f, $f, $g, $g, $a, $a, $b];
+		alterations = (
+			es: -1,
+			eses: -2,
+			is: 1,
+			isis: 2
+		);	
+	}
+
 	*new { | path, source, header |
 		^super.newCopyArgs(path, source, header).init;	
 	}
@@ -22,7 +33,7 @@ Lilypond {
 		};
 		file.putString("\n}\n");
 	}
-	
+
 	makeHeader {
 		^(title: PathName(path).fileNameWithoutExtension);
 	}
