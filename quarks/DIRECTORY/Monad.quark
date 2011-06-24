@@ -1,8 +1,0 @@
-(
-	\name: 			"Monad",
-	\path: 			"Monad",
-	\summary:		"Implementations of Monads in SuperCollider",
-	\author: 		"Miguel Negr‹o",
-	\since: 		"2011",
-	\version:		0.1
-)

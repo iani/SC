@@ -1,7 +1,0 @@
-(
-	\name: "API",
-	\path: "API",
-	\summary: "Application Programming Interfaces for sc applications: declaring them, calling them and mounting them on OSC",
-	\author: "felix",
-	\helpdoc: "Help/API.html"
-)
