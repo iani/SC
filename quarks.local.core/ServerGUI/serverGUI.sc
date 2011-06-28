@@ -1,41 +1,47 @@
 // Sergio Luque
+// www.sergioluque.com
+// version 2
+
 + Server {
 	makeWindow { arg w;
-		var active, booter, killer, makeDefault, running, booting, stopped;
-		var recorder, scoper;
+		var active, booter, killer, makeDefault, running, booting, stopped, bundling, showDefault;
+		var startDump, stopDump, blockAliveThread, dumping = false;
+		var recorder;
 		var countsViews, ctlr;
-		var dumping=false, label, font = Font(\Helvetica, 10), font2 = Font(\Helvetica, 9), 
-//		    gray =   Color.gray(0.925)/*Color.new255(203, 202, 192)*/, 
-//		    green = Color.new255(108, 125, 20);//Color.new255(93, 107, 17); //Color.new255(141, 160, 25)
-//		    gray	= Color.new255(51, 111, 203, 255 * 0.95),
-		    gray	= Color.new255(50, 50, 50, 255 * 0.95),
-		    green	= Color.gray(0.925),
-		    gui
-		    
-		    
-		    ;		
-		    
+		var label, gui;
+		var font, font2, backgroundColor, fontColor;
+		
+		font = GUI.font.new("Helvetica", 10);
+		font2 = GUI.font.new("Helvetica", 9);
+		backgroundColor = Color(0.196, 0.196, 0.196);
+		fontColor = Color.gray(0.925);
+		
+		if (window.notNil) { ^window.front };
 		gui = GUI.current;
-		if (window.notNil, { ^window.front });
 		
 		if(w.isNil) {
 			label = name.asString + "server";
-			w = window = SCWindow(label, 
-						Rect(Window.screenBounds.width - 404 , named.values.indexOf(this) * 22, 449-17-10 - 18, 21),
-						border: false);
-			w.view.background_(gray);
-			w.alpha = 1;
+			w = window = gui.window.new(
+							label, 
+							Rect(Window.screenBounds.width - 404, named.values.indexOf(this) * 22, 404, 21),
+							border: false
+						   );
+			w.view.background_(backgroundColor);
 			w.alwaysOnTop = false;
 			w.view.decorator = FlowLayout(w.view.bounds);
-		} { label = w.name };
-		
-		if(isLocal,{
-			booter = SCButton(w, Rect(0,0, 15, 15));
-			booter.states = [["b", green, Color.clear],
-						   ["q", green, Color.clear]];
-		 	booter.font	= font;
-			
-			booter.action = { arg view; 
+		} {
+			label = w.name
+		};
+
+		if(isLocal) {
+			booter = gui.button.new(w, Rect(0,0, 15, 15));
+			booter.canFocus = false;
+			booter.font = font;
+			booter.states = [[ "b", fontColor, Color.clear ],
+						   	   [ "q", fontColor, Color.clear ]
+						   	  ];
+
+			booter.action = { arg view;
 				if(view.value == 1, {
 					booting.value;
 					this.boot;
@@ -45,200 +51,192 @@
 				});
 			};
 			booter.setProperty(\value,serverRunning.binaryValue);
-			
-			killer = SCButton(w, Rect(0,0, 15, 15));
-			killer.states = [["k", green, Color.clear]];
-			killer.font	= font;
-			
-			killer.action = { Server.killAll };	
-		});
-		
-		active = SCStaticText(w, Rect(0,0, 50, 15));
+
+			killer = gui.button.new(w, Rect(0, 0, 15, 15));
+			killer.states = [[ "k", fontColor, Color.clear]];
+			killer.font = font;
+			killer.canFocus = false;
+			killer.action = { Server.killAll; stopped.value; };
+		};
+
+		active = gui.staticText.new(w, Rect(0,0, 50, 15));
 		active.string = this.name.asString;
 		active.align = \center;
-		active.font = Font("Helvetica-Bold", 9);
+		active.font = gui.font.new("Helvetica", 9).boldVariant;
 		active.background = Color.black;
-		if(serverRunning,running,stopped);		
+		if(serverRunning,running,stopped);
 
-		makeDefault = SCButton(w, Rect(0,0, 15, 15));
-		makeDefault.states = [["d", green, Color.clear]];
-		makeDefault.font	= font;
-		makeDefault.action = {
-			thisProcess.interpreter.s = this;
-			Server.default = this;
-		};
-		this.addDependant({ | server, message |
-			if (message === \default) {
-				if (Server.default === this) {
-					makeDefault.states = [["d", green, Color.green(0.5)]];
-				}{
-					makeDefault.states = [["d", green, Color.clear]];
-				};
-				makeDefault.refresh;				
-			}
-		});
- 
-		//w.view.decorator.nextLine;
-		
-		recorder = SCButton(w, Rect(0,0, 15, 15));
-		recorder.states = [
-			["r", green, Color.clear],
-			[">", Color.red, Color.gray(0.1)],
-			["[]", gray, Color.red]
-		];
-		recorder.font	= font2;
-		recorder.action = {
-			if (recorder.value == 1) {
-				this.prepareForRecord;
-			}{
-				if (recorder.value == 2) { this.record } { this.stopRecording };
+		makeDefault = gui.button.new(w, Rect(0,0, 15, 15));
+		makeDefault.font = font;
+		makeDefault.canFocus = false;
+		makeDefault.states = [[ "d", fontColor, Color.clear ], [ "d", fontColor, Color(0.647, 0.761, 0.38, 0.7)]];
+		makeDefault.value_((this == Server.default).binaryValue);
+		makeDefault.action = { Server.default_(this) };
+
+		if(isLocal){
+			recorder = gui.button.new(w, Rect(0,0, 15, 15));
+			recorder.font = font2;
+			recorder.states = [
+				[ "r", fontColor, Color.clear ],
+				[ "[]", Color.white, Color.red ]
+			];
+			recorder.action = {
+				if (recorder.value == 1) { this.record } { this.stopRecording };
 			};
+			recorder.enabled = false;
 		};
-		recorder.enabled = false;
-		
+
 		w.view.keyDownAction = { arg view, char, modifiers;
-			var startDump, stopDump, stillRunning;
 			
+
+				// if any modifiers except shift key are pressed, skip action
 			if(modifiers & 16515072 == 0) {
-				
-				case 
+
+				case
 				{char === $n } { this.queryAllNodes(false) }
 				{char === $N } { this.queryAllNodes(true) }
 				{char === $l } { this.tryPerform(\meter) }
+				{char === $p} { if(serverRunning) { this.plotTree } }
 				{char === $ } { if(serverRunning.not) { this.boot } }
-				{char === $s and: { gui.stethoscope.isValidServer( this ) } } { 
+				{char === $s and: { gui.stethoscope.isValidServer( this ) } } {
 					GUI.use( gui, { this.scope })}
 				{char == $d } {
 					if(this.isLocal or: { this.inProcess }) {
-						stillRunning = {
-							SystemClock.sched(0.2, { this.stopAliveThread });
-						};
-						startDump = { 
-							this.dumpOSC(1);
-							this.stopAliveThread;
-							dumping = true;
-							w.name = "dumping osc: " ++ name.asString;
-							CmdPeriod.add(stillRunning);
-						};
-						stopDump = {
-							this.dumpOSC(0);
-							this.startAliveThread;
-							dumping = false;
-							w.name = label;
-							CmdPeriod.remove(stillRunning);
-						};
 						if(dumping, stopDump, startDump)
 					} {
 						"cannot dump a remote server's messages".inform
 					}
-				
-				}
-				
+
+				};
 			};
 		};
-		
-		if (isLocal, {
-			
+
+		if (isLocal) {
+
 			running = {
-				active.stringColor_(Color.new255(165,194,97));//Color.red
+				active.stringColor_(Color.new255(165,194,97));
+//				active.string = "running";
 				booter.setProperty(\value,1);
 				recorder.enabled = true;
 			};
 			stopped = {
 				active.stringColor_(Color.grey(0.3));
+//				active.string = "inactive";
+				stopDump.value;
 				booter.setProperty(\value,0);
 				recorder.setProperty(\value,0);
 				recorder.enabled = false;
-
+				countsViews.do(_.string = "");
 			};
 			booting = {
-				active.stringColor_(Color.new255(255, 140, 0));//Color.yellow(0.9)
+				active.stringColor_(Color.new255(255, 140, 0));
+//				active.string = "booting";
 				//booter.setProperty(\value,0);
 			};
-			
+			bundling = {
+				active.stringColor_(Color.new255(237, 157, 196));
+				booter.setProperty(\value,1);
+				recorder.enabled = false;
+			};
+			blockAliveThread = {
+				SystemClock.sched(0.2, { this.stopAliveThread });
+			};
+			startDump = {
+				this.dumpOSC(1);
+				this.stopAliveThread;
+				dumping = true;
+				w.name = "dumping osc: " ++ name.asString;
+				CmdPeriod.add(blockAliveThread);
+			};
+			stopDump = {
+				this.dumpOSC(0);
+				this.startAliveThread;
+				dumping = false;
+				w.name = label;
+				CmdPeriod.remove(blockAliveThread);
+			};
+
 			w.onClose = {
-				//OSCresponder.removeAddr(addr);
-				//this.stopAliveThread;
-				//this.quit;
 				window = nil;
 				ctlr.remove;
 			};
-		},{	
+
+		} {
 			running = {
-				active.background = Color.red;
-				recorder.enabled = true;
+				active.stringColor_(Color.new255(165,194,97));
+//				active.string = "running";
+				active.background = Color.white;
 			};
 			stopped = {
-				active.background = Color.black;
-				recorder.setProperty(\value,0);
-				recorder.enabled = false;
+				active.stringColor_(Color.grey(0.3));
+//				active.string = "inactive";
 
 			};
 			booting = {
-				active.background = Color.yellow;
+				active.stringColor_(Color.new255(255, 140, 0));
+//				active.string = "booting";
 			};
+
+			bundling = {
+				active.stringColor = Color.new255(237, 157, 196);
+				active.background = Color.red(0.5);
+				booter.setProperty(\value,1);
+			};
+
 			w.onClose = {
 				// but do not remove other responders
 				this.stopAliveThread;
+				window = nil;
 				ctlr.remove;
 			};
-		});
+		};
+
+		showDefault = {
+			makeDefault.value = (Server.default == this).binaryValue;
+		};
+
 		if(serverRunning,running,stopped);
-			
-//		w.view.decorator.nextLine;
-		w.view.decorator.shift(3);
-
-		countsViews = 
-		#[
-			"avg:", "peak:",
-			"u:", "s:", "g:"
-		].collect({ arg name, i;
+				
+		countsViews =
+		#[ "avg:", "peak:", "u:", "s:", "g:" ]
+		 .collect { arg name, i;
 			var label,numView, pctView;
-			
-		
-			if (i < 2, { 
-				
-				label = SCStaticText(w, Rect(0,0, 24, 15));
-				label.font	= font2;
-				label.stringColor	= green;
-				label.string = name;
-				label.align = \left;
-			
-				numView = SCStaticText(w, Rect(0,0, 18, 15));
-				numView.font	= font2;
-				numView.stringColor	= green;
-				numView.string = "?";
-				numView.align = \right;
-			
-				pctView = SCStaticText(w, Rect(0,0, 15, 15));
-				pctView.font	= font2;
-				pctView.stringColor	= green;
-				pctView.string = "%";
-				pctView.align = \left;
 
-			 	
-				
-			},{ label = SCStaticText(w, Rect(0,0, 12, 15));
-				label.font	= font2;
-				label.stringColor	= green;
+
+			if (i < 2, {
+				label = gui.staticText.new(w, Rect(0,0, 24, 15));
 				label.string = name;
-				label.align = \left;
-				
-				numView = SCStaticText(w, Rect(0,0, 15, 15));
-				numView.font	= font2;
-				numView.stringColor	= green;
-				numView.string = "?";
+				label.font = font2;
+				label.stringColor	= fontColor;
+				label.align = \right;
+
+				numView = gui.staticText.new(w, Rect(0,0, 21, 15));
+				numView.font = font2;
+				numView.stringColor	= fontColor;
 				numView.align = \right;
+
+				pctView = gui.staticText.new(w, Rect(0,0, 15, 15));
+				pctView.string = "%";
+				pctView.font = font2;
+				pctView.stringColor	= fontColor;
+				pctView.align = \left;
+			},{
+				label = gui.staticText.new(w, Rect(0,0, 12, 15));
+				label.string = name;
+				label.font = font2;
+				label.stringColor	= fontColor;
+				label.align = \right;
 				
-				w.view.decorator.shift(10);
-				
-				
+				numView = gui.staticText.new(w, Rect(0,0, 21, 15));
+				numView.font = font2;
+				numView.stringColor	= fontColor;
+				numView.align = \right;
 			});
-			
+
 			numView
-		});
-		
-		w.front;
+		};
+
+ 		w.front;
 
 		ctlr = SimpleController(this)
 			.put(\serverRunning, {	if(serverRunning,running,stopped) })
@@ -248,11 +246,16 @@
 				countsViews.at(2).string = numUGens;
 				countsViews.at(3).string = numSynths;
 				countsViews.at(4).string = numGroups;
-				//countsViews.at(5).string = numSynthDefs;
+//				countsViews.at(5).string = numSynthDefs;
 			})
-			.put(\cmdPeriod,{
-				recorder.setProperty(\value,0);
-			});	
+			.put(\bundling, bundling)
+			.put(\default, showDefault);
+		if(isLocal){
+			ctlr.put(\cmdPeriod,{
+					recorder.setProperty(\value,0);
+				})
+		};
+
 		this.startAliveThread;
 	}
 }
