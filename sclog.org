@@ -818,3 +818,9 @@ Local Quark folders to use:
 
 quarks.local.core : Core library parts
 quarks.local.projects : Project code
+** 2011-07 July
+*** 2011-07-17 Sunday
+**** TODO GitQuarks should *copy* installed version back to uninstalled and restore timestamps for git transparency  :lilt:
+     :PROPERTIES:
+     :ENTERED_ON: <2011-07-17 Sun 13:24>
+     :END:

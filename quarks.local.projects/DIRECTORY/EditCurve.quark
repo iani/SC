@@ -1,0 +1,15 @@
+(
+	\name: "EditCurve",
+	\path: "EditCurve",
+	\summary: "Curve Editor with many features",
+	\helpdoc: "Help/EditCurve.html",
+	\author: "JŽr™me Bertholon",
+	\version: 0.01,
+	\organization: "Ambiant Project",
+	\country: "France",
+	\since: "2010",
+	\url: "http://acroe.imag.fr/proj/ambiant/?q=node/5",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+

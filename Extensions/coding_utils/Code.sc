@@ -58,7 +58,7 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
 				this.selectPreviousSnippet;
 			}),
-			CocoaMenuItem.addToMenu("Code", "nextz snippet", ["K", false, false], {
+			CocoaMenuItem.addToMenu("Code", "next snippet", ["K", false, false], {
 				this.selectNextSnippet;
 			}),
 			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false],
