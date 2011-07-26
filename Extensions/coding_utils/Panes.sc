@@ -1,12 +1,16 @@
 /* 
-Arrange Document windows conveniently for a laptop-sized monitor screen. 
+Arrange Document windows conveniently for a laptop-sized monitor screen.
+
+Feature still Testing on 20.7.2011! - Un-Released: Positions of Doc windows are restored from archive when recompiling: Implemented in Session class by MC, May/June 2011.
+
 */
 
 Panes {
-	classvar <>listenerY = 300, <>onePaneListenerWidth = 640, <>twoPaneListenerHeight = 300;
+//classvar <>listenerY = 300, <>onePaneListenerWidth = 640, <>twoPaneListenerHeight = 300;
+	classvar <>listenerY = 300, <>twoPaneListenerHeight = 300;
+classvar <>listenerXdelta=20;
 	classvar <>panePos;
 	classvar <>listenerPos, <>tryoutPos;
-	classvar <session;		// for saving / restoring doc positions and doc texts to archive
 	classvar <currentPositionAction;
 	classvar <>tryoutName = "tryout.scd";
 
@@ -17,6 +21,7 @@ Panes {
 		Code.addMenu;
 		Dock.addMenu;
 		BufferResource.addMenu;
+		Session.prepare;
 	}
 
 	*start { this.activate } // synonym
@@ -30,7 +35,10 @@ Panes {
 //		this.arrange2Panes;
 		Dock.showDocListWindow;
 		// confuses post and Untitled windows if not deferred on startup:
-		{ this.openTryoutWindow; }.defer(0.5); 
+		{
+			this.openTryoutWindow;
+			Session.restoreWindowPositions;
+		}.defer(0.5); 
 	}
 
 	*stop { this.deactivate } // synonym
@@ -47,13 +55,14 @@ Panes {
 			CocoaMenuItem.addToMenu("Utils", "activate pane placement", nil, {
 				this.activate;
 			}),
-			CocoaMenuItem.addToMenu("Utils", "single-pane doc arrangement", ["<", false, false], {
+			CocoaMenuItem.addToMenu("Utils", "single-pane doc arrangement", ["<", true, false], {
 				this.doRestoreTop({ this.arrange1Pane; });
 			}),
-			CocoaMenuItem.addToMenu("Utils", "multi-pane doc arrangement", [">", false, false], {
+			CocoaMenuItem.addToMenu("Utils", "multi-pane doc arrangement", [">", true, false], {
 				this.doRestoreTop({ this.arrange2Panes; });
 			}),
-			CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", [">", true, false], {
+			CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", ["A", false, false],
+			{
 				currentPositionAction.(Document.current);
 			}),
 		]
@@ -75,13 +84,13 @@ Panes {
 				tryout = Document.open(path);
 			};
 		};
-		tryout.front;
+//mc		tryout.front;
 	}
 
 	*arrange1Pane {
 		var width;
 		width = Dock.width;
-		listenerPos = Rect(0, listenerY, this.twoPaneWidth, 
+		listenerPos = Rect(0, listenerY, this.twoPaneWidth - listenerXdelta, //mc
 			Window.screenBounds.height - listenerY);
 		tryoutPos = Rect(0, 0, this.twoPaneWidth, listenerY - 28);
 		panePos = Rect(this.twoPaneWidth, 0, this.twoPaneWidth, Window.screenBounds.height);
@@ -90,7 +99,7 @@ Panes {
 	}
 
 	*arrange2Panes {
-		listenerPos = Rect(0, 0, this.twoPaneWidth, twoPaneListenerHeight - 25);
+		listenerPos = Rect(0, 0, this.twoPaneWidth - listenerXdelta, twoPaneListenerHeight - 25);//mc
 		panePos = Rect(0, twoPaneListenerHeight, this.twoPaneWidth, 
 			Window.screenBounds.height - twoPaneListenerHeight
 		);
