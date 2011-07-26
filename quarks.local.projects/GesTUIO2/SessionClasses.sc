@@ -10,22 +10,21 @@ TouchSession {
 	init {
 		postf("%, NEW. ID: %, data: %\n", this.class.name, id, data); // temporary... debug
 		behavior = sessionManager.sessionBehavior;
-		sessionManager.newSession(this);
+		sessionManager.sessionCreatedAction.(this);
 	}
 
 	sessionChanged  { | argData |
 		postf("%, CHANGED. ID: %, data: %\n", this.class.name, id, argData);
-		sessionManager.sessionChanged(this);
+		sessionManager.sessionChangedAction.(this);
 	}
 	
 	sessionEnded  {
 		postf("%, ENDED. ID: %, data: %\n", this.class.name, id, data);
-		sessionManager.sessionEnded(this);
+		sessionManager.sessionEndedAction.(this);
 	}
-	
 }
 
 FiducialSession : TouchSession {
-}
+} 
 
 

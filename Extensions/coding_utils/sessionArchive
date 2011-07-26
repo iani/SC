@@ -1,22 +1,24 @@
 var o, p;
 o = [
-	Session.prNew,  Array.prNew(3),  Array.prNew,  IdentityDictionary.prNew,  
+	Session.prNew,  Array.prNew(2),  Array.prNew,  IdentityDictionary.prNew,  
 	Array.prNew(128),  Rect.prNew,  Rect.prNew,  Rect.prNew,  
 	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew,  
 	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew,  
 	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew,  
 	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew,  
 	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew,  
-	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew
+	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew,  
+	Rect.prNew,  Rect.prNew,  Rect.prNew,  Rect.prNew,  
+	Rect.prNew
 ];
 p = [
 	// Session
 	0, [ selectOrder: o[1],  prevSelectOrder: o[2],  
 		docPositions: o[3] ],  
 	// Array
-	1, [ 'Untitled',  'tryout.scd',  'Main.sc' ],  
+	1, [ 'Panes.sc',  'Untitled' ],  
 	// IdentityDictionary
-	3, [ array: o[4],  size: 27,  
+	3, [ array: o[4],  size: 32,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
@@ -39,19 +41,19 @@ p = [
 		nil,  nil,  'GitQuarks.sc',  o[21],  
 		'Untitled',  o[22],  'SystemClock.html',  o[23],  
 		'Document.sc',  o[24],  'do',  o[25],  
-		nil,  nil,  'Main.sc',  o[26],  
+		'installtest.quark',  o[26],  'Main.sc',  o[27],  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
+		'Plily.sc',  o[28],  nil,  nil,  
+		'tryout.scd',  o[29],  nil,  nil,  
+		'Lilypond.sc',  o[30],  'ArrayedCollection.sc',  o[31],  
+		'Integer.sc',  o[32],  'LocalQuarks.sc',  o[33],  
 		nil,  nil,  nil,  nil,  
-		'tryout.scd',  o[27],  nil,  nil,  
-		nil,  nil,  'ArrayedCollection.sc',  o[28],  
-		'Integer.sc',  o[29],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
+		nil,  nil,  'TempTempTempTempTempTemp.rtf',  o[34],  
 		nil,  nil,  nil,  nil,  
-		nil,  nil,  'TempTempTempTempTempTemp.rtf',  o[30],  
-		nil,  nil,  nil,  nil,  
-		nil,  nil,  'if.html',  o[31],  
-		nil,  nil,  nil,  nil ],  
+		nil,  nil,  'if.html',  o[35],  
+		'Quarks.sc',  o[36],  nil,  nil ],  
 	// Rect
 	5, [ left: 640.000000,  top: 4.000000,  
 		width: 640.000000,  height: 874.000000 ],  
@@ -68,8 +70,8 @@ p = [
 	9, [ left: 637.000000,  top: 4.000000,  
 		width: 640.000000,  height: 874.000000 ],  
 	// Rect
-	10, [ left: 640.000000,  top: 4.000000,  
-		width: 640.000000,  height: 874.000000 ],  
+	10, [ left: 86.000000,  top: 328.000000,  
+		width: 626.000000,  height: 481.000000 ],  
 	// Rect
 	11, [ left: 104.000000,  top: 245.000000,  
 		width: 626.000000,  height: 481.000000 ],  
@@ -86,8 +88,8 @@ p = [
 	15, [ left: 640.000000,  top: 4.000000,  
 		width: 640.000000,  height: 874.000000 ],  
 	// Rect
-	16, [ left: 0.000000,  top: 278.000000,  
-		width: 620.000000,  height: 600.000000 ],  
+	16, [ left: 640.000000,  top: 4.000000,  
+		width: 640.000000,  height: 874.000000 ],  
 	// Rect
 	17, [ left: 660.000000,  top: 104.000000,  
 		width: 702.000000,  height: 774.000000 ],  
@@ -101,11 +103,11 @@ p = [
 	20, [ left: 107.000000,  top: 305.000000,  
 		width: 626.000000,  height: 481.000000 ],  
 	// Rect
-	21, [ left: 627.000000,  top: 4.000000,  
+	21, [ left: 640.000000,  top: 4.000000,  
 		width: 640.000000,  height: 874.000000 ],  
 	// Rect
-	22, [ left: 0.000000,  top: 278.000000,  
-		width: 620.000000,  height: 600.000000 ],  
+	22, [ left: 23.000000,  top: 397.000000,  
+		width: 626.000000,  height: 481.000000 ],  
 	// Rect
 	23, [ left: 83.000000,  top: 268.000000,  
 		width: 626.000000,  height: 481.000000 ],  
@@ -119,19 +121,34 @@ p = [
 	26, [ left: 640.000000,  top: 4.000000,  
 		width: 640.000000,  height: 874.000000 ],  
 	// Rect
-	27, [ left: 0.000000,  top: 0.000000,  
-		width: 640.000000,  height: 272.000000 ],  
-	// Rect
-	28, [ left: 149.000000,  top: 259.000000,  
-		width: 626.000000,  height: 481.000000 ],  
-	// Rect
-	29, [ left: 158.000000,  top: 136.000000,  
-		width: 1282.000000,  height: 693.000000 ],  
-	// Rect
-	30, [ left: 287.000000,  top: -6.000000,  
+	27, [ left: 640.000000,  top: 4.000000,  
 		width: 640.000000,  height: 874.000000 ],  
 	// Rect
-	31, [ left: 640.000000,  top: 4.000000,  
+	28, [ left: 191.000000,  top: 213.000000,  
+		width: 626.000000,  height: 481.000000 ],  
+	// Rect
+	29, [ left: 0.000000,  top: 0.000000,  
+		width: 640.000000,  height: 272.000000 ],  
+	// Rect
+	30, [ left: 640.000000,  top: 4.000000,  
+		width: 640.000000,  height: 874.000000 ],  
+	// Rect
+	31, [ left: 149.000000,  top: 259.000000,  
+		width: 626.000000,  height: 481.000000 ],  
+	// Rect
+	32, [ left: 158.000000,  top: 136.000000,  
+		width: 1282.000000,  height: 693.000000 ],  
+	// Rect
+	33, [ left: 640.000000,  top: 4.000000,  
+		width: 640.000000,  height: 874.000000 ],  
+	// Rect
+	34, [ left: 287.000000,  top: -6.000000,  
+		width: 640.000000,  height: 874.000000 ],  
+	// Rect
+	35, [ left: 640.000000,  top: 4.000000,  
+		width: 640.000000,  height: 874.000000 ],  
+	// Rect
+	36, [ left: 640.000000,  top: 4.000000,  
 		width: 640.000000,  height: 874.000000 ]
 ];
 prUnarchive(o,p);

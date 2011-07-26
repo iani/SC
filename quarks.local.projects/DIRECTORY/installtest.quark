@@ -1,0 +1,15 @@
+(
+	\name: "installtest",
+	\path: "installtest",
+	\summary: "test only",
+	\helpdoc: "Help/installtest.html",
+	\author: "Ioannis Zannos",
+	\version: 0.01,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+

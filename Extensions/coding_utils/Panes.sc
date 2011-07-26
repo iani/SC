@@ -21,7 +21,7 @@ classvar <>listenerXdelta=20;
 		Code.addMenu;
 		Dock.addMenu;
 		BufferResource.addMenu;
-		Session.prepare;
+//		Session.prepare;
 	}
 
 	*start { this.activate } // synonym
@@ -37,7 +37,7 @@ classvar <>listenerXdelta=20;
 		// confuses post and Untitled windows if not deferred on startup:
 		{
 			this.openTryoutWindow;
-			Session.restoreWindowPositions;
+//			Session.restoreWindowPositions;
 		}.defer(0.5); 
 	}
 

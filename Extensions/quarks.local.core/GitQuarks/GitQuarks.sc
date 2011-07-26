@@ -3,7 +3,7 @@ GitQuarks : Quarks {
 	// install so that it can be distributed through git: 
 	// copy code instead of creating a link. 
 	// For uninstall use rm -rf to remove directory instead of simple rm which works for alias
-	install { | name , includeDependencies=true, checkoutIfNeeded=true |
+	install { | name, includeDependencies=true, checkoutIfNeeded=true |
 		var q, deps, installed, dirname, quarksForDep;
 
 		if(this.isInstalled(name),{
@@ -80,8 +80,17 @@ GitQuarks : Quarks {
 			).throw;
 		});
 
-		// Uninstall by removing the folder recursively.
-		("rm -rf " +  (Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )).systemCmd;
+		/* TODO: Uninstall by copying back to the source repository in order to preserve edited changes
+		in the quark. Then remove from Extensions. 
+
+		*/
+		(	"cp -r " + 
+			(Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ ) 
+			+ " " +  
+			(local.path).escapeChar($ )
+			+ " && rm -rf " +  
+			(Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )
+		).systemCmd;
 		(q.name + "uninstalled").inform;
 	}
 
