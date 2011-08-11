@@ -1,0 +1,14 @@
+(
+	\name: "customization",
+	\path: "customization",
+	\summary: "Switch between different color themes for document windows",
+	\helpdoc: "Help/customization.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: ["ServerPrep", "Resource"]
+)
+

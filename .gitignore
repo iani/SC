@@ -24,6 +24,10 @@ archive.sctxar
 
 tryout.scd
 
+# Version 110811: Ignore all extensions (!!!)
+# All extensions are now in quarks and configured individually by the user
+Extensions
+
 Extensions\ \(archive\)
 Extensions\ \(disabled\)
 HistoryLogs
