@@ -87,6 +87,7 @@ GitQuarks : Quarks {
 		// install via copy -r to Extensions/<quarks-dir>
 		("cp -r " +  (local.path +/+ q.path).escapeChar($ ) +  (Platform.userExtensionDir +/+ local.name +/+ q.path).escapeChar($ )).systemCmd;
 		(q.name + "installed").inform;
+//		{ thisProcess.recompile }.defer(3);
 	}
 	
 	uninstall { | name |
