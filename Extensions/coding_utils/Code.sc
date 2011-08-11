@@ -55,11 +55,15 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "make osc snippet commands", [/*{*/ "}", true, true], {
 				this.makeCodeOSC;
 			}),
-			CocoaMenuItem.addToMenu("Code", "previous snippet", ["J", false, false], {
-				this.selectPreviousSnippet;
-			}),
-			CocoaMenuItem.addToMenu("Code", "next snippet", ["K", false, false], {
+			/* IZ 20110810: J for next, K for previous: compatibility with de facto standard
+				for movement by keyboard in most software since before the mouse: 
+				vi, gmail, google labs, ebib, many other apps and games. See HJKL keys: 
+				http://en.wikipedia.org/wiki/HJKL_keys#HJKL_keys */
+			CocoaMenuItem.addToMenu("Code", "next snippet", ["J", false, false], {
 				this.selectNextSnippet;
+			}),
+			CocoaMenuItem.addToMenu("Code", "previous snippet", ["K", false, false], {
+				this.selectPreviousSnippet;
 			}),
 			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false],
 				{ this.forkCurrentSnippet(AppClock); }

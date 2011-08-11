@@ -46,13 +46,35 @@ Preceive.event;
 
 Preceive.postOSC;
 
-Preceive(
+~pack1 = Preceive(
 	\start->{ "playing".postln; },
 	\a -> { "this was alpha".postln; },
 	1 -> { "beat 1".postln; },
 	5 -> { "beat 5".postln; },
 	\end -> { "end".postln; }
-).play;
+);
+
+~pack2 = Preceive(
+	\start->{ "playing pack 2".postln; },
+	\a -> { "this was pack 2 alpha".postln; },
+	1 -> { "beat 1 pack 2".postln; },
+	5 -> { "beat 5 pack 2".postln; },
+	\xtra -> { "extra action pack 2".postln; },
+	\end -> { "end".postln; }
+);
+
+
+p = Posc(\msg, Pseq([\a, \xtra], inf)).play;
+
+
+~pack1.play;
+
+~pack2.play;
+
+~pack1.stop;
+
+~pack2.stop;
+
 
 */
 
@@ -64,6 +86,7 @@ Preceive : Event {
 	}
 
 	init { | actions |
+//		if (event.isNil) { event = Event.new };
 		actions do: { | a | this.addAction(a.key, a.value) };
 	}
 
@@ -83,7 +106,7 @@ Preceive : Event {
 		var newPiece;
 		thisProcess.recvOSCfunc = this;
 		this.getEvent;
-		if (piece.notNil) { this.setEvent(piece) };
+		if (piece.notNil) { this.addEvent(piece) };
 	}
 		
 	*getEvent { 
@@ -93,14 +116,17 @@ Preceive : Event {
 
 	*clear { event = this.new }
 	
-	*setEvent { | piece |
-//		piece.postln;
+	*addEvent { | piece |
+		piece.postln;
 		if (piece.isNil) { ^this.getEvent };
-		event = this.getEvent[piece] ? piece;
-//		[this, thisMethod.name, event].postln;
+		event = this.getEvent; // [piece] ? piece;
+		piece keysValuesDo: { | key, value |
+			event[key] = value;	
+		};
+		[this, thisMethod.name, event].postln;
 		^event;
 	}
-	
+
 	*stopOSC {
 		// shortcut for Preceove.verbose = false;
 		verbose = false;
@@ -109,6 +135,13 @@ Preceive : Event {
 	*postOSC {
 		verbose = true;
 		this.play;
+	}
+
+	stop {
+		this.getEvent;
+		this keysDo: { | key |
+			event[key] = nil;
+		}	
 	}
 
 	*stop {	
