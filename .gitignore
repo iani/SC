@@ -27,6 +27,11 @@ tryout.scd
 # Version 110811: Ignore all extensions (!!!)
 # All extensions are now in quarks and configured individually by the user
 Extensions
+# The only thing that needs to be installed by default for lilt to be configurable is this: 
+!Extensions/L*
+# In the same spirit, also ignore startup.rtf, startup.scd
+startup.rtf
+startup.scd
 
 Extensions\ \(archive\)
 Extensions\ \(disabled\)

@@ -40,12 +40,6 @@ Code {
 
 	*menuItems {
 		^[
-			CocoaMenuItem.addToMenu("Code", "Configure core quarks", nil, {
-				GitQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.core").gui;
-			}),
-			CocoaMenuItem.addToMenu("Code", "Configure project quarks", nil, {
-				GitQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.projects").gui;
-			}),
 			CocoaMenuItem.addToMenu("Code", "snippet list view", [/*{*/ "}", false, false], {
 				this.showCodeListWindow;
 			}),
