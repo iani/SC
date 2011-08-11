@@ -1,0 +1,14 @@
+(
+	\name: "Resource",
+	\path: "Resource",
+	\summary: "Access objects by key, create only when needed",
+	\helpdoc: "Help/Resource.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2010",
+	\url: "http://earlab.org",
+	\dependencies: ["ServerPrep"]
+)
+

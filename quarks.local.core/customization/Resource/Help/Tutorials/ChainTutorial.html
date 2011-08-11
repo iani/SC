@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cb150f}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #112ec6}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Monaco; min-height: 16.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+span.s1 {color: #000000}
+span.s2 {color: #112ec6}
+span.s3 {color: #cb150f}
+span.s4 {color: #737373}
+span.s5 {color: #162bc4}
+span.s6 {color: #008219}
+span.s7 {color: #008323}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Chain Tutorial<span class="Apple-converted-space"> </span></b></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">DRAFT DRAFT DRAFT</p>
+<p class="p2"><br></p>
+<p class="p3">Just a few notes made with AB.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">On 2011 06 01</p>
+<p class="p2"><br></p>
+<p class="p3">A Chain takes a pattern as argument and plays the objects returned by that pattern, until the patterns' stream ends (until it returns nil).<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">The objects returned by the pattern's stream (that is, the elements of the pattern) must be objects that respond to the message 'onEnd'. Each new element in the stream is played when the previous element ends. There are two kinds of objects that are regularly used as elements in a chain:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">1. SynthResource objects</p>
+<p class="p3">2. ChainLink objects</p>
+<p class="p2"><br></p>
+<p class="p3">The next sections explain how to define and use SynthResource objects and ChainLink objects in a Chain.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p4"><b>1: Synths in a chain</b></p>
+<p class="p2"><br></p>
+<p class="p3">SynthResource objects play synths that have a definitive duration. When a synth ends, the next one is played. A SynthResource object is created in a chain by a function. For example:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">{ { SinOsc.ar(400, 0, 0.1) }.play.dur(1, 1) };</p>
+<p class="p2"><br></p>
+<p class="p3">Here the duration of the Synth is given by the message 'dur'. The first argument is the duration of the "steady" part of the synth, while the second argument gives the fadeout time, i.e. the time interval until that synth fades out to 0 amplitude.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">In other words, if a function returns a SynthResource (which plays a synth), then the Chain will wait until that synth is freed before it proceeds to the next function. For example:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">//:example1: synth chain</p>
+<p class="p7">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(400, 0, 0.1) }.play.dur(1, 1); },<span class="Apple-tab-span">	</span><span class="s3">// duration: 1 + 1 (release) = 2 seconds</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(800, 0, 0.1) }.play.dur(0.1, 0.1); } <span class="s3">// duration: 0.1 + 0.1 = 0.2. seconds</span></p>
+<p class="p8">], <span class="s2">5</span>));<span class="Apple-tab-span">	</span>// 5 repetitions</p>
+<p class="p5"><br></p>
+<p class="p6">//:example2: choose at random from the functions in the list</p>
+<p class="p7">Chain<span class="s1">(</span>Prand<span class="s1">([</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(400 + 200.rand, 0, 0.1) }.play.dur(1, 1); },</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(800 + 800.rand, 0, 0.1) }.play.dur(0.1, 0.1); }<span class="Apple-converted-space"> </span></p>
+<p class="p8">], <span class="s2">inf</span>));</p>
+<p class="p5"><br></p>
+<p class="p8">//: End of example</p>
+<p class="p5"><br></p>
+<p class="p4"><b>2: Chain Links<span class="Apple-converted-space"> </span></b></p>
+<p class="p2"><br></p>
+<p class="p3">Chain links are objects that enclose a function giving it a duration and a number of repetitions. The duration and repetitions of a ChainLink is given by a pattern, passed as argument to the chain message to a function:<span class="Apple-converted-space"> </span></p>
+<p class="p9"><br></p>
+<p class="p10">//:Other objects in chain</p>
+<p class="p11">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>{ </span><span class="s4">"hello "</span><span class="s1">.post; }.chain(1.once),<span class="Apple-tab-span">	</span></span>// evaluate this once, and wait 1 second<span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>{ </span><span class="s4">"there"</span><span class="s1">.postln; }.chain(0.1.once), <span class="Apple-tab-span">	</span></span>// evaluate this once, and wait 0.1 seconds</p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>{ </span><span class="s4">"NNN"</span><span class="s1">.postln; }.chain(</span><span class="s5">Pn</span><span class="s1">(0.2, 3)) <span class="Apple-tab-span">	</span></span>// evaluate this 3, and wait 0.2 seconds each time</p>
+<p class="p12">], 10));</p>
+<p class="p13"><br></p>
+<p class="p10">//: End of example</p>
+<p class="p5"><br></p>
+<p class="p4"><b>n: Playing sounds inside a chain link</b></p>
+<p class="p5"><br></p>
+<p class="p3">The function of a Chain link can also create Synths, but the timing is the responsibility of the pattern that controls the timing of the repetitions of the chain function, in other words the timing does not depend on the duration of the synths created by the chain function.<span class="Apple-converted-space">  </span>In the following example, the duration of each synth is 0.5 seconds, but the interval between the starts of each synth is 0, 0.25, 0.5, and 1 seconds:</p>
+<p class="p2"><br></p>
+<p class="p6">//:synthchain<span class="Apple-converted-space"> </span></p>
+<p class="p7">Chain<span class="s1">(</span>Pn<span class="s1">(</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ <span class="s6">\default</span>.mplay([<span class="s6">\freq</span>, [40, 47, 49, 50, 52].choose.midicps]).dur(0.25, 0.25) }</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.chain(<span class="s2">Pseq</span>([0, 0.25, 0.5, 1], <span class="s2">inf</span>))</p>
+<p class="p8">, 1));</p>
+<p class="p9"><br></p>
+<p class="p10">//: End of example</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p4"><b>N. Binding a chain to a symbol</b></p>
+<p class="p5"><br></p>
+<p class="p6">//:Binding a chain to a symbol</p>
+<p class="p5"><br></p>
+<p class="p8"><span class="s6">\chainlet</span>.chain(<span class="s2">Pseq</span>([</p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(400 rrand: 800, 0, 0.1) }.play.dur(0.1, 0.7); },<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span>{ { <span class="s2">SinOsc</span>.ar(800 rrand: 1200, 0, 0.1) }.play.dur(0.1, 0.1); }<span class="Apple-converted-space"> </span></p>
+<p class="p8">], <span class="s2">inf</span>));</p>
+<p class="p8">5.wait;</p>
+<p class="p8"><span class="s6">\chainlet</span>.chain.stop;</p>
+<p class="p5"><br></p>
+<p class="p8">//: ---</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p4"><b>n: Using patterns shared by functions inside the chain</b></p>
+<p class="p5"><br></p>
+<p class="p13"><br></p>
+<p class="p10">//:patterns in chain<span class="Apple-converted-space"> </span></p>
+<p class="p11">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p10"><span class="s1"><span class="Apple-tab-span">	</span>{ </span><span class="s7">\regi</span><span class="s1">.n }.chain, <span class="Apple-tab-span">	</span></span>// get the next value of regi here</p>
+<p class="p12"><span class="Apple-tab-span">	</span>{ <span class="s7">\default</span>.mplay([<span class="s7">\freq</span>, <span class="s7">\freq</span>.n * ~regi.value]).dur(0.25, 0.25) }</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.chain(<span class="s5">Pseq</span>([0, 0.25, 0.5, 1] / 2, 1)),</p>
+<p class="p12">], <span class="s5">inf</span>),</p>
+<p class="p12"><span class="Apple-tab-span">	</span>() make: {</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">\freq</span>.stream(<span class="s5">Pseq</span>([47, 49, 50, 52].midicps, <span class="s5">inf</span>));</p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">\regi</span>.stream(<span class="s5">Pseq</span>([1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 5], <span class="s5">inf</span>));</p>
+<p class="p12"><span class="Apple-tab-span">	</span>}</p>
+<p class="p12">);</p>
+<p class="p13"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+</body>
+</html>

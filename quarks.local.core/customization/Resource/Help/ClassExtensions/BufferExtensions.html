@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cf0c0c}
+span.s1 {color: #162bc4}
+span.s2 {color: #000000}
+span.s3 {color: #d00c0c}
+span.s4 {color: #008323}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p2">//:d Buffer.play;</p>
+<p class="p1"><br></p>
+<p class="p2"><span class="s1">Buffer</span><span class="s2">.play; <span class="Apple-tab-span">	</span></span>// plays the current buffer - or the default</p>
+<p class="p1"><br></p>
+<p class="p2">//:a playing the default buffer</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s1">Buffer</span>.default.play; <span class="s3">//<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><br></p>
+<p class="p2">//:b playing the default buffer on another server</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s1">Buffer</span>.default(<span class="s1">Server</span>.internal).play;</p>
+<p class="p1"><br></p>
+<p class="p2">//:c current buffer is the last selected buffer</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s1">Buffer</span>.current.play;</p>
+<p class="p1"><br></p>
+<p class="p2">//:Play with custom arguments</p>
+<p class="p1"><br></p>
+<p class="p3">10 do: { <span class="s1">Buffer</span>.play(args: [<span class="s4">\rate</span>, 0.75 + 1.0.rand]); };</p>
+<p class="p1"><br></p>
+<p class="p2">//:Play with custom arguments, with a delay of 0.1 between each iteration</p>
+<p class="p2">/* Note: Should be evaluated using Command-Shift-X */</p>
+<p class="p3">10 do: { <span class="s1">Buffer</span>.play(args: [<span class="s4">\rate</span>, 0.75 + 1.0.rand]); 0.1.wait };</p>
+<p class="p1"><br></p>
+<p class="p2">//:As above, but using Symbol:pn</p>
+<p class="p2">/* Can be evaluated by enter key alone but boot the server first*/</p>
+<p class="p1"><br></p>
+<p class="p3">{ <span class="s1">Buffer</span>.play(args: [<span class="s4">\rate</span>, 0.75 + 1.0.rand]); <span class="s4">\dur</span>.pn(0.1, 10) }.sched;</p>
+<p class="p4"><br></p>
+<p class="p5">//:Gradually increase the rate and the delay between starts using Symbol:pseq</p>
+<p class="p5">/* Can be evaluated by enter key alone, but boot the server first */</p>
+<p class="p1"><br></p>
+<p class="p3">{ <span class="s1">Buffer</span>.play(args: [<span class="s4">\rate</span>, \rate.pseq((1.5, 1.4..0.5).next, inf)]); <span class="s4">\dur</span>.pseq((0.01, 0.3..2.7), 1) }.sched;</p>
+<p class="p4"><br></p>
+<p class="p2">//:Play with custom function</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s1">Buffer</span>.play({ <span class="s1">| bufnum |</span> <span class="s1">BufRd</span>.ar(1, bufnum, <span class="s1">LFNoise1</span>.ar(1) * <span class="s1">BufFrames</span>.ir(bufnum)) });</p>
+<p class="p1"><br></p>
+<p class="p2">//:Long form: Play with custom function</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s1">BufferResource</span>.default.play({ <span class="s1">| bufnum |</span> <span class="s1">BufRd</span>.ar(1, bufnum, <span class="s1">LFNoise1</span>.ar(1) * <span class="s1">BufFrames</span>.ir(bufnum)) });</p>
+<p class="p1"><br></p>
+<p class="p2">//:playing the same buffer with a custom function many times:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p3">10 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Buffer</span>.play({ <span class="s1">| bufnum |</span> <span class="s1">BufRd</span>.ar(1, bufnum, <span class="s1">SinOsc</span>.ar(0.02.rrand(0.09)) * <span class="s1">BufFrames</span>.ir(bufnum)) });</p>
+<p class="p3">};</p>
+<p class="p1"><br></p>
+<p class="p2">//:Variant</p>
+<p class="p3">10 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Buffer</span>.play({ <span class="s1">| bufnum |</span> <span class="s1">BufRd</span>.ar(1, bufnum, <span class="s1">LFNoise1</span>.ar(0.3).range(-1, 1) * <span class="s1">BufFrames</span>.ir(bufnum)) });</p>
+<p class="p3">};</p>
+</body>
+</html>

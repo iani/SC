@@ -1,0 +1,14 @@
+(
+	\name: "PsendPreceive",
+	\path: "PsendPreceive",
+	\summary: "Use patterns for broadcasting and reacting to OSC messages",
+	\helpdoc: "Help/PsendPreceive.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2010",
+	\url: "http://earlab.org",
+	\dependencies: []
+)
+

@@ -1,0 +1,14 @@
+(
+	\name: "Spectrograph",
+	\path: "Spectrograph",
+	\summary: "Real time spectrogram (inspired by Thor Magnusson's spectrogram quark",
+	\helpdoc: "Help/Spectrograph.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: ["ServerPrep", "Resource"]
+)
+

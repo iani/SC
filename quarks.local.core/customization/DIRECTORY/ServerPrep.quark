@@ -1,0 +1,14 @@
+(
+	\name: "ServerPrep",
+	\path: "ServerPrep",
+	\summary: "Load synthdefs, buffers, synths, routines in right order. Boot server if needed, then load",
+	\helpdoc: "Help/ServerPrep.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2010",
+	\url: "http://earlab.org",
+	\dependencies: []
+)
+

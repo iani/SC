@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+span.s1 {color: #000000}
+span.s2 {color: #162bc4}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>MenuHandler</b></p>
+<p class="p2"><b></b><br></p>
+<p class="p3"><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Purpose</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3">Enable the easy addition or removal of menu items for any object.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">(Limited to MacOS X for the moment)</p>
+<p class="p4"><b></b><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3">To enable any object (Class or instance) to add menu items, define a class or instance method menuItems for it.<span class="Apple-converted-space"> </span></p>
+<p class="p3">The method should return an array of CocoaMenuItems. These items are stored in MenuHandler using the object (or class) as key, so that they can be removed when sending the object the message removeMenu.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Example:<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3">(From Dock class, abbreviated:)</p>
+<p class="p4"><br></p>
+<p class="p3">The Dock class defines the following menu items:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span>*menuItems { ^[</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s2">CocoaMenuItem</span><span class="s1">.addToMenu(</span>"Utils"<span class="s1">, </span>"show doc list window"<span class="s1">, [</span>"\""<span class="s1">, </span><span class="s2">false</span><span class="s1">, </span><span class="s2">false</span><span class="s1">], {</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">this</span>.showDocListWindow;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}),</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s2">CocoaMenuItem</span><span class="s1">.addToMenu(</span>"Utils"<span class="s1">, </span>"browse / open user classes"<span class="s1">, [</span>"b"<span class="s1">, </span><span class="s2">true</span><span class="s1">, </span><span class="s2">true</span><span class="s1">], {</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">this</span>.browseUserClasses;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}),</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s2">CocoaMenuItem</span><span class="s1">.addToMenu(</span>"Utils"<span class="s1">, </span>"open / create class help"<span class="s1">, [</span>"D"<span class="s1">, </span><span class="s2">true</span><span class="s1">, </span><span class="s2">false</span><span class="s1">], {</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">this</span>.openCreateHelpFile;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}),</p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s2">CocoaMenuItem</span><span class="s1">.addToMenu(</span>"Utils"<span class="s1">, </span>"insert class help template"<span class="s1">, </span><span class="s2">nil</span><span class="s1">, {</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s2">this</span>.insertClassHelpTemplate;</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>]</p>
+<p class="p6"><span class="Apple-tab-span">	</span>}<span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-converted-space"> </span></p>
+<p class="p3">These can be added by evaluating:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p8"><span class="s2">Dock</span>.addMenu</p>
+<p class="p4"><br></p>
+<p class="p3"><b>and removed by calling:<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p8"><span class="s2">Dock</span>.removeMenu</p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Related Classes</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3">See also following class extensions: Object:addMenu, Object:removeMenu, Meta_CocoaMenuItem:addToMenu</p>
+<p class="p4"><br></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance Creation</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Class variables</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>menuItems</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span> --<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*addMenu :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*initClass :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*menuItems :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*removeMenu</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span> --<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>

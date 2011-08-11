@@ -1,0 +1,14 @@
+(
+	\name: "ServerGUI",
+	\path: "ServerGUI",
+	\summary: "Replace Server Window by a smaller one, leaving free space for windows on the Computer Display",
+	\helpdoc: "Help/ServerGUI.html",
+	\author: "Sergio Luque",
+	\version: 1.0,
+	\organization: "University of Birmingham",
+	\country: "Spain",
+	\since: "2010",
+	\url: "http://www.sergioluque.com/",
+	\dependencies: []
+)
+

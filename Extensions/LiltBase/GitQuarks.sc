@@ -20,6 +20,9 @@ GitQuarks : Quarks {
 			}),
 			CocoaMenuItem.addToMenu("Code", "Configure draft quarks", nil, {
 				GitQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.drafts").gui;
+			}),
+			CocoaMenuItem.addToMenu("Code", "Save local quarks", nil, {
+				this.saveLocalQuarks;
 			})
 		]
 	}
@@ -106,4 +109,19 @@ GitQuarks : Quarks {
 		(q.name + "uninstalled").inform;
 	}
 
+	*saveLocalQuarks {
+		var script = "echo 'copying quarks from Extensions to archive ...' ", path;
+		var quarkgroups = #["core", "projects", "drafts"];
+		quarkgroups do: { | group |
+			path = format("%/quarks.local.%/*", Platform.userExtensionDir, group).escapeChar($ );
+			if (path.pathMatch.size > 0) {
+				script = script + format("&& cp -r % %", path, 
+					format(format("%/quarks.local.%/", Platform.userAppSupportDir, 
+						group)).escapeChar($ );
+				);
+			};
+		};
+		script = script ++ " && echo '... quark copy DONE'";
+		script.unixCmd;
+	}
 }

@@ -1,0 +1,15 @@
+(
+	\name: "GesTUIO",
+	\path: "GesTUIO",
+	\summary: "Configure Sound Interaction on a Multitouch Surface sending TUIO",
+	\helpdoc: "Help/gestuio.html",
+	\author: "Stratos Kountouras, Ioannis Zannos",
+	\version: 0.01,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+

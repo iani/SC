@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #ff3019}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+span.s1 {font: 9.0px Monaco}
+span.s2 {color: #000000}
+span.s3 {color: #008323}
+span.s4 {color: #162bc4}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Spectrograph</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: UniqueWindow : UniqueObject : Object</b></p>
+<p class="p4"><span class="Apple-converted-space"> </span></p>
+<p class="p3">A real time Spectrogram<span class="Apple-converted-space">  </span>with customizable window dimensions and colors. Inspired from the Spectrogram Quark by Thor Magnusson and Dan Stowell.</p>
+<p class="p4"><br></p>
+<p class="p5">Note: The Spectrograph may occasionally crash SuperCollider if it is running on a MacBook with battery power. I have not been able to trace the source of the problem so far but suspect this is due to fast Image updates causing problems with the Graphics Card.</p>
+<p class="p4"><br></p>
+<p class="p3">A Spectrograph instance is identified by its name and server. That is, if you call Spectrograph.new with the same name and Server as that of an already existing Spectrograph instance, the old Spectrograph instance will be returned.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*new(name, bounds, server, rate, bufsize) </b>: Create a Spectrograph window</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>name</b>: the name of the window and the Spectrograph (a Symbol).<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Note: The server's name will automatically be added to the name</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>bounds: </b>A Rect. The bounds of the Spectrograph window. Width should be 400 or greater.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Defaults to the bounds of Spectrogram.small.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>server: </b>The server on which the Spectrograph will operate. Default: Server.default.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>rate</b>: The time in seconds to wait between polls. Default: 0.04 (25 polls per second).</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>bufsize: </b>The size of the fft buffer to use for polling the fft signal. Default: 1024.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Should be between a power of 2 between 2 * Server blockSize and 1024</p>
+<p class="p4"><br></p>
+<p class="p3">Spectrograph does not need starting. It starts as soon as its server is booted, and remains active as long as its window is open.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*current </b>: Return the last created Spectrograph instance, if still open. If closed, return nil</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*big</b> : Create a default Spectrograph on a big centered window (1000x390). If already open,<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>then change the size of the window to big.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span><b>*small</b> : Create a default Spectrograph on a small window at the bottom right of the screen. If already open,</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>then change the size of the window to small.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Per default, the PollFFT synth instance that gets the data stops when the Spectrograph window closes. One can change this behavior by setting the instance variable <span class="s1">stopPollerOnClose</span>.<span class="Apple-converted-space">  </span>(See instance method stopPollerOnClose_).</p>
+<p class="p4"><br></p>
+<p class="p6">//:Open the default spectrograph</p>
+<p class="p7">Spectrograph<span class="s2">.new;</span></p>
+<p class="p8"><br></p>
+<p class="p9"><span class="s3">\test3</span>.playFunc({ <span class="s4">LFSaw</span>.ar(<span class="s4">LFNoise2</span>.kr(0.1).range(100, 10000), 0, 0.005) });</p>
+<p class="p8"><br></p>
+<p class="p6">//:Set backround color</p>
+<p class="p9"><span class="s4">Spectrograph</span>.background = <span class="s4">Color</span>(0.1, 0.3, 0.6);</p>
+<p class="p8"><br></p>
+<p class="p6">//:Change to big size</p>
+<p class="p7">Spectrograph<span class="s2">.big;</span></p>
+<p class="p8"><br></p>
+<p class="p6">//:Change to back small size</p>
+<p class="p7">Spectrograph<span class="s2">.small;</span></p>
+<p class="p8"><br></p>
+<p class="p6">//:Some test sounds</p>
+<p class="p9"><span class="s3">\test</span>.playFunc({ <span class="s4">SinOsc</span>.ar(<span class="s4">LFSaw</span>.kr(0.1).range(100, 10000), 0, 0.001) });</p>
+<p class="p9"><span class="s3">\test2</span>.playFunc({ <span class="s4">SinOsc</span>.ar(<span class="s4">LFSaw</span>.kr(0.01).range(100, 10000), 0, 0.001) });</p>
+<p class="p9"><span class="s3">\default</span>.play rsyncs: { loop { 0.25.rand.wait; <span class="s3">\default</span>.set(<span class="s3">\freq</span>, 100 + 10000.rand) } };</p>
+<p class="p8"><br></p>
+<p class="p6">//:stop the examples</p>
+<p class="p9">[<span class="s3">\test</span>, <span class="s3">\test2</span>, <span class="s3">\default</span>] do: <span class="s4">_</span>.releaseSynth;</p>
+<p class="p8"><br></p>
+<p class="p6">//:-</p>
+<p class="p8"><br></p>
+<p class="p3"><b>Instance Methods</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>rate(number) </b>: Set the rate of fft data polling.</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p6">//:Start with default rate and small size</p>
+<p class="p7">Spectrograph<span class="s2">.small;</span></p>
+<p class="p8"><br></p>
+<p class="p6">//:Start a test sound</p>
+<p class="p9"><span class="s3">\test3</span>.play({ <span class="s4">SinOsc</span>.ar(<span class="s4">LFNoise0</span>.kr(20).range(100, <span class="s4">LFSaw</span>.kr(0.1, pi).range(100, 10000)), 0, 0.01) })</p>
+<p class="p8"><br></p>
+<p class="p6">//:Change the rate to 2 frames per second</p>
+<p class="p9"><span class="s4">Spectrograph</span>.current.rate = 0.5;</p>
+<p class="p8"><br></p>
+<p class="p6">//:Change the rate to 100 frames per second</p>
+<p class="p9"><span class="s4">Spectrograph</span>.current.rate = 0.01;</p>
+<p class="p8"><br></p>
+<p class="p6">//:Close the spectrograph</p>
+<p class="p9"><span class="s4">Spectrograph</span>.current.close;</p>
+<p class="p8"><br></p>
+<p class="p6">//:Stop the test sound</p>
+<p class="p9"><span class="s3">\test3</span>.releaseSynth;</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>stopPollerOnClose_(boolean)</b> : If <i>true</i>, the PollFFT synth will stop when the Spectrograph window closes.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>If <i>false</i>, it the PollFFT synth will remain active.</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Default is <i>true</i>.</p>
+<p class="p4"><br></p>
+<p class="p3"><b>Keyboard commands on the Spectrograph window</b></p>
+<p class="p4"><br></p>
+<p class="p3">Th Spectrograph window top view, when focussed (when the spectograph window is on top), will respond to the following keyboard input:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3"><span class="Apple-tab-span">	</span>s: resize the window to bottom right of the screen</p>
+<p class="p3"><span class="Apple-tab-span">	</span>b: resize the window to center of screen with a width of 1000 pixels</p>
+<p class="p3"><span class="Apple-tab-span">	</span>t: toggle the size of the window between big size and small size.</p>
+<p class="p3"><span class="Apple-tab-span">	</span>&lt;: reduce the rate by 0.01 seconds, down to a minimum of 0.01 (100 frames per second)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>&gt;: increment the rate by 0.01 seconds, up to a maximum of 0.2 (5 frames per second)</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+</body>
+</html>
