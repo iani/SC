@@ -45,8 +45,4 @@ synthdefs
 
 dev_only
 
-# Do include quarks, because you want to preserve compatibility
-# Of all versions of your lib, even when quarks are modified at later time
-quarks
-!Extensions/quarks
-!Extensions/quarks.local
+
