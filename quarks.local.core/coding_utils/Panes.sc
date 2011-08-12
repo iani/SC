@@ -1,18 +1,16 @@
 /* 
-Arrange Document windows conveniently for a laptop-sized monitor screen.
-
-Feature still Testing on 20.7.2011! - Un-Released: Positions of Doc windows are restored from archive when recompiling: Implemented in Session class by MC, May/June 2011.
+Arrange Document windows so that they fill the entire area of the currently available main monitor screen. 
 
 */
 
 Panes {
-//classvar <>listenerY = 300, <>onePaneListenerWidth = 640, <>twoPaneListenerHeight = 300;
 	classvar <>listenerY = 300, <>twoPaneListenerHeight = 300;
 	classvar <>listenerXdelta=20;
 	classvar <>panePos;
 	classvar <>listenerPos, <>tryoutPos;
 	classvar <currentPositionAction;
 	classvar <>tryoutName = "tryout.scd";
+	classvar <>defaultArrangementAction;
 
 	*initClass { StartUp.add(this); }
 
@@ -21,8 +19,7 @@ Panes {
 		Code.addMenu;
 		Dock.addMenu;
 		BufferResource.addMenu;
-//		Session.prepare;
-		this.start;
+		{ this.start; }.defer(2); // wait for Lion to reopen last session windows before starting
 	}
 
 	*start { this.activate } // synonym
@@ -32,13 +29,14 @@ Panes {
 			NotificationCenter.notify(this, \docOpened, doc);  
 		};
 		Document.allDocuments do: this.setDocActions(_);
-		this.arrange1Pane;
-//		this.arrange2Panes;
+		if (defaultArrangementAction.isNil) {
+			defaultArrangementAction = { this.arrange2Panes; };
+		};
+		defaultArrangementAction.value;
 		Dock.showDocListWindow;
 		// confuses post and Untitled windows if not deferred on startup:
 		{
 			this.openTryoutWindow;
-//			Session.restoreWindowPositions;
 		}.defer(0.5); 
 	}
 
@@ -57,14 +55,22 @@ Panes {
 			this.activate;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "single-pane doc arrangement", ["<", true, false], {
-			this.doRestoreTop({ this.arrange1Pane; });
+			this.arrange1Pane;
+			this.rearrangeAllDocs;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "multi-pane doc arrangement", [">", true, false], {
-			this.doRestoreTop({ this.arrange2Panes; });
+			this.arrange2Panes;
+			this.rearrangeAllDocs;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", ["A", false, false],
 		{
-			currentPositionAction.(Document.current);
+			var doc = Document.current;
+			var pos = doc.bounds;
+			var done = false;
+			currentPositionAction.(doc);
+		}),
+		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["A", true, false],
+		{	this.rearrangeAllDocs;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "Boot/Quit default server", ["B", true, false], { 
 			if (Server.default.serverRunning) { Server.default.quit } { Server.default.boot };
@@ -130,7 +136,6 @@ Panes {
 				tryout = Document.open(path);
 			};
 		};
-//mc		tryout.front;
 	}
 
 	*arrange1Pane {
@@ -141,7 +146,6 @@ Panes {
 		tryoutPos = Rect(0, 0, this.twoPaneWidth, listenerY - 28);
 		panePos = Rect(this.twoPaneWidth, 0, this.twoPaneWidth, Window.screenBounds.height);
 		this changeArrangement: { | doc | this.placeDoc(doc) };
-		Dock.showDocListWindow;
 	}
 
 	*arrange2Panes {
@@ -156,14 +160,18 @@ Panes {
 			this.placeDoc(doc);
 			this.next2Pane;
 		};
-		Document.listener.front;
 	}
 
 	*twoPaneWidth { ^min(640, Window.screenBounds.width / 2) }
 
 	*changeArrangement { | arrangeFunc |
 		currentPositionAction = arrangeFunc;
-		Document.allDocuments do: { | doc | currentPositionAction.(doc) };
+	}
+	
+	*rearrangeAllDocs {
+		this doRestoreTop: {
+			Document.allDocuments do: currentPositionAction.(_);
+		};
 	}
 	
 	*placeDoc { | doc |
@@ -207,20 +215,4 @@ Panes {
 	}
 	
 	*docNotifiers { ^[\docOpened, \docToFront, \docEndFront, \docMouseUp, \docClosed] }
-
-	// TODO
-	*flipTryoutWindow {}
-
-	// TODO, via class Session, whose instance is stored in classvar session here.
-	*storePositions {}
-	*restorePositions {}
-/*
-	*saveDocPositions {
-		Document.allDocuments do: { | doc | savedDocPositions.put(doc, doc.bounds) };
-	}
-	
-	*restoreDocPositions {
-		Document.allDocuments do: { | doc | doc.bounds = savedDocPositions[doc] }
-	}
-*/
 }
