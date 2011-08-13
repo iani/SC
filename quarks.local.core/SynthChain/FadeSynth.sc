@@ -21,7 +21,7 @@ FadeSynth : SynthResource {
 		addAction = argAction;
 	}
 
-	-< { | func |
+	<> { | func |
 		var def;
 		def = func.asSynthDef(fadeTime: fadeTime, name: key.last);
 		def.addToServer(server);

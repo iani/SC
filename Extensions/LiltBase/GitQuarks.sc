@@ -138,7 +138,7 @@ GitQuarks : Quarks {
 				views.do({ |view| view.remove });
 			});
 			scrollview.decorator.reset;
-			views = quarks.collect{|quark|
+			views = quarks collect: { | quark |
 				var qView = QuarkView.new(scrollview, 500@20, quark,
 					this.installed.detect{|it| it == quark}.notNil);
 				scrollview.decorator.nextLine;
@@ -213,7 +213,7 @@ GitQuarks : Quarks {
 				warning.string = "Applying changes, please wait";
 				warning.background_(Color(1.0, 1.0, 0.9));
 				0.1.wait;
-				views.do{|qView|
+				views.do{ | qView |
 					qView.toBeInstalled.if({
 						this.install(qView.quark.name);
 						qView.flush

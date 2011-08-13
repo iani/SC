@@ -1,28 +1,27 @@
 Curve {
 	//============
 	// Declaration des variables
-	var <>liVal;
-	var <>envX, <>envY, <>tsLesPts;
-	var <>id;
+	var <>liVal;			// list of values: SortedList of points, sorted by ascending x
+	var <>envX, <>envY;	// x and y values for the envelope playing the curve
+	var <>tsLesPts;		// list of all points (x@y)
+	var <>id;				// id of the Curve
 	
 	//============
 	// Initialisation	
-	*new {
-		arg liVal;
-			^this.newCopyArgs(liVal).init;
+	*new { | liVal |
+		^this.newCopyArgs(liVal).init;
 	}
 	
 	init {
-		liVal = liVal ?? {SortedList.new(4, {arg a, b; a.x < b.x});};
+		liVal = liVal ?? { SortedList.new(4, {arg a, b; a.x < b.x}); };
 	}
 	
 	//============
 	// Edition de liVal
 	// Edition standard des points
-	addPt {
-		arg ptS;
+	addPt { | ptS |
 		this.liVal.add(ptS);
-		id = this.liVal.detectIndex({arg pt; pt.x == ptS.x;});
+		id = this.liVal detectIndex: {arg pt; pt.x == ptS.x;};
 	}
 
 	removePt {

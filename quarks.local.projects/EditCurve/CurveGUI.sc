@@ -18,13 +18,12 @@ CurveGUI {
 	var idCurve = 0, fonctionMouse = \xy;
 	
 	// Appel
-	*new {
-		arg selectorCurve, nom, left = 0, bottom = 0, longueur = 1186, hauteur = 260;
+	*new { | selectorCurve, nom, left = 0, bottom = 0, longueur = 1186, hauteur = 260 |
 		^this.newCopyArgs(selectorCurve, nom, left, bottom, longueur, hauteur).init;
 	}
 	
 	init {
-		selectorCurve = selectorCurve ?? {SelectorCurve.new};
+		selectorCurve = selectorCurve ?? { SelectorCurve.new };
 	
 	// Fenetre para
 		windowPara = Window(nom ++ "_Para", Rect(left, bottom + hauteur + 20 , 704, 126), 0);
@@ -38,8 +37,8 @@ CurveGUI {
 			["Show"],
 			["Hide"]
 		]);
-		bShowHide.value_(
-			selectorCurve.liParaCurveGUI.at(idCurve).paraGUI.at(\showHide));
+//		bShowHide.value_(
+//			selectorCurve.liParaCurveGUI.at(idCurve).paraGUI.at(\showHide));
 		bShowHide.action_({
 			arg a;
 			selectorCurve.editParaGUI([\showHide, a.value])
