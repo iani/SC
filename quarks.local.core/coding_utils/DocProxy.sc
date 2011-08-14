@@ -5,6 +5,7 @@ Provide utilities for:
 - Creating a ProxySpace that is only active whenever a selected Document is front
 - Starting and stopping the current ProxySpace
 - Switching between ProxySpaces whenever a Document with a different ProxySpace comes to the front
+- Creating shortcuts for selecting ProxySpace Documents and for cycling between them
 - Starting and stopping all current ProxySpaces
 
 */
@@ -34,8 +35,11 @@ DocProxy {
 					}.defer(0.2);
 				});
 				this.addShortcutForDoc(doc);
+				if (doc.background == Color.white) {
+					doc.background = Color.rand(0.85);
+				}
 			};
-		}).setShortCut("p", true);
+		}).setShortCut("p", false, true);
 		CocoaMenuItem.add(["JITlib", "Stop current ProxySpace"], {
 			var proxySpace;
 			proxySpace = proxies[Document.current];
