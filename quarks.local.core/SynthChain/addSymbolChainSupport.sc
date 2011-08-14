@@ -1,8 +1,17 @@
 /* Add support for Code, UniqueObject and a number of its subclasses. */
 
+/*
++ Object {
+	fadeDefArgValue { ^this }
+}
+*/
+
 + Symbol {
+//	fadeDefArgValue { ^this.buffer }
 	
 	// ========== FadeSynth support ===========
+	asSynthDesc { ^SynthDescLib.global[this] }
+
 	<> { | func | ^FadeSynth(this) <> func; }
 	// trying a nicer looking symbol combination ?: 
 
@@ -50,12 +59,15 @@
 	free { | server | ^this.synth(server).free }
  
 	stop { | dur, server | ^this.release(dur, server) }
+	start { | args, server |
+		^FadeSynth(this, args, server).start;
+	}
 	// Note: avoid overwriting release method from Object ?? Do we want to have the method below?
 	release { | dur, server | this.releaseSynth(dur, server) }
 	releaseSynth { | dur, server | this.synth(server).releaseSynth(dur) }
 
-	set { | ... args | this.synth.object.set(*args) }
-	setn { | ... args | this.synth.object.setn(*args) }
+	set { | ... args | this.synth.set(*args) }
+	setn { | ... args | this.synth.setn(*args) }
 	
 	// ====== Bus support ======
 	audio { | numChannels = 1, server |
@@ -86,19 +98,15 @@
 		this.synth.mapFunc(param, func, args);	
 	}
 	
-		// ====== Buffer support ======
+	// ====== Buffer support ======
 	playBuf { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args |
 		/* Play a buffer by name with a function */
-		^BufferResource(this, target.asTarget.server).play(
-			func, target, outbus, fadeTime, addAction, args
-		);
+		^this.bufr(target).play(func, target, outbus, fadeTime, addAction, args);
 	}
 	playBufd { | defName, args, target, addAction=\addToHead, name |
 		/* Play a buffer by name with a synthdef */
 		^(name ? this).playDef(defName,
-			[\buf, BufferResource(this, target.asTarget.server).object] ++ args,
-			target, addAction
-		);
+			[\buf, this.bufr(target).object] ++ args, target, addAction);
 	}
 
 	buffer { | target | ^this.bufr(target).object; }
@@ -117,6 +125,17 @@
 }
 
 + Function {
+	
+	asSynthDesc { | rates, prependArgs, outClass=\Out, fadeTime, name, server |
+		var udef;
+		udef = Udef.fromFunc(this, rates, prependArgs, outClass, fadeTime, name, server);
+		^SynthDescLib.global[udef.name.asSymbol];
+	}
+	
+	udef { | rates, prependArgs, outClass=\Out, fadeTime, name, server |
+		^Udef.fromFunc(this, rates, prependArgs, outClass, fadeTime, name, server);
+	}
+
 	// Playing UGen functions as ResourceSynths, as in standard Function:play
 	play { | target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
 		// rewriting Function:play to work with ServerPrep

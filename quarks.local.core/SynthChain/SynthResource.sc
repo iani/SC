@@ -54,13 +54,13 @@ SynthResource : AbstractServerResource {
 	}
  
 	registerObject {
-		object addDependant: { | me, what |
+		object addDependant: { | synth, what |
 			switch (what, 
 				\n_go, {
-					this.synthStarted
+					this synthStarted: synth;
 				},
 				\n_end, {
-					this.synthEnded
+					this synthEnded: synth;
 				}
 			);
 		};

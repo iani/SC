@@ -19,7 +19,7 @@ BufferResource : AbstractServerResource {
 		^PathName(path).fileNameWithoutExtension.asSymbol;
 	}
 
-	*default { | server | ^this.new(nil, server ? Server.default, path: defaultPath) }
+	*default { | server | ^this.new(\default, server ? Server.default, path: defaultPath) }
 	
 	*current { | server |
 		^current[server ? Server.default];
@@ -112,6 +112,7 @@ BufferResource : AbstractServerResource {
 
 	sendTo {
 		if (path.isNil) {
+			warn("allocating new buffer: %\n", this.key);
 			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, 
 				completionMessage: { | b | this.loaded(b); }
 			);

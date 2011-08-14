@@ -1,4 +1,4 @@
-/* Add support for Code, UniqueObject and a number of its subclasses. */
+/* Add support for Code, Resource, ServerPrep */
 
 + Server { asKey { ^this } }
 

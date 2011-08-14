@@ -8,7 +8,36 @@ Dock.browseUserClasses:
 
 Dock {
 	classvar <>width = 160;
-	*menuItems { ^[
+	classvar <shortcutDocs;
+	classvar <shortcutDocMenuItems;
+	*initClass { StartUp add: this }
+	
+	*doOnStartUp {
+		shortcutDocMenuItems = Array.newClear(10);
+		shortcutDocs = Object.readArchive(Platform.userExtensionDir +/+ "ShortcutDocs.scd");
+		if (shortcutDocs.isNil) { 
+			shortcutDocs = { [nil, nil] } ! 10;
+			shortcutDocs[0] = ["tryout.scd", Platform.userAppSupportDir +/+ "tryout.scd"];
+		};
+		shortcutDocs.slice(nil, 1) do: this.makeDocShortcutMenuItem(_, _);
+	}
+
+	*showDoc { | i |
+		var docName, docPath, doc;
+		#docName, docPath = shortcutDocs[i];
+		doc = Document.allDocuments detect: { | d | d.name == docName };
+		if (doc.isNil) { doc = Document open: docPath };
+		if (doc.notNil) { doc.front };
+	}
+
+	*menuItems {
+		^{ | i | 
+			CocoaMenuItem.add(["Add Doc shortcut", i.asString], { 
+				this.addDocShortcut(Document.current, i);
+			}).setShortCut(i.asString, true)
+		} ! 10 
+		addAll: 
+		[
 			CocoaMenuItem.addToMenu("Utils", "show doc list window", ["\"", false, false], {
 				this.showDocListWindow;
 			}),
@@ -20,8 +49,8 @@ Dock {
 			}),
 			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
 				this.insertClassHelpTemplate;
-			}),	
-			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
+			}),
+/*			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
 				{ 
 					var u;
 					Server.default = Server.internal;
@@ -40,9 +69,23 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
 				Spectrograph.small;
 			}),
-			
+*/			
 		]		
 	}
+	
+	*addDocShortcut { | doc, i |
+		var docName;
+		if (shortcutDocMenuItems[i].notNil) { shortcutDocMenuItems[i].remove };
+		shortcutDocs[i] = [docName = doc.name, doc.path];
+		this.makeDocShortcutMenuItem(docName, i);
+		shortcutDocs.writeArchive(Platform.userExtensionDir +/+ "ShortcutDocs.scd");
+	}
+
+	*makeDocShortcutMenuItem { | docName, i |
+		if (docName.isNil) { ^this };
+		CocoaMenuItem.add([docName], { this showDoc: i }).setShortCut(i.asString);
+	}
+	
 	*showDocListWindow {
 		var listwin;
 		listwin = ListWindow('Documents', 

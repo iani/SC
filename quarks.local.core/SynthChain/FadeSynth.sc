@@ -1,39 +1,62 @@
 /* Inspired by JITlib's NodeProxy. 
-A simpler, more rudimentary implementation here. Just the xfade of successive synths, and storing the in, out, and fadeTime parameters so that they remain persistent. 
+A simpler, more rudimentary implementation here. 
 
-
+Arguments and def are persistent.
 
 */
 
-
 FadeSynth : SynthResource {
-	var <>in = 0, <>out = 0, <>fadeTime = 0.02, <>addAction = \addToHead;
+	var <>fadeTime = 0.02, <>addAction = \addToHead;
+	var <>desc, <>args, <hasGate = false;
+//	var <inputs, <outputs;	 // TODO!
 	
-	*new { | name = \out, in = 0, out = 0, fadeTime = 0.02, target, addAction = \addToHead |
-		^super.new(name, target, in, out, fadeTime, addAction);
+	*new { | name = \out, args, target, addAction = \addToHead, fadeTime = 0.02 |
+		^super.new(name, name, target, args, fadeTime, addAction);
 	}
 
-	init { | argTarget, defName, argIn = 0, argOut = 0, argFadeTime = 0.02, argAction = \addToHead |
+	init { | argTarget, defName, argArgs, argFadeTime = 0.02, argAction = \addToHead |
 		super.initTarget(argTarget);
-		in = argIn;
-		out = argOut;
+		args = FadeSynthArgs(argArgs);
 		fadeTime = argFadeTime;
 		addAction = argAction;
+		this.initDesc(defName);
 	}
 
-	<> { | func |
-		var def;
-		def = func.asSynthDef(fadeTime: fadeTime, name: key.last);
-		def.addToServer(server);
-		if (object.notNil) { object.release(fadeTime) };
-		this.makeSynth(def.name, [\in, in, \out, out], addAction);
-	}
+	initDesc { | funcOrSymbol |
+		desc = funcOrSymbol.asSynthDesc(nil, nil, nil, fadeTime);
+		hasGate = args addArgsFromDesc: desc;	
+ 	}
 
-	synthEnded {	// do not remove when synth ends
-		object.releaseDependants; // clean up synth's dependants
+ 	<> { | funcOrSymbol |
+	 	this.releaseSynth(fadeTime);
+	 	this initDesc: funcOrSymbol;
+		this.makeSynth(desc.name, args.fadeSynthArgs, addAction);
 	}
 
 	releaseSynth { | dtime |
-		super.releaseSynth(dtime ? fadeTime);	
+		if (object.isNil) { ^this };
+		if (hasGate) {
+			super.releaseSynth(dtime ? fadeTime);		
+		}{	// a fade out mechanism should be devised here;
+			object.free;
+		}; 
 	}
+
+	synthEnded { | synth |
+		synth.releaseDependants;
+		if (object === synth) {
+			object = nil;
+//			this.remove; // so we can restart this, with all its settings 
+		}
+	}
+	
+	start {
+		if (object.isNil) { this.makeSynth(desc.name, args.fadeSynthArgs, addAction); };
+	}
+
+	set { | ... newArgs | 
+		super.set(*newArgs);
+		newArgs pairsDo: { | key, value | args[key] = value; };
+	}
+
 }

@@ -69,7 +69,7 @@ Panes {
 			var done = false;
 			currentPositionAction.(doc);
 		}),
-		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["A", true, false],
+		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["R", false, false],
 		{	this.rearrangeAllDocs;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "Boot/Quit default server", ["B", true, false], { 
