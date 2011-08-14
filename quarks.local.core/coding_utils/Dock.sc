@@ -9,26 +9,47 @@ Dock.browseUserClasses:
 Dock {
 	classvar <>width = 160;
 	classvar <shortcutDocs;
+	classvar <shortcutDocPaths;
 	classvar <shortcutDocMenuItems;
+
 	*initClass { StartUp add: this }
 	
 	*doOnStartUp {
 		shortcutDocMenuItems = Array.newClear(10);
-		shortcutDocs = Object.readArchive(Platform.userExtensionDir +/+ "ShortcutDocs.scd");
-		if (shortcutDocs.isNil) { 
-			shortcutDocs = { [nil, nil] } ! 10;
-			shortcutDocs[0] = ["tryout.scd", Platform.userAppSupportDir +/+ "tryout.scd"];
+		shortcutDocs = Array.newClear(10);
+		shortcutDocPaths = Object.readArchive(Platform.userExtensionDir +/+ "ShortcutDocs.scd");
+		if (shortcutDocPaths.isNil) { 
+			shortcutDocPaths = Array.newClear(10);
+			shortcutDocPaths[0] = Platform.userAppSupportDir +/+ "tryout.scd";
 		};
-		shortcutDocs.slice(nil, 1) do: this.makeDocShortcutMenuItem(_, _);
+		shortcutDocPaths do: this.makeDocShortcutMenuItem(_, _);
+	}
+
+	*makeDocShortcutMenuItem { | path, i |
+		if (path.isNil) { ^this };
+		shortcutDocMenuItems[i] = CocoaMenuItem.add([path.basename], { 
+			this showDoc: i 
+		}).setShortCut(i.asString);
 	}
 
 	*showDoc { | i |
-		var docName, docPath, doc;
-		#docName, docPath = shortcutDocs[i];
-		doc = Document.allDocuments detect: { | d | d.name == docName };
-		if (doc.isNil) { doc = Document open: docPath };
-		if (doc.notNil) { doc.front };
+		var docPath, doc;
+		doc = shortcutDocs[i];
+		if (doc.notNil and: { Document.allDocuments includes: doc }) { ^doc.front };
+		docPath = shortcutDocPaths[i];
+		if (docPath.notNil) {
+			shortcutDocs[i] = Document open: docPath;
+		}
 	}
+	
+	*addDocShortcut { | doc, i |
+		if (shortcutDocMenuItems[i].notNil) { shortcutDocMenuItems[i].remove };
+		shortcutDocs[i] = doc;
+		shortcutDocPaths[i] = doc.path;
+		shortcutDocPaths.writeArchive(Platform.userExtensionDir +/+ "ShortcutDocs.scd");
+		this.makeDocShortcutMenuItem(doc.path ?? { doc.name }, i);
+	}
+
 
 	*menuItems {
 		^{ | i | 
@@ -50,6 +71,44 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
 				this.insertClassHelpTemplate;
 			}),
+			// Create and start a new ProxySpace on the current document
+			CocoaMenuItem.add(["JITlib", "Make Doc ProxySpace"], {
+				var doc, name, proxySpace;
+				doc = Document.current;
+				if (doc.envir isKindOf: ProxySpace) {
+					postf("ProxySpace already created for '%'\n", doc.name); 
+				}{
+					name = "".catList(doc.name.findRegexp("[^- !.]*").slice(nil, 1)).asSymbol;
+					proxySpace = ProxySpace(Server.default, name, TempoClock.new).push;
+					doc.envir = proxySpace;
+					if (Server.default.serverRunning.not) { Server.default.boot; };
+					Server.default.waitForBoot({ 
+						{ proxySpace.play; }.defer(0.2);
+					});
+//					doc.name = doc.name + "*";
+				};
+			}).setShortCut("p", true),
+			CocoaMenuItem.add(["JITlib", "Stop current ProxySpace"], {
+				var proxySpace;
+				proxySpace = Document.current.envir;
+				if (proxySpace isKindOf: ProxySpace) { proxySpace.stop };
+			}).setShortCut(".", false, true),
+			CocoaMenuItem.add(["JITlib", "Start current ProxySpace"], {
+				var proxySpace;
+				proxySpace = Document.current.envir;
+				if (proxySpace isKindOf: ProxySpace) {
+					proxySpace.play;
+					proxySpace.envir.keys do: _.play;
+				};
+			}).setShortCut(",", false, true),
+			CocoaMenuItem.add(["JITlib", "Stop all ProxySpaces"], {
+				ProxySpace.all do: _.stop;
+			}).setShortCut(">", false, true),
+			CocoaMenuItem.add(["JITlib", "Start all ProxySpaces"], {
+				ProxySpace.all do: this.startAllNodes(_);
+			}).setShortCut("<", false, true),
+
+			
 /*			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
 				{ 
 					var u;
@@ -73,17 +132,9 @@ Dock {
 		]		
 	}
 	
-	*addDocShortcut { | doc, i |
-		var docName;
-		if (shortcutDocMenuItems[i].notNil) { shortcutDocMenuItems[i].remove };
-		shortcutDocs[i] = [docName = doc.name, doc.path];
-		this.makeDocShortcutMenuItem(docName, i);
-		shortcutDocs.writeArchive(Platform.userExtensionDir +/+ "ShortcutDocs.scd");
-	}
-
-	*makeDocShortcutMenuItem { | docName, i |
-		if (docName.isNil) { ^this };
-		CocoaMenuItem.add([docName], { this showDoc: i }).setShortCut(i.asString);
+	*startAllNodes { | proxySpace |
+		proxySpace.postln.play; 
+		proxySpace.envir.keys do: _.play;
 	}
 	
 	*showDocListWindow {
