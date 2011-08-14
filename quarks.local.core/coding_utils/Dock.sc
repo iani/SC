@@ -71,43 +71,6 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
 				this.insertClassHelpTemplate;
 			}),
-			// Create and start a new ProxySpace on the current document
-			CocoaMenuItem.add(["JITlib", "Make Doc ProxySpace"], {
-				var doc, name, proxySpace;
-				doc = Document.current;
-				if (doc.envir isKindOf: ProxySpace) {
-					postf("ProxySpace already created for '%'\n", doc.name); 
-				}{
-					name = "".catList(doc.name.findRegexp("[^- !.]*").slice(nil, 1)).asSymbol;
-					proxySpace = ProxySpace(Server.default, name, TempoClock.new).push;
-					doc.envir = proxySpace;
-					if (Server.default.serverRunning.not) { Server.default.boot; };
-					Server.default.waitForBoot({ 
-						{ proxySpace.play; }.defer(0.2);
-					});
-//					doc.name = doc.name + "*";
-				};
-			}).setShortCut("p", true),
-			CocoaMenuItem.add(["JITlib", "Stop current ProxySpace"], {
-				var proxySpace;
-				proxySpace = Document.current.envir;
-				if (proxySpace isKindOf: ProxySpace) { proxySpace.stop };
-			}).setShortCut(".", false, true),
-			CocoaMenuItem.add(["JITlib", "Start current ProxySpace"], {
-				var proxySpace;
-				proxySpace = Document.current.envir;
-				if (proxySpace isKindOf: ProxySpace) {
-					proxySpace.play;
-					proxySpace.envir.keys do: _.play;
-				};
-			}).setShortCut(",", false, true),
-			CocoaMenuItem.add(["JITlib", "Stop all ProxySpaces"], {
-				ProxySpace.all do: _.stop;
-			}).setShortCut(">", false, true),
-			CocoaMenuItem.add(["JITlib", "Start all ProxySpaces"], {
-				ProxySpace.all do: this.startAllNodes(_);
-			}).setShortCut("<", false, true),
-
 			
 /*			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
 				{ 
@@ -131,12 +94,7 @@ Dock {
 */			
 		]		
 	}
-	
-	*startAllNodes { | proxySpace |
-		proxySpace.postln.play; 
-		proxySpace.envir.keys do: _.play;
-	}
-	
+
 	*showDocListWindow {
 		var listwin;
 		listwin = ListWindow('Documents', 
