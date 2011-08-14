@@ -35,7 +35,7 @@ Dock {
 	*showDoc { | i |
 		var docPath, doc;
 		doc = shortcutDocs[i];
-		if (doc.notNil and: { Document.allDocuments includes: doc }) { ^doc.front };
+		if (doc.notNil and: { Document.allDocuments includes: doc }) { ^doc.front.didBecomeKey };
 		docPath = shortcutDocPaths[i];
 		if (docPath.notNil) {
 			shortcutDocs[i] = Document open: docPath;
