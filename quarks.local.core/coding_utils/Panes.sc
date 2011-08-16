@@ -29,6 +29,7 @@ Panes {
 			NotificationCenter.notify(this, \docOpened, doc);  
 		};
 		Document.allDocuments do: this.setDocActions(_);
+//		postf("Panes: activate method, defaultArrangementAction is: %\n", defaultArrangementAction);
 		if (defaultArrangementAction.isNil) {
 			defaultArrangementAction = { this.arrange2Panes; };
 		};
@@ -175,7 +176,7 @@ Panes {
 	}
 	
 	*placeDoc { | doc |
-		if (doc.isListener) { ^doc.bounds = listenerPos };
+		if (doc.reallyIsListener) { ^doc.bounds = listenerPos };
 		if (doc.name == tryoutName) { ^doc.bounds = tryoutPos };
 		doc.bounds = panePos;
 	}
