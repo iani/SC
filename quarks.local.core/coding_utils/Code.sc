@@ -10,6 +10,7 @@ Code {
 	var <prevsnippetstart, <prevsnippetend;
 	var <thissnippetstart, <thissnippetend;
 	var <nextsnippetstart, <nextsnippetend;
+	var <snippetSeparator = ":";
 	
 	*new { | doc |
 		^this.newCopyArgs(doc).init;	
@@ -25,17 +26,22 @@ Code {
 			if (Server.default.serverRunning.not) { Server.default.boot };
 		}{
 			func.fork(clock);
-		}
+		};
+		if (History.started) { History.enter(string) };
 	}
 
 	init {
-		var prItems;
 		string = doc.string;
-		positions = string.findRegexp("^//:");
+		if (string[52..61] == "// History") { snippetSeparator = " - " };
+		positions = string.findRegexp(format("^//%", snippetSeparator));
+		// if findRegexp returns an array of strings (which is not what we want), then
+		// repeat init. 
+		/// This is a workarround for an erratic error (bug in findRegexp?)
+		if ((positions ? [])[0].isKindOf(String)) { this.init; };
 	}
 	
 	headers {
-		^string.findRegexp("^//:[^\n]*").flop[1];
+		^string.findRegexp(format("^//%[^\n]*", snippetSeparator)).flop[1];
 	}
 
 	*menuItems {
@@ -73,8 +79,8 @@ Code {
 				autoBoot = autoBoot.not;
 				postf("Server auto-boot set to %\n", autoBoot);
 			}),
-			CocoaMenuItem.addToMenu("Code", "toggle light/dark color theme", ["T", true, true], {
-				DocThemes.toggle;
+			CocoaMenuItem.addToMenu("Code", "Insert //:--", ["p", true, true], {
+				Document.current.string_("//:--\n", Document.current.selectedRangeLocation, 0);
 			}),
 		];
 	}
@@ -169,7 +175,7 @@ Code {
 		var start, length;
 		this.findSnippets;
 		start = nextsnippetstart;
-		length = nextsnippetend - nextsnippetstart;
+		length = (nextsnippetend ?? { string.size }) - nextsnippetstart;
 		doc.selectRange(start, length);
 	}
 

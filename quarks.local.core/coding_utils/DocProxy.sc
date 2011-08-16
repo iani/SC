@@ -7,13 +7,18 @@ Provide utilities for:
 - Switching between ProxySpaces whenever a Document with a different ProxySpace comes to the front
 - Creating shortcuts for selecting ProxySpace Documents and for cycling between them
 - Starting and stopping all current ProxySpaces
+- Starting, ending, auto-saving at quit, File-Dialog-loading History. 
 
 */
 
 DocProxy {
 	classvar <proxies;		// IdentityDictionary holding the proxies that correspond to each Document
 	classvar <docs;
-	*initClass { StartUp add: this }
+	*initClass {
+		StartUp add: this;
+		ShutDown add: this;
+	}
+
 	*doOnStartUp { 
 		proxies = IdentityDictionary.new;
 		docs = Array.newClear(10);
@@ -26,6 +31,11 @@ DocProxy {
 			}{
 				name = "".catList(doc.name.findRegexp("[^- !.]*").slice(nil, 1)).asSymbol;
 				proxySpace = ProxySpace(Server.default, name, TempoClock.new);
+				this.enterHistory(
+					format("ProxySpace(Server.default, %, TempoClock.new).play\n;",
+						name.asCompileString
+					);
+				);
 				proxies[doc] = proxySpace;
 				if (Server.default.serverRunning.not) { Server.default.boot; };
 				Server.default.waitForBoot({ 
@@ -59,6 +69,25 @@ DocProxy {
 		CocoaMenuItem.add(["JITlib", "Start all ProxySpaces"], {
 			ProxySpace.all do: this.startAllNodes(_);
 		}).setShortCut("<", false, true);
+		CocoaMenuItem.add(["JITlib", "Start History"], {
+			History.start;
+		}).setShortCut("h", false, true);
+		CocoaMenuItem.add(["JITlib", "Stop History"], {
+			History.stop;
+		}).setShortCut("H", false, true);
+		CocoaMenuItem.add(["JITlib", "Show History"], {
+			History.document;
+		}).setShortCut("h", true, true);
+		CocoaMenuItem.add(["JITlib", "Load History"], {
+			Dialog.getPaths({ | paths |
+				if (paths.size > 0) {
+					History.loadCS(paths.first);
+					// TODO: check consistency and necessity of 
+					// reversing order of history when recording / saving / loding etc. 
+					History.current.lines = History.current.lines.reverse;
+				}				
+			});
+		}).setShortCut("H", true, true);
 		CocoaMenuItem.add(["Next ProxySpace Doc"], {
 			this.goToAdjacentProxyDoc(1);
 		}).setShortCut(/*[*/ "]", false, true);
@@ -76,8 +105,18 @@ DocProxy {
 
 	*switchToProxy { | proxySpace |
 		if (proxySpace.isNil) { ^this };
+		this.enterHistory(
+			format("ProxySpace.pop;\nProxySpace.all[%].push;", proxySpace.name.asCompileString)
+		);
 		ProxySpace.pop;
 		proxySpace.push;
+	}
+
+	*enterHistory { | string |
+		if (History.started.not) {
+			History.start;
+		};
+		History.enter(string) 
 	}
 
 	*startAllNodes { | proxySpace |
@@ -95,14 +134,16 @@ DocProxy {
 		}).setShortCut(index.asString, false, true);
 	}
 
-	*goToAdjacentProxyDoc { | increment = 1 
-| 		var doc, pDocs, index;
+	*goToAdjacentProxyDoc { | increment = 1 |
+		var doc, pDocs, index;
 		doc = proxies.findKeyForValue(currentEnvironment);
 		if (doc.isNil) { ^this };
 		pDocs = docs select: _.notNil;
 		index = pDocs indexOf: doc + increment;
-		index.postln;
 		pDocs.wrapAt(index).front.didBecomeKey;
 	}
-	
+
+	*doOnShutDown {
+		History.end;	
+	}	
 }

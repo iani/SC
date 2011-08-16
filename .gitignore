@@ -46,3 +46,6 @@ synthdefs
 dev_only
 
 sessionArchive
+
+#Ignore HistoryLog files from JITlib
+HistoryLogs
