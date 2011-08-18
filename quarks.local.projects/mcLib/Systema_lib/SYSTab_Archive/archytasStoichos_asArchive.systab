@@ -1,0 +1,165 @@
+SYSTab('archytasStoichos', ("var o, p;
+o = [
+	MultiLevelIdentityDictionary.prNew,  IdentityDictionary.prNew,  Array.prNew(32),  IdentitySelector.prNew,  
+	Array.prNew(1),  SYSParam.prNew,  Event.prNew,  Array.prNew(8),  
+	\"Archytas\",  List.prNew,  Array.prNew(1),  List.prNew,  
+	Array.prNew(1),  List.prNew,  Array.prNew,  Array.prNew(2),  
+	IdentityDictionary.prNew,  Array.prNew(32),  SYSvocParam.prNew,  Event.prNew,  
+	Array.prNew(4),  List.prNew,  Array.prNew(1),  List.prNew,  
+	Array.prNew,  List.prNew,  Array.prNew(1),  List.prNew,  
+	Array.prNew,  IdentityDictionary.prNew,  Array.prNew(32),  IdentitySelector.prNew,  
+	List.prNew,  Array.prNew,  IdentitySelector.prNew,  List.prNew,  
+	Array.prNew(2),  SYSinstParam.prNew,  Event.prNew,  Array.prNew(4),  
+	List.prNew,  Array.prNew(1),  List.prNew,  Array.prNew(1),  
+	List.prNew,  Array.prNew,  List.prNew,  Array.prNew,  
+	IdentityDictionary.prNew,  Array.prNew(32),  IdentitySelector.prNew,  List.prNew,  
+	Array.prNew
+];
+p = [
+	// MultiLevelIdentityDictionary
+	0, [ dictionary: o[1] ],  
+	// IdentityDictionary
+	1, [ array: o[2],  size: 2,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	2, [ nil,  nil,  nil,  nil,  
+		'selector',  o[3],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		o[5],  o[16],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// IdentitySelector
+	3, [ wrapIndex: 0,  whiteFunc: nil,  
+		src: o[4] ],  
+	// Array
+	4, [ o[5] ],  
+	// SYSParam
+	5, [ sysSymbol: 'archytasStoichos',  envir: o[6],  
+		calcDefs: o[9],  scaledDefs: o[11],  
+		drawDefs: o[13],  subLevelClasses: o[15] ],  
+	// Event
+	6, [ array: o[7],  size: 2,  
+		proto: nil,  parent: nil,  
+		know: true ],  
+	// Array
+	7, [ nil,  nil,  'label',  o[8],  
+		'centOffset',  0,  nil,  nil ],  
+	// List
+	9, [ array: o[10] ],  
+	// Array
+	10, [ 'basicSYS' ],  
+	// List
+	11, [ array: o[12] ],  
+	// Array
+	12, [ 'basicSYS' ],  
+	// List
+	13, [ array: o[14] ],  
+	// Array
+	15, [ SYSinstParam,  SYSvocParam ],  
+	// IdentityDictionary
+	16, [ array: o[17],  size: 3,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	17, [ o[18],  o[29],  nil,  nil,  
+		'selector',  o[34],  nil,  nil,  
+		o[37],  o[48],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// SYSvocParam
+	18, [ sysSymbol: 'archytasStoichos',  envir: o[19],  
+		calcDefs: o[21],  scaledDefs: o[23],  
+		drawDefs: o[25],  subLevelClasses: o[27] ],  
+	// Event
+	19, [ array: o[20],  size: 1,  
+		proto: nil,  parent: nil,  
+		know: true ],  
+	// Array
+	20, [ 'align',  'right',  nil,  nil ],  
+	// List
+	21, [ array: o[22] ],  
+	// Array
+	22, [ 'vocAnno' ],  
+	// List
+	23, [ array: o[24] ],  
+	// List
+	25, [ array: o[26] ],  
+	// Array
+	26, [ 'vocAnno' ],  
+	// List
+	27, [ array: o[28] ],  
+	// IdentityDictionary
+	29, [ array: o[30],  size: 1,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	30, [ nil,  nil,  nil,  nil,  
+		'selector',  o[31],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// IdentitySelector
+	31, [ wrapIndex: 0,  whiteFunc: nil,  
+		src: o[32] ],  
+	// List
+	32, [ array: o[33] ],  
+	// IdentitySelector
+	34, [ wrapIndex: 0,  whiteFunc: nil,  
+		src: o[35] ],  
+	// List
+	35, [ array: o[36] ],  
+	// Array
+	36, [ o[37],  o[18] ],  
+	// SYSinstParam
+	37, [ sysSymbol: 'archytasStoichos',  envir: o[38],  
+		calcDefs: o[40],  scaledDefs: o[42],  
+		drawDefs: o[44],  subLevelClasses: o[46] ],  
+	// Event
+	38, [ array: o[39],  size: 1,  
+		proto: nil,  parent: nil,  
+		know: true ],  
+	// Array
+	39, [ 'align',  'left',  nil,  nil ],  
+	// List
+	40, [ array: o[41] ],  
+	// Array
+	41, [ 'instAnno' ],  
+	// List
+	42, [ array: o[43] ],  
+	// Array
+	43, [ 'instAnno' ],  
+	// List
+	44, [ array: o[45] ],  
+	// List
+	46, [ array: o[47] ],  
+	// IdentityDictionary
+	48, [ array: o[49],  size: 1,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	49, [ nil,  nil,  nil,  nil,  
+		'selector',  o[50],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// IdentitySelector
+	50, [ wrapIndex: 0,  whiteFunc: nil,  
+		src: o[51] ],  
+	// List
+	51, [ array: o[52] ]
+];
+prUnarchive(o,p);
+").interpret, SYSTabParam(( 'sysOffX': 20, 'xS': 1.0, 'midiRef': 54, 'labelFFont': SCFont("Helvetica", 12), 
+  'annoFont': SCFont("Helvetica", 10), 'legend': 'freqRef', 'yS': 1.0, 'labelHFont': SCFont("Helvetica", 14) ), List[ 'initSYSTab' ], List[  ], List[  ]))

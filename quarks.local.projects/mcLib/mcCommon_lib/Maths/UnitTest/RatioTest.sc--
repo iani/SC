@@ -1,0 +1,25 @@
+/*
+Ratio.test;
+TestKDTree
+*/
+TestRatio : UnitTest {	
+	setUp {
+			// this will be called before each test
+		}
+	tearDown {
+			// this will be called after each test
+		}
+	
+	test_SimpleNumberMethods { 
+		var methods = [Ratio, SimpleNumber].collect{|class| class.methods
+			.collect{|method| method.name} };
+		var unmatched = methods[1].reject{|sym| methods[0].matchItem(sym) };
+		this.assert(unmatched.isEmpty, "Ratio implements all methods of SimpleNumber", true,
+		 	{"unmatched methods:\n".postln; unmatched.do{|sym| sym.postln}; "\n".postln});
+	}
+	test_asRatio {
+	//	var a = 
+	
+		
+	}
+}

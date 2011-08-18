@@ -1,0 +1,66 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red96\green96\blue96;\red0\green115\blue0;
+\red191\green0\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf0 if (\cf2 this\cf0 .isLog(2)) \{ (\cf3 "\\n\\n"\cf0  + \cf2 thisProcess\cf0 .nowExecutingPath.basename + \cf3 "\\n"\cf0 ).postln; \};\
+\
+(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 DrawDef\cf0 (\cf4 \\SYS_HeaderFooter\cf0 , \cf4 \\movedX\cf0 , \cf2 nil\cf0 , \
+	\{\cf2 |node, pE, sysSym, sysTab, self, label|\cf0 \
+		\cf2 var\cf0  sysCalc = pE.sysCalcs[sysSym], labelHRect = \cf2 Rect\cf0 .new;\
+		sysCalc.label = label;\
+		sysCalc.labelHAction = node.tree.server.addField(\cf2 MovedXActionField\cf0 , labelHRect, 			\{\cf2 |sV, cC|\cf0  if (cC == 2) \{ \cf2 SCRequestString\cf0 (sysCalc.label, \cf3 "new lablel:"\cf0 , \
+				\{\cf2 |str|\cf0  sysCalc.label = str \}) \} \{ \cf2 false\cf0  \} \} );\
+		\{\cf2 |e, scaledView, trans, scale, sysOffX, yHroom, labelHheight, labelFheight, footerTop,\
+			labelHFont, labelHColor, labelFFont, labelFColor, labelHGab, labelFGab, outline,\
+			selOn, selColor|\cf0 \
+			\cf2 var\cf0  sys = \cf2 Systema\cf0 .at(sysSym), label = sysCalc.label, labelFRect;\
+			\
+			\cf5 // header\cf0 \
+			\cf2 var\cf0  labHC = if(selOn && (sysTab.mlSel.selected.first == self)) \{selColor\} \{labelHColor\};\
+			\cf2 var\cf0  xLabelH = sysCalc.xCoreL - sysOffX;\
+			\cf2 var\cf0  labelHWidth = sysCalc.coreWidth + (2 * sysOffX);\
+			\
+			labelHRect.set(*scaledView.transScaleX(\
+				\cf2 Rect\cf0 ( xLabelH, yHroom, labelHWidth, labelHheight)).asArray);\
+			\cf2 Color\cf0 .black.setFill; \cf2 Pen\cf0 .fillRect(labelHRect.insetBy(labelHGab / -2));\
+			if (label.bounds(labelHFont).width > labelHRect.width) \{\
+				label.drawInRect(labelHRect.insetBy(0, -2), labelHFont, labelHColor)\
+			\}\{\
+				label.drawCenteredIn(labelHRect, labelHFont, labelHColor)\
+			\};\
+			if(selOn && (sysTab.mlSel.selected.first == self)) \{ \cf2 Pen\cf0 .use\{\
+				\cf2 Pen\cf0 .setShadow(2@2, 20, \cf2 Color\cf0 .white);\
+\pard\pardeftab560\ql\qnatural
+\cf0 				\cf5 // Pen.beginTransparencyLayer; // only one object\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 				selColor.setFill; \cf2 Pen\cf0 .fillRect(labelHRect); \
+				\cf5 // Pen.endTransparencyLayer \cf0 \
+			\}\};\
+			\
+			\cf5 // footer\cf0 \
+			labelFRect = scaledView.transScaleX(\
+				\cf2 Rect\cf0 (sysCalc.xCoreL, footerTop, sysCalc.coreWidth, labelFheight));\
+			\cf2 Pen\cf0 .use \{ \
+				\cf2 Pen\cf0 .setShadow(0@1, 5, \cf2 Color\cf0 .new255(0, 0, 0, 255));\
+				\cf2 Color\cf0 .new255(0, 0, 0, 150).setFill; \
+				\cf2 Pen\cf0 .fillRect(labelFRect.insetBy(labelFGab / -2));\
+				if (label.bounds(labelFFont).width > labelFRect.width) \{\
+					label.drawInRect(labelFRect, labelFFont, labelFColor)\
+				\}\{\
+					label.drawCenteredIn(labelFRect, labelFFont, labelFColor)\
+				\};\
+			\};\
+			\
+			if (outline) \{ \cf5 // Pen.width = 2;\cf0 \
+				labelHColor.setStroke; \cf2 Pen\cf0 .strokeRect( labelHRect );\
+				labelFColor.setStroke; \cf2 Pen\cf0 .strokeRect( labelFRect ) \}\
+	\}\}\
+\cf5 //	,\{\{|e, drawServer, labelHAction| //this.logln("actionFields" + drawServer.actionFields);\cf0 \
+\cf5 //		drawServer.removeClickField(labelHAction)\cf0 \
+\cf5 //	\}\} //works! but all actions are cleared on rebuild anyway\cf0 \
+	);\
+);}

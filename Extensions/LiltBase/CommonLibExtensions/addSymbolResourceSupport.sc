@@ -1,4 +1,5 @@
 /* Add support for Code, Resource, ServerPrep */
+//:--
 
 + Server { asKey { ^this } }
 
@@ -7,8 +8,11 @@
 + String {
 	asKey { ^this.hash }
 	fork { | clock | Code.fork(this, clock); }
-	evalPost { | clock | this.eval.postln; }
-	eval { | clock | ^this.interpret; }
+	evalPost {
+		this.eval.postln;
+		if (History.started) { History.enter(this) };
+	}
+	eval { ^this.interpret; }
 	window { | makeFunc | ^this.asSymbol.window(makeFunc); }
 	close { this.asSymbol.close }
 }

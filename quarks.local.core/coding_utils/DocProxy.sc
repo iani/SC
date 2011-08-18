@@ -47,7 +47,8 @@ DocProxy {
 				this.addShortcutForDoc(doc);
 				if (doc.background == Color.white) {
 					doc.background = Color.rand(0.85);
-				}
+				};
+				postf("Started ProxySpace % for document: %\n", name, doc.name);
 			};
 		}).setShortCut("p", false, true);
 		CocoaMenuItem.add(["JITlib", "Stop current ProxySpace"], {

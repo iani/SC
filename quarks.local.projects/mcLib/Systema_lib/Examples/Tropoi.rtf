@@ -1,0 +1,211 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;\f1\fnil\fcharset0 AGMuni;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue0;\red0\green0\blue191;
+\red96\green96\blue96;\red0\green115\blue0;\red96\green96\blue96;}
+\deftab560
+\pard\pardeftab560\li1140\fi-1140\ql\qnatural
+
+\f0\fs28 \cf2 // first sample the set of hypoLydian signs as the 'natural' key\cf3 \
+\cf2 // SYS.agmUni is built on Archytas' tuning\cf3 \
+(\
+\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56858  \u55348 \u56831  \u55368 \u57139  \u55368 \u57140  \u55368 \u57141  \u55368 \u57144  \u55368 \u57148  \u55348 \u56829  \u55368 \u57149  \u1017  \u55348 \u57213  \u55348 \u56855  \u55348 \u56854  \u55348 \u56853  \u55348 \u56850  \u55348 \u56846  \u55348 \u56845  \u55348 \u56844  \u55348 \u56841  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hypoLydianTropos: Alypian Notation"\cf3 ).reduce;
+\f1 \
+
+\f0 a.globDict.put(\cf6 \\label\cf3 , \cf5 "HypoLydian tropos"\cf3 );\
+a.midiRoot = (\cf4 SYS\cf3 .agmUni.midiRoot);\
+a.save.postrlid;\
+);\
+\
+\cf2 // then reduce and change the tuning of all other Troposs\cf3 \
+\cf2 // adopt midiRoot according to harmonic relation to hypoLydian\cf3 \
+\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56902  \u55348 \u56798  \u55348 \u56802  \u55348 \u56803  \u55348 \u56804  \u55348 \u56807  \u55348 \u56897  \u55348 \u56896  \u55348 \u56895  \u55348 \u56892  \u55348 \u57203  \u55348 \u56887  \u55348 \u57204  \u55348 \u56886  \u55348 \u56883  \u1021  \u55348 \u56881  \u55348 \u57180  \u55348 \u57207  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 ,\
+	\cf5 "hyperLydianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HyperLydian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1); \cf2 //.rootIndex_(9);\cf3 \
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 2) / (2/|1 ** 0) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56903  \u55348 \u56801  \u55348 \u56802  \u55348 \u56804  \u55348 \u56805  \u55348 \u56810  \u55348 \u56897  \u55348 \u56895  \u55348 \u56894  \u55348 \u56891  \u55348 \u56888  \u55348 \u56887  \u55348 \u56886  \u55348 \u56885  \u55348 \u57178  \u1021  \u55348 \u57180  \u55348 \u56880  \u55348 \u56878  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hyperAeolianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HyperAeolian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	\cf2 // * (4/|3 ** 9) / (2/|1 ** 3) \
+	\cf3 * (3/|2 ** 1) / (2/|1 ** -1) / (4/|3 ** 2) ).cpsmidi;\
+a.save.postlid;\
+);
+\f1 \
+
+\f0 (\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56815  \u55348 \u56819  \u55348 \u56822  \u55348 \u56823  \u55348 \u56824  \u55348 \u56860  \u55348 \u56857  \u55348 \u56856  \u55348 \u56831  \u55368 \u57138  \u55368 \u57142  \u55368 \u57145  \u55368 \u57146  \u55368 \u57147  \u55368 \u57150  \u55348 \u57215  \u55348 \u57214  \u55348 \u57213  \u55348 \u57210  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hyperPhrygianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HyperPhrygian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 4) / (2/|1 ** 1) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 "
+\f1 \cf7  \cf5 \uc0\u55348 \u56818 \cf7  \cf5 \uc0\u55348 \u56821  \u55348 \u56825  \u55348 \u56826  \u55348 \u56827  \u55348 \u56858  \u55348 \u56857  \u55348 \u56831  \u55368 \u57136  \u55368 \u57141  \u55368 \u57144  \u55368 \u57148  \u55348 \u56829  \u55368 \u57149  \u1017  \u55348 \u57215  \u55348 \u57213  \u55348 \u57212  \u55348 \u56853  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hyperIonianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HyperIonian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+\cf2 //	* (4/|3 ** 11) / (2/|1 ** 4)\cf3 \
+	* (3/|2 ** 1) / (2/|1 ** 0) / (4/|3 ** 0) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 "
+\f1 \cf7  \cf5 \uc0\u55348 \u56819 \cf7  \cf5 \uc0\u55348 \u56822  \u55348 \u56825  \u55348 \u56827  \u55348 \u56860  \u55348 \u56857  \u55368 \u57136  \u55368 \u57137  \u55368 \u57138  \u55368 \u57142  \u55368 \u57145  \u55368 \u57148  \u55368 \u57149  \u55368 \u57150  \u55348 \u57215  \u55348 \u57212  \u55348 \u57211  \u55348 \u57210  \u55348 \u56852  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hyperDorianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HyperDorian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 6) / (2/|1 ** 2) ).cpsmidi;\
+a.save.postlid;\
+);\
+\
+\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56821  \u55348 \u56824  \u55348 \u56860  \u55348 \u56858  \u55348 \u56831  \u55368 \u57139  \u55368 \u57140  \u55368 \u57141  \u55368 \u57144  \u55368 \u57147  \u55368 \u57150  \u55368 \u57151  \u1017  \u55348 \u57213  \u55348 \u56855  \u55348 \u56854  \u55348 \u56853  \u55348 \u56850  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "lydianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "Lydian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 1) / (2/|1 ** 0) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56822  \u55348 \u56827  \u55348 \u56860  \u55348 \u56858  \u55348 \u56857  \u55368 \u57136  \u55368 \u57139  \u55368 \u57141  \u55368 \u57142  \u55368 \u57145  \u55368 \u57149  \u55368 \u57150  \u1017  \u55348 \u57215  \u55348 \u57212  \u55348 \u56855  \u55348 \u56852  \u55348 \u56849  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "aeolianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "Aeolian"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	\cf2 //* (4/|3 ** 8) / (2/|1 ** 3) \
+	\cf3 * (3/|2 ** 1) / (2/|1 ** -1) / (4/|3 ** 3) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56824  \u55348 \u56860  \u55348 \u56857  \u55348 \u56856  \u55348 \u56831  \u55368 \u57138  \u55368 \u57142  \u55368 \u57143  \u55368 \u57144  \u55368 \u57147  \u55368 \u57150  \u55348 \u57215  \u55348 \u57214  \u55348 \u57213  \u55348 \u57210  \u55348 \u56852  \u55348 \u56851  \u55348 \u56850  \u55348 \u56847  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "phrygianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "Phrygian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 3) / (2/|1 ** 1) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56827  \u55348 \u56858  \u55348 \u56857  \u55368 \u57136  \u55368 \u57141  \u55368 \u57142  \u55368 \u57145  \u55368 \u57149  \u1017  \u55348 \u57215  \u55348 \u57213  \u55348 \u57212  \u55348 \u56853  \u55348 \u56852  \u55348 \u56850  \u55348 \u56849  \u55348 \u56844  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "ionianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "Ionian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	\cf2 // * (4/|3 ** 10) / (2/|1 ** 4) \cf3 \
+	* (3/|2 ** 1) / (2/|1 ** 0) / (4/|3 ** 1) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56860  \u55348 \u56857  \u55368 \u57136  \u55368 \u57137  \u55368 \u57138  \u55368 \u57142  \u55368 \u57145  \u55368 \u57146  \u55368 \u57147  \u55368 \u57150  \u55348 \u57215  \u55348 \u57212  \u55348 \u57211  \u55348 \u57210  \u55348 \u56852  \u55348 \u56849  \u55348 \u56848  \u55348 \u56847  \u55348 \u56843  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "dorianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "Dorian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 5) / (2/|1 ** 2) ).cpsmidi;\
+a.save.postlid;\
+);\
+\cf2 /* (\
+a = Systema(" 
+\f1 \cf2 \uc0\u55348 \u56858  \u55348 \u56831  \u55368 \u57139  \u55368 \u57140  \u55368 \u57141  \u55368 \u57144  \u55368 \u57148  \u55348 \u56829  \u55368 \u57149  \u1017  \u55348 \u57213  \u55348 \u56855  \u55348 \u56854  \u55348 \u56853  \u55348 \u56850  \u55348 \u56846  \u55348 \u56845  \u55348 \u56844  \u55348 \u56841  
+\f0 \cf2 ", 0, \\agmUni, \
+	"hypoLydianTropos: Alypian Notation");\
+a.globDict.put(\\label, "HypoLydian tropos");\
+a.reduce.tuning_(\\hypoLydianTropos).rootDegree_(1/|1);\
+a.midiRoot = (SYS.hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 0) / (2/|1 ** 0) ).cpsmidi;\
+a.save.postlid;\
+); */\cf3 \
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56857  \u55368 \u57136  \u55368 \u57139  \u55368 \u57141  \u55368 \u57142  \u55368 \u57145  \u55368 \u57148  \u55368 \u57149  \u55368 \u57150  \u55348 \u57215  \u55348 \u57212  \u55348 \u56855  \u55348 \u56853  \u55348 \u56852  \u55348 \u56849  \u55348 \u56846  \u55348 \u56844  \u55348 \u56843  \u55348 \u56840  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hypoAeolianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HypoAeolian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	\cf2 //* (4/|3 ** 7) / (2/|1 ** 3)\cf3 \
+	* (3/|2 ** 1) / (2/|1 ** -1) / (4/|3 ** 4) ).cpsmidi;\
+a.save.postlid;a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55348 \u56831  \u55368 \u57138  \u55368 \u57142  \u55368 \u57143  \u55368 \u57144  \u55368 \u57147  \u55368 \u57151  \u1017  \u55348 \u57213  \u55348 \u57210  \u55348 \u56852  \u55348 \u56851  \u55348 \u56850  \u55348 \u56847  \u55348 \u56843  \u55348 \u56842  \u55348 \u56841  \u55348 \u56838  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hypoPhrygianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HypoPhrygian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 2) / (2/|1 ** 1) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55368 \u57136  \u55368 \u57141  \u55368 \u57142  \u55368 \u57144  \u55368 \u57145  \u55368 \u57149  \u55368 \u57150  \u1017  \u55348 \u57215  \u55348 \u57212  \u55348 \u56853  \u55348 \u56852  \u55348 \u56850  \u55348 \u56849  \u55348 \u56844  \u55348 \u56843  \u55348 \u56841  \u55348 \u56840  \u55348 \u56837  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hypoIonianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HypoIonian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	\cf2 // * (4/|3 ** 9) / (2/|1 ** 4) \cf3 \
+	* (3/|2 ** 1) / (2/|1 ** 0) / (4/|3 ** 2) ).cpsmidi;\
+a.save.postlid;\
+);\
+(\
+a = \cf4 Systema\cf3 (\cf5 " 
+\f1 \uc0\u55368 \u57138  \u55368 \u57142  \u55368 \u57145  \u55368 \u57146  \u55368 \u57147  \u55368 \u57150  \u55348 \u57215  \u55348 \u57214  \u55348 \u57213  \u55348 \u57210  \u55348 \u56852  \u55348 \u56849  \u55348 \u56848  \u55348 \u56847  \u55348 \u56843  \u55348 \u56840  \u55348 \u56839  \u55348 \u56838  \u55348 \u56835  
+\f0 "\cf3 , 0, \cf6 \\agmUni\cf3 , \
+	\cf5 "hypoDorianTropos: Alypian Notation"\cf3 );\
+a.globDict.put(\cf6 \\label\cf3 , \cf5 "HypoDorian tropos"\cf3 );\
+a.reduce.tuning_(\cf6 \\hypoLydianTropos\cf3 ).rootDegree_(1/|1);\
+a.midiRoot = (\cf4 SYS\cf3 .hypoLydianTropos.midiRoot.midicps \
+	* (4/|3 ** 4) / (2/|1 ** 2) ).cpsmidi;a.save.postlid;\
+);\
+\
+)\
+\
+\
+\
+\
+\
+\
+\
+\
+}

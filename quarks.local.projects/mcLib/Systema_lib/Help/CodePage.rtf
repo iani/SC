@@ -1,0 +1,917 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;\f2\fnil\fcharset0 AGMuni;
+\f3\fnil\fcharset0 LucidaGrande;\f4\fnil\fcharset0 MonacoVoc;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red0\green115\blue0;\red96\green96\blue96;
+\red191\green0\blue0;}
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs52 \cf2 CodePage\cf0  \cf2 Help\cf0  
+\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f1 \cf0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs44 \cf0 *enc(\cf3 \\code\cf0 ) or *enc(\cf3 \\group\cf0 )\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs20 \cf2 Document\cf0 .listener.font_(\cf2 Font\cf0 (\cf4 "MonacoIns"\cf0 , 12))\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf2 Document\cf0 .listener.font_(\cf2 Font\cf0 (\cf4 "MonacoVoc"\cf0 , 14))\
+\cf2 Document\cf0 .listener.font_(\cf2 Font\cf0 (\cf4 "Monaco"\cf0 , 9))
+\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs20 \cf4 "
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 "\cf0 .enc(\cf3 \\agmIns\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 "\cf0 .enc(\cf3 \\agmVoc\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 "\cf0 .enc(\cf3 \\pm70Voc\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 "\cf0 .enc(\cf3 \\pm70Voc2\cf0 )\
+\
+encodings are specific:\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 "\cf0 .enc(\cf3 \\agmVoc\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 "\cf0 .enc(\cf3 \\agmIns\cf0 )\
+\
+but default group (\cf3 \\agm\cf0 ) converts all:\
+\
+(\
+a = \cf4 "\\nAGM instrumental:\\n\
+
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 \\n\
+AGM vocal:\\n\
+
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 \\n"\cf0 .enc\
+)\
+\
+(\
+a = \cf4 "\\nAGM instrumental:\\n\
+
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 \\n\
+AGM vocal:\\n\
+
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 \\n"\cf0 .enc(\cf3 \\agm\cf0 )\
+)
+\fs22 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\ql\qnatural\pardirnatural
+\cf0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs36 \cf0 *includesCode(\cf3 \\code\cf0 ) and *findCodes(\cf3 \\codes\cf0 ):\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+test if str includes a specific encoding:\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs20 \cf4 "
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 "\cf0 .includesCode(\cf3 \\agmVoc\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 "\cf0 .findCodes(\cf3 \\agm\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 "\cf0 .includesCode(\cf3 \\agmVoc\cf0 )\
+\
+(\
+\cf4 "\\nAGM instrumental:\\n\
+
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 \\n\
+AGM vocal:\\n\
+
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 \
+\
+\\n"\cf0 .findCodes\
+)
+\fs24 \
+\
+
+\fs20 (\
+\cf4 "\\nAGM instrumental:\\n\
+
+\f2 \uc0\u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 \\n\
+AGM vocal:\\n\
+
+\f2 \uc0\u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 \\n\
+\
+\\n"\cf0 .findCodes(\cf3 \\pm70\cf0 )\
+)\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs36 \cf2 String\cf0  \cf4 ""\cf0 .penc(\cf3 \\code\cf0 ) and \cf4 ""\cf0 .pencln(\cf3 \\codes\cf0 ):
+\fs24 \
+\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf4 "
+\f2 \uc0\u55348 \u57176 
+\f1 "
+\f2 \cf0 .enc(\cf3 \\agmIns\cf0 )\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\fs18 \cf4 "
+\f2 \cf4 \uc0\u55348 \u57176 
+\f1 \cf4 "\cf0 .penc(\cf3 \\agmIns\cf0 )
+\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f2 \cf4 "\uc0\u55348 \u56826 "\cf0 .penc(\cf3 \\agmVoc\cf0 )\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f1 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf4 "
+\f2 \uc0\u55348 \u56902 \u55348 \u56903 \u55348 \u56904 \u55348 \u56798 \u55348 \u56799 \u55348 \u56800 \u55348 \u56801 \u55348 \u56802 \u55348 \u56803 \u55348 \u56804 \u55348 \u56805 \u55348 \u56806 \u55348 \u56807 \u55348 \u56808 \u55348 \u56809 \u55348 \u56810 \u55348 \u56897 \u55348 \u56896 \u55348 \u56895 \u55348 \u56894 \u55348 \u56893 \u55348 \u56892 \u55348 \u56891 \u55348 \u56890 \u55348 \u57203 \u55348 \u56889 \u55348 \u57202 \u55348 \u56888 \u55348 \u56887 \u55348 \u57204 \u55348 \u56886 \u55348 \u56885 \u55348 \u56884 \u55348 \u56883 \u55348 \u56882 \u55348 \u57205 \u55348 \u57178 \u1021 \u55348 \u56881 \u55348 \u57180 \u55348 \u56880 \u55348 \u56879 \u55348 \u57207 \u55348 \u56878 \u55348 \u56877 \u55348 \u56876 \u55348 \u56875 \u55348 \u56874 \u55348 \u57175 \u55348 \u57182 \u55348 \u57208 \u55348 \u56873 \u55348 \u56872 \u55348 \u56871 \u55348 \u57176 \u55348 \u57206 \u55348 \u56870 \u55348 \u56869 \u55348 \u56868 \u55348 \u56867 \u55348 \u57177 \u55348 \u57183 \u55348 \u56830 \u55348 \u56865 \u55348 \u57179 \u55348 \u56864 \u55348 \u56863 \u55348 \u57181 \u55348 \u56862 \u55348 \u56861 
+\f1 "\cf0 .penc(\cf3 \\agmIns\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56812 \u55348 \u56813 \u55348 \u56814 \u55348 \u56815 \u55348 \u56816 \u55348 \u56817 \u55348 \u56818 \u55348 \u56819 \u55348 \u56820 \u55348 \u56821 \u55348 \u56822 \u55348 \u56823 \u55348 \u56824 \u55348 \u56825 \u55348 \u56826 \u55348 \u56827 \u55348 \u56860 \u55348 \u56859 \u55348 \u56858 \u55348 \u56857 \u55348 \u56856 \u55348 \u56831 \u55368 \u57136 \u55368 \u57137 \u55368 \u57138 \u55368 \u57139 \u55368 \u57140 \u55368 \u57141 \u55368 \u57142 \u55368 \u57143 \u55368 \u57144 \u55368 \u57145 \u55368 \u57146 \u55368 \u57147 \u55368 \u57148 \u55348 \u56829 \u55368 \u57149 \u55368 \u57150 \u55368 \u57151 \u1017 \u55348 \u57215 \u55348 \u57214 \u55348 \u57213 \u55348 \u57212 \u55348 \u57211 \u55348 \u57210 \u55348 \u56855 \u55348 \u56854 \u55348 \u56853 \u55348 \u56852 \u55348 \u56851 \u55348 \u56850 \u55348 \u56849 \u55348 \u56848 \u55348 \u56847 \u55348 \u56846 \u55348 \u56845 \u55348 \u56844 \u55348 \u56843 \u55348 \u56842 \u55348 \u56841 \u55348 \u56840 \u55348 \u56839 \u55348 \u56838 \u55348 \u56837 \u55348 \u56836 \u55348 \u56835 \u55348 \u56834 \u55348 \u56833 \u55348 \u56832 
+\f1 "\cf0 .pencln(\cf3 \\agmVoc\cf0 )\
+\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56832 \u55348 \u57180 
+\f1 "\cf0 .penc\
+\cf4 "
+\f2 \uc0\u55348 \u56861 
+\f3 \uc0\u1017 
+\f1 "\cf0 .penc\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f4 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\fs20 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs36 \cf2 Unicode\cf0  & \cf2 UTF\cf0 -8\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf4 "A"\cf0 .asUTF8  		\cf5 //41\cf0 \
+\cf4 "A"\cf0 .asUTF8List  	\cf5 //[ 41 ]\cf0 \
+\cf4 "\'a9"\cf0 .asUTF8  		\cf5 //C2A9\cf0 \
+\cf4 "\'a9"\cf0 .asUTF8List  	\cf5 //[ C2A9 ]\cf0 \
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .asUTF8  		\cf5 //F09D8880\cf0 \
+\cf4 "
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1 "\cf0 .asUTF8 		\cf5 //F09D889DF09D889EF09D8D9D\cf0 \
+\cf4 "
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1 "\cf0 .asUTF8List 	\cf5 //[ F09D889D, F09D889E, F09D8D9D ]\cf0 \
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .asUTF8\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .asUTF8List\
+\
+\cf4 "\'a9"\cf0 .asUnicodeList 	 		\cf5 //A9\cf0 \
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .asUnicodeList 	 		\cf5 //1D200\cf0 \
+\cf4 "
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1 "\cf0 .asUnicodeList 		\cf5 //0001D21D, 0001D21E, 0001D35D\cf0 \
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .asUnicodeList		\cf5 //0001D21D, 0001D21E, 0001D35D\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs18 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .findUTF8\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .takeUTF8\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .keepUTF8\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .dropUTF8\
+\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .findOfCode(\cf3 \\agmIns\cf0 )\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .findOfCode(\cf3 \\agmVoc\cf0 )\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .takeOfCode(\cf3 \\agmIns\cf0 )\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .takeOfCode(\cf3 \\agmVoc\cf0 )\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .keepOfCode(\cf3 \\agmIns\cf0 )\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .keepOfCode(\cf3 \\agmVoc\cf0 )\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .dropOfCode(\cf3 \\agmIns\cf0 )\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .dropOfCode(\cf3 \\agmVoc\cf0 )\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs36 \cf0 asEncDigits, asEncNames\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf4 "\'a9"\cf0 .asEncDigits\
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .asEncDigits(\cf3 \\agmIns\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .asEncDigits(\cf3 \\agmVoc\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1 "\cf0 .asEncDigits(\\agmIns)\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .asEncDigits(\\agmIns)\
+\cf4 "! 
+\f2 \uc0\u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .asEncDigits(\\agmIns).asEncUTF8(\\agmVoc) // conversion ??\
+\
+\cf4 "\'a9"\cf0 .asEncNames(\\agmIns)\
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .asEncNames(\cf3 \\agmIns\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .asEncNames(\cf3 \\agmVoc\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u56861 \u55348 \u57180 \u55348 \u56862 \u55348 \u57181 
+\f1 "\cf0 .asEncNames(\\agmIns)\
+\cf4 "! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .asEncNames(\\agmIns)\
+\cf4 "! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56861 \u55348 \u56862 \u55348 \u57181 
+\f1  ?"\cf0 .asEncNames(\\agmIns).asEncUTF8(\\agmVoc) // conversion ??\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf4 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs30 \cf0 convertByIndex, convertByAscii, convertByDigit, convertByName
+\fs24 \cf4 \
+\
+"
+\f2 \uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".pencln(\\pm70)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f2 \cf4 "\uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByIndex\
+
+\f2 \cf4 "\uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByIndex(\\agmIns)\cf4 \
+
+\f2 "\uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByIndex(\\pm70Ins)\cf4 \
+
+\f2 "\uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByAscii(\\agmVoc)\
+
+\f2 \cf4 "\uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByAscii(\\pm70Voc)\
+\cf4 "
+\f2 \uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByDigit(\\agmIns)\
+\cf4 "
+\f2 \uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByDigit(\\pm70Ins)\
+
+\f2 \cf4 "\uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByName(\\agmVoc)\
+
+\f2 \cf4 "\uc0\u55348 \u56832  \u55348 \u57180  \u55348 \u56861  
+\f3 \uc0\u1017 
+\f1 ".\cf0 convertByName(\\pm70Voc)\
+\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs36 \cf0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf2 Char\cf0  inspection: asciiExt, encDigit, encName\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f4\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1 \cf4 "
+\f2 \uc0\u55348 \u57180 
+\f1 "\cf0 .enc.[0].asciiExt\
+\cf4 "
+\f2 \uc0\u55348 \u57180 
+\f1 "\cf0 .enc.[0].encDigit(\cf3 \\agmIns\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u57180 
+\f1 "\cf0 .enc.[0].encDigit(\cf3 \\pm70Ins\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56861 
+\f1 "\cf0 .enc.[0].asciiExt\
+\cf4 "
+\f2 \uc0\u55348 \u56861 
+\f1 "\cf0 .enc.[0].encDigit(\cf3 \\agmIns\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .enc.[0].encDigit(\cf3 \\agmIns\cf0 ) \cf5 //encoded chars are ambiguous !!!\cf0 \
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .enc.[0].encDigit(\cf3 \\pm70Ins\cf0 )\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf4 "
+\f2 \uc0\u55348 \u57180 
+\f1 "\cf0 .enc.[0].asciiExt\
+\cf4 "
+\f2 \uc0\u55348 \u57180 
+\f1 "\cf0 .enc.[0].encName(\cf3 \\agmIns\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u57180 
+\f1 "\cf0 .enc.[0].encName(\cf3 \\pm70Ins\cf0 )\
+\
+\cf4 "
+\f2 \uc0\u55348 \u56861 
+\f1 "\cf0 .enc.[0].asciiExt\
+\cf4 "
+\f2 \uc0\u55348 \u56861 
+\f1 "\cf0 .enc.[0].encName(\cf3 \\agmIns\cf0 )\
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .enc.[0].encName(\cf3 \\agmIns\cf0 ) \cf5 //encoded chars are ambiguous !!!\cf0 \
+\cf4 "
+\f2 \uc0\u55348 \u56832 
+\f1 "\cf0 .enc.[0].encName(\cf3 \\pm70Ins\cf0 )\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs36 \cf0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf2 Number\cf0  asEncUTF8, asEncName\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf0 1.asEncUTF8(\cf3 \\agmIns\cf0 )\
+1.asEncUTF8(\cf3 \\agmVoc\cf0 )\
+1.asEncUTF8(\cf3 \\pm70Ins\cf0 )\
+1.asEncUTF8(\cf3 \\pm70Voc\cf0 )\
+\
+70.asEncUTF8(\cf3 \\agmIns\cf0 )\
+70.asEncUTF8(\cf3 \\agmVoc\cf0 )\
+70.asEncUTF8(\cf3 \\pm70Ins\cf0 )\
+70.asEncUTF8(\cf3 \\pm70Voc\cf0 )\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf5 // 
+\f3 \uc0\u963 \u964 \u959 \u943 \u967 \u959 \u962  \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf5 //(deactivate CodePage, copy posting into .scd file, save as plain text and open in TextWrangler (utf8))\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1 \cf0 \
+l = (70..1).collect\{\cf2 |i|\cf0  i.asEncUTF8(\cf3 \\agmIns\cf0 )\}\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf4 ""\cf0 .catList(l).pencln\
+\cf4 ""\cf0 .scatList(l).pencln\
+\
+l = (70..1).collect\{\cf2 |i|\cf0  i.asEncUTF8(\cf3 \\agmVoc\cf0 )\}\
+\cf4 ""\cf0 .catList(l).pencln\
+\cf4 ""\cf0 .scatList(l).pencln\
+\
+(\
+(70..1).do\{\cf2 |i|\cf0  \cf4 ""\cf0 .catList( \
+	[\cf3 \\agmIns\cf0 , \cf3 \\agmVoc\cf0 , \cf3 \\pm70Ins\cf0 , \cf3 \\pm70Voc\cf0 ].collect\{\cf2 |code|\cf0  i.asEncUTF8(code) ++ \cf4 "\\t\\t"\cf0 \}\
+	++ [i.asString , \cf4 "\\n"\cf0  ]\
+	).postln \}\
+)\
+\
+1.asEncName(\cf3 \\agmIns\cf0 )\
+1.asEncName(\cf3 \\agmVoc\cf0 )\
+1.asEncName(\cf3 \\pm70Ins\cf0 )\
+1.asEncName(\cf3 \\pm70Voc\cf0 )\
+\
+31.asEncName(\cf3 \\agmIns\cf0 )\
+28.asEncName(\cf3 \\pm70Ins\cf0 )\
+\
+70.asEncName(\cf3 \\agmIns\cf0 )\
+70.asEncName(\cf3 \\agmVoc\cf0 )\
+70.asEncName(\cf3 \\pm70Ins\cf0 )\
+70.asEncName(\cf3 \\pm70Voc\cf0 )\
+\
+for (1,70)\{\cf2 |i|\cf0  i.asEncName(\cf3 \\agmIns\cf0 ).postln\}
+\fs18 \
+\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs36 \cf2 Symbol\cf0  asEncUTF8, asEncDigit\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \\1.asEncUTF8(\cf3 \\agmIns\cf0 )\
+\\1.asEncUTF8(\cf3 \\agmVoc\cf0 )\
+\\1.asEncUTF8(\cf3 \\pm70Ins\cf0 )\
+\\1.asEncUTF8(\cf3 \\pm70Voc\cf0 )\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 \\Sigma\cf0 .asEncUTF8(\cf3 \\agmIns\cf0 )\
+\cf3 \\Sigma\cf0 .asEncUTF8(\cf3 \\pm70Ins\cf0 )\
+\
+\\70.asEncUTF8(\cf3 \\agmIns\cf0 )\
+\\70.asEncUTF8(\cf3 \\agmVoc\cf0 )\
+\\70.asEncUTF8(\cf3 \\pm70Ins\cf0 )\
+\\70.asEncUTF8(\cf3 \\pm70Voc\cf0 )
+\fs36 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \\1.asEncDigit(\cf3 \\agmIns\cf0 )\
+\\1.asEncDigit(\cf3 \\agmVoc\cf0 )\
+\\1.asEncDigit(\cf3 \\pm70Ins\cf0 )\
+\\1.asEncDigit(\cf3 \\pm70Voc\cf0 )\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf3 \\Sigma\cf0 .asEncDigit(\cf3 \\agmIns\cf0 )\
+\cf3 \\Sigma\cf0 .asEncDigit(\cf3 \\pm70Ins\cf0 )\
+\
+\\70.asEncDigit(\cf3 \\agmIns\cf0 )\
+\\70.asEncDigit(\cf3 \\agmVoc\cf0 )\
+\\70.asEncDigit(\cf3 \\pm70Ins\cf0 )\
+\\70.asEncDigit(\cf3 \\pm70Voc\cf0 )
+\fs36 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs36 \cf2 Collection\cf0  asEncUTF8, asEncName, asEncDigit\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+[1, 28, 31, 70, 75].asEncUTF8(\cf3 \\agmIns\cf0 )\
+[1, 28, 31, 70, 75].asEncUTF8(\cf3 \\agmVoc\cf0 )\
+[1, 28, 31, 70, 75].asEncUTF8(\cf3 \\pm70Ins\cf0 )\
+[1, 28, 31, 70, 75].asEncUTF8(\cf3 \\pm70Voc\cf0 )\
+\
+[1, 28, 31, 70, 75].asEncName(\cf3 \\agmIns\cf0 )\
+[1, 28, 31, 70, 75].asEncName(\cf3 \\agmVoc\cf0 )\
+[1, 28, 31, 70, 75].asEncName(\cf3 \\pm70Ins\cf0 )\
+[1, 28, 31, 70, 75].asEncName(\cf3 \\pm70Voc\cf0 )
+\fs18 \
+\
+
+\fs24 [\\1, \\28, \\31, \\70, \\Sigma].asEncDigit(\cf3 \\pm70Voc\cf0 )
+\fs18 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs36 \cf2 Post\cf0  \cf2 Tests\cf0  for activated CodePage:
+\fs30 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+for (70,1)\{\cf2 |i|\cf0  i.asEncUTF8(\cf3 \\agmIns\cf0 ).post\} \cf5 //catches up with postings in reverse order\cf0 \
+for (1,70)\{\cf2 |i|\cf0  \{i.asEncUTF8(\cf3 \\agmIns\cf0 ).post\}.defer(0.005 + 0.005*i)\} \cf5 // fast\cf0 \
+for (1,70)\{\cf2 |i|\cf0  \{i.asEncUTF8(\cf3 \\agmIns\cf0 ).post\}.defer(0.01 + 0.01*i)\} \cf5 // ok\cf0 \
+for (1,70)\{\cf2 |i|\cf0  \{i.asEncUTF8(\cf3 \\agmIns\cf0 ).post\}.defer(0.1 + 0.01*i)\}  \cf5 // very slow\cf0 \
+\
+for (1,70)\{\cf2 |i|\cf0  [i, i.asEncUTF8(\cf3 \\agmIns\cf0 ), i.asEncUTF8(\cf3 \\agmIns\cf0 ).enc.ascii].postln\}\
+for (1,70)\{\cf2 |i|\cf0  [i, i.asEncUTF8(\cf3 \\agmIns\cf0 ), i.asEncUTF8(\cf3 \\agmIns\cf0 ).reverse].postln\}\
+for (1,70)\{\cf2 |i|\cf0  [i, i.asEncUTF8(\cf3 \\agmIns\cf0 ), i.asEncUTF8(\cf3 \\pm70Ins\cf0 )].postln\}
+\fs18 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs36 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 More\cf0  \cf2 Tests
+\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 (\cf4 "123 so"\cf0 ).pencln\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u1017  \u967 \u950 \u968 \u969 "
+\f1 \cf0 ).pencln\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u1017  \u967 \u950 \u968 \u969 "
+\f1 \cf0 ).penc\
+\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 "\cf0 ).penc\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 "\cf0 ).penc(\cf3 \\pm70\cf0 ); \cf4 "no don't overwrite me"\cf0 .post\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 "\cf0 ).pencln\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 "\cf0 ).pencln(\cf3 \\pm70\cf0 ) \cf5 //overwrites post by answer\cf0 \
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 "\cf0 ).pencln(\cf3 \\pm70\cf0 ); \cf4 "avoid it"\cf0 .postln;\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 "\cf0 ).pencln([ \cf3 \\pm70Ins\cf0 , \cf3 \\pm70Voc\cf0 ]); \cf4 ""\cf0 .postln;\
+(\cf4 "a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 "\cf0 ).postln; \cf4 ""\cf0 .postln\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf5 /*\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf5 a = CodePage.findSections("123 so")\
+a = CodePage.findSections("
+\f3 \uc0\u951 \u945 \u966 \u951 
+\f1  
+\f3 \uc0\u948 \u951 
+\f1  ")\
+("
+\f3 \uc0\u951 \u945 \u966 \u951 
+\f1  
+\f3 \uc0\u948 \u951 
+\f1  ").pencln\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 
+\f1 ")\
+("
+\f2 \uc0\u55348 \u56861 
+\f1 ").pencln\
+a = CodePage.findSections(" 
+\f2 \uc0\u55348 \u56861 
+\f1 ")\
+(" 
+\f2 \uc0\u55348 \u56861 
+\f1 ").pencln\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861  
+\f1 ")\
+("
+\f2 \uc0\u55348 \u56861  
+\f1 ").pencln\
+a = CodePage.findSections(" 
+\f2 \uc0\u55348 \u56861  
+\f1 ")\
+(" 
+\f2 \uc0\u55348 \u56861  
+\f1 ").pencln\
+a = CodePage.findSections(" 
+\f2 \uc0\u55348 \u56861  \u55348 \u56861 
+\f1 ")\
+(" 
+\f2 \uc0\u55348 \u56861  \u55348 \u56861 
+\f1 ").pencln\
+\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u57178 \u55348 \u57180  adfs \u55348 \u57207 \u55348 \u57178 \u55348 \u57180 \u55348 \u57207 \u55348 \u56876 
+\f1 ")\
+"
+\f2 \uc0\u55348 \u57178 \u55348 \u57180  adfs \u55348 \u57207 \u55348 \u57178 \u55348 \u57180 \u55348 \u57207 \u55348 \u56876 
+\f1 ".pencln(\\agm) //kill !!!\
+\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 1\u55348 \u56861 
+\f1 ")\
+a = CodePage.findSections(" 1
+\f2 \uc0\u55348 \u56861 
+\f1 ")\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861  1
+\f1 ")\
+a = CodePage.findSections(" 
+\f2 \uc0\u55348 \u56861  1 
+\f1 ")\
+\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 \'80\u55348 \u56861 
+\f1 ")\
+a = CodePage.findSections(" 1
+\f2 \uc0\u55348 \u56861 
+\f1 ")\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861  1
+\f1 ")\
+a = CodePage.findSections(" 
+\f2 \uc0\u55348 \u56861  1 
+\f1 ")\
+\
+\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 \'80\u55348 \u56861 
+\f1  ! 
+\f2 \uc0\u55348 \u56832 
+\f1 ")\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 \'80\u55348 \u56861 
+\f1  !")\
+a = CodePage.findSections("1
+\f2 \uc0\u55348 \u56861 
+\f1  !
+\f2 \uc0\u55348 \u56861 
+\f1 ")\
+a = CodePage.findSections("\'80
+\f2 \uc0\u55348 \u56861 
+\f1  !
+\f2 \uc0\u55348 \u56861 
+\f1 ")\
+\
+\
+a = CodePage.findSections(
+\fs34 "
+\f3 \uc0\u1017 
+\f2 \uc0\u55348 \u57180 
+\f1 "
+\fs24 )\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\fs34 \cf5 "
+\f3 \uc0\u1017 
+\f2 \uc0\u55348 \u57180 
+\f1 ".
+\fs18 asEncDigit(\\agmIns)
+\fs24 \
+\
+\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 \u55348 \u56862  \u55348 \u57181 
+\f1 ")\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 1\u55348 \u56861 2
+\f1 ")\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 1\u55348 \u56861 2\u55348 \u56861 
+\f1 ")\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 1\u55348 \u56861 2\u55348 \u56861  
+\f1 ")\
+a = CodePage.findSections(" 
+\f2 \uc0\u55348 \u56861 1\u55348 \u56861  2 \u55348 \u56861  1
+\f1 ")\
+a = CodePage.findSections("AGM 
+\f2 \uc0\u55348 \u56861 \u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56861 \'80\u55348 \u56861 
+\f1  ! 
+\f2 \uc0\u55348 \u56832 
+\f1 ")\
+\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1 ")\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1 ", \\pm70)\
+a = CodePage.findSections("
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1 ", [ \\pm70Ins, \\pm70Voc])\
+\
+a = CodePage.findSections("a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 ")\
+a = CodePage.findSections("a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 ", \\pm70)\
+a = CodePage.findSections("a 
+\f2 \uc0\u55348 \u56861 
+\f1  
+\f2 \uc0\u55348 \u56832 
+\f1  
+\f3 \uc0\u967 \u968 \u969 \u968 
+\f1  
+\f2 \uc0\u55348 \u56862 
+\f1  ! 
+\f2 \uc0\u55348 \u57180 \u55348 \u56881 \u1021 \u1017 \u55348 \u57180 \u55348 \u56881 \u1021 \u55348 \u57181 
+\f1  
+\f3 \uc0\u1017 
+\f1  
+\f3 \uc0\u967 \u950 \u968 \u969 
+\f1 ", [ \\pm70Ins, \\pm70Voc])\
+\
+*/
+\fs18 \cf0 \
+}
