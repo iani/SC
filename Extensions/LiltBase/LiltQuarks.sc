@@ -5,7 +5,7 @@ Manage local quarks of lilt library:
 - Create 3 menu items for Configuring core, project and draft quarks
 - Modify window height to fit the list of all quarks in a directory better. 
 
-Note: Since the UserExtensionsDirectory is now ignored by the git configuration of Lilt2, quark installation works in the standard way through symbolic links. There is no need to copy or remove the quarks files to the Extensions. 
+Note: Since the Platform.userExtensionDir is now ignored by the git configuration of Lilt2, quark installation works in the standard way through symbolic links. There is no need to copy or remove the quarks files to the Extensions. 
 
 */
 LiltQuarks : Quarks {
@@ -58,7 +58,7 @@ LiltQuarks : Quarks {
 
 		scrB = GUI.window.screenBounds;
 //		height = min(quarks.size * 25 + 120, scrB.height - 60);
-//		IZ mod: 
+//		IZ mod: add more vertical space to fit all quarks in the pane
 		height = min(quarks.size.postln * 25 + 170, scrB.height - 60);
 		window = GUI.window.new(this.name, Rect.aboutPoint( scrB.center, 250, height.div( 2 )));
 		flowLayout = FlowLayout( window.view.bounds );

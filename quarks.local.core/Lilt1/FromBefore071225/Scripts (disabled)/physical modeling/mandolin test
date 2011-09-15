@@ -1,0 +1,30 @@
+~controlSpecs = [
+	[ 'out', 0, 1, 'linear', 0, 0 ],
+	[ 'freq', 20, 20000, 'exp', 0, 440 ],
+	[ 'bodysize', 0, 128, 'linear', 0, 64 ],
+	[ 'pickposition', 0, 128, 'linear', 0, 64 ],
+	[ 'stringdamping', 0, 138, 'linear', 0, 69 ],
+	[ 'stringdetune', 0, 20, 'linear', 0, 10 ],
+	[ 'aftertouch', 0, 128, 'linear', 0, 64 ],
+//	[ 'trig', 0, 1, 'linear', 0, 0 ],
+//	[ 'mul', 0, 1, 'linear', 0, 0 ],
+//	[ 'add', 0, 1, 'linear', 0, 0 ],
+	[\period, 0.07, 5, \linear, 0, 0.25]
+];
+
+~period = 0.25;
+
+~start = {
+	loop {
+		Synth(\stkmandolin, [\out, ~out, \freq, ~freq, 
+			\pickposition, ~pickposition,
+			\stringdamping, ~stringdamping,
+			\bodysize, ~bodysize,
+			\stringdetune, ~stringdetune,
+			\aftertouch, ~aftertouch
+			]);
+		~period.wait;
+	}
+}.funcWrap;
+
+

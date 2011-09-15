@@ -1,0 +1,14 @@
+(
+	\name: "Lilt1",
+	\path: "Lilt1",
+	\summary: "Build complex SC applications out of code file modules ('Scripts')",
+	\helpdoc: "Help/Lilt1.html",
+	\author: "Ioannis Zannos",
+	\version: 1.1,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2003",
+	\url: "http://earlab.org",
+	\dependencies: []
+)
+

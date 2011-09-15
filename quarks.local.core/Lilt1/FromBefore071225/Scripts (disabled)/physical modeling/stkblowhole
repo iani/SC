@@ -1,0 +1,19 @@
+// Generated from SynthDesc on: Sun Jul 24 12:19:52 2005
+
+/* Note: this script clicks when ending due to DC offset buildup in the StkBlowhole UGen. To avoid this, one can release the Synth instead of freeing it. See example of doing this in script 'blowhole' */
+
+~controlSpecs = [
+[ 'out', 0, 4095, 'linear', 1, 0 ],
+[ 'freq', 20, 20000, 'exp', 0, 440 ],
+[ 'reedstiffness', 0, 128, 'linear', 0, 64 ],
+[ 'noisegain', 0, 40, 'linear', 0, 20 ],
+[ 'tonehole', 0, 128, 'linear', 0, 64 ],
+[ 'register', 0, 22, 'linear', 0, 11 ],
+[ 'breathpressure', 0, 128, 'linear', 0, 64 ],
+[ 'trig', 0, 1, 'linear', 1, 1 ],
+[ 'gate', 0, 1, 'linear', 1, 1 ],
+[ 'mul', 0, 1, 'linear', 0, 1 ],
+[ 'add', 0, 1, 'linear', 0, 0 ]
+];
+
+~start = { Synth("stkblowhole", ['out', ~out, 'freq', ~freq, 'reedstiffness', ~reedstiffness, 'noisegain', ~noisegain, 'tonehole', ~tonehole, 'register', ~register, 'breathpressure', ~breathpressure, 'trig', ~trig, 'gate', ~gate, 'mul', ~mul, 'add', ~add], ~target,#[\h, \t, \addBefore, \addAfter, \addReplace][~addAction]) };

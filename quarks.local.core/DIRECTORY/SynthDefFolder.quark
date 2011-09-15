@@ -1,0 +1,14 @@
+(
+	\name: "SynthDefFolder",
+	\path: "SynthDefFolder",
+	\summary: "All .scd files in this folder are auto-loaded by this Quark",
+	\helpdoc: "Help/SynthDefFolder.html",
+	\author: "Ioannis Zannos",
+	\version: 0.1,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: ["ServerPrep"]
+)
+

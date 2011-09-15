@@ -1,0 +1,57 @@
+// (SC3) Script for session 'Corfu Swallows'
+// Generated on Thu Jun  7 07:11:38 2007
+
+~sessionName = "Corfu Swallows";
+~server = Server.named['localhost'] ? { Server.default };
+~serverAddressDetails = [ "127.0.0.1", 57110 ];	// Servers address saved for reference
+
+//List of paths of samples to be loaded for this session:
+~samplePaths = [
+	"/Applications/SC3/sounds/cs/swallows.wav",
+	"./sounds/a11wlk01.wav",
+	"./sounds/a11wlk01-44_1.aiff",
+	"./sounds/break",
+	"./sounds/break2",
+	"./sounds/SinedPink.aiff",
+];
+
+// Specs for creating scripts: names of Groups, Folders, Files, Scripts
+~scriptGroups = [
+	["Scripts",
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)', 1, 682, true ],
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)[2]', 303, 682, true ],
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)[3]', 604, 682, true ],
+		[ 'buffer playback', 'playbuf (looping)', 'playbuf (looping)[4]', 907, 682, true ],
+		[ 'mixing+multichannel', 'PAN8', 'PAN8', 0, 87, true ],
+		[ 'mixing+multichannel', 'PAN8', 'PAN8[2]', 301, 87, true ],
+		[ 'Spectral Synths', 'PV_MagAbove', 'PV_MagAbove', 602, 570, true ],
+		[ 'Spectral Synths', 'PV_RectComb', 'PV_RectComb', 905, 529, true ],
+	],
+];
+
+// Specs for creating links between scripts:
+~linkSpecs = [
+	[ 'Scripts', 'playbuf (looping)', 'out', 'Scripts', 'PAN8', 'in' ],
+	[ 'Scripts', 'playbuf (looping)[2]', 'out', 'Scripts', 'PAN8[2]', 'in' ],
+	[ 'Scripts', 'playbuf (looping)[3]', 'out', 'Scripts', 'PV_MagAbove', 'in' ],
+	[ 'Scripts', 'playbuf (looping)[4]', 'out', 'Scripts', 'PV_RectComb', 'in' ],
+];
+
+// Specs to create MIDIResponders for each Script:
+~midiBindings = [
+];
+
+// Specs for the parameter snapshots of the scripts:
+~snapshots = [
+['Scripts', 'playbuf (looping)[3]',	[ "swa", [ 18, 'swallows', 1, 1, 0, 1, 1 ] ],
+
+],
+];
+
+// -------------- SCRIPT-SPECIFIC DATA: --------------
+~scriptData = [
+];
+// -------------- END SCRIPT-SPECIFIC DATA --------------
+
+// the common part of the script for starting and stopping is included as template:
+~script.include('Includes', 'SessionLoad');

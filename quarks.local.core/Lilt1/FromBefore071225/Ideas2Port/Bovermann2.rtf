@@ -1,0 +1,74 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf420
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 (\
+~duau.play;\
+~duau = \{|t_gate = 0, t_gate2 = 0, freq = 80|\
+	var src;\
+	src = SinOsc.ar(\
+		Phasor.ar(t_gate, [20, 21], freq, 10), \
+		pi, \
+		2\
+	).softclip.sum;\
+ \
+	src = CompanderD.ar(src, src,\
+		thresh: EnvGen.ar(Env([0,1,0], [0.1, 0.1]), gate: t_gate),\
+		slopeBelow: 0.022,\
+		slopeAbove: 0.1,\
+		clampTime: 0.2,\
+		relaxTime: 0.00002\
+	) * EnvGen.ar(Env([0,1,0], [0.0001, 2]), gate: t_gate2)!2;\
+	src.softclip\
+\}\
+)\
+~duau.set(\\t_gate, 1, \\t_gate2, 1, \\freq, 76)\
+~duau.set(\\t_gate, 1, \\t_gate2, 1, \\freq, 96)\
+\
+\
+Technorati Tags: code, sc3\
+\
+Posted in SuperCollider, Coding | No Comments \'c8\
+Livecoding Practice II\
+July 21st, 2007\
+\
+Done without the function posted in the last post, but I like it anyhow:\
+\
+s.boot;\
+p = ProxySpace.push(s);\
+ProxyMixer(p)\
+History.start;\
+ \
+~tacker.clear\
+~tacker.fadeTime = 10;\
+~tacker = \{|amp = 0.1, freq = 60|\
+	var in;\
+	var lf = \{LFSaw.ar(Phasor.ar(\
+		Impulse.ar(2/5, 2.0.rand), \
+		120, \
+		1, \
+		TRand.kr(0.5 * freq, freq, Impulse.ar(50))\
+	))\}!10;\
+	in = lf.collect\{|lf| \
+		(Impulse.ar(lf.exprange(15, 1000)) * lf.range(0.1, 1))\
+	\}.sum * 0.1;\
+	(Pan2.ar(in, WhiteNoise.ar(1)) * 20 * amp).softclip\
+\}\
+~tacker.play\
+ \
+~filta = \{|freq = 10000, rq = 0.1|\
+	RLPF.ar(~tacker.ar, freq, rq)\
+\}\
+ \
+Spec.add(\\wet, [0, 1].asSpec)\
+~outa = \{|wet = 0.1| (wet * ~filta.ar) + ((1-wet) * ~tacker.ar)\}\
+~cutta = \{\
+	~outa.ar * LFPulse.ar(Line.kr(10, 20, 300))\
+\}\
+ \
+Spec.add(\\dt, [0, 1].asSpec)\
+~tacker1 = \{|dt = 0.2| DelayN.ar(~cutta.ar, 1, dt)\}\
+p.free(10)\
+\
+}

@@ -1,0 +1,132 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fnil\fcharset77 Monaco;\f1\fswiss\fcharset77 Helvetica;\f2\fswiss\fcharset77 Helvetica-Oblique;
+}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red0\green115\blue0;
+}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf2 /* IZ 050710 \
+Each of these synthdefs merely starts one of the Physical Modeling UGens from the Synthesis Toolkit (STK) of Perry Cook, as ported to SC3 by Paul Lansky and Christian Hresko. \
+\
+These UGens are not part of the regular release of SuperCollider on SourceForge. You need\
+to download and install them from: \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\fs26 \cf2 	{\field{\*\fldinst{HYPERLINK "http://www.music.princeton.edu/paul/stkugens.tar.gz"}}{\fldrslt 
+\f2\i http://www.music.princeton.edu/paul/stkugens.tar.gz}} 
+\f0\i0\fs18 \
+Another reference page is: \
+	http://swiki.hfbk-hamburg.de:8888/MusicTechnology/677\
+\
+// Sorted in alphabetical order: \
+*/\cf0 \
+\
+\
+[\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 SynthDef\cf0 (\cf4 \\stkbandedwg\cf0 , \{ \cf3 | out = 0, freq=440, instr=0,  bowpressure=0, bowmotion=0, \
+	integration=0, modalresonance=64, bowvelocity=0, setstriking=0, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\
+ 	// adding DetectSilence to stop synth when sound fades out\
+ 	var src;\
+ 	src = StkBandedWG\cf0 .ar(freq, instr, bowpressure, bowmotion, \
+		integration, modalresonance, bowvelocity, setstriking, trig, mul, add);\
+	DetectSilence.ar(src, doneAction: 2);\
+	\cf3 Out\cf0 .ar(out, src);\
+\}),\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkbeethree\cf0 , \{ \cf3 | out = 0, freq=440, op4gain=10, op3gain=20, lfospeed=64, \
+	lfodepth=0, adsrtarget=64, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkBeeThree\cf0 .ar(freq, op4gain, op3gain, lfospeed, \
+		lfodepth, adsrtarget, trig, mul, add));\
+\}),\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkblowhole\cf0 , \{ \cf3 | out = 0, freq=440, reedstiffness=64, noisegain=20, tonehole=64, \
+	register=11, breathpressure=64, trig = 1, gate = 1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf2 /* using an envelope to avoid clicks when starting and stopping:\
+	   I have tested synth.set(\\trig, 0) and synth.run(false) before freeing\
+	   and the click persists (dc buildup probably?) */\cf0 \
+	\cf3 var\cf0  env;\
+	env = \cf3 Env\cf0 ([0, 1, 0], [0.05, 0.05], releaseNode: 1);\
+	\cf3 Out\cf0 .ar(out, \cf3 StkBlowHole\cf0 .ar(freq, reedstiffness, noisegain, tonehole, \
+		register, breathpressure, trig, mul, add) * \cf3 EnvGen\cf0 .kr(env, gate, doneAction: 2)\
+	);\
+\}),\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkbowed\cf0 , \{ \cf3 | out = 0, freq=220, bowpressure = 64, bowposition = 64, \
+	vibfreq=64, vibgain=64, loudness=64,trig=1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkBowed\cf0 .ar(freq, bowpressure, bowposition, vibfreq, \
+		vibgain, loudness, trig, mul, add));\
+\}),\
+\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkclarinet\cf0 , \{ \cf3 | out = 0, freq=440, reedstiffness=64, \
+	noisegain=4, vibfreq=64, vibgain=11, breathpressure=64, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkClarinet\cf0 .ar(freq, reedstiffness, noisegain, vibfreq, \
+		vibgain, breathpressure, trig, mul, add));\
+\}),\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkpluck\cf0 , \{ \cf3 | out = 0, freq = 440, decay = 0.99, mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkPluck\cf0 .ar(freq, decay, mul, add));\
+\}),\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 // could not get flute to work! (iz 050710)\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 SynthDef\cf0 (\cf4 \\stkflute\cf0 , \{ \cf3 | out = 0, freq=440,jetDelay=49, noisegain=0.15, jetRatio = 0.32, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkFlute\cf0 .ar(freq, jetDelay, noisegain, jetRatio, mul, add));\
+\}),\
+\
+// stkmandolin synthdef stops when the sound of the first pluck fades out\
+// Q: Is there a way to re-pluck a running StkMandolin? \
+\cf3 SynthDef\cf0 (\cf4 \\stkmandolin\cf0 , \{ \cf3 | out = 0, freq=520,   bodysize=64,  pickposition=64,  \
+	stringdamping=69,  stringdetune=10,  aftertouch=64, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\
+ 	var src;\
+ 	src = StkMandolin\cf0 .ar(freq, bodysize, pickposition, stringdamping, \
+		stringdetune, aftertouch, trig, mul, add);\
+	DetectSilence.ar(src, doneAction: 2);\
+	\cf3 Out\cf0 .ar(out, src);\
+\}),\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkmodalbar\cf0 , \{ \cf3 | out = 0, freq=440,  instrument=0, stickhardness=64, stickposition=64, \
+	vibratogain=20, vibratofreq=20, directstickmix=64,volume=64, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkModalBar\cf0 .ar(freq, instrument, stickhardness, stickposition, \
+		vibratogain, vibratofreq, directstickmix, volume, trig, mul, add));\
+\}),\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkmoog\cf0 , \{ \cf3 | out = 0, freq=440, filterQ=10, sweeprate=20, \
+	vibfreq=64, vibgain=0, gain=64, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkMoog\cf0 .ar(freq, filterQ, sweeprate, vibfreq, \
+		vibgain, gain, trig, mul, add));\
+\}),\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stksaxofony\cf0 , \{ \cf3 | out = 0, freq=220, reedstiffness=64, reedaperture=64, noisegain=20, \
+	blowposition=26, vibratofrequency=20, vibratogain=20, breathpressure=128, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkSaxofony\cf0 .ar(freq, reedstiffness, reedaperture, noisegain, \
+		blowposition, vibratofrequency, vibratogain, breathpressure, trig, mul, add));\
+\}),\
+\
+\
+\cf3 SynthDef\cf0 (\cf4 \\stkvoicform\cf0 , \{ \cf3 | out = 0, freq=440, vuvmix=64,  vowelphon=64, vibfreq=64,\
+	vibgain=20, loudness=64, trig = 1, \
+ 	mul = 1.0, add = 0.0 |\cf0 \
+	\cf3 Out\cf0 .ar(out, \cf3 StkVoicForm\cf0 .ar(freq, vuvmix, vowelphon, vibfreq, \
+		vibgain, loudness, trig, mul, add));\
+\})\
+]\
+\
+\
+\
+\
+\
+}
