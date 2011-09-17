@@ -9,22 +9,39 @@ Note: Since the Platform.userExtensionDir is now ignored by the git configuratio
 
 */
 LiltQuarks : Quarks {
+	classvar path2quarks; //mc
 	
 	*initClass {
+		var gitRoot = this.findGitRoot;
+		gitRoot !? { path2quarks = gitRoot +/+ "quarks.local"}; //do some more config within gitRoot…
 		Class.initClassTree(MenuHandler);	
-		this.addMenu;	
+		this.addMenu;
+	}
+	*findGitRoot {
+		var alias, path = Platform.userExtensionDir;
+		if (thisProcess.platform.isKindOf(UnixPlatform).not) {
+			("*•do not know how to find git dir on this platform").warn
+		}{
+			alias = ["LiltBase", "LiltBase alias"].detect{|alias| File.exists(path +/+ alias) };
+			if (alias.isNil) { "•could not find alias that points to folder 'LiltBase'".warn }{
+				^"" +/+ PathName((path +/+ alias).standardizePath).allFolders.reduce('+/+') }
+		};
+		^nil
 	}
 	
 	*menuItems {
 		^[
 			CocoaMenuItem.addToMenu("Code", "Configure core quarks", nil, {
-				LiltQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.core").gui;
+				if (path2quarks.isNil) { "•could not find local quark dir".warn 
+				}{ LiltQuarks(localPath: path2quarks +/+ "Lilt.core").gui }
 			}),
 			CocoaMenuItem.addToMenu("Code", "Configure project quarks", nil, {
-				LiltQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.projects").gui;
+				if (path2quarks.isNil) { "•could not find local quark dir".warn 
+				}{ LiltQuarks(localPath: path2quarks +/+ "iani.projects").gui }
 			}),
 			CocoaMenuItem.addToMenu("Code", "Configure draft quarks", nil, {
-				LiltQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.drafts").gui;
+				if (path2quarks.isNil) { "•could not find local quark dir".warn
+				}{ LiltQuarks(localPath: path2quarks +/+ "iani.drafts").gui }
 			}),
 		]
 	}
