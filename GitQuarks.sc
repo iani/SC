@@ -19,14 +19,20 @@ GitQuarks {
 	}
 	*addLocalQuarks {|baseFileName, quarksDir|
 		var quarks, alias = userExtensionDir +/+ baseFileName;
-		alias = [alias, alias + "alias"].detect{|alias| File.exists(alias)};
+		alias = [alias, alias + "alias", alias + "link"].detect{|file| File.exists(file) };
 		if (alias.isNil) { ("¥could not find alias that points to git base:" ++ baseFileName).warn }{
-			quarks = PathName("" +/+ PathName(alias.standardizePath).allFolders.reduce('+/+') 
+			alias = this.annoyingBrokenStandardizePathWorkaround(alias);
+			quarks = PathName("" +/+ PathName(alias).allFolders.reduce('+/+') 
 				+/+ quarksDir).folders.collect{|path| Quarks(localPath: path.fullPath.drop(-1)) };
 			quarkMenu !? { 
 				SCMenuSeparator(quarkMenu); index = index + 1;
 				quarks.do{|quark| this.add2Menu(quark.local.path.basename, {quark.gui}) } } 
 		}
+	}
+	*annoyingBrokenStandardizePathWorkaround {|path|
+		if (("if [ -L '" ++ path ++ "' ]; then echo 0; fi").unixCmdGetStdOut[0].isNil) {
+			^path.standardizePath
+		}{ ^("cd" + path.escapeChar($ ) + "; pwd -P").unixCmdGetStdOut.drop(-1) }
 	}
 }
 
