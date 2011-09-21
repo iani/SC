@@ -4,24 +4,30 @@ Arrange Document windows so that they fill the entire area of the currently avai
 */
 
 Panes {
-	classvar <>listenerY = 300, <>twoPaneListenerHeight = 300;
-	classvar <>listenerXdelta=20;
-	classvar <>panePos;
-	classvar <>listenerPos, <>tryoutPos;
-	classvar <currentPositionAction;
-	classvar <>tryoutName = "tryout.scd";
-	classvar <>defaultArrangementAction;
+	classvar <prefs, prefsFile="PanesPrefs.scd";
+	classvar <>panePos, <>protoPanePos, <>listenerPos, <>tryoutPos;
+	classvar <currentPositionAction, <>defaultArrangementAction;
+	
+	*defaults{
+		 ^(
+			listenerY: 200, listenerXdelta: 20 ,menuHeight: 22, multiPaneListenerHeight: 300
+			,multiPaneHeight: Window.screenBounds.height - 22
+			,defaultArrangementMethod: \arrangeMulitPanes, tryoutName: "tryout.scd"
+		)
+	}
 
 	*initClass { StartUp.add(this); }
 
 	*doOnStartUp {
+		this.loadPrefs; //mc
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;
 		BufferResource.addMenu;
 		{ this.start; }.defer(2); // wait for Lion to reopen last session windows before starting
 	}
-
+	*loadPrefs{ prefs = ().putAll(UserPrefs.load(prefsFile, this.defaults)) }
+	
 	*start { this.activate } // synonym
 	*activate {
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
@@ -31,14 +37,12 @@ Panes {
 		Document.allDocuments do: this.setDocActions(_);
 //		postf("Panes: activate method, defaultArrangementAction is: %\n", defaultArrangementAction);
 		if (defaultArrangementAction.isNil) {
-			defaultArrangementAction = { this.arrange2Panes; };
+			defaultArrangementAction = { this.perform(prefs.defaultArrangementMethod) };
 		};
 		defaultArrangementAction.value;
 		Dock.showDocListWindow;
 		// confuses post and Untitled windows if not deferred on startup:
-		{
-			this.openTryoutWindow;
-		}.defer(0.5); 
+		{ this.openTryoutWindow }.defer(0.5); 
 	}
 
 	*stop { this.deactivate } // synonym
@@ -60,19 +64,25 @@ Panes {
 			this.rearrangeAllDocs;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "multi-pane doc arrangement", [">", true, false], {
-			this.arrange2Panes;
+			this.arrangeMulitPanes;
 			this.rearrangeAllDocs;
 		}),
-		CocoaMenuItem.addToMenu("Utils", "switch window pos (in 2 panes)", ["A", false, false],
+		CocoaMenuItem.addToMenu("Utils", "switch window pos (mulit-pane mode)", ["A", false, false],
 		{
 			var doc = Document.current;
-			var pos = doc.bounds;
-			var done = false;
+//mc ?!		var pos = doc.bounds;
+//mc	?!		var done = false;
 			currentPositionAction.(doc);
+		}),
+		CocoaMenuItem.addToMenu("Utils", "maximize window (mulit-pane mode)", ["M", false, false],
+		{
+			this.maximizeDocHight(Document.current);
 		}),
 		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["R", false, false],
 		{	this.rearrangeAllDocs;
 		}),
+		
+//why is all the following in Panes? Could we not modularise Panes any further? 
 		CocoaMenuItem.addToMenu("Utils", "Boot/Quit default server", ["B", true, false], { 
 			if (Server.default.serverRunning) { Server.default.quit } { Server.default.boot };
 		}),
@@ -128,7 +138,7 @@ Panes {
 	}
 
 	*openTryoutWindow {
-		var tryout, path;
+		var tryout, path, tryoutName = prefs.tryoutName;
 		if ((tryout = Document.allDocuments.detect({ | d | d.name == tryoutName })).isNil) {
 		path = Platform.userAppSupportDir ++ "/" ++ tryoutName;
 			if (path.pathMatch.size == 0) {
@@ -140,30 +150,31 @@ Panes {
 	}
 
 	*arrange1Pane {
-		var width;
+		var width, multiPaneWidth = this.multiPaneWidth, listenerY = prefs.listenerY;
 		width = Dock.width;
-		listenerPos = Rect(0, listenerY, this.twoPaneWidth - listenerXdelta, //mc
+		listenerPos = Rect(0, listenerY, multiPaneWidth - prefs.listenerXdelta, //mc
 			Window.screenBounds.height - listenerY);
-		tryoutPos = Rect(0, 0, this.twoPaneWidth, listenerY - 28);
-		panePos = Rect(this.twoPaneWidth, 0, this.twoPaneWidth, Window.screenBounds.height);
+		tryoutPos = Rect(0, 0, multiPaneWidth, listenerY - 28);
+		panePos = Rect(multiPaneWidth, 0, multiPaneWidth, Window.screenBounds.height);
 		this changeArrangement: { | doc | this.placeDoc(doc) };
 	}
 
-	*arrange2Panes {
-		listenerPos = Rect(0, 0, this.twoPaneWidth - listenerXdelta, twoPaneListenerHeight - 25);//mc
-		panePos = Rect(0, twoPaneListenerHeight, this.twoPaneWidth, 
-			Window.screenBounds.height - twoPaneListenerHeight
-		);
-		tryoutPos = Rect(0, twoPaneListenerHeight, this.twoPaneWidth, 
-			Window.screenBounds.height - twoPaneListenerHeight
-		);
+	*arrangeMulitPanes {
+		var multiPaneWidth = this.multiPaneWidth, mPLH = prefs.multiPaneListenerHeight;
+		var multiPaneHeight = prefs.multiPaneHeight;
+		var screenTop = Window.screenBounds.height - prefs.menuHeight;
+
+		listenerPos = Rect(0, 0, multiPaneWidth - prefs.listenerXdelta, mPLH); //mc
+		tryoutPos = Rect(0, mPLH, multiPaneWidth, screenTop - mPLH);
+		panePos = Rect(multiPaneWidth, screenTop - multiPaneHeight, multiPaneWidth, multiPaneHeight);
+		protoPanePos = panePos.copy;
 		this changeArrangement: { | doc | 
 			this.placeDoc(doc);
-			this.next2Pane;
+			this.nextPane;
 		};
 	}
 
-	*twoPaneWidth { ^min(640, Window.screenBounds.width / 2) }
+	*multiPaneWidth { ^min(640, Window.screenBounds.width / 2) }
 
 	*changeArrangement { | arrangeFunc |
 		currentPositionAction = arrangeFunc;
@@ -177,27 +188,32 @@ Panes {
 	
 	*placeDoc { | doc |
 		if (doc.reallyIsListener) { ^doc.bounds = listenerPos };
-		if (doc.name == tryoutName) { ^doc.bounds = tryoutPos };
+		if (doc.name == prefs.tryoutName) { ^doc.bounds = tryoutPos };
 		doc.bounds = panePos;
 	}
 
-	*next2Pane {
-		var left;
-		left = this.twoPaneWidth + panePos.left;
-		if ((left + this.twoPaneWidth) > Window.screenBounds.width) {
-			panePos.left = 0;
-		}{
-			panePos.left = left
-		};
-		if (panePos.left == 0) {
-			panePos.top = twoPaneListenerHeight;
-			panePos.height = Window.screenBounds.height - twoPaneListenerHeight;
-		}{
-			panePos.top = 0;
-			panePos.height = Window.screenBounds.height;
-		}
+	*nextPane {
+		var left, top, multiPaneWidth = this.multiPaneWidth, multiPaneHeight = prefs.multiPaneHeight;
+		var screenTop = Window.screenBounds.height - prefs.menuHeight;
+		if (panePos.left == 0) { panePos = protoPanePos.copy }{
+			top = panePos.top - multiPaneHeight;
+			if (top >= 0) { panePos.top = top }{
+				left = panePos.left + multiPaneWidth;
+				if ((left + this.multiPaneWidth) > Window.screenBounds.width) {
+					panePos = tryoutPos.copy;		
+				}{
+					panePos.left = left;
+					panePos.top = screenTop - multiPaneHeight;
+		}}};
 	}
-
+	*maximizeDocHight{
+		var height, doc = Document.current;
+		if (doc.reallyIsListener.not && (doc.name != prefs.tryoutName) && doc.bounds.left != 0) {
+			height = Window.screenBounds.height - prefs.menuHeight;
+			doc.bounds = doc.bounds.top_(height).height_(height)
+		}	
+	}
+	
 	*docOpened { | doc |
 // why does this post twice always???????????
 //		postf("Panes init doc actions docOpened: %\n", doc.name).postln;
