@@ -1,4 +1,7 @@
 /* 
+
+TODO: Rename EventStream -> EnvirStream to prevent conflict with Help file EventStream.html in Common library of SC release. 
+
 Pattern and stream support for looping Functions
 
 The Stream stores itself in the current environment, that way each environment can have its own namespace, and name reuse becomes possible 

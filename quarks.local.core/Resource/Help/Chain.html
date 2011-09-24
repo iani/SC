@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Style-Type" content="text/css">
 <title></title>
 <meta name="Generator" content="Cocoa HTML Writer">
-<meta name="CocoaVersion" content="1038.35">
+<meta name="CocoaVersion" content="1138">
 <style type="text/css">
 p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
 p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
@@ -98,12 +98,12 @@ span.Apple-tab-span {white-space:pre}
 <p class="p12"><br></p>
 <p class="p10">//: End of examples</p>
 <p class="p4"><br></p>
-<p class="p3"><b>Storing a chain as UniqueObject</b></p>
+<p class="p3"><b>Storing a chain as Resource</b></p>
 <p class="p12"><br></p>
-<p class="p3">One can simplify the code even further by storing a chain as a UniqueObject which is accessibe through messages to a symbol.<span class="Apple-converted-space"> </span></p>
+<p class="p3">One can simplify the code even further by storing a chain as a Resource which is accessibe through messages to a symbol.<span class="Apple-converted-space"> </span></p>
 <p class="p3">To do this, one sends the symbol the message 'chain':<span class="Apple-converted-space"> </span></p>
 <p class="p13"><br></p>
-<p class="p10">//:Start and stop a chain as UniqueObject (run with Command-shift-x)</p>
+<p class="p10">//:Start and stop a chain as Resource (run with Command-shift-x)</p>
 <p class="p8"><span class="s3">\simple</span>.chain(<span class="s2">Pn</span>({ { <span class="s2">SinOsc</span>.ar(400 + 400.rand.dup, 0, 0.1) }.play.dur(0.01, 0.05) }) );</p>
 <p class="p8">1.5.wait;</p>
 <p class="p8"><span class="s3">\simple</span>.chain.stop;</p>
@@ -141,7 +141,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p8">);</p>
 <p class="p10">//: ---</p>
 <p class="p12"><br></p>
-<p class="p3">The code above is longer than in the example before, but it can be shortened by using pseq, one of the speciallized methods for binding pattern streams to symbols:<span class="Apple-converted-space"> </span></p>
+<p class="p3">The code above is longer than in the example before, but it can be shortened by using pseq, one of the specialized methods for binding pattern streams to symbols:<span class="Apple-converted-space"> </span></p>
 <p class="p12"><br></p>
 <p class="p10">//:Example of Symbol:pseq</p>
 <p class="p9">Chain<span class="s1">(</span></p>

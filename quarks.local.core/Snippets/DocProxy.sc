@@ -70,12 +70,18 @@ DocProxy {
 		CocoaMenuItem.add(["JITlib", "Start all ProxySpaces"], {
 			ProxySpace.all do: this.startAllNodes(_);
 		}).setShortCut("<", false, true);
-		CocoaMenuItem.add(["JITlib", "Start History"], {
+		CocoaMenuItem.add(["JITlib", "Start History Recording"], {
 			History.start;
 		}).setShortCut("h", false, true);
-		CocoaMenuItem.add(["JITlib", "Stop History"], {
-			History.stop;
+		CocoaMenuItem.add(["JITlib", "End History Recording"], {
+			History.end;
 		}).setShortCut("H", false, true);
+		CocoaMenuItem.add(["JITlib", "Play History"], {
+			History.play;
+		}).setShortCut("i", false, true);
+		CocoaMenuItem.add(["JITlib", "Stop History Playback"], {
+			History.stop;
+		}).setShortCut("I", false, true);
 		CocoaMenuItem.add(["JITlib", "Show History"], {
 			History.document;
 		}).setShortCut("h", true, true);
