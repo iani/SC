@@ -12,6 +12,7 @@ Panes {
 		 ^(
 			listenerY: 200, listenerXdelta: 20 ,menuHeight: 22, multiPaneListenerHeight: 300
 			,multiPaneHeight: Window.screenBounds.height - 22
+			,multiPaneAreaWidth: Window.screenBounds.width
 			,defaultArrangementMethod: \arrangeMulitPanes, tryoutName: "tryout.scd"
 		)
 	}
@@ -40,7 +41,7 @@ Panes {
 			defaultArrangementAction = { this.perform(prefs.defaultArrangementMethod) };
 		};
 		defaultArrangementAction.value;
-		Dock.showDocListWindow;
+		Dock.showDocListWindow(prefs.multiPaneAreaWidth);
 		// confuses post and Untitled windows if not deferred on startup:
 		{ this.openTryoutWindow }.defer(0.5); 
 	}
@@ -80,6 +81,11 @@ Panes {
 		}),
 		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["R", false, false],
 		{	this.rearrangeAllDocs;
+		}),
+		
+//quick add, but very helpful...	
+		CocoaMenuItem.addToMenu("Utils", "all GUIs front", ["g", true, false],
+		{	Window.allWindows.do{|w| w.front}
 		}),
 		
 //why is all the following in Panes? Could we not modularise Panes any further? 
@@ -199,7 +205,7 @@ Panes {
 			top = panePos.top - multiPaneHeight;
 			if (top >= 0) { panePos.top = top }{
 				left = panePos.left + multiPaneWidth;
-				if ((left + this.multiPaneWidth) > Window.screenBounds.width) {
+				if ((left + this.multiPaneWidth) > prefs.multiPaneAreaWidth) {
 					panePos = tryoutPos.copy;		
 				}{
 					panePos.left = left;
