@@ -1,14 +1,29 @@
 /*
 
+IZ 20110925
 
-Manage local quarks of lilt library:
-- Create 3 menu items for Configuring core, project and draft quarks
-- Modify window height to fit the list of all quarks in a directory better. 
+Repository Quarks: Manage repository quarks, that is quarks residing in local directories anywhere in the system. These quarks may be parts of Git repositories, or may just be in any local folder. 
 
-Note: Since the Platform.userExtensionDir is now ignored by the git configuration of Lilt2, quark installation works in the standard way through symbolic links. There is no need to copy or remove the quarks files to the Extensions. 
+RepQuarks builds a menu that has one item for each rep-quark directory found in the system. Each item in the menu opens a GUI window for installing or un-installing any quarks in the rep-quark directory. 
+
+There are two ways to add a quark-directory to the RepQuarks menu: 
+
+1. 	Place the quark directory inside the user application support directory
+ 	(~/Library/Application Support/SuperCollider),
+ 	- at the root level, 
+ 	- and name it quarks.<anything>, 
+ 		where <anything> is a name of your choice. 
+ 	The name of your choice will appear in the menu. 
+2. 	Define an empty subclass of RepQuarks and use it in the following way: 
+	2.1 	Place he definition file of the subclass inside the directory of the quarks that you want 
+		to include. The definition file should be at the top level of your quarks directory. 
+	2.2. Make an alias of the definition file and place it inside the Extensions folder in the
+		user application support directory. 
 
 */
-LiltQuarks : Quarks {
+
+RepQuarks : Quarks {
+	classvar <paths;
 	
 	*initClass {
 		Class.initClassTree(MenuHandler);	
@@ -16,17 +31,32 @@ LiltQuarks : Quarks {
 	}
 	
 	*menuItems {
-		^[
-			CocoaMenuItem.addToMenu("Code", "Configure core quarks", nil, {
-				LiltQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.core").gui;
-			}),
-			CocoaMenuItem.addToMenu("Code", "Configure project quarks", nil, {
-				LiltQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.projects").gui;
-			}),
-			CocoaMenuItem.addToMenu("Code", "Configure draft quarks", nil, {
-				LiltQuarks(localPath: Platform.userAppSupportDir +/+ "quarks.local.drafts").gui;
-			}),
-		]
+		^this.makeMenus(this.userExtensionQuarks ++ this.aliasedSubclassQuarks);
+	}
+	
+	*makeMenus { | quarkMenuSpecs |
+		var name, path;
+		paths = quarkMenuSpecs.slice(nil, 1);
+		^quarkMenuSpecs collect: { | spec, i |
+			#name, path = spec;
+			CocoaMenuItem.addToMenu("Quarks", name, nil, {
+				this.new(localPath: paths[i].postln).gui;
+			});
+		}
+	}
+	
+	*userExtensionQuarks {
+		var paths, specs;
+		paths = (Platform.userAppSupportDir +/+ "/quarks.*").pathMatch;
+		specs = paths collect: { | p | [p.basename[7..], p] };
+		^specs ? [];
+	}
+	
+	*aliasedSubclassQuarks {
+		var specs;
+		specs = this.subclasses collect: { | sc | 
+			[sc.name.asString, sc.filenameSymbol.asString.dirname +/+ "/"] };
+		^specs ? [];
 	}
 
 	// a gui for Quarks. 2007 by LFSaw.de
@@ -59,7 +89,7 @@ LiltQuarks : Quarks {
 		scrB = GUI.window.screenBounds;
 //		height = min(quarks.size * 25 + 120, scrB.height - 60);
 //		IZ mod: add more vertical space to fit all quarks in the pane
-		height = min(quarks.size.postln * 25 + 170, scrB.height - 60);
+		height = min(quarks.size * 25 + 170, scrB.height - 60);
 		window = GUI.window.new(this.name, Rect.aboutPoint( scrB.center, 250, height.div( 2 )));
 		flowLayout = FlowLayout( window.view.bounds );
 		window.view.decorator = flowLayout;
