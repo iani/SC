@@ -4,17 +4,18 @@ IZ 20110925
 
 Repository Quarks: Manage repository quarks, that is quarks residing in local directories anywhere in the system. These quarks may be parts of Git repositories, or may just be in any local folder. 
 
-RepQuarks builds a menu that has one item for each rep-quark directory found in the system. Each item in the menu opens a GUI window for installing or un-installing any quarks in the rep-quark directory. 
+RepQuarks builds a menu that has one item for each rep-quark directory found in the system. Each item in the menu opens a GUI window for installing or un-installing any quarks in the rep-quark directory. A rep-quark repository is a folder containing quarks, and uses exactly the same format as a regular Quarks repository (a "DIRECTORY" folder which lists and gives info for the quarks included, see also Quarks help file).
 
-There are two ways to add a quark-directory to the RepQuarks menu: 
+There are two alternative ways to add a quark-directory to the RepQuarks menu: 
 
-1. 	Place the quark directory inside the user application support directory
+1. 	_Either:_ Place the quark directory inside the user application support directory
  	(~/Library/Application Support/SuperCollider),
  	- at the root level, 
  	- and name it quarks.<anything>, 
  		where <anything> is a name of your choice. 
  	The name of your choice will appear in the menu. 
-2. 	Define an empty subclass of RepQuarks and use it in the following way: 
+
+2. 	_Or:_ Define an empty subclass of RepQuarks and use it in the following way: 
 	2.1 	Place he definition file of the subclass inside the directory of the quarks that you want 
 		to include. The definition file should be at the top level of your quarks directory. 
 	2.2. Make an alias of the definition file and place it inside the Extensions folder in the
