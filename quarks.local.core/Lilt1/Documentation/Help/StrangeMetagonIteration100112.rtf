@@ -1,0 +1,92 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf540
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;}
+\deftab560
+\pard\pardeftab560\ql\qnatural
+
+\f0\fs18 \cf2 /* iz Tuesday; January 12, 2010: 11:51 AM\
+\
+Strange shapes that result from letting one parameter "plex" take successively values from the arithmetic series 1, 2, 3 ...\
+\
+Here showing "plex" values from 1 to 10, and realizing each time 2 variants: one with 25 iterations and 50 iterations. \
+\
+\
+*/\cf0 \
+\
+\
+(\
+f = \{ \cf3 | plex = 1, iterations = 25 |\cf0 \
+\cf3 Turtle\cf0 .draw(\{ \cf3 | t |\cf0 \
+	\cf3 var\cf0  metagonSide = 64;\
+	\cf3 Pseq\cf0 (\{ \cf3 | i |\cf0 \
+		\cf3 Pfuncn\cf0 (\{ t.turn(2 ** (i * plex) * pi / (i + 1 ** 1.001)); t.move(metagonSide, 1) \}, i + 2)\
+	\} ! iterations\
+	, 1)\
+\},  x: 400, y: 400,rate: 0);\
+\};\
+\
+r = \{\
+	(1..10) do: \{ \cf3 | plex |\cf0 \
+		[25, 50] do: \{ \cf3 | iterations |\cf0 \
+			f.(plex, iterations);\
+			5.wait;\
+		\}\
+	\}\
+\
+\}.fork(\cf3 AppClock\cf0 );\
+\
+)\
+\
+\
+\cf2 // variants exploring values of plex (1..10) / 10 as well as (1..10) / 100\cf0 \
+\
+\cf2 // A prepare -------------------------\cf0 \
+(\
+f = \{ \cf3 | plex = 1, iterations = 25 |\cf0 \
+\cf3 Turtle\cf0 .draw(\{ \cf3 | t |\cf0 \
+	\cf3 var\cf0  metagonSide = 64;\
+	\cf3 Pseq\cf0 (\{ \cf3 | i |\cf0 \
+		\cf3 Pfuncn\cf0 (\{ t.turn(2 ** (i * plex) * pi / (i + 1 ** plex)); t.move(metagonSide, 1) \}, i + 2)\
+	\} ! iterations\
+	, 1)\
+\},  x: 400, y: 400,rate: 0);\
+\};\
+\
+r = \{ \cf3 | series |\cf0  \
+\{\
+	series do: \{ \cf3 | plex |\cf0 \
+		[25, 50] do: \{ \cf3 | iterations |\cf0 \
+			f.(plex, iterations);\
+			5.wait;\
+		\}\
+	\}\
+\}.fork(\cf3 AppClock\cf0 );\
+\}\
+)\
+\
+\cf2 // B run ------------------------- !!!\cf0 \
+\cf2 // 1\cf0 \
+r.((1..10) / 10);   \cf2 // wait for this to finish first\cf0 \
+\
+\cf2 // 2\cf0 \
+r.((1..10) / 100);\
+\
+\cf2 // Now vary the drawing function: \cf0 \
+(\
+f = \{ \cf3 | plex = 1, iterations = 25 |\cf0 \
+\cf3 Turtle\cf0 .draw(\{ \cf3 | t |\cf0 \
+	\cf3 var\cf0  metagonSide = 64;\
+	\cf3 Pseq\cf0 (\{ \cf3 | i |\cf0 \
+		\cf3 Pfuncn\cf0 (\{ t.turn(2 ** (i * plex) * pi / (i + 1 ** plex)); t.move(metagonSide * (i + 1) ** 0.5, 1) \}, i + 2)\
+	\} ! iterations\
+	, 1)\
+\},  x: 400, y: 400,rate: 0);\
+\};\
+)\
+\
+\
+\
+\
+\
+\
+}
