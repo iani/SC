@@ -13,14 +13,14 @@ One can store other scripts in this folder as backups, alternatives, or modular 
 // ScriptBrowser.at('Sessions', 'Default Session');
 
 // Server.default.boot; // boot the default server
-Samples(Server.default).load("./sounds/a11wlk*");
-Samples(Server.default).load("./sounds/break*");
-Samples(Server.default).load("./sounds/Sined*");
+// Samples(Server.default).load("./sounds/a11wlk*");
+// Samples(Server.default).load("./sounds/break*");
+// Samples(Server.default).load("./sounds/Sined*");
 
 // Make a window for opening/closing browsers for various objects: 
 ScriptBrowser.loadPath('Startup', 'BrowserControlWindow');
 // Load all files in folder "Utilities" in a session with that name: 
-ScriptBrowser.loadPath('Includes', 'UtilitiesSession');
+// ScriptBrowser.loadPath('Includes', 'UtilitiesSession');
 
 // ScriptPatch.loadDefault; // load default script-patch
 
