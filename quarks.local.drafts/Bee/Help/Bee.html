@@ -36,6 +36,16 @@ span.Apple-tab-span {white-space:pre}
 <p class="p2"><br></p>
 <p class="p1">Bee.draw({ | b, i | b.turn(1 / 0.3); b.move(40.0.rand).pos }, repeat: 8000, rate: 0.0);</p>
 <p class="p2"><br></p>
+<p class="p1">//:---</p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p1">Bee.draw({ | b, i |<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>b.turn(1 / 0.3); b.move(40.0.rand);</p>
+<p class="p1"><span class="Apple-tab-span">	</span>NetAddr("127.0.0.1", 12345).sendMsg("/xy", b.pos.x, b.pos.y);</p>
+<p class="p1"><span class="Apple-tab-span">	</span>postf("I just sent to python this message: % % %\n", "/xy", b.pos.x, b.pos.y);</p>
+<p class="p1">}, repeat: 8000, rate: 0.2);</p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
 <p class="p1">//:--</p>
 <p class="p2"><br></p>
 <p class="p1">(</p>
