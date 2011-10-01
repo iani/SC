@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #c51913}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #2608ca}
+span.s1 {color: #2608ca}
+span.s2 {color: #000000}
+span.s3 {color: #c51913}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">/* iz Tuesday; January 12, 2010: 1:57 PM</p>
+<p class="p1">How to use Pfuncn inside other patterns?<span class="Apple-converted-space"> </span></p>
+<p class="p1">*/</p>
+<p class="p2"><br></p>
+<p class="p1">// 2 first tries... nothing in particular ...</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> sides = [10, 20, 30, 40, 50].scramble;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>(sides collect: { <span class="s1">| ms |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(2 * pi / (ms + 3)); t.move(ms, 1) }, 10)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>}, 5)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)<span class="Apple-tab-span">	</span></p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> sides = [5, 20, 30, 40, 50];</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turn = 0.4;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>({<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>sides = sides.scramble * [1, -1].choose;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>(sides collect: { <span class="s1">| ms |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn * 2 * pi / (ms + 3)); t.move(ms, 1) }, 10) })</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} ! 40, 1)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)<span class="Apple-tab-span">	</span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">// Now more focussed patterns:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">// We are trying to draw a spiral of sorts several times, while changing the direction of<span class="Apple-converted-space"> </span></p>
+<p class="p1">// turn of the spiral at each new spiral.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">// First a wrong way - it always produces the same figure</p>
+<p class="p1">// This is because the value of "turn" that is used by Pfuncn is only the *last* one,<span class="Apple-converted-space"> </span></p>
+<p class="p1">// Pecause the function of Pfuncn is evaluated _after_ the Pfuncn is created.<span class="Apple-converted-space"> </span></p>
+<p class="p1">// So, this is not the right way, see below how to do it right</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>({<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>((1..10) collect: { <span class="s1">| ms |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = [-pi / 6, pi / 6].choose.postln;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn); t.move(ms, 1) }, 5) })</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} ! 10, 1)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">// This is the right way because now we can vary the turn angle with a stream</p>
+<p class="p1">// Preparatory. We are not yet varying the angle here.</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> metagonSide, side;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>metagonSide = <span class="s1">Pn</span>(<span class="s1">Pseries</span>(1, 1, 10)).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>Plazy<span class="s2">({</span></p>
+<p class="p1"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>side = metagonSide.next;<span class="Apple-tab-span">	</span></span>// this will work because it is inside Plazy</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(pi / 6); t.move(side, 1) }, 5)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span>, 100)</p>
+<p class="p3">},<span class="Apple-converted-space">  </span>x: 400, y: 400,rate: 0);</p>
+<p class="p3">)<span class="Apple-tab-span">	</span></p>
+<p class="p2"><br></p>
+<p class="p1">// Half-way to the solution: Here is how we vary the turn angle with a stream</p>
+<p class="p1">// We vary at every 5th vertex, instead of at every complete spiral</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> sideStream, side;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turnStream, turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>sideStream = <span class="s1">Pn</span>(<span class="s1">Pseries</span>(1, 1, 10)).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>turnStream = <span class="s1">Prand</span>([-pi / 6, pi / 6], <span class="s1">inf</span>).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>Plazy<span class="s2">({</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>side = sideStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = turnStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn.next); t.move(side, 1) }, 5)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span>, 100)</p>
+<p class="p3">},<span class="Apple-converted-space">  </span>x: 400, y: 400,rate: 0);</p>
+<p class="p3">)<span class="Apple-tab-span">	</span></p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p2"><br></p>
+<p class="p1">// Now the solution: Varying at every complete spiral</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> sideStream, side;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turnStream, turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>sideStream = <span class="s1">Pn</span>(<span class="s1">Pseries</span>(1, 1, 10)).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>turnStream = <span class="s1">Prand</span>([-pi / 6, pi / 6], <span class="s1">inf</span>).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>Plazy<span class="s2">({</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = turnStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Plazy</span>({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>side = sideStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn.next); t.move(side, 1) }, 5);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>, 10)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span>, 70)</p>
+<p class="p3">},<span class="Apple-converted-space">  </span>x: 400, y: 400,rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">// A regular pattern built on the same principle</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> sideStream, side;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turnStream, turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>sideStream = <span class="s1">Pn</span>(<span class="s1">Pseries</span>(1, 1, 10)).asStream; <span class="s3">// Pn repeats infinitely per default</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>turnStream = <span class="s1">Pseq</span>([-pi / 6, pi / 6, pi / 6, -pi / 6, pi / 6], <span class="s1">inf</span>).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>Plazy<span class="s2">({</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = turnStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Plazy</span>({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>side = sideStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn.next); t.move(side, 1) }, 5);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>, 10)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span>, 70)</p>
+<p class="p3">},<span class="Apple-converted-space">  </span>x: 400, y: 400,rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p1">// and another ...</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> sideStream, side;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turnStream, turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>sideStream = <span class="s1">Pn</span>(<span class="s1">Pseries</span>(1, 1, 10)).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>turnStream = <span class="s1">Pseq</span>([-pi / 6, pi / 6], <span class="s1">inf</span>).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>Plazy<span class="s2">({</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = turnStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Plazy</span>({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>side = sideStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn.next); t.move(side, 1) }, 5);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>, 10)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span>, 70)</p>
+<p class="p3">},<span class="Apple-converted-space">  </span>x: 400, y: 400,rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p1">// and yet another ...</p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> sideStream, side;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turnStream, turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> left, right;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>left = pi / 6;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>right = left.neg;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>sideStream = <span class="s1">Pn</span>(<span class="s1">Pseries</span>(1, 1, 10)).asStream;</p>
+<p class="p1"><span class="s2"><span class="Apple-tab-span">	</span></span>// This stream produces the series: l r r l r l r r l r l r l r r l r l r l r l r r ...</p>
+<p class="p1"><span class="s2"><span class="Apple-tab-span">	</span>turnStream = p({ <span class="Apple-tab-span">	</span></span>// This creates a Prout</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> n = 0;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>loop {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>n = n + 1;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>n do: { left.yield; right.yield };</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>right.yield;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};<span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>Plazy<span class="s2">({</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = turnStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pn</span>(</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Plazy</span>({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>side = sideStream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn.next); t.move(side, 1) }, 5);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>, 10)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>})</p>
+<p class="p3"><span class="Apple-tab-span">	</span>, 150)</p>
+<p class="p3">},<span class="Apple-converted-space">  </span>x: 400, y: 400,rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p1">// Some other simple variations</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> metagonSide = 64;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> side;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>metagonSide = <span class="s1">Pwhite</span>(1, 20, <span class="s1">inf</span>).asStream;</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>Pn<span class="s2">(</span>Plazy<span class="s2">({ </span>| i |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>side = metagonSide.next.postln;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(2pi / 10); t.move(side, 1) }, 12)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>}), 5)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>x: 400, y: 400,rate: 0);</p>
+<p class="p3">)<span class="Apple-tab-span">	</span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> ms = 10;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>turn = <span class="s1">Prand</span>([-pi / 6, pi / 6, pi / 6, pi / 6], <span class="s1">inf</span>).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>({<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>((1..10) collect: { <span class="s1">| ms |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn.next); t.move(ms, 1) }, 5) })</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} ! 10, 1)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> ms = 100;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turnstream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>turnstream = <span class="s1">Prand</span>([-pi / 6, pi / 6, pi / 6, pi / 6], <span class="s1">inf</span>).asStream;</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>Pseq<span class="s2">({</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = turnstream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>((1..10) collect: { <span class="s1">| ms |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn); t.move(ms, 1) }, 5) })</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} ! 10, 1)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> ms = 100;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turnstream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>turnstream = <span class="s1">Prand</span>([-pi / 6, pi / 6, pi / 6, pi / 6], <span class="s1">inf</span>).asStream;</p>
+<p class="p4"><span class="s2"><span class="Apple-tab-span">	</span></span>Pseq<span class="s2">({</span></p>
+<p class="p1">//<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = turnstream.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>((1..10) collect: { <span class="s1">| ms |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turnstream.next); t.move(ms, 1) }, 5) })</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} ! 10, 1)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> ms = 10;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>({<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pseq</span>((1..10) collect: { <span class="s1">| ms |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>turn = [-pi / 6, pi / 7, -pi / 7, pi / 6].choose.postln;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn); t.move(ms, 1) }, 5) })</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>} ! 10, 1)<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)<span class="Apple-tab-span">	</span></p>
+<p class="p2"><br></p>
+<p class="p3">(</p>
+<p class="p3">t = <span class="s1">Turtle</span>.draw({ <span class="s1">| t |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> turn;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> ms = 10;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>turn = <span class="s1">Pseq</span>([pi / 3, -pi / 3], 10).asStream;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pfuncn</span>({ t.turn(turn.next); t.move(ms, 1) }, 25);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>},<span class="Apple-converted-space">  </span>rate: 0);</p>
+<p class="p3">)<span class="Apple-tab-span">	</span></p>
+</body>
+</html>

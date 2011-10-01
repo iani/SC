@@ -6,7 +6,7 @@ Chain {
 		^this.newCopyArgs(pattern, envir ? ()).init.start;
 	}
 	
-	init { CmdPeriod.doOnceFirst(this); }
+	init { /* { pattern.postln; } ! 5; */ CmdPeriod.doOnceFirst(this); }
 
 	cmdPeriod { this.stop; }
 
@@ -64,6 +64,7 @@ ChainLink {
 			envir use: {
 				var dur;
 				dur = times.(envir).next;
+//				postf("ChainLink:sched: times: %, dur: %\n", times, dur);
 				if (dur.isNil) {
 					onEnd.(envir);
 				}{
@@ -79,6 +80,11 @@ ChainLink {
 		times = nil;
 		func = nil;	
 	}
+	
+	repeat { | n = 1 |
+		// utility: wrap this ChainLink in Pn to repeat alone in a Chain
+		^Pn(this, n);
+	}
 }
 /*
 Pattern and stream support for looping Functions
@@ -87,6 +93,12 @@ Pattern and stream support for looping Functions
 // Help for coding chains
 + Function {
 	
+	/* 
+	repeat { | timePat, envir, dtime = 0, clock, key = \dur |
+	
+	}
+	*/
+
 	/* transform a function into a function that makes an EventStream */
 	chain { | timePat, envir, dtime = 0, clock, key = \dur | 
 		^{ this.stream(

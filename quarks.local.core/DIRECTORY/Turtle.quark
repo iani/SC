@@ -1,0 +1,14 @@
+(
+	\name: "Turtle",
+	\path: "Turtle",
+	\summary: "Simple turtle graphics (a-la Logo), driven by patterns. See also: Bee",
+	\helpdoc: "Help/Turtle.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "January 2010",
+	\url: "http://earlab.org",
+	\dependencies: []
+)
+
