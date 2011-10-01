@@ -41,8 +41,8 @@ ScriptBrowser.loadPath('Startup', 'Enable OSC commands');
 ScriptBrowser.makeGui;		// Make ScriptBrowser browser last to have window foremost
 
 // Move message window below Script Browser:
-Document.listener.bounds = Rect(0, -22, 630, 400).fromTop.fromRight;
-Document.listener.front;
+// Document.listener.bounds = Rect(0, -22, 630, 400).fromTop.fromRight;
+// Document.listener.front;
 
-Session.select('Untitled Session');
+// Session.select('Untitled Session');
 
