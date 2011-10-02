@@ -47,6 +47,72 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span>{ b.turn(0.1); b.move(4) }.repeat(100, 0.1);</p>
 <p class="p3">});</p>
 <p class="p1"><br></p>
+<p class="p2">//:Starting a new polygon at a separated location</p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> newPoly;</p>
+<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> length, angle_d;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>newPoly =<span class="Apple-converted-space">  </span><span class="s1">Polygon</span>((20 rrand: 480)@(20 rrand: 480));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly.graph add: newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly = newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01);</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p2">//:Repeatedly choosing amongst 2 different patterns at random</p>
+<p class="p1"><br></p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> newPoly;</p>
+<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> length, angle_d;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>newPoly =<span class="Apple-converted-space">  </span><span class="s1">Polygon</span>((20 rrand: 480)@(20 rrand: 480));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly.graph add: newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly = newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01); },</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(pi / 3); b.move(i % 20 * 2) }.repeat(75, 0.1); }</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>].choose.value;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:Distributing patterns in a random grid</p>
+<p class="p1"><br></p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> grid, pos;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> length, hlength, angle_d;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>grid = (<span class="s1">Array</span>.iota(2, 3).flop ++ <span class="s1">Array</span>.iota(3, 2)) * 70 + 50;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>grid = grid ++ grid.flop.flat.scramble.clump(2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>while { (pos = grid.pop).notNil } {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>pos = (pos[0])@(pos[1]);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>newPoly =<span class="Apple-converted-space">  </span><span class="s1">Polygon</span>(pos);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly.graph add: newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly = newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>hlength = 1.5 rrand: 2.5;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01); },</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(pi / 3); b.move(i % 20 * hlength) }.repeat(75, 0.01); }</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>].choose.value;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
 <p class="p2">//:Sending OSC to another application at each new vertex drawn.</p>
 <p class="p3">(</p>
 <p class="p4">Bee<span class="s3">.draw({ </span>| b, i |<span class="s3"><span class="Apple-converted-space"> </span></span></p>

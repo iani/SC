@@ -10,7 +10,7 @@ The other methods: jump, next, prev are under development.
 */
 
 Bee {
-	var <>poly;			// the polygon on which the Bee is situated
+	var <poly;			// the polygon on which the Bee is situated
 	var <>pace = 10;		// the default step size by which the bee steps
 	var <orientation = 0; 	// the current orientation of the bee
 	var <>angle;			// the default angle by which the bee turns
@@ -82,6 +82,11 @@ Bee {
 		^poly pos: index;	
 	}
 
+	poly_ { | argPoly |
+		poly = argPoly;
+		index = -1;	
+	}
+ 
 	orientation_ { | angle |
 		orientation = angle;
 		// calculate and cache xScale, yScale
