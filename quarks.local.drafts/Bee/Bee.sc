@@ -24,15 +24,11 @@ Bee {
 	// analogous to Turtle.draw:
 	
 	*draw { | patternFunc, window, x, y, orientation = 0, repeats = 1, rate = 0.1 |
-		var bee, count = 0, dur, poly;
+		// Draw by repeating patternFunc repeats times, waiting for rate between repeats
+		// If repeats is a pattern or function, then the rate is calculated from it. 
+		var bee, count = 0, dur;
 
-		window = window ?? { Screen(nil, "Bee", Rect(700, 200, 500, 500)) };
-		x = x ?? { window.view.bounds.width / 2 };
-		y = y ?? { window.view.bounds.height / 2 };
-		poly = Polygon((x@y));
-		window add: poly;
-		
-		bee = this.new(poly, nil, orientation);
+		bee = this.newWithWindow(window, x, y, orientation);
 		
 		if (repeats isKindOf: Integer) { rate = Pn(rate, repeats) };
 		rate = rate.asStream;
@@ -43,6 +39,19 @@ Bee {
 				count = count + 1;
 			}
 		}.fork;
+		^bee;
+	}
+	
+	*draw1 { | func, window, x, y, orientation = 0 | 
+		// draw by creating a routine from fumction func
+		// the routine may include functions repeated via Function:repeat
+		// Provides a counter for counting the iterations during drawing (Counter class)
+		var bee, counter;
+		bee = this.newWithWindow(window, x, y, orientation);
+		counter = Counter.new;
+		{
+			func.(bee, counter);	
+		}.fork
 		^bee;
 	}
 

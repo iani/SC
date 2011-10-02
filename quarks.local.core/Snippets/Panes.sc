@@ -12,7 +12,7 @@ Panes {
 		 ^(
 			listenerY: 200, listenerXdelta: 20 ,menuHeight: 22, multiPaneListenerHeight: 300
 			,multiPaneHeight: Window.screenBounds.height - 22
-			,defaultArrangementMethod: \arrangeMulitPanes, tryoutName: "tryout.scd"
+			,defaultArrangementMethod: \arrangeMultiPanes, tryoutName: "tryout.scd"
 		)
 	}
 
@@ -64,7 +64,7 @@ Panes {
 			this.rearrangeAllDocs;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "multi-pane doc arrangement", [">", true, false], {
-			this.arrangeMulitPanes;
+			this.arrangeMultiPanes;
 			this.rearrangeAllDocs;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "switch window pos (mulit-pane mode)", ["A", false, false],
@@ -128,6 +128,9 @@ Panes {
 			}.fork
 		}),
 
+		CocoaMenuItem.addToMenu("Utils", "Show tryout window", ["T", true, true], {
+			this.openTryoutWindow.front;
+		}),
 		]
 	}
 
@@ -147,6 +150,7 @@ Panes {
 				tryout = Document.open(path);
 			};
 		};
+		^tryout;
 	}
 
 	*arrange1Pane {
@@ -159,7 +163,7 @@ Panes {
 		this changeArrangement: { | doc | this.placeDoc(doc) };
 	}
 
-	*arrangeMulitPanes {
+	*arrangeMultiPanes {
 		var multiPaneWidth = this.multiPaneWidth, mPLH = prefs.multiPaneListenerHeight;
 		var multiPaneHeight = prefs.multiPaneHeight;
 		var screenTop = Window.screenBounds.height - prefs.menuHeight;
