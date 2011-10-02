@@ -11,7 +11,8 @@ p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-h
 p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #c61913}
 p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
 p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #2608ca}
-p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
 span.s1 {color: #2608ca}
 span.s2 {color: #737373}
 span.s3 {color: #000000}
@@ -87,26 +88,20 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">});</p>
 <p class="p1"><br></p>
 <p class="p1"><br></p>
-<p class="p2">//:Distributing patterns in a random grid</p>
+<p class="p2">//:Distributing patterns in a grid, off-centered</p>
 <p class="p1"><br></p>
 <p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> newPoly;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> grid, pos;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> length, hlength, angle_d;</p>
-<p class="p3"><span class="Apple-tab-span">	</span>grid = (<span class="s1">Array</span>.iota(2, 3).flop ++ <span class="s1">Array</span>.iota(3, 2)) * 70 + 50;</p>
-<p class="p3"><span class="Apple-tab-span">	</span>grid = grid ++ grid.flop.flat.scramble.clump(2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> grid, pos, length, hex_length;</p>
+<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span>grid = </span>[({ | i | (1..4).rotate(i) } ! 3).flat, ({ (1..4) } ! 3).flat].flop * 115 - 30;</p>
 <p class="p3"><span class="Apple-tab-span">	</span>while { (pos = grid.pop).notNil } {</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>pos = (pos[0])@(pos[1]);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 2 rrand: 6;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>hex_length = 1.0 rrand: 2.0;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>newPoly =<span class="Apple-converted-space">  </span><span class="s1">Polygon</span>(pos);</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly.graph add: newPoly;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly = newPoly;</p>
+<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((</span>pos[0])@(pos[1]));</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>hlength = 1.5 rrand: 2.5;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01); },</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(pi / 3); b.move(i % 20 * hlength) }.repeat(75, 0.01); }</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(pi / 3); b.move(i % 20 * hex_length) }.repeat(75, 0.01); }</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>].choose.value;<span class="Apple-converted-space"> </span></p>
 <p class="p3"><span class="Apple-tab-span">	</span>}</p>
 <p class="p3">});</p>
@@ -118,7 +113,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4">Bee<span class="s3">.draw({ </span>| b, i |<span class="s3"><span class="Apple-converted-space"> </span></span></p>
 <p class="p3"><span class="Apple-tab-span">	</span>b.turn(1 / 0.3); b.move(40.0.rand);</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="s1">NetAddr</span>(<span class="s2">"127.0.0.1"</span>, 12345).sendMsg(<span class="s2">"/xy"</span>, b.pos.x, b.pos.y);</p>
-<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span>postf(</span>"I just sent to Python this message: % % %\n"<span class="s3">, </span>"/xy"<span class="s3">, b.pos.x, b.pos.y);</span></p>
+<p class="p6"><span class="s3"><span class="Apple-tab-span">	</span>postf(</span>"I just sent to Python this message: % % %\n"<span class="s3">, </span>"/xy"<span class="s3">, b.pos.x, b.pos.y);</span></p>
 <p class="p3">}, repeats: 8000, rate: 0.2);</p>
 <p class="p3">)</p>
 <p class="p1"><br></p>

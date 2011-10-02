@@ -83,8 +83,9 @@ Bee {
 	}
 
 	poly_ { | argPoly |
+//		poly.graph add: argPoly;
 		poly = argPoly;
-		index = -1;	
+		index = -1;
 	}
  
 	orientation_ { | angle |
@@ -104,8 +105,10 @@ Bee {
 
 	jump { | point |
 		// jump to point and create a new polygon there. 
-		poly = Polygon(point).graph_(poly.graph);
-		index = 0;
+		var newPoly;
+		newPoly =  Polygon(point);
+		poly.graph add: newPoly;
+		this.poly = newPoly;
 	}
 
 	turn { | angleInc |
