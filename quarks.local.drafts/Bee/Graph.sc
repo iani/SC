@@ -12,5 +12,14 @@ Graph : Model {
 	}
 
 	draw { graph do: _.value }
+	
+	//TODO
+
+	zoomToFit {}
+	
+	scroll {}
+
+	zoom {}
+
 }
 

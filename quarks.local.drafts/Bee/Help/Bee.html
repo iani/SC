@@ -7,151 +7,142 @@
 <meta name="Generator" content="Cocoa HTML Writer">
 <meta name="CocoaVersion" content="1138">
 <style type="text/css">
-p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 span.s1 {color: #2608ca}
 span.s2 {color: #737373}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
 <body>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">Bee.draw({ | bee, count, dur| [bee, count, dur].postln; }, repeat: 10);</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">Bee.draw({ | b, i | b.turn(1 / (i % 10 + 1)); b.move(20).pos }, repeat: 500);</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">Bee.draw({ | b, i | b.turn(1 / (i % 10 + 1)); b.move(20).pos }, repeat: 500, rate: 0.01);</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">Bee.draw({ | b, i | b.turn(1 / (i % 10 + 1)); b.move(40.0.rand).pos }, repeat: 5000, rate: 0.0);</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">Bee.draw({ | b, i | b.turn(1 / 0.3); b.move(40.0.rand).pos }, repeat: 8000, rate: 0.0);</p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p2"><br></p>
-<p class="p1">(</p>
-<p class="p1">Bee.draw({ | b, i |<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-tab-span">	</span>b.turn(1 / 0.3); b.move(40.0.rand);</p>
-<p class="p1"><span class="Apple-tab-span">	</span>NetAddr("127.0.0.1", 12345).sendMsg("/xy", b.pos.x, b.pos.y);</p>
-<p class="p1"><span class="Apple-tab-span">	</span>postf("I just sent to python this message: % % %\n", "/xy", b.pos.x, b.pos.y);</p>
-<p class="p1">}, repeat: 8000, rate: 0.2);</p>
-<p class="p1">)</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">(</p>
-<p class="p1">Bee.draw({ | b, i | b.turn(1 / 0.3); b.move(40.0.rand).pos },<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="s1">Screen</span>(<span class="s1">nil</span>, <span class="s2">"Bee"</span>, <span class="s1">Rect</span>(100, 50, 1000, 800)),<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-tab-span">	</span>repeat: 8000, rate: 0.0</p>
-<p class="p1">);</p>
-<p class="p1">)</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p1">b = Bee(Polygon(250@250)).makeWindow("test", Rect(800, 300, 500, 500));</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">r = {</p>
-<p class="p1"><span class="Apple-tab-span">	</span>50 do: {</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([\left, \right].choose);</p>
-<p class="p1"><span class="Apple-tab-span">	</span>}</p>
-<p class="p1">}.fork;</p>
-<p class="p2"><br></p>
-<p class="p1">//:---<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1">b = Bee.new;</p>
-<p class="p1">p = Polygon(250@250);</p>
-<p class="p1">c = Screen(nil, "test");</p>
-<p class="p1">c.graph add: p;</p>
-<p class="p1">b.poly = p;</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">u = {</p>
-<p class="p1"><span class="Apple-tab-span">	</span>b.angle = pi / 3;</p>
-<p class="p1"><span class="Apple-tab-span">	</span>50 do: {</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([\left, \right].choose);</p>
-<p class="p1"><span class="Apple-tab-span">	</span>}</p>
-<p class="p1">}.fork;</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p2"><br></p>
-<p class="p1">v = {</p>
-<p class="p1"><span class="Apple-tab-span">	</span>b.angle = pi / 1.5;</p>
-<p class="p1"><span class="Apple-tab-span">	</span>50 do: {</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
-<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([\left, \right].choose);</p>
-<p class="p1"><span class="Apple-tab-span">	</span>}</p>
-<p class="p1">}.fork;</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p1">g = Screen.new;</p>
-<p class="p1">//:---<span class="Apple-converted-space"> </span></p>
-<p class="p1">g add: {</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Pen.moveTo(50@50);</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Pen.lineTo(100@100);</p>
-<p class="p1"><span class="Apple-tab-span">	</span>Pen.stroke;<span class="Apple-tab-span">	</span></p>
-<p class="p1">};</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p1">g add: (p = Polygon(150@150));</p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p2"><br></p>
-<p class="p1">p add: (250@250);</p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p2"><br></p>
-<p class="p1">p add: (50@250);</p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p2"><br></p>
-<p class="p1">p add: (150@150);</p>
-<p class="p1">p add: (150@50);</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p1">g add: (q = Polygon(150@150));</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1">//:---</p>
-<p class="p1">b = Bee(q);</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p1">b.move;</p>
-<p class="p1">b.turn;</p>
-<p class="p1">b.left;</p>
-<p class="p1">b.right;</p>
-<p class="p1">b.angle = pi / 5;</p>
-<p class="p2"><br></p>
-<p class="p1">//:--</p>
-<p class="p1">g.graph.graph addFirst: { Pen.scale(2, 2); };</p>
-<p class="p1">g.graph.graph addFirst: { Pen.width(0.5); };</p>
-<p class="p1">g.window.refresh;</p>
-<p class="p2"><br></p>
-<p class="p1">g.graph.graph[0] = { Pen.width = 0.5; };</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p1"><br></p>
+<p class="p2">Bee.draw({ | b, i | b.turn(1 / (i % 20 + 1) * pi); b.move(17) }, repeats: 500);</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p1"><br></p>
+<p class="p2">Bee.draw({ | b, i | b.turn(1 / 0.3); b.move(40.0.rand) },</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Screen(nil, "bee", Rect(0, 0, 1400, 900)),</p>
+<p class="p2"><span class="Apple-tab-span">	</span>repeats: 8000, rate: 0.0</p>
+<p class="p2">);</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p2">(</p>
+<p class="p2">Bee.draw({ | b, i |<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>b.turn(1 / 0.3); b.move(40.0.rand);</p>
+<p class="p2"><span class="Apple-tab-span">	</span>NetAddr("127.0.0.1", 12345).sendMsg("/xy", b.pos.x, b.pos.y);</p>
+<p class="p2"><span class="Apple-tab-span">	</span>postf("I just sent to Python this message: % % %\n", "/xy", b.pos.x, b.pos.y);</p>
+<p class="p2">}, repeats: 8000, rate: 0.2);</p>
+<p class="p2">)</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p1"><br></p>
+<p class="p2">(</p>
+<p class="p2">Bee.draw({ | b, i | b.turn(1 / 0.3); b.move(40.0.rand).pos },<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="s1">Screen</span>(<span class="s1">nil</span>, <span class="s2">"Bee"</span>, <span class="s1">Rect</span>(100, 50, 1000, 800)),<span class="Apple-converted-space"> </span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>repeats: 8000, rate: 0.0</p>
+<p class="p2">);</p>
+<p class="p2">)</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p2">b = Bee(Polygon(250@250)).makeWindow("test", Rect(800, 300, 500, 500));</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p1"><br></p>
+<p class="p2">r = {</p>
+<p class="p2"><span class="Apple-tab-span">	</span>50 do: {</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([\left, \right].choose);</p>
+<p class="p2"><span class="Apple-tab-span">	</span>}</p>
+<p class="p2">}.fork;</p>
+<p class="p1"><br></p>
+<p class="p2">//:---<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">b = Bee.new;</p>
+<p class="p2">p = Polygon(250@250);</p>
+<p class="p2">c = Screen(nil, "test");</p>
+<p class="p2">c.graph add: p;</p>
+<p class="p2">b.poly = p;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p1"><br></p>
+<p class="p2">u = {</p>
+<p class="p2"><span class="Apple-tab-span">	</span>b.angle = pi / 3;</p>
+<p class="p2"><span class="Apple-tab-span">	</span>50 do: {</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([\left, \right].choose);</p>
+<p class="p2"><span class="Apple-tab-span">	</span>}</p>
+<p class="p2">}.fork;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p1"><br></p>
+<p class="p2">v = {</p>
+<p class="p2"><span class="Apple-tab-span">	</span>b.angle = pi / 1.5;</p>
+<p class="p2"><span class="Apple-tab-span">	</span>50 do: {</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
+<p class="p2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([\left, \right].choose);</p>
+<p class="p2"><span class="Apple-tab-span">	</span>}</p>
+<p class="p2">}.fork;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p2">g = Screen.new;</p>
+<p class="p2">//:---<span class="Apple-converted-space"> </span></p>
+<p class="p2">g add: {</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Pen.moveTo(50@50);</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Pen.lineTo(100@100);</p>
+<p class="p2"><span class="Apple-tab-span">	</span>Pen.stroke;<span class="Apple-tab-span">	</span></p>
+<p class="p2">};</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p2">g add: (p = Polygon(150@150));</p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p1"><br></p>
+<p class="p2">p add: (250@250);</p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p1"><br></p>
+<p class="p2">p add: (50@250);</p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p1"><br></p>
+<p class="p2">p add: (150@150);</p>
+<p class="p2">p add: (150@50);</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p2">g add: (q = Polygon(150@150));</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p2">b = Bee(q);</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p2">b.move;</p>
+<p class="p2">b.turn;</p>
+<p class="p2">b.left;</p>
+<p class="p2">b.right;</p>
+<p class="p2">b.angle = pi / 5;</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p2">g.graph.graph addFirst: { Pen.scale(2, 2); };</p>
+<p class="p2">g.graph.graph addFirst: { Pen.width(0.5); };</p>
+<p class="p2">g.window.refresh;</p>
+<p class="p1"><br></p>
+<p class="p2">g.graph.graph[0] = { Pen.width = 0.5; };</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">Pseq</p>
+<p class="p1"><br></p>
 </body>
 </html>
