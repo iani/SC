@@ -79,7 +79,7 @@ zoomToFit:
 Fitting the rectangle of the entire drawing in the rectangle of of the view of the Screen window: 
 Let sbounds be the screen window bounds, and dbounds be the bounds of the drawing. 
 
-
+... 
 
 
 */

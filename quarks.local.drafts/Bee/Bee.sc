@@ -4,8 +4,8 @@ Drawing polygons.
 
 Like Turtle, but with the ability to move to already drawn vertices of a polygon and start other polygons there. ( = Branching?)
 
-Currently only the 'move', turn, left, right, methods have been fully implementd. 
-The other methods: jump, next, prev are under development.
+Currently only the 'move', turn, left, right, jump methods have been fully implementd. 
+Methods next, prev are under development.
 
 */
 
@@ -109,6 +109,12 @@ Bee {
 		newPoly =  Polygon(point);
 		poly.graph add: newPoly;
 		this.poly = newPoly;
+	}
+
+	moveTo { | point |
+		// move directly to point
+		poly add: point;
+		index = index + 1;			
 	}
 
 	turn { | angleInc |

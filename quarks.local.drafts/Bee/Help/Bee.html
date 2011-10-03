@@ -7,16 +7,18 @@
 <meta name="Generator" content="Cocoa HTML Writer">
 <meta name="CocoaVersion" content="1138">
 <style type="text/css">
-p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
 p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #c61913}
-p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
 p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #2608ca}
-p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
-p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bc2117}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #2f09d0}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
 span.s1 {color: #2608ca}
 span.s2 {color: #737373}
 span.s3 {color: #000000}
-span.s4 {color: #128500}
+span.s4 {color: #2f09d0}
+span.s5 {color: #128500}
 span.Apple-tab-span {white-space:pre}
 </style>
 </head>
@@ -49,16 +51,11 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">});</p>
 <p class="p1"><br></p>
 <p class="p2">//:Starting a new polygon at a separated location</p>
-<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> newPoly;</p>
-<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |<span class="s3"><span class="Apple-tab-span">	</span></span></p>
 <p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> length, angle_d;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>1.wait;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>newPoly =<span class="Apple-converted-space">  </span><span class="s1">Polygon</span>((20 rrand: 480)@(20 rrand: 480));</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly.graph add: newPoly;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly = newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((20 rrand: 480)@(20 rrand: 480));</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01);</p>
@@ -66,18 +63,29 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span>}</p>
 <p class="p3">});</p>
 <p class="p1"><br></p>
+<p class="p5">//:For drawing on sand, no jumps are allowed</p>
+<p class="p5">// Here is the same example as above, using move exclusively, no jumps</p>
+<p class="p6">Bee<span class="s3">.draw1({ </span>| b, i |<span class="s3"><span class="Apple-tab-span">	</span></span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s4">var</span> length, angle_d;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.moveTo((50 rrand: 450)@(50 rrand: 450));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s4">| i |</span> b.turn(pi / 30); b.move(length) }.repeat(50, 0.01);</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
 <p class="p2">//:Repeatedly choosing amongst 2 different patterns at random</p>
 <p class="p1"><br></p>
 <p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> newPoly;</p>
 <p class="p1"><span class="Apple-tab-span">	</span></p>
 <p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> length, angle_d;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>1.wait;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>newPoly =<span class="Apple-converted-space">  </span><span class="s1">Polygon</span>((20 rrand: 480)@(20 rrand: 480));</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly.graph add: newPoly;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.poly = newPoly;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((20 rrand: 480)@(20 rrand: 480));</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[</p>
@@ -92,12 +100,12 @@ span.Apple-tab-span {white-space:pre}
 <p class="p1"><br></p>
 <p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> grid, pos, length, hex_length;</p>
-<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span>grid = </span>[({ | i | (1..4).rotate(i) } ! 3).flat, ({ (1..4) } ! 3).flat].flop * 115 - 30;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>grid = [({ | i | (1..4).rotate(i) } ! 3).flat, ({ (1..4) } ! 3).flat].flop * 112 - 30;</p>
 <p class="p3"><span class="Apple-tab-span">	</span>while { (pos = grid.pop).notNil } {</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 2 rrand: 6;</p>
-<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>hex_length = 1.0 rrand: 2.0;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>hex_length = 1.0 rrand: 2.0;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
-<p class="p5"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((</span>pos[0])@(pos[1]));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((pos[0])@(pos[1]));</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01); },</p>
@@ -113,7 +121,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p4">Bee<span class="s3">.draw({ </span>| b, i |<span class="s3"><span class="Apple-converted-space"> </span></span></p>
 <p class="p3"><span class="Apple-tab-span">	</span>b.turn(1 / 0.3); b.move(40.0.rand);</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="s1">NetAddr</span>(<span class="s2">"127.0.0.1"</span>, 12345).sendMsg(<span class="s2">"/xy"</span>, b.pos.x, b.pos.y);</p>
-<p class="p6"><span class="s3"><span class="Apple-tab-span">	</span>postf(</span>"I just sent to Python this message: % % %\n"<span class="s3">, </span>"/xy"<span class="s3">, b.pos.x, b.pos.y);</span></p>
+<p class="p7"><span class="s3"><span class="Apple-tab-span">	</span>postf(</span>"I just sent to Python this message: % % %\n"<span class="s3">, </span>"/xy"<span class="s3">, b.pos.x, b.pos.y);</span></p>
 <p class="p3">}, repeats: 8000, rate: 0.2);</p>
 <p class="p3">)</p>
 <p class="p1"><br></p>
@@ -135,7 +143,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span>50 do: {</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s4">\left</span>, <span class="s4">\right</span>].choose);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s5">\left</span>, <span class="s5">\right</span>].choose);</p>
 <p class="p3"><span class="Apple-tab-span">	</span>}</p>
 <p class="p3">}.fork;</p>
 <p class="p1"><br></p>
@@ -146,7 +154,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span>50 do: {</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s4">\left</span>, <span class="s4">\right</span>].choose);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s5">\left</span>, <span class="s5">\right</span>].choose);</p>
 <p class="p3"><span class="Apple-tab-span">	</span>}</p>
 <p class="p3">}.fork;</p>
 <p class="p1"><br></p>
@@ -158,13 +166,13 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3"><span class="Apple-tab-span">	</span>50 do: {</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
 <p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
-<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s4">\left</span>, <span class="s4">\right</span>].choose);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s5">\left</span>, <span class="s5">\right</span>].choose);</p>
 <p class="p3"><span class="Apple-tab-span">	</span>}</p>
 <p class="p3">}.fork;</p>
 <p class="p1"><br></p>
 <p class="p1"><br></p>
 <p class="p1"><br></p>
-<p class="p2">//:---</p>
+<p class="p2">//:Without Bee</p>
 <p class="p3">g = <span class="s1">Screen</span>.new;</p>
 <p class="p2">//:---<span class="Apple-converted-space"> </span></p>
 <p class="p3">g add: {</p>
@@ -195,7 +203,7 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">g add: (q = <span class="s1">Polygon</span>(150@150));</p>
 <p class="p1"><br></p>
 <p class="p1"><br></p>
-<p class="p2">//:---</p>
+<p class="p2">//:Editing the graph</p>
 <p class="p3">b = <span class="s1">Bee</span>(q);</p>
 <p class="p1"><br></p>
 <p class="p2">//:--</p>
@@ -211,9 +219,6 @@ span.Apple-tab-span {white-space:pre}
 <p class="p3">g.window.refresh;</p>
 <p class="p1"><br></p>
 <p class="p3">g.graph.graph[0] = { <span class="s1">Pen</span>.width = 0.5; };</p>
-<p class="p1"><br></p>
-<p class="p1"><br></p>
-<p class="p4">Pseq</p>
 <p class="p1"><br></p>
 </body>
 </html>
