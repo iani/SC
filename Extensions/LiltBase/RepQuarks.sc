@@ -19,7 +19,9 @@ There are two alternative ways to add a quark-directory to the RepQuarks menu:
 	2.1 	Place he definition file of the subclass inside the directory of the quarks that you want 
 		to include. The definition file should be at the top level of your quarks directory. 
 	2.2. Make an alias of the definition file and place it inside the Extensions folder in the
-		user application support directory. 
+		user application support directory. This should be a regular MacOS X alias made in the Finder,
+		not a symlink. If you use symlinks, then you should provide the path to the quark folder
+		through the class method *quarkPath of your subclass of RepQuarks.
 
 */
 
@@ -27,24 +29,32 @@ RepQuarks : Quarks {
 	classvar <paths;
 	
 	*initClass {
-		Class.initClassTree(MenuHandler);	
-		this.addMenu;	
+		StartUp add: { Platform.case(\osx, { this.addMenu; }); };
 	}
 	
 	*menuItems {
-		^this.makeMenus(this.userExtensionQuarks ++ this.aliasedSubclassQuarks);
+		^this.mainQuarks ++ this.makeMenus((this.userExtensionQuarks ++ this.aliasedSubclassQuarks));
 	}
 	
 	*makeMenus { | quarkMenuSpecs |
 		var name, path;
-		paths = quarkMenuSpecs.slice(nil, 1);
+		paths = quarkMenuSpecs.flop[1];
 		^quarkMenuSpecs collect: { | spec, i |
 			#name, path = spec;
 			CocoaMenuItem.addToMenu("Quarks", name, nil, {
-				this.new(localPath: paths[i].postln).gui;
+				this.new(localPath: paths[i]).gui;
 			});
 		}
 	}
+
+	*mainQuarks {
+		^[
+			CocoaMenuItem.addToMenu("Quarks", "quarks", nil, { Quarks.gui }),
+			CocoaMenuItem.addToMenu("Quarks", "sc3-plugins", nil, {
+				Quarks(localPath: (Platform.userAppSupportDir +/+ "sc3-plugins")).gui
+			})			
+		]
+	}	
 	
 	*userExtensionQuarks {
 		var paths, specs;
@@ -56,8 +66,47 @@ RepQuarks : Quarks {
 	*aliasedSubclassQuarks {
 		var specs;
 		specs = this.subclasses collect: { | sc | 
-			[sc.name.asString, sc.filenameSymbol.asString.dirname +/+ "/"] };
+			[sc.name.asString, sc.getQuarkPath] };
 		^specs ? [];
+	}
+	
+	*getQuarkPath {
+		/* RepQuarks can be included in the compile path of SuperCollider by creating 
+		a subclass of RepQuarks, putting it in the top level of your quarks folder, and then
+		putting an alias of the subclass file inside the Extensions folder of SuperCollider
+		(Platform.userExtensionDir;). 
+	
+		Otherwise, if you use a symlink (ln -s) to include your quark directory in the 
+		Extensions folder, then you should provide a class method quarkPath to define your 
+		custom path.  This may also be a class variable with getter: 
+			classvar <quarkPath = "/path/to/my/quark/folder... ";
+			
+		The getQuarkPath method first checks if the file of this subclass is in the Extensions folder.
+		If yes, it assumes that this is a symlink, and tries to get your custom quarkPath. 
+		If no, it uses the path of the file of this subclass to get your quarks. 
+		This means that your quarks can be used independently of your quarkPath method,
+		as long as an *alias* (MacOS X) your RepQuarks subclass definition file is placed 
+		in the Extensions folder.  	
+		
+		 */
+		var path;
+		path = this.filenameSymbol.asString.dirname;
+		if (path == Platform.userExtensionDir) {
+			 postf("% is a symlink. Will use custom path to find quarks\n", this.name);
+			 path = this.quarkPath;
+			 postf("Custom quarks path is: %\n", path);
+			 
+		}{
+			path = path +/+ "/";
+		};
+		^path;
+	}
+
+	*quarkPath {
+		/* This is the default quarks path. Subclasses may overwrite it.
+		It is only used if the subclass definition file of a quark folder is placed in 
+		the Extensions folder *not* as an alias, but as a symlink. */
+		^PathName("~/Quarks/").fullPath;
 	}
 
 	// a gui for Quarks. 2007 by LFSaw.de
@@ -66,7 +115,9 @@ RepQuarks : Quarks {
 		var	window, caption, explanation, views, resetButton, saveButton, warning,
 			scrollview, scrB, flowLayout, /* quarksflow, */ height, maxPerPage, nextButton, prevButton;
 		var	quarks;
-		var pageStart = 0, fillPage = { |start|
+		var pageStart = 0, fillPage;
+		
+		fillPage = { | start |
 			scrollview.visible = false;
 			views.notNil.if({
 				views.do({ |view| view.remove });
@@ -84,6 +135,8 @@ RepQuarks : Quarks {
 
 		// note, this doesn't actually contact svn
 		// it only reads the DIRECTORY entries you've already checked out
+//		postf("RepQuarks gui - repos: %\n", repos.postln.quarks);
+//		postf("RepQuarks gui - local: %\n", local.postln.quarks);
 		quarks = this.repos.quarks.copy
 			.sort({ |a, b| a.name < b.name });
 
