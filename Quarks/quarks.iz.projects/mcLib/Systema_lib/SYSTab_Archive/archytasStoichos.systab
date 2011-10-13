@@ -1,0 +1,5 @@
+SYSTab('archytasStoichos', MultiLevelSelector([ [ SYSParam('archytasStoichos', ( 'sysSym': 'archytasStoichos', 'spineWR': 0, 'ribEdgeWLR': 2, 'spineWL': 0, 
+  'ribWL': 0, 'ribExtR': 10, 'ribWR': 0, 'ribExtL': 10, 'label': "Archytas", 
+  'centOffset': 0 ), List[ 'basicSYS' ], List[ 'basicSYS' ], List[ 'lableSYS' ]) ], [ [ List[ SYSinstParam('archytasStoichos', ( 'sysSym': 'archytasStoichos', 'align': 'left' ), List[ 'instAnno' ], List[ 'instAnno' ], List[  ]), SYSvocParam('archytasStoichos', ( 'sysSym': 'archytasStoichos', 'align': 'right' ), List[ 'vocAnno' ], List[ 'vocAnno' ], List[  ]) ], [ [ List[  ] ], [ List[  ] ] ] ] ] ], [ 0, [ [ 0, [ [ 0 ], [ 0 ] ] ] ] ], [ nil, [ [ nil, [ [ nil ], [ nil ] ] ] ] ]), SYSTabParam(( 'labelFFont': SCFont("Helvetica", 12), 'yFroom': 8, 'labelHFont': SCFont("Helvetica", 14), 'sysOffX': 20, 
+  'midiRef': 54, 'xS': 1.0, 'annoFont': SCFont("Helvetica", 10), 'legend': 'freqRef', 'yHroom': 12, 
+  'yS': 1.0 ), List[ 'initSYSTab' ], List[  ], List[  ]))

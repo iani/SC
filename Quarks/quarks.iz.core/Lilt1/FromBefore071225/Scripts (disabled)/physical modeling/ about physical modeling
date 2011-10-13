@@ -1,0 +1,5 @@
+/* 
+
+This folder contains mainly scripts for running and controlling synthdefs that were created on the basis of Perry Cooks STK software as ported to SC by Paul Lansky and Christian Hresko. These Ugens are not part of the regular distribution of SC3 and must be downloaded and isntalled separately. See the Hamburg SC swiki or Paul Lansky's website at Princeton for download. 
+
+*/ 

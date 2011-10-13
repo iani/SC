@@ -1,0 +1,15 @@
+(
+	\name: "Bee",
+	\path: "Bee",
+	\summary: "Turtle like graphics, but creating + moving on a Scene-Graph",
+	\helpdoc: "Help/Bee.html",
+	\author: "Ioannis Zannos",
+	\version: 0.01,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+

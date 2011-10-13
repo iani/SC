@@ -1,0 +1,147 @@
+s.boot;
+
+/////////SYNTHDEFS
+//reverb
+(
+SynthDef(\space,{arg in = 16, out = 0, amp = 1, mix= Rand(0.3,0.45) , room = Rand(0.35,0.45), damp = Rand(0.0,0.2);
+var sig;
+
+sig = In.ar(in,2);
+
+sig = FreeVerb.ar( sig, mix,room,damp,amp);
+sig = LPF.ar(sig, 20000);
+
+Out.ar(out, sig )
+}).send(s);
+
+SynthDef(\grainGrid, { | out = 0, buffer , triggerRate = 4, grainDur = 0.07, 
+	playbackRate = 1, bufPosition = 0, amp = 0.3, pan = 0.0, envbuf = -1 |
+	var plBckRt = Rand(0.8,1.3);//playbackRate
+
+	Out.ar(out,
+		GrainBuf.ar(2, 
+			Impulse.ar(triggerRate), grainDur, buffer, plBckRt, bufPosition, 2, pan, envbuf, maxGrains: 500)*amp
+	);
+}).send(s);
+)
+
+//grain buffers
+~b1 = Buffer.read(s,"c://tests/grain1n.wav");
+~b2 = Buffer.read(s,"c://tests/grain2n.wav");
+~b3 = Buffer.read(s,"c://tests/grain3n.wav");
+~b4 = Buffer.read(s,"c://tests/grain4n.wav");
+~b5 = Buffer.read(s,"c://tests/grain5n.wav");
+~b6 = Buffer.read(s,"c://tests/grain6n.wav");
+~b7 = Buffer.read(s,"c://tests/grain7n.wav"); 
+
+//window buffers
+//size
+n = 1024;
+
+	//Percussive
+a = Env.perc( 0.1 , 0.9 , 1 ,[ 1.3, -4.9]).asSignal(n);
+a.plot
+
+~percEnv = Buffer.sendCollection( s, a );
+~percEnv.bufnum;
+~percEnv.free;
+
+	//sinc
+a = Array.fill(n,{|i| var x, l = 2; x = 2*i/(n-1) - 1; if(x == 0, {0}, { (2*pi*x*l).sin / (2*pi*x*l)} )} );
+a.plot
+~sincEnv = Buffer.sendCollection( s, a );
+~sincEnv.bufnum;
+~sincEnv.free; 
+
+///////// the WORD set
+~wordSet = Set[];
+
+(
+(65..90) do: {|i| ~wordSet.add(i.asAscii.asString) }; //letters
+10 do: {|i| ~wordSet.add( i.asString ) }; //letters 
+)
+(
+var u;
+
+u = ["AMBIANT", "KEPKYPA", "IONIO", "POLYTECHNO", "LISTON", "LEYKIMMI", "SAROKO", "LATER",
+	"HOUR", "SUNDAY", "JULY", "MONDAY", "TIME", "TUESDAY", "WEDNESDAY", "THURSDAY",
+	"FRIDAY", "SATURDAY", "JUNE", "WINTER", "SUMMER", "MINUTE", "MICROSECOND", "WATERMELON"
+	"CIRCLE", "CUBE", "SPHERE", "BEER", "BANANA", "COFFEE", "ARROWS", "SOUND", "MEMORY", "NET",
+	"HARVEST", "TREE", "GEORGE", "EVELINE", "JOHN", "ROAD", "DEATH", "CLOCK", "MEAT",
+	"WATER", "INFINITY", "YEAR", "HOME", "SILENCE", "YESTERDAY", "MAY", "SEPTEMBER",
+	"SATURN", "DURATION", "NOW", "TOMORROW", "TODAY", "URANUS", "ADAM", "EVA", "NUMBER", "INFINITESIMAL",
+	"CYNTHIA", "THIS", "GIRL", "CYGNUS", "PATH", "FIRE", "AIR", "LAUNDRY", "COMPASS", "EYE", "BREAD"];
+
+u do: {|i| ~wordSet.add( i ) }; //letters 
+)
+
+[$_ , $#, $% ] do: {|i| ~wordSet.add(i)}; 
+
+//////////////grain - duration correspondence
+(
+//wait times -> number of words after this wait time
+~grainDictionary = Dictionary[
+	0 -> {rrand( 0.008, 0.03 )},
+	1 -> {rrand( 0.008, 0.01 )},
+	2 -> {rrand( 0.007, 0.0099 )},
+	3 -> {rrand( 0.003, 0.006 )},
+	4 -> {rrand( 0.003, 0.006 )},
+	5 -> {rrand( 0.009, 0.03 )},
+	6 -> {rrand( 0.008, 0.02 )}
+]
+)
+
+//PLAY ME
+(
+var waitTime, numberOfWords;
+var word, orientation, firstX, firstY, delayTimes, dur, rates, playDurs;
+var  grainDurs, soundBuffers, bufPositions, grainEnvBufs, amps, pans, out;
+var time = 0, bufferNumber, buf, envBufNumber, initialTime, sine;
+
+initialTime = SystemClock.seconds;
+
+bufferNumber = #[0,1,2,3,4,5,6];
+envBufNumber = #[-1,7,8];
+
+Synth.tail(1,\space);
+
+{
+	loop {
+		time = SystemClock.seconds - initialTime;
+
+		sine = sin( pi*time/193 );
+
+		waitTime =  -0.46 * sine + 0.701 * 2.5;
+		numberOfWords = max( 0, ( 2.06 * sine + 1 ).floor );
+
+		buf = bufferNumber.choose;
+
+		waitTime.wait;
+
+		numberOfWords do: {
+
+			word = ~wordSet.choose;
+			orientation = [\horizontal, \vertical].choose;
+			firstX = 27.rand;
+			firstY = 27.rand;
+			dur = 0.3.rrand(12.0);
+			delayTimes = {0.0.rrand(1.1)};
+			rates = {0.2.rrand(12.0)};
+			playDurs = 0.5;
+			grainDurs =  ~grainDictionary.at( buf ).value;
+			soundBuffers = buf;
+			bufPositions = { 1.0.rand };
+			grainEnvBufs = envBufNumber.choose;
+			amps = { [0.039, 0.158 ].wchoose([0.969, 0.031]) * 
+				exp( -1* ( pi* time / 193  - (0.5*pi) ).squared / 0.21) + 0.0092 };
+			pans = 1.0.rand2;
+			out = 16;
+
+			WordPhraseWithFunctions( word, orientation, firstX, firstY, dur, delayTimes, 
+				rates, playDurs, grainDurs, soundBuffers, bufPositions,
+				grainEnvBufs, amps, pans, out);
+
+		};
+		}
+}.fork;
+)                  

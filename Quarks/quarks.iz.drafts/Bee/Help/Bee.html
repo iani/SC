@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #c61913}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #2608ca}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bc2117}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #2f09d0}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+span.s1 {color: #2608ca}
+span.s2 {color: #737373}
+span.s3 {color: #000000}
+span.s4 {color: #2f09d0}
+span.s5 {color: #128500}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:Draw by repeating a single function many times. Default wait between repeats is 0.1 seconds</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s1">Bee</span>.draw({ <span class="s1">| b, i |</span> b.turn(1 / (i % 20 + 1) * pi); b.move(17) }, repeats: 500);</p>
+<p class="p1"><br></p>
+<p class="p2">//:Draw using a custom screen window</p>
+<p class="p1"><br></p>
+<p class="p3"><span class="s1">Bee</span>.draw({ <span class="s1">| b, i |</span> b.turn(1 / 0.3); b.move(40.0.rand) },</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Screen</span>(<span class="s1">nil</span>, <span class="s2">"bee"</span>, <span class="s1">Rect</span>(0, 0, 1400, 900)),</p>
+<p class="p3"><span class="Apple-tab-span">	</span>repeats: 8000, rate: 0.0</p>
+<p class="p3">);</p>
+<p class="p1"><br></p>
+<p class="p2">//:Draw with a routine that includes several different functions repeated many times each</p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
+<p class="p2"><span class="s3"><span class="Apple-tab-span">	</span></span>// function 1, repeated 300 times with 0.01 wait between repeats</p>
+<p class="p3"><span class="Apple-tab-span">	</span>{ <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi); b.move(17) }.repeat(500, 0.01);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>1.wait;</p>
+<p class="p2"><span class="s3"><span class="Apple-tab-span">	</span></span>// function 2, repeated 500 times with 0.01 wait between repeats</p>
+<p class="p3"><span class="Apple-tab-span">	</span>{ <span class="s1">| i |</span> b.turn(1 / (i / 10 % 20 + 1) * pi); b.move(20) }.repeat(300, 0.01);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>b.orientation = 0.55 * pi;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>b.move(60);</p>
+<p class="p2"><span class="s3"><span class="Apple-tab-span">	</span></span>// function 3, repeated 100 times with 0.1 wait between repeats</p>
+<p class="p3"><span class="Apple-tab-span">	</span>{ b.turn(0.1); b.move(4) }.repeat(100, 0.1);</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p2">//:Starting a new polygon at a separated location</p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |<span class="s3"><span class="Apple-tab-span">	</span></span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> length, angle_d;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((20 rrand: 480)@(20 rrand: 480));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01);</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p5">//:For drawing on sand, no jumps are allowed</p>
+<p class="p5">// Here is the same example as above, using move exclusively, no jumps</p>
+<p class="p6">Bee<span class="s3">.draw1({ </span>| b, i |<span class="s3"><span class="Apple-tab-span">	</span></span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s4">var</span> length, angle_d;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.moveTo((50 rrand: 450)@(50 rrand: 450));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s4">| i |</span> b.turn(pi / 30); b.move(length) }.repeat(50, 0.01);</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p2">//:Repeatedly choosing amongst 2 different patterns at random</p>
+<p class="p1"><br></p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
+<p class="p1"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>7 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s1">var</span> length, angle_d;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 3 rrand: 7;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((20 rrand: 480)@(20 rrand: 480));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.3.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01); },</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(pi / 3); b.move(i % 20 * 2) }.repeat(75, 0.1); }</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>].choose.value;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:Distributing patterns in a grid, off-centered</p>
+<p class="p1"><br></p>
+<p class="p4">Bee<span class="s3">.draw1({ </span>| b, i |</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> grid, pos, length, hex_length;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>grid = [({ | i | (1..4).rotate(i) } ! 3).flat, ({ (1..4) } ! 3).flat].flop * 112 - 30;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>while { (pos = grid.pop).notNil } {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>length = 2 rrand: 6;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>hex_length = 1.0 rrand: 2.0;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.jump((pos[0])@(pos[1]));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.orientation = 2pi.rand;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(1 / (i % 20 + 1) * pi * 1.001); b.move(length) }.repeat(100, 0.01); },</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ { <span class="s1">| i |</span> b.turn(pi / 3); b.move(i % 20 * hex_length) }.repeat(75, 0.01); }</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>].choose.value;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">});</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:Sending OSC to another application at each new vertex drawn.</p>
+<p class="p3">(</p>
+<p class="p4">Bee<span class="s3">.draw({ </span>| b, i |<span class="s3"><span class="Apple-converted-space"> </span></span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>b.turn(1 / 0.3); b.move(40.0.rand);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">NetAddr</span>(<span class="s2">"127.0.0.1"</span>, 12345).sendMsg(<span class="s2">"/xy"</span>, b.pos.x, b.pos.y);</p>
+<p class="p7"><span class="s3"><span class="Apple-tab-span">	</span>postf(</span>"I just sent to Python this message: % % %\n"<span class="s3">, </span>"/xy"<span class="s3">, b.pos.x, b.pos.y);</span></p>
+<p class="p3">}, repeats: 8000, rate: 0.2);</p>
+<p class="p3">)</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p1"><br></p>
+<p class="p3">(</p>
+<p class="p3"><span class="s1">Bee</span>.draw({ <span class="s1">| b, i |</span> b.turn(1 / 0.3); b.move(40.0.rand).pos },<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Screen</span>(<span class="s1">nil</span>, <span class="s2">"Bee"</span>, <span class="s1">Rect</span>(100, 50, 1000, 800)),<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>repeats: 8000, rate: 0.0</p>
+<p class="p3">);</p>
+<p class="p3">)</p>
+<p class="p1"><br></p>
+<p class="p2">//:Drawing with one Bee instance and several routines executed manually.<span class="Apple-converted-space"> </span></p>
+<p class="p3">b = <span class="s1">Bee</span>(<span class="s1">Polygon</span>(250@250)).makeWindow(<span class="s2">"test"</span>, <span class="s1">Rect</span>(800, 300, 500, 500));</p>
+<p class="p1"><br></p>
+<p class="p2">//:Routine 1</p>
+<p class="p1"><br></p>
+<p class="p3">r = {</p>
+<p class="p3"><span class="Apple-tab-span">	</span>50 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s5">\left</span>, <span class="s5">\right</span>].choose);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">}.fork;</p>
+<p class="p1"><br></p>
+<p class="p2">//:Routine 2</p>
+<p class="p1"><br></p>
+<p class="p3">u = {</p>
+<p class="p3"><span class="Apple-tab-span">	</span>b.angle = pi / 3;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>50 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s5">\left</span>, <span class="s5">\right</span>].choose);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">}.fork;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:Routine 3</p>
+<p class="p1"><br></p>
+<p class="p3">v = {</p>
+<p class="p3"><span class="Apple-tab-span">	</span>b.angle = pi / 1.5;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>50 do: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.1.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.move;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b.perform([<span class="s5">\left</span>, <span class="s5">\right</span>].choose);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>}</p>
+<p class="p3">}.fork;</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:Without Bee</p>
+<p class="p3">g = <span class="s1">Screen</span>.new;</p>
+<p class="p2">//:---<span class="Apple-converted-space"> </span></p>
+<p class="p3">g add: {</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pen</span>.moveTo(50@50);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pen</span>.lineTo(100@100);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Pen</span>.stroke;<span class="Apple-tab-span">	</span></p>
+<p class="p3">};</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p3">g add: (p = <span class="s1">Polygon</span>(150@150));</p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p1"><br></p>
+<p class="p3">p add: (250@250);</p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p1"><br></p>
+<p class="p3">p add: (50@250);</p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p1"><br></p>
+<p class="p3">p add: (150@150);</p>
+<p class="p3">p add: (150@50);</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p3">g add: (q = <span class="s1">Polygon</span>(150@150));</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:Editing the graph</p>
+<p class="p3">b = <span class="s1">Bee</span>(q);</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p3">b.move;</p>
+<p class="p3">b.turn;</p>
+<p class="p3">b.left;</p>
+<p class="p3">b.right;</p>
+<p class="p3">b.angle = pi / 5;</p>
+<p class="p1"><br></p>
+<p class="p2">//:--</p>
+<p class="p3">g.graph.graph addFirst: { <span class="s1">Pen</span>.scale(2, 2); };</p>
+<p class="p3">g.graph.graph addFirst: { <span class="s1">Pen</span>.width(0.5); };</p>
+<p class="p3">g.window.refresh;</p>
+<p class="p1"><br></p>
+<p class="p3">g.graph.graph[0] = { <span class="s1">Pen</span>.width = 0.5; };</p>
+<p class="p1"><br></p>
+</body>
+</html>

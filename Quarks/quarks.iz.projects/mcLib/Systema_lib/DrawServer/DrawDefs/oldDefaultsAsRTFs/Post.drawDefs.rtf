@@ -1,0 +1,150 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red191\green0\blue0;\red0\green115\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf2 if (\cf3 this\cf2 .isLog(2)) \{ (\cf4 "\\n\\n"\cf2  + \cf3 thisProcess\cf2 .nowExecutingPath.basename + \cf4 "\\n"\cf2 ).postln; \};\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs22 \cf5 \
+// |name, protoCalcFunc, protoDrawFunc|\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs18 \cf5 /*\
+DrawDef.all\
+\
+d = ScaledDrawServer.new(rate: 1).active_(true); //click in win to refresh\
+DrawFunc(\\postFrameRate, target: d); \
+\
+d = ScaledDrawServer.new(rate: 1).active_(true); d.scaledView.resize = 5; d; //click in win to refresh\
+		d.scaledView.scaleHEnabled_(false).scaleVEnabled_(false); // ScaledUserViewContainer only\
+		d.scaledView.moveHEnabled_(false).moveVEnabled_(false); // ScaledUserViewContainer only\
+DrawFunc(\\postFrameRate, target: d); \
+DrawScaled(\\postFrameRate, target: d); \
+DrawFunc(\\postFrameRate, (dump: false), target: d); \
+DrawScaled(\\postFrameRate, (dump: false), target: d);\
+\
+d.drawEnvir.isPost\
+d.drawEnvir.parent.isPost = true\
+\
+d = ScaledDrawServer.new(rate: 1, viewFollows: true).active_(true); //click in win to refresh\
+DrawFunc(\\postFrameRate, target: d); \
+DrawScaled(\\postFrameRate, target: d); \
+\
+d.scaledView.autoRefreshMouseActions\
+d.scaledView.autoRefreshMouseActions = false\
+\
+// check jump behaviour and double click reset --->\
+*/\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs22 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs18 \cf2 (\
+\cf3 DrawDef\cf2 (\cf6 \\postFrameRate\cf2 , \cf6 \\draw\cf2 , \cf3 nil\cf2 \
+	,\{\cf3 |node, rect, font, color, offset, dump=true|\cf2 \
+		font = font ?? \{ \cf3 Font\cf2 .new(\cf4 "Helvetica"\cf2 , 10) \};\
+		color = color ?? \{ \cf3 Color\cf2 .green \};\
+		offset = offset ?? \{ 0@0 \};\
+		\{\cf3 |e, drawServer, view, scaledView, isPost=true, post|\cf2 \
+			\cf3 var\cf2  pos, str = (\cf4 "frameRate:"\cf2  + drawServer.rate);\
+			\cf3 var\cf2  bounds = str.bounds(font);\
+			\cf3 var\cf2  cRect = rect ?? \{ view.drawBounds \};\'a0\cf5 //var !! may change due to user interaction\cf2 \
+			\cf5 //var cRect = rect = rect ?? \{ view.bounds \};\'a0//check-hack: here initial bounds stay\cf2 \
+			\
+			\cf5 //node.tree.postTree;\cf2 \
+			\cf5 //if (scaledView.isKindOf(ScaledUserCanvasContainer)) \{ \}\cf2 \
+			\
+if (dump) \{\
+	\cf5 //Color.yellow.set; Pen.width = 2; Pen.strokeRect( cRect.insetBy(6) );\cf2 \
+\cf5 //post.add([\\postln, "----------------------------------------------"]);\cf2 \
+\cf5 //post.add([\\postln, ("view, hasFocus:" + [view, view.hasFocus]) ]);\cf2 \
+\cf5 //post.add([\\postln, ("view.parent.bounds:" + view.parent.bounds) ]);\cf2 \
+\cf5 //post.add([\\postln, ("view.bounds:" + view.bounds) ]);\cf2 \
+\cf5 //post.add([\\postln, ("view.drawBounds:" + view.drawBounds) ]);\cf2 \
+\
+if (scaledView.notNil) \{\
+\cf5 //	post.add([\\postln, "+++:"]);\cf2 \
+\cf5 //	post.add([\\postln, ("scaledView:" + scaledView) ]);\cf2 \
+\cf5 //	if (scaledView.isKindOf(ScaledUserViewContainer) || \cf2 \
+\cf5 //		scaledView.isKindOf(ScaledUserCanvasContainer) ) \{\cf2 \
+\cf5 //			post.add([\\postln, ("scaledView.composite, hasFocus:" + \cf2 \
+\cf5 //				[scaledView.composite, scaledView.composite.hasFocus])]);\cf2 \
+\cf5 //			post.add([\\postln, ("scaledView.composite.bounds:" + scaledView.composite.bounds) ]);\cf2 \
+\cf5 //	\};\cf2 \
+\cf5 //	post.add([\\postln, ("scaledView.parent.bounds:" + scaledView.parent.bounds) ]);\cf2 \
+\cf5 //	post.add([\\postln, ("scaledView.bounds:" + scaledView.bounds) ]);\cf2 \
+\cf5 //	post.add([\\postln, ("scaledView.drawBounds:" + scaledView.drawBounds) ]);\cf2 \
+	\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.viewRect (rounded):"\cf2  \
+		+ scaledView.viewRect.asArray.round(0.001) , 1]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.fromBounds:"\cf2  + scaledView.fromBounds ]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "all .asArray.round(0.001):"\cf2 , 1]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.scale:"\cf2  + scaledView.scale.round(0.001) ]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.move:"\cf2  + scaledView.move.round(0.001) ]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.scaleFromBounds:"\cf2  \
+		+ scaledView.scaleFromBounds.round(0.001) ]); \cf5 // mc\cf2 \
+	if (scaledView.isKindOf(\cf3 ScaledUserCanvasContainer\cf2 )) \{\
+		post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.canvasBounds:"\cf2  \
+			+ scaledView.canvasBounds.asArray.round(0.001) , 1]); \cf5 // mc\cf2 \
+		post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.totalBounds:"\cf2  \
+			+ scaledView.totalBounds.asArray.round(0.001) , 0]); \cf5 // mc\cf2 \
+		post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.totalTranslation:"\cf2  \
+			+ scaledView.totalTranslation.asArray.round(0.001) , 0]); \cf5 // mc\cf2 \
+	\};\
+	post.add([\cf6 \\postln\cf2 , [node, \cf4 "cRect:"\cf2  + cRect.asArray.round(0.001)], 1]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.transScale(cRect):"\cf2  \
+		+ scaledView.transScale(cRect).asArray.round(0.001) ]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.convertFwd(*cRect.extent.asArray):"\cf2  \
+		+ scaledView.convertFwd(*cRect.extent.asArray).round(0.001)  ]);\
+		\
+	post.add([\cf6 \\postln\cf2 , \cf4 "scaledView.convertBwd(*cRect.extent.asArray):"\cf2  \
+		+ scaledView.convertBwd(*cRect.extent.asArray).round(0.001) ]);\
+	post.add([\cf6 \\postln\cf2 , \cf4 "----------------------------------------------"\cf2 , 0, 1]);  \
+\} \};\
+	if (isPost) \{\
+			pos = (cRect.left + 2)@(cRect.bottom - bounds.height);\
+			str.drawAtPoint(pos + offset, font, color);\
+			if (scaledView.notNil) \{\
+				\cf5 // pos.x = pos.x + (bounds.width * scaledView.scaleFromBounds[0]) + 10;\cf2 \
+				pos.x = pos.x + bounds.width + 10;\
+				str = \cf4 "scale:"\cf2  + scaledView.scale.round(0.001) \
+					+ \cf4 " move:"\cf2  + scaledView.move.round(0.001)\
+					+ \cf4 " trans:"\cf2  + scaledView.totalTranslation.round(0.001)\
+					+ \cf4 " scaleDelta:"\cf2  + scaledView.scaleDelta.round(0.001);\
+				bounds = str.bounds(font);\
+				str.drawAtPoint(pos + offset, font, color) \};\
+			if (scaledView.isKindOf(\cf3 ScaledUserView\cf2 )) \{\
+				\cf5 //pos.x = pos.x + (bounds.width * scaledView.scaleFromBounds[0]) + 10;\cf2 \
+				pos.x = pos.x + bounds.width + 10;\
+				str = \cf4 "scaleFromBounds:"\cf2  + scaledView.scaleFromBounds; bounds = str.bounds(font);\
+				str.drawAtPoint(pos + offset, font, color) \};\
+	\}\}\});\
+);\
+\
+(\
+\cf3 DrawDef\cf2 (\cf6 \\post\cf2 , \cf6 \\draw\cf2 , \cf3 nil\cf2 \
+	,\{ \cf3 arg\cf2  node, font = \cf3 Font\cf2 .new(\cf4 "Monaco"\cf2 , 10), color = \cf3 Color\cf2 .green, offset = 0@0;\
+		\{\cf3 arg\cf2  e, isPost, post, postOffset = 0@0;\
+			\cf3 var\cf2  str, bounds, pos, xOff=2, yOff=0;\
+			if (isPost) \{\
+				post.do\{\cf3 |pArray|\cf2  \
+					\cf3 var\cf2  lfB = pArray[2] ? 0;\
+					\cf3 var\cf2  lfE = pArray[3] ? 0;\
+					str = pArray[1].asString;\
+					bounds = str.bounds(font);\
+					yOff = yOff + (bounds.height * lfB);\
+					pos = xOff@yOff;\
+					pArray.first.switch( \cf5 // to be extended \\enc ... + post methods in Systema!!!\cf2 \
+						\cf6 \\post\cf2 , \{ xOff = xOff + bounds.width \},\
+						\cf6 \\postln\cf2 , \{ xOff=2; yOff = yOff + bounds.height \});\
+					str.drawAtPoint(pos + offset + postOffset, font, color);\
+					yOff = yOff + (bounds.height * lfE);\
+				\}\
+			\}\
+	\}\});\
+);\
+\
+}

@@ -1,0 +1,14 @@
+(
+	\name: "Chain",
+	\path: "Chain",
+	\summary: "Play timed chains of synths and functions",
+	\helpdoc: "Help/Chain.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: ["Resource"]
+)
+

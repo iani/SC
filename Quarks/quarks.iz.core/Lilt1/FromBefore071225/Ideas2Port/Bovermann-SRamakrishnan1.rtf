@@ -1,0 +1,31 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf420
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 \
+Till Bovermann\
+after a patch by S Ramakrishnan\
+\
+LFSaw.de\
+\
+\
+\
+ ( p = ProxySpace.new(s).push; ) \
+\
+( ~blipsFx = \{|rq = 1, lfFreq = 10, delayScale = 1| var chain; chain = ~blips_001.ar + ~brow.ar; chain = BPF.ar(chain, LFNoise0.kr(lfFreq).range(30, 10000), rq); chain = (chain).distort; 6.do(\{ chain = AllpassL.ar( chain, 0.5, delayScale * [Rand(0.5), Rand(0.25)], 5 ) \}); chain; \}; ); \
+\
+\
+~blipsFx.set( 'lfFreq', 14.73908045977, 'fadeTime', 8, 'rq', 0.053259948831001, 'delayScale', 0.13738237958833 ); \
+\
+~brow.set('fadeTime', 10); \
+( ~brow = \{ var x, y; #x, y = Splay.ar( LPF.ar( Formlet.ar( Pulse.ar(([50, 52,60] +.1 [-12, 0, 12]).flatten.midicps), LFNoise1.ar(0.1).exprange([300, 150, 1000], 200), 0.1, 0.01 ), 1000 ) )*0.3; Rotate2.ar(x, y, LFNoise1.kr(0.2)); \}; ); \
+\
+( // 001 var sustainTime, transitionTime, density; var period; sustainTime = 1.0; transitionTime = 0.5; density = 20.0; period = (2 * transitionTime + sustainTime) / density; period.postln; ~blipsFx.play; Tdef(\\player, \{ inf.do(\{ arg i; if(0.8.coin, \{ ~blips_001.spawn([ \\sustainTime, rrand(0.25*sustainTime, 4*sustainTime), \\transitionTime, transitionTime, \\dens, rrand(4*density, 0.125*density) ]); \}); rrand(0.5*period, 2*period).wait; \}); \}).play; )\
+\
+ ( ~blips_001 = \{arg sustainTime = 4.0, transitionTime = 4.0, dens = 10; var out, env, freq; env = Env.new( #[0.0, 1.0, 1.0, 0.0], [transitionTime, sustainTime, transitionTime], 'welch' ); freq = ExpRand(60, 20000); out = Formant.ar( freq* SinOsc.ar(dens).range(1.1, 0.5), XLine.kr(ExpRand(60,1000), ExpRand(200,10000), 4), XLine.kr(800, 8000, 4) ).squared * Blip.ar( XLine.kr(ExpRand(0.125,10), ExpRand(0.125,10), 4), XLine.kr(ExpRand(1.0,100), ExpRand(2.0,100), 4) ); out = EnvGen.kr(env, doneAction: 2) * out; out = Pan2.ar(out, Line.kr(Rand(-1.0, 1.0), Rand(-1.0, 1.0), 4), 0.3); \}; );\
+ \
+  ~blips_001.play; ~blipsFx.play; ~brow.play; \
+  \
+  \
+  }

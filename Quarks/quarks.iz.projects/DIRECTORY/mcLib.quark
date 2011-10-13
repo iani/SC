@@ -1,0 +1,14 @@
+(
+	\name: "mcLib",
+	\path: "mcLib",
+	\summary: "Modeling and Visualization of ancient greek music theory and notation",
+	\helpdoc: "Help/mcLib.html",
+	\author: "Martin Carlé",
+	\version: 0.01,
+	\organization: "Humboldt Universität zu Berlin",
+	\country: "Germany",
+	\since: "2011",
+	\url: "",
+	\dependencies: []
+)
+

@@ -1,0 +1,536 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> <hmtl>
+ 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="824.42">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p5 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #d40000}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d40000}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #1200c4}
+span.s3 {color: #1200c4}
+span.s4 {color: #000000}
+span.s5 {color: #1200c4}
+span.s6 {color: #d40000}
+span.s7 {font: 12.0px Helvetica; color: #000000}
+span.s8 {color: #0000ff}
+span.s9 {color: #1200c4}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+ <body>
+ 
+<p class="p1"><span class="s1"><b>Systema<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b> enables convenient handling of 'rational' and 'non-cyclic' scales</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><b> Object : Scale </b></p>
+<p class="p3"><br></p>
+<p class="p1"> Scale representaion and repository with an interface to the <b>SCL format</b>. 	<br><b>Systema</b>, in contrast to <b>Scale</b> handles 'non-cyclic' or 'non-octave-indentical' 	scales. It supports 'rational' scale definitions by instances of class <b>Ratio</b>. 	<br><br>Compatible with the <b>Scale</b> + <b>Tuning</b> couple, Systema provides a series of 	additional scale creation methods e.g. parasemantic, sturmian words, maximally even, MOS etc.) 	and offers some useful transformation and modulation methods for them. Various annotations to 	each step of a scale can be specified and stored on disk.</p>
+<p class="p2"><br></p>
+<p class="p1"><b>See also:</b>  Scale, RCTuning, Ratio 						<br>Examples --> Archytas_Stoichos, Archytas_Stoichos_Systema, Systema_posts </p>
+<p class="p2"><br></p>
+<p class="p4"><b>Other Issues</b></p>
+<p class="p2"><br></p>
+<p class="p1"> <b>Systema extends the default pitch event.</b><br><br>Extension<br>/Users/admin2/Library/Application Support/SuperCollider/Extensions/quarks_ MC/Systema/Systema_lib/Systema_pitchEvent.sc  adds:<br><br>Yes, there are many eventTypes to play any alternative pitch models<br><i> Event.partialEvents.playerEvent.eventTypes.keys.asList.sort </i><br> but we want to stay compatible with the default eventType 'note' <br><i> Event.partialEvents.playerEvent.eventTypes[\note] </i><br> and its corresponding pitchEvent<br><i> Event.partialEvents.pitchEvent</i> </a></p>
+<p class="p2"><br></p>
+ 
+<p class="p4"><b>Creation / Class Methods</b></p>
+<p class="p5"><br></p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*new (steps,  pitchesPerOctave,  tuning,  name,  root,  tc,  midiRoot,  octaveRatio,  globDict,  stepDicts,  stepCodes )</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		steps </b>-  5 casses of usage depending on whether steps is <br>		(1) a List of Integers -- interpreted as the degree of a scale like in Scale.<br>		(2) a List of SimpleNumber that contains a Ratio => rational-mode, degrees are derived.		<br>(3) a List of SimpleNumber that contains Floats => cents-mode, degrees are derived.		<br>In this 3 cases also UTF8 codes known to CodePage are allowed which will be look up		in the stepDicts or the stepDicts of the Systema with the same name as the given Tuning.		<br>(4) a String of UTF8 codes. More convenient than to split code strings by commas like 		in the cases 1-3.<br>								(5) a Symbol -- syntactic sugar to retrieve a Systema by name (similar to a pseudo 		method). In this case the 3 follwing arguments take the function of those of method 		'tuning_'.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		pitchesPerOctave </b>-  an Integer -- specifying the pitches per octave in a scale. If tuning is 		nil and values of the steps argument are degees (i.e. case 1), an equal tempered scale 		with the number of pitches per octave is computed as default tuning. In all other cases 		the number of pitchesPerOctave is derived and the argument is ignored. However if 		0, a systema's scale is considered to be non-cyclic.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		tuning </b>-  a Tuning or Symobl specifying a tunings name. Tunings are looked up first in all		known Systemata, then in TuningInfo.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		name </b>-  a String or Symbol. Name may entail a discription separated by a colon.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		root </b>-  Integer offset of rootIndex. If nil, the degree of tuning 0 cents or 1/1 (if 		rational)	is searched to determine the instance var rootIndex (see below). 		Alternativeley a Ratio, Float or string may be used like in 'rootDegree_' (see below).</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		tc </b>-  Integer offset of tonalCenter. If nil, it is set to the rootIndex, and thus refers to 		the rootDegree (always 0). Alternativeley a Ratio, Float or string may be used like in 		'rootDegree_' (see below).</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		midiRoot </b>-  see Instance Variables - Default is 60.0.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		octaveRatio </b>-  a SimpleNumber to overwrite the octaveRatio of a Tuning. If nil, it will be		derived either from steps or tuning.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		globDict </b>-  see Instance Variables and example file testSystema.systema</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		stepDicts </b>-  see Instance Variables and example file testSystema.systema</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		stepCode </b>-  a Symbol, Symbols, or a Collection of Symbols specifing the UTF8 codes to be		used in order to replace the Strings given in the steps List. If nil, all availlable		encodings are used as given by (1st) the stepDicts or (2nd) the stepDicts of the tuning of		a Systema referenced	by name as Sybol in the tuning argument.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span> </p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema([1,2], name: \SimpleName) //note: leading capitals will be converted to minuscule.</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema([0,14],name: "Any Name: with a global discription of this systema")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.ionian</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.ionian(\just) // quickly apply a Tuning</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.unknown // throws an error -> not nice, and no suitable way to create a new Systema</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\ionian) // just another quick access method</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\ionian, \et19) // and also quickly change the tuning</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\unknown)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema([1,2/|1], 0, \et24).postl		// non-cyclic -- last degree matches tuning</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema([1,2/|1], tuning: \et24).postl	// cyclic -- last degree does not match tuning</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema([0.0, 600], nil, \et24).postli.play(0.4, (1..6)) //octaveRatio has only effect when 		cycling</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema([0.0, 600 ], nil, \et24, octaveRatio: 0.5).postli.play(0.4, (1..6)) // thus, also on 		direction </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema("𝈉 Ϲ 𝈚 𝍚𝍷𝍜𝈬", 0, \testSystema, 			"new SYS: from code string").postlid.play</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(["𝈉", 2, "Ϲ", "𝈚", 1], 0, \testSystema).postlid.play // specify degree by		degrees</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(["𝈉", 2, "Ϲ", "𝈚", 1/|1], 0, \testSystema).postlid.play // by Ratios</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(["𝈉", 1200, "Ϲ", "𝈚", 0.0], 0, \testSystema).postlid.play //by cents</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*fromEvent (ev)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> scaleLoop </b>-  ... this will import a subclass of Loop called ScaleLoop</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*at (name)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> name </b>-  a Symbol to retrieve an instance from classvar all by name.</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*remove (name)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> name </b>-  a name symbol to remove an instance from classvar all.</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*removeAll </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> remove all instances from classvar all.</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*posta </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post all' present Systemata with name, tuning name and description.</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*addSystemDir (dir)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> add a system-wide dir to look for .systema or .scl files </p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>			dir </b>-  full path as String (need not to be escaped) - Default value is <b>nil</b>.</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*addUserDir (dir)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> add a user-owned dir to look for .systema or .scl files </p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>			dir </b>-  full path as String (need not to be escaped) - Default value is <b>nil</b>.</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*load (path,  post)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> path </b>-  a file. If path is nil a file dialog is invoked - Default value is <b>nil</b>.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		post </b>-  a Boolean -- whether paths should be posted</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("TEST/testSystema.systema") </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// searches for testSystema.systeama in folder TEST of *userDirs and *systemDirs</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// only one parent folder maybe specified, otherwise all subdirs of SYSTEMATA is searched. </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// if you drop the file extension, all files containing the file name string are found:</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("TEST/testSystema") </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("test") 	// all systema files containing the string test are loaded</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*loadDir (dir,  post)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> dir </b>-  a directory. If dir is nil a file dialog is invoked - Default value is <b>nil</b>.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		post </b>-  a Boolean -- whether paths should be posted</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.loadDir("TEST") // loads subdirs of *userDirs and *systemDirs incl. String TEST</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			// eg: </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.loadDir("/Users/admin2/Library/Application Support/SuperCollider/SYSTEMATA/TEST") </p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*loadAll (post)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> load all Systemata in *systemDirs and *userDirs</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		post </b>-  a Boolean -- whether paths should be posted</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.loadAll(false) //load all don't post</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*importSCL (path,  post)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> path </b>-  a file. If path is nil a file dialog is invoked - Default value is <b>nil</b>.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		post </b>-  a Boolean -- whether paths should be posted</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("TEST/testSCL.scl") </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// searches for arch_enh.scl in folder SCL of *userDirs and *systemDirs</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// only one parent folder maybe specified, otherwise all subdirs of SYSTEMATA is searched. </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// if you drop the file extension, all files containing the file name string are found:</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("TEST/testSCL")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("testSCL") // all files which contain the string arch_enh are loaded</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*importSCLdir (dir,  post)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> dir </b>-  a directory. If dir is nil a file dialog is invoked - Default value is <b>nil</b>.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		post </b>-  a Boolean -- whether paths should be posted</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCLdir("SCL") // loads subdirs of *userDirs and *systemDirs containing "SCL"</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*importSCLall (post)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> import all SCL files in *systemDirs and *userDirs</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		post </b>-  a Boolean -- whether paths should be posted</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCLall</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*saveAll (dir )</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> dir </b>-  any absolute or relative dir to [Platform.userAppSupportDir +/+ "SYSTEMATA"] - Default value is <b>"SAVED"</b>.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.saveAll</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.loadDir("SAVED")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.saveAll("Tests/SaveTest")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.loadDir("SaveTest")</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*exportSCLall (dir )</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> dir </b>-  any absolute or relative dir to [Platform.userAppSupportDir +/+ "SYSTEMATA"] - Default value is <b>"SAVED_SCL"</b>.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.exportSCLall</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCLdir("SAVED_SCL")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.exportSCLall("Tests/SaveTest SCL")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCLdir("SaveTest SCL")</p> <p class="p5"><br></p>
+ 
+<p class="p11"><b>Accessing Class Variables</b></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*all</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  IdentityDictionary with all instances stored by its name symbol. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*systemDirs</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  Set of system-wide dirs to look for systemata or SCL files. Default dir is 		SYSTEMATA in [Platform.systemAppSupportDir]. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*userDirs</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>   Set of user-owned dirs to look for systemata or SCL files. Default dir is SYSTEMATA 		in [Platform.systemAppSupportDir]. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*defaultCodes</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*defaultCodes_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  Set of default encodings known to CodePage. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*copySymbols</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*copySymbols_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  keys to those entries in globDict that will be copied by copy methods. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*isLdPost</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>*isLdPost_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  (boolean) whether to post loaded files, or not. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p11"><b>Accessing Instance Variables</b></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>rootIndex</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>rootIndex_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  Offset to the list of degrees. All 'degrees' of the systema are relative to this 	offset, enabling for negative degrees. The rootIndex maybe directly set by an Integer, or 	indirectly by the method 'rootDegree_' (see below). </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>tonalCenter</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>tonalCenter_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  An offset possibly diffrent from root of scale (== degree 0). TonalCenter need not 	be contained in degrees, but must be an index matching a step of tuning. TonalCenter maybe set 	directly by an Integer, or by 'tcDegree_'. Options of arguments are those of 'rootDegree_'.	(see below). </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>midiRoot</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>midiRoot_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  default absolut pitch of rootIndex specified by a midiNote - Default is 60.0. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>globDict</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>globDict_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  global Event for all sorts of meta-data, including post-options and 'stepCodes' known 	to CodePage. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>stepDicts</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>stepDicts_</b></p>
+ 
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>  List of Events with meta-data for each step of a Systema, including UTF8 code 	strings known by CodePage.<br><br>Also refer to example file 'testSystema.systema'. </p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ 
+<p class="p7"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+ <p class="p11"><b> Instance Methods</b></p>
+<p class="p12"><br></p>
+<p class="p6"> See also instance vars of Scale.</p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>copy (argName)</b></p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.ionian.copy("hey").postli.play</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.copy.postld.play</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.copy("kiekste").postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.deepCopy.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.deepCopy("kiekste").postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.copy.asCompileString</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>copyByIndices (indices,  argName)</b></p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyByIndices([13,23,33], "cpByIndices").postld // new rootIndex 1</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyByIndices([13,24,33], "cpByIndices").postld // root does not match</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>copyByDegrees (degrees,  argName)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> same as copyBy</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>copyBy (items,  argName)</b></p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyBy([-10,0,10], "cpByDegs").postld // new rootIndex 1</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyBy([-10,1,10], "cpByDegs").postld // rootIndex does not match -> 0</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyBy([ 112/|81, 1/|1, 32/|45], "cpByRatios").postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyBy([561.0, 0.0, -590.2], "cpByFloats").postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyBy([ "𝍴", "𝍜", "𝍞" ], "cpByCodes").postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyBy([ "𝍴𝍜𝍞" ], "cpByCodes").postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.copyBy([ "𝈔 Ϲ 𢌷" ], "cpByCodes").postld</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>save (dir )</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> dir </b>-  any absolute or relative dir to [Platform.userAppSupportDir +/+ "SYSTEMATA"] - Default value is <b>"SAVED"</b>.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("TEST/testSystema.systema")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\testSystema).save</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("SAVED/testSystema.systema")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\testSystema).save("Tests/SaveTest2")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("SaveTest2/testSystema")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("TEST/testSCL")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\testSCL).save("Tests/SaveTest3")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("SaveTest3/testSCL")</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>exportSCL (dir )</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> dir </b>-  any absolute or relative dir to [Platform.userAppSupportDir +/+ "SYSTEMATA"] - Default value is <b>"SAVED_SCL"</b>.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("TEST/testSCL.scl")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\testSCL).exportSCL</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("SAVED_SCL/testSCL.scl")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\testSCL).exportSCL("Tests/SaveTest2")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("SaveTest2/testSCL")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.load("TEST/testSystema.systema")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema(\testSystema).exportSCL("Tests/SaveTest3")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.importSCL("SaveTest3/testSystema")</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>rootDegree </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> set rootIndex indirectly by !! degree !!. The argument can be either (1) an 		Interger of a valid degree present in degrees, or can be looked up in tuning 		via (2) a Float representing cents, (3) a Ratio representing a ratio, or (4) a String,		giving a UTF8 sequence known to CodePage.<br>(Also see sample file testSysteama.systeama.)</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.rootDegree = -23</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.rootDegree = 1/|1</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.rootDegree = -1200.0</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.rootDegree = "𝍜"</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>tcDegree </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> set rootIndex by degree or CodePage code known by Set at globDict[\stepCodes]</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.tcDegree = -23</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.tcDegree = 1/|1</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.tcDegree = -1200.0</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.tcDegree = "blaαδφϹ𝈕dada"</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema.testSystema.postld</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>isCyclic </b></p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.postl</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.isCyclic_(false).postl</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.isCyclic_(true).postl</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.isCyclic_(true).postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.isCyclic_(false).postld</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>scaleDegrees </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> like 'degrees', but plus the first cyclic degree</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>posti </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post intervals'</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.posti</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.postri</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.postci</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.postid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.postrid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.postcid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.posti</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.postri</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.postci</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.postid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.postrid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.postcid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS([1,12.rand,12.rand], 14, name:"test").posti </p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postid </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post intervals descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postri </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post ratio intervals'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postrid </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post ratio intervals descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postci </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post cent intervals'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postcid </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post rational intervals descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postl (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post long'</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>			prtLegend </b>-  a List of Strings -- keys as Strings to values stored in the stepDicts.				Surrounding spaces give the width of the print column.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>			prtFormat </b>-  a List of Symbols -- one of \l, \c, or \r is possible, defining the 				column's allignment.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span> </p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postl</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postrl</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postcl</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postrld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postcld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postrld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postcld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postrld(["  name  ", "agmVoc"], [\c, \c])</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postld (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post long descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postrl (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post ratios long'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postrld (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post ratios long descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postcl (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post cents long'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postcld (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post cents long descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postli (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post long (with) intervals'</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>			prtLegend </b>-  a List of Strings -- keys as Strings to values stored in the stepDicts.				Surrounding spaces give the width of the print column.</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>			prtFormat </b>-  a List of Symbols -- one of \l, \c, or \r is possible, defining the 				column's allignment.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span> </p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postli</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postrli</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.postcli</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postli</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postlid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postrli</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postrlid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postcli</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postclid</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postclid(["  name  ", "agmVoc"], [\c, \c])</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postlid (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post long intervals descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postrli (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post ratio long intervals'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postrlid (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post ratio long intervals descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postcli (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post cents long intervals'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>postclid (prtLegend,  prtFormat)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'post cents long intervals descending'</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>semitones </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> like in Scale</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>cents </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> like in Scale</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>ratios </b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> like in Scale</p>
+ <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>degreeToRatio (degree,  octave )</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> like in Scale</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.degrees.do{|deg| SYS.testSystema.degreeToRatio(deg).postln }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.degrees.do{|deg| SYS.testSystema.degreeToRatio(deg, -1).postln }</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>degreeToFreq (degree,  rootFreq,  octave )</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> like in Scale</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		rootFreq </b>-  if nil, midiRoot is used as default.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.degreeToFreq(0, 54.midicps)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.degreeToFreq(0)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.degrees.collect{|deg| SYS.testSystema.degreeToFreq(deg) }</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>at (index)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> get midinote/semitone of a degree</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.at(-1)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.at(0)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.at(7)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.at(8)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.at(-24)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.at(-23)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.at(-21)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.at(0)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.at(21)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.at(22)</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>wrapAt (index)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> get midinote/semitone of a degree wraped at the tuning 		<br>(though this makes little sense for non-cyclic systemata)</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.wrapAt(-1)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.wrapAt(0)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.wrapAt(7)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.wrapAt(8)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.wrapAt(-24)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.wrapAt(-23)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.wrapAt(-21)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.wrapAt(0)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.wrapAt(21)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.testSystema.wrapAt(22)</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>performDegreeToKey (degree,  stepsPerOctave,  accidental )</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> returns a midinote based on current tuning.</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.performDegreeToKey(-1)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.performDegreeToKey(0)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.performDegreeToKey(7)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.performDegreeToKey(8)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.performDegreeToKey(-24)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.performDegreeToKey(-23)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.performDegreeToKey(-21)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.performDegreeToKey(0)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.performDegreeToKey(21)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.performDegreeToKey(22)</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>performKeyToDegree (inKey)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> map midinotes back into scale degrees</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Scale.ionian.degrees</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.semitones.collect{|key| SYS.ionian.performKeyToDegree(key) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				// <br> // shift rootIndex</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			SYS.ionian.copy("root2").rootIndex_(2).degrees</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r = (0..(SYS.root2.size-1)).collect{|deg| SYS.root2.performDegreeToKey(deg) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|key| SYS.root2.performKeyToDegree(key) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				// <br> //  descending systema</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema(Systema.testSystema.ratios.drop(2).drop(-1), name: \testCyc0,				octaveRatio: 0.25).rootIndex_(0).postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r = (0..(SYS.testCyc0.size-1)).collect{|deg| SYS.testCyc0.performDegreeToKey(deg) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|key| SYS.testCyc0.performKeyToDegree(key) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				// <br> // descending systema with shifted rootIndex</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			Systema(Systema.testSystema.ratios.drop(2).drop(-1), name: \testCyc21,	 			octaveRatio: 0.25).postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r = (0..(SYS.testCyc21.size-1)).collect{|deg| SYS.testCyc21.performDegreeToKey(deg) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|key| SYS.testCyc21.performKeyToDegree(key) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|key| SYS.testCyc21.degrees.at(SYS.testCyc21.performKeyToDegree(key)) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				// <br> // non-cycric testSystema descending with shifted rootIndex</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r = (0..(SYS.testSystema.size-1)).collect{|deg| 				SYS.testSystema.performDegreeToKey(deg) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|key| SYS.testSystema.performKeyToDegree(key) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|key| SYS.testSystema.degrees.at(SYS.testSystema.performKeyToDegree(key)?0)}</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				// <br> // non-cycric testSystema descending with shifted rootIndex</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r = SYS.testSystema.degrees.collect{|deg| SYS.testSystema.performDegreeToKey(deg) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|key| SYS.testSystema.performKeyToDegree(key) }</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>performNearestInList (degree)</b></p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span> </p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				(-4..14).collect{|i| SYS.ionian.performNearestInList(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.rootIndex_(2).degrees</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				(-4..14).collect{|i| SYS.ionian.rootIndex_(2).performNearestInList(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				(-4..14).collect{|i| SYS.testSystema.performNearestInList(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				[-24, -23, -22, -20, -0.3, 0, 0.3, 21, 22, 23].collect{|i| 					SYS.testSystema.performNearestInList(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS([13, 23, 33], 0, \testSystema, \extractIndices, 1).postld.degrees;</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				[-24, -23, -22, -20, -0.3, 0, 0.3, 21, 22, 23].collect{|i| 					SYS.extractIndices.performNearestInList(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.copyBy([-10, 0, 10], \extractDegrees).postld.degrees;</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				[-24, -23, -22, -20, -0.3, 0, 0.3, 21, 22, 23].collect{|i| 					SYS.extractDegrees.performNearestInList(i) }</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>performNearestInScale (degree)</b></p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span> </p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				(-4..14).collect{|i| SYS.ionian.performNearestInScale(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.ionian.rootIndex_(2).degrees</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				(-4..14).collect{|i| SYS.ionian.rootIndex_(2).performNearestInScale(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				<br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.postld</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				(-4..14).collect{|i| SYS.testSystema.performNearestInScale(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				SYS.testSystema.deepCopy(\testCyclic).isCyclic_(true).postld				(-4..14).collect{|i| SYS.testCyclic.performNearestInScale(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				[-24, -23, -22, -20, -0.3, 0, 0.3, 21, 22, 23].collect{|i| 					SYS.testSystema.performNearestInScale(i) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>				[-24, -23, -22, -20, -0.3, 0, 0.3, 21, 22, 23].collect{|i| 					SYS.testCyclic.performNearestInScale(i) }</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>ratioToDegree (ratio)</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> </b>-  same like performKeyToDegree with a Ratio as argument</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r = SYS.testSystema.degrees.collect{|deg| SYS.testSystema.degreeToRatio(deg) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|ratio| SYS.testSystema.ratioToDegree(ratio) }</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>freqToDegree (freq,  rootFreq,  octave )</b></p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b> </b>-  same like performKeyToDegree but with frequency as argument</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r = SYS.testSystema.degrees.collect{|deg| SYS.testSystema.degreeToFreq(deg) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|freq| SYS.testSystema.freqToDegree(freq) }</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			r.collect{|freq| SYS.testSystema.freqToDegree(freq +1) } //still a bit academic ;-)</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>play (dur ,  degs,  amp)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> play it</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		dur </b>-  duration per note</p>
+ 
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>		degs </b>-  list of degrees or code string. Same argument policy as explained for 'rootDegree_'</p>
+ 
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+ <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.ionian.play</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.ionian.playR	</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.play(0.2)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.playR(0.2)</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.play(0.2, (-2..0))</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.play(0.2, [16/|15, 28/|27, 1/|1])</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.play(0.2, [111.7, 63.0, 0.0])</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.play(0.2, "Ͻ𝈱𝍜")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.playR(0.2, "𢌾𢌿Ϲ")</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Systema.testSystema.play(0.8, ["𢌾𢌿Ϲ", "𝍷𝈯𝍷", "𝈮𝈭𝈬"])</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// <br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// Patterns are supported. Actually 'play' uses a Pbind like this</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		// <br></p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Pbind(\dur, 0.2, \scale, Systema.testSystema, \degree, [16/|15, 28/|27, 1/|1]).play</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		(</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		Pbind(\dur, 0.8, \scale, Systema.testSystema, \codes, [\agmIns, \agmVoc], </p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>			\degree, Pseq(["𢌾𢌿Ϲ", "𝍷𝈯𝍷", "𝈮𝈭𝈬"]) ).play</p> <p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>		)</p> <p class="p5"><br></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span>playR (dur ,  degs,  amp)</b></p>
+ 
+<p class="p6"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b> 'play reverse' (see play)</p>
+ <p class="p5"><br></p>
+ </body> </html>

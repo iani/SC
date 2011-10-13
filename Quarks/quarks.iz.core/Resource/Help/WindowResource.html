@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+span.s1 {color: #000000}
+span.s2 {color: #008323}
+span.s3 {color: #162bc4}
+span.s4 {color: #737373}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">//: a</p>
+<p class="p2">WindowResource<span class="s1">(</span><span class="s2">\test</span><span class="s1">).onClose({ </span>"closed".postln<span class="s1">; });</span></p>
+<p class="p1">//:b</p>
+<p class="p3"><span class="s2">\test2</span>.window.onClose({ ({ 10.rand } ! 10).postln });</p>
+<p class="p4"><br></p>
+<p class="p1">//:w simple unique window</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="s3">{ WindowResource</span>(<span class="s2">\simple</span>) onClose: { <span class="s3">| me |</span> postf(<span class="s4">"The window named '%' was closed\n"</span>, me.name) }; }.defer;</p>
+<p class="p4"><br></p>
+<p class="p1">//:y/2 does not reopen:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">{</p>
+<p class="p3"><span class="Apple-tab-span">	</span>8 do: {<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">WindowResource</span>(<span class="s2">\repeatsimple</span>).onClose({ <span class="s3">| me |</span> postf(<span class="s4">"The window named '%' was closed\n"</span>, me.name) })</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.window.view.background<span class="Apple-converted-space">  </span>= <span class="s3">Color</span>.rand;</p>
+<p class="p5"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>"It's still the same window"<span class="s1">.postln;</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>0.5.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span>3.wait;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s3">WindowResource</span>(<span class="s2">\repeatsimple</span>).window.close;</p>
+<p class="p3">}.fork(<span class="s3">AppClock</span>);</p>
+<p class="p4"><br></p>
+<p class="p1">//:c</p>
+<p class="p4"><br></p>
+<p class="p3">r = {</p>
+<p class="p3"><span class="Apple-tab-span">	</span>5 do: { <span class="s3">| i |</span></p>
+<p class="p2"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>WindowResource<span class="s1">(</span><span class="s2">\otherWindow</span><span class="s1">, {</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">var</span> w;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>w = <span class="s3">Window</span>.new(<span class="s4">"MyWindow"</span>, <span class="s3">Rect</span>(*<span class="s3">Array</span>.rand(4, 250, 400)));</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>w.view.background = <span class="s3">Color</span>.rand(0.5, 1);</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">StaticText</span>(w, <span class="s3">Rect</span>(0, 0, 300, 50))</p>
+<p class="p5"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>.string = format(</span>"if you close me I will reappear - up to 5 times.\ncounting: % times"<span class="s1">, i + 1);</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>w;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}).front.onClose(</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{</p>
+<p class="p5"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>postf(</span>"I closed for the %th time\n"<span class="s1">, i + 1);<span class="Apple-converted-space"> </span></span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>r.next;</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>});</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s3">nil</span>.yield;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>};</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s4">"THE END"</span>.postln;</p>
+<p class="p3">}.fork(<span class="s3">AppClock</span>)</p>
+</body>
+</html>
