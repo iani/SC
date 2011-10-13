@@ -1,1 +1,0 @@
-[ "/Users/iani/sounds/osmosis_sounds/seals_normalized/weddell1.aiff", "/Users/iani/sounds/osmosis_sounds/seals_normalized/leo_wed.aiff" ]
