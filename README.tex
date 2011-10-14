@@ -1,4 +1,4 @@
-% Created 2011-06-08 Wed 13:15
+% Created 2011-10-14 Fri 14:42
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -22,37 +22,52 @@
 
 \title{Lilt2/Elemenb\'i (\emph{Look Ma, No Boot})}
 \author{Ioannis Zannos}
-\date{08 June 2011}
+\date{14 October 2011}
 \maketitle
 
 \setcounter{tocdepth}{3}
 \tableofcontents
 \vspace*{1cm}
 
-By Ioannis Zannos, March-May 2011
+\section{Credits, Download}
+\label{sec-1}
+
+\begin{itemize}
+\item Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
+\item Quarks modularisation scheme by Martin Carl\'e, September-October 2011
+\item Server GUI by Sergio Luque
+\end{itemize}
 
 Download from: \href{https://github.com/iani/SC}{https://github.com/iani/SC}
 or:
 \begin{verbatim}
   git clone git://github.com/iani/SC.git
 \end{verbatim}
-
-
 \section{Installation}
-\label{sec-1}
-
-
-As of 2011-06-08 The library is being reorganized to a modular plugin-form using quarks (thanks MC).  To open up a GUI that lists local quarks for installing or removing evaluate an appropriately modified version of the following statement: 
-
-\small{
-\begin{verbatim}
-Quarks(localPath: Platform.userAppSupportDir +/+ "quarks.local").gui;
-\end{verbatim}
-}
-
-Note: In this library \texttt{quarks.local} is the top level directory for all modules in quark form. 
-\section{Class ServerPrep}
 \label{sec-2}
+
+
+As of 2011-06-08 The library is being reorganized to a modular plugin-form using quarks (thanks MC). To make these quarks available via a menu on MacOS X, make an alias of the folder ``PutMyAliasInExtensions'' and put the alias in:
+
+\begin{verbatim}
+  ~/Library/Application Support/SuperCollider/Extensions/
+\end{verbatim}
+
+
+Then recompile SuperCollider. 
+
+Choose iz.local from the Quarks menu.  Recommended Quarks to try out are: 
+
+\begin{itemize}
+\item LiltBase (Provide utility classes for other Quark modules)
+\item Snippets (Place document windows conveniently and provide navigation and code execution utilities)
+\item ServerPrep (Handle loading of Buffers, SynthDefs and automate booting of Server before starting Synths)
+\item Resource (Bind Synths and other objects to symbols and make them available through the symbols)
+\item ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
+\item Chains (Alternative score-writing class for scheduling execution of functions with patterns)
+\end{itemize}
+\section{Class ServerPrep}
+\label{sec-3}
 
 
 \begin{itemize}
@@ -76,7 +91,7 @@ Classes involved:
 \item Udef
 \end{itemize}
 \section{Class SynthResource}
-\label{sec-3}
+\label{sec-4}
 
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
@@ -116,7 +131,7 @@ Example of how SynthResource can simplify the code required:
 )
 \end{verbatim}
 \section{Class Chain, EventStream, Function:sched and Function:stream}
-\label{sec-4}
+\label{sec-5}
 
 
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
@@ -176,14 +191,14 @@ Chain(Prand([ // choose from the following at random:
 )
 \end{verbatim}
 \section{Object methods for easy messaging via NotificationCenter}
-\label{sec-5}
+\label{sec-6}
 
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 \section{Class Code}
-\label{sec-6}
+\label{sec-7}
 
 
 Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in \{ \}.fork or Routine(\{ \}). 
@@ -203,12 +218,12 @@ Shortcuts provided are:
 \item Command-alt-control-shift-\}: Create OSCresponders for running the code segments of the current Document
 \end{itemize}
 \section{Class Panes}
-\label{sec-7}
+\label{sec-8}
 
 
 Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
 \section{Class Dock}
-\label{sec-8}
+\label{sec-9}
 
 
 Provide some useful shortcuts for common tasks: 
@@ -226,7 +241,7 @@ Provide some useful shortcuts for common tasks:
 
    closeDocListWindow : Close the document list window
 \section{Class Spectrograph}
-\label{sec-9}
+\label{sec-10}
 
 
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 

@@ -1,31 +1,53 @@
-                 Lilt2/Elemenbí (/Look Ma, No Boot/)
-                 ===================================
+                Lilt2/Elemenb\'i (/Look Ma, No Boot/)
+                =====================================
 
 Author: Ioannis Zannos
-Date: 2011-05-24 12:21:32 EEST
+Date: 2011-10-14 14:41:31 EEST
 
 
-By Ioannis Zannos, March-May 2011
+Table of Contents
+=================
+1 Credits, Download 
+2 Installation 
+3 Class ServerPrep 
+4 Class SynthResource 
+5 Class Chain, EventStream, Function:sched and Function:stream 
+6 Object methods for easy messaging via NotificationCenter 
+7 Class Code 
+8 Class Panes 
+9 Class Dock 
+10 Class Spectrograph 
+
+
+1 Credits, Download 
+~~~~~~~~~~~~~~~~~~~~
+Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
+Quarks modularisation scheme by Martin Carl\'e, September-October 2011
+Server GUI by Sergio Luque
 
 Download from: [https://github.com/iani/SC]
 or:
  git clone git://github.com/iani/SC.git
 
-*Summary of ideas in this Library*
+2 Installation 
+~~~~~~~~~~~~~~~
 
-Table of Contents
-=================
-1 Class ServerPrep 
-2 Class SynthResource 
-3 Class Chain, EventStream, Function:sched and Function:stream 
-4 Object methods for easy messaging via NotificationCenter 
-5 Class Code 
-6 Class Panes 
-7 Class Dock 
-8 Class Spectrograph 
+As of 2011-06-08 The library is being reorganized to a modular plugin-form using quarks (thanks MC). To make these quarks available via a menu on MacOS X, make an alias of the folder "PutMyAliasInExtensions" and put the alias in:
 
+ ~/Library/Application Support/SuperCollider/Extensions/
 
-1 Class ServerPrep 
+Then recompile SuperCollider. 
+
+Choose iz.local from the Quarks menu.  Recommended Quarks to try out are: 
+
+- LiltBase (Provide utility classes for other Quark modules)
+- Snippets (Place document windows conveniently and provide navigation and code execution utilities)
+- ServerPrep (Handle loading of Buffers, SynthDefs and automate booting of Server before starting Synths)
+- Resource (Bind Synths and other objects to symbols and make them available through the symbols)
+- ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
+- Chains (Alternative score-writing class for scheduling execution of functions with patterns)
+
+3 Class ServerPrep 
 ~~~~~~~~~~~~~~~~~~~
 
 - Obviate the need to boot the server manually before starting synths.
@@ -45,7 +67,7 @@ Classes involved:
 - UniqueBuffer
 - Udef
 
-2 Class SynthResource 
+4 Class SynthResource 
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
@@ -82,7 +104,7 @@ Example of how SynthResource can simplify the code required:
   }.fork;
   )
 
-3 Class Chain, EventStream, Function:sched and Function:stream 
+5 Class Chain, EventStream, Function:sched and Function:stream 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
@@ -140,34 +162,37 @@ Other example:
   )
 
 
-4 Object methods for easy messaging via NotificationCenter 
+6 Object methods for easy messaging via NotificationCenter 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 
-5 Class Code 
+7 Class Code 
 ~~~~~~~~~~~~~
 
 Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
 
 Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
 
-Shortcuts provided are: 
+Shortcuts provided are:
 
-- Command-shift-x: Evaluate the code in an AppClock routine, after booting the default server if needed
-- Command-shift-alt-x: Evaluate the code in a SystemClock routine, after booting the default server if needed
+- Command-shift-x: Evaluate the code in an AppClock routine. Booting the default server if needed
+- Command-shift-alt-x: Evaluate the code in a SystemClock routine Boot default server if needed
 - Command-shift-v: Evaluate and post the results of the code, without routine or server booting
 - Command-shift-j: Select the next code part
 - Command-shift-k: Select the previous code part
+- Command-shift-}: open a list of the code segments of the current Document
+- Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
+- Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
 
-6 Class Panes 
+8 Class Panes 
 ~~~~~~~~~~~~~~
 
 Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
 
-7 Class Dock 
+9 Class Dock 
 ~~~~~~~~~~~~~
 
 Provide some useful shortcuts for common tasks: 
@@ -185,8 +210,8 @@ Provide some useful shortcuts for common tasks:
 
    closeDocListWindow : Close the document list window
 
-8 Class Spectrograph 
-~~~~~~~~~~~~~~~~~~~~~
+10 Class Spectrograph 
+~~~~~~~~~~~~~~~~~~~~~~
 
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
 

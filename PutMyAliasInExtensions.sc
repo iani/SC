@@ -1,2 +1,0 @@
-
-IZ_Quarks : RepQuarks {}
