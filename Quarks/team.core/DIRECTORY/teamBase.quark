@@ -1,0 +1,14 @@
+(
+	\name: "teamBase",
+	\path: "teamBase",
+	\summary: "team essentials",
+	\helpdoc: "",
+	\author: "",
+	\version: 1.0,
+	\organization: "",
+	\country: "",
+	\since: "2011",
+	\url: "",
+	\dependencies: []
+)
+
