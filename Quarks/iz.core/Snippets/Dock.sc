@@ -99,10 +99,11 @@ Dock {
 		]		
 	}
 
-	*showDocListWindow {
+	*showDocListWindow {|multiPaneAreaWidth|
 		var listwin;
+		multiPaneAreaWidth = multiPaneAreaWidth ?? { Window.screenBounds.width };
 		listwin = ListWindow('Documents', 
-			Rect(Window.screenBounds.width - width, 87, width, Window.screenBounds.height - 87), 
+			Rect(multiPaneAreaWidth - width, 87, width, Window.screenBounds.height - 87),  
 			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
 				d.name->{
 					d.front; 
