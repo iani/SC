@@ -1,0 +1,16 @@
+~controlSpecs = [
+[ 'out', 0, 4095, 'linear', 1, 0 ],
+[ 'freq', 20, 20000, 'exp', 0, 440 ],
+[ 'reedstiffness', 0, 128, 'linear', 0, 64 ],
+[ 'noisegain', 0, 8, 'linear', 0, 4 ],
+[ 'vibfreq', 1e-05, 30, 'exp', 0, 64 ],
+[ 'vibgain', 0, 22, 'linear', 0, 11 ],
+[ 'breathpressure', 0, 128, 'linear', 0, 64 ],
+[ 'trig', 0, 1, 'linear', 1, 1 ],
+[ 'mul', 0, 1, 'linear', 0, 1 ],
+[ 'add', 0, 1, 'linear', 0, 0 ]
+];
+
+~start = { Synth("stkclarinet", ['out', ~out, 'freq', ~freq, 'reedstiffness', ~reedstiffness, 'noisegain', ~noisegain, 'vibfreq', ~vibfreq, 'vibgain', ~vibgain, 'breathpressure', ~breathpressure, 'trig', ~trig, 'mul', ~mul, 'add', ~add], ~target,#[\h, \t, \addBefore, \addAfter, \addReplace][~addAction]) };
+
+/// testing

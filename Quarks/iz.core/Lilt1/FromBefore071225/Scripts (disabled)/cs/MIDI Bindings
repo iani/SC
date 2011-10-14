@@ -1,0 +1,26 @@
+/* IZ 2007-06-07 { SC3
+
+UC33: 
+Faders 1 - 4: Amp control for LoopBuf 1 - 4
+Knobs A 1 - 4: Rate Control for LoopBuf 1 - 4
+
+BCR2000
+Buttons A 1 - 4: LoopBuf on - off 1 - 4
+
+
+
+
+} */
+
+~controlSpecs = [
+
+];
+
+~start = {
+	"started".postln;
+};
+
+
+~stop = {
+	"stopped".postln;
+};

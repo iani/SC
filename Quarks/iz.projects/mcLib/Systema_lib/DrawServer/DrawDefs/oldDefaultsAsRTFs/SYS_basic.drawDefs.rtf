@@ -1,0 +1,255 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green115\blue0;\red191\green0\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf2 if (\cf3 this\cf2 .isLog(2)) \{ (\cf4 "\\n\\n"\cf2  + \cf3 thisProcess\cf2 .nowExecutingPath.basename + \cf4 "\\n"\cf2 ).postln; \};\
+\
+(\
+\cf3 DrawDef\cf2 (\cf5 \\SYS_basic\cf2 , \cf5 \\scaled\cf2 ,\
+	\{\cf3 |node, drawServer, pE, e, sysSym, spineW, ribColor, ribWL, ribWR,  ribWrootL, ribWrootR, \
+		ribExtL, ribExtR, coreLGab, coreRGab, sysLGab, sysRGab|\cf2 \
+		\cf3 var\cf2  sysCalc; \cf6 // and more things that will not change interactively:\cf2 \
+		\cf3 var\cf2  spineWL = spineW.div(2), spineWR = if (spineW.even) \{ spineWL \} \{ spineWL + 1\};\
+		\cf3 var\cf2  coreL = (spineWL + ribExtL + coreLGab) * -1;\
+		\cf3 var\cf2  coreR = spineWR + ribExtR + coreRGab;\
+		\cf3 var\cf2  sys, sysSize = 0, sysUpdFunc, sysCalcFunc, sysDepFunc, makeActionsFunc;\
+		pE.sysCalcs[sysSym] = (); sysCalc = pE.sysCalcs[sysSym];\
+		\cf6 //x\cf2 \
+		sysCalc.coreL = coreL; sysCalc.coreR = coreR; sysCalc.coreWidth = coreR - coreL;\
+		sysCalc.maxL = coreL - sysLGab; sysCalc.maxR = coreR + sysRGab;\
+		\cf6 //y\cf2 \
+		sysCalc.midiSteps = \cf3 List\cf2 []; sysCalc.ribExtLs = \cf3 List\cf2 []; sysCalc.ribExtRs = \cf3 List\cf2 [];\
+		sysCalc.ribColors = \cf3 List\cf2 []; sysCalc.ribWLs = \cf3 List\cf2 []; sysCalc.ribWRs = \cf3 List\cf2 [];\
+		sysCalc.midiNotes = []; sysCalc.yS = [];\
+		\
+		\cf6 // actions\cf2 \
+		sysCalc.coreRect = \cf3 Rect\cf2 .new; sysCalc.sysRect = \cf3 Rect\cf2 .new;\
+		sysCalc.degeeFields = \cf3 List\cf2 []; sysCalc.degreeActionRects = \cf3 List\cf2 [];\
+		\
+		drawServer.addField(\cf3 ScaledActionField\cf2 , sysCalc.coreRect, \{\cf3 |sV, cC, mod|\cf2  \cf3 var\cf2  sys; \
+			if (cC == 1) \{ if (sys.notNil) \{ \cf6 //cmd or shift-cmd\cf2 \
+				mod.switch(1048840, \{ sys.play \}, 1179914, \{ sys.playR \} ) \} \};\
+			\cf3 true\cf2  \}); \cf6 // swallow!\cf2 \
+		\
+		makeActionsFunc = \{\cf3 |scaleDegrees|\cf2  \
+			sysCalc.degeeFields.do\{\cf3 |field|\cf2  drawServer.removeField(field) \};\
+			sysCalc.refToneSynths = \cf3 Array\cf2 .newClear(scaleDegrees.size);\
+			sysCalc.degeeFields.clear;  sysCalc.degreeActionRects.clear;\
+			scaleDegrees.do\{\cf3 |degree, i|\cf2  \
+				\cf3 var\cf2  aRect = \cf3 Rect\cf2 .new;\
+				sysCalc.degreeActionRects.add(aRect);\
+				sysCalc.degeeFields.add( \
+					drawServer.addField(\cf3 ScaledActionField\cf2 , aRect, \{\cf3 |sV, cC, mod|\cf2  \
+						\cf3 var\cf2  refSynths; \cf6 //if cmd is pressed cC is always 1 !\cf2 \
+						if (sys.isNil) \{ \cf3 false\cf2  \}\{ mod.switch(\
+							1573160, \{ drawServer.beginDragAction = \{\cf3 |v, x, y, mod|\cf2  \
+									v.dragLabel = \cf4 "play a step"\cf2  \};\
+								sys.play(1, [degree]); \cf3 true\cf2  \}, \cf6 // alt-cmd\cf2 \
+							1704234, \{ drawServer.beginDragAction = \{\cf3 |v, x, y, mod|\cf2  \
+									v.dragLabel = \cf4 "set a step to continious sine"\cf2  \};\
+								refSynths = sysCalc.refToneSynths; \cf6 //shift-alt-cmd\cf2 \
+								if (refSynths[i].isNil) \{ refSynths[i] = \
+									\{\cf3 |freq|\cf2  \cf3 SinOsc\cf2 .ar(freq, 0, 0.2) \}.play(fadeTime: 0.2, \
+										args: [\cf5 \\freq\cf2 , sys.degreeToFreq(degree)]);\
+								\}\{ refSynths[i].releaseSynth(0.2); refSynths[i] = \cf3 nil\cf2  \} \},\
+							1835305, \{ drawServer.beginDragAction = \{\cf3 |v, x, y, mod|\cf2  \
+									v.dragLabel = \cf4 "reset sine steps"\cf2  \};\
+								sysCalc.refToneSynths = sysCalc.refToneSynths.collect\{\cf3 |rt|\cf2 \
+									rt !? \{ rt.releaseSynth(0.2) \}; \cf3 nil\cf2  \} \} \cf6 // ctl-alt-cmd\cf2 \
+							, \{ \cf3 false\cf2  \} ) \}\
+				\}));\
+			\}\};\
+			\
+		\cf6 // Systema data\cf2 \
+		\cf6 // updates: 2 cases: midiRoot may change frequently but tuning and annotations change rarely  \cf2 \
+		sysUpdFunc = \{ \cf6 // independent of e\cf2 \
+			\cf3 var\cf2  midiSteps, rootIndex;\
+			sysCalc.ribWLs.clear; sysCalc.ribWRs.clear; \
+			sysCalc.ribExtLs.clear; sysCalc.ribExtRs.clear;\
+			sysCalc.rootIndex = rootIndex = sys.rootIndex;\
+			sysCalc.midiSteps = midiSteps = pE.sysMidiStepsFunc(sys);\
+			\
+			if (sysSize != midiSteps.size) \{ makeActionsFunc.value(sys.scaleDegrees) \};\
+			sysSize = midiSteps.size;\
+			\
+			midiSteps.do\{\cf3 |step|\cf2 \
+				if (i != rootIndex) \{ \cf6 // all of those could be individualised later\cf2 \
+					sysCalc.ribWLs.add(ribWL);\
+					sysCalc.ribWRs.add(ribWR);\
+				\}\{\
+					sysCalc.ribWLs.add(ribWrootL);\
+					sysCalc.ribWRs.add(ribWrootR);\
+				\};\
+				sysCalc.ribExtLs.add(ribExtL * -1);\
+				sysCalc.ribExtRs.add(ribExtR);\
+				sysCalc.ribColors.add(ribColor);\
+				\cf6 // if individualised maxL and maxR need to be updated accordingly\cf2 \
+			\};\
+			sysCalc.indexMin = midiSteps.minIndex;\
+			sysCalc.indexMax = midiSteps.maxIndex;\
+			\
+			sysCalc.midiRoot = sys.midiRoot;\
+		\};\
+		node.addDependantFuncTo(\cf3 Systema\cf2 , \{\cf3 |who, what, name|\cf2  \cf6 //this.logln("sCD:" + [who, what, name]);\cf2 \
+			what.switch(\cf5 \\destroy\cf2 , \{ sysCalc.sys = sys = \cf3 nil\cf2 ; makeActionsFunc.value([]) \}, \
+				\cf5 \\new\cf2 , \{ if (name == sysSym) \{ sysCalc.sys = sys = \cf3 Systema\cf2 .at(name);\
+					node.addDependantFuncTo(sys, sysDepFunc) \}\'a0\} )\});\
+		sysCalcFunc = \{ \cf6 // dependent on e anyway\cf2 \
+			\cf3 var\cf2  midiRef, midiNotes;\
+			sysCalc.midiRef = midiRef = sysCalc.midiRoot; \cf6 //+ sysMidiOffset ?!? to compare drawings\cf2 \
+			sysCalc.midiNotes = midiNotes = sysCalc.midiSteps.collect\{\cf3 |step|\cf2  \
+				\cf0 midiRef\cf2  - pE.midiRef + step \};\
+			e.midiMin = \cf0 midiNotes\cf2 [sysCalc.indexMin].min(e.midiMin); \
+			e.midiMax = \cf0 midiNotes\cf2 [sysCalc.indexMax].max(e.midiMax);\
+			sysCalc.refToneSynths.do\{\cf3 |rt, i|\cf2  \
+				rt !? \{ rt.set(\cf5 \\freq\cf2 , (\cf0 midiNotes[i] + midiRef).midicps\cf2 )\} \};\
+			sysCalc.yS = midiNotes.collect\{\cf3 |midi|\cf2  e.drawSys0 - (midi * e.midiScale) \} \};\
+		sysDepFunc = \{\cf3 |who, what ...args|\cf2  \cf6 //this.logln("refSysDepFunc:" + [who, what, args]);\cf2 \
+			what.switch(\cf5 \\midiRoot\cf2 , \{ sysCalc.midiRoot = args[0] \}, \{ sysUpdFunc.value \}) \};\
+		sysCalc.sys = sys = \cf3 Systema\cf2 .at(sysSym);\
+		sys !? \{ sysUpdFunc.value; node.addDependantFuncTo(sys, sysDepFunc) \};\
+		\
+		\{\cf3 |e, post|\cf2 \
+			sys !? \{ sysCalcFunc.value \};\
+			\
+\cf6 //			\cf2 \
+\cf6 //			//y\cf2 \
+\cf6 //			if (sys.isNil) \{\cf2 \
+\cf6 //				sysSize = 0;\cf2 \
+\cf6 //				makeActionsFunc.value([]);\cf2 \
+\cf6 //			\}\{\cf2 \
+\cf6 //				if (sysSize != sys.degrees.size) \{\cf2 \
+\cf6 //					sysSize = sys.degrees.size;\cf2 \
+\cf6 //					makeActionsFunc.value(sys.scaleDegrees);\cf2 \
+\cf6 //				\};\cf2 \
+\cf6 //				newCents = sys.scaleIndices.collect\{|deg| sys.tuning.degToC(deg) \};//most economic\cf2 \
+\cf6 //				if (cents != newCents) \{\cf2 \
+\cf6 //					cents = newCents;\cf2 \
+\cf6 //					sysCalc.midiSteps.clear; sysCalc.ribWLs.clear; sysCalc.ribWRs.clear; \cf2 \
+\cf6 //					sysCalc.ribExtLs.clear; sysCalc.ribExtRs.clear;\cf2 \
+\cf6 //					rootIndex = sys.rootIndex; stepMin = inf; stepMax = -inf;\cf2 \
+\cf6 //					cents.do\{|cent, i| var step = cent * 0.01; \cf2 \
+\cf6 //						if (step < stepMin) \{ stepMin = step; minIndex = i \};\cf2 \
+\cf6 //						if (step > stepMax) \{ stepMax = step; maxIndex = i \};\cf2 \
+\cf6 //						sysCalc.midiSteps.add(step);\cf2 \
+\cf6 //						if (i != rootIndex) \{ // all of those could be individualised later\cf2 \
+\cf6 //							sysCalc.ribWLs.add(ribWL);\cf2 \
+\cf6 //							sysCalc.ribWRs.add(ribWR);\cf2 \
+\cf6 //						\}\{\cf2 \
+\cf6 //							sysCalc.ribWLs.add(ribWrootL);\cf2 \
+\cf6 //							sysCalc.ribWRs.add(ribWrootR);\cf2 \
+\cf6 //						\};\cf2 \
+\cf6 //						sysCalc.ribExtLs.add(ribExtL * -1);\cf2 \
+\cf6 //						sysCalc.ribExtRs.add(ribExtR);\cf2 \
+\cf6 //						sysCalc.ribColors.add(ribColor);\cf2 \
+\cf6 //						// if individualised maxL and maxR need to be updated accordingly\cf2 \
+\cf6 //					\};\cf2 \
+\cf6 //					sysCalc.minInd = minIndex;\cf2 \
+\cf6 //					sysCalc.maxInd = maxIndex;\cf2 \
+\cf6 //				\};\cf2 \
+\cf6 //				midiRoot = sys.midiRoot;\cf2 \
+\cf6 //				sysCalc.midinotes = sysCalc.midiSteps.collect\{|step| midiRoot - midiRef + step \};\cf2 \
+\cf6 //				e.midiMin = sysCalc.midinotes[sysCalc.minInd].min(midiMin); \cf2 \
+\cf6 //				e.midiMax = sysCalc.midinotes[sysCalc.maxInd].max(midiMax);\cf2 \
+\cf6 //				sysCalc.ys = sysCalc.midinotes.collect\{|midi| drawSys0 - (midi * midiScale) \};\cf2 \
+\cf6 //				\cf2 \
+\cf6 //			\};\cf2 \
+\
+post.add([\cf5 \\postln\cf2 , \cf4 "SYS:"\cf2  + \cf3 SYS\cf2 .at(sysSym), 1]);\
+	\}\}\
+	,\{\cf3 |node, pE, sysSym, refToneColor, spineColor, spineW, selHeight, sysTab, self|\cf2 \
+		\cf3 var\cf2  sel = sysTab.mlSel, sysCalc = pE.sysCalcs[sysSym];\
+		\cf3 var\cf2  updDegreeActionRectsFunc = \{\cf3 |scaleV|\cf2 \
+			\cf3 var\cf2  ribWLs = sysCalc.ribWLs, ribWRs = sysCalc.ribWRs;\
+			\cf3 var\cf2  ribExtLs = sysCalc.ribExtLs, ribExtRs = sysCalc.ribExtRs;\
+			sysCalc.degreeActionRects.do\{\cf3 |rect, i|\cf2  \
+				\cf3 var\cf2  x = ribExtLs[i] + sysCalc.xSpine, width = ribExtRs[i] - ribExtLs[i] + spineW;\
+				\cf3 var\cf2  height = (ribWLs[i].max(ribWRs[i]) + selHeight) / scaleV;\
+				rect.set(x, sysCalc.yS[i] - (height / 2), width, height) \}\
+		\};\
+		\{\cf3 |e, sysCalcs, offX, sysOffX, midiSysYgTop, midiSysH, outline, selOn, selColor, scale, post|\cf2 \
+			\cf6 //y do calcs not need elsewhere and thus not in sysCalc \cf2 \
+			\cf3 var\cf2  maxY = sysCalc.yS[sysCalc.indexMin], minY = sysCalc.yS[sysCalc.indexMax];\
+			\cf6 //x\cf2 \
+			sysCalc.width = sysCalc.maxR - sysCalc.maxL;\
+			sysCalc.xL = offX + sysOffX;\
+			sysCalc.xSpine = sysCalc.xL - sysCalc.maxL;\
+			sysCalc.xCoreL = sysCalc.xSpine + sysCalc.coreL;\
+			e.offX = sysCalc.xL + sysCalc.width + sysOffX;\
+\
+			sysCalc.coreRect.set(sysCalc.xCoreL, minY, sysCalc.coreWidth, maxY - minY);\
+			sysCalc.sysRect.set(sysCalc.xL, minY, sysCalc.width, maxY - minY);\
+			updDegreeActionRectsFunc.value(scale[1]);\
+		\
+			if (sysCalc.sys.isNil) \{\
+				\cf3 Color\cf2 .red.setFill; \cf3 Pen\cf2 .fillRect(sysCalc.coreRect);\
+			\}\{\
+				if(selOn) \{\
+					if (sel.selected(0)[0] == self) \{\
+						\cf3 Pen\cf2 .use \{\
+							\cf3 Pen\cf2 .setShadow(2@4, 20, \cf3 Color\cf2 .white);\
+\pard\pardeftab560\ql\qnatural
+\cf2 							\cf3 Pen\cf2 .beginTransparencyLayer;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 							selColor.setFill; \cf3 Pen\cf2 .fillRect(sysCalc.coreRect); \
+							\cf3 Pen\cf2 .endTransparencyLayer \
+				\}\}\};\
+				if(outline) \{	\
+					\cf3 Color\cf2 .red.setStroke; \cf3 Pen\cf2 .strokeRect(sysCalc.coreRect);\
+					\cf3 Color\cf2 .yellow.setStroke; \cf3 Pen\cf2 .strokeRect(sysCalc.sysRect);\
+					sysCalc.degreeActionRects.do\{\cf3 |rect|\cf2  \cf3 Pen\cf2 .strokeRect(rect)\}\
+				\};\
+				\cf3 Pen\cf2 .use\{\
+					\cf3 var\cf2  ribWLs = sysCalc.ribWLs, ribWRs = sysCalc.ribWRs;\
+					\cf3 var\cf2  ribExtLs = sysCalc.ribExtLs, ribExtRs = sysCalc.ribExtRs;\
+					\cf3 var\cf2  ribColors = sysCalc.ribColors, rootIndex = sysCalc.rootIndex;\
+					\cf3 var\cf2  refTones = sysCalc.refToneSynths;\
+					\
+					\cf3 Pen\cf2 .setShadow(1@ -1, 7, \cf3 Color\cf2 .black);\
+					\cf3 Pen\cf2 .beginTransparencyLayer;\
+					\
+					\cf3 Pen\cf2 .translate(sysCalc.xSpine, 0);\
+					sysCalc.yS.do\{\cf3 |y, i|\cf2  ribColors[i].setStroke; \
+						if (refTones[i].isNil) \{spineColor.setStroke\}\'a0\{refToneColor.setStroke\};\
+						\cf3 Pen\cf2 .width = ribWLs[i]; \cf3 Pen\cf2 .line(ribExtLs[i]@y, 0@y); \cf3 Pen\cf2 .stroke;\
+						\cf3 Pen\cf2 .width = ribWRs[i]; \cf3 Pen\cf2 .line(0@y, ribExtRs[i]@y); \cf3 Pen\cf2 .stroke\
+					\};\
+					spineColor.setStroke; \cf3 Pen\cf2 .width = spineW; \
+					\cf3 Pen\cf2 .line(0@minY, 0@maxY); \cf3 Pen\cf2 .stroke;\
+					\
+					\cf3 Pen\cf2 .endTransparencyLayer;\
+				\};\
+			\};\
+\cf6 //post.add([\\postln, "sysCalcs:" + [sysCalcs], 1])\cf2 \
+	\}\});\
+);	\
+\
+(\
+\cf3 DrawDef\cf2 (\cf5 \\SYS_anno_inst\cf2 , \cf5 \\scaled\cf2 ,\
+	\{\cf3 |node, align|\cf2 \
+		\{\cf3 |e, post|\cf2  \
+				\
+post.add([\cf5 \\postln\cf2 , \cf4 "instAnno align:"\cf2  + align])\
+	\}\}\
+	, \{\cf3 |node, align|\cf2 \
+		\{\cf3 |e, post|\cf2  \
+				\
+post.add([\cf5 \\postln\cf2 , \cf4 "node, align:"\cf2  + [node, align]])\
+	\}\});\
+);\
+\
+(\
+\cf3 DrawDef\cf2 (\cf5 \\SYS_ano_voc\cf2 , \cf5 \\scaled\cf2 ,\
+	\{\cf3 |node, align|\cf2 \
+		\{\cf3 |e, post|\cf2  \
+			\
+post.add([\cf5 \\postln\cf2 , \cf4 "vocAnno align:"\cf2  + align])\
+	\}\}\
+	, \{\cf3 |node, align|\cf2 \
+		\{\cf3 |e, post|\cf2  \
+\
+post.add([\cf5 \\postln\cf2 , \cf4 "node, align:"\cf2  + [node, align]])\
+	\}\})\
+);}

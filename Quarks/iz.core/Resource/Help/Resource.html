@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+span.s1 {color: #162bc4}
+span.s2 {color: #008323}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Resource</b></p>
+<p class="p2"><b></b><br></p>
+<p class="p3"><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Purpose</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3">Provide a way to create an object when it is needed, and to access through a key it if it already exists.<span class="Apple-converted-space">  </span>This is useful if an object may be used by many other ones, and we want make sure that we will not inadvertedly create a copy of it if it already exists.</p>
+<p class="p4"><br></p>
+<p class="p3">Examples:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">1. Instead of writing:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6">w = <span class="s1">Window</span>.new(<span class="s2">'test'</span>);</p>
+<p class="p7"><br></p>
+<p class="p6">w.close;</p>
+<p class="p4"><br></p>
+<p class="p3">Write:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p8">\test.window;</p>
+<p class="p9"><br></p>
+<p class="p8">\test.close;</p>
+<p class="p4"><b></b><br></p>
+<p class="p3">2. Instead of writing:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p8">a = Synth('default');</p>
+<p class="p8">a.set(\freq, 880);</p>
+<p class="p8">a.free;</p>
+<p class="p4"><br></p>
+<p class="p3">Write:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p8">\default.playDef;</p>
+<p class="p8">\default.set(\freq, 880);</p>
+<p class="p8">\default.free;</p>
+<p class="p9"><br></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p5"><b>Related Classes</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3">Subclasses of Resource: WindowResource, AbstractServerResource, SynthResource, BufferResource and others.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance Creation</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Class variables</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>objects</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>key :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>object</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*all :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*at :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*atKey :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*clear :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*initClass :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*mainKey :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*makeKey :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*new :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*objects :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*removeAll :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*removedMessage</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>free :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>init :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>key :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>object :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>printOn :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>release :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>remove :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>removedMessage :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>stop</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><b></b><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>

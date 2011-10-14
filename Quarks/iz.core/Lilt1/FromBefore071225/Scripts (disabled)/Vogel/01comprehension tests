@@ -1,0 +1,54 @@
+/* IZ 2007-05-13 { SC3
+Trying out list comprehensions for search in Vogel space
+} */
+
+/* 00
+Representation of points in the tone net.
+Given that all tones in the tone net lie at intervals of pure octaves, fifths, thirds and sevenths from each other, they 
+
+*/
+
+~reference_frequency = 440;  // central a (la) in the tonenet 
+
+// calculate the frequency of any tone in the tonenet, specified by its position in the 
+// 4 dimensions of octave (powers of 2), fifth (powers of 3), third (powers of 5) and 
+// seventh (powers of 7). 
+~calculate_frequency = { | octaves = 0, fifths = 0, thirds = 0, sevenths = 0 |
+	([2, 3, 5, 7] ** [octaves, fifths, thirds, sevenths]).product * ~reference_frequency;
+};
+
+/*
+~calculate_frequency.value;
+~calculate_frequency.(0);
+~calculate_frequency.(1);
+~calculate_frequency.(-1);
+~calculate_frequency.(0, 1);
+~calculate_frequency.(-1, 1);
+*/
+
+/* Consonance degree calculation from position vectors of the tones of a chord: 
+
+Find the overtone and undertone series reference tones of a chord: 
+
+*/
+
+
+
+/* 01 
+"Find all points in the Vogel Tone-Net which are "enharmonically equivalent" to a given tone t". This set of points is abbreviated here as "e".
+
+Here "enharmonic equivalence" is defined as being close enough in frequency. More precisely: 
+Point q is considered as being enharmonically equivalent to point r if the interval formed by q and t is smaller than a predefined distance d. Here d will be taken to be 50 cents i.e. half a tempered semitone. 
+
+If we consider the Tone-Net as infinite, then there will be infinitely many enharmonically equivalent tones to any given tone t. We therefore limit the set of candidate points to a region in the vicinity of t, so that that we can get a finite set of points to choose from. The dimensions of the region are those specified by Martin Vogel himself in his work "Die Lehre von den Tonbeziehungen" (The Theory of Tone Relationships). This space contains 172 points or pitch classes, and is constructed in such a way as to minimize the deviation from pure fifth, third, and seventh intervals. The 172-point tone net represents an extension of other interval-equivalence systems that underlie known tempered divisions of the octave as for example the 12-tone, 53-tone or 72-tone divisions (for a detailed explanation of this see Vogel 1970). 
+
+Given the above, the set of enharmonically equivalent points e to a point t can be found by: 
+
+*/
+
+/*
+
+all {:[x
+
+*/
+

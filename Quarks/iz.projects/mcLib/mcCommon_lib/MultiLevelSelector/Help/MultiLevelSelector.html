@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #dc0000}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #dc0000; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #dc0202}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+span.s1 {color: #dc0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">/*</p>
+<p class="p1">m = MultiLevelIdentityDictionary.new;</p>
+<p class="p1">m.put(\a, \b, \c, 1);</p>
+<p class="p1">m.put(\b, \b, \c, 2);</p>
+<p class="p1">n = m.leafDo{|key, item| [key, item].postln}</p>
+<p class="p1">n = m.leafDoFrom([\a, \b], {|key, item| [key, item].postln})</p>
+<p class="p1">n = m.leafDoFrom([\a, \b], {|key, item| [key, item].postln})</p>
+<p class="p2"><br></p>
+<p class="p1">z = MultiLevelSelector.new</p>
+<p class="p1">z.putAt([], [2])</p>
+<p class="p1">z.putAt([2], [4])</p>
+<p class="p1">z.putAt([2,1], [9])</p>
+<p class="p2"><br></p>
+<p class="p1">z.putAt([1,3, 6, 4], [9])</p>
+<p class="p1">z.putAt([2, 4], [4])</p>
+<p class="p1">z.selectAt([1,3],2)</p>
+<p class="p1">z.selected</p>
+<p class="p1">z.selectorAt(1,3).selected</p>
+<p class="p1">z.selectorAt(1).selected</p>
+<p class="p1">z.mlDict.postTree</p>
+<p class="p1">z.addAllAt([5], [3, 1, 2])</p>
+<p class="p1">z.mlDict.at(\selector)</p>
+<p class="p1">z.selector(0).src</p>
+<p class="p1">z.selectAt([], 2)</p>
+<p class="p1">z.select(0, 2)</p>
+<p class="p1">z.selected</p>
+<p class="p1">z.selector(1).src</p>
+<p class="p2"><br></p>
+<p class="p1">z.idle=false</p>
+<p class="p1">z.selPath(1)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">z.putAt([], [[\a1, \b1], [[5],[3]] ], [\b1,[[3], [2]]] )</p>
+<p class="p1">z.putAt([], [SortedList.new.add(\c)])</p>
+<p class="p1">z.putAt([], [SortedList.new.add(\d)])</p>
+<p class="p1">z.selector.src.function</p>
+<p class="p1">z.addAllAt([], SortedList[\a, \b, \c], \b)</p>
+<p class="p1">z.addAllAt([], [\d], \a)</p>
+<p class="p1">z.addAllAt([], SortedList[\3], \3)</p>
+<p class="p1">z.selector.src</p>
+<p class="p2"><br></p>
+<p class="p1">z = MultiLevelSelector.new([[]], nil, [{|item| item.even}])</p>
+<p class="p1">z.selector.whiteFunc.value(4)</p>
+<p class="p1">z.addAllAt([], [8,3,2], \3)</p>
+<p class="p1">z.addAllAt([], [4], \4)</p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p1">z = MultiLevelSelector.new([SortedList.new(function: {|a, b| a &gt; b })], nil,<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>[{|item| item &gt; 4}] )</p>
+<p class="p1">)</p>
+<p class="p1">z.addAllAt([], Array.series(5, 3, 1), \3)</p>
+<p class="p1">z.addAllAt([], Array.series(10, 3, 1), \3)</p>
+<p class="p2"><br></p>
+<p class="p1">a = SortedList[\a, \b, \c]</p>
+<p class="p1">b = a.deepCopy</p>
+<p class="p1">b.function</p>
+<p class="p1">a.add(\d)</p>
+<p class="p1">a.addAll([\e])</p>
+<p class="p2"><br></p>
+<p class="p1">z.mlDict.postTree</p>
+<p class="p1">z.mlDict.asCompileString</p>
+<p class="p1">z.asCompileString</p>
+<p class="p2"><br></p>
+<p class="p1">a = SortedList[4, 3, 2]</p>
+<p class="p1">a.asCompileString</p>
+<p class="p1">SortedList.new.storeArgs</p>
+<p class="p1">SortedList.methods.collect{|m| m.name.postln}</p>
+<p class="p2"><br></p>
+<p class="p1">z = MultiLevelSelector([[\a1, \b1], [[5],[3]] ])</p>
+<p class="p1">z = MultiLevelSelector([[\a1, \b1], [[5],[3]] ], [\b1,[[3], [2]]])</p>
+<p class="p1">z = MultiLevelSelector([[\a1, \b1], [ [[\c2, \d2]] ,[[\e2, \f2]] ] ])</p>
+<p class="p1">z = MultiLevelSelector([[\a1, \b1], [ [[\c2, \d2]] ] ])</p>
+<p class="p1">z = MultiLevelSelector([[\a1, \b1], [ [[\c2, \d2], <span class="Apple-converted-space">  </span>[ [[\c2, \d2]] ] <span class="Apple-converted-space">  </span>]<span class="Apple-converted-space">  </span>] ])</p>
+<p class="p1">z = MultiLevelSelector([[\a1, \b1], [ [[\c2, \d2], <span class="Apple-converted-space">  </span>[ [[\c2, \d2]] ] <span class="Apple-converted-space">  </span>],<span class="Apple-converted-space">  </span>[[\e2, \f2]]<span class="Apple-converted-space">  </span>] ])</p>
+<p class="p1">z = MultiLevelSelector([[\aa, \a1, \b1], [ [[\c2, \d2], <span class="Apple-converted-space">  </span>[ [[\c2, \d2]] ] <span class="Apple-converted-space">  </span>],<span class="Apple-converted-space">  </span>[[\e2, \f2]]<span class="Apple-converted-space">  </span>] ])</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">z = MultiLevelSelector([[\a1, \b1], [[[5, 3, 4]], nil] ])</p>
+<p class="p2"><br></p>
+<p class="p1">z.selPath</p>
+<p class="p1">z.selPath(nil, \a1)</p>
+<p class="p1">z.selPath(0)</p>
+<p class="p1">z.selPath(1)</p>
+<p class="p1">z.selector(0).src</p>
+<p class="p1">z.selector(1).src</p>
+<p class="p1">z.selected(1)</p>
+<p class="p2"><br></p>
+<p class="p1">z.mlDict.at(\b1, \selector).src</p>
+<p class="p1">z.mlDict.at(\a1, \selector).selected</p>
+<p class="p1">z.mlDict.postTree</p>
+<p class="p1">z.mlDict.leaves</p>
+<p class="p2"><br></p>
+<p class="p1">z.mlDict.leafDo{|a, b, c| [a, b, c].postln }</p>
+<p class="p1">(</p>
+<p class="p1">z.mlDict.treeDo(</p>
+<p class="p1"><span class="Apple-tab-span">	</span>{|path, obj, res| ["branch: ", path, res].postln; "".postln; res +1<span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, argu| ["leaf: ", path, obj, argu].postln; }</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, 0</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, res| ["post-branch: ", path, res].postln; "".postln; 0 });</p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p1">var currSrcs=List.new;</p>
+<p class="p1">var n = -1;</p>
+<p class="p2"><br></p>
+<p class="p1">z.mlDict.treeDo(</p>
+<p class="p1"><span class="Apple-tab-span">	</span>{|path, obj, res| ["branch: ", path, obj.at(\selector), res].postln; "".postln;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// if (path.isEmpty) { currSrcs = currSrcs.add(obj.at(\selector).src) }</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currSrcs.add(obj.at(\selector).src.copy); n = n +1;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// if (path.isEmpty) { [] } { obj.at(\selector).src.copy }</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>obj.at(\selector).src.copy</p>
+<p class="p1"><span class="Apple-tab-span">	</span>}</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, argu| var index;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>["leaf: ", path, obj, argu].postln;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[n, currSrcs].postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>index = currSrcs[n].indexOf(path.last).postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// currSrces[n].put(currSrces)<span class="Apple-tab-span">	</span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>}</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, []</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, res| ["post-branch: ", path, res].postln; "".postln; res }</p>
+<p class="p1">);</p>
+<p class="p1">this.logln("currSrcs:" + currSrcs)</p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p1">var currSrcs=List.new;</p>
+<p class="p1">var n = -1;</p>
+<p class="p1">var list = List.new;</p>
+<p class="p2"><br></p>
+<p class="p1">z.mlDict.treeDo(</p>
+<p class="p1"><span class="Apple-tab-span">	</span>{|path, obj, res| var index, newList;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>["branch: ", path, obj.at(\selector).src, res].postln;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[res, currSrcs].postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>if (res.isPositive) {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>index = currSrcs[res].indexOf(path.last).postln;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>currSrcs[res].put(index, obj.at(\selector));</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>newList = currSrcs.add(obj.at(\selector).src.copy); n = n +1;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[res, currSrcs].postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>list.add(newList);</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>"".postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>res + 1</p>
+<p class="p1"><span class="Apple-tab-span">	</span>}</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, argu| var index;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>["leaf: ", path, obj, argu].postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// list.add(obj.src)<span class="Apple-tab-span">	</span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>}</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, -1</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, res|<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>["post-branch: ", path, res].postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>res = res-1;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[res, currSrcs].postln;</p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>"".postln;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>res;</p>
+<p class="p1"><span class="Apple-tab-span">	</span>}</p>
+<p class="p1">);</p>
+<p class="p1">this.logln("currSrcs:" + currSrcs)</p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p1">z.mlDict.treeCollect(</p>
+<p class="p1"><span class="Apple-tab-span">	</span>nil //, {|path, obj| ["branch: ", path, obj].postln<span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj| ["leaf: ", path, obj].postln; obj.src }</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, collection| ["post-branch: ", path, collection].postln; "".postln; collection }</p>
+<p class="p1"><span class="Apple-tab-span">	</span>);</p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p3">z = MultiLevelSelector([[\a1, \b1], [ [[\c2, \d2]] ,[[\e2, \f2]] ] ])</p>
+<p class="p3">z = MultiLevelSelector([[\a1, \b1], [ [[\c2, \d2], <span class="Apple-converted-space">  </span>[ [[\c2, \d2]] ] <span class="Apple-converted-space">  </span>],<span class="Apple-converted-space">  </span>[[\e2, \f2]]<span class="Apple-converted-space">  </span>] ])</p>
+<p class="p3">z = MultiLevelSelector([[\aa, \a1, \b1], [ [[\c2, \d2], <span class="Apple-converted-space">  </span>[ [[\c2, \d2]] ] <span class="Apple-converted-space">  </span>],<span class="Apple-converted-space">  </span>[[\e2, \f2]]<span class="Apple-converted-space">  </span>] ])</p>
+<p class="p3">z = MultiLevelSelector([[\a1, \b1], [ nil ,[[\e2, \f2]] ] ], [ 1, [nil, [1]]])</p>
+<p class="p3"><span class="s1">z.</span>mlDict.postTree</p>
+<p class="p1">(</p>
+<p class="p1">z.mlDict.treeCollect2(</p>
+<p class="p1"><span class="Apple-tab-span">	</span>nil //, {|path, obj| ["branch: ", path, obj].postln<span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj| ["leaf: ", path, obj.src].postln; obj.src }</p>
+<p class="p1"><span class="Apple-tab-span">	</span>, {|path, obj, collection| ["post-branch: ", path, collection].postln; "".postln; collection }</p>
+<p class="p1"><span class="Apple-tab-span">	</span>);</p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p1">d = z.decomposeSources</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s1">d = </span>[ [ [ \aa, \a1, \b1 ], [ [ [ \c2, \d2 ], [ [ [ \c2, \d2 ] ] ] ], [ [ \e2, \f2 ] ] ] ], [ 2, [ [ 1, [ [ 1 ] ] ] ], [ [ 1 ] ] ], [ nil, [ [ nil, [ [ nil ] ] ] ], [ [ nil ] ] ] ]</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s1">y = </span>MultiLevelSelector(*d)</p>
+<p class="p1">y.mlDict.postTree</p>
+<p class="p2"><br></p>
+<p class="p1">z.decomposeSources2</p>
+<p class="p2"><br></p>
+<p class="p1">(</p>
+<p class="p1">a = List[\a1, \a2];</p>
+<p class="p1">b = List[\b1, \b2, \b3];</p>
+<p class="p1">c = List[\c1, \c2, \c3, \c4, \c5, \c6, \c7];</p>
+<p class="p1">d = 4;</p>
+<p class="p1">e = List[\e1, \e2];</p>
+<p class="p2"><br></p>
+<p class="p1">// z = MultiLevelSelector([a, b, c, d, e], [\a1, \b2, \c7, 2, \e1])</p>
+<p class="p3">z = MultiLevelSelector([a, b, c, d, e])</p>
+<p class="p1">)</p>
+<p class="p1">z.path(2)</p>
+<p class="p1">z.srcs.size.do{|i| z.path(i).postln};</p>
+<p class="p1">z.selector(0).src</p>
+<p class="p1">z.srcs.size.do{|i| z.selector(i).src.postln}</p>
+<p class="p2"><br></p>
+<p class="p1">z.selected</p>
+<p class="p1">z.selected(0)</p>
+<p class="p1">z.selected(1)</p>
+<p class="p1">z.selected(2)</p>
+<p class="p1">z.selectedAt(\a1)</p>
+<p class="p1">z.selectedAt(\b1)</p>
+<p class="p2"><br></p>
+<p class="p1">z.sourceAt(\a1)</p>
+<p class="p1">z.sourceAt(\b1)</p>
+<p class="p2"><br></p>
+<p class="p1">z.selector(0).src</p>
+<p class="p1">z.selector(1).src</p>
+<p class="p1">z.selector(2)</p>
+<p class="p1">z.selector.src</p>
+<p class="p1">z.selectorAt.src</p>
+<p class="p1">z.selectorAt(\a1).src</p>
+<p class="p2"><br></p>
+<p class="p1">z.removeAt(\a1)</p>
+<p class="p1">z.removeAt(\b1)</p>
+<p class="p1">z.mlDict.postTree</p>
+<p class="p2"><br></p>
+<p class="p1">z.putAt([\a1], [[\g1, \g2, \g3]] )</p>
+<p class="p1">z.putAt([\b1], [[\h1, \h2]], [\h2] )</p>
+<p class="p1">z.mlDict.postTree</p>
+<p class="p2"><br></p>
+<p class="p1">z.selectAt([\a1], 5)</p>
+<p class="p1">z.selectAt([\a1], 8)</p>
+<p class="p1">z.selectAt([\a1], 1)</p>
+<p class="p1">z.selectAt([\b1], 1)</p>
+<p class="p1">z.selectAt([\b1], \h1)</p>
+<p class="p2"><br></p>
+<p class="p1">z.select(0, \a1)</p>
+<p class="p2"><br></p>
+<p class="p1">*/</p>
+</body>
+</html>

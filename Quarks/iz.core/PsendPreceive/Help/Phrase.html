@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.29">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Helvetica; color: #ca1c10}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Helvetica; color: #ca1c10; min-height: 11.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #ca1c10; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">IZ 2010 11 17<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Sending and receiving hierarchical (nested) phrase structures via OSC.<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>1. Define phrases to listen to (receive)</b></p>
+<p class="p4"><br></p>
+<p class="p5"><br></p>
+<p class="p6">// 1. Define the structure of the piece to listen to</p>
+<p class="p6">~score = Preceive(<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// Top phrase. All other phrases are contained here.<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>\start-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at start of phrase do ...</p>
+<p class="p6"><span class="Apple-tab-span">	</span>\end-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at end of phrase do ...</p>
+<p class="p6"><span class="Apple-tab-span">	</span>1-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at beat 1 of phrase do ...</p>
+<p class="p6"><span class="Apple-tab-span">	</span>'1'-&gt;Preceive( ... ), <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at subphrase 1 do ...</p>
+<p class="p6"><span class="Apple-tab-span">	</span>'bridge'-&gt;Preceive( ... ), <span class="Apple-tab-span">	</span>// at subphrase named 'bridge' do ...</p>
+<p class="p6"><span class="Apple-tab-span">	</span>'crash'-&gt;{ ... }, <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// at ID (tag) named 'crash' do ...</p>
+<p class="p6">);</p>
+<p class="p5"><br></p>
+<p class="p6">~piece = ~score.play; <span class="Apple-tab-span">	</span>// make the piece active = start listening.</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// piece is now an instance of OSCresponderStream</p>
+<p class="p6">~piece.stop;</p>
+<p class="p5"><br></p>
+<p class="p6">// piece.start, piece.reset??</p>
+<p class="p5"><br></p>
+<p class="p3"><b>2. Define phrases to listen to send.<span class="Apple-converted-space"> </span></b></p>
+<p class="p5"><br></p>
+<p class="p6">Parameters to specify:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>1. Name of phrase (tag)</p>
+<p class="p6"><span class="Apple-tab-span">	</span>2. Length of phrase (only if it consists of single beats)</p>
+<p class="p6"><span class="Apple-tab-span">	</span>3. Array of Subphrases</p>
+<p class="p5"><br></p>
+<p class="p6">Syntax for creation of instances (specification) of Psend:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">Psend(&lt;phrase contents (\msg key)&gt; ... pairs);</p>
+<p class="p5"><br></p>
+<p class="p6">Where:<span class="Apple-converted-space"> </span></p>
+<p class="p6">- pairs are key-value pairs in the same manner as Pbind, and are treated as in Pbind.<span class="Apple-converted-space"> </span></p>
+<p class="p6">- special keys to specify are:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>\name</p>
+<p class="p6"><span class="Apple-tab-span">	</span>\dest</p>
+<p class="p5"><br></p>
+<p class="p6">Psend is a subclass of Pbind and is created in a similar way as Pbind, with the only</p>
+<p class="p6">difference that the first argument to the 'new' method is the list of messages or message</p>
+<p class="p6">patterns. Examples:</p>
+<p class="p5"><br></p>
+<p class="p6">Psend(3);<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// Sends a phrase of 3 beats.<span class="Apple-converted-space"> </span></p>
+<p class="p6">Psend(\a);<span class="Apple-tab-span">	</span>// sends a phrase containing only a single beat and with message (id/tag) 'a'</p>
+<p class="p6">Psend([\a, 3, \b]); sends \a, then 3 beats, then \b, each on a single beat.<span class="Apple-converted-space"> </span></p>
+<p class="p6">Psend([\a, Psend(3, name: \riff), \b]); sends \a, then a phrase of<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>3 beats with name id 'riff', then \b, each on a single beat.<span class="Apple-converted-space"> </span></p>
+<p class="p6">Psend([\a, Pn(\riff2, 50), \b]); sends \a, then 50 times the message \riff2, then \b.</p>
+<p class="p5"><br></p>
+<p class="p6">As the above shows, Psend can also nest patterns. For example:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">Psend([\a, Prand([\riff, \scale, \trill], 50), \b]);</p>
+<p class="p5"><br></p>
+<p class="p6">Additionally, each Psend sends the tag \start at the beginning and \end at the end, together<span class="Apple-converted-space"> </span></p>
+<p class="p6">with its name:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">Psend(3);<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// will send the following:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6">Note: We may want to send the name of the Psend with each message like this.</p>
+<p class="p6">Beat Number<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Message</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>&lt;pid&gt; \start &lt;id of the Psend&gt;</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>&lt;pid&gt; \beat 1</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>&lt;pid&gt; \beat 2</p>
+<p class="p6">beat 3<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>&lt;pid&gt; \beat 3</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>&lt;pid&gt; \end &lt;id of the Psend&gt;</p>
+<p class="p5"><br></p>
+<p class="p6">Where &lt;pid&gt; is the id of the Psend.<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">The id of the Psend can be given by the key 'name' in Pbind-argument manner.<span class="Apple-converted-space"> </span></p>
+<p class="p6">If it is not given, then it is provided by the Psend composed numerically:<span class="Apple-converted-space"> </span></p>
+<p class="p6">The first Psend gets the id 1.<span class="Apple-converted-space"> </span></p>
+<p class="p6">The first Psend nested inside the Psend gets the id 1_1, or &lt;pid&gt;_1</p>
+<p class="p6">etc.<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">Beat Number<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Message</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\start &lt;id of the Psend&gt;</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 1</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 2</p>
+<p class="p6">beat 3<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 3</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\end &lt;id of the Psend&gt;</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6">Psend([\a, 2, \b], name: \intro); // sends the following:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\start \intro</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 1</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\a</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 2</p>
+<p class="p6">beat 3<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 3</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 4</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\b</p>
+<p class="p6">beat 5<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\end \intro</p>
+<p class="p5"><br></p>
+<p class="p6">Psend([\a, Pseq([\riff, \scale], 2), \b], \finish); // sends the following:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\start \finish</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 1</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\a</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 2</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\riff</p>
+<p class="p6">beat 3<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\beat 3</p>
+<p class="p6">beat 3<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\scale</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\riff 4</p>
+<p class="p6">beat 5<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\scale 5</p>
+<p class="p6">beat 6<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\b</p>
+<p class="p6">beat 7<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\end \finish</p>
+<p class="p5"><br></p>
+<p class="p6">If an element of the message array is an array, then all elements of the array are sent in</p>
+<p class="p6">one beat. For example:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">Psend([\a, [\riff, \scale], \b], \poly); // sends the following:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\start \poly</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\a 1</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\riff</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\scale</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\b</p>
+<p class="p6">beat 5<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\end \poly</p>
+<p class="p5"><br></p>
+<p class="p6">To send arrays of parameters in one beat, enclose these in one array:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">Psend([\a, [\riff, [\scale, 3.14]], \b], \poly); // sends the following:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\start \poly</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\a 1</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\riff</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\scale 3.14</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\b</p>
+<p class="p6">beat 5<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\end \poly</p>
+<p class="p5"><br></p>
+<p class="p6">Psend([\a, [[\scale, 3.14]], \b], \poly); // sends the following:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\start \poly</p>
+<p class="p6">beat 1<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\a 1</p>
+<p class="p6">beat 2<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\scale</p>
+<p class="p6">beat 4<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\b</p>
+<p class="p6">beat 5<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>\end \poly</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6">=========================== Older, rejected version:<span class="Apple-converted-space"> </span></p>
+<p class="p6">Psend(</p>
+<p class="p6"><span class="Apple-tab-span">	</span>&lt;ID&gt;, <span class="Apple-tab-span">	</span>// can be nil. In that case, the number of the subphrase is sent as ID</p>
+<p class="p6"><span class="Apple-tab-span">	</span>length, <span class="Apple-tab-span">	</span>// <span class="Apple-tab-span">	</span>of beats in phrase</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>or: subprhase.</p>
+<p class="p6">);</p>
+<p class="p5"><br></p>
+<p class="p6">Examples:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">Psend(nil, 5);<span class="Apple-tab-span">	</span>// a phrase of 5 beats without name.<span class="Apple-converted-space"> </span></p>
+<p class="p6">Psend(\intro, 10);<span class="Apple-tab-span">	</span>// a phrase named intro, with 10 beats.</p>
+<p class="p6">Psend(nil, [Psend(nil, 10), Psend(nil, 5)]);<span class="Apple-tab-span">	</span>// a phrase with 2 subphrases.<span class="Apple-converted-space"> </span></p>
+<p class="p6">Psend(nil, [Psend(nil, 10), Psend(nil, 5)]);<span class="Apple-tab-span">	</span>// a phrase with 2 subphrases.<span class="Apple-converted-space"> </span></p>
+<p class="p6">Psend(nil, [Psend(nil, 10), \crash, Psend(nil, 3)]);<span class="Apple-tab-span">	</span>// a phrase with 2 subprhases and a single tag on one beat<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p6">=========================== End of older, rejected version:<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p3"><b>Implementation</b></p>
+<p class="p7"><br></p>
+<p class="p3"><i>General thoughts:<span class="Apple-converted-space"> </span></i></p>
+<p class="p3">- <span class="Apple-tab-span">	</span>Subphrases store the environment of the phrases they are part of as their parentEnvironment.<span class="Apple-converted-space"> </span></p>
+<p class="p3">- <span class="Apple-tab-span">	</span>To be played, a Preceive must create a stream that keeps track of where it is.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span>This will be implemented by class OSCresponderStream</p>
+<p class="p3">-<span class="Apple-tab-span">	</span>The Preceive may have a MultiLevelIdentityDictionary structure.<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><i>Psend:<span class="Apple-converted-space"> </span></i></p>
+<p class="p7"><br></p>
+<p class="p3">-<span class="Apple-tab-span">	</span>Is a subclass of Pbind.</p>
+<p class="p3">-<span class="Apple-tab-span">	</span>it's initClass should just include Class.initClassTree(Posc) to add the osc type event</p>
+<p class="p3">-<span class="Apple-tab-span">	</span>its new class is something like this:<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+</body>
+</html>

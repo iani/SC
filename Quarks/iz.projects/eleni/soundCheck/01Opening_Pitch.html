@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #606060}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #ad140d}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #ad150f}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf1812}
+span.s1 {color: #001bb9}
+span.s2 {color: #000000}
+span.s3 {color: #221bb9}
+span.s4 {color: #2307bf}
+span.s5 {color: #606060}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p2"><br></p>
+<p class="p3">s = <span class="s1">Server</span>.local;</p>
+<p class="p2"><br></p>
+<p class="p3">//:Debussy images pour orchestre 1 - mixtur</p>
+<p class="p3">(</p>
+<p class="p4"><span class="s1">SynthDef</span><span class="s2">(</span>"pitchFollow1"<span class="s2">,{</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> in, amp, freq, hasFreq, out;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>in = <span class="s1">Mix</span>.new(<span class="s1">SoundIn</span>.ar([0,1]));</p>
+<p class="p3"><span class="Apple-tab-span">	</span>amp = <span class="s1">Amplitude</span>.kr(in, 0.05, 0.05);</p>
+<p class="p3"><span class="Apple-tab-span">	</span># freq, hasFreq = <span class="s1">Pitch</span>.kr(in, ampThreshold: 0.02, median: 7);</p>
+<p class="p5"><span class="s2"><span class="Apple-tab-span">	</span></span>//freq = Lag.kr(freq.cpsmidi.round(1).midicps, 0.05);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>out = <span class="s1">Mix</span>.new(<span class="s1">VarSaw</span>.ar(freq * [0.5,1.2, 1.5, 1.7, 2.2] / 2.5, 0, <span class="s1">LFNoise1</span>.kr(0.3,0.1,0.1), amp));</p>
+<p class="p3"><span class="Apple-tab-span">	</span>6.do({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>out = <span class="s1">AllpassN</span>.ar(out, 0.040, [0.040.rand,0.040.rand], 2)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>});</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(0,out)</p>
+<p class="p3">}).play(s);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">//:comb stuff</p>
+<p class="p3">(</p>
+<p class="p4"><span class="s1">SynthDef</span><span class="s2">(</span>"pitchFollow2"<span class="s2">,{</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">var</span> in, amp, freq, hasFreq, out;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>in = <span class="s1">Mix</span>.new(<span class="s1">SoundIn</span>.ar([0,1]));</p>
+<p class="p3"><span class="Apple-tab-span">	</span>amp = <span class="s1">Amplitude</span>.kr(in, 0.05, 0.05);</p>
+<p class="p3"><span class="Apple-tab-span">	</span># freq, hasFreq = <span class="s1">Pitch</span>.kr(in, ampThreshold: 0.02, median: 7);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>out = <span class="s1">CombC</span>.ar(<span class="s1">LPF</span>.ar(in, 1000), 0.1, (2 * freq).reciprocal, -6).distort * 0.05;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>6.do({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>out = <span class="s1">AllpassN</span>.ar(out, 0.040, [0.040.rand,0.040.rand], 2)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>});</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(0,out);</p>
+<p class="p3">}).play(s);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">//:Variation of the above<span class="Apple-converted-space"> </span></p>
+<p class="p3">(</p>
+<p class="p4"><span class="s3">SynthDef</span><span class="s2">(</span>"pitchFollow2"<span class="s2">,{</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s3">var</span> in, amp, freq, hasFreq, out;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>in = <span class="s3">Mix</span>.new(<span class="s3">SoundIn</span>.ar([0,1]));</p>
+<p class="p3"><span class="Apple-tab-span">	</span>amp = <span class="s3">Amplitude</span>.kr(in, 0.05, 0.05);</p>
+<p class="p3"><span class="Apple-tab-span">	</span># freq, hasFreq = <span class="s3">Pitch</span>.kr(in, ampThreshold: 0.02, median: 7);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>out = <span class="s3">CombC</span>.ar(<span class="s3">LPF</span>.ar(in, 1000), 0.1, (LFNoise0.kr(7).range(2, 2.5) * freq).reciprocal, -6).distort * 0.05;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>6.do({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>out = <span class="s3">AllpassN</span>.ar(out, 0.040, [0.040.rand,0.040.rand], 2)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>});</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s3">Out</span>.ar(0,out);</p>
+<p class="p3">}).play(s);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p3">//:DiskOut</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s4">SynthDef</span><span class="s2">(</span>"help-Diskout"<span class="s2">, {</span><span class="s4">arg</span><span class="s2"> bufnum;</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s4">DiskOut</span>.ar(bufnum, <span class="s4">In</span>.ar(0,2));</p>
+<p class="p3">}).send(s);</p>
+<p class="p2"><br></p>
+<p class="p3">//:Debussy images pour orchestre 1 - mixtur</p>
+<p class="p3">(</p>
+<p class="p4"><span class="s3">SynthDef</span><span class="s2">(</span>"pitchFollow_Debussy_record"<span class="s2">,{ | bufnum = 0 |</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s3">var</span> in, amp, freq, hasFreq, out;</p>
+<p class="p3"><span class="Apple-tab-span">	</span>in = <span class="s3">SoundIn</span>.ar(0);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>amp = <span class="s3">Amplitude</span>.kr(in, 0.05, 0.05);</p>
+<p class="p3"><span class="Apple-tab-span">	</span># freq, hasFreq = <span class="s3">Pitch</span>.kr(in, ampThreshold: 0.02, median: 7);</p>
+<p class="p6"><span class="s2"><span class="Apple-tab-span">	</span></span>//freq = Lag.kr(freq.cpsmidi.round(1).midicps, 0.05);</p>
+<p class="p3"><span class="Apple-tab-span">	</span>out = <span class="s3">Mix</span>.new(<span class="s3">VarSaw</span>.ar(freq * [0.5,1.2, 1.5, 1.7, 2.2] / 2.5, 0, <span class="s3">LFNoise1</span>.kr(0.3,0.1,0.1), amp + 1 pow: 2));</p>
+<p class="p3"><span class="Apple-tab-span">	</span>6.do({</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>out = <span class="s3">AllpassN</span>.ar(out, 0.040, [0.040.rand,0.040.rand], 2)</p>
+<p class="p3"><span class="Apple-tab-span">	</span>});</p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="s3">Out</span>.ar(0, out);</p>
+<p class="p3">}).play(Server.default);</p>
+<p class="p3">)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p7">// start something to record</p>
+<p class="p3">x = <span class="s4">Synth</span>.new(<span class="s5">"bubbles"</span>);</p>
+<p class="p2"><br></p>
+<p class="p7">// allocate a disk i/o buffer</p>
+<p class="p3">b = <span class="s4">Buffer</span>.alloc(s, 65536, 2);</p>
+<p class="p2"><br></p>
+<p class="p7">// create an output file for this buffer, leave it open</p>
+<p class="p3">b.write(<span class="s5">"~/diskouttest.aiff"</span>.standardizePath, <span class="s5">"aiff"</span>, <span class="s5">"int16"</span>, 0, 0, <span class="s4">true</span>);</p>
+<p class="p7">// create the diskout node; making sure it comes after the source</p>
+<p class="p4"><span class="s2">d = </span><span class="s4">Synth</span><span class="s2">.tail(</span><span class="s4">nil</span><span class="s2">, </span>"help-Diskout"<span class="s2">, [</span>"bufnum"<span class="s2">, b]);</span></p>
+<p class="p7">// stop recording</p>
+<p class="p3">d.free;</p>
+<p class="p7">// stop the bubbles</p>
+<p class="p3">x.free;</p>
+<p class="p7">// close the buffer and the soundfile</p>
+<p class="p3">b.close;</p>
+<p class="p7">// free the buffer</p>
+<p class="p3">b.free;</p>
+<p class="p2"><br></p>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #252bc4}
+span.s1 {color: #000000}
+span.s2 {color: #737373}
+span.s3 {color: #d01b14}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p2">The examples in this file require the Chain quark, which is in quarks.local.core of the Lilt distribution.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">//:---<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">b = Bee.new.makeWindow("chains", Rect(800, 400, 500, 500));</p>
+<p class="p1"><br></p>
+<p class="p2">Chain(Pn({ "hello".postln }.chain(1.once), 3));</p>
+<p class="p1"><br></p>
+<p class="p2">Chain({ "hello".postln; ~dur.value.postln; }.chain(Pn(0.1, 5)));</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">Chain(Pseq([{ "hello".postln; ~dur.value.postln; }.chain(Pn(0.1, 5))]);</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p3">Chain<span class="s1">(</span>Pseq<span class="s1">([</span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>{ <span class="s2">"waiting for n seconds"</span>.postln }.chain(Pn(0.3, 2))<span class="Apple-tab-span">	</span><span class="s3">// wait 1 second once</span></p>
+<p class="p2">], 3</p>
+<p class="p2">));</p>
+<p class="p1"><br></p>
+<p class="p2">//:-----</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p3">Chain<span class="s1">(</span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>{ <span class="s2">"waiting for n seconds"</span>.postln }.chain(Pn(0.3, 2))<span class="Apple-tab-span">	</span><span class="s3">// wait 1 second once</span></p>
+<p class="p2">);</p>
+<p class="p1"><br></p>
+<p class="p2">//:---</p>
+<p class="p3">Chain<span class="s1">(</span></p>
+<p class="p2"><span class="Apple-tab-span">	</span>Pn({ <span class="s2">"waiting for n seconds"</span>.postln }.chain(Pn(0.3, 2)), 3)</p>
+<p class="p2">);</p>
+</body>
+</html>

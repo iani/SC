@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; color: #162bc4}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; color: #162bc4}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+span.s1 {color: #162bc4}
+span.s2 {color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>TouchOSC</b></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Usage</b></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s1">TouchOSC</span><span class="s2">.new </span>// create and activate a new session</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s1">TouchOSC</span><span class="s2">.deactivate </span>// deactivate the default TouchOSC instance</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p5">To customize the behavior of TouchOSC, store functions to the following instance variables:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p5">sessionCreated</p>
+<p class="p5">sessionChanged</p>
+<p class="p5">sessionEnded</p>
+<p class="p2"><br></p>
+<p class="p5">Like this:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p5">TouchOSC.new.sessionCreatedAction = { | session |</p>
+<p class="p5"><span class="Apple-tab-span">	</span>session.id.postln;<span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>{ SinOsc.ar(400 + 1000.rand, 0, EnvGen.kr(Env.perc(level: 0.1), doneAction: 2)) }.play;</p>
+<p class="p5">};</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p5">TouchOSC.new.sessionCreatedAction = { | session |</p>
+<p class="p5">//<span class="Apple-tab-span">	</span>session.id.postln;<span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>{ WhiteNoise.ar(EnvGen.kr(Env.perc(level: 0.1), doneAction: 2)) }.play;</p>
+<p class="p5">};</p>
+</body>
+</html>

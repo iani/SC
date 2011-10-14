@@ -1,0 +1,14 @@
+(
+	\name: "Helper3",
+	\path: "Helper3",
+	\summary: "Create html help file from comments written inside a Class definition code",
+	\helpdoc: "Help/Helper3.html",
+	\author: "Martin Carle",
+	\version: 1.0,
+	\organization: "Humboldt Universität zu Berlin",
+	\country: "Germany",
+	\since: "2010",
+	\url: "---",
+	\dependencies: []
+)
+

@@ -1,0 +1,24 @@
+/* 050712. 
+Testing Jan Trutschler's Munger UGen.
+*/
+~controlSpecs = [
+[ 'out', 0, 1023, 'linear', 1, 0 ],
+[ 'bufnum', 0, 127, 'linear', 0, 0 ],
+[ 'bufFrames', 0, 88200, 'linear', 0, 44100 ],
+[ 'grate', 0, 20, 'linear', 0, 10 ],
+[ 'grate_var', 0, 1, 'linear', 0, 0 ],
+[ 'glen', 0, 1000, 'linear', 0, 500 ],
+[ 'glen_var', 0, 1, 'linear', 0, 0 ],
+[ 'gpitch', 0, 2, 'linear', 0, 1 ],
+[ 'gpitch_var', 0, 1, 'linear', 0, 0 ],
+[ 'ggain', 0, 1.2, 'linear', 0, 0.6 ],
+[ 'ggain_var', 0, 1, 'linear', 0, 0.2 ],
+[ 'direction', 0, 1, 'linear', 0, 0 ],
+[ 'position', 0, 1, 'linear', 0, -1 ],
+[ 'voices', 0, 20, 'linear', 0, 10 ],
+[ 'pan_spread', 0, 1, 'linear', 0, 0.5 ],
+[ 'smoothpitch', 0, 2, 'linear', 0, 1 ],
+[ 'wrampLength', 0, 1024, 'linear', 0, 512 ]
+];
+
+~start = { Synth("munger", ['out', ~out, 'buf', ~bufnum, 'bufFrames', ~bufFrames, 'grate', ~grate, 'grate_var', ~grate_var, 'glen', ~glen, 'glen_var', ~glen_var, 'gpitch', ~gpitch, 'gpitch_var', ~gpitch_var, 'ggain', ~ggain, 'ggain_var', ~ggain_var, 'direction', ~direction, 'position', ~position, 'voices', ~voices, 'pan_spread', ~pan_spread, 'smoothpitch', ~smoothpitch, 'wrampLength', ~wrampLength]) };

@@ -1,0 +1,18 @@
+// Generated from SynthDesc on: Sun Jul 24 10:12:15 2005
+
+~controlSpecs = [
+[ 'out', 0, 4095, 'linear', 1, 0 ],
+[ 'freq', 20, 20000, 'exp', 0, 440 ],
+[ 'instr', 0, 1, 'linear', 0, 0 ],
+[ 'bowpressure', 0, 1, 'linear', 0, 0 ],
+[ 'bowmotion', 0, 1, 'linear', 0, 0 ],
+[ 'integration', 0, 1, 'linear', 0, 0 ],
+[ 'modalresonance', 0, 128, 'linear', 0, 64 ],
+[ 'bowvelocity', 0, 1, 'linear', 0, 0 ],
+[ 'setstriking', 0, 1, 'linear', 0, 0 ],
+[ 'trig', 0, 1, 'linear', 1, 1 ],
+[ 'mul', 0, 1, 'linear', 0, 1 ],
+[ 'add', 0, 1, 'linear', 0, 0 ]
+];
+
+~start = { Synth("stkbandedwg", ['out', ~out, 'freq', ~freq, 'instr', ~instr, 'bowpressure', ~bowpressure, 'bowmotion', ~bowmotion, 'integration', ~integration, 'modalresonance', ~modalresonance, 'bowvelocity', ~bowvelocity, 'setstriking', ~setstriking, 'trig', ~trig, 'mul', ~mul, 'add', ~add], ~target, #[\h, \t, \addBefore, \addAfter, \addReplace][~addAction]) };

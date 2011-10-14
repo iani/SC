@@ -1,0 +1,75 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf540
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red191\green0\blue0;\red0\green115\blue0;}
+\deftab560
+\pard\pardeftab560\ql\qnatural
+
+\f0\fs18 \cf2 (\
+\cf3 var\cf2  myPath;\
+myPath = \cf3 PathName\cf2 .new(\cf4 "MyDisk/SC 2.2.8 f/Sounds/FunkyChicken"\cf2 ); \
+myPath.fileName.postln; \
+)\
+\
+\cf3 Post\cf2  << \cf4 "~/images/ambiantWorkshop/FRAMES/*"\cf2 .pathMatch;\
+\
+~folders = \cf4 "~/images/*"\cf2 .pathMatch;\
+\
+\cf5 //:Load image paths\cf2 \
+~loader = \{ \cf3 | path = "~/images/ambiantWorkshop/FRAMES/*" |\cf2 \
+	\cf3 var\cf2  folders, files, imageDict;\
+	imageDict = \cf3 IdentityDictionary\cf2 .new;\
+	folders = path.pathMatch;\
+	folders do: \{ \cf3 | f |\cf2 \
+		f.basename.postln;\
+		imageDict[f.basename.asSymbol] = format(\cf4 "%*"\cf2 , f).pathMatch;\
+		postf(\cf4 "FOLDER LOADED: \\n%\\n"\cf2 , f);\
+	\};\
+	imageDict;		\
+\};\
+\
+\cf5 //:----\cf2 \
+~images = ~loader.value;\
+\
+\cf5 //:---\cf2 \
+~images.postln;\
+\
+\cf5 //:---\cf2 \
+~images.keys.asArray.postln;\
+\
+\
+\cf5 //:Load images to oF\cf2 \
+~imageLib = \cf3 MultiLevelIdentityDictionary\cf2 .new;\
+~loadImages2oF = \{ \cf3 | path = "~/images/ambiantWorkshop/FRAMES/*" |\cf2 \
+	\cf3 var\cf2  folders, files, imageDict;\
+	imageDict = \cf3 IdentityDictionary\cf2 .new;\
+	folders = path.pathMatch;\
+	folders do: \{ \cf3 | f |\cf2 \
+		f.basename.postln;\
+		imageDict[f.basename.asSymbol] = format(\cf4 "%*"\cf2 , f).pathMatch;\
+		postf(\cf4 "FOLDER LOADED: \\n%\\n"\cf2 , f);\
+	\};\
+	\{\
+		\cf3 var\cf2  index = 0;\
+		imageDict keysValuesDo: \{ \cf3 | folder, files |\cf2 \
+ 			files do: \{ \cf3 | path, i |\cf2 \
+	 			postf(\cf4 "LOADING: %, %, %\\n"\cf2 , index, folder, path.basename);\
+\cf5 	 			OF.loadImage(index, path);\cf2 \
+				~imageLib.put(folder, i, index);\
+	 			index = index + 1;\
+				0.01.wait;\
+ 			\}\
+		\}\
+	\
+	\}.fork;\
+\};\
+\
+~loadImages2oF.value;\
+\
+\cf5 //:image mapping mechanism;\cf2 \
+~imageLib = \cf3 MultiLevelIdentityDictionary\cf2 .new;\
+\
+~imageLib.put(\cf6 'eleni1'\cf2 , 10, 532);\
+~imageLib.put(\cf6 'eleni1'\cf2 , 50, 4432);\
+\
+~imageLib.at(\cf6 'eleni1'\cf2 , 50);}

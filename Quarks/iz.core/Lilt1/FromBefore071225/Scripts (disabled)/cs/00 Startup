@@ -1,0 +1,36 @@
+/* IZ 2007-06-07 { SC3
+
+} */
+
+var script, session;
+script = ~script;
+session = ~script.session;
+
+~start = {
+	Post << ~script << " started\n";
+	['playbuf (looping)', 'playbuf (looping)[2]', 'playbuf (looping)[3]',
+		'playbuf (looping)[4]'] do: { | s |
+			session.getScript('Samples', s)
+			.loadBuffer('swallows')
+			.nset(\amp, 0.97 
+				/*, \loop, 0 */
+			);
+	};
+	session.getScript('Processing', 'PV_RectComb').nset(\source_level, 1, \fx_level, 0);
+	session scriptsDo: { | s, i |
+		[s, script, s == script].postln;
+		if (s != script ) { s.activateMIDI; };
+	};
+	session.scriptGroupNamed('Processing').list do: _.start;
+	session.scriptGroupNamed('Multichannel').list do: _.start;
+};
+
+
+~stop = {
+	Post << ~script << " stopped\n";
+};
+
+
+~controlSpecs = [
+
+];

@@ -1,0 +1,14 @@
+(
+	\name: "LiltBase",
+	\path: "LiltBase",
+	\summary: "System Class extensions used by several other quarks in the IZ library",
+	\helpdoc: "Help/LiltBase.html",
+	\author: "Ioannis Zannos",
+	\version: 1.0,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+)
+

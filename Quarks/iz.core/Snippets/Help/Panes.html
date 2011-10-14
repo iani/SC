@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica; min-height: 22.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+span.s1 {color: #162bc4}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Panes</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>Inherits from: Object</b></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><b>Purpose</b></p>
+<p class="p4"><br></p>
+<p class="p3">Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents.</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage</b></p>
+<p class="p4"><br></p>
+<p class="p3">To activate the document placement mechanism and create the menus, evaluate:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p7"><span class="s1">Panes</span>.activate;</p>
+<p class="p4"><br></p>
+<p class="p3">This also adds the menus for Docks, Code and BufferResource. <span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">To deactivate the document placement mechanism and remove the menus, evaluate:<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p7"><span class="s1">Panes</span>.deactivate;</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Related Classes</b></p>
+<p class="p4"><br></p>
+<p class="p3">Docks, Code, BufferResource, MenuHandler,<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Instance Creation</b></p>
+<p class="p4"><br></p>
+<p class="p3">This class is not intended for making instances.</p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>currentPositionAction :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>listenerPos :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>listenerY :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>onePaneListenerWidth :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>panePos :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>session :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>tryoutName :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>tryoutPos :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>twoPaneListenerHeight</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance variables</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>--<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Class methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*activate : </b>Activate the document placement mechanism and create menus for:<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Panes (this class)</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Docks</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Code</p>
+<p class="p3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>BufferResource (loading and preview of Buffers, saving and loading of Buffer lists)</p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*arrange1Pane :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*arrange2Panes :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*changeArrangement :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*currentPositionAction :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*deactivate :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*doRestoreTop :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*docNotifiers :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*docOpened :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*flipTryoutWindow :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*listenerPos :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*listenerPos_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*listenerY :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*listenerY_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*menuItems :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*next2Pane :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*onePaneListenerWidth :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*onePaneListenerWidth_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*openTryoutWindow :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*panePos :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*panePos_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*placeDoc :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*restorePositions :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*session :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*setDocActions :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*start :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*stop :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*storePositions :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*tryoutName :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*tryoutName_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*tryoutPos :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*tryoutPos_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*twoPaneListenerHeight :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*twoPaneListenerHeight_ :<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>*twoPaneWidth</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Instance methods</b></p>
+<p class="p4"><br></p>
+<p class="p3"><b><span class="Apple-tab-span">	</span>--<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p4"><b><span class="Apple-converted-space">  </span></b></p>
+</body>
+</html>

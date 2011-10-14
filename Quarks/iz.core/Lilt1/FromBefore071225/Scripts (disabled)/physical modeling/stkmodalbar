@@ -1,0 +1,18 @@
+// Generated from SynthDesc on: Fri Jul 29 21:57:30 2005
+
+~controlSpecs = [
+[ 'out', 0, 4095, 'linear', 1, 0 ],
+[ 'freq', 20, 20000, 'exp', 0, 440 ],
+[ 'instrument', 0, 1, 'linear', 0, 0 ],
+[ 'stickhardness', 0, 128, 'linear', 0, 64 ],
+[ 'stickposition', 0, 128, 'linear', 0, 64 ],
+[ 'vibratogain', 0, 40, 'linear', 0, 20 ],
+[ 'vibratofreq', 0, 40, 'linear', 0, 20 ],
+[ 'directstickmix', 0, 128, 'linear', 0, 64 ],
+[ 'volume', 0, 128, 'linear', 0, 64 ],
+[ 'trig', 0, 1, 'linear', 1, 1 ],
+[ 'mul', 0, 1, 'linear', 0, 1 ],
+[ 'add', 0, 1, 'linear', 0, 0 ]
+];
+
+~start = { Synth("stkmodalbar", ['out', ~out, 'freq', ~freq, 'instrument', ~instrument, 'stickhardness', ~stickhardness, 'stickposition', ~stickposition, 'vibratogain', ~vibratogain, 'vibratofreq', ~vibratofreq, 'directstickmix', ~directstickmix, 'volume', ~volume, 'trig', ~trig, 'mul', ~mul, 'add', ~add], ~target,#[\h, \t, \addBefore, \addAfter, \addReplace][~addAction]) };
