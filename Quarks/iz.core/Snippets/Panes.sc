@@ -236,7 +236,7 @@ Panes {
 		}{ 	newMultiPaneAreaWidth = Window.screenBounds.width };
 		if (newMultiPaneAreaWidth != multiPaneAreaWidth) {
 			multiPaneAreaWidth = newMultiPaneAreaWidth;
-			this.rearrangeAllDocs;
+			//this.rearrangeAllDocs;
 			Dock.positionDocListWindowLeftFrom(multiPaneAreaWidth);
 		} 
 	}
