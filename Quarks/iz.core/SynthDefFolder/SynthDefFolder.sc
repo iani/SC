@@ -5,7 +5,7 @@ SynthDefFolder {
 
 	*initClass {
 		StartUp add: {
-			this.fileNameSymbol.asString.pathMatch.postln;
+			(this.filenameSymbol.asString.dirname +/+ "*.scd").pathMatch do: _.load;
 		}	
 	}
 	

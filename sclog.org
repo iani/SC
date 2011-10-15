@@ -2,6 +2,7 @@
 #+OPTIONS: ^:{} f:nil
 
 * 2011
+
 ** 2011-04 April
 *** 2011-04-19 Tuesday
 **** fixing the scaling of the fft magnitude :spectrogram:
@@ -820,7 +821,50 @@ quarks.local.core : Core library parts
 quarks.local.projects : Project code
 ** 2011-07 July
 *** 2011-07-17 Sunday
-**** TODO GitQuarks should *copy* installed version back to uninstalled and restore timestamps for git transparency  :lilt:
+**** CANCELLED GitQuarks should *copy* installed version back to uninstalled and restore timestamps for git transparency :lilt:
+     CLOSED: [2011-10-15 Sat 09:43]
      :PROPERTIES:
      :ENTERED_ON: <2011-07-17 Sun 13:24>
      :END:
+** 2011-10 October
+*** 2011-10-15 Saturday
+**** reorganized library into quarks
+     :PROPERTIES:
+     :ENTERED_ON: <2011-10-15 Sat 09:38>
+     :END:
+
+Added + tweaked local Quark mechanism by Martin Carle. 
+Documented Quark installation procedure and added instructions in README files. 
+Quarks are installed as symlinks in the Extension library (not as copies).
+**** TODO Possible scheme for restoring quark configurations from Git branches
+     :PROPERTIES:
+     :ENTERED_ON: <2011-10-15 Sat 10:05>
+     :END:
+
+***** Problem:
+
+When switching from one Git branch to another, links to some quark folders which were installed may be missing.  How to restore the quark configuration that belongs to a particular branch of a Git repository? 
+
+Note: What happens when the folder of an installed quark is missing because the branch does not contain it?  Testing this with SC 3.4.4 on MacOS X 10.7.2: The missing quark is simply not included in the library, but SC compiles OK. When the folder is recreated by switching to another branch, then the link to that folder works again and the quark is included in the current SC compile configuration. 
+
+***** Suggested solution
+Each branch should remember the quark configuration that was last installed by the user. This configuration should be installed when the user re-compiles. 
+
+***** Implementation method
+
+SC should be able to recognize what git branch is currently checked out. Solution: Write the name of the branch in a file that is saved in the repository. 
+
+The user should recall which configuration of quarks was last installed for each branch. This configuration can be different for each user. Therefore, the configuration is saved in the user application support folder, not in the git repository. 
+
+The configurations are therefore saved as a multi-level dictionary in an archive in the user application support folder. The structure of the dictionary is: 
+
+- level 1: name of repository
+  - level 2: name of branch
+    For each branch in each repository: 
+    List of names of quarks installed. 
+
+This configuration should be saved at each time that any quark is installed or deinstalled using the quarks GUI. 
+
+Additionally, it is proposed to save a default quark configuration for each branch, inside the branch, possibly in the same file that saves the name of the branch. If a user-specific configuration for this branch is not found, then a dialog pops up and prompts the user to install the default configuration. 
+
+
