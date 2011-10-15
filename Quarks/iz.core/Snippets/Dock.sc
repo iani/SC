@@ -133,6 +133,13 @@ Dock {
 		window = Window.allWindows.detect({ | w | w.name == "Documents" });
 		if (window.notNil) { window.close };
 	}
+	*positionDocListWindowLeftFrom {|xPos|
+		var window;
+		window = Window.allWindows.detect({ | w | w.name == "Documents" });
+		if (window.notNil) { 
+			window.bounds = Rect((xPos - width).max(0), 87, width, Window.screenBounds.height - 87)
+		}
+	}
 	
 	*browseUserClasses {
 		var windowName = 'User Classes';
