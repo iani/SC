@@ -12,6 +12,7 @@ SynthDefs created while the server is running are sent immediately. ServerReady 
 Udef {
 	classvar <all;
 	classvar <>loadPath;	// used by SynthDefs to enable storing of path of file that created me
+	classvar <>add2AllServers = true;	// if true, all Udefs are shared with all Servers
 	var <def, <name;
 	var <path; // enable opening the file that contains the Udef def, see SynthDefs quark
 	
@@ -75,6 +76,9 @@ Udef {
 	
 	*at { | server | ^this.onServer(server) }
 	*onServer { | server |
+		if (add2AllServers) {
+			^all.leaves.flat.asSet.asArray; // prevent doubles
+		};
 		server = server ? Server.default;
 		if (all.atPath(server).isNil) { ^[] };
 		^all.leaves(server);

@@ -7,7 +7,12 @@ ServerPrep {
 	var cmdPeriod = false; 			// distinguish server boot from cmd period;
 	var serverBootedResponder;		// Wait for server notification on boot: ['/done', '/notify']
 
-	*initClass { all = IdentityDictionary.new; }
+	*initClass {
+		all = IdentityDictionary.new;
+		StartUp add: { Server.all do: { | s | s addDependant: { | server, message |
+			if (message === \default) { this.new(server); }
+		} } };
+	}
 
 	*new { | server |
 		var new;
