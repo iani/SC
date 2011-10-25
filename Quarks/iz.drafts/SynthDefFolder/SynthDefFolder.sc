@@ -26,3 +26,5 @@ Stereo : Group {
 
 OUT { *new { | source, out = 0 | ^Out.ar(\out.kr(out), source); } }
 
+KOUT { *new { | source, out = 0 | ^Out.kr(\out.kr(out), source); } }
+

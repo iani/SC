@@ -23,7 +23,6 @@ There are two alternative ways to add a quark-directory to the RepQuarks menu:
 		user application support directory. This should be a regular MacOS X alias made in the Finder,
 		not a symlink. If you use symlinks, then you should provide the path to the quark folder
 		through the class method *quarkPath of your subclass of RepQuarks.
-
 */
 
 RepQuarks : Quarks {
@@ -107,7 +106,7 @@ RepQuarks : Quarks {
 		
 		 */
 		var path;
-		path = this.filenameSymbol.asString.pathOnly;
+		path = PathName(this.filenameSymbol.asString).pathOnly;
 		if (path == Platform.userExtensionDir) {
 			 postf("% is a symlink. Will use custom path to find quarks\n", this.name);
 			 path = this.quarkPath;

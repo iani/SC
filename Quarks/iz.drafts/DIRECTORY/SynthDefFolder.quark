@@ -2,7 +2,7 @@
 	\name: "SynthDefFolder",
 	\path: "SynthDefFolder",
 	\summary: "All .scd files in this folder are auto-loaded by this Quark",
-	\helpdoc: "Help/SynthDefFolder.html",
+	\helpdoc: "SynthDefFolder.html",
 	\author: "Ioannis Zannos",
 	\version: 0.1,
 	\organization: "Ionian University, Corfu",
