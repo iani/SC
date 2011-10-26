@@ -865,6 +865,19 @@ The configurations are therefore saved as a multi-level dictionary in an archive
 
 This configuration should be saved at each time that any quark is installed or deinstalled using the quarks GUI. 
 
-Additionally, it is proposed to save a default quark configuration for each branch, inside the branch, possibly in the same file that saves the name of the branch. If a user-specific configuration for this branch is not found, then a dialog pops up and prompts the user to install the default configuration. 
+Additionally, it is proposed to save a default quark configuration for each branch, inside the branch, possibly in the same file that saves the name of the branch. If a user-specific configuration for this branch is not found, then a dialog pops up and prompts the user to install the default configuration.
+*** 2011-10-26 Wednesday
+**** merging mc work from assembla
+     :PROPERTIES:
+     :ENTERED_ON: <2011-10-26 Wed 12:12>
+     :END:
+
+Merge procedure and setup to include two remotes in one local repository:
+
+The assembla remote repository is protected and is used by mc and iz for pushing code collaboratively. 
+
+The github repository is public and is used for sharing code with everyone. 
+
+The assembla repository is linked to the master branch. The github respository is linked to the LogIn branch. 
 
 
