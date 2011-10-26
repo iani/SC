@@ -1,14 +1,14 @@
 (
 	\name: "SoundFeatures",
 	\path: "SoundFeatures",
-	\summary: "Analyse sound files, and store auditory feature information to guide composition/synthesis",
+	\summary: "Audio Feature Detection support",
 	\helpdoc: "Help/SoundFeatures.html",
 	\author: "Ioannis Zannos",
-	\version: 0.01,
+	\version: 0.1,
 	\organization: "Ionian University, Corfu",
 	\country: "Greece",
 	\since: "2011",
 	\url: "http://earlab.org",
-//	\dependencies: []
-	\dependencies: ["Resource", ServerPrep]
+	\dependencies: ["ServerPrep"]
 )
+
