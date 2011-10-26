@@ -6,12 +6,13 @@ Arrange Document windows so that they fill the entire area of the currently avai
 Panes {
 	classvar <prefs, prefsFile="PanesPrefs.scd";
 	classvar <>panePos, <>protoPanePos, <>listenerPos, <>tryoutPos;
-	classvar <currentPositionAction, <>defaultArrangementAction;
+	classvar <currentPositionAction, <>defaultArrangementAction, <multiPaneAreaWidth;
 	
 	*defaults{
 		 ^(
 			listenerY: 200, listenerXdelta: 20 ,menuHeight: 22, multiPaneListenerHeight: 300
 			,multiPaneHeight: Window.screenBounds.height - 22
+			,multiPaneAreaWidth: Window.screenBounds.width //mc
 			,defaultArrangementMethod: \arrangeMultiPanes, tryoutName: "tryout.scd"
 		)
 	}
@@ -26,7 +27,10 @@ Panes {
 		BufferResource.addMenu;
 		{ this.start; }.defer(2); // wait for Lion to reopen last session windows before starting
 	}
-	*loadPrefs{ prefs = ().putAll(UserPrefs.load(prefsFile, this.defaults)) }
+	*loadPrefs{ 
+		prefs = ().putAll(UserPrefs.load(prefsFile, this.defaults));
+		multiPaneAreaWidth = prefs.multiPaneAreaWidth;
+	}
 	
 	*start { this.activate } // synonym
 	*activate {
@@ -40,7 +44,7 @@ Panes {
 			defaultArrangementAction = { this.perform(prefs.defaultArrangementMethod) };
 		};
 		defaultArrangementAction.value;
-		Dock.showDocListWindow;
+		Dock.showDocListWindow(multiPaneAreaWidth); //mc
 		// confuses post and Untitled windows if not deferred on startup:
 		{ this.openTryoutWindow }.defer(0.5); 
 	}
@@ -78,8 +82,16 @@ Panes {
 		{
 			this.maximizeDocHight(Document.current);
 		}),
+		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (multi-pane mode)", 
+			["M", false, true], {	this.togglePaneAreaWidth;
+		}),
 		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["R", false, false],
 		{	this.rearrangeAllDocs;
+		}),
+		
+//quick add, but very helpful...	
+		CocoaMenuItem.addToMenu("Utils", "all GUIs front", ["g", true, false],
+		{	Window.allWindows.do{|w| w.front}
 		}),
 		
 //why is all the following in Panes? Could we not modularise Panes any further? 
@@ -203,7 +215,7 @@ Panes {
 			top = panePos.top - multiPaneHeight;
 			if (top >= 0) { panePos.top = top }{
 				left = panePos.left + multiPaneWidth;
-				if ((left + this.multiPaneWidth) > Window.screenBounds.width) {
+				if ((left + this.multiPaneWidth) > multiPaneAreaWidth) {
 					panePos = tryoutPos.copy;		
 				}{
 					panePos.left = left;
@@ -216,6 +228,17 @@ Panes {
 			height = Window.screenBounds.height - prefs.menuHeight;
 			doc.bounds = doc.bounds.top_(height).height_(height)
 		}	
+	}
+	*togglePaneAreaWidth{
+		var newMultiPaneAreaWidth;
+		if (multiPaneAreaWidth == Window.screenBounds.width) {
+			newMultiPaneAreaWidth = prefs.multiPaneAreaWidth
+		}{ 	newMultiPaneAreaWidth = Window.screenBounds.width };
+		if (newMultiPaneAreaWidth != multiPaneAreaWidth) {
+			multiPaneAreaWidth = newMultiPaneAreaWidth;
+//			this.rearrangeAllDocs;
+			Dock.positionDocListWindowLeftFrom(multiPaneAreaWidth);
+		} 
 	}
 	
 	*docOpened { | doc |

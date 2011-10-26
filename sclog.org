@@ -879,5 +879,7 @@ The assembla remote repository is protected and is used by mc and iz for pushing
 The github repository is public and is used for sharing code with everyone. 
 
 The assembla repository is linked to the master branch. The github respository is linked to the LogIn branch. 
-
-
+**** checked out all mc mods to Panes, Dock from assembla/master to github/LogIn
+     :PROPERTIES:
+     :ENTERED_ON: <2011-10-26 Wed 17:54>
+     :END:

@@ -99,10 +99,11 @@ Dock {
 		]		
 	}
 
-	*showDocListWindow {
+	*showDocListWindow {|multiPaneAreaWidth|
 		var listwin;
+		multiPaneAreaWidth = multiPaneAreaWidth ?? { Window.screenBounds.width };
 		listwin = ListWindow('Documents', 
-			Rect(Window.screenBounds.width - width, 87, width, Window.screenBounds.height - 87), 
+			Rect(multiPaneAreaWidth - width, 87, width, Window.screenBounds.height - 87),  
 			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
 				d.name->{
 					d.front; 
@@ -131,6 +132,13 @@ Dock {
 		var window;
 		window = Window.allWindows.detect({ | w | w.name == "Documents" });
 		if (window.notNil) { window.close };
+	}
+	*positionDocListWindowLeftFrom {|xPos|
+		var window;
+		window = Window.allWindows.detect({ | w | w.name == "Documents" });
+		if (window.notNil) { 
+			window.bounds = Rect((xPos - width).max(0), 87, width, Window.screenBounds.height - 87)
+		}
 	}
 	
 	*browseUserClasses {
