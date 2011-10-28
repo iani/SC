@@ -23,6 +23,7 @@ There are two alternative ways to add a quark-directory to the RepQuarks menu:
 		user application support directory. This should be a regular MacOS X alias made in the Finder,
 		not a symlink. If you use symlinks, then you should provide the path to the quark folder
 		through the class method *quarkPath of your subclass of RepQuarks.
+
 */
 
 RepQuarks : Quarks {
@@ -106,7 +107,7 @@ RepQuarks : Quarks {
 		
 		 */
 		var path;
-		path = PathName(this.filenameSymbol.asString).pathOnly;
+		path = this.filenameSymbol.asString.pathOnly;
 		if (path == Platform.userExtensionDir) {
 			 postf("% is a symlink. Will use custom path to find quarks\n", this.name);
 			 path = this.quarkPath;
@@ -123,6 +124,17 @@ RepQuarks : Quarks {
 		^PathName("~/Quarks/").fullPath;
 	}
 
+	// of quarks in local, select those also present in userExtensionDir
+	installed {
+		^local.quarks select: { | q | this.installPath(q).pathMatch.notEmpty }
+	}
+
+	// IZ: user extension dir + local quark containing dir
+	installDir { ^Platform.userExtensionDir +/+ local.path.basename }
+	
+	// IZ: user extension dir + local quark containing dir + quark name
+	installPath { | q | ^this.installDir +/+ q.name; }
+	
 	// a gui for Quarks. 2007 by LFSaw.de
 	// Mod of window height to fit all quarks list by IZ 201108
 	gui {
@@ -133,13 +145,14 @@ RepQuarks : Quarks {
 		
 		fillPage = { | start |
 			scrollview.visible = false;
-			views.notNil.if({
+			if (views.notNil) {
 				views.do({ |view| view.remove });
-			});
+			};
 			scrollview.decorator.reset;
 			views = quarks collect: { | quark |
 				var qView = QuarkView.new(scrollview, 500@20, quark,
-					this.installed.detect{|it| it == quark}.notNil);
+					this.installed.detect{ | it | it == quark }.notNil
+				);
 				scrollview.decorator.nextLine;
 				qView;
 			};
@@ -191,9 +204,12 @@ RepQuarks : Quarks {
 			.action_({ Help(this.local.path).gui });
 
 		// add open directory button (open is only implemented in OS X)
-		(thisProcess.platform.name == \osx).if{
-			GUI.button.new(window, Rect(15,15,150,20)).states_([["open quark directory", 
-				Color.black, Color.gray(0.5)]]).action_{ arg butt;
+		if (thisProcess.platform.name == \osx) {
+			GUI.button.new(
+				window, 
+				Rect(15,15,150,20)
+			).states_([["open quark directory", Color.black, Color.gray(0.5)]]
+			).action = {
 				"open %".format(this.local.path.escapeChar($ )).unixCmd;
 			};
 		};
@@ -202,16 +218,14 @@ RepQuarks : Quarks {
 		resetButton.states = [
 			["reset", Color.black, Color.gray(0.5)]
 		];
-		resetButton.action = { arg butt;
-			views.do(_.reset);
-		};
+		resetButton.action = { views.do(_.reset); };
 
 		saveButton = GUI.button.new(window, Rect(15,15,75,20));
 		saveButton.states = [
 			["save", Color.black, Color.blue(1, 0.5)]
 		];
 		saveButton.action = { arg butt;
-			Task{
+			Task {
 				warning.string = "Applying changes, please wait";
 				warning.background_(Color(1.0, 1.0, 0.9));
 				0.1.wait;
@@ -252,4 +266,95 @@ RepQuarks : Quarks {
 		fillPage.(pageStart);
 		^window;
 	}
+	
+	install { | name, includeDependencies = true, checkoutIfNeeded = true |
+		var q, deps, installed, dirname, quarksForDep;
+		// rewritten as instance method:
+//		var extendedDirname;	// IZ: includes base directory, for better structure of Extensions dir
+		
+		
+		if (this.isInstalled(name)) {
+			(name + "already installed").inform;
+			^this
+		};
+
+		q = local.findQuark(name);
+		if (q.isNil) {
+			if (checkoutIfNeeded) {
+				(name.asString + " not found in local quarks; checking out from remote ...").postln;
+				this.checkout(name, sync: true);
+				q = local.reread.findQuark(name);
+				if (q.isNil) {
+					Error("Quark" + name + "install: checkout failed.").throw;
+				};
+			}
+			{
+				Error(name.asString + "not found in local quarks.  Not yet downloaded from the repository ?").throw;
+			};
+		};
+
+		if (q.isCompatible.not) {
+			(q.name + " reports that it is not compatible with your current class library.  See the help file for further information.").inform;
+			^this
+		};
+
+		// create /quarks/ directory if needed
+		if (this.repos.checkDir.not) { this.checkoutDirectory };
+
+		// Now ensure that the dependencies are installed (if available given the current active reposses)
+		if (includeDependencies) {
+			q.dependencies(true).do({ |dep|
+				quarksForDep = if(dep.repos.isNil, {this}, {Quarks.forUrl(dep.repos)});
+				if(quarksForDep.isNil, {
+					("Quarks:install - unable to find repository for dependency '" ++ dep.name
+						++ "' - you may need to satisfy this dependency manually. No repository detected locally with URL " ++ dep.repos).warn;
+				}, {
+					if(quarksForDep.isInstalled(dep.name).not, {
+						try({
+							quarksForDep.install(dep.name, false, checkoutIfNeeded)
+						}, {
+							("Unable to satisfy dependency of '"++name++"' on '"++dep.name
+								++"' - you may need to install '"++dep.name++"' manually.").warn;
+						});
+					});
+				});
+			});
+		};
+
+		// Ensure the correct folder-hierarchy exists first
+		
+		// IZ Adding enclosing dir for grouping: 
+		// dirname = (Platform.userExtensionDir +/+ local.name +/+ q.path).dirname;
+		
+		if (File.exists(this.installDir).not) {
+			systemCmd("mkdir -p " + this.installDir.escapeChar($ ));
+		};
+
+		// install via symlink to Extensions/<quark-group-dir>/<quarks-dir>
+		systemCmd("ln -s " 
+			+ (local.path +/+ q.path).escapeChar($ ) 
+			+ this.installPath(q).escapeChar($ ));
+		inform(q.name + "installed");
+	}
+
+	uninstall { | name |
+		var q, deps, installed;
+		name = name.asString;
+		if(this.isInstalled(name).not,{
+			^this
+		});
+
+		q = local.findQuark(name);
+		if(q.isNil,{
+			Error(
+				name +
+				"is not found in Local quarks in order to look up its relative path.  You may remove the symlink manually."
+			).throw;
+		});
+
+		// remove symlink file
+		systemCmd("rm " + this.installPath(q).escapeChar($ ));
+		(q.name + "uninstalled").inform;
+	}
+
 }
