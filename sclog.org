@@ -883,3 +883,8 @@ The assembla repository is linked to the master branch. The github respository i
      :PROPERTIES:
      :ENTERED_ON: <2011-10-26 Wed 17:54>
      :END:
+*** 2011-10-28 Friday
+**** quarks install in quark group directory
+     :PROPERTIES:
+     :ENTERED_ON: <2011-10-28 Fri 11:42>
+     :END:
