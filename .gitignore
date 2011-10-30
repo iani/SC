@@ -26,22 +26,22 @@ tryout.scd
 
 # Version 110811: Ignore all extensions (!!!)
 # All extensions are now in quarks and configured individually by the user
-Extensions/*
+# Extensions/*
 # The only thing that needs to be installed by default for lilt to be configurable is this: 
 !Extensions/LiltBase
 # In the same spirit, also ignore startup.rtf, startup.scd
 startup.rtf
 startup.scd
 
-Extensions\ \(archive\)
-Extensions\ \(disabled\)
+# Extensions\ \(archive\)
+# Extensions\ \(disabled\)
 HistoryLogs
 UserPrefs
-Notes
+# Notes
 SC_helptree.cache.txt
 sclang_completion_dict
 sounds
-synthdefs
+# synthdefs
 
 dev_only
 
