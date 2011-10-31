@@ -129,11 +129,20 @@ RepQuarks : Quarks {
 		^local.quarks select: { | q | this.installPath(q).pathMatch.notEmpty }
 	}
 
+/////////////
+//mc: installPath now kills subdirs of a quark definition!
+// -> wouldn't it be better to further allow DELIBERATE subdirs ?!?
+// for example see 'team.core' where subgroupings by authors seem helpful, 
+// especially if there are many collaborators
+
 	// IZ: user extension dir + local quark containing dir
 	installDir { ^Platform.userExtensionDir +/+ local.path.basename }
 	
 	// IZ: user extension dir + local quark containing dir + quark name
 	installPath { | q | ^this.installDir +/+ q.name; }
+
+//////////////
+
 	
 	// a gui for Quarks. 2007 by LFSaw.de
 	// Mod of window height to fit all quarks list by IZ 201108

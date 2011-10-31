@@ -1,6 +1,6 @@
 (
 	\name: "Helper3",
-	\path: "Helper3",
+	\path: "mc/Helper3",
 	\summary: "Create html help file from comments written inside a Class definition code",
 	\helpdoc: "Help/Helper3.html",
 	\author: "Martin Carle",
