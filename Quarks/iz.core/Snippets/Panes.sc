@@ -71,18 +71,18 @@ Panes {
 			this.arrangeMultiPanes;
 			this.rearrangeAllDocs;
 		}),
-		CocoaMenuItem.addToMenu("Utils", "switch window pos (mulit-pane mode)", ["A", false, false],
+		CocoaMenuItem.addToMenu("Utils", "switch window pos (multi-pane mode)", ["A", false, false],
 		{
 			var doc = Document.current;
 //mc ?!		var pos = doc.bounds;
 //mc	?!		var done = false;
 			currentPositionAction.(doc);
 		}),
-		CocoaMenuItem.addToMenu("Utils", "maximize window (mulit-pane mode)", ["M", false, false],
+		CocoaMenuItem.addToMenu("Utils", "maximize window (multi-pane mode)", ["M", false, false],
 		{
 			this.maximizeDocHight(Document.current);
 		}),
-		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (mulit-pane mode)", 
+		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (multi-pane mode)", 
 			["M", false, true], {	this.togglePaneAreaWidth;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["R", false, false],
