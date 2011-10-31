@@ -1,6 +1,6 @@
 (
 	\name: "teamBase",
-	\path: "team.core/teamBase",
+	\path: "teamBase",
 	\summary: "team essentials",
 	\helpdoc: "",
 	\author: "",
