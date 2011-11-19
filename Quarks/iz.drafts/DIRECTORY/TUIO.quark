@@ -1,0 +1,15 @@
+(
+	\name: "TUIO",
+	\path: "TUIO",
+	\summary: "Bare-bones implementation of TUIO reception, with code-customizeable response actions",
+	\helpdoc: "Help/TUIO.html",
+	\author: "Ioannis Zannos",
+	\version: 0.01,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2011",
+	\url: "http://earlab.org",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+
