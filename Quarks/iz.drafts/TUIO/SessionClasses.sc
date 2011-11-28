@@ -11,20 +11,20 @@ TouchSession {
 	}
 	
 	init {
-//		postf("%, NEW. ID: %, data: %\n", this.class.name, id, data); // temporary... debug
 //		behavior = sessionManager.sessionBehavior(this);
-		if (sessionManager.verbose) { postf("blob % created: %\n", id, data); };
+		if (sessionManager.verbose) { postf("blob % created: %\n", id, data.round(0.00001)); };
 		sessionManager.sessionCreatedAction.(this);
 	}
 
 	sessionChanged  { | argData |
-//		postf("%, CHANGED. ID: %, data: %\n", this.class.name, id, argData);
-		if (sessionManager.verbose) { postf("blob % moved: %\n", id, argData); };
-		sessionManager.sessionChangedAction.(this);
+		// Ignore change if both x-speed and y-speed are 0
+		if (sessionManager.verbose) { postf("blob % moved: %\n", id, argData.round(0.00001)); };
+		sessionManager.sessionChangedAction.(this, argData);
+		data = argData;
 	}
 	
 	sessionEnded  {
-//		postf("%, ENDED. ID: %, data: %\n", this.class.name, id, data);
+		if (sessionManager.verbose) { postf("blob % ended.\n", id); };
 		sessionManager.sessionEndedAction.(this);
 	}
 }

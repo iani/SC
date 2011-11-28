@@ -78,5 +78,12 @@ ConfigCCV {
 			Archive.global.put(this.name.asSymbol, configPath);
 		});
 	}
+	
+	*openConfigFile {
+		if (this.loadConfig(configPath)) {
+			format("open %", configPath.escapeChar($ )).unixCmd;
+		};
+	}
+
 }
 

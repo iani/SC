@@ -1,9 +1,15 @@
-/* 
+/* 2011 11 18
 
 Simple way to toggle sound on and off for these examples: 
 Type Command-Alt-Shift-b to boot / quit the default server.
 
 Typing Command-Shift-x evaluates the present file and boots the server if needed.
+
+TUIO.activate;
+TUIO.new.verbose = true;
+TUIO.new.verbose = false;
+
+Synth("test");
 
 */
 
