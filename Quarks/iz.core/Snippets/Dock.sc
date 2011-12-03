@@ -215,6 +215,7 @@ Dock {
 		};
 	}
 
+
 	*insertClassHelpTemplate {
 		var doc, class;
 		doc = Document.current;
@@ -277,8 +278,9 @@ Examples
 				doc.selectionStart, doc.selectionSize); 0.2.wait; 
 			doc.font_(Font("Helvetica-Bold", 12), 
 				doc.selectionStart, doc.string.size - doc.selectionStart); 
-		}.fork(AppClock);
-		
+		}.fork(AppClock);		
 		
 	}
+
+
 }

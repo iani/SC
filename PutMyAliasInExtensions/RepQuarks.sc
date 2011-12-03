@@ -107,7 +107,8 @@ RepQuarks : Quarks {
 		
 		 */
 		var path;
-		path = this.filenameSymbol.asString.pathOnly;
+//		path = this.filenameSymbol.asString.pathOnly;
+		path = this.filenameSymbol.asString;
 		if (path == Platform.userExtensionDir) {
 			 postf("% is a symlink. Will use custom path to find quarks\n", this.name);
 			 path = this.quarkPath;

@@ -66,7 +66,12 @@ BufLoader : DefLoader {
 
 	responderPaths { ^[['/done', '/b_allocRead'], ['/done', '/b_alloc']] }
 
-	loadNextObjectGroup { serverPrep.loadDefs; }
+	loadNextObjectGroup {
+		if (BufferResource.onServer(server).size > 0) {
+			postf("===== LOADED % BUFFERS =====\n", BufferResource.onServer(server).size);
+		};
+		serverPrep.loadDefs;
+	}
 
 	addAllBufferResources {
 		/* Received from ServerPrep on Boot time. Done before loading process starts */

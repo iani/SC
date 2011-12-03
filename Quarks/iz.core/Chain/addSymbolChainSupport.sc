@@ -115,7 +115,7 @@
 		^switch (this,
 			\default, { BufferResource.default(target.asTarget.server) },
 			\current, { BufferResource.current(target.asTarget.server) },
-			{ BufferResource(this, target.asTarget.server.postln) }
+			{ BufferResource(this, target.asTarget.server) }
 		)
 	}
 

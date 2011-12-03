@@ -43,7 +43,7 @@ BufferResource : AbstractServerResource {
 	
 	*loadPaths { | paths | paths do: this.read(_);	}
 	
-	*saveList {
+	*saveListDialog {
 		Dialog.savePanel({ | path |
 			var file;
 			file = File.open(path, "w");
@@ -51,17 +51,21 @@ BufferResource : AbstractServerResource {
 			file.close;
 		});	
 	}
-	
-	*loadList {
+
+	*loadListDialog {
 		Dialog.getPaths({ | paths |
 			var path, file, soundPaths;
-			path = paths.first;
-			file = File.open(path, "r");
-			soundPaths = file.readAllString;
-			file.close;
-			soundPaths = soundPaths.interpret;
-			soundPaths do: this.read(_);
+			this.loadList(paths.first);
 		});			
+	}
+	
+	*loadList { | path |
+		var file, soundPaths;
+		file = File.open(path, "r");
+		soundPaths = file.readAllString;
+		file.close;
+		soundPaths = soundPaths.interpret;
+		soundPaths do: this.read(_);
 	}
 
 	*list { BufferListWindow.new }
@@ -158,10 +162,10 @@ BufferResource : AbstractServerResource {
 				{ this.load; this.list; }.defer(0.1);
 			}),
 			CocoaMenuItem.addToMenu("Buffers", "Load buffer list", [], {
-				{ this.loadList; this.list; }.defer(0.1);
+				{ this.loadListDialog; this.list; }.defer(0.1);
 			}),
 			CocoaMenuItem.addToMenu("Buffers", "Save buffer list", [], {
-				{ this.saveList; }.defer(0.1);
+				{ this.saveListDialog; }.defer(0.1);
 			}),
 		];
 	}
