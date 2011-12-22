@@ -43,14 +43,16 @@ RepQuarks : Quarks {
 		if (menu.isNil) {
 			menu = SCMenuGroup(nil, menuName, 10);
 		};
-		this.addToMenu("quarks", { Quarks.gui });
-		this.addToMenu("sc3-plugins", {
+		SCMenuItem(menu, "quarks").action = { Quarks.gui };
+		SCMenuItem(menu, "sc3-plugins").action = {
 			Quarks(localPath: (Platform.userAppSupportDir +/+ "sc3-plugins")).gui
-		});
+		};
 	}
 
-	*addToMenu { | itemName, action |
-		SCMenuItem(menu, itemName).action = action;
+	*addToMenu { | itemName, path |
+		postf("THIS WILL ENTER LIBRARY: %\n", itemName);
+		SCMenuItem(menu, itemName).action = { this.new(localPath: path).gui; };
+		
 	}
 
 	*makeMenu {
@@ -59,28 +61,20 @@ RepQuarks : Quarks {
 		SCMenuSeparator(menu, menu.children.size);
 		pathMatch = (path ++ "quarks.*").pathMatch;
 		if (pathMatch.size > 0) {
-			^pathMatch do: { | p |
-				this.addToMenu(p.basename[7..], { this.new(localPath: p).gui; });
-			}
+			^pathMatch do: { | p | this.addToMenu(p.basename[7..], p); }
 		};
 		pathMatch = (path ++ "*").pathMatch select: { | p |
 			this.isQuarkFolder(p +/+ "/");	
 		};
 		if (pathMatch.size > 0) {
-			^pathMatch do: { | p |
-				this.addToMenu(p.basename, { this.new(localPath: p).gui; });
-			}
+			^pathMatch do: { | p | this.addToMenu(p.basename, p); }
 		};
-		if (this.isQuarkFolder(path)) {
-			^this.addToMenu(this.name.asString, { this.new(localPath: path).gui; });
-		};
+		if (this.isQuarkFolder(path)) { ^this.addToMenu(this.name.asString, path); };
 		path = path ++ "Quarks/";
 		if (this.isQuarkFolder(path)) {
-			^this.addToMenu(this.name.asString, { this.new(localPath: path).gui; });
+			^this.addToMenu(this.name.asString, path);
 		};
-		(path ++ "*").pathMatch do: { | p |
-			this.addToMenu(p.basename, { this.new(localPath: p).gui; });
-		};
+		(path ++ "*").pathMatch do: { | p | this.addToMenu(p.basename, p); };
 	}
 
 	*isQuarkFolder { | path |
