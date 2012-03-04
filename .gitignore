@@ -10,6 +10,8 @@
 
 # ignore zipped files
 *.zip
+# except for this one: 
+!PutMyAliasInExtensions/RepQuarkTemplates.zip
 
 # Ignore default SuperCollider object text archive
 archive.sctxar
