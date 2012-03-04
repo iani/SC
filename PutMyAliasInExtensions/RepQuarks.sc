@@ -2,27 +2,7 @@
 
 MC / IZ 201109-10
 
-Repository Quarks: Manage repository quarks, that is quarks residing in local directories anywhere in the system. 
-These quarks may be parts of Git repositories, or may just be in any local folder. 
-
-RepQuarks builds a menu that has one item for each rep-quark directory found in the system. Each item in the menu opens a GUI window for installing or un-installing any quarks in the rep-quark directory. A rep-quark repository is a folder containing quarks, and uses exactly the same format as a regular Quarks repository (a "DIRECTORY" folder which lists and gives info for the quarks included, see also Quarks help file).
-
-There are two alternative ways to add a quark-directory to the RepQuarks menu: 
-
-1. 	_Either:_ Place the quark directory inside the user application support directory
- 	(~/Library/Application Support/SuperCollider),
- 	- at the root level, 
- 	- and name it quarks.<anything>, 
- 		where <anything> is a name of your choice. 
- 	The name of your choice will appear in the menu. 
-
-2. 	_Or:_ Define an empty subclass of RepQuarks and use it in the following way: 
-	2.1 	Place he definition file of the subclass inside the directory of the quarks that you want 
-		to include. The definition file should be at the top level of your quarks directory. 
-	2.2. Make an alias of the definition file and place it inside the Extensions folder in the
-		user application support directory. This should be a regular MacOS X alias made in the Finder,
-		not a symlink. If you use symlinks, then you should provide the path to the quark folder
-		through the class method *quarkPath of your subclass of RepQuarks.
+Please see README_RepQuarks.rtfd for documentation. 
 
 */
 
@@ -50,31 +30,53 @@ RepQuarks : Quarks {
 	}
 
 	*addToMenu { | itemName, path |
-		postf("THIS WILL ENTER LIBRARY: %\n", itemName);
+//		postf("THIS WILL ENTER LIBRARY: %\n", itemName);
 		SCMenuItem(menu, itemName).action = { this.new(localPath: path).gui; };
-		
 	}
 
 	*makeMenu {
-		var path, pathMatch;
-		path = this.getQuarkPath;
+		var path, pathMatch, quarkspecs;
+		path = this.getQuarkPath;	// subclasses give their own paths
 		SCMenuSeparator(menu, menu.children.size);
-		pathMatch = (path ++ "quarks.*").pathMatch;
-		if (pathMatch.size > 0) {
-			^pathMatch do: { | p | this.addToMenu(p.basename[7..], p); }
+		quarkspecs = this.getQuarksDirectories(path);
+		if (quarkspecs.size == 0) {
+			postf("FOUND NO QUARKS FOR: %\n", path);
+		}{
+			quarkspecs do: { | spec | this.addToMenu(spec[0], spec[1]); }
+		}
+	}
+
+	*getQuarksDirectories { | path |
+		/* 	Find out which quark groups are contained in the folder given by the 
+			quarkpath and create a menu for them.
+			Search in 4 ways: 
+			1. Look for a folder named Quarks. If found then if it contains
+			a DIRECTORY folder, read the quark definitions from the DIRECTORY folder. 
+			2. If no DIRECTORY folder was found in the Quarks folder, then search for 
+		   	DIRECTORY folders in each of the subdirectories of the Quarks folder. 
+		   	3. If none of the above, then, 
+			if the quarkpath folder contains a folder named DIRECTORY, then read the quarks
+			from DIRECTORY and add one single quark group named after the quarkpath folder.
+			4. Otherwise look at each subfolder in the quarkpath folder and add a quark group
+			for each subfolder that contains a DIRECTORY folder.
+		*/
+		var pathplus, quarksDirectories;
+		pathplus = path +/+ "Quarks/DIRECTORY";
+		quarksDirectories = pathplus.pathMatch;
+		if (quarksDirectories.size > 0) { ^[[path.basename, quarksDirectories.first]] };
+		pathplus = path +/+ "Quarks/*";
+		quarksDirectories = pathplus.pathMatch.select { | p |
+			(p +/+ "DIRECTORY").pathMatch.size > 0;
 		};
-		pathMatch = (path ++ "*").pathMatch select: { | p |
-			this.isQuarkFolder(p +/+ "/");	
+		if (quarksDirectories.size > 0) {
+			^[quarksDirectories collect: _.basename, quarksDirectories].flop.postln;
 		};
-		if (pathMatch.size > 0) {
-			^pathMatch do: { | p | this.addToMenu(p.basename, p); }
+		pathplus = path +/+ "DIRECTORY";
+		if ((quarksDirectories = pathplus.pathMatch).size > 0) {
+			^[[path.basename, quarksDirectories.first]].postln;
 		};
-		if (this.isQuarkFolder(path)) { ^this.addToMenu(this.name.asString, path); };
-		path = path ++ "Quarks/";
-		if (this.isQuarkFolder(path)) {
-			^this.addToMenu(this.name.asString, path);
-		};
-		(path ++ "*").pathMatch do: { | p | this.addToMenu(p.basename, p); };
+		pathplus = path +/+ "*/DIRECTORY";
+		^quarksDirectories = pathplus.pathMatch.collect({ | p | [p.dirname.basename, p] }).postln;
 	}
 
 	*isQuarkFolder { | path |
@@ -101,8 +103,8 @@ RepQuarks : Quarks {
 		
 		 */
 		var path;
-//		path = this.filenameSymbol.asString.pathOnly;
-		path = this.filenameSymbol.asString;
+		path = this.filenameSymbol.asString.dirname;
+//		path = this.filenameSymbol.asString;
 		if (path == Platform.userExtensionDir) {
 			 postf("% is a symlink. Will use custom path to find quarks\n", this.name);
 			 path = this.quarkPath;

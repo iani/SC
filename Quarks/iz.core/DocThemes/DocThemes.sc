@@ -61,7 +61,8 @@ DocThemes {
 	*createDefaultCustomTheme {
 		Document.themes[\pinkString] = Document.themes[\default].copy;
 //		Document.themes[\pinkString][\textColor] = Color(0.4, 0.4, 0.5);
-		Document.themes[\pinkString][\textColor] = Color(0.6, 0.6, 0.65);
+//		Document.themes[\pinkString][\textColor] = Color(0.6, 0.6, 0.65);
+		Document.themes[\pinkString][\textColor] = Color(0, 0, 0, 1);
 		Document.themes[\pinkString][\stringColor] = Color(0.9, 0.1, 0.6);
 		Document.themes[\pinkString][\numberColor] = Color(0.7, 0.2, 0, 1);
 		Document.themes[\pinkString][\classColor] = Color(0.1, 0.6, 0.9);
