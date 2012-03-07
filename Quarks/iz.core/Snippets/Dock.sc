@@ -99,7 +99,7 @@ Dock {
 		]		
 	}
 
-	*showDocListWindow {|multiPaneAreaWidth|
+	*showDocListWindow { | multiPaneAreaWidth |
 		var listwin;
 		multiPaneAreaWidth = multiPaneAreaWidth ?? { Window.screenBounds.width };
 		listwin = ListWindow('Documents', 
@@ -121,7 +121,7 @@ Dock {
 			delay: 0.1; // leave some time for Documents to update their name etc.
 		)
 		.addNotifier(Code, \openedCodeListWindow, {
-			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height / 2 - 70;
+			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height / 2 - 70
 		})
 		.addNotifier(Code, \closedCodeListWindow, {
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
@@ -140,7 +140,19 @@ Dock {
 			window.bounds = Rect((xPos - width).max(0), 87, width, Window.screenBounds.height - 87)
 		}
 	}
-	
+
+	*placeDocWindow { | x = -160, y = 200 |
+		/* 	IZ 120308 Hack to send Document list window to the other computer monitor screen. Try: 
+			Dock.placeDocWindow(-160, 200);
+		*/
+		var docwin;
+		docwin = Window.allWindows select: { | w | w.name == "Documents" };
+		if (docwin.size > 0) {
+			docwin = docwin.first;
+			docwin.bounds = docwin.bounds.moveTo(x, y);
+		}
+	}
+
 	*browseUserClasses {
 		var windowName = 'User Classes';
 		ListWindow(windowName, nil, {

@@ -31,9 +31,9 @@ Alternatively, if you want to use the rest of the quarks belonging to the librar
 \b0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\fs24 \cf0 oT add or modify Classes in SuperCollider one places the files that contain Class definition code inside the folder "Extensions" under 
+\fs24 \cf0 To add or modify Classes in SuperCollider one places the files that contain Class definition code inside the folder "Extensions" under 
 \f1 Platform.userAppSupportDir
-\f0  (for more info see {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Using-Extensions.html"}}{\fldrslt \cf2 \ul \ulc2 Using-Extensions}}). The \cf3  {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Quarks/Quarks.html"}}{\fldrslt \cf4 \ul \ulc4 Quarks}}\cf0  mechanism allows one package a group of classes in a folder and to add or remove it via GUI.  This makes it possible to organize code in packages, which makes code management easier. A Quark is installed by placing na alias of its folder in the Extensions directory. Normal Quarks are downloaded by SuperCollider with the statement 
+\f0  (for more info see {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Using-Extensions.html"}}{\fldrslt \cf2 \ul \ulc2 Using-Extensions}}). The\cf3  {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Quarks/Quarks.html"}}{\fldrslt \cf4 \ul \ulc4 Quarks}}\cf0  mechanism allows one package a group of classes in a folder and to add or remove it via GUI.  This makes it possible to organize code in packages, which makes code management easier. A Quark is installed by placing an alias of its folder in the Extensions directory. Normal Quarks are downloaded by SuperCollider with the statement 
 \f1 \cf5 Quarks.gui
 \f0 \cf0  and are all placed in the folder  
 \f1 Platform.userAppSupportDir ++ Quarks
@@ -43,10 +43,12 @@ Alternatively, if you want to use the rest of the quarks belonging to the librar
 
 \f0\b\fs36 What RepQuarks are and how they work
 \f1\b0\fs18 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\fs24 \
+\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\f0 RepQuarks are Quarks whose code resides locally, that is, on the computer where the SuperCollider client ("lang")  is running. There can be any number of local folders anywhere in the system that contain RepQuarks. To add the quarks of a local folder to SuperCollider, follow these 3 steps:\
+\f0 \cf0 RepQuarks are Quarks whose code resides locally, that is, on the computer where the SuperCollider client ("lang")  is running. There can be any number of local folders anywhere in the system that contain RepQuarks. To add the quarks of a local folder to SuperCollider, follow these 3 steps:\
 \
 \pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural
 \ls1\ilvl0\cf0 {\listtext	1.	}Define an empty subclass of RepQuarks and puts its definition file at the top level of the folder containing the RepQuarks. The name of the subclass may be anything any valid unique class name. \
@@ -101,7 +103,7 @@ Quarks can be grouped into several subfolders according to the topics they addre
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\b\fs28 \cf0 B. Variations of 1 and 2 above: Use an intermediate folder named "Quarks"\
+\b\fs28 \cf0 B. Variations of 1 and 2 above: Put all quarks in one subfolder named "Quarks"\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
 \b0\fs24 \cf0 \
