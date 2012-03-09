@@ -12,7 +12,8 @@ Panes {
 	classvar <prefs, prefsFile = "PanesPrefs.scd";
 	classvar <>panePos, <>protoPanePos, <>listenerPos, <>tryoutPos;
 	classvar <currentPositionAction, <>defaultArrangementAction, <multiPaneAreaWidth;
-	classvar <>miniServerWindow = false; // if true, rightmost pane will leave space for it
+	classvar <>miniServerWindow = false; // if true, rightmost pane will leave space for 
+	// Sergio Luque's modivied Server:makeWindow at the bottom right part of the screen
 
 	*defaults {
 		 ^(

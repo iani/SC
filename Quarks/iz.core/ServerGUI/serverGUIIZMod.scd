@@ -1,4 +1,11 @@
 // Sergio Luque
+/* tryout of some extra options by IZ
+
+DEACTIVATED
+
+*/
+
+
 + Server {
 	makeWindow { arg w;
 		var active, booter, killer, makeDefault, running, booting, stopped;

@@ -1,16 +1,21 @@
-/*
-
-MC / IZ 201109-10
-
+/* MC / IZ 201109-10
 Please see README_RepQuarks.rtfd for documentation. 
+
+2DO: Implement automatic dependency resolution: 
+Before installing a Quark from a RepQuarks repository, look at all its class definitions by performing a grep for class definition code in the class definition files of the quark. Collect all declared superclasses in those class definitions. Find if those superclasses are already defined. If a superclass is not already defined, then find if it is defined in one of the known RepQuark repositories. If yes, find the Quark in that repository and install it. Print a message about the automatic dependency resolution (successful or not). 
+
+To prepare this: Look at Quarks classvars: global, allInstances, known, repos, local.
+Examine which of these variables should be used to store the list of known/installed repquarks with their paths. These can be used to search all existing RepQuarks in order to resolve dependencies. 
 
 */
 
 RepQuarks : Quarks {
 	classvar <menu, <menuName = "Quarks";
+//	classvar <repQuarks;	// dict of all RepQuarks instances, i.e. groups of local repository quarks.
 
 	*initClass {
 		StartUp add: {
+//			repQuarks = IdentityDictionary.new;
 			Platform.case(\osx, {
 				this.makeMainQuarksMenu;
 				this.subclasses do: _.makeMenu;
@@ -31,6 +36,9 @@ RepQuarks : Quarks {
 
 	*addToMenu { | itemName, path |
 //		postf("THIS WILL ENTER LIBRARY: %\n", itemName);
+//		path.postln;
+//		pathMatch(path +/+ "DIRECTORY/*").postln;
+//		repQuarks[itemName.asSymbol] = this.new(localPath: path);
 		SCMenuItem(menu, itemName).action = { this.new(localPath: path).gui; };
 	}
 
@@ -69,7 +77,7 @@ RepQuarks : Quarks {
 			(p +/+ "DIRECTORY").pathMatch.size > 0;
 		};
 		if (quarksDirectories.size > 0) {
-			^[quarksDirectories collect: _.basename, quarksDirectories];
+			^[quarksDirectories collect: _.basename, quarksDirectories].flop;
 		};
 		pathplus = path +/+ "DIRECTORY";
 		if ((quarksDirectories = pathplus.pathMatch).size > 0) {
@@ -139,6 +147,13 @@ RepQuarks : Quarks {
 			scrollview, scrB, flowLayout, /* quarksflow, */ height, maxPerPage, nextButton, prevButton;
 		var	quarks;
 		var pageStart = 0, fillPage;
+
+		// note, this doesn't actually contact svn
+		// it only reads the DIRECTORY entries you've already checked out
+//		postf("RepQuarks gui - repos: %\n", repos.postln.quarks);
+//		postf("RepQuarks gui - local: %\n", local.postln.quarks);
+		quarks = this.repos.quarks.copy
+			.sort({ |a, b| a.name < b.name });
 		
 		fillPage = { | start |
 			scrollview.visible = false;
@@ -156,13 +171,6 @@ RepQuarks : Quarks {
 			scrollview.visible = true;
 			views
 		};
-
-		// note, this doesn't actually contact svn
-		// it only reads the DIRECTORY entries you've already checked out
-//		postf("RepQuarks gui - repos: %\n", repos.postln.quarks);
-//		postf("RepQuarks gui - local: %\n", local.postln.quarks);
-		quarks = this.repos.quarks.copy
-			.sort({ |a, b| a.name < b.name });
 
 		scrB = GUI.window.screenBounds;
 //		height = min(quarks.size * 25 + 120, scrB.height - 60);
@@ -268,8 +276,7 @@ RepQuarks : Quarks {
 		var q, deps, installed, dirname, quarksForDep;
 		// rewritten as instance method:
 //		var extendedDirname;	// IZ: includes base directory, for better structure of Extensions dir
-		
-		
+
 		if (this.isInstalled(name)) {
 			(name + "already installed").inform;
 			^this
@@ -298,7 +305,8 @@ RepQuarks : Quarks {
 		// create /quarks/ directory if needed
 		if (this.repos.checkDir.not) { this.checkoutDirectory };
 
-		// Now ensure that the dependencies are installed (if available given the current active reposses)
+		// Now ensure that the dependencies are installed 
+		// (if available given the current active reposses)
 		if (includeDependencies) {
 			q.dependencies(true).do({ |dep|
 				quarksForDep = if(dep.repos.isNil, {this}, {Quarks.forUrl(dep.repos)});

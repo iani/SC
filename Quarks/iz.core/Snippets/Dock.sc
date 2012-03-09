@@ -144,6 +144,8 @@ Dock {
 	*placeDocWindow { | x = -160, y = 200 |
 		/* 	IZ 120308 Hack to send Document list window to the other computer monitor screen. Try: 
 			Dock.placeDocWindow(-160, 200);
+			Note: Compare with Dock.positionDocListWindowLeftFrom which does not place the 
+			window entirely outside the current main monitor screen. 
 		*/
 		var docwin;
 		docwin = Window.allWindows select: { | w | w.name == "Documents" };
