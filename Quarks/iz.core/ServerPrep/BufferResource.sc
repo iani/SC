@@ -4,10 +4,10 @@ Works with ServerPrep, so that buffers are always loaded before any synths are s
 BufferResource : AbstractServerResource {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	classvar >current;
-	var <path, <startFrame = 0, <numFrames, <numChannels = 1;
+	var <path, <startFrame = 0, <numFrames, <numChannels = 1, <sampleRate, <duration;
 
 	*initClass {
-		current = IdentityDictionary.new;	
+		current = IdentityDictionary.new;
 	}
 
 	*makeKey { | key, target, numFrames, numChannels, path |
@@ -30,19 +30,54 @@ BufferResource : AbstractServerResource {
 */
 	}
 
+	// this method just defines arguments similar to Buffer-new
+	// use it only to create buffers that do not read from a file
+	// to read buffers from file use *read
+	*new { | key, server, numFrames, numChannels = 1, path, startFrame = 0 |
+		^super.new(key, (server ? Server.default), numFrames, numChannels, path, startFrame);
+	}
+
+	init { | argServer, argNumFrames, argNumChannels = 1, argPath, argStartFrame |
+		super.init(argServer);
+		numFrames = argNumFrames;
+		numChannels = argNumChannels;
+		path = argPath;
+		startFrame = argStartFrame;
+		ServerPrep(server).addBuffer(this);
+		NotificationCenter.notify(BufferResource, \created, this);
+		if (path.notNil) {
+			current[server] = this;
+		};
+	}
+
+	*saveDefaults {
+		// save all current instances to Archive.global;
+		Archive.global.put(this.name, (this.all.flat collect: { | b | b.key add: b.path }));
+		Archive.write;
+	}
+	
+	*loadDefaults {
+		// load all Server.default instances from Archive.global;
+		Archive.global.at(this.name) do: { | bspec |
+			if (bspec[3].notNil) { this.read(bspec[3], Server.named[bspec[2]]) };
+		};
+	}
+
+	*loadSCdefaults { this.loadPaths("./sounds/a*".pathMatch;) }
+
+	*load {
+		Dialog.getPaths({ | paths | this.loadPaths(paths) });
+	}
+
+	*loadPaths { | paths | paths do: this.read(_);	}
+
 	*read { | path, server, startFrame = 0, numFrames, play |
 		if (path.pathMatch.size == 0) {
 			^postf("Could not find Buffer at path: %\n", path);
 		};
 		^this.new(this.keyFromPath(path), server, numFrames, nil, path, startFrame, play);
 	}
-	
-	*load {
-		Dialog.getPaths({ | paths | this.loadPaths(paths) });
-	}
-	
-	*loadPaths { | paths | paths do: this.read(_);	}
-	
+
 	*saveListDialog {
 		Dialog.savePanel({ | path |
 			var file;
@@ -69,6 +104,13 @@ BufferResource : AbstractServerResource {
 	}
 
 	*list { BufferListWindow.new }
+	
+	*nameSelectionList { 
+		BufferListWindow(
+			action: { | b | postf("'%'.buffer.play;\n", b.name); },
+			message: ": Click to post name"
+		);
+	}
 
 	*postAll { this.onServer.postln }
 	*postNames { this.onServer.collect(_.name).asCompileString.postln }
@@ -78,24 +120,6 @@ BufferResource : AbstractServerResource {
 		if (name.isNil) { ubuf = this.current } { ubuf = this.getObject(this.makeKey(name)); };
 		if (ubuf.isNil) { ^postf("Could not find a BufferResource named: %\n", name); };
 		ubuf.play(func);
-	}
-
-	// this method just defines arguments similar to Buffer-new
-	// use it only to create buffers that do not read from a file
-	// to read buffers from file use *read
-	*new { | key, server, numFrames, numChannels = 1, path, startFrame = 0 |
-		^super.new(key, (server ? Server.default), numFrames, numChannels, path, startFrame);
-	}
-
-	init { | argServer, argNumFrames, argNumChannels = 1, argPath, argStartFrame |
-		super.init(argServer);
-		numFrames = argNumFrames;
-		numChannels = argNumChannels;
-		path = argPath;
-		startFrame = argStartFrame;
-		ServerPrep(server).addBuffer(this);
-		NotificationCenter.notify(BufferResource, \created, this);
-		if (path.notNil) { current[server] = this; };
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
@@ -109,7 +133,7 @@ BufferResource : AbstractServerResource {
 
 	makePlayFunc { | func |
 		if (func.notNil) { ^func };
-		^{ | buf, rate = 1 | 
+		^{ | buf, rate = 1 |
 			PlayBuf.ar(buf.numChannels, buf, rate * BufRateScale.kr(buf), 0, 0, 0, 2); 
 		};
 	}
@@ -128,10 +152,12 @@ BufferResource : AbstractServerResource {
 			});
 		};
 	}
-	
+
 	loaded { | b |
-		numFrames = b.numFrames;
 		numChannels = b.numChannels;
+		numFrames = b.numFrames;
+		sampleRate = b.sampleRate;
+		duration = b.numFrames / (b.sampleRate ? 44100);
 		NotificationCenter.notify(BufferResource, \loaded, this);
 	}
 
@@ -148,10 +174,11 @@ BufferResource : AbstractServerResource {
 	}
 
 	isLoaded { ^object.notNil }
-	
+
 	bufnum { if (object.notNil) { ^object.bufnum } { ^nil } }
 	
-	name { ^key.last }
+
+	name { ^key[2] }
 
 	*menuItems {
 		^[
@@ -167,7 +194,19 @@ BufferResource : AbstractServerResource {
 			CocoaMenuItem.addToMenu("Buffers", "Save buffer list", [], {
 				{ this.saveListDialog; }.defer(0.1);
 			}),
+			CocoaMenuItem.addToMenu("Buffers", "Save lists to Archive", [], {
+				{ this.saveDefaults; }.defer(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Buffers", "Load lists from Archive", [], {
+				{ this.loadDefaults; }.defer(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Buffers", "Buffer selector list", [], {
+				{ this.nameSelectionList; }.defer(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Buffers", "Post current buffer", [], {
+				{ postf("'%'.buffer", this.current.key.last); }.defer(0.1);
+			}),
+
 		];
 	}
-
 }

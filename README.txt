@@ -2,7 +2,7 @@
                 =====================================
 
 Author: Ioannis Zannos
-Date: 2011-10-14 17:27:25 EEST
+Date: 2012-03-13 17:37:42 EET
 
 
 Table of Contents
@@ -24,6 +24,8 @@ Table of Contents
 - Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
+- beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
+  BEAST research team at the University of Birmingham
 
 Download from: [https://github.com/iani/SC]
 or:

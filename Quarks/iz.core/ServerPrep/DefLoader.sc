@@ -67,9 +67,10 @@ BufLoader : DefLoader {
 	responderPaths { ^[['/done', '/b_allocRead'], ['/done', '/b_alloc']] }
 
 	loadNextObjectGroup {
-		if (BufferResource.onServer(server).size > 0) {
-			postf("===== LOADED % BUFFERS =====\n", BufferResource.onServer(server).size);
-		};
+		// TODO: Debug a glitch where sometimes Command-. starts running this several times.
+//		if (BufferResource.onServer(server).size > 0) {
+//			postf("===== LOADED % BUFFERS =====\n", BufferResource.onServer(server).size);
+//		};
 		serverPrep.loadDefs;
 	}
 

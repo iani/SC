@@ -18,8 +18,10 @@ Resource {
 		var object;
 		key = this.makeKey(key ? this.name, makeFunc, *otherArgs);		object = this.atKey(key);
 		if (object.isNil) {
-			object = this.newCopyArgs(key).init(makeFunc, *otherArgs);
+			object = this.newCopyArgs(key);
 			objects.putAtPath(key, object);
+			object.init(makeFunc, *otherArgs); // allow archiving of updated list of objects
+											// (although not used ...)
 		};
 		^object;
 	}

@@ -1,0 +1,14 @@
+(
+	\name: "VBAP",
+	\path: "VBAP",
+	\summary: "Implements Vector Based Panning for a 3D dome of many speakers",
+	\helpdoc: "VBAP.html",
+	\author: "Scott Wilson (Quarked by Ioannis Zannos)",
+	\version: 1.0,
+	\organization: "University of Birmingham",
+	\country: "UK",
+	\since: "2010",
+	\url: "http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx",
+	\dependencies: []
+)
+

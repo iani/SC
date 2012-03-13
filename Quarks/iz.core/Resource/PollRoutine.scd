@@ -12,7 +12,7 @@ UNDER DEVELOPMENT
 */
 
 
-Poll : UniqueRoutine {
+PollRoutine : UniqueRoutine {
 	var <>rate, <>pollfunc, <actions, routine;
 	
 	

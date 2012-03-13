@@ -1,5 +1,5 @@
 /* IZ 120309 
-
+Provide menu item and shortcut for opening the help gui window to this quark,
 */
 
 IZNotesHelp {

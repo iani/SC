@@ -1,7 +1,8 @@
 /* MC / IZ 201109-10
 Please see README_RepQuarks.rtfd for documentation. 
 
-2DO: Implement automatic dependency resolution: 
+2DO: Implement automatic dependency resolution? Probably too expensive as one would have to scan for *all* class names? Some thoughts though: 
+ 
 Before installing a Quark from a RepQuarks repository, look at all its class definitions by performing a grep for class definition code in the class definition files of the quark. Collect all declared superclasses in those class definitions. Find if those superclasses are already defined. If a superclass is not already defined, then find if it is defined in one of the known RepQuark repositories. If yes, find the Quark in that repository and install it. Print a message about the automatic dependency resolution (successful or not). 
 
 To prepare this: Look at Quarks classvars: global, allInstances, known, repos, local.
@@ -206,7 +207,11 @@ RepQuarks : Quarks {
 
 		GUI.button.new(window, Rect(0, 0, 150, 20))
 			.states_([["browse all help", Color.black, Color.gray(0.5)]])
-			.action_({ Help(this.local.path).gui });
+			.action_({
+				var path;
+				path = this.local.path;
+				Help(path[0..path.size-2]).gui
+			});
 
 		// add open directory button (open is only implemented in OS X)
 		if (thisProcess.platform.name == \osx) {

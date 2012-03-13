@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p10 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #bf0000}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p13 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p14 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #007300}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #001dfd}
+span.s3 {color: #000000}
+span.s4 {text-decoration: underline}
+span.s5 {color: #0000bf}
+span.s6 {color: #606060}
+span.s7 {color: #007300}
+span.s8 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BEPartials<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>a list of Loris Bandwidth Enhanced Partials</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>Inherits from: </b><a href="SC://Object"><span class="s2"><b>Object</b></span></a></p>
+<p class="p3"><br></p>
+<p class="p1">BEPartials represents a list of partials in the Loris Reassigned Bandwidth-Enhanced Additive Sound Model. Its individual partials are instances of <a href="BEPartial.html"><span class="s2">BEPartial</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3"><b>See also:</b> <a href="Loris.html"><span class="s4">Loris</span></a>, <a href="BEOsc.html"><span class="s4">BEOsc</span></a>, <a href="BEPartial.html"><span class="s4">BEPartial</span></a>, <a href="RBE_SDIF_File.html"><span class="s4">RBE_SDIF_File</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>Creation / Class Methods</b></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>*new (sdif)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BEPartials.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>sdif </b>- An instance of <a href="RBE_SDIF_File.html"><span class="s2">RBE_SDIF_File</span></a><span class="s2"> </span>pointing to a SDIF file with RBEP (Loris) partial frames.<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p10"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>f = </span><span class="s5">RBE_SDIF_File</span><span class="s3">(</span><span class="s6">"A.sdif"</span><span class="s3">.resolveRelative); </span>// open a SDIF file with RBEP frames</p>
+<p class="p11"><span class="s3"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>p = </span>BEPartials<span class="s3">(f);</span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>f.close;</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p13"><b>Accessing Instance and Class Variables</b></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>partialList_</b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>partialList</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Set or get this object's partial list. This is an <a href="SC://Array"><span class="s2">Array</span></a> containing instances of <a href="BEPartial.html"><span class="s2">BEPartial</span></a>.</p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p8"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p13"><b>Instance Methods</b></p>
+<p class="p14"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>at (index)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the BEPartial at <b>index</b>.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>size</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the number of partials in this list.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>dur</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the duration of this list in seconds.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>fadeInOut</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Checks partials for non-zero amplitudes at start and end breakpoints and adds additional fadein and out breakpoints if needed.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span>ar (stretch, pitch, bw)</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p7"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns an <a href="SC://Array"><span class="s2">Array</span></a> of Arrays of three EnvGens and a <a href="LorisPhaseGen.html"><span class="s2">LorisPhaseGen</span></a> (one Array for each partial) suitable for use as the inputs to a <a href="BEOsc.html"><span class="s2">BEOsc</span></a>. The order for each partial is [freq, phase, bw, amp]. The arguments below may be constants, control rate UGens, or Functions. If the latter, the <a href="SC://Function"><span class="s2">Function</span></a> will be evaluated separately for each partial. (See examples below.)</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>stretch </b>- A time stretch factor. Higher is longer. Default value is 1.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>pitch </b>- A pitch scale factor. Default value is 1.</p>
+<p class="p9"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>bw </b>- A bandwidth scale factor. Default value is 1.</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p13"><b>Examples</b></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p12">s.boot;</p>
+<p class="p15"><span class="s3">f = </span><span class="s5">RBE_SDIF_File</span><span class="s3">(</span><span class="s6">"A.sdif"</span><span class="s3">.resolveRelative); </span>// open a SDIF file with RBEP frames</p>
+<p class="p11"><span class="s3">p = </span>BEPartials<span class="s3">(f);</span></p>
+<p class="p12">f.close;</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p12">(</p>
+<p class="p12"><span class="s5">SynthDef</span>(<span class="s7">\A</span>, { <span class="s5">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p12"><span class="s5">var</span> outmix, envs;</p>
+<p class="p3"><br></p>
+<p class="p15">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p12">envs = p.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p15">// pan each partial and mix</p>
+<p class="p12">outmix = <span class="s5">Mix</span>(<span class="s5">PanAz</span>.ar(2, <span class="s5">BEOsc</span>.ar(*envs), {<span class="s5">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s5">EnvGen</span>.ar(<span class="s5">Env</span>.linen(attack, p.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="s5">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p12">}).load(s, dir: <span class="s6">""</span>.resolveRelative);</p>
+<p class="p12">)</p>
+<p class="p3"><br></p>
+<p class="p11">Synth<span class="s3">(</span><span class="s7">\A</span><span class="s3">);</span></p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\A</span>, [pitch: 0.5]);</p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\A</span>, [stretch: 3]);</p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\A</span>, [stretch: 3, bw:0]);</p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\A</span>, [stretch: 3, bw:2]);</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p15">// inputs can be other UGens</p>
+<p class="p15">// works well for stretch</p>
+<p class="p12">(</p>
+<p class="p12"><span class="s5">SynthDef</span>(<span class="s7">\Astretch</span>, { <span class="s5">arg</span> pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p12"><span class="s5">var</span> outmix, envs;</p>
+<p class="p3"><br></p>
+<p class="p15">// normal onset, then hold....</p>
+<p class="p12">envs = p.ar(<span class="s5">EnvGen</span>.kr(<span class="s5">Env</span>([1, 1, 10], [0.1, 0.05])), pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p15">// pan each partial and mix</p>
+<p class="p12">outmix = <span class="s5">Mix</span>(<span class="s5">PanAz</span>.ar(2, <span class="s5">BEOsc</span>.ar(*envs), {<span class="s5">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s5">EnvGen</span>.ar(<span class="s5">Env</span>.linen(attack, p.dur * 10, release), gate, mul, doneAction: 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="s5">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p12">}).load(s, dir: <span class="s6">""</span>.resolveRelative);</p>
+<p class="p12">)</p>
+<p class="p6"><br></p>
+<p class="p16"><span class="s5">Synth</span><span class="s3">(</span>\Astretch<span class="s3">);</span></p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\Astretch</span>, [pitch: 0.5]); <span class="s8">// hello cello</span></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p15">// can use Functions for BEPartials:ar</p>
+<p class="p15">// wobble partial pitch</p>
+<p class="p12">(</p>
+<p class="p12"><span class="s5">SynthDef</span>(<span class="s7">\ApitchWobble</span>, { <span class="s5">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p12"><span class="s5">var</span> outmix, envs;</p>
+<p class="p3"><br></p>
+<p class="p15">// randomly modulate pitch per partial</p>
+<p class="p12">envs = p.ar(stretch, {<span class="s5">SinOsc</span>.kr(<span class="s5">Rand</span>(4.0, 10.0)).range(0.995, 1.005)}, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p15">// pan each partial and mix</p>
+<p class="p12">outmix = <span class="s5">Mix</span>(<span class="s5">PanAz</span>.ar(2, <span class="s5">BEOsc</span>.ar(*envs), {<span class="s5">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s5">EnvGen</span>.ar(<span class="s5">Env</span>.linen(attack, p.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="s5">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p12">}).load(s, dir: <span class="s6">""</span>.resolveRelative);</p>
+<p class="p12">)</p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\ApitchWobble</span>, [stretch: 3]);</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p15">// rand pitch</p>
+<p class="p12">(</p>
+<p class="p12"><span class="s5">SynthDef</span>(<span class="s7">\ApitchRand</span>, { <span class="s5">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p12"><span class="s5">var</span> outmix, envs;</p>
+<p class="p3"><br></p>
+<p class="p15">// randomly scale pitch per partial with global scale</p>
+<p class="p12">envs = p.ar(stretch, {<span class="s5">Rand</span>(1.0, 2.0) * pitch}, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p15">// pan each partial and mix</p>
+<p class="p12">outmix = <span class="s5">Mix</span>(<span class="s5">PanAz</span>.ar(2, <span class="s5">BEOsc</span>.ar(*envs), {<span class="s5">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s5">EnvGen</span>.ar(<span class="s5">Env</span>.linen(attack, p.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="s5">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p12">}).load(s, dir: <span class="s6">""</span>.resolveRelative);</p>
+<p class="p12">)</p>
+<p class="p3"><br></p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\ApitchRand</span>, [stretch: 3]);</p>
+<p class="p15"><span class="s5">Synth</span><span class="s3">(</span><span class="s7">\ApitchRand</span><span class="s3">, [stretch: 3]); </span>// different every time</p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\ApitchRand</span>, [stretch: 3, bw: 0]);</p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\ApitchRand</span>, [stretch: 3, pitch: 0.5, bw: 5]); <span class="s8">// exaggerate noise components</span></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p15">////// manipulate partialList directly</p>
+<p class="p3"><br></p>
+<p class="p15">// sort by frequency and then only odd numbered partials (numbers start at 0, so use 'even')</p>
+<p class="p12">q = p.copy;</p>
+<p class="p12">q.partialList = q.partialList.sort({<span class="s5">|a, b|</span> a.freqs.mean &lt;= b.freqs.mean }).select({<span class="s5">|item, i|</span> i.even });</p>
+<p class="p3"><br></p>
+<p class="p12">(</p>
+<p class="p12"><span class="s5">SynthDef</span>(<span class="s7">\Aodd</span>, { <span class="s5">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p12"><span class="s5">var</span> outmix, envs;</p>
+<p class="p3"><br></p>
+<p class="p15">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p12">envs = q.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p15">// pan each partial and mix</p>
+<p class="p12">outmix = <span class="s5">Mix</span>(<span class="s5">PanAz</span>.ar(2, <span class="s5">BEOsc</span>.ar(*envs), {<span class="s5">Rand</span>(-1, 1)} ! q.size))<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s5">EnvGen</span>.ar(<span class="s5">Env</span>.linen(attack, q.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="s5">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p12">}).load(s, dir: <span class="s6">""</span>.resolveRelative);</p>
+<p class="p12">)</p>
+<p class="p3"><br></p>
+<p class="p11">Synth<span class="s3">(</span><span class="s7">\Aodd</span><span class="s3">);</span></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p15">// thin partialList by keeping only loud partials</p>
+<p class="p12">r = p.copy;</p>
+<p class="p12">r.partialList = r.partialList.select({<span class="s5">|part|</span> part.amps.maxItem &gt; 0.005 });</p>
+<p class="p3"><br></p>
+<p class="p12">(</p>
+<p class="p12"><span class="s5">SynthDef</span>(<span class="s7">\Athin</span>, { <span class="s5">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p12"><span class="s5">var</span> outmix, envs;</p>
+<p class="p3"><br></p>
+<p class="p15">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p12">envs = r.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p15">// pan each partial and mix</p>
+<p class="p12">outmix = <span class="s5">Mix</span>(<span class="s5">PanAz</span>.ar(2, <span class="s5">BEOsc</span>.ar(*envs), {<span class="s5">Rand</span>(-1, 1)} ! r.size))<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s5">EnvGen</span>.ar(<span class="s5">Env</span>.linen(attack, r.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="s5">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p12">}).load(s, dir: <span class="s6">""</span>.resolveRelative);</p>
+<p class="p12">)</p>
+<p class="p3"><br></p>
+<p class="p15"><span class="s5">Synth</span><span class="s3">(</span><span class="s7">\Athin</span><span class="s3">); </span>// reasonable quality sound but cheaper in CPU</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p15">// thin partialList by keeping only quiet partials</p>
+<p class="p12">t = p.copy;</p>
+<p class="p12">t.partialList = t.partialList.select({<span class="s5">|part|</span> part.amps.maxItem &lt; 0.005 });</p>
+<p class="p3"><br></p>
+<p class="p12">(</p>
+<p class="p12"><span class="s5">SynthDef</span>(<span class="s7">\Aquiet</span>, { <span class="s5">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p12"><span class="s5">var</span> outmix, envs;</p>
+<p class="p3"><br></p>
+<p class="p15">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p12">envs = t.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p15">// pan each partial and mix</p>
+<p class="p12">outmix = <span class="s5">Mix</span>(<span class="s5">PanAz</span>.ar(2, <span class="s5">BEOsc</span>.ar(*envs), {<span class="s5">Rand</span>(-1, 1)} ! t.size))<span class="Apple-converted-space"> </span></p>
+<p class="p12"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s5">EnvGen</span>.ar(<span class="s5">Env</span>.linen(attack, t.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p12"><span class="s5">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p12">}).load(s, dir: <span class="s6">""</span>.resolveRelative);</p>
+<p class="p12">)</p>
+<p class="p3"><br></p>
+<p class="p16"><span class="s5">Synth</span><span class="s3">(</span>\Aquiet<span class="s3">);</span></p>
+<p class="p12"><span class="s5">Synth</span>(<span class="s7">\Aquiet</span>, [stretch: 6, pitch: 0.125, bw: 2, mul: 6]);</p>
+<p class="p3"><br></p>
+</body>
+</html>
