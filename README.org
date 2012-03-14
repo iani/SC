@@ -5,7 +5,7 @@ Lilt2/Elemenb\'i (/Look Ma, No Boot/)
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
-  BEAST research team at the University of Birmingham
+  BEAST research team at the University of Birmingham. See: http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx
 
 Download from: https://github.com/iani/SC
 or:

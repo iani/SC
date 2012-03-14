@@ -2,7 +2,7 @@
                 =====================================
 
 Author: Ioannis Zannos
-Date: 2012-03-13 17:37:42 EET
+Date: 2012-03-14 18:18:27 EET
 
 
 Table of Contents
@@ -25,7 +25,7 @@ Table of Contents
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
-  BEAST research team at the University of Birmingham
+  BEAST research team at the University of Birmingham. See: [http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx]
 
 Download from: [https://github.com/iani/SC]
 or:
