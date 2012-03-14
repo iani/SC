@@ -96,13 +96,15 @@ Chain(Pseq([
 },
 { "done".postln; j.postln; }.chain]));
 
-/* 	collect the onsets, then play them back with a simple percussive sound
-	We store the onsets directly in a buffer, and use the buffer data for
-	direct timing
+/* 	Collect the onsets, then play them back with a simple percussive sound,
+	and test them with envelopes and grains.
+	Store the onsets directly in a buffer, and use the buffer data for
+	direct timing.
 */
 
 //:1-First create a buffer to store the onsets in: 
-BufferResource('jensenOnsets', Server.default, 100000);
+BufferResource('jensenOnsets', Server.default, 100000); // max 100000 onsets
+BufferResource('jensenOnsetsAbs', Server.default, 100000); // max 100000 onsets
 
 //:2-Then Collect onsets in buffer and play them with a percussive sound
 {
@@ -113,7 +115,7 @@ BufferResource('jensenOnsets', Server.default, 100000);
 		OSCresponder(nil, 'bufpos', { | t, r, m |
 			jensenOnsets = jensenOnsets add: m[3]; m[3..]; // keeping this for reference
 	// store the DIFFERENCE (DT!) from the previous onset time point, in seconds, for Duty
-			'jensenOnsets'.buffer.set(index, onset.neg + (onset = m[4]));		index = index + 1;			// increment the index
+			'jensenOnsets'.buffer.set(index, onset.neg + (onset = m[4]));			'jensenOnsetsAbs'.buffer.set(index, onset);		index = index + 1;			// increment the index
 		}).add;
 	}.chain,
 	{
@@ -135,18 +137,38 @@ BufferResource('jensenOnsets', Server.default, 100000);
 	{
 		"starting onset playback".postln;
 		postf("onsets are: %\n", jensenOnsets.asCompileString);
-		{ | onsets, numOnsets = 5 | // num onsets will be used as arg to Dseries
-			var trig;
-			trig = Duty.kr(
-					Dbufrd(onsets, Dseries(0, 1, inf), 1), // 
-					0, 
-					Dseries(1, 1, numOnsets)
-				); 
-			WhiteNoise.ar(Decay.kr(Slope.kr(DelayN.kr(trig, 0.001, 0.001)) > 0)) * 0.1
+		{ | onsets, numOnsets = 5, buf | // num onsets will be used as arg to Dseries
+			var trig, env;
+			trig = TDuty.kr(
+					Dbufrd(onsets, Dseries(0, 1, numOnsets), 1), // 
+					0,
+					1
+			);
+			env = Decay.kr(trig);
+			[
+				WhiteNoise.ar(0.1),
+				PlayBuf.ar(1, buf, BufRateScale.kr(buf), loop: 0, doneAction: 2)
+			] * env * 0.5
 		
-		}.play(args: [numOnsets: index + 1, onsets: \jensenOnsets.buffer]);
+		}.play(args: [numOnsets: index + 1, onsets: \jensenOnsets.buffer, \buf, 'a11wlk01'.buffer]);
 	
-	}.chain]));
+	},
+	{ "Now testing playback with TGains".postln;
+		{ | onsets, numOnsets = 5, buf |
+			var trig, pos, env, graindur = 0.8, centeroffset;
+			centeroffset = graindur / 2;
+			// TDuty provides the triggers and also frees the synth when onsets are over
+			trig = TDuty.kr(Dseq([2], numOnsets), 0, 1, doneAction: 2);
+			TGrains.ar(2, trig, buf, 1, 
+				Dbufrd(onsets, Dseries(0, 1, inf), 1) + centeroffset, 
+			graindur, 0)		
+		}.play(args: [
+			onsets: \jensenOnsetsAbs.buffer,
+			numOnsets: index,
+			\buf, 'a11wlk01'.buffer]);
+		
+	}.chain;
+	]));
 }.value;
 
 

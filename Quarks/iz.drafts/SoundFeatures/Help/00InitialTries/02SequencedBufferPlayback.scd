@@ -119,11 +119,7 @@ r = {
 //:Control of onsets, rates, centers and durations
 a = 'a11wlk01'.playBuf({ | buf |
 	var onsets, rates, centers, durations;
-	onsets = Duty.kr(
-		Dseq([0.1, 0.2, 0.3, 0.1, 0.1, 0.2] / 3, inf), 
-		0, Dseries(1, 1, inf)
-	);
-	onsets = Slope.kr(DelayN.kr(onsets, 0.001, 0.001)) > 0;
+	onsets = TDuty.kr(Dseq([0.1, 0.2, 0.3, 0.1, 0.1, 0.2] / 3, inf), 0, 1);
 	durations = Dseq([0.05, 0.1, 0.15], inf) + Dseq([0, 0, 0.0, 0.0, 0.3], inf);
 	rates = Dseq([1, 1.2, 0.75, -0.75, -1, -1.2, 1], inf);
 	centers = Dseq([0, 1, 2, 3, 2, 1], inf) + Dstutter(6, Dseries(0, 0.01, inf));
@@ -133,11 +129,7 @@ a = 'a11wlk01'.playBuf({ | buf |
 //:Variation of above with gradual shifting of center positions by 0.001 seconds at each new grain
 a = 'a11wlk01'.playBuf({ | buf |
 	var onsets, rates, centers, durations;
-	onsets = Duty.kr(
-		Dseq([0.1, 0.2, 0.3, 0.1, 0.1, 0.2] / 3, inf), 
-		0, Dseries(1, 1, inf)
-	);
-	onsets = Slope.kr(DelayN.kr(onsets, 0.001, 0.001)) > 0;
+	onsets = TDuty.kr(Dseq([0.1, 0.2, 0.3, 0.1, 0.1, 0.2] / 3, inf), 0, 1);
 	durations = Dseq([0.05, 0.1, 0.15], inf) + Dseq([0, 0, 0.0, 0.0, 0.3], inf);
 	rates = Dseq([1, 1.2, 0.75, -0.75, -1, -1.2, 1], inf);
 //	centers = Dseq([0, 1, 2, 3, 2, 1], inf) + Dstutter(6, Dseries(0, 0.01, inf));
@@ -160,8 +152,7 @@ a = 'a11wlk01'.playBuf({ | buf |
 //:2. Play
 a = 'a11wlk01'.playBuf({  // tried also with 'Belugawhales'
 	| buf, onsets, rates, centers, durations, numons = 4, numrat = 4, numcen = 4, numdur = 4 |
-	onsets = Duty.kr(Dbufrd(onsets, Dseries(0, 1, inf) % numons, 1), 0, Dseries(1, 1, inf));
-	onsets = Slope.kr(DelayN.kr(onsets, 0.001, 0.001)) > 0;
+	onsets = TDuty.kr(Dbufrd(onsets, Dseries(0, 1, inf) % numons, 1), 0, 1);
 	rates = Dbufrd(rates, Dseries(0, 1, inf) % numrat, 1);
 	centers = Dbufrd(centers, Dseries(0, 1, inf) % numcen, 1);
 	durations = Dbufrd(durations, Dseries(0, 1, inf) % numdur, 1);
