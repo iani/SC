@@ -15,10 +15,15 @@ BufferResource.load; // evaluate this line to open a file dialog
 
 //==================== Using buffers to store the series of parameter values ==================
 //:1. Prepare buffers
-[\onsets, \rates, \centers, \durations] do: { | b |
-	BufferResource(\onsetbuf, Server.default, 100);
-	b.buffer.sendCollection(1 ! 100, 0);
-};
+{ 
+	[\onsets, \rates, \centers, \durations] do: { | b |
+		BufferResource(b, Server.default, 100);
+		0.2.wait; // slower systems need some time for the buffer to initialize
+		b.buffer.sendCollection(1 ! 100, 0);
+		0.2.wait;
+	};
+	"BUFFERS INITIALIZED".postln;
+}.fork;
 
 //:1b. Test to see that the contents have been initialized
 [\onsets, \rates, \centers, \durations] do: { | b |
@@ -41,7 +46,7 @@ a = 'swallows10minL'.playBuf({  // tried also with 'Belugawhales'
 ]);
 
 //:3. Change the contents of the buffers
-\rates.buffer.set(1, -1);
+\rates.buffer.set(1, -0.2);
 
 //:4 different rates 
 \rates.buffer.setn(0, [1, 1.2, 1.3, 1.4]);

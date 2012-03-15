@@ -139,10 +139,15 @@ a = 'a11wlk01'.playBuf({ | buf |
 
 //==================== Using buffers to store the series of parameter values ==================
 //:1. Prepare buffers
-[\onsets, \rates, \centers, \durations] do: { | b |
-	BufferResource(\onsetbuf, Server.default, 100);
-	b.buffer.sendCollection(1 ! 100, 0);
-};
+{ 
+	[\onsets, \rates, \centers, \durations] do: { | b |
+		BufferResource(b, Server.default, 100);
+		0.2.wait; // slower systems need some time for the buffer to initialize
+		b.buffer.sendCollection(1 ! 100, 0);
+		0.2.wait;
+	};
+	"BUFFERS INITIALIZED".postln;
+}.fork;
 
 //:1b. Test to see that the contents have been initialized
 [\onsets, \rates, \centers, \durations] do: { | b |
