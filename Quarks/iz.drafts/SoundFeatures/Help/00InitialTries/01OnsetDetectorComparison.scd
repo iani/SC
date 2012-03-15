@@ -96,15 +96,25 @@ Chain(Pseq([
 },
 { "done".postln; j.postln; }.chain]));
 
-/* 	Collect the onsets, then play them back with a simple percussive sound,
+
+// 	===============================================================================
+// 	===============================================================================
+
+/*
+	Collect the onsets, then play them back with a simple percussive sound,
 	and test them with envelopes and grains.
 	Store the onsets directly in a buffer, and use the buffer data for
 	direct timing.
 */
 
-//:1-First create a buffer to store the onsets in: 
-BufferResource('jensenOnsets', Server.default, 100000); // max 100000 onsets
-BufferResource('jensenOnsetsAbs', Server.default, 100000); // max 100000 onsets
+//:1-Load buffers, create buffers to store onsets: 
+
+BufferResource.loadSCdefaults;
+
+Server.default.waitForBoot({
+	BufferResource('jensenOnsets', Server.default, 100000); // max 100000 onsets
+	BufferResource('jensenOnsetsAbs', Server.default, 100000); // max 100000 onsets
+});
 
 //:2-Then Collect onsets in buffer and play them with a percussive sound
 {
