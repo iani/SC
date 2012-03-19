@@ -72,30 +72,17 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open / create class help", ["D", true, false], {
 				this.openCreateHelpFile;
 			}),
-			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
+/*			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
 				this.insertClassHelpTemplate;
 			}),
-			
-/*			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
-				{ 
-					var u;
-					Server.default = Server.internal;
-					WaitForServer(Server.internal);
-					u = Resource('stethoscope', { 
-						var s; 
-						s = Stethoscope(Server.internal);
-						s.window.onClose_(s.window.onClose addFunc: { u.remove });
-						s;
-					});
-					u.object.window.front;
-					// restart if server re-booted with scope on
-					ServerPrep(Server.internal).addObjectAction(u, { u.object.run });
-				}.fork(AppClock);
+*/			
+			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
+				Server.default.scope;
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
-				Spectrograph.small;
+				Server.default.freqscope;
 			}),
-*/			
+			
 		]		
 	}
 
