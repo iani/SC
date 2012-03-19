@@ -258,6 +258,7 @@ RepQuarks : Quarks {
 		explanation = GUI.staticText.new(window, Rect(20,15,500,20));
 		explanation.string = 
 			"\"+\" -> installed, \"-\" -> not installed, \"*\" -> marked to install, \"x\" -> marked to uninstall";
+		explanation.font = Font("Helvetica-Bold", 12); // Fit QT Gui default
 		window.view.decorator.nextLine;
 
 		warning = GUI.staticText.new(window, Rect(20,15,400,30));
