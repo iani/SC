@@ -20,7 +20,7 @@ IZ August 16, 2011.
 		^this.name == " post ";
 	}
 	
-	realListener {
+	*realListener {
 		^Document.allDocuments detect: { | d | d.name == " post " };
 	}
 

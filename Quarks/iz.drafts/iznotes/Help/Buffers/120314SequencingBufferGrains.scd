@@ -7,11 +7,11 @@ Just writing down some tries made with collected sound recordings ...
 
 
 
-//:---
-
+//:Load an audio file from disk to buffer, to play with
 
 BufferResource.load; // evaluate this line to open a file dialog
-
+// The names of the loaded buffers are posted in the listener window. 
+// Alternatively run BufferResource.list or BufferResource.postNames to get the names
 
 //==================== Using buffers to store the series of parameter values ==================
 //:1. Prepare buffers
@@ -30,7 +30,7 @@ BufferResource.load; // evaluate this line to open a file dialog
 	b.buffer.getn(0, 100, { | vals | b.post; ":".postln; vals.postln });
 }
 
-//:2. Play
+//:2. Play (see names of loaded buffers from BufferResource.list or BufferResource.postNames)
 a = 'swallows10minL'.playBuf({  // tried also with 'Belugawhales'
 	| buf, onsets, rates, centers, durations, numons = 4, numrat = 4, numcen = 4, numdur = 4 |
 	onsets = TDuty.kr(Dbufrd(onsets, Dseries(0, 1, inf) % numons, 1), 0, 1);
@@ -46,7 +46,7 @@ a = 'swallows10minL'.playBuf({  // tried also with 'Belugawhales'
 ]);
 
 //:3. Change the contents of the buffers
-\rates.buffer.set(1, -0.2);
+\rates.buffer.set(1, -1);
 
 //:4 different rates 
 \rates.buffer.setn(0, [1, 1.2, 1.3, 1.4]);
