@@ -1,5 +1,0 @@
-[0] biber-darwin:197> INFO - This is biber 0.9.3
-[0] biber-darwin:198> INFO - Logfile is '/Users/iani/Documents/projects_ongoing/SC/README.blg'
-[1] biber-darwin:205> INFO - === Biber version 0.9.3
-[1] biber-darwin:206> INFO - === Fri Oct 14, 2011, 14:43:01
-[218] Biber.pm:213> FATAL - Cannot find control file '/Users/iani/Documents/projects_ongoing/SC/README.bcf'! - did you pass the "backend=biber" option to BibLaTeX?

@@ -72,7 +72,7 @@ RepQuarks : Quarks {
 		var pathplus, quarksDirectories;
 		pathplus = path +/+ "Quarks/DIRECTORY";
 		quarksDirectories = pathplus.pathMatch;
-		if (quarksDirectories.size > 0) { ^[[path.basename, quarksDirectories.first]] };
+		if (quarksDirectories.size > 0) { ^[[path.basename, quarksDirectories.first.dirname]] };
 		pathplus = path +/+ "Quarks/*";
 		quarksDirectories = pathplus.pathMatch.select { | p |
 			(p +/+ "DIRECTORY").pathMatch.size > 0;
@@ -82,10 +82,10 @@ RepQuarks : Quarks {
 		};
 		pathplus = path +/+ "DIRECTORY";
 		if ((quarksDirectories = pathplus.pathMatch).size > 0) {
-			^[[path.basename, quarksDirectories.first]].postln;
+			^[[path.basename, pathplus.dirname]];
 		};
 		pathplus = path +/+ "*/DIRECTORY";
-		^quarksDirectories = pathplus.pathMatch.collect({ | p | [p.dirname.basename, p] });
+		^quarksDirectories = pathplus.pathMatch.collect({ | p | [p.dirname.basename, p.dirname] });
 	}
 
 	*isQuarkFolder { | path |
