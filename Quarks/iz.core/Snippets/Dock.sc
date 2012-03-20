@@ -15,6 +15,9 @@ Dock {
 	*initClass { StartUp add: this }
 	
 	*doOnStartUp {
+		// Install Qt GUI if available, so that scope and freqscope work on local server:
+		if (GUI respondsTo: \qt) { GUI.qt };
+
 		shortcutDocMenuItems = Array.newClear(10);
 		shortcutDocs = Array.newClear(10);
 		if (File.exists(this.shortcutDocDir)) {
