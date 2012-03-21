@@ -1,0 +1,14 @@
+(
+	\name: "FromLilt1",
+	\path: "FromLilt1",
+	\summary: "Various useful extensions taken from Lilt1. Do not include this Quark if you also include Lilt1",
+//	\helpdoc: "Help/iznotes.html",
+	\author: "Ioannis Zannos",
+	\version: 0.01,
+	\organization: "Ionian University, Corfu",
+	\country: "Greece",
+	\since: "2012",
+	\url: "http://earlab.org",
+	\dependencies: []
+)
+

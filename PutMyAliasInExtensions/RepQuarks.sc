@@ -237,7 +237,7 @@ RepQuarks : Quarks {
 		saveButton.action = { arg butt;
 			Task {
 				warning.string = "Applying changes, please wait";
-				warning.background_(Color(1.0, 1.0, 0.9));
+				warning.background_(Color(0.7, 0.0, 0.0));
 				0.1.wait;
 				views.do{ | qView |
 					qView.toBeInstalled.if({
@@ -250,7 +250,7 @@ RepQuarks : Quarks {
 					})
 				};
 				warning.string = "Done. You should now recompile sclang";
-				warning.background_(Color(0.9, 1.0, 0.9));
+				warning.background_(Color(0, 0.7, 0));
 			}.play(AppClock);
 		};
 
