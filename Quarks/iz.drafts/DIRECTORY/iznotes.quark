@@ -9,6 +9,7 @@
 	\country: "Greece",
 	\since: "2011",
 	\url: "http://earlab.org",
+	\schelp: "Classes/IZNotesHelp",
 	\dependencies: []
 //	\dependencies: ["Resource"]
 )
