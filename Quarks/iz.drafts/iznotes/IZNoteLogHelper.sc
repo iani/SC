@@ -10,5 +10,18 @@ IZNotesHelp {
 		};
 	}
 	
-	*help { Help(this.filenameSymbol.asString.dirname).gui }
+	*help {
+		var isQT;
+		Platform.case(
+			\osx, {
+				isQT = GUI.current == QtGUI;
+				GUI.cocoa;
+				Help(this.filenameSymbol.asString.dirname).gui;
+				if (isQT) { GUI.qt };
+			},
+			{
+				Help(this.filenameSymbol.asString.dirname).gui;
+			}
+		);
+	}
 }
