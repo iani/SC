@@ -63,7 +63,13 @@ BufferResource : AbstractServerResource {
 		};
 	}
 
-	*loadSCdefaults { this.loadPaths("./sounds/a*".pathMatch;) }
+	*loadSCdefaults { this.loadPaths((this.defaultSoundsDir +/+ "a*").pathMatch;) }
+
+	*defaultSoundsDir { /* IZ 2012 03 22 
+		Return the current default path of the sounds folder belonging to the standard SuperCollider 		distribution. */
+		^Platform.resourceDir +/+ "sounds";
+	}
+
 
 	*load {
 		Dialog.getPaths({ | paths | this.loadPaths(paths) });
