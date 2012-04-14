@@ -8,7 +8,7 @@ Added these modifications to remove a harmless but obnoxious error message in Do
 	openCodeFile {
 		var openDoc, filename, newDoc;
 		// use the base name for comparison because quarks installed through links to Extensions
-		// gives a different path than the Class
+		// give a different path than the Class
 		filename = this.filenameSymbol.asString.basename;
 		openDoc = Document.allDocuments detect: { | d | (d.path ? "-").basename == filename };
 		if (openDoc.isNil) {
@@ -26,7 +26,7 @@ Added these modifications to remove a harmless but obnoxious error message in Do
 	openHelpFileLocally {
 		var classBasePath, classHelpPath, match, doc;
 		// use the base name for comparison because quarks installed through links to Extensions
-		// gives a different path than the Class
+		// give a different path than the Class
 		classBasePath = this.filenameSymbol.asString.dirname;
 		classHelpPath = classBasePath ++ "/Help";
 		if (classHelpPath.pathMatch.size == 0) {

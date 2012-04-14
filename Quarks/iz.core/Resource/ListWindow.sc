@@ -5,7 +5,15 @@ ListWindow : WindowResource {
 		^super.new(key, {
 			var screenBounds, centerX, centerY, itemsHeight;
 			var w, view, listview, searchview, items;
-			w = Window(title ? key, bounds ?? { Rect(500, 500, 500, 500) });
+			items = getItemsAction.value;
+			if (bounds.isNil) {
+				screenBounds = Window.screenBounds;
+				centerX = screenBounds.width / 2;
+				itemsHeight = items.size max: 8 * 18 + 30 min: screenBounds.height;
+				centerY = screenBounds.height - itemsHeight / 2;
+				bounds = Rect(centerX - 200, centerY, 400, itemsHeight);
+			};
+			w = Window(title ? key, bounds);
 			view = w.view;
 			searchview = TextView(w, view.bounds.height = 20).font = Font("Helvetica", 12);
 			searchview.focusColor = Color.red;
@@ -32,7 +40,9 @@ ListWindow : WindowResource {
 					}.defer(0.001); // must defer to get the latest string !!!
 				})
 			};
-			listview = EZListView(w, view.bounds.insetBy(0, 12).top = 24);
+			w.bounds.postln;
+			w.view.bounds.postln;
+			listview = EZListView(w, view.bounds.insetBy(0, 12).postln.top = 24);
 			listview.widget.resize = 5;
 			listview.widget.parent.resize = 5;
 			listview.widget.keyDownAction = { | view, char, mod, unicode, key |
@@ -46,7 +56,7 @@ ListWindow : WindowResource {
 				16rF703, { listview.value = listview.items.size - 1; }
 				)
 			};
-			listview.items = items = getItemsAction.value;
+			listview.items = items;
 			listview.value = getIndexAction.(items) ? 0;
 			w.addDependant({ | me |
 				{	items;
@@ -55,13 +65,6 @@ ListWindow : WindowResource {
 				}.defer(delay);
 			});
 			w.toFrontAction = { searchview.focus };
-			if (bounds.isNil) {
-				screenBounds = Window.screenBounds;
-				centerX = screenBounds.width / 2;
-				itemsHeight = items.size max: 8 * 18 + 30 min: screenBounds.height;
-				centerY = screenBounds.height - itemsHeight / 2;
-				w.bounds = Rect(centerX - 200, centerY, 400, itemsHeight);
-			};
 			w;
 		}).addMessages(notifier, messages).front;
 	}
