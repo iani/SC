@@ -1,7 +1,8 @@
 
 ListWindow : WindowResource {
 
-	*new { | key = 'list', bounds, getItemsAction, getIndexAction, notifier, messages, title, delay = 0.0 |
+	*new { | key = 'list', bounds, getItemsAction, getIndexAction, notifier, 
+			messages, title, delay = 0.0 |
 		^super.new(key, {
 			var screenBounds, centerX, centerY, itemsHeight;
 			var w, view, listview, searchview, items;
@@ -40,7 +41,7 @@ ListWindow : WindowResource {
 					}.defer(0.001); // must defer to get the latest string !!!
 				})
 			};
-			listview = EZListView(w, view.bounds.insetBy(0, 12).postln.top = 24);
+			listview = EZListView(w, view.bounds.insetBy(0, 12).top = 24);
 			listview.widget.resize = 5;
 			listview.widget.parent.resize = 5;
 			listview.widget.keyDownAction = { | view, char, mod, unicode, key |

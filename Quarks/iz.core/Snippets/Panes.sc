@@ -66,7 +66,17 @@ Panes {
 		defaultArrangementAction.value;
 		Dock.showDocListWindow(multiPaneAreaWidth); //mc
 		// confuses post and Untitled windows if not deferred on startup:
-		{ this.openTryoutWindow }.defer(0.5); 
+		{
+			this.openTryoutWindow;
+			this.placeListener;
+		}.defer(0.5);
+		 
+	}
+
+	*placeListener {
+		var listener;
+		listener = Document.allDocuments detect: { | d | d.name == " post " };
+		if (listener.notNil) { this placeDoc: listener };
 	}
 
 	*stop { this.deactivate } // synonym
