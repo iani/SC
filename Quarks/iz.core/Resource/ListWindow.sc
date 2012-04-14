@@ -40,8 +40,6 @@ ListWindow : WindowResource {
 					}.defer(0.001); // must defer to get the latest string !!!
 				})
 			};
-			w.bounds.postln;
-			w.view.bounds.postln;
 			listview = EZListView(w, view.bounds.insetBy(0, 12).postln.top = 24);
 			listview.widget.resize = 5;
 			listview.widget.parent.resize = 5;
