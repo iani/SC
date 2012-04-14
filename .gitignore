@@ -1,15 +1,9 @@
 ################
 
-#Copyrighted stuff: 
-
-# Quarks/beastmulch
-
-################
-
 # Ignore MacOS folder listing: 
 .DS_Store
 
-# Ignore auto-save files from emacs:
+# EMACS cruft - Ignore auto-save files from emacs:
 *.*~
 *~
 \#*
@@ -18,44 +12,10 @@
 
 # ignore zipped files
 *.zip
-# except for this one: 
-!PutMyAliasInExtensions/RepQuarkTemplates.zip
 
-# Ignore default SuperCollider object text archive
-archive.sctxar
-
-
-# Ignore Latex to pdf auxiliary file output
+# LaTeX cruft - Ignore Latex to pdf auxiliary file output
 *.log
 *.synctex.gz
 *.out
 *.toc
 *.aux
-
-tryout.scd
-
-# Version 110811: Ignore all extensions (!!!)
-# All extensions are now in quarks and configured individually by the user
-# Extensions/*
-# The only thing that needs to be installed by default for lilt to be configurable is this: 
-!Extensions/LiltBase
-# In the same spirit, also ignore startup.rtf, startup.scd
-startup.rtf
-startup.scd
-
-# Extensions\ \(archive\)
-# Extensions\ \(disabled\)
-HistoryLogs
-UserPrefs
-# Notes
-SC_helptree.cache.txt
-sclang_completion_dict
-sounds
-# synthdefs
-
-dev_only
-
-sessionArchive
-
-#Ignore HistoryLog files from JITlib
-HistoryLogs
