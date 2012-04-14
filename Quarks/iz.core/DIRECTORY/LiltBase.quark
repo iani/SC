@@ -3,6 +3,7 @@
 	\path: "LiltBase",
 	\summary: "System Class extensions used by several other quarks in the IZ library",
 	\helpdoc: "Help/LiltBase.html",
+	\schelp: "Other/RepQuarkList",
 	\author: "Ioannis Zannos",
 	\version: 1.0,
 	\organization: "Ionian University, Corfu",

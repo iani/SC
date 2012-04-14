@@ -1,4 +1,6 @@
 /* MC / IZ 201109-10
+RepQuarks is a code management mechanism for SuperCollider based on Quarks. RepQuarks makes it possible to combine different quark projects which exist independently in different folders, without having to copy these in the global Quarks directory. This gives additional freedom in working with multiple projects while keeping their files separate, and is especially valuable for sharing code with other people independently from the global Quarks. 
+
 Please see README_RepQuarks.rtfd for documentation. 
 
 2DO: Implement automatic dependency resolution? Probably too expensive as one would have to scan for *all* class names? Some thoughts though: 

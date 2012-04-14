@@ -12,6 +12,8 @@
 
 # ignore zipped files
 *.zip
+# except for this one: 
+!PutMyAliasInExtensions/RepQuarkTemplates.zip
 
 # LaTeX cruft - Ignore Latex to pdf auxiliary file output
 *.log

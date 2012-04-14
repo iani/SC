@@ -1,0 +1,129 @@
+CLASS:: RepQuarks
+summary:: Install Quarks from folders anywhere in your system, using links.
+categories:: Quarks, RepQuarks
+related:: Classes/Quarks
+
+DESCRIPTION::
+RepQuarks makes it possible to combine different quark projects which exist independently in different folders, without having to copy these in the global Quarks directory. This gives additional freedom in working with multiple projects while keeping their files separate, and is especially valuable for sharing code with other people independently from the global Quarks. 
+
+RepQuarks scans a directory that is structured in the manner documented by Quarks for quarks, and creates a menu item for it. The menu creates a Quarks window for installing or uninstalling quarks in the usual Quarks manner. 
+
+
+CLASSMETHODS::
+
+METHOD:: menu
+Create a menu item for the present group of RepQuarks.
+
+returns:: (returnvalue)
+
+METHOD:: menuName
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: initClass
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: makeMainQuarksMenu
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: addToMenu
+(describe method here)
+
+argument:: itemName
+(describe argument here)
+
+argument:: path
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: makeMenu
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: getQuarksDirectories
+(describe method here)
+
+argument:: path
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: isQuarkFolder
+(describe method here)
+
+argument:: path
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: getQuarkPath
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: quarkPath
+(describe method here)
+
+returns:: (returnvalue)
+
+
+INSTANCEMETHODS::
+
+METHOD:: installed
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: installDir
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: installPath
+(describe method here)
+
+argument:: q
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: gui
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: install
+(describe method here)
+
+argument:: name
+(describe argument here)
+
+argument:: includeDependencies
+(describe argument here)
+
+argument:: checkoutIfNeeded
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: uninstall
+(describe method here)
+
+argument:: name
+(describe argument here)
+
+returns:: (returnvalue)
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::

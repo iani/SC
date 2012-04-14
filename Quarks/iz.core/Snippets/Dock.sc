@@ -20,9 +20,7 @@ Dock {
 
 		shortcutDocMenuItems = Array.newClear(10);
 		shortcutDocs = Array.newClear(10);
-		if (File.exists(this.shortcutDocDir)) {
-			shortcutDocPaths = Object.readArchive(this.shortcutDocDir);
-		};
+		shortcutDocPaths = Archive.global at: \shortCutDocs;
 		if (shortcutDocPaths.isNil) {
 			shortcutDocPaths = Array.newClear(10);
 			shortcutDocPaths[0] = Platform.userAppSupportDir +/+ "tryout.scd";
@@ -30,7 +28,7 @@ Dock {
 		shortcutDocPaths do: this.makeDocShortcutMenuItem(_, _);
 	}
 
-	*shortcutDocDir { ^Platform.userExtensionDir +/+ "ShortcutDocs.scd" }
+//	*shortcutDocDir { ^Platform.userExtensionDir +/+ "ShortcutDocs.scd" }
 
 	*makeDocShortcutMenuItem { | path, i |
 		if (path.isNil) { ^this };
@@ -53,7 +51,8 @@ Dock {
 		if (shortcutDocMenuItems[i].notNil) { shortcutDocMenuItems[i].remove };
 		shortcutDocs[i] = doc;
 		shortcutDocPaths[i] = doc.path;
-		shortcutDocPaths.writeArchive(this.shortcutDocDir);
+		Archive.global.put(\shortCutDocs, shortcutDocPaths);
+//		shortcutDocPaths.writeArchive(this.shortcutDocDir);
 		this.makeDocShortcutMenuItem(doc.path ?? { doc.name }, i);
 	}
 
