@@ -6,10 +6,15 @@ Lilt2/Elemenb\'i (/Look Ma, No Boot/)
 - Server GUI by Sergio Luque
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
   BEAST research team at the University of Birmingham. See: http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx
+- collins quark group ported from Nick Collin's work at: http://www.sussex.ac.uk/Users/nc81/code.html
 
 Download from: https://github.com/iani/SC
 or:
  : git clone git://github.com/iani/SC.git
+
+* Copying (License)
+
+This library is distributed under the GNU General Public License. It contains other libraries released under the same license, in particular work by Nick Collins. See full text of the GNU license in file: "COPYING.txt".
 
 * Installation
 
