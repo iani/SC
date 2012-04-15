@@ -5,6 +5,7 @@ BufferResource : AbstractServerResource {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	classvar >current;
 	var <path, <startFrame = 0, <numFrames, <numChannels = 1, <sampleRate, <duration;
+	var <>completionAction;	// eval when buffer loaded. For sendCollection;
 
 	*initClass {
 		current = IdentityDictionary.new;
@@ -45,9 +46,31 @@ BufferResource : AbstractServerResource {
 		startFrame = argStartFrame;
 		ServerPrep(server).addBuffer(this);
 		NotificationCenter.notify(BufferResource, \created, this);
-		if (path.notNil) {
-			current[server] = this;
-		};
+		if (path.notNil) { current[server] = this };
+	}
+	
+	*sendCollection { | key, server, collection, numChannels = 1, wait = -1, action |
+		// like Meta_Buffer:sendCollection
+		var bufres;
+		bufres = this.new(key, server, collection.size, numChannels);
+		bufres.completionAction = { | b | b.sendCollection(collection, 0, wait, action); };
+			
+/*		NotificationCenter.registerOneShot(this, \loaded, bufres, {
+			bufres.object.sendCollection(collection, 0, wait, action);
+		});
+*/
+
+	}
+
+	sendCollection { | collection, startFrame = 0, wait = -1, action |
+		// like Buffer:sendCollection
+		if (object.notNil) {
+			object.sendCollection(collection, startFrame, wait, action);
+		}{
+			completionAction = { | b | 
+				b.sendCollection(collection, startFrame, wait, action); 
+			};
+		}
 	}
 
 	*saveDefaults {
@@ -69,7 +92,6 @@ BufferResource : AbstractServerResource {
 		Return the current default path of the sounds folder belonging to the standard SuperCollider 		distribution. */
 		^Platform.resourceDir +/+ "sounds";
 	}
-
 
 	*load {
 		Dialog.getPaths({ | paths | this.loadPaths(paths) });
@@ -146,16 +168,21 @@ BufferResource : AbstractServerResource {
 
 	sendTo {
 		if (path.isNil) {
-			warn("allocating new buffer: %\n", this.key);
 			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, 
-				completionMessage: { | b | this.loaded(b); }
+				completionMessage: { | b | 
+					postf("allocated buffer %: %\n", this.key[1..], b);
+					this.loaded(b);
+				}
 			);
 		}{
-			object = Buffer.read(server, path, startFrame, numFrames, { | b |
-				postf("Loaded buffer (%) '%' (% seconds)\n", 
-					b.bufnum, b.path.basename, (b.numFrames / b.sampleRate).round(0.01));
-				this.loaded(b);
-			});
+			object = Buffer.read(server, path, startFrame, numFrames, 
+				action: { | b |
+					postf("Loaded buffer (%) '%' (% seconds)\n", 
+						b.bufnum, b.path.basename, (b.numFrames / b.sampleRate).round(0.01)
+					);
+					this.loaded(b);
+				}
+			);
 		};
 	}
 
@@ -164,7 +191,10 @@ BufferResource : AbstractServerResource {
 		numFrames = b.numFrames;
 		sampleRate = b.sampleRate;
 		duration = b.numFrames / (b.sampleRate ? 44100);
-		NotificationCenter.notify(BufferResource, \loaded, this);
+		// must defer, otherwise sendCollection does not work. ServerShmInterface delay on boot?
+		{ completionAction.(b); }.defer(1);
+		// this seems problematic: (what use? note that buffer object is not present here yet!)
+		{ NotificationCenter.notify(BufferResource, \loaded, this); }.defer;
 	}
 
 	free {

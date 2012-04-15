@@ -83,6 +83,8 @@ RepQuarks : Quarks {
 			^[quarksDirectories collect: _.basename, quarksDirectories].flop;
 		};
 		pathplus = path +/+ "DIRECTORY";
+		postf("this should be found: %\n", pathplus);
+		postf("the match is: %\n", pathplus.pathMatch);
 		if ((quarksDirectories = pathplus.pathMatch).size > 0) {
 			^[[path.basename, pathplus.dirname]];
 		};

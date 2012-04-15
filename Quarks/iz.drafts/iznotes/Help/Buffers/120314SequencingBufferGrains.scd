@@ -8,7 +8,7 @@ Just writing down some tries made with collected sound recordings ...
 
 
 //:Load an audio file from disk to buffer, to play with
-
+BufferResource.loadSCdefaults; // get the defaults anyway
 BufferResource.load; // evaluate this line to open a file dialog
 // The names of the loaded buffers are posted in the listener window. 
 // Alternatively run BufferResource.list or BufferResource.postNames to get the names
@@ -31,7 +31,7 @@ BufferResource.load; // evaluate this line to open a file dialog
 }
 
 //:2. Play (see names of loaded buffers from BufferResource.list or BufferResource.postNames)
-a = 'swallows10minL'.playBuf({  // tried also with 'Belugawhales'
+a = 'a11wlk01'.playBuf({  // tried also with 'Belugawhales'
 	| buf, onsets, rates, centers, durations, numons = 4, numrat = 4, numcen = 4, numdur = 4 |
 	onsets = TDuty.kr(Dbufrd(onsets, Dseries(0, 1, inf) % numons, 1), 0, 1);
 	rates = Dbufrd(rates, Dseries(0, 1, inf) % numrat, 1);
@@ -39,10 +39,10 @@ a = 'swallows10minL'.playBuf({  // tried also with 'Belugawhales'
 	durations = Dbufrd(durations, Dseries(0, 1, inf) % numdur, 1);
 	TGrains.ar(2, onsets, buf, rates, centers, durations, Dseq([-0.5, 0.5], inf), 0.5);
 }, args: [
-	\onsets, \onsets.buffer,
-	\rates, \rates.buffer,
-	\centers, \centers.buffer,
-	\durations, \durations.buffer
+	onsets: \onsets.buffer,
+	rates: \rates.buffer,
+	centers: \centers.buffer,
+	durations: \durations.buffer
 ]);
 
 //:3. Change the contents of the buffers

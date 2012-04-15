@@ -1,13 +1,12 @@
 CLASS:: RepQuarks
 summary:: Install Quarks from folders anywhere in your system, using links.
 categories:: Quarks, RepQuarks
-related:: Classes/Quarks
+related:: Classes/Quarks, Other/RepQuarkList
 
 DESCRIPTION::
 RepQuarks makes it possible to combine different quark projects which exist independently in different folders, without having to copy these in the global Quarks directory. This gives additional freedom in working with multiple projects while keeping their files separate, and is especially valuable for sharing code with other people independently from the global Quarks. 
 
 RepQuarks scans a directory that is structured in the manner documented by Quarks for quarks, and creates a menu item for it. The menu creates a Quarks window for installing or uninstalling quarks in the usual Quarks manner. 
-
 
 CLASSMETHODS::
 
