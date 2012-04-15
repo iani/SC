@@ -1,0 +1,341 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fnil\fcharset77 Monaco;
+\f3\fswiss\fcharset77 Helvetica-Oblique;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green115\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help
+\f1\b\fs30 \
+\
+BBCSParam
+\f0\b0\fs24 \
+\
+
+\f1\b Superclass: BBCutSynth
+\f0\b0 \
+\
+A BBCutSynth providing standard enveloping, amplitude, pan and playback parameter functionality. All the parameters can be specified via functions (or anything that responds to value), and if the object controlling a parameter responds to updatephrase or updateblock calls, these will automatically be effected. Otherwise, the value message is received for any atomic cut. \
+\
+
+\f1\b \ul Class Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b *new(ampfunc, panfunc, pbsfunc, dutycycle, atkprop, relprop, curve, offsetshift)
+\f2\b0\fs18 \
+
+\f0\fs24 \
+
+\f1\b ampfunc
+\f0\b0  - Function for amplitude\
+
+\f1\b panfunc
+\f0\b0  - Function for pan position, will only work where the signal is mono.\
+
+\f1\b pbsfunc
+\f0\b0  - Function for playbackspeed.\
+
+\f1\b dutycycle
+\f0\b0  - proportion of actual duration of cut to play for- usually, when the \
+inter onset interval is equal to the duration of the cut, values greater than 1 give overlapping\
+
+\f1\b atkprop
+\f0\b0  - Proportion of duration to spend on envelope attack\
+
+\f1\b relprop
+\f0\b0  - Proportion of duration to spend on envelope decay \
+\
+The proportion for the sustain is 1.0-atkprop-relprop.\
+\
+
+\f1\b curve
+\f0\b0  - Curve parameter for the envelope, 0.0 being straight, o/w negative or positive curvature\
+
+\f1\b offsetshift
+\f0\b0  - Perturbs offsets from the block offset position. Offsets are in the range 0.0 to 1.0, as is the \
+shift. Just return the shift.  \
+\
+The arguments passed to these functions on a value call are the repeat number of the cut and \
+the cutinfo array ([ioi, dur, offset, amp, ...]. Offsetshift is a special case and gets passed \
+(repeat, cutinfo, lengthbts, lengthsecs) to assist in the decision- cutinfo.at(2) is the current offset. \
+\
+
+\f1\b \ul Instance Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b initBBCutSynthParam
+\f0\b0 \
+\
+
+\f1\b synthesisecut
+\f0\b0 \
+
+\f1\b updateblock\
+updatephrase
+\f0\b0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f3\i \cf0 Examples- 
+\f0\i0 \
+\
+The examples will use BBCutSynthSF and BBCSAudioIn, the subclasses of BBCSParam. BBCSParam is not\
+used on its own. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\fs18 \cf2 //run this first to load the samples:\cf0 \
+(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 var\cf0  filenames, bpsound;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //Put in the locations of your samples\cf0 \
+filenames= [\cf4 "break"\cf0 ,\cf4 "break2", "a11wlk01.wav"\cf0 ];\
+\cf2 //how many beats in your samples?- last is run deliberately slowly here\cf0 \
+bpsound= [8,4, 4];\
+\
+f= \cf3 Array\cf0 .fill(filenames.size, \{\cf3 arg\cf0  i; \cf3 SF3\cf0 (filenames.at(i), bpsound.at(i))\});\
+)
+\f0\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\fs18 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //testing amp/pbs/pan/dutycycle\cf0 \
+(\
+b= \cf3 BBCut\cf0 .new(\cf3 BBCutSynthSF\cf0 (f.at(2),0.5, \
+\{[1.0,0.1,0.0].wchoose([0.8, 0.1, 0.1])\}, 	\cf2 //ampfunc\cf0 \
+\{1.0.rand2\},								\cf2 //panfunc\cf0 \
+\{[0.25, 0.5,1.0].choose\},						\cf2 //pbsfunc\cf0 \
+\{[0.5,1.0].choose\}							\cf2 //dutycycle\cf0 \
+),\cf3 ChooseCutProc\cf0 .new(\{0.25\},\{2**(3.rand)\}));\
+\
+b.tempo_(2.2).go;\
+)\
+\
+\
+\cf2 //testing atkprop, relprop, curve\cf0 \
+(\
+var prop;\
+prop=1.0;\
+b= \cf3 BBCut\cf0 .new(\cf3 BBCSAudioIn\cf0 (1, \
+atkprop:\{prop=exprand(0.1,0.9); prop\}, \
+relprop:\{1.0-prop\}, \
+curve:\{rrand(-16,16)\}\
+),\cf3 ChooseCutProc\cf0 .new(\{1.0\},\{2\}));\
+\
+b.tempo_(2.5).go;\
+)\
+\
+\
+\cf2 //testing atkprop, relprop, curve\cf0 \
+(\
+b= \cf3 BBCut\cf0 .new([\cf3 BBCG\cf0 (\cf3 BBCutSynthSF\cf0 (f.at(2),0.5, atkprop:0.5, relprop:0.5, curve:16))],\cf3 BBCutProc11\cf0 .new);\
+\
+b.tempo_(2.2).ar;\
+)\
+\
+\
+(	\cf2 //run two synths off same cut procedure, sharing some parameter sequences\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 var\cf0  p, q;\
+\
+p=\cf3 Pseq\cf0 ([0.1,1,1,0.1],\cf3 inf\cf0 ).asStream;\
+q=\cf3 Pseq\cf0 ([1,0.1,0.1,1],\cf3 inf\cf0 ).asStream;\
+\
+b= \cf3 BBCut\cf0 .new([\
+\cf3 [BBCutSynthSF\cf0 (f.at(1), 0.5,ampfunc: \{p.next\}, panfunc:-1.0,dutycycle:\{q.next\})],\
+\cf3 [BBCutSynthSF\cf0 (f.at(0), ampfunc:\{p.next\}, dutycycle:\{q.next\}, panfunc:1.0)]\
+],\cf3 SQPusher1\cf0 .new);\
+\
+b.tempo_(3.2).go;\
+)\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //textural, try also setting playback rates to 0.25 rather than 1.0\cf0 \
+(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 var\cf0  p, q;\
+\
+p=\cf3 Pseq\cf0 ([0.1,1,1,0.1],\cf3 inf\cf0 ).asStream;\
+q=\cf3 Pseq\cf0 ([1,0.1,0.1,1],\cf3 inf\cf0 ).asStream;\
+\
+b= \cf3 BBCut\cf0 .new([\
+\cf3 BBCG\cf0 ([\cf3 BBCSFilter1\cf0 .new, \cf3 BBCutSynthSF\cf0 (f.at(2), 0.5,\{p.next\},-1.0,dutycycle:\{q.next\})]),\
+\cf3 BBCG\cf0 (\cf3 BBCutSynthSF\cf0 (f.at(2), 0.2, \{0.3*(p.next)\},1.0, dutycycle:\{q.next\}))]\
+,\cf3 ChooseCutProc\cf0 (\{[1.5, 0.25, 0.125].wchoose([0.02, 0.68, 0.3])\}, \{if(0.96.coin,4,3)\}));\
+\
+b.tempo_(3.2).go;\
+)\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //showing specialised classes for parameter functions, which respond to updateblock/phrase\cf0 \
+(\
+b= \cf3 BBCut\cf0 .new([\cf3 BBCG\cf0 (\cf3 BBCutSynthSF\cf0 (f.at(1), \
+ampfunc:\cf3 BBCSRollAmplitude\cf0 .new(1, 3),\
+panfunc: \cf3 BBCSPan1\cf0 .new, pbsfunc: \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 BBCSPlayback1\cf0 .new\
+), \cf3 Group\cf0 .new, 0)],\cf3 WarpCutProc1\cf0 .new);\
+\
+b.tempo_(2.3).go;\
+)\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //for audio capture\cf0 \
+(\
+b= \cf3 BBCut\cf0 .new([\cf3 BBCG\cf0 (\cf3 BBCSAudioIn\cf0 (1, \
+ampfunc:BBCSRollAmplitude.new(1, 3),\
+panfunc: BBCSPan1.new, \
+pbsfunc: BBCSPlayback1.new\
+), \cf3 Group\cf0 .new, 0)],\cf3 WarpCutProc1\cf0 .new);\
+\
+b.tempo_(2.3).go;\
+)\
+\
+\
+\cf2 //dutycycle manipulations\cf0 \
+(\
+b= \cf3 BBCut\cf0 .new(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 BBCutSynthSF\cf0 (f.at(1), \
+ampfunc:\cf3 BBCSRollAmplitude\cf0 .new,\
+panfunc: \cf3 BBCSPan1\cf0 .new,\
+pbsfunc: \cf3 BBCSPlayback1\cf0 .new, \
+dutycycle: \cf3 BBCSPlayback1\cf0 .new(0.9, 1))		\cf2 //also try .new(0.8,-1) to make shorter through the roll\cf0 \
+,\cf3 WarpCutProc1\cf0 .new);\
+\
+b.tempo_(2.3).go;\
+)\
+\
+\
+\
+(\
+b= \cf3 BBCut\cf0 .new(\
+\cf3 BBCutSynthSF\cf0 (f.at(0), \
+ampfunc:BBCSRollAmplitude.new(-1, 1.5),\
+panfunc: BBCSPan1.new, \
+pbsfunc: BBCSPlayback1.new(0.95,-1), \
+dutycycle: BBCSPlayback1.new(0.9, 1))\
+,\cf3 BBCutProc11\cf0 .new(phrasebars:1,stutterchance:0.7));\
+\
+b.tempo_(3.3).go;\
+)\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //demoing offsetshiftfunc- move all offset positions back by a SQ or forwards by a Q\cf0 \
+(\
+b=\cf3 BBCut\cf0 .new(\cf3 BBCG\cf0 (\cf3 BBCutSynthSF\cf0 (f.at(0),\
+offsetshiftfunc:\{\cf3 arg\cf0  repeat, cutinfo, bts, secs; \
+([-0.25,0.5].choose)/bts\
+\})), \cf3 BBCutProc11\cf0 .new);\
+\
+b.go;\
+)\
+\
+\cf2 //can also try returning the offset itself as the shift, compare with just returning 0\cf0 \
+(\
+b=\cf3 BBCut\cf0 .new(\cf3 BBCG\cf0 (\cf3 BBCutSynthSF\cf0 (f.at(1),\
+offsetshiftfunc:\{\cf3 arg\cf0  repeat, cutinfo, bts, secs; \
+cutinfo.at(2)*repeat;				\cf2 //offset chosen by cutproc multiplied by repeat number in block!					\cf0 \
+\})), \cf3 BBCutProc11\cf0 .new(phrasebars:1,stutterchance:0.7));\
+\
+b.tempo_(3.1).go;\
+)\
+\
+\
+\
+(\
+	\cf2 //showing use of all parameters\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 var\cf0  w;\
+\cf3 var\cf0  slider,string;\
+\cf3 var\cf0  num;\
+\cf3 var\cf0  names,data, specs, lastval;\
+\cf3 var\cf0  sf;\
+\
+names= [\cf4 "restchance"\cf0 ,\cf4 "ampvariation"\cf0 ,\cf4 "panvariation"\cf0 ,\cf4 "playbackrate"\cf0 ,\cf4 "dutycycle"\cf0 ,\cf4 "atkprop"\cf0 ,\cf4 "relprop"\cf0 ,\cf4 "curve"\cf0 , \cf4 "offsetchance"\cf0 ];\
+\
+data=	\cf2 //control spec data for ui controls\cf0 \
+[\
+[0.0,1.0,\cf5 \\lin\cf0 , 0.0,0.0],	\cf2 //restchance\cf0 \
+[0.0,1.0,\cf5 \\amp\cf0 , 0.0,1.0],	\cf2 //ampvariation\cf0 \
+[0.0,1.0,\cf5 \\lin\cf0 , 0.0,0.0],	\cf2 //panvariation\cf0 \
+[0.5,2.0,\cf5 \\exp\cf0 , 0.0,1.0],	\cf2 //playbackrate\cf0 \
+[0.01,2.0,\cf5 \\lin\cf0 , 0.01, 1.0],	\cf2 //dutycycle\cf0 \
+[0.001,0.5,\cf5 \\lin\cf0 ,0.0, 0.01],	\cf2 //atkprop\cf0 \
+[0.001,0.5,\cf5 \\lin\cf0 ,0.0, 0.01],	\cf2 //relprop\cf0 \
+[-40.0,40,\cf5 \\lin\cf0 , 0,0.0, 0.0],\cf2 //curve- curvature rating\cf0 \
+[0.0,1.0,\cf5 \\lin\cf0 ,0.0, 0.0]	 	\cf2 //offsetchance \cf0 \
+];\
+\
+specs= \cf3 Array\cf0 .fill(data.size, \{\cf3 arg\cf0  i; \cf3 ControlSpec\cf0 .performList(\cf5 \\new\cf0 , data.at(i))\});\
+\
+num= names.size;\
+\
+w = \cf3 SCWindow\cf0 (\cf4 "BBCutSynthParam demo N.M.Collins 26/11/01"\cf0 , \cf3 Rect\cf0 .new(100, 500, 500, (30*num)));\
+\
+string= \cf3 Array\cf0 .fill(num);\
+slider= \cf3 Array\cf0 .fill(num);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //Fill with defaults. This array will hold the updated last value of any GUI element\cf0 \
+lastval= \cf3 Array\cf0 .fill(num, \{\cf3 arg\cf0  i; data.at(i).at(4);\}); \
+\
+num.do(\
+\{\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 arg\cf0  i;\
+\
+\cf3 SCStaticText\cf0 ( w, \cf3 Rect\cf0 .new(5, (30*i)+5, 95,20)).string_(names.at(i));\
+slider.put(i,\cf3 SCSlider\cf0 .new( w, \cf3 Rect\cf0 .new(105, (30*i)+5, 95,20)));\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf2 //set slider to default value, else will default to 0.0\cf0 \
+slider.at(i).value_(specs.at(i).unmap(data.at(i).at(4)));\
+string.put(i, \cf3 SCStaticText\cf0 ( w, \cf3 Rect\cf0 .new(205, (30*i)+5, 95,20)).string_(data.at(i).at(4)));\
+\
+slider.at(i).action_(\{\cf3 arg\cf0  sl; \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 var\cf0  val; val = specs.at(i).map(sl.value);  string.at(i).string_(val); \
+lastval.put(i, val);  \cf2 //set associated variable to this value, bbcut code will poll this rather than the slider directly\cf0 \
+\});\
+\
+\});\
+\
+w.front;\
+\
+sf= \cf3 SF3\cf0 (\cf4 "a11wlk01.wav"\cf0 ,4);\
+\
+\cf3 BBCut\cf0 (\
+\cf3 BBCutSynthSF\cf0 (sf,\{lastval.at(8)\},\
+\{\
+if(lastval.at(0).coin,	\cf2 //restchance\cf0 \
+\{0\},\
+\{\
+rrand(lastval.at(1),1.0)\} \cf2 //amp variation\cf0 \
+)\},	\
+\{rrand(-1.0*(lastval.at(0)),lastval.at(2))\}, \cf2 //panvariation\cf0 \
+\{lastval.at(3)\},	\cf2 //playback\cf0 \
+\{lastval.at(4)\},	\cf2 //dutycycle\cf0 \
+\{lastval.at(5)\},	\cf2 //atk prop\cf0 \
+\{lastval.at(6)\},	\cf2 //rel prop\cf0 \
+\{lastval.at(7)\}	\cf2 //curve\cf0 \
+)\
+).tempo_(2).go;\
+\
+)\
+\
+\
+\
+\
+\
+\
+}

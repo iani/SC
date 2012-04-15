@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cd1713}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #102ac3}
+span.s3 {color: #0f2abf}
+span.s4 {color: #017320}
+span.s5 {color: #008225}
+span.s6 {color: #1738f5}
+span.s7 {color: #454ec3}
+span.s8 {color: #cd1713}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>PolyPitch<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>Polyphonic pitch tracker</b></p>
+<p class="p2"><br></p>
+<p class="p1"><b>PolyPitch.ar(input, maxvoices=4,levelcompressionfactor=(-0.1),mixleftterm=4.0,torprec=0.0000001,cancellationweight=1.0,polyphonyestimategamma=0.66)</b></p>
+<p class="p2"><br></p>
+<p class="p1">Polyphonic pitch tracker implementing:</p>
+<p class="p1">Anssi Klapuri (2008) Multipitch analysis of polyphonic music and speech signals using an auditory model. IEEE Transactions on Audio, Speech, and Language Processing 16(2): 255-266</p>
+<p class="p2"><br></p>
+<p class="p1">The UGen returns an array of outputs in the format:</p>
+<p class="p2"><br></p>
+<p class="p1">[numberofvoicesdetected, frequency in Hz of voice 1, salience of voice 1, frequency of voice 2, salience of voice 2, ...]</p>
+<p class="p2"><br></p>
+<p class="p1">The parameter set-up is quite delicate, but some parameters from the paper are made available. The UGen requires sampling rate of 44100, and 64 sample blocksize.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">The current codebase uses libsamplerate internally (http://www.mega-nerd.com/SRC/), by Erik de Castro Lopo. The FFT implementation is also currently based on Mac specific Accelerate library code.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>input</b> - input signal</p>
+<p class="p1"><b>maxvoices</b> -Maximum polyphony tracked.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><b>levelcompressionfactor</b> -Equation (5) in the paper, this value is v-1</p>
+<p class="p1"><b>mixleftterm</b> -Sets relative weight of left term in equation (10), that is, stigma in equation (11). Klapuri notes that high values here are fine for non-drum signals, but drum signals may require more noise robust frontend via a lower mixleftterm.<span class="Apple-converted-space">   </span></p>
+<p class="p1"><b>torprec</b> - Precision of search in Algorithm 1 (p. 260)</p>
+<p class="p1"><b>cancellationweight</b> -d in Table 1, p.261</p>
+<p class="p1"><b>polyphonyestimategamma</b> -gamma in equation (17)</p>
+<p class="p2"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p4">(</p>
+<p class="p4">{</p>
+<p class="p3"><br></p>
+<p class="p4"><span class="s2">var</span> in, tracked;</p>
+<p class="p3"><br></p>
+<p class="p5">//in = Mix(SinOsc.ar([440,990,775],0,0.1));<span class="Apple-converted-space"> </span></p>
+<p class="p4">in = <span class="s2">Mix</span>(<span class="s2">Saw</span>.ar([440,990,775],0.1));</p>
+<p class="p5">//in= SoundIn.ar;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p4">tracked=<span class="s2">PolyPitch</span>.kr(in,6,-0.1,10.0);</p>
+<p class="p3"><br></p>
+<p class="p4">tracked.poll;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p5">//Out.ar(0,Pan2.ar(in));<span class="Apple-converted-space"> </span></p>
+<p class="p4">}.play</p>
+<p class="p4">)</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p4">(</p>
+<p class="p4">{</p>
+<p class="p3"><br></p>
+<p class="p4"><span class="s2">var</span> in, tracked;</p>
+<p class="p3"><br></p>
+<p class="p4">in= <span class="s2">SoundIn</span>.ar;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p4">tracked=<span class="s2">PolyPitch</span>.kr(in,6,-0.1,10.0);</p>
+<p class="p3"><br></p>
+<p class="p4">SendReply.kr(<span class="s3">Impulse.kr(</span>44100/2048<span class="s3">)</span>,<span class="s4">'polyparam',</span>tracked);<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p4">}.play</p>
+<p class="p4">)</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p4">(</p>
+<p class="p3"><br></p>
+<p class="p4"><span class="s2">SynthDef</span>(<span class="s5">\ppsine</span>,{<span class="s2">arg</span> amp=0.0, freq= 440,pan=0.0;<span class="Apple-converted-space"> </span></p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p3"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s2">Out</span>.ar(0,<span class="s2">Pan2</span>.ar(<span class="s2">Saw</span>.ar(freq.lag(0.01),amp.lag(0.01)),pan))</p>
+<p class="p4">}).add;<span class="Apple-converted-space"> </span></p>
+<p class="p4">)</p>
+<p class="p3"><br></p>
+<p class="p4">(</p>
+<p class="p4">b = <span class="s2">Array</span>.fill(6,{<span class="s2">Synth</span>(<span class="s5">\ppsine</span>)})</p>
+<p class="p4">)</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p6">(</p>
+<p class="p6"><span class="s6">var</span> count= 0;<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p6">o.remove;<span class="Apple-converted-space"> </span></p>
+<p class="p7"><br></p>
+<p class="p6">o = <span class="s2">OSCresponder</span>(<span class="s7">nil</span>, <span class="s5">'polyparam'</span>, { <span class="s6">|t, r, msg|</span><span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><br></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="s6">var</span> numvoices = msg[3];<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>count= (count+1)%1;<span class="Apple-converted-space"> <span class="Apple-tab-span">	</span></span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>if(count==0) {</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>msg.postln;</p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span>6.do{<span class="s6">|i|</span> <span class="s6">var</span> index = 4+(i*2);<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>if(i&lt;numvoices) {</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b[i].set(<span class="s5">\freq</span>,msg[index]*4,<span class="s5">\amp</span>,0.2); <span class="s8">//*(msg[index+1])</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>b[i].set(<span class="s5">\amp</span>,0.0);<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>};</p>
+<p class="p6"><span class="Apple-tab-span">	</span>}</p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span></p>
+<p class="p6">}).add;</p>
+<p class="p7"><br></p>
+<p class="p6">)</p>
+<p class="p7"><br></p>
+<p class="p6">c = {(<span class="s2">SoundIn</span>.ar*0.5)!2}.play</p>
+<p class="p7"><br></p>
+<p class="p6">c.free;</p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+<p class="p3"><br></p>
+</body>
+</html>

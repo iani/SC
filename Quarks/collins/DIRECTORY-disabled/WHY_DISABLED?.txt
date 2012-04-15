@@ -1,0 +1,6 @@
+... Because these UGens are also included in the SC3plugins quark. 
+If loaded together with the SC3plugins quark, they will cause a "discrepancy", which will stop SuperCollider lang from compiling the SCClassLibrary. 
+
+(IZ 2012 04 15)
+
+

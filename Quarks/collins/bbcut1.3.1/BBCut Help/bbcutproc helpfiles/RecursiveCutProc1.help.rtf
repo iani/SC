@@ -1,0 +1,199 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fnil\fcharset77 Monaco;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red191\green0\blue0;\red96\green96\blue96;
+\red191\green0\blue0;\red0\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;\red0\green115\blue0;
+}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help
+\f1\b\fs30 \
+\
+RecursiveCutProc1
+\f0\b0\fs24 \
+\
+
+\f1\b Superclass: BBCutProc
+\f0\b0 \
+\
+This class implements explicit recursive cutting, as described in LMJ13. \
+The level of recursion can be set as a parameter of the cut procedure. \
+The user chooses cut, repeat and offset functions which are applied through\
+successive iteratinos to make new cut sequences. Only the final cut sequence of\
+a cut sequence of a cut sequence... is rendered. \
+\
+
+\f1\b \ul Class Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b *new(cutfunc,repeatfunc,offsetfunc,reclevel=2,phraselength=4.0,bpsd=0.5)\
+ 
+\f0\b0 \
+Create a RecursiveCutProc1 object with the given parameters.\
+\
+
+\f1\b cutfunc 
+\f0\b0 - A user specified function determining the next cut size, passed the arguments \
+phrase length filled so far and current phraselength. \
+
+\f1\b repeatfunc 
+\f0\b0 - A user specified function determining the number of repeats of the new cutsize, \
+passed the arguments phrase length determined and current phraselength. \
+
+\f1\b offsetfunc 
+\f0\b0 - A user specified function determining the offset for the new block, passed the arguments \
+quantise level (= currphraselength/beats per sub division, so one 4/4 bar phrase with bpsd 0.5 gives\
+quantise level of 8, ie eighth notes) ,current beats per sub division,phrase completed so far and \
+current phrase length. The default method is\
+
+\f2\fs18 \
+\{\cf2 arg\cf0  q,bpsubdiv; rrand(0,q - 1)*bpsubdiv\};  \cf3 //random offset into source
+\f0\fs24 \cf0 \
+\
+
+\f1\b reclevel-
+\f0\b0  Level of recursion, so 0 gives back the source exactly, 1 is one cutup, 4 is \
+four recursive cutups. The higher the reclevel , the greater the performance hit at the start of the phrase.\
+Outside realtime rendering is required for very high values, and the output will be increasingly set on one \
+offset at a greatest common divisor cut size (see the paper for technical analysis). Notes however that the \
+CPU cost is in the language app, not the server. In implicit cutting, the cost is in the Server.\
+
+\f1\b phraselength 
+\f0\b0 - Next length of phrase in beats.\
+
+\f1\b bpsd -
+\f0\b0  beats per sub division.\
+\
+
+\f1\b \ul Instance Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b initRecCutProc 
+\f0\b0 Called internally after a new.\
+\
+
+\f1\b chooseblock
+\f0\b0 - this uses the setoffset method of BBCutSynth to specify offset jumps relative to the\
+current phrase size. In normal use phrasesize will be the same as the beat length of the source you wish \
+to cut up. Note that sources which don't respond to setoffset will not be effected by RecCutProc except\
+for any enveloping/panning etc caused by blocks. \
+\
+Examples- \
+
+\f2\fs18 \
+(\cf3 //defaults\cf0 \
+\cf2 var\cf0  sf;\
+\
+sf=\cf2 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf2 BBCut\cf0 (\cf2 BBCutSynthSF\cf0 (sf), \cf2 RecursiveCutProc1\cf0 .new).tempo_(2).go;\
+)\
+\
+(\cf5 //20 recursion levels with simple user defined functions plus quick delay hack\cf6 \
+\cf7 var\cf6  sf;\
+\
+sf=\cf7 SF3\cf6 (\cf8 "a11wlk01.wav"\cf6 ,8); \cf5 //("break2",4);\cf6 \
+\
+\cf7 BBCut\cf6 (\cf7 BBCutSynthSF\cf6 (sf,pbsfunc:\{rrand(0.98,1.02)\}), \cf7 RecursiveCutProc1\cf6 .new(\{[4.0,2.5,1.5].choose\},\{rrand(1,3)\},\{[0.0,2.0].choose\},20)\
+).tempo_(4).go;\
+\
+\{\cf7 var\cf6  in; \
+\
+in= \cf7 In\cf6 .ar(0,2);\
+\
+\cf7 ReplaceOut\cf6 .ar(0, \cf7 CombN\cf6 .ar(0.3*in, 0.25, 0.25, 20, 1, 0.7*in))\}.play;\
+\cf0 )\
+\
+\
+\
+(\cf3 //recursion level control\cf0 \
+\cf2 var\cf0  sf;\
+\cf2 var\cf0  w,slider;\
+	\
+w = \cf2 SCWindow\cf0 (\cf4 "panel"\cf0 , \cf2 Rect\cf0 .new(200,200,200,100));\
+slider=\cf2 DDSlider\cf0 ( w, \cf2 Rect\cf0 .new(5,5,180,40), \cf4 "recursion level"\cf0 , 0, 50, \cf9 'linear'\cf0 , 1, 0);\
+\
+w.front;\
+\
+sf=\cf2 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf2 BBCut\cf0 (\cf2 BBCutSynthSF\cf0 (sf), \cf2 RecursiveCutProc1\cf0 .new(reclevel:slider)).tempo_(2).go;\
+)\
+\
+\
+(\cf3 //user defined functions\cf0 \
+\cf2 var\cf0  sf;\
+\cf2 var\cf0  w,slider;\
+\cf2 var\cf0  cutfunc, repeatfunc, offsetfunc;\
+	\
+sf=\cf2 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+cutfunc= \{\cf2 arg\cf0  done, currpl; if((done<(currpl*0.7)), \{[1.5,0.5].choose\},\{[0.25,1.0].choose\});\};\
+repeatfunc= \{\cf2 arg\cf0  done, currpl; if((done<(currpl*0.7)), \{1\},\{rrand(1,3)\});\};\
+\cf3 //3/4 of the time let through what is there already, otherwise a random offset\cf0 \
+offsetfunc= \{\cf2 arg\cf0  q, bpsd, done, currphraselength; if(0.75.coin, \{done%(q*bpsd)\},\{(q.rand)*bpsd\});\};\
+\
+\cf2 BBCut\cf0 (\cf2 BBCutSynthSF\cf0 (sf), \cf2 RecursiveCutProc1\cf0 .new(cutfunc, repeatfunc, offsetfunc,3, 8.0)).tempo_(2).go;\
+)\
+\
+\
+\
+\cf3 //as a comparison, here is the easier but more expensive implicit recursive method\cf0 \
+\cf3 //implicit recursive cutting, nth order\cf0 \
+\
+\cf3 //this code assumes 8 out busses 0-7, 8 in (8-15 = 1-8 for AudioIn UGen)\cf0 \
+\cf3 //then spare audio busses from 16 up\
+\cf0 \
+\cf3 //There will be a delay in hearing output proportional to n since the \cf0 \
+\cf3 //various audio capture devices need to be capturing a flow before \cf0 \
+\cf3 //the next can capture a flow, passing down to the final one. \cf0 \
+(\
+\cf2 var\cf0  sf, tc, n;\
+\cf2 var\cf0  source, reccutters;\
+sf= \cf2 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf3 //number of levels of recursive audio cutting\cf0 \
+\cf3 //be careful, costs go up quickly\cf0 \
+n=4; \
+\
+tc= \cf2 TempoClock\cf0 (2.6);\
+\
+source=\cf2 BBCut\cf0 (\cf2 BBCG\cf0 (\cf2 BBCutSynthSF\cf0 (sf),outbus:(2*n)+16), tempoclock:tc);\
+\
+reccutters= \cf2 Array\cf0 .fill(n);\
+\
+n.reverseDo(\{\cf2 arg\cf0  i; \
+reccutters.put(i, \cf2 BBCut\cf0 (\cf2 BBCG\cf0 (\cf2 BBCSAudioIn\cf0 ([(2*i)+11, (2*i)+12], atkprop:0.02, relprop:0.02),\cf2 nil\cf0 ,(2*i)+16), tempoclock:tc));\
+\});\
+\
+\{\cf2 Out\cf0 .ar(0,\cf2 In\cf0 .ar(16,2))\}.play;\
+\
+\
+\cf3 //give it all chance to set up- can do without this, just being safe\cf0 \
+\cf2 Task\cf0 (\
+\{\
+1.0.wait;\
+source.go;\
+reccutters.reverseDo(\{\cf2 arg\cf0  val; val.go;\});\
+\cf2 nil\cf0 \
+\}).start;\
+\
+\
+)\
+\
+\
+\
+\
+\
+\
+\
+////////////\
+For additional data on the algorithm see\
+Nick Collins, "Recursive Audio Cutting",\
+Leonardo Music Journal 13\
+////////////\
+
+\f0\fs24 \
+}

@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cd1713}
+span.s1 {color: #102ac3}
+span.s2 {color: #000000}
+span.s3 {color: #737373}
+span.s4 {color: #008225}
+span.s5 {color: #102ac2}
+span.s6 {color: #cd1713}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>WT_Transient<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>Wavelet transient filter</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>WT_Transient(buffer, branchthreshold=0.5, prunethreshold=0.1, mode=0)</b></p>
+<p class="p2"><br></p>
+<p class="p3">Masks out wavelet coefficients which aren't part of detected 'transient branches' following:<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">Laurent Daudet (2001) Transients modelling by pruned wavelet trees. ICMC 2001, Cuba.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">Result is the transient part of a signal, with longer tonal/time-stable components removed (rationale is that sufficiently energetic coefficients at positions correlated across scales is a time-localized transient). Daudet recommends using Haar wavelet (D2) or Daubechies D4 for the analysis.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><b>buffer</b> - dwt buffer.</p>
+<p class="p3"><b>branchthreshold</b> - Minimum detection threshold for a branch</p>
+<p class="p3"><b>prunethreshold</b> - Minimum detection threshold for the first node from the top of a branch to avoid pruning</p>
+<p class="p3"><b>mode</b> - Normal mode, multiplies coefficients by the transient branch mask, retaining only coefficients on transient branches. Mode 1, outputs the mask itself (1 on a transient branch, 0 otherwise).<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p4">s.boot;</p>
+<p class="p4">(</p>
+<p class="p4">b = <span class="s1">Buffer</span>.alloc(s,1024,1);</p>
+<p class="p5"><span class="s2">c = </span><span class="s1">Buffer</span><span class="s2">.read(s,</span>"sounds/a11wlk01.wav"<span class="s2">);</span></p>
+<p class="p4">)</p>
+<p class="p6"><br></p>
+<p class="p7">(</p>
+<p class="p7"><span class="s1">SynthDef</span>(<span class="s3">"help-Transient"</span>, { <span class="s1">arg</span> out=0, bufnum=0, soundBufnum=2;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s1">var</span> in, chain;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>in = <span class="s1">PlayBuf</span>.ar(1, soundBufnum, <span class="s1">BufRateScale</span>.kr(soundBufnum), loop: 1);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s1">DWT</span>(bufnum, in, wavelettype:0);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s1">WT_Transient</span>(chain, <span class="s1">MouseX</span>.kr(0.0,2.0),<span class="s1">MouseY</span>.kr(0.0,0.05));<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(out, <span class="s1">IDWT</span>(chain).dup);</p>
+<p class="p7">}).play(s,[<span class="s4">\out</span>, 0, <span class="s4">\bufnum</span>, b, <span class="s4">\soundBufnum</span>, c]);</p>
+<p class="p7">)</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p9">//with SoundIn</p>
+<p class="p7">(</p>
+<p class="p7"><span class="s1">SynthDef</span>(<span class="s3">"help-Transient"</span>, { <span class="s1">arg</span> out=0, bufnum=0, soundBufnum=2;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s1">var</span> in, chain;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>in = <span class="s1">SoundIn</span>.ar;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s1">DWT</span>(bufnum, in, <span class="s2">wavelettype:18</span>);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s1">WT_Transient</span>(chain, <span class="s1">MouseX</span>.kr(0.0,1.0),<span class="s1">MouseY</span>.kr(0.0,0.01));<span class="Apple-converted-space"> </span></p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(out, <span class="s1">IDWT</span>(chain).dup);</p>
+<p class="p7">}).play(s,[<span class="s4">\out</span>, 0, <span class="s4">\bufnum</span>, b, <span class="s4">\soundBufnum</span>, c]);</p>
+<p class="p7">)</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p4">(</p>
+<p class="p4"><span class="s1">SynthDef</span>(<span class="s3">"help-Transient"</span>, { <span class="s1">arg</span> out=0, bufnum=0, soundBufnum=2;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">var</span> in, chain;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">var</span> residual;<span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span></span><span class="s1">var</span><span class="s2"> delaylength = 0.0217813; </span>//(1024-64)/44100 //1024.0/SampleRate.ir + ControlDur.ir;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">var</span> transientresynthesis;<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>delaylength.poll;<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>in = <span class="s1">PlayBuf</span>.ar(1, soundBufnum, <span class="s1">BufRateScale</span>.kr(soundBufnum), loop: 1);</p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>chain = <span class="s1">DWT</span>(bufnum, in);</p>
+<p class="p4"><span class="Apple-tab-span">	</span>chain = <span class="s1">WT_Transient</span>(chain,<span class="s1">MouseX</span>.kr(0.0,3.0),<span class="s1">MouseY</span>.kr(0.0,0.1));<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>transientresynthesis = <span class="s1">IDWT</span>(chain);<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>residual = <span class="s1">DelayN</span>.ar(in,delaylength,delaylength) - transientresynthesis;<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(out, residual.dup);</p>
+<p class="p4">}).play(s,[<span class="s4">\out</span>, 0, <span class="s4">\bufnum</span>, b, <span class="s4">\soundBufnum</span>, c]);</p>
+<p class="p4">)</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p4">b.free; c.free;</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p9">//as preprocessing for onset detection (related to its use in Bello et al (2005) A Tutorial on Onset Detection Signals, IEEE Transactions on Speech and Audio Processing<span class="Apple-converted-space"> </span></p>
+<p class="p6"><br></p>
+<p class="p4">(</p>
+<p class="p4"><span class="s1">SynthDef</span>(<span class="s3">"help-Transient"</span>, { <span class="s1">arg</span> out=0, bufnum=0, soundBufnum=2;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">var</span> in, chain,onset;</p>
+<p class="p4"><span class="Apple-tab-span">	</span>in = <span class="s1">PlayBuf</span>.ar(1, soundBufnum, <span class="s1">BufRateScale</span>.kr(soundBufnum), loop: 1);</p>
+<p class="p4"><span class="Apple-tab-span">	</span>chain = <span class="s1">DWT</span>(bufnum, in);</p>
+<p class="p4"><span class="Apple-tab-span">	</span>chain = <span class="s1">WT_Transient</span>(chain,<span class="s1">MouseY</span>.kr(0.0,2.0),0.001);<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span>onset = <span class="s1">WT_Onset</span>.kr(chain, <span class="s1">MouseX</span>.kr(0.0,0.1));<span class="Apple-converted-space"> </span></p>
+<p class="p6"><span class="Apple-tab-span">	</span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(out, [in,<span class="s1">SinOsc</span>.ar(440,0,0.1*<span class="s1">Trig1</span>.ar(onset,0.05))]);</p>
+<p class="p4">}).play(s,[<span class="s4">\out</span>, 0, <span class="s4">\bufnum</span>, b, <span class="s4">\soundBufnum</span>, c]);</p>
+<p class="p4">)</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p4">(</p>
+<p class="p4">{</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s5">var</span> in, chain;</p>
+<p class="p4"><span class="Apple-tab-span">	</span>in = <span class="s5">PlayBuf</span>.ar(1, c, <span class="s5">BufRateScale</span>.kr(c), loop: 1);</p>
+<p class="p4"><span class="Apple-tab-span">	</span>chain = <span class="s5">DWT</span>(b, in);</p>
+<p class="p4"><span class="Apple-tab-span">	</span>chain = <span class="s5">WT_Transient</span>(chain,<span class="s5">0.01</span>,0.0005);<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="s5">WT_Onset</span>.kr(chain, rawodf:1)*20.0;<span class="Apple-converted-space"> </span></p>
+<p class="p4">}.plot(1.0)</p>
+<p class="p6"><br></p>
+<p class="p4">)</p>
+<p class="p6"><br></p>
+<p class="p6"><br></p>
+<p class="p8"><br></p>
+<p class="p9">//feature; detecting total 'transientness' by summing all transient coefficient moduli<span class="Apple-converted-space"> </span></p>
+<p class="p8"><br></p>
+<p class="p7">(</p>
+<p class="p7"><span class="s1">SynthDef</span>(<span class="s3">"help-Transient"</span>, { <span class="s1">arg</span> out=0, bufnum=0, soundBufnum=2;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s1">var</span> in, chain,transient, transientmeasure, sound;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>in = <span class="s1">PlayBuf</span>.ar(1, soundBufnum, <span class="s1">BufRateScale</span>.kr(soundBufnum), loop: 1);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s1">DWT</span>(bufnum, in, wavelettype:2);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s1">WT_Transient</span>(chain, <span class="s1">MouseX</span>.kr(0.0,3.0),<span class="s1">MouseY</span>.kr(0.0,0.5));<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>transientmeasure = <span class="s1">WT_ModulusSum</span>.kr(chain);<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>transientmeasure.poll(100);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>sound = <span class="s1">Mix</span>(<span class="s1">Saw</span>.ar([100+<span class="s2">transientmeasure</span>,220,440],0.3)*((transientmeasure/100.0).min(1.0).lag(0.05)));</p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s1">Out</span>.ar(out,[in,sound]);</p>
+<p class="p7">}).play(s,[<span class="s4">\out</span>, 0, <span class="s4">\bufnum</span>, b, <span class="s4">\soundBufnum</span>, c]);</p>
+<p class="p7">)</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p9">//cross synthesis via transient mask<span class="Apple-converted-space"> </span></p>
+<p class="p7">(</p>
+<p class="p7">{</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s1">var</span> inA, chainA, inB, chainB, chain ;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>inA = <span class="s1">PlayBuf</span>.ar(c,1,loop:1);<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>inB =<span class="Apple-converted-space">  </span><span class="s1">Pulse</span>.ar(<span class="s1">LFNoise1</span>.kr(2).exprange(10, 1000));</p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span></span>//inB =<span class="Apple-converted-space">  </span>SoundIn.ar;</p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>chainA = <span class="s1">DWT</span>(<span class="s1">LocalBuf</span>(2048), inA);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chainB = <span class="s1">DWT</span>(<span class="s1">LocalBuf</span>(2048), inB);</p>
+<p class="p8"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>chainA = <span class="s1">WT_Transient</span>(chainA, <span class="s1">MouseX</span>.kr(0.0,3.0),<span class="s1">MouseY</span>.kr(0.0,0.5),mode:1); <span class="s6">//get transient mask</span></p>
+<p class="p9"><span class="s2"><span class="Apple-tab-span">	</span>chain = </span><span class="s1">WT_Mul</span><span class="s2">(chainA, chainB); </span>//use on other sound direct (could also use mode 0, for more gradual multiply)</p>
+<p class="p7"><span class="Apple-tab-span">	</span>[inA, 0.2 *<span class="s1">IDWT</span>(chain)];</p>
+<p class="p7">}.play</p>
+<p class="p7">);</p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+</body>
+</html>

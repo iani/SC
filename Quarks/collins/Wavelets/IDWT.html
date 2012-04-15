@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #1636ee}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cd1713}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #000000; min-height: 14.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #0000ee}
+span.s4 {color: #0e28b9}
+span.s5 {color: #1636ee}
+span.s6 {color: #102ac3}
+span.s7 {color: #cd1713}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>IDWT<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>Inverse Discrete Wavelet Transform</b></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="../../../../Applications/SuperCollider/SuperCollider3.4.3/Help/Core/Object.html"><span class="s3"><b>Object</b></span></a></span><span class="s4"><b> : </b><a href="../../../../Applications/SuperCollider/SuperCollider3.4.3/Help/Core/Kernel/AbstractFunction.html"><span class="s5"><b>AbstractFunction</b></span></a><b> : </b><a href="../../../../Applications/SuperCollider/SuperCollider3.4.3/Help/UGens/UGen.html"><span class="s5"><b>UGen</b></span></a><b><span class="Apple-converted-space"> </span></b></span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><b>IDWT.new(chain, wintype, winsize, wavelettype)</b></p>
+<p class="p1"><b>IDWT.ar(chain, wintype, winsize, wavelettype)</b></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">The wavelet transform analyzes the input signal with respect to a mother wavelet at a number of scales. The IDWT UGen returns from the wavelet coefficient domain to the time domain.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space"> </span>Most often this is used as the end of a process which begins with DWT, followed by scale-domain processing using WT (wavelet-transform) UGens, followed by IDWT.</p>
+<p class="p2"><br></p>
+<p class="p1"><b>chain</b> - The FFT "chain" signal coming originally from an DWT UGen, perhaps via other WT UGens.</p>
+<p class="p1"><b>wintype</b> - defines how the data is windowed:</p>
+<p class="p1"><span class="Apple-tab-span">	</span>-1 is for <b><i>rectangular</i></b> windowing, simple but typically not recommended;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>0 (the default) is for <b><i>Sine</i></b> windowing, typically recommended for work when the signal is reconstructed;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>1 is for <b><i>Hann</i></b> windowing, typically recommended for analysis work.</p>
+<p class="p1"><b>winsize</b> - can be used to account for zero-padding, in the same way as the DWT UGen.</p>
+<p class="p1"><b>wavelettype</b> - The choices of wavelet are those available in the gsl wavelet library code (http://www.gnu.org/s/gsl/manual/html_node/DWT-Initialization.html). Each is given a numeric code as follows (see the web page for the explanation of k):</p>
+<p class="p1">0-8 gsl_wavelet_daubechies, k = 4,6,8,10,12,14,16,18,20</p>
+<p class="p1">9-17 gsl_wavelet_daubechies_centered, k = 4,6,8,10,12,14,16,18,20</p>
+<p class="p1">18 gsl_wavelet_haar, k=2</p>
+<p class="p1">19 gsl_wavelet_haar_centered, k=2</p>
+<p class="p1">20-30 gsl_wavelet_bspline, k=103, 105, 202, 204, 206, 208, 301, 303, 305, 307, 309</p>
+<p class="p1">31-41 gsl_wavelet_bspline_centered k=103, 105, 202, 204, 206, 208, 301, 303, 305, 307, 309</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">The IDWT UGen converts the DWT data in-place (in the original DWT buffer) and overlap-adds the result to produce a continuous signal at its output.</p>
+<p class="p2"><br></p>
+<p class="p4"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6">// example</p>
+<p class="p7">(</p>
+<p class="p7">{ <span class="s6">arg</span> out=0;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s6">var</span> in, chain;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>in = <span class="s6">WhiteNoise</span>.ar(0.05);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s6">DWT</span>(<span class="s6">LocalBuf</span>(1024), in);</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s6">Out</span>.ar(out,<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[<span class="s6">IDWT</span>(chain),in] <span class="s7">// inverse DWT</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>);</p>
+<p class="p7">}.play;</p>
+<p class="p7">)</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6">//direct synthesis via writing values to buffer (try changing wavelet type...)</p>
+<p class="p5"><br></p>
+<p class="p7">(</p>
+<p class="p7">b = <span class="s6">Buffer</span>.alloc(s,1024);<span class="Apple-converted-space"> </span></p>
+<p class="p7">b.zero;</p>
+<p class="p7">)</p>
+<p class="p5"><br></p>
+<p class="p7">(</p>
+<p class="p7">{</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s6">var</span> chain;</p>
+<p class="p5"><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="s2"><span class="Apple-tab-span">	</span>chain = </span><span class="s6">FFTTrigger</span><span class="s2">(b); </span>//works as DWT substitute too</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s6">Out</span>.ar(0, (0.1*<span class="s6">IDWT</span>(chain,wintype:-1)).dup(2));</p>
+<p class="p7">}.play;</p>
+<p class="p7">)</p>
+<p class="p5"><br></p>
+<p class="p6">//run this to change sound: WARNING, NOISY!</p>
+<p class="p7">b.setn(0,<span class="s6">Array</span>.rand(1024,-1.0,1.0));<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">b.setn(0,<span class="s6">Array</span>.fill(1024,{<span class="s6">|i|</span> i/1024.0}));<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">b.setn(0,<span class="s6">Array</span>.fill(1024,{<span class="s6">|i|</span> 1.0-(i/1024.0)}));<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">b.setn(0,<span class="s6">Array</span>.fill(1024,{<span class="s6">|i|</span> [exprand(0.001,0.1),exprand(0.001,0.1).neg,1.0.rand].choose}));<span class="Apple-converted-space"> </span></p>
+<p class="p8"><br></p>
+<p class="p8"><br></p>
+<p class="p7">b.setn(0,<span class="s6">Array</span>.fill(1024,{<span class="s6">|i|</span> [exprand(0.001,1.0),0.0].wchoose([0.1,0.9])}));<span class="Apple-converted-space"> </span></p>
+</body>
+</html>

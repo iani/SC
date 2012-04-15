@@ -1,0 +1,273 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeTarget = D2AAC0620554660B00DB518D /* Chromagram */;
+		addToTargets = (
+			D2AAC0620554660B00DB518D /* Chromagram */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = 46C8360611C46EF00076CB84 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					492,
+					361,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					663,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFindDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFindDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					200,
+					677,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFindDataSource_MessageID,
+					PBXFindDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.XCSCMDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					639,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_SCM_ColumnID,
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					623,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 311712708;
+			PBXWorkspaceStateSaveDate = 311712708;
+		};
+		perUserProjectItems = {
+			4628207412945C2E00164F05 /* PBXTextBookmark */ = 4628207412945C2E00164F05 /* PBXTextBookmark */;
+			4628207512945C2E00164F05 /* PBXTextBookmark */ = 4628207512945C2E00164F05 /* PBXTextBookmark */;
+			4628207612945C2E00164F05 /* PBXTextBookmark */ = 4628207612945C2E00164F05 /* PBXTextBookmark */;
+			4628207912945C2E00164F05 /* PBXTextBookmark */ = 4628207912945C2E00164F05 /* PBXTextBookmark */;
+			46D8D35611DA975E004B6854 /* PBXTextBookmark */ = 46D8D35611DA975E004B6854 /* PBXTextBookmark */;
+			46EB7D5E1263B85900111876 /* PBXTextBookmark */ = 46EB7D5E1263B85900111876 /* PBXTextBookmark */;
+			46EB81BA126F5F7A00111876 /* PBXTextBookmark */ = 46EB81BA126F5F7A00111876 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 46C8360511C46EF00076CB84 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	4628207412945C2E00164F05 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46EB7D5812620E9D00111876 /* Chromagram.cpp */;
+		name = "Chromagram.cpp: 105";
+		rLen = 0;
+		rLoc = 1852;
+		rType = 0;
+		vrLen = 165;
+		vrLoc = 1201;
+	};
+	4628207512945C2E00164F05 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46EB7DAA12664C1D00111876 /* SCComplex.h */;
+		name = "SCComplex.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 293;
+		vrLoc = 992;
+	};
+	4628207612945C2E00164F05 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46EB7DAA12664C1D00111876 /* SCComplex.h */;
+		name = "SCComplex.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 293;
+		vrLoc = 992;
+	};
+	4628207912945C2E00164F05 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 4628207A12945C2E00164F05 /* Unroll.h */;
+		name = "Unroll.h: 126";
+		rLen = 2;
+		rLoc = 2879;
+		rType = 0;
+		vrLen = 1341;
+		vrLoc = 2275;
+	};
+	4628207A12945C2E00164F05 /* Unroll.h */ = {
+		isa = PBXFileReference;
+		name = Unroll.h;
+		path = /data/svnprojects/SuperCollider3/common/Headers/plugin_interface/Unroll.h;
+		sourceTree = "<absolute>";
+	};
+	46C8360511C46EF00076CB84 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	46C8360611C46EF00076CB84 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	46C8367811C5C4AB0076CB84 /* sndfile.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {841, 8764}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 297}";
+		};
+	};
+	46D8D25511DA8C21004B6854 /* vecLibTypes.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = vecLibTypes.h;
+		path = /Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/vecLib.framework/Headers/vecLibTypes.h;
+		sourceTree = "<absolute>";
+	};
+	46D8D35611DA975E004B6854 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46D8D25511DA8C21004B6854 /* vecLibTypes.h */;
+		name = "vecLibTypes.h: 68";
+		rLen = 0;
+		rLoc = 2386;
+		rType = 0;
+		vrLen = 268;
+		vrLoc = 2222;
+	};
+	46EB7D4912620DE600111876 /* VEPConv.cpp */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = VEPConv.cpp;
+		path = "/Users/nickcollins/Desktop/SCtotry/skUG-src-0.1.0a 2/src/VEP/VEPConv.cpp";
+		sourceTree = "<absolute>";
+	};
+	46EB7D5812620E9D00111876 /* Chromagram.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {841, 4745}}";
+			sepNavSelRange = "{1852, 0}";
+			sepNavVisRange = "{1201, 165}";
+			sepNavWindowFrame = "{{181, 129}, {1189, 728}}";
+		};
+	};
+	46EB7D5E1263B85900111876 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46EB7D4912620DE600111876 /* VEPConv.cpp */;
+		name = "VEPConv.cpp: 3";
+		rLen = 4;
+		rLoc = 39;
+		rType = 0;
+		vrLen = 471;
+		vrLoc = 0;
+	};
+	46EB7DA812664BB800111876 /* SCComplex.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {841, 1820}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{868, 287}";
+		};
+	};
+	46EB7DAA12664C1D00111876 /* SCComplex.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {841, 1664}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{992, 293}";
+			sepNavWindowFrame = "{{565, 85}, {1189, 728}}";
+		};
+	};
+	46EB81BA126F5F7A00111876 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46EB81BB126F5F7A00111876 /* Unroll.h */;
+		name = "Unroll.h: 126";
+		rLen = 2;
+		rLoc = 2879;
+		rType = 0;
+		vrLen = 1341;
+		vrLoc = 2275;
+	};
+	46EB81BB126F5F7A00111876 /* Unroll.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = Unroll.h;
+		path = /data/svnprojects/SuperCollider3/common/Headers/plugin_interface/Unroll.h;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1130, 3302}}";
+			sepNavSelRange = "{2879, 2}";
+			sepNavVisRange = "{2275, 1341}";
+			sepNavWindowFrame = "{{251, 126}, {1189, 728}}";
+		};
+	};
+	D2AAC0620554660B00DB518D /* Chromagram */ = {
+		activeExec = 0;
+	};
+}
