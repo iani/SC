@@ -8,73 +8,39 @@
 SCMIRSimilarityMatrix {   
 	var <rows, <columns; //rows is size of source2, columns size of source 1
 	var <dimensions; //number of features in source vectors
-	//var <file1, <file2; //source audio files may not exist, if using this as a general similarity matrix tool
 	var <sequence1, <sequence2; //actual vector sequences compared 
 	var <self; //flag for self similarity, saves on some calculation 
 	var <matrix; 
 	var <reductionfactor; //for storing reduction factor in calculation
-	var <reducedrows, <reducedcolumns; 
+	var <reducedrows, <reducedcolumns;	
 	
-	//basic mode is to extract from files
-	//symmetric flag cuts off file2 to be same legnth as file1 (wlog), leading to a square matrix
-	//*new {|file1, file2, symmetric=true|      
-//		  
-//		//must have at least features in first file? 
-//		  
-//		//if (file2.isNil,{ ^nil});       
-//		  
-//		^super.new.initSCMIRSimilarityMatrix(sequence1, sequence2);       
-//		  
-//	}  
-	
-	
-	*new {|dimensions, sequence1, sequence2|       
-
+	*new { | dimensions, sequence1, sequence2 |       
 		if (sequence1.isNil) {
 			"SCMIRSimilarityMatrix:new: no first sequence passed in".postln; ^nil;
 		};  
-				  
 		^super.new.initSCMIRSimilarityMatrix(dimensions, sequence1, sequence2);       
-		  
 	}  	
 		
-	
-	initSCMIRSimilarityMatrix {|dim, seq1, seq2|
-		var temp; 
-				
+	initSCMIRSimilarityMatrix { | dim, seq1, seq2 |
+		var temp;
 		dimensions = dim; 
-		
 		sequence1 = seq1; 	
-		
 		//must be RawArray for file write out
-		if(not(sequence1.isKindOf(FloatArray)) ) {
-			sequence1 = FloatArray.newFrom(sequence1); 
-		};
-		
+		if ( sequence1.isKindOf(FloatArray).not ) { sequence1 = FloatArray.newFrom(sequence1); };
 		self = 0; 
-		
 		//comprison or self similarity	
 		sequence2 = seq2 ?? {self = 1;  sequence1}; 
-	
-			//must be RawArray for file write out
+		//must be RawArray for file write out
 		if(not(sequence2.isKindOf(FloatArray)) ) {
 			sequence2 = FloatArray.newFrom(sequence2); 
 		};
-				
-		
-	
 		//but if do this will get confused in interpreting results? 
 		//swap if needed so always have columns >= rows
 		if (sequence1.size<sequence2.size) {
-			
-			temp= sequence1; 
-			
+			temp = sequence1; 
 			sequence1 = sequence2; 
-			
 			sequence2 = temp; 
-			
 			"Swapped sequence1 and sequence2, since sequence2 was longer than sequence1".postln;
-			
 		};	
 		
 		//must allow for dimensions amongst the input data array 
@@ -84,46 +50,27 @@ SCMIRSimilarityMatrix {
 	}	
 	
 	
-	calculate {|unit=1, metric=2, prepost=0, reductiontype=1|
-
+	calculate { | unit = 1, metric = 2, prepost = 0, reductiontype = 1 |
 		var file; 
 		var temp; 
 		var bytescheck; 
 		var outputfilename, inputfilename; 
-		
-		//var tempdir; 
-		//tempdir = if(SCMIR.tempdir.notNil){SCMIR.tempdir}{""}; 
-
 		//unit is framesperblock, must be integer
 		unit = unit.asInteger; 
-		
-		if (unit<1) {"SCMIRSimilarityMatrix:calculate: unit less than 1".postln; ^nil}; 
-		
+		if (unit < 1) { "SCMIRSimilarityMatrix:calculate: unit less than 1".postln; ^nil}; 
 		//since rows <= columns
-		if (unit>rows) {unit=rows; }; 	  
-		 
+		if (unit > rows) { unit = rows; };
 		reductionfactor = unit; 
- 			
 		//write out binary file with input data
-		//tempdir+
-		
 		inputfilename = SCMIR.getTempDir ++ "similaritymatrix2input"; 
 		outputfilename = SCMIR.getTempDir ++ "similaritymatrix2output"; 
-		
 		//"similaritymatrix2input"
 		file = SCMIRFile(inputfilename,"wb"); 
-		
 	 	file.putInt32LE(columns);
 		file.putInt32LE(rows); 
 		file.putInt32LE(dimensions); 
-		
 		file.writeLE(sequence1); 
-		
-		if (self==0) {
-			//"now crash? 2".postln;
-			file.writeLE(sequence2); 
-		};
-		
+		if (self == 0) { file.writeLE(sequence2); };
 		file.close; 
 		
 		//call auxilliary program
@@ -145,41 +92,14 @@ SCMIRSimilarityMatrix {
 		
 		reducedcolumns = columns.div(unit); //file.getInt32LE;
 		reducedrows = rows.div(unit); //file.getInt32LE;
-		
 		temp = reducedrows*reducedcolumns;  
 		matrix= FloatArray.newClear(temp);     
-		  
-		//"matrix size check 1".postln;
-//		matrix.size.postln;  
-		  
-		file.readLE(matrix);  
-		
-		//bytescheck =   
-		//bytescheck.postln;  
-		  
-		//if((4*bytescheck) != temp) {
-//		
-//			[\bytereadissue, bytescheck, 4*bytescheck, temp].postln;	
-//			
-//		};  
-//		  
-		//need debug code; if matrix read in has different size, must re-read. Not sure why this happens, must be issue with operating system file read or _FileReadRawLE  
-		  
-		//"matrix size check 2".postln;
-//		matrix.size.postln;  
-//		temp.size.postln;
-//		[reducedrows,reducedcolumns].postln; 
-		  
-		  
-		file.close;   
-		
-		
-
-	}
-	
+		file.readLE(matrix); 		  
+		file.close;
+	}	
 	
 	//may need some way to check original audio file lengths for time positions accurately in seconds 
-		//will crash if matrix is not a symmetric matrix as an array of arrays   
+	//will crash if matrix is not a symmetric matrix as an array of arrays   
 	//no axes drawn, just direct plot with fixed border of 20
 	plot {|stretch=1, power=5, path|
 		

@@ -32,9 +32,9 @@ Autocousmatic {
 		//array of soundfiles to operate on 
 		//filenames = paths;  
 		 
-		numChannels= numchan; //num output channels
+		numChannels = numchan; //num output channels
 		 
-		duration= dur;  
+		duration = dur;  
 		
 		//make sure directories exist for temporary files 
 		"mkdir /tmp/autocousmaticanalysis".systemCmd;  
@@ -42,11 +42,11 @@ Autocousmatic {
 		"mkdir /tmp/autocousmatictemp".systemCmd;
 		 
 		sourcedir = ""; //"/data/audio/autocousmatic/source";  
-		tempdir= "/tmp/autocousmatictemp"; //data/audio/autocousmatic/temp";  
-		renderdir= ""; //"/data/audio/autocousmatic/render";  
-		analysisdir= "/tmp/autocousmaticanalysis"; //"/data/audio/autocousmatic/analysis/";  
+		tempdir = "/tmp/autocousmatictemp"; //data/audio/autocousmatic/temp";  
+		renderdir = ""; //"/data/audio/autocousmatic/render";  
+		analysisdir = "/tmp/autocousmaticanalysis"; //"/data/audio/autocousmatic/analysis/";  
 		
-		AutocousmaticSoundFile.autocousmatic= this; 
+		AutocousmaticSoundFile.autocousmatic = this; 
 		
 		//maximum of 1000, no problem in practice; can also change ServerOptions
 		
@@ -98,17 +98,11 @@ Autocousmatic {
 		
 		
 		//starting simple; assess input database, generate processed versions, select favourites, place into larger scale top-down determined structure with 
-		maxiterations.do {
-		
-		
-		
+		maxiterations do: {
+			
 		}
-		
-		 
-	}  
-	
-	
-	
+	}	
+
 	//also set number of iterations of processing? 
 	//initial tests and basic piece generation 
 	compose1 {|number= 200, fromgeneration=0, reanalyse=true, iterations=1|
@@ -118,47 +112,49 @@ Autocousmatic {
 		//final mix can take account of derivation chain, matching similar processes from similar soundfiles together
 		
 		{
-	
 		//starting simple; assess input database, generate processed versions, select favourites, place into larger scale top-down determined structure 
 		
-		if(fromgeneration==0) {
+		if (fromgeneration==0) {
+			this.analyse(inputsoundfiles); 
 		
-		this.analyse(inputsoundfiles); 
+			//create outputs in tempdir
+			//will avoid accidentally picking up stuff from previous runs of the program, program will just overwrite stuff itself
+			newgeneration = this.createnewgeneration(inputsoundfiles, number,0); 
+			tempfilenames= newgeneration[0]; 
+			derivations= newgeneration[1]; 
+			
+			totaltempcreated= number; 
 		
-		//create outputs in tempdir
-		//will avoid accidentally picking up stuff from previous runs of the program, program will just overwrite stuff itself
-		newgeneration = this.createnewgeneration(inputsoundfiles, number,0); 
-		tempfilenames= newgeneration[0]; 
-		derivations= newgeneration[1]; 
-		
-		totaltempcreated= number; 
-		
-		} {
-		
-		//must just load up what's there already
-		tempfilenames= (tempdir++"/*").pathMatch;
-		//derivations =  //but what about this? 
-		
+		}{
+			
+			//must just load up what's there already
+			tempfilenames= (tempdir++"/*").pathMatch;
+			//derivations =  //but what about this? 
+			
 		};
 		
 		
 		newsoundfiles = List[]; 
 		
-		iterations.do{|whichiteration|
+		iterations do: { | whichiteration |
 		
 		//if(whichiteration>=fromgeneration) {
 		
 		//};
 		
-		if(whichiteration>0) {
-		//can iterate here; take any temp and further process back into temp, 
-		//reduces number each generation to avoid over processing
-		newgeneration= this.createnewgeneration(tempfiles, number.div(whichiteration+1), newsoundfiles.size); //offsets them 
-		tempfilenames= newgeneration[0];
-		derivations= newgeneration[1]; 
+		if (whichiteration>0) {
+			//can iterate here; take any temp and further process back into temp, 
+			//reduces number each generation to avoid over processing
+			newgeneration= this.createnewgeneration(tempfiles, number.div(whichiteration+1), newsoundfiles.size); //offsets them 
+			tempfilenames= newgeneration[0];
+			derivations= newgeneration[1]; 
 		}; 
 		
-		tempfiles= tempfilenames.collect{|filename,i| var newfile= AutocousmaticSoundFile(filename);  newfile.derivation= derivations[i]; newfile}; 
+		tempfiles = tempfilenames collect: { | filename, i |
+			var newfile = AutocousmaticSoundFile(filename); 
+			newfile.derivation= derivations[i];
+			newfile
+		}; 
 		
 		//if problems loading any, remove those 
 		tempfiles= tempfiles.select{|val| val.uniqueidentifier.notNil}; 
@@ -221,10 +217,10 @@ Autocousmatic {
 	 
 	 
 	//call external program? Or run SC in NRT mode with Logger and feature extraction? 
-	analyse {|whichfiles, redoanalysis=true| 
+	analyse { | whichfiles, redoanalysis = true | 
 		 
 		 //may need routine structure around this to adequately wait
-		 whichfiles.do {|filenow|
+		 whichfiles do: { | filenow |
 		 
 		 ("started analysis of " ++filenow.filename).postln;
 		 

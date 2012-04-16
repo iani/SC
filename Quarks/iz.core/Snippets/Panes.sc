@@ -68,7 +68,7 @@ Panes {
 		// confuses post and Untitled windows if not deferred on startup:
 		{
 			this.openTryoutWindow;
-			this.placeListener;
+			this.placeListener.bounds =  listenerPos; // override toggling
 		}.defer(0.5);
 		 
 	}
@@ -77,6 +77,7 @@ Panes {
 		var listener;
 		listener = Document.allDocuments detect: { | d | d.name == " post " };
 		if (listener.notNil) { this placeDoc: listener };
+		^listener;
 	}
 
 	*stop { this.deactivate } // synonym
@@ -233,9 +234,17 @@ Panes {
 	}
 	
 	*placeDoc { | doc |
-		if (doc.reallyIsListener) { ^doc.bounds = listenerPos };
+		if (doc.reallyIsListener) { ^this toggleListener: doc };
 		if (doc.name == prefs.tryoutName) { ^doc.bounds = tryoutPos };
 		doc.bounds = panePos;
+	}
+	
+	*toggleListener { | doc |
+		if (doc.bounds == listenerPos) {
+			doc.bounds = doc.bounds.height_(Window.screenBounds.height) ;
+		}{
+			doc.bounds = listenerPos;
+		}
 	}
 
 	*nextPane {

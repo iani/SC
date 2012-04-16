@@ -32,9 +32,7 @@ AutocousmaticSectionDensityModel {
 		transitionnow = transitions.choose; 
 		transitionpos = 3; 
 	}
-		
-	
-	
+
 	next {
 		var selection; 
 		var nearest, score; 

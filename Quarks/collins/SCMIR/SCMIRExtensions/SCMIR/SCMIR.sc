@@ -114,25 +114,21 @@ SCMIR {
 		
 		
 	}
-	*external {|command, scorerender=false, limit=2000| 
+
+	*external { | command, scorerender = false, limit = 2000 | 
 		
-		if(thisThread.class==Routine) {
-			
-		SCMIR.waitOnUnixCmd(command, limit);
-			
-			if(scorerender) {
+		if (thisThread.class == Routine) {
+			SCMIR.waitOnUnixCmd(command, limit);
+			if (scorerender) {
 				//safety first, file not being written out quickly enough
 				0.2.wait;	
 			};
-				
-		} {
-		
-		if(scorerender) {
-		systemCmd(command);	
-		} {
-		SCMIR.pipe(command);
-		};	
-				
+		}{
+			if (scorerender) {
+				systemCmd(command);	
+			}{
+				SCMIR.pipe(command);
+			};				
 		}
 	}
 		 

@@ -25,12 +25,18 @@ ServerPrep {
 	/* ===== Internal stuff. See "Use these methods" section below for usage ===== */
 
 	init {
-		serverBootedResponder = OSCpathResponder(server.addr, ['/done', '/notify'], {
-			defs.addAllUdefs;
-			bufs.addAllBufferResources;
-			this.loadAllObjects;
-			this.notifyTree;
-		}).add;
+		serverBootedResponder = OSCpathResponder(
+			server.addr, 
+		//	['/done', '/notify']
+		// better wait for root group to be created:
+			[ '/n_go', 1, 0, -1, -1, 1, -1, -1 ]
+			, {
+				defs.addAllUdefs;
+				bufs.addAllBufferResources;
+				this.loadAllObjects;
+				this.notifyTree;
+			}
+		).add;
 		bufs = BufLoader(this, server);			
 		defs = DefLoader(this, server);			
 		synths = SynthLoader(this, server);
