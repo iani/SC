@@ -111,7 +111,7 @@ Panes {
 		}),
 		CocoaMenuItem.addToMenu("Utils", "maximize window (multi-pane mode)", ["M", false, false],
 		{
-			this.maximizeDocHight(Document.current);
+			this.maximizeDocHeight(Document.current);
 		}),
 		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (multi-pane mode)", 
 			["M", false, true], {	this.togglePaneAreaWidth;
@@ -264,14 +264,14 @@ Panes {
 			}
 		};
 	}
-	*maximizeDocHight{
+	*maximizeDocHeight {
 		var height, doc = Document.current;
 		if (doc.reallyIsListener.not && (doc.name != prefs.tryoutName) && doc.bounds.left != 0) {
 			height = Window.screenBounds.height - prefs.menuHeight;
 			doc.bounds = doc.bounds.top_(height).height_(height)
 		}	
 	}
-	*togglePaneAreaWidth{
+	*togglePaneAreaWidth {
 		var newMultiPaneAreaWidth;
 		if (multiPaneAreaWidth == Window.screenBounds.width) {
 			newMultiPaneAreaWidth = prefs.multiPaneAreaWidth
