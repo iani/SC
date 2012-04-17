@@ -1,0 +1,368 @@
+CLASS:: BufferResource
+summary:: Make a buffer available through a symbol. Load files into buffer. 
+categories:: Live Coding, Buffers, Lilt
+related:: Classes/Resource, Classes/AbstractServerResource
+
+DESCRIPTION::
+
+???
+
+CLASSMETHODS::
+
+METHOD:: defaultPath
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: initClass
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: makeKey
+(describe method here)
+
+argument:: key
+(describe argument here)
+
+argument:: target
+(describe argument here)
+
+argument:: numFrames
+(describe argument here)
+
+argument:: numChannels
+(describe argument here)
+
+argument:: path
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: keyFromPath
+(describe method here)
+
+argument:: path
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: default
+(describe method here)
+
+argument:: server
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: current
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: new
+(describe method here)
+
+argument:: key
+(describe argument here)
+
+argument:: server
+(describe argument here)
+
+argument:: numFrames
+(describe argument here)
+
+argument:: numChannels
+(describe argument here)
+
+argument:: path
+(describe argument here)
+
+argument:: startFrame
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: sendCollection
+(describe method here)
+
+argument:: key
+(describe argument here)
+
+argument:: server
+(describe argument here)
+
+argument:: collection
+(describe argument here)
+
+argument:: numChannels
+(describe argument here)
+
+argument:: wait
+(describe argument here)
+
+argument:: action
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: saveDefaults
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: loadDefaults
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: loadSCdefaults
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: defaultSoundsDir
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: load
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: loadPaths
+(describe method here)
+
+argument:: paths
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: read
+(describe method here)
+
+argument:: path
+(describe argument here)
+
+argument:: server
+(describe argument here)
+
+argument:: startFrame
+(describe argument here)
+
+argument:: numFrames
+(describe argument here)
+
+argument:: play
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: saveListDialog
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: loadListDialog
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: loadList
+(describe method here)
+
+argument:: path
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: list
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: nameSelectionList
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: postAll
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: postNames
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: play
+(describe method here)
+
+argument:: func
+(describe argument here)
+
+argument:: name
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: menuItems
+(describe method here)
+
+returns:: (returnvalue)
+
+
+INSTANCEMETHODS::
+
+METHOD:: path
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: startFrame
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: numFrames
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: numChannels
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: sampleRate
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: duration
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: completionAction
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: init
+(describe method here)
+
+argument:: argServer
+(describe argument here)
+
+argument:: argNumFrames
+(describe argument here)
+
+argument:: argNumChannels
+(describe argument here)
+
+argument:: argPath
+(describe argument here)
+
+argument:: argStartFrame
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: sendCollection
+(describe method here)
+
+argument:: collection
+(describe argument here)
+
+argument:: startFrame
+(describe argument here)
+
+argument:: wait
+(describe argument here)
+
+argument:: action
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: play
+(describe method here)
+
+argument:: func
+(describe argument here)
+
+argument:: target
+(describe argument here)
+
+argument:: outbus
+(describe argument here)
+
+argument:: fadeTime
+(describe argument here)
+
+argument:: addAction
+(describe argument here)
+
+argument:: args
+(describe argument here)
+
+argument:: name
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: makePlayFunc
+(describe method here)
+
+argument:: func
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: sendTo
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: loaded
+(describe method here)
+
+argument:: b
+(describe argument here)
+
+returns:: (returnvalue)
+
+METHOD:: free
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: freed
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: isLoaded
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: bufnum
+(describe method here)
+
+returns:: (returnvalue)
+
+METHOD:: name
+(describe method here)
+
+returns:: (returnvalue)
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::
