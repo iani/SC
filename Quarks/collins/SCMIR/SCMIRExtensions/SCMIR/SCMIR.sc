@@ -2,7 +2,6 @@
 //class variables and methods only, singleton class
  
 SCMIR { 
-	 
 	//for auxilliary operations 
 	classvar <soundfile;  
 	classvar <tempdir; //location for temp files; if none given, same path as soundfile input 
@@ -12,111 +11,74 @@ SCMIR {
 	classvar <globalfeaturenorms; 
 		 
 	*initClass { 
-			 
 		soundfile = SoundFile.new; 
-		
 		samplingrate = 44100;  
 		//framesize = 1024; 
 		framehop = 1024; 
 		framerate = samplingrate/framehop; 
 		hoptime = framerate.reciprocal; 
-		
 		executabledirectory = SCMIR.filenameSymbol.asString.dirname.escapeChar($ )++"/scmirexec/";  
 		//tempdir = SCMIR.filenameSymbol.asString.dirname++"/scmirtemp/";  
-		
 		tempdir = "/tmp/";	//user should always have write permission here? 
-		
 		SCMIR.initGlobalFeatureNorms; 
-		
 	} 
 	
-
-	
-	//warning: this method can invalidate all previous SCMIR method calls, and conflict with saved information
-	//for individual files, can check using numframes and duration versus current SCMIR.framerate*duration
-	*setFrameHop {|hopsize| 
-		
+	// warning: this method can invalidate all previous SCMIR method calls, 
+	// and conflict with saved information
+	// for individual files, can check using numframes and duration versus current 
+	// SCMIR.framerate*duration
+	*setFrameHop { | hopsize = 1024 |	
 		if ((hopsize!= 1024) && (hopsize!=512)) {
-			
 			"SCMIR:setFrameHop: only hopsize of 1024 or 512 supported".postln;
-			
-			^nil}; 
-		
+			^nil
+		}; 
 		framehop = hopsize;
-		
 		framerate = samplingrate/framehop; 
-
 		hoptime = framerate.reciprocal; 
-		
-	}
-	
-	//frame hop length in seconds
-//	hopTime {
-//	
-//		^hoptime; //framerate.reciprocal; 	
-//		
-//	}
-	
+	}	
 	
 	//COMPENSATION REQUIRED since triggering on chromafft, will be storing values based on initial delay of 4096 samples
 	//should associate value with 2048 samples in halfway through window 
 	*frameTime{|whichframe| ^(framehop*whichframe+2048)/samplingrate}
 
-		 
 	*setTempDir {|tmpdirectory| 
-			 
 		//can do further tests here 
 		tempdir = tmpdirectory; //if nil, will construct as go from paths passed in 
-			 
 		if(tempdir.notNil,{ 
 			if(tempdir.last!=$/,{ 
 				tempdir = tempdir++"/";  
 			});  
 		});  
-			 
 	}
 	
 	*getTempDir {
-		
 		//return empty string as prefix otherwise
 		^ tempdir?""; 	
-		
 	}
 	 
-		 
 	*setExecutableDir {|execdir| 
-			 
 		//can do further tests here 
 		executabledirectory = execdir; //if nil, will construct as go from paths passed in 
-			 
 		if(executabledirectory.notNil,{ 
 			if(executabledirectory.last!=$/,{ 
 				executabledirectory = executabledirectory++"/";  
 			});  
 		});  
-			 
 	} 
-		
- 
- 
- 		//return true if in Routine, else in Main thread and .wait not valid
+
+	//return true if in Routine, else in Main thread and .wait not valid
 	*waitStatus {
-			
 			^(thisThread.class==Routine); //Thread
 	}
 	
-	
 	*waitIfRoutine {|time|
-		
 		if(thisThread.class==Routine) {
 			time.wait;	
 		}
-		
-		
 	}
 
 	*external { | command, scorerender = false, limit = 2000 | 
-		
+
 		if (thisThread.class == Routine) {
 			SCMIR.waitOnUnixCmd(command, limit);
 			if (scorerender) {
@@ -133,7 +95,7 @@ SCMIR {
 	}
 		 
 	//wait on process, assumed within Routine 
-	*processWait {|processname, limit=2000|  
+	*processWait { | processname, limit = 2000|  
 			 
 		var a, count;  
 		var checkstring = "ps -xc | grep '"++processname++"'";  

@@ -1,7 +1,7 @@
 CLASS:: SCMIRSimilarityMatrix
 summary:: Similarity matrix calculation and resources including plotting and DTW
 categories:: Machine Listening
-related:: Classes/SCMIR, Guides/SCMIR, Classes/SCMIRAudioFile
+related:: Classes/SCMIR, Guides/SCMIRguide, Classes/SCMIRAudioFile
 
 DESCRIPTION::
 by Nick Collins. 

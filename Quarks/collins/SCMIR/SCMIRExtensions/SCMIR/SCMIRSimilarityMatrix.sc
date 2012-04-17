@@ -5,7 +5,7 @@
 //first input sequence is always longer, since greater width in screen space for plotting, and greater time along x axis 
 
 
-SCMIRSimilarityMatrix {   
+SCMIRSimilarityMatrix {  
 	var <rows, <columns; //rows is size of source2, columns size of source 1
 	var <dimensions; //number of features in source vectors
 	var <sequence1, <sequence2; //actual vector sequences compared 
@@ -26,7 +26,7 @@ SCMIRSimilarityMatrix {
 		dimensions = dim; 
 		sequence1 = seq1; 	
 		//must be RawArray for file write out
-		if ( sequence1.isKindOf(FloatArray).not ) { sequence1 = FloatArray.newFrom(sequence1); };
+		if ( sequence1.isKindOf(FloatArray).not ) { sequence1 = FloatArray.newFrom(sequence1.flat); };
 		self = 0; 
 		//comprison or self similarity	
 		sequence2 = seq2 ?? {self = 1;  sequence1}; 
@@ -48,8 +48,7 @@ SCMIRSimilarityMatrix {
 		rows = (sequence2.size).div(dimensions); 
 			
 	}	
-	
-	
+
 	calculate { | unit = 1, metric = 2, prepost = 0, reductiontype = 1 |
 		var file; 
 		var temp; 
@@ -80,7 +79,7 @@ SCMIRSimilarityMatrix {
 		//temp = SCMIR.executabledirectory++"similaritymatrix2" + metric + unit + prepost + reductiontype + self + (tempdir++"similaritymatrix2output")+ (tempdir++"similaritymatrix2input"); 
 
 		temp.postln;
-				 
+
 		//unixCmd(temp);    
 		//SCMIR.processWait("similaritymatrix2"); 
 		
@@ -101,7 +100,7 @@ SCMIRSimilarityMatrix {
 	//may need some way to check original audio file lengths for time positions accurately in seconds 
 	//will crash if matrix is not a symmetric matrix as an array of arrays   
 	//no axes drawn, just direct plot with fixed border of 20
-	plot {|stretch=1, power=5, path|
+	plot { | stretch = 1, power = 5, path |
 		
 		var window, uview, background=Color.white;
 		var xsize = reducedcolumns*stretch; 
@@ -113,75 +112,44 @@ SCMIRSimilarityMatrix {
 		
 		//just need path, not [score, path]
 		if(path.notNil){ if(path.size==2){path = path[1];}};
-		
-		window = SCWindow("Similarity matrix", Rect(100,100,totalx,totaly));
-		 
-		window.view.background_(background); 
-		 
-		uview = SCUserView(window, window.view.bounds).focusColor_(Color.clear); 
- 
- 		xaxisy = totaly- border; 
+		window = Window("Similarity matrix", Rect(100,100,totalx,totaly));
+		window.view.background_(background);
+		uview = UserView(window, window.view.bounds).focusColor_(Color.clear); 
+ 		xaxisy = totaly - border; 
  		origin = border@xaxisy;
- 
 		uview.drawFunc_({ 
 				 
 			Pen.use { 
 				Pen.width_(1); 
-				//.alpha_(0.4) 
-				//Color.white.setFill; 
 				Color.black.setStroke; 
-					 
-				//Pen.fillRect(Rect(0,0,xsize,ysize)); 
-	
 				Pen.moveTo(origin); 
-				Pen.lineTo((border+xsize)@(xaxisy)); 
-					 
+				Pen.lineTo((border + xsize)@(xaxisy));
 				Pen.moveTo(origin); 
 				Pen.lineTo(border@border); 
-					 
 				Pen.stroke; 
-	
-				reducedcolumns.do{|i|
-					
-					var pos; 
-					var x = (i*stretch)+border; 
-					
-					pos = reducedrows*i; 
-					
-					reducedrows.do{|j|
-					
-					var y = border + ((reducedrows-j-1)*stretch); 	
+				reducedcolumns do: { | i |	
+					var pos;
+					var x = (i * stretch) + border; 
+					pos = reducedrows * i; 
+					reducedrows do: { | j |
+					var y = border + ((reducedrows - j - 1) * stretch); 
 					Pen.color = Color.grey(0.2+(0.8*((1.0-(matrix[pos+j]))**power)));
-					Pen.addRect(Rect(x,y,stretch,stretch));
+//					Pen.addRect(Rect(x,y,stretch,stretch));
+					Pen.addRect(Rect(x, y, stretch, stretch));
 					Pen.fill;   
-					  
 					}
-					
 				};
-
 				if(path.notNil){
-					
 					Pen.color = Color.blue(0.9,0.5); //partially transparent
-					
 					path.do{|coord|
-						
 						var x = (coord[0]*stretch)+border; 
-						var y = border + ((reducedrows-coord[1]-1)*stretch); 						
-						Pen.addRect(Rect(x,y,stretch,stretch));
+						var y = border + ((reducedrows-coord[1]-1)*stretch);						Pen.addRect(Rect(x,y,stretch,stretch));
 						Pen.fill;
-						
 					}
-					
-					
 				};
-									 
 			}; 
 		}); 
-		 
 		window.front; 
-		  
 	}  
-
-	
 }
 	

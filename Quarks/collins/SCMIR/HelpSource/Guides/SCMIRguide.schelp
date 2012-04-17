@@ -1,17 +1,16 @@
-SCMIR		SuperCollider Music Information Retrieval	
+title:: SCMIR Guide
+summary:: SuperCollider Music Information Retrieval System by Nick Collins
+categories:: Machine Listening
+related:: Classes/SCMIR, Classes/SCMIRAudioFile, Classes/SCMIRSimilarityMatrix
 
-by Nick Collins. 
-
+DESCRIPTION::
 This extension library (with additional plugins and language invoked executables) for SuperCollider demonstrates carrying out some basic music information retrival tasks in audio content analysis. Right now, you can extract features for an audio file in NRT mode, plot features, get similarity matrices, plot them, extract novelty curves from the similarity matrices and thus find section boundaries. The library should work in batch processing too. 
 
 The SCMIR base class allows you to set a base directory for temp files and storage of SCMIRAudioFile files with analysis data (.scmirZ format). Note that file permissions can be an issue on network systems; it is suggested that you work with a local copy of SuperCollider where you have write permissions. Also, do not try to analyze audio files from directories where you have no write access if you haven't set an alternative temp directory where temporary files can be written. 
 
-
-See also: SCMIRAudioFile, SCMIRSimilarityMatrix
-
-
-Examples
-
+examples:: 
+subsection:: Setting up SCMIR
+code::
 
 SCMIR.setTempDir("/Users/nickcollins/Desktop/SCMIRTest");
 
@@ -22,8 +21,8 @@ SCMIR.setTempDir(nil);
 
 SCMIR.tempdir
 
-
 SCMIR.setFrameHop(512);  //default is 1024. Only these two numbers allowed for now. Note that changing this affects all open and to be loaded SCMIRAudioFiles; it may invalidate settings. It should only be used on a per complete project basis
 
 SCMIR.setFrameHop(1024); //restore default
 
+::

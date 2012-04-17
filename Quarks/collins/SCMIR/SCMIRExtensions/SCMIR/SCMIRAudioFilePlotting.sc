@@ -8,7 +8,7 @@
 		};
 
 		labels = featureinfo
-			.collect({ | f | { | i | format("% %", f.first.name, i + 1) } ! f[1] })
+			.collect({ | f | { | i | format("% %", f.first.name, i + 1) } ! (f[1] ? 1) })
 			.flatten(1);
 
 		labels.postln;

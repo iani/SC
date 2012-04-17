@@ -1,7 +1,7 @@
 CLASS:: SCMIR
 summary:: Base class for SuperCollider Music Information Retrieval System by Nick Collins
 categories:: Machine Listening
-related:: Classes/SCMIR, Classes/SCMIRAudioFile, Classes/SCMIRSimilarityMatrix
+related:: Guides/SCMIRguide, Classes/SCMIRAudioFile, Classes/SCMIRSimilarityMatrix
 
 DESCRIPTION::
 (The SCMIR base class allows you to set a base directory for temp files and storage of SCMIRAudioFile files with analysis data (.scmirZ format). Note that file permissions can be an issue on network systems; it is suggested that you work with a local copy of SuperCollider where you have write permissions. Also, do not try to analyze audio files from directories where you have no write access if you haven't set an alternative temp directory where temporary files can be written. 

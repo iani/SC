@@ -3,11 +3,8 @@
 + Score { 
 	recordNRTSCMIR { | oscFilePath, outputFilePath, inputFilePath, sampleRate = 44100, 
 		headerFormat = "AIFF", sampleFormat = "int16", options, completionString="", duration = nil | 
-		
-		var cmd; 
-		
-		//var pipe, line, cmd; 
-		
+		var cmd;
+		//var pipe, line, cmd;
 		postf("Score starting NRT SCMIR. Paths are:\nosc: %\ninput: %\noutput: %\n", 
 			oscFilePath, inputFilePath, outputFilePath);
 		
@@ -19,7 +16,7 @@
 			+ sampleRate + headerFormat + sampleFormat
 			+ (options ? Score.options).asOptionsString 
 			+ completionString;
-		
+
 		//systemCmd(cmd); 
 		SCMIR.external(cmd, true);
 
@@ -34,8 +31,10 @@
 	 
 	*recordNRTSCMIR { | list, oscFilePath, outputFilePath, inputFilePath, sampleRate = 44100, 
 		headerFormat = "AIFF", sampleFormat = "int16", options, completionString="", duration = nil |
-		this.new(list).recordNRTSCMIR(oscFilePath, outputFilePath, inputFilePath, sampleRate, 
-		headerFormat, sampleFormat, options, completionString, duration); 
+		this.new(list).recordNRTSCMIR(
+			oscFilePath, outputFilePath, inputFilePath, sampleRate, 
+			headerFormat, sampleFormat, options, completionString, duration
+		); 
 	}	 
 		 
 		 

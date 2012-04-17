@@ -8,7 +8,7 @@
 	 
 	 
 	//matrix is target, size is reducedcolumns by reducedrows 
-	dtw {|leeway=10|   
+	dtw { | leeway = 10 |   
 		
 		//var result; //[totalcost, path]
 		
