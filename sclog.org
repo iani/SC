@@ -888,3 +888,21 @@ The assembla repository is linked to the master branch. The github respository i
      :PROPERTIES:
      :ENTERED_ON: <2011-10-28 Fri 11:42>
      :END:
+* 2012
+** 2012-04 April
+*** 2012-04-17 Tuesday
+**** TODO: Simplify Panes + UserPrefs
+     :PROPERTIES:
+     :ENTERED_ON: <2012-04-17 Tue 09:54>
+     :END:
+
+UserPrefs may use the global Archive, which is the standard method for saving objects to disc for the user.
+
+Simplify Panes: 
+- Where should menu items such as Boot/Quit default server go? New class ...
+- Review and simplify pane placement scheme, especially:
+  - *defaults
+  - protoPanePos
+  - *arrange1Pane, *arrangeMultiPanes
+  - review role of *multiPaneWidth 
+  - *nextPane
