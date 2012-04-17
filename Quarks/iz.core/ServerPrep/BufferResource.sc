@@ -191,7 +191,7 @@ BufferResource : AbstractServerResource {
 		numFrames = b.numFrames;
 		sampleRate = b.sampleRate;
 		duration = b.numFrames / (b.sampleRate ? 44100);
-		// must defer, otherwise sendCollection does not work. ServerShmInterface delay on boot?
+		// must defer, otherwise sendCollection does not work on server boot. Why?
 		{ completionAction.(b); }.defer(0.1);
 		// this seems problematic: (what use? note that buffer object is not present here yet!)
 		{ NotificationCenter.notify(BufferResource, \loaded, this); }.defer;

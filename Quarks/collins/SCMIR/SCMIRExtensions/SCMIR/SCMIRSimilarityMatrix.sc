@@ -72,7 +72,7 @@ SCMIRSimilarityMatrix {
 		if (self == 0) { file.writeLE(sequence2); };
 		file.close; 
 		
-		//call auxilliary program
+		// call auxiliary program
 		temp = SCMIR.executabledirectory++"similaritymatrix2" + metric + unit + prepost + reductiontype + self + outputfilename + inputfilename; 
 		
 		//"similaritymatrix2output"+ "similaritymatrix2input"; 
@@ -102,24 +102,26 @@ SCMIRSimilarityMatrix {
 	//no axes drawn, just direct plot with fixed border of 20
 	plot { | stretch = 1, power = 5, path |
 		
-		var window, uview, background=Color.white;
-		var xsize = reducedcolumns*stretch; 
-		var ysize = reducedrows*stretch; 
+		var window, uview, background = Color.white;
+		var xsize = reducedcolumns * stretch; 
+		var ysize = reducedrows * stretch; 
 		var border = 20;  
 		var xaxisy, origin;
-		var totalx = xsize + (2*border); 
-		var totaly = ysize + (2*border); 
+		var totalx = xsize + (2 * border); 
+		var totaly = ysize + (2 * border); 
 		
 		//just need path, not [score, path]
 		if(path.notNil){ if(path.size==2){path = path[1];}};
-		window = Window("Similarity matrix", Rect(100,100,totalx,totaly));
+		window = Window("Similarity matrix", Rect(100, 100, totalx, totaly));
 		window.view.background_(background);
 		uview = UserView(window, window.view.bounds).focusColor_(Color.clear); 
  		xaxisy = totaly - border; 
  		origin = border@xaxisy;
 		uview.drawFunc_({ 
 				 
-			Pen.use { 
+			Pen.use {
+				Pen.scale(1, -1); 
+				Pen.translate(0, totaly.neg); 
 				Pen.width_(1); 
 				Color.black.setStroke; 
 				Pen.moveTo(origin); 

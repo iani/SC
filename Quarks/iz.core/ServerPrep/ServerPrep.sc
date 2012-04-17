@@ -27,7 +27,7 @@ ServerPrep {
 	init {
 		serverBootedResponder = OSCpathResponder(
 			server.addr, 
-		//	['/done', '/notify']
+		//	['/done', '/notify'] // sent by server when boot complete. But: 
 		// better wait for root group to be created:
 			[ '/n_go', 1, 0, -1, -1, 1, -1, -1 ]
 			, {

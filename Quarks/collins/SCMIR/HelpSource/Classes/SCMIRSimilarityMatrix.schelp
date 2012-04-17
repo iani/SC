@@ -6,12 +6,30 @@ related:: Classes/SCMIR, Guides/SCMIRguide, Classes/SCMIRAudioFile
 DESCRIPTION::
 by Nick Collins. 
 
-An instance of the SCMIRSimilarityMatrix class calculates and stores a distance matrix over a single input sequence (self-similarity) or between two sequences. The sequences can be multi-dimensional feature vector sequences, though they must be in a flattened array format:
-[feature0 at time0, feature 1 at time 0, ... feature dimensions-1 at time 0, feature 0 at time 1, ...]
- 
-Note that the cosine metric only gives non zero similarity values if the number of feature dimensions is greater than 1. Note also that the similarity value is 0.0 if two points are maximally close (hence, it is a distance matrix). 
- 
-The internal code operates on FloatArrays (due to interaction with external processing and need for RawArrays in file output and input), and auto conversion is imposed at input if required. 
+An instance of the SCMIRSimilarityMatrix class calculates and stores a distance matrix over a single input sequence (self-similarity) or between two sequences. The sequences can be multi-dimensional feature vector sequences. 
+
+It is acceptable to give these as a nested array of numbers of the form: [[feature0 ...], [feature1 ...], ...]. Each array [featuren ...] must be an array of numbers. Also all feature subarrays must have the same size. For example: 
+
+code::
+~feature1 = [1, 2, 3]; // feature vector sequence 1
+~feature2 = [5, 6, 7]; // feature vector sequence 2
+
+~featureArray = [~feature1, ~feature2]; // combined multidimensional feature sequence
+
+// But you can also flatten the sequence: 
+~featureArray = [~feature1, ~feature2].flat;
+::
+
+In any case, SCMIRSimilarityMatrix flattens the feature array and converts it to a FloatArray before processing it. (The internal code operates on FloatArrays due to interaction with external processing and need for RawArrays in file output and input).
+
+The metrics available for calculating the similarity in method "calculate" are: 
+numberedlist::
+## cosine metric (indicated by number 0)
+## manhattan metric (indicated by number 1)
+## euclidean metric (indicated by number 2)
+::
+
+Note that the cosine metric only gives non zero similarity values if the number of feature dimensions is greater than 1. Note also that the similarity value is 0.0 if two points are maximally close (hence, it is a distance matrix).
 
 The dtw method returns [minimum path cost, best path] where the best path is a List of (x,y) co-ordinates into the matrix. Larger x is further along sequence1, larger y is further along the other sequence (sequence 1 again for self similarity, or a different sequence 2).
 

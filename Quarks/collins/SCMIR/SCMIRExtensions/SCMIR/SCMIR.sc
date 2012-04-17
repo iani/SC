@@ -182,201 +182,135 @@ SCMIR {
 			}); 		
 		0.01.wait;
 	}
-	
-	
-		 
+
 	//given one dimensional curve, typically already normalized 0.0 to 1.0, find peak locations 
 	*peakPick {|curve, reach=15, exaggeration = 5, threshold = 1.0, minseparation=20|  
-			 
 		var peakcurve;  
 		var maxindex = curve.size-1;  
 		var list;  
 		var sep=0;  
-			 
 		peakcurve = Array.fill(curve.size,{|i|    
-				 
 			var below, above;  
 			var sum = 0.0;  
 			var now = curve[i];  
-				 
-			below = (i-reach).max(0); 
-			above= (i+reach).min(maxindex);  
-				 
-				 
-			for(below, above,{|j| 
-				var temp;  
-					 
+			below = (i - reach).max(0); 
+			above= (i + reach).min(maxindex);  
+
+			for(below, above, { | j | 
+				var temp;
 				temp = now - curve[j];  
-					 
 				//increase penalty if not local maximum 
-				if(temp<0.0) {temp = exaggeration*temp; }; 
-					 
+				if(temp<0.0) {temp = exaggeration * temp; }; 
 				sum = sum + (temp);  
-					 
 			});  
-				 
 			sum 
-				 
 		});  
 			 
 		list = List[]; 	 
 			 
-		peakcurve.do{|val,i|  if(sep>0,{sep= sep-1;}); if ((val>threshold) and: (sep==0)) {list.add(i); sep= minseparation; } };  
-			 
+		peakcurve do: { | val, i |
+			if(sep > 0) { sep = sep - 1; });
+			if ((val > threshold) and: (sep == 0)) { list add: i; sep = minseparation; } };
 		^[list, peakcurve] 
-	 
 	} 
-		 
+
+	*initGlobalFeatureNorms { globalfeaturenorms = nil; }
 	
-	*initGlobalFeatureNorms {
-		
-		globalfeaturenorms = nil; 
-		
-	}
-	
-	//could make a dictionary over all observations ever, just a bit trickier?  
-	//*lookupGlobalFeatureNorm {|featuretype,normalizationtype|
-//		
-//	}
-	
-	//assumes you know what you're doing, that format of featureinfo used to extract globals is same as that now being used
-	//and that values do exist
-	*lookupGlobalFeatureNorms {|which|
+	// could make a dictionary over all observations ever, just a bit trickier?  
+	// *lookupGlobalFeatureNorm { | featuretype, normalizationtype | }	
+	// assumes you know what you're doing, that format of featureinfo used to extract globals 
+	// is same as that now being used and that values do exist
+	*lookupGlobalFeatureNorms { | which |
 		^[globalfeaturenorms[0][which],globalfeaturenorms[1][which]];
 	}
 	
-	*saveGlobalFeatureNorms {|filename|
-
+	*saveGlobalFeatureNorms { | filename |
 		var archive; 
-		
 		filename = filename ?? { (SCMIR.getTempDir)++"globalfeaturenorms.scmirZ" };   
-		  
 		archive = SCMIRZArchive.write(filename);  
-	  
 		archive.writeItem(globalfeaturenorms); 	  
-		  	    
 		archive.writeClose;  
-
 	}
 	
 	*loadGlobalFeatureNorms {|filename|
-		
 		var archive; 
-		
 		filename = filename ?? {(SCMIR.getTempDir)++"globalfeaturenorms.scmirZ"};   
-		
 		archive = SCMIRZArchive.read(filename);  
-		
 		globalfeaturenorms = archive.readItem; 
-		
 		archive.close; 
 	}
 	
-	//run normalization procedures for all standard features over all filenames in list, obtaining global max and min, and mean and stddev
+	// run normalization procedures for all standard features over all filenames in list, 
+	// obtaining global max and min, and mean and stddev
 	*findGlobalFeatureNorms {|filenamelist, featureinfo, normalizationtype=0|
-		
 		var e; 
 		var norms; 		
 		var framesum = 0, framesumr; 
 		var temp1, temp2; 
+		norms= nil!(filenamelist.size); 
 		
+		filenamelist.do {|filename,j|
 			
-			norms= nil!(filenamelist.size); 
-			
-			filenamelist.do {|filename,j|
-				
-			e = SCMIRAudioFile(filename,featureinfo, normalizationtype);
-			
-			e.extractFeatures(false); 
+		e = SCMIRAudioFile(filename,featureinfo, normalizationtype);
 		
-			norms[j] = [e.normalize(e.featuredata, true), e.numframes];     
-		
-			framesum = framesum + e.numframes; 
-		
-			};
-			
-			if(normalizationtype==0) {
-				
-				//normalize
-				temp1 = norms[0][0][0]; 
-				temp2 = norms[0][0][1]; 
-				
-				norms.do{|val| 
-					
-					temp1 = min(val[0][0],temp1); 
-					temp2 = max(val[0][1],temp2);
-					
-					}; 
-
-				//combine
-				globalfeaturenorms = [temp1,temp2];
-					
-			} {
-				
-				//standardize
-				framesumr = 1.0/framesum;
-				
-				temp1 = 0.0; 
-				temp2 = 0.0; 
-				
-				norms.do{|val| 
-					
-					temp1 = temp1 + (val[0][0]*val[1]*framesumr);
-					temp2 = temp2 + (val[0][1]*val[1]*framesumr);
-					
-					}; 
-					
-				globalfeaturenorms = [temp1,temp2.sqrt]; //to stddev from variance at this point
-				
-			};
-			
-		
-	}
+		e.extractFeatures(false); 
 	
+		norms[j] = [e.normalize(e.featuredata, true), e.numframes];     
 	
-	//for adding multiple sound file feature instances to
-	*createARFF {|filename,numfeatures,classes|
-		
-		var file; 
-		
-		filename = filename ?? {(SCMIR.getTempDir)++"features.arff"};
-		
-		numfeatures  = numfeatures ? 1; 
-		
-		classes = classes ? ["class1","class2"]; 
-		
-		file = File(filename,"w"); 
-		
-		file.write("@RELATION SCMIR\n");
-		
-		numfeatures.do{|i|
-			
-			file.write("@ATTRIBUTE"+i+"NUMERIC\n");
-		
+		framesum = framesum + e.numframes; 
+	
 		};
 		
+		if(normalizationtype==0) {
+			
+			//normalize
+			temp1 = norms[0][0][0]; 
+			temp2 = norms[0][0][1]; 
+			
+			norms.do{|val| 
+				
+				temp1 = min(val[0][0],temp1); 
+				temp2 = max(val[0][1],temp2);
+				
+				}; 
+
+			//combine
+			globalfeaturenorms = [temp1,temp2];
+				
+		} {
+			
+			//standardize
+			framesumr = 1.0/framesum;
+			
+			temp1 = 0.0; 
+			temp2 = 0.0; 
+			
+			norms do: { | val | 
+				temp1 = temp1 + (val[0][0] * val[1] * framesumr);
+				temp2 = temp2 + (val[0][1] * val[1] * framesumr);
+			}; 
+			globalfeaturenorms = [temp1, temp2.sqrt]; //to stddev from variance at this point
+		};
+	}
+
+	//for adding multiple sound file feature instances to
+	*createARFF {|filename,numfeatures,classes|
+		var file; 
+		filename = filename ?? { (SCMIR.getTempDir) ++ "features.arff" };
+		numfeatures  = numfeatures ? 1; 
+		classes = classes ? ["class1","class2"]; 
+		file = File(filename,"w"); 
+		file.write("@RELATION SCMIR\n");
+		numfeatures do: { | i | file.write("@ATTRIBUTE"+i+"NUMERIC\n"); };
 		file.write("@ATTRIBUTE class {"); 
-			
-		classes.do{|class,i| 
-			
+		classes do: { | class, i | 
 			file.write(class.asString);	
-			
-			if((i+1)<classes.size) {
-			file.write(",");	
-			}
-			
-			};
-			
+			if ((i+1) < classes.size) { file.write(","); }
+		};
 		file.write("}\n");
-
 		file.write("@DATA\n");
-
 		^file;
 	}
-	
-	
-
-		 
 } 
  
  
