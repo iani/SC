@@ -234,17 +234,9 @@ Panes {
 	}
 	
 	*placeDoc { | doc |
-		if (doc.reallyIsListener) { ^this toggleListener: doc };
+		if (doc.reallyIsListener) { ^doc.bounds = listenerPos; };
 		if (doc.name == prefs.tryoutName) { ^doc.bounds = tryoutPos };
 		doc.bounds = panePos;
-	}
-	
-	*toggleListener { | doc |
-		if (doc.bounds == listenerPos) {
-			doc.bounds = doc.bounds.height_(Window.screenBounds.height) ;
-		}{
-			doc.bounds = listenerPos;
-		}
 	}
 
 	*nextPane {
