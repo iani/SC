@@ -68,7 +68,7 @@ Panes {
 		// confuses post and Untitled windows if not deferred on startup:
 		{
 			this.openTryoutWindow;
-			this.placeListener;
+			this.placeListener.bounds =  listenerPos; // override toggling
 		}.defer(0.5);
 		 
 	}
@@ -77,6 +77,7 @@ Panes {
 		var listener;
 		listener = Document.allDocuments detect: { | d | d.name == " post " };
 		if (listener.notNil) { this placeDoc: listener };
+		^listener;
 	}
 
 	*stop { this.deactivate } // synonym
@@ -110,7 +111,7 @@ Panes {
 		}),
 		CocoaMenuItem.addToMenu("Utils", "maximize window (multi-pane mode)", ["M", false, false],
 		{
-			this.maximizeDocHight(Document.current);
+			this.maximizeDocHeight(Document.current);
 		}),
 		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (multi-pane mode)", 
 			["M", false, true], {	this.togglePaneAreaWidth;
@@ -233,7 +234,7 @@ Panes {
 	}
 	
 	*placeDoc { | doc |
-		if (doc.reallyIsListener) { ^doc.bounds = listenerPos };
+		if (doc.reallyIsListener) { ^doc.bounds = listenerPos; };
 		if (doc.name == prefs.tryoutName) { ^doc.bounds = tryoutPos };
 		doc.bounds = panePos;
 	}
@@ -263,14 +264,14 @@ Panes {
 			}
 		};
 	}
-	*maximizeDocHight{
+	*maximizeDocHeight {
 		var height, doc = Document.current;
 		if (doc.reallyIsListener.not && (doc.name != prefs.tryoutName) && doc.bounds.left != 0) {
 			height = Window.screenBounds.height - prefs.menuHeight;
 			doc.bounds = doc.bounds.top_(height).height_(height)
 		}	
 	}
-	*togglePaneAreaWidth{
+	*togglePaneAreaWidth {
 		var newMultiPaneAreaWidth;
 		if (multiPaneAreaWidth == Window.screenBounds.width) {
 			newMultiPaneAreaWidth = prefs.multiPaneAreaWidth
