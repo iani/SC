@@ -1,0 +1,158 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fnil\fcharset77 Monaco;
+}
+{\colortbl;\red255\green255\blue255;\red0\green115\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red191\green0\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help\
+
+\f1\b\fs30 \
+SF3
+\f0\b0\fs24 \
+\
+
+\f1\b Superclass: Object
+\f0\b0 \
+\
+A convenience class for dealing with opening a sound file or signal, and running it at\
+a synchronised playback speed. A SF3 object contains all necessary\
+parameters for such manipulations. This class deals with multichannel sources.\
+   It is assumed that there are a fixed number of beats to a sample/signal.\
+\
+
+\f1\b \ul Class Methods
+\f0\b0 \ulnone \
+\
+*
+\f1\b new(path, beats, tempo)
+\f0\b0     Make a new SF3 object by loading the given sound. \
+\
+
+\f1\b *array(patharray, beatsarray)
+\f0\b0  Make an Array of SF3 objects from the Arrays patharray and beatsarray.\
+\
+
+\f1\b *newFromBuf(buf, bts, sampRate, tempo) 
+\f0\b0 Create an SF3 wrapper for an existing Buffer object.\
+\
+\
+
+\f1\b \ul Instance Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b load(path, beats, tempo)
+\f0\b0 \
+\
+
+\f1\b path
+\f0\b0  
+\f1\b -
+\f0\b0  Filename string compatible with PathName.standardizePath. This takes the sounds directory\
+as the home directory for samples, and can convert OS9 pathnames and absolute (full unix from root directory) pathnames\
+
+\f1\b beats -
+\f0\b0  Beats per sound is enough information \
+to work out the original tempi of the soundfiles.\
+
+\f1\b tempo -
+\f0\b0  Used to work out the number of beats in the sample in the absence of the proceeding argument. \
+\
+
+\f1\b replace(path, beats)
+\f0\b0  Load a replacement soundfile, clear old buffer and replace with new. Not yet determined how dangerous this is. \
+\
+
+\f1\b free
+\f0\b0  Free the buffer and set to nil to force garbage collection. \
+\
+
+\f1\b newBuf(buf, bts, sampRate)\
+\
+replaceBuf(buf, bts, sampRate)
+\f0\b0 \
+\
+For working out playback rates appropriate to the given tempo:\
+
+\f1\b \
+workOutRateFromBPS(bps)
+\f0\b0 \
+
+\f1\b workOutRateFromBPM(bpm)
+\f0\b0 \
+\
+Playback functions:\
+\
+
+\f1\b play(bus=0, target, addaction= \cf2 \\addToHead\cf0 , rate=1.0, offset=0.0, amp=1.0, pan=0.0, len)\
+
+\f0\b0 \
+Defaults to playing once at the chosen rate.\
+\
+
+\f1\b loopplay\cf3 (\cf0 bus=0, target, addaction= \cf2 \\addToHead\cf0 , rate=1.0, offset=0.0, amp=1.0, pan=0.0)
+\f0\b0 \
+\
+Play on a loop. 
+\f2\fs18   \
+
+\f0\fs24 \
+\
+Examples:\
+
+\f2\fs18 \
+(\
+f= \cf3 SF3\cf0 (\cf4 "a11wlk01.wav"\cf0 , 4);\
+\
+f.play(rate:1.0);\
+)\
+\
+\
+(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 var\cf0  synth, f;\
+\
+f= \cf3 SF3\cf0 (\cf4 "a11wlk01.wav"\cf0 , 4);\
+\
+\cf5 //right panned sample looping with reverse playback\cf0 \
+synth= f.loop(0, \cf3 BBCut\cf0 .server, \cf2 \\addToHead\cf0 , -0.75, f.numFrames-1, 0.5, 0.9);\
+\
+\cf5 //add in comb fx on the left channel, source from the right panned synth \cf0 \
+\cf3 SynthDef\cf0 (\cf4 "combfx"\cf0 ,\{\cf3 Out\cf0 .ar(0, \cf3 CombN\cf0 .ar(\cf3 In\cf0 .ar(1), 0.1, 0.1, 10))\}).play(synth,\cf3 nil\cf0 ,\cf2 \\addAfter\cf0 );\
+)\
+\
+\
+(	\
+f= \cf3 SF3\cf0 .new(\cf4 "break"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 .new(\cf3 BBCutSynthSF\cf0 .new(f,0.2)).tempo_(2.3).go;	\cf5 //20% chance of random offset\cf0 \
+)\
+\
+\cf5 //now run this to swap the soundfile over-\cf0 \
+f.replace(\cf4 "break2"\cf0 , 4);\
+\
+\
+\cf5 //run this to load a batch of samples:\cf0 \
+(\
+\cf3 var\cf0  filenames, bpsound;\
+\
+\cf5 //Put in the locations of your samples\cf0 \
+filenames= [\cf4 "break"\cf0 ,\cf4 "break2"\cf0 ];\
+\cf5 //how many beats in your samples?\cf0 \
+bpsound= [8,4];\
+\
+f= \cf3 Array\cf0 .fill(filenames.size, \{\cf3 arg\cf0  i; \cf3 SF3\cf0 (filenames.at(i), bpsound.at(i))\});\
+\
+f.do(\{\cf3 arg\cf0  val; \cf3 Post\cf0  <<[val.soundFilePath, val.numChannels, val.numFrames, val.sampleRate, val.buffer.bufnum]<<nl;\});\
+)\
+\
+\cf5 //Alternatively do this:\cf0 \
+\
+(\
+f=\cf3 SF3\cf0 .array([\cf4 "break"\cf0 ,\cf4 "break2"\cf0 ,\cf4 "a11wlk01.wav"\cf0 ], [8,4, 8]);\
+\
+f.do(\{\cf3 arg\cf0  val; \cf3 Post\cf0  <<[val.soundFilePath, val.numChannels, val.numFrames, val.sampleRate, val.buffer.bufnum, val.length]<<nl;\});\
+)\
+\
+}

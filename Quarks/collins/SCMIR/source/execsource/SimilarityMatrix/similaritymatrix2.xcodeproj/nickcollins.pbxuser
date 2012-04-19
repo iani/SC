@@ -1,0 +1,275 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeExecutable = 46AD5A7112ECB04A00EBFF46 /* simmatSC */;
+		activeTarget = 8DD76FA90486AB0100D96B5E /* similaritymatrix2 */;
+		addToTargets = (
+			8DD76FA90486AB0100D96B5E /* similaritymatrix2 */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = 46B970AB127C012D003EFC45 /* Code sense */;
+		executables = (
+			46B970A5127C010E003EFC45 /* similaritymatrix2 */,
+			46AD5A7112ECB04A00EBFF46 /* simmatSC */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXBookmarksDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBookmarksDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					200,
+					200,
+					150.58349609375,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBookmarksDataSource_LocationID,
+					PBXBookmarksDataSource_NameID,
+					PBXBookmarksDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					777,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					889,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXSymbolsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXSymbolsDataSource_SymbolNameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					16,
+					200,
+					50,
+					684,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXSymbolsDataSource_SymbolTypeIconID,
+					PBXSymbolsDataSource_SymbolNameID,
+					PBXSymbolsDataSource_SymbolTypeID,
+					PBXSymbolsDataSource_ReferenceNameID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					849,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 321725255;
+			PBXWorkspaceStateSaveDate = 321725255;
+		};
+		perUserProjectItems = {
+			46495B0513301226007080AA /* PBXTextBookmark */ = 46495B0513301226007080AA /* PBXTextBookmark */;
+			46495BF413340BF1007080AA /* PBXTextBookmark */ = 46495BF413340BF1007080AA /* PBXTextBookmark */;
+			46495BF513340BF1007080AA /* PBXTextBookmark */ = 46495BF513340BF1007080AA /* PBXTextBookmark */;
+			46AD5B4612F23C3E00EBFF46 /* PBXTextBookmark */ = 46AD5B4612F23C3E00EBFF46 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 46B970AA127C012D003EFC45 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	46495B0513301226007080AA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46AD5A4212EC53E200EBFF46 /* similarity2.cpp */;
+		name = "similarity2.cpp: 129";
+		rLen = 0;
+		rLoc = 4710;
+		rType = 0;
+		vrLen = 1146;
+		vrLoc = 4335;
+	};
+	46495BF413340BF1007080AA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46AD5A4212EC53E200EBFF46 /* similarity2.cpp */;
+		name = "similarity2.cpp: 129";
+		rLen = 6;
+		rLoc = 4710;
+		rType = 0;
+		vrLen = 732;
+		vrLoc = 5231;
+	};
+	46495BF513340BF1007080AA /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46AD5A4212EC53E200EBFF46 /* similarity2.cpp */;
+		name = "similarity2.cpp: 5";
+		rLen = 38;
+		rLoc = 265;
+		rType = 0;
+		vrLen = 2758;
+		vrLoc = 0;
+	};
+	46AD5A4212EC53E200EBFF46 /* similarity2.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1279, 10166}}";
+			sepNavSelRange = "{4710, 6}";
+			sepNavVisRange = "{5231, 732}";
+			sepNavWindowFrame = "{{169, 58}, {1242, 815}}";
+		};
+	};
+	46AD5A7112ECB04A00EBFF46 /* simmatSC */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+			YES,
+		);
+		argumentStrings = (
+			"0 1 0 1 1 outputtest /data/gitprojects/supercollider/common/build/similaritymatrix2input ",
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+			"PBXLSLaunchAction-0" = {
+				PBXLSLaunchAction = 0;
+				PBXLSLaunchStartAction = 1;
+				PBXLSLaunchStdioStyle = 2;
+				PBXLSLaunchStyle = 0;
+				class = PBXLSRunLaunchConfig;
+				commandLineArgs = (
+				);
+				displayName = "Executable Runner";
+				environment = {
+				};
+				identifier = com.apple.Xcode.launch.runConfig;
+				remoteHostInfo = "";
+				startActionInfo = "";
+			};
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		launchableReference = 46AD5A7212ECB04A00EBFF46 /* similaritymatrix2 */;
+		libgmallocEnabled = 0;
+		name = simmatSC;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		startupPath = "<<ProjectDirectory>>";
+		variableFormatDictionary = {
+		};
+	};
+	46AD5A7212ECB04A00EBFF46 /* similaritymatrix2 */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = "compiled.mach-o.executable";
+		name = similaritymatrix2;
+		path = /data/sc3code/classes/SCMIR/scmirexec/similaritymatrix2;
+		sourceTree = "<absolute>";
+	};
+	46AD5B4612F23C3E00EBFF46 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 46AD5A4212EC53E200EBFF46 /* similarity2.cpp */;
+		name = "similarity2.cpp: 166";
+		rLen = 0;
+		rLoc = 5486;
+		rType = 0;
+		vrLen = 722;
+		vrLoc = 4232;
+	};
+	46B970A5127C010E003EFC45 /* similaritymatrix2 */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = similaritymatrix2;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	46B970AA127C012D003EFC45 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	46B970AB127C012D003EFC45 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	8DD76FA90486AB0100D96B5E /* similaritymatrix2 */ = {
+		activeExec = 0;
+		executables = (
+			46B970A5127C010E003EFC45 /* similaritymatrix2 */,
+		);
+	};
+}

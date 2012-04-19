@@ -1,0 +1,213 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fnil\fcharset77 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf2 //This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help\cf0 \
+\
+\cf2 //pausing\cf0 \
+(\
+\cf3 var\cf0  sf;\
+\cf3 var\cf0  tc, bbcutter;\
+\
+sf=\cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+  \
+tc= \cf3 TempoClock\cf0 .new(2.7);\
+\
+bbcutter=\cf3 BBCut11\cf0 (sf, tempoclock:tc);\
+\
+bbcutter.go;\
+\
+tc.schedAbs(tc.elapsedBeats+4.0,\{\
+bbcutter.pause(1);\
+tc.sched(3.99,\{bbcutter.pause(0); \cf3 nil\cf0 \});\
+\cf3 nil\cf0 \});\
+\
+)\
+\
+\cf2 //pausing a cut aware effect\cf0 \
+(\
+\cf3 var\cf0  sf;\
+\cf3 var\cf0  tc, bbcutter;\
+\
+sf=\cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+  \
+tc= \cf3 TempoClock\cf0 .new(2.7);\
+\
+bbcutter=\cf3 BBCut\cf0 ([BBCSFilter1.new,BBCutSynthSF(sf)], tempoclock:tc);\
+\
+bbcutter.go;\
+\
+tc.schedAbs(tc.elapsedBeats+8.0,\{\
+bbcutter.bbcgarray.at(0).bbcsarray.at(0).synth.run(false);\
+tc.sched(7.99,\{\
+bbcutter.bbcgarray.at(0).bbcsarray.at(0).synth.run(true);\
+\cf3 nil\cf0 \});\
+\cf3 nil\cf0 \});\
+\
+)\
+\
+\
+\cf2 //kill after 4 beats\cf0 \
+(\
+\cf3 var\cf0  sf;\
+\cf3 var\cf0  tc, bbcutter;\
+\
+sf=\cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+  \
+tc= \cf3 TempoClock\cf0 .new(2.7);\
+\
+bbcutter=\cf3 BBCut11\cf0 (sf, tempoclock:tc).go;\
+\
+tc.schedAbs(tc.elapsedBeats+4.0,\{\
+bbcutter.kill;\
+\cf3 nil\cf0 \});\
+\
+)\
+\
+\
+\cf2 //fills 1- straight beat with fill every 4th bar\cf0 \
+\cf2 //other options aside from this constant kill and create below \cf0 \
+\cf2 //are to run two constantly and set some volume parameter once in a while\cf0 \
+\cf2 //or to pause them alternately\cf0 \
+(\
+\cf3 var\cf0  sf;\
+\cf3 var\cf0  ec, bbcutter, tc;\
+\
+sf=\cf3 SF3\cf0 (\cf4 "break2"\cf0 ,4);\
+ \
+ec=1.neg;\
+\
+tc= \cf3 TempoClock\cf0 .new(2.7);\
+\
+tc.schedAbs(tc.elapsedBeats, \{\
+\cf3 var\cf0  next;\
+ec= ec+1; \
+\
+next= 12.0; \
+\
+if(ec>0,\{bbcutter.kill;\});\
+\
+bbcutter= \cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf), \
+if(ec%2==0,\{\cf3 BBCutProc\cf0 .new\},\{next=4.0; \cf3 WarpCutProc1\cf0 (phraselength:4.0);\}),\
+tc).go;\
+\
+next\
+\});\
+\
+)\
+\
+\
+\
+\cf2 //fills 2- more complex pattern \cf0 \
+\cf2 //some slight teething troubles if left running for a while\cf0 \
+\
+(\
+\cf3 var\cf0  sf, tc, bbcutter;\
+\cf3 var\cf0  seq, ec,randoff,x,y,z;\
+\
+sf=\cf3 SF3\cf0 (\cf4 "break2"\cf0 ,4);\
+\
+seq= \cf3 Pseq\cf0 ([0,0,0,1,0,0,0,2],\cf3 inf\cf0 ).asStream;\
+\
+\cf2 //chance of random offsetting- zero except for each fill\cf0 \
+randoff=[0.0,0.0,0.0,1.0];\
+\
+ec=1.neg;\
+\
+tc= \cf3 TempoClock\cf0 .new(2.7);\
+\
+tc.schedAbs(tc.elapsedBeats, \{\
+\cf3 var\cf0  next;\
+ec= ec+1; \
+\
+z=[2,4,8].choose; y= rrand(3,12.3); x= randoff.wrapAt(ec);\
+\
+if(ec>0,\{bbcutter.kill;\});\
+\
+bbcutter= \cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf,\{x\}), \
+[\
+\{\cf3 BBCutProc\cf0 .new\}, \cf2 //for plain play\cf0 \
+\{\cf3 WarpCutProc1\cf0 (\{0.5\},phraselength:4.0)\},		\cf2 //for obvious fill\cf0 \
+\{\cf3 BBCPPermute\cf0 (4.0,8,\{\cf3 arg\cf0  i,n; ((i*y)%n).asInteger\},\{z\})\}\
+].at(seq.next).value;\
+,tc).go;\
+\
+4.0\
+\});\
+\
+\
+)\
+\
+\
+\
+\cf2 //spawning BBCut routines\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \
+(\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf3 var\cf0  sf, tc, bbcutter;\
+\cf3 var\cf0  ec;\
+var options; \
+\
+sf=\cf3 SF3\cf0 (\cf4 "break2"\cf0 ,4);\
+\
+ec=1.neg;\
+\
+tc= \cf3 TempoClock\cf0 .new(3);\
+\
+options=[\{\cf3 BBCut11\cf0 (sf, phrasebars:1, stutterchance:0.3.rand, randomoffset:1.0.rand, tempoclock:tc)\},\
+\{\cf3 WarpCut1\cf0 (sf, phrasefunc:4.0, probs:\cf3 Array\cf0 .rand(3,0.0,1.0), panfunc:1.0, randomoffset:1.0.rand,\
+tempoclock:tc)\},\
+\{\cf3 PermuteCut\cf0 .rotator(sf,4.0, [8,16].choose, 8.rand, 2.rand, 3.rand+1, panfunc:1.0.neg,\
+tempoclock:tc)\}\
+];\
+\
+tc.schedAbs(tc.elapsedBeats, \{\
+\cf3 var\cf0  next;\
+ec= ec+1; \
+\
+if(ec>0.5,\{bbcutter.kill;\});\
+\
+bbcutter= options.wchoose([0.6,0.2,0.2]).value.go;\
+\
+4.0\
+\});\
+\
+\
+)\
+\
+\
+\cf2 //overlap texture effect, spawning multiple bbcutters and applying a separate filter to each\cf0 \
+(\
+\cf3 var\cf0  sf, tc, ec, s; \
+\
+s=\cf3 Server\cf0 .local;\
+\
+sf=\cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+ec=1.neg;\
+\
+tc= \cf3 TempoClock\cf0 .new(3);\
+\
+tc.schedAbs(tc.elapsedBeats, \{\
+\cf3 var\cf0  next;\
+\cf3 var\cf0  bbcutter, bus, fxsynth;\
+ec= ec+1; \
+\
+bus=\cf3 Bus\cf0 .audio(s, 2);\
+\
+bbcutter= \cf3 BBCut\cf0 (\cf3 BBCG\cf0 (\cf3 BBCutSynthSF\cf0 (sf, 1.0.rand, 1.0, 1.0.rand2), \cf3 nil\cf0 , bus.index), \cf3 BBCutProc11\cf0 (phrasebars:1, stutterchance:0.3.rand), tc).ar;\
+\
+fxsynth= \{\cf3 Out\cf0 .ar(0, \cf3 BPF\cf0 .ar(\cf3 In\cf0 .ar(bus.index,2),10000.rand, rrand(0.01,1.0)))\}.play;\
+\
+tc.sched(16.0, \{bbcutter.kill; fxsynth.free; bus.free;\});\
+\
+4.0\
+\});\
+\
+)\
+\
+\
+}

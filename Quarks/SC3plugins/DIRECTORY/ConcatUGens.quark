@@ -1,0 +1,14 @@
+(
+	\name: "ConcatUGens",
+	\path: "ConcatUGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/ConcatUGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

@@ -1,0 +1,14 @@
+(
+	\name: "BlackrainGens",
+	\path: "BlackrainGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/BlackrainGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

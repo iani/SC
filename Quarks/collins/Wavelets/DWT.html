@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #1534e7}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cd1713}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #008225}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #1636ee}
+span.s4 {color: #0e28b9}
+span.s5 {color: #1534e7}
+span.s6 {color: #ad140e}
+span.s7 {color: #102ac3}
+span.s8 {color: #cd1713}
+span.s9 {color: #102ac2}
+span.s10 {color: #737373}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>DWT<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>Discrete Wavelet Transform</b></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="../../../../Applications/SuperCollider/SuperCollider3.4.3/Help/Core/Object.html"><span class="s3"><b>Object</b></span></a></span><span class="s4"><b> : </b><a href="../../../../Applications/SuperCollider/SuperCollider3.4.3/Help/Core/Kernel/AbstractFunction.html"><span class="s5"><b>AbstractFunction</b></span></a><b> : </b><a href="../../../../Applications/SuperCollider/SuperCollider3.4.3/Help/UGens/UGen.html"><span class="s5"><b>UGen</b></span></a></span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><b>DWT.new(buffer, input, hop, wintype, active, winsize, wavelettype)</b></p>
+<p class="p2"><br></p>
+<p class="p1">The wavelet transform analyzes the input signal with respect to a mother wavelet at a number of scales.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>buffer</b> - The buffer where a frame will be held. Its size must be a power of two. LocalBuf is useful here, because processes should not share data between synths.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><b>input</b> - the audio signal to be analyzed</p>
+<p class="p2"><br></p>
+<p class="p1"><b>hop</b> - the amount of offset from one analysis frame to the next, measured in multiples of the analysis frame size. This can range between zero and one, and the default is 0.5 (meaning each frame has a 50% overlap with the preceding/following frames).</p>
+<p class="p1"><b>wintype</b> - defines how the data is windowed:</p>
+<p class="p1"><span class="Apple-tab-span">	</span>-1 is for <b><i>rectangular</i></b> windowing, simple but typically not recommended;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>0 (the default) is for <b><i>Sine</i></b> windowing, typically recommended for work where the signal is eventually re-constructed;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-tab-span">	</span>1 is for <b><i>Hann</i></b> windowing, typically recommended for analysis work.</p>
+<p class="p1"><b>active</b> - is a simple control allowing analysis to be active (&gt;0) or inactive (&lt;=0). This is mainly useful for signal analysis processes which are only intended to analyse at specific times rather than continuously. NOT CURRENTLY IMPLEMENTED.</p>
+<p class="p1"><b>winsize</b> - the windowed audio frames are usually the same size as the buffer. If you wish the DWT to be <i>zero-padded</i> then you can specify a window size smaller than the actual buffer size (e.g. window size 1024 with buffer size 2048). Both values must still be a power of two. Leave this at its default of zero for no zero-padding.</p>
+<p class="p1"><b>wavelettype</b> - The choices of wavelet are those available in the gsl wavelet library code (http://www.gnu.org/s/gsl/manual/html_node/DWT-Initialization.html). Each is given a numeric code as follows (see the web page for the explanation of k):</p>
+<p class="p1">0-8 gsl_wavelet_daubechies, k = 4,6,8,10,12,14,16,18,20</p>
+<p class="p1">9-17 gsl_wavelet_daubechies_centered, k = 4,6,8,10,12,14,16,18,20</p>
+<p class="p1">18 gsl_wavelet_haar, k=2</p>
+<p class="p1">19 gsl_wavelet_haar_centered, k=2</p>
+<p class="p1">20-30 gsl_wavelet_bspline, k=103, 105, 202, 204, 206, 208, 301, 303, 305, 307, 309</p>
+<p class="p1">31-41 gsl_wavelet_bspline_centered k=103, 105, 202, 204, 206, 208, 301, 303, 305, 307, 309</p>
+<p class="p2"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5">(</p>
+<p class="p5">{ <span class="s4">arg</span> out=0;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s4">var</span> in, chain;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>in = <span class="s4">WhiteNoise</span>.ar(0.05);</p>
+<p class="p5"><span class="Apple-tab-span">	</span>chain = <span class="s4">DWT</span>(<span class="s4">LocalBuf</span>(1024), in);</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s4">Out</span>.ar(out,<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[<span class="s4">IDWT</span>(chain),in] <span class="s6">// inverse DWT</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>);</p>
+<p class="p5">}.play;</p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p6">//no overlap, slight delays between left and right apparent due to processing delay, but reconstruction basically sound</p>
+<p class="p5">(</p>
+<p class="p5">{ <span class="s7">arg</span> out=0;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s7">var</span> in, chain;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>in = <span class="s7">SoundIn</span>.ar;<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>chain = <span class="s7">DWT</span>(<span class="s7">LocalBuf</span>(1024), in, 1.0, wavelettype:9);</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s7">Out</span>.ar(out,<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[<span class="s7">IDWT</span>(chain),in] <span class="s8">// inverse DWT</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>);</p>
+<p class="p5">}.play;</p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p6">//try to compensate</p>
+<p class="p5">(</p>
+<p class="p7">{ <span class="s7">arg</span> out=0;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s7">var</span> in, chain;</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s7">var</span> delaytime = 1024.0/<span class="s7">SampleRate</span>.ir;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>in = <span class="s7">SoundIn</span>.ar;<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s7">DWT</span>( <span class="s7">LocalBuf</span>(1024), in, 1.0, wavelettype:20);</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s7">Out</span>.ar(out,<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>[<span class="s7">IDWT</span>(chain),<span class="s7">DelayN</span>.ar(in,delaytime,delaytime)] <span class="s8">// inverse DWT</span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>);</p>
+<p class="p7">}.play;</p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p6">//plot wavelet coefficients live</p>
+<p class="p5">(</p>
+<p class="p8"><span class="s7">SynthDef</span><span class="s2">(</span>"plotWaveletCoefficients"<span class="s2">, { </span><span class="s7">arg</span><span class="s2"> out=0, buffer=0;</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s7">var</span> in, chain;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>in = <span class="s7">SoundIn</span>.ar;<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>chain = <span class="s7">DWT</span>(buffer, in, 1.0, wavelettype:9);</p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p5">}).add;</p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5">(</p>
+<p class="p5">n = 1024;<span class="Apple-converted-space"> </span></p>
+<p class="p5">b= <span class="s9">Buffer</span>.alloc(s,n,1);<span class="Apple-converted-space"> </span></p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p5">(</p>
+<p class="p5"><span class="s7">var</span> w;</p>
+<p class="p6"><span class="s7">var</span><span class="s2"> transformsize=n; </span>//no more than this, using getn: can adapt with loadToFloatArray et al, see Buffer helpfile</p>
+<p class="p5"><span class="s7">var</span> numscales = log2(transformsize);<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="s7">var</span> width = transformsize.div(2);<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="s7">var</span> dataarray = 0.0.dup(transformsize);<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="s7">var</span> cellheight = 10;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p9"><span class="s7">Synth</span><span class="s2">(</span>\plotWaveletCoefficients<span class="s2">,[</span>\buffer<span class="s2">, b]);</span></p>
+<p class="p4"><br></p>
+<p class="p5">w = <span class="s7">Window</span>(<span class="s10">"Wavelet coefficients"</span>,<span class="s7">Rect</span>(100,100,width,cellheight*numscales)).front;</p>
+<p class="p4"><br></p>
+<p class="p5">w.view.background_(<span class="s7">Color</span>.white);</p>
+<p class="p5">w.drawHook = {</p>
+<p class="p5"><span class="Apple-tab-span">	</span>numscales.do{<span class="s7">|i|</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">var</span> numatscale = 2**i;<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">var</span> widthperwaveletcoeff= width/numatscale;<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">var</span> y = i*cellheight;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>numatscale.do{<span class="s7">|j|</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">var</span> x = j*widthperwaveletcoeff;<span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">var</span> coeff = dataarray[numatscale+j];</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p6"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span>// set the Color</p>
+<p class="p6"><span class="s2"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></span><span class="s7">Pen</span><span class="s2">.color = </span><span class="s7">Color</span><span class="s2">.green((coeff+2.0)/4.0);<span class="Apple-tab-span">	</span></span>//assumes coeffs in a particular range around -2 to 2</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">Pen</span>.addRect(</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">Rect</span>(x, y, widthperwaveletcoeff, cellheight);<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>);</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="s7">Pen</span>.fill;</p>
+<p class="p4"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>}</p>
+<p class="p4"><br></p>
+<p class="p5"><span class="Apple-tab-span">	</span>}</p>
+<p class="p5">};</p>
+<p class="p4"><br></p>
+<p class="p5">{</p>
+<p class="p4"><br></p>
+<p class="p4"><span class="Apple-tab-span">	</span></p>
+<p class="p5"><span class="s7">inf</span>.do{</p>
+<p class="p4"><br></p>
+<p class="p5">b.getn(0,transformsize,{<span class="s7">|val|</span><span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6">//val.postln;</p>
+<p class="p4"><br></p>
+<p class="p5">dataarray = val;<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5">{w.refresh;}.defer;</p>
+<p class="p4"><br></p>
+<p class="p5">});</p>
+<p class="p4"><br></p>
+<p class="p5">(1024/(s.sampleRate)).wait;</p>
+<p class="p4"><br></p>
+<p class="p5">}</p>
+<p class="p4"><br></p>
+<p class="p5">}.fork;<span class="Apple-converted-space"> </span></p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p5">b.free;</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p10"><br></p>
+<p class="p6">//processing chain</p>
+<p class="p7">(</p>
+<p class="p7">{ <span class="s7">var</span> in, chain;</p>
+<p class="p7"><span class="Apple-tab-span">	</span>in = <span class="s7">WhiteNoise</span>.ar(0.2);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s7">DWT</span>(<span class="s7">LocalBuf</span>(2048), in);</p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s7">WT_FilterScale</span>(chain, <span class="s7">MouseX</span>.kr(-1.0,1.0));<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span>chain = <span class="s7">WT_MagAbove</span>(chain, <span class="s7">MouseY</span>.kr(-0.5,0.5));</p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="s7">IDWT</span>(chain).dup(2)</p>
+<p class="p7">}.play;</p>
+<p class="p7">)</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p6">//naughty: mix and match FFT and DWT!<span class="Apple-converted-space"> </span></p>
+<p class="p5">(</p>
+<p class="p5">{ <span class="s7">arg</span> out=0;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s7">var</span> in, chain;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>in = <span class="s7">SoundIn</span>.ar;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>chain = <span class="s7">DWT</span>(<span class="s7">LocalBuf</span>(1024), in);</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s7">Out</span>.ar(out,<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(10*<span class="s7">IFFT</span>(chain)).dup(2) <span class="s8">// inverse DWT</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>);</p>
+<p class="p5">}.play;</p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p6">//naughty: other way around<span class="Apple-converted-space"> </span></p>
+<p class="p5">(</p>
+<p class="p5">{ <span class="s7">arg</span> out=0;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s7">var</span> in, chain;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>in = <span class="s7">SoundIn</span>.ar;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>chain = <span class="s7">FFT</span>(<span class="s7">LocalBuf</span>(1024), in);</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s7">Out</span>.ar(out,<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>(0.05*<span class="s7">IDWT</span>(chain)).dup(2) <span class="s8">// inverse DWT</span></p>
+<p class="p5"><span class="Apple-tab-span">	</span>);</p>
+<p class="p5">}.play;</p>
+<p class="p5">)</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+</body>
+</html>

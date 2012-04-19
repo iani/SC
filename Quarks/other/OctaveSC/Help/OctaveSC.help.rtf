@@ -1,0 +1,618 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf410
+{\fonttbl\f0\fswiss\fcharset77 Helvetica-Bold;\f1\fnil\fcharset77 Monaco;\f2\fswiss\fcharset77 Helvetica;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red96\green96\blue96;\red0\green0\blue191;
+\red0\green0\blue0;\red191\green0\blue0;\red191\green0\blue0;\red0\green115\blue0;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc2\leveljcn2\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid0\'02\'05.;}{\levelnumbers\'01;}}{\listname ;}\listid3}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs36 \cf2 OctaveSC
+\f1\b0\fs28 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\fs24 \cf0 03 / 2006 by Thomas Hermann, Neuroinformatics Group, Bielefeld University, Bielefeld, Germany\
+distributed under GPL (GNU public license), please cite the author and the website when using this library in research projects/publications.\
+\
+Bug fixes and improvements are very welcome, please send them to \
+	thermann(at)sonification.de 	or 	thermann(at)techfak.uni-bielefeld.de\
+for inclusion in the maintained version.\
+\
+OctaveSC enables sc3/octave interfacing.\
+sc3 is the master, an octave process is forked to receive commands via a fifo pipe. \
+For sc3, \
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\ql\qnatural\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\uc0\u8259 	}interface functions to communicate function args from sc3 to octave functions and\
+{\listtext	\uc0\u8259 	}interface functions to interpret return args from octave are provided.\
+{\listtext	\uc0\u8259 	}document key bindings can be created which allows to use SC editor as editor for octave\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 For octave\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\ql\qnatural\pardirnatural
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8259 	}interface functions to send function results to sc are defined\
+{\listtext	\uc0\u8259 	}interface functions to get call args from sc are defined.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 Important Notes:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 - actually octavePath is set to "/sw/bin/octave". adapt and use\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\fs18 \cf2 	OctaveSC\cf0 .octavePath = \cf3 "/sw/bin/octave"\cf0  \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\fs24 \cf0   to set it manually
+\f1\fs18 \
+
+\f2\fs24 - Currently an xterm is started (see startX), so make sure that X11 is running before creating \
+  an Octave interface.\
+- under both Power and intel Macs, interestingly the "ieee-be" (big endianness) setting work!!!\
+  if you encounter endianness problems (e.g. alloc errors even on small matrices) try adjusting \
+  the endianness of octave via OctaveSC.arch = "ieee-le".\
+- Find below some tips what to do when SC3 freezes (the wheel of death under OSX)\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf2 Quick start example\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 \
+\cf4 OctaveSC\cf5 .octavePath\cf6 // = "/sw/bin/octave" 	// evnt adjust if necessary\cf5 \
+\cf2 OctaveSC\cf0 .arch \cf7  	// = "ieee-be" 		// evtl adjust to "ieee-le" or "native" if needed\cf0 \
+\
+o = \cf2 OctaveSC\cf0 .new				\cf7 // create OctaveSC instance\
+\cf0 o.init						\cf7 // start octave process, please wait until fifos are created!\cf0 \
+\
+o[\cf8 \\data\cf0 ]=[1,2,3];				\cf7 // send array to octave under var. name data\cf0 \
+o.value(\cf3 "y=data*rand(3)"\cf0 ); 		\cf7 // compute something using octave\cf0 \
+o[\cf8 \\y\cf0 ]						\cf7 // transfer octave variables to sc3\cf0 \
+o.finish						\cf7 // terminate octave process and delete o\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf2 \
+List of Functions\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+*new ()\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	creates a new octave instance. \
+	Currently it is necessary to call this.init to (i) create fifo pipes, (ii) start octave \
+	Alternatively you may step by step call:\
+	- launch, \
+	- then start octave manually, e.g. from your preferred Terminal program \
+	- then call this.initPipes manually to initalize the FIFO pipes.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 start\
+	
+\f2\b0 currently creates /tmp/octaveSC_start.sh shell script to be called from your favorite terminal\
+	program to start octave listening to a special octave2sc fifo pipe.\
+	(TODO: fix problem with "open -a iTerm".unixCmd to execute a program.\
+\
+
+\f0\b startX
+\f2\b0 \
+	starts octave via an xterm. \
+	For this to work, X11 must be running and DISPLAY ":0.0" has to be active.\
+
+\f0\b \
+initPipes\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	opens the fifo pipes used to communicate between octave and sc. These are in /tmp named\
+	- sc2oct-hashval.fifo: for sending binary data from sc to octave\
+	- oct2sc-hashval.fifo: for sending binary data from octave to sc\
+	- cmd2oct-hashval.fifo: for sending commands (octave prog code strings) to octave\
+	hashval is a hash value for the instace of OctaveSC.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 \
+init\
+	
+\f2\b0 startup octave and initialize FIFO pipes. Currently X11 is used, due to problems\
+	with starting a Term program with control arguments...
+\f0\b \
+\
+put(key, value)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	set an octave variable - this allows to transfer scalars, vectors or matrices to octave. \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\fs18 \cf0 \
+	o = OctaveSC.new.init\
+	o.put(\\myscalar, 17.45)\
+	o.put(\\z, [135,1,14])\
+	o.put(\\mymat, [[1,2,3],[4,5,6],[7,8,9]])\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\fs24 \cf0 	It is convenient to use the shortcut form\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\fs18 \cf0 \
+	o[\\z] = [135, 1, 15]\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 \
+at(key)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 	
+\f2\fs24 transfer an octave variable value to sc3, argument is the symbol which identifies the variable name
+\f1\fs18 \
+\
+	o.at(\\z)\
+\
+	
+\f2\fs24 which can also be written as
+\f1\fs18 \
+	\
+	o[\\z]\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 \
+value(expr, inp, out)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	comfortable octave invocation. \
+\
+	
+\f0\b expr
+\f2\b0 : 	string to be executed as octave program\
+\
+	
+\f0\b inp
+\f2\b0 : 		array of key,val pairs to send sc variables to octave\
+\
+	
+\f0\b out
+\f2\b0 : 		array of var names to receive octave variables back to sc \
+		\
+	On invocation, value does the following:\
+		1. if inp is given, \
+			for all key/val pairs the val is send to octave and \
+			received there under variable name key.asString		2. expr is evaluated in octave\
+		3. check the envir argument and proceed arcordingly \
+		4. if out is given,\
+			for all key/var pairs the octave variable key is send back to sc3\
+			and stored they in the currentEnvironment under name var.\
+	example: \
+	
+\f1\fs18 \
+	o.value(\cf3 "x = center(foo*bar)"\cf0 , [\cf8 \\foo\cf0 , [1,2,3,4,5,6,78,9,10], \cf8 \\bar\cf0 , 20], [\cf8 \\x\cf0 ]);\
+	o.finish\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 \
+client(doc)
+\f2\b0 \
+	sets document doc as client for GUI invocation to the current OctaveSC instance. \
+	This is done by overwriting doc.keyDownAction to evaluate the shortcut CTRL-RETURN.\
+	doc defaults to nil, which would set  the instance of Octave to the globalKeyDownAction of\
+	class document. Given a specfic doc (e.g. Document.current) will register the\
+	control only for the given document.\
+	Code execution is similar to SC code invocation: \
+		- if no selection is made: CTRL-return executes actual line\
+		- if a block is selected: CTRL-return executes the selection\
+	Note that the return key and not the enter key is the shortcut default.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\fs18 \cf0 	o = \cf2 OctaveSC\cf0 .new.init; \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 	o.client \cf7 // set all documents as clients to control this instance of OctaveSC\cf0 \
+\
+	\cf7 // the following block is octave code - execute by selecting line/block \cf0 \
+	\cf7 // and type shortcut CTRL-RETURN \cf0 \
+	(\
+	d = eye(10)\
+	t = [1:0.1:10];\
+	plot(t.*sin(3*t))\
+	)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 finish\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	quits the octave process, closes the fifo pipes and then removes the temporay files\
+	which have been stored in /tmp\
+	After finish the instance of OctaveSC can not be used anymore. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\fs18 \cf0 	o.finish\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 closePipes\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	closes the above defined pipes. SC will block if these pipes are not empty. \
+	
+\f1\fs18 \cf2 this\cf0 .value(\cf3 "exit"\cf0 )
+\f2\fs24  will close octave and thus clear all pipes. \
+	It is recommended to do this before using closePipes.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 \
+quit\
+	
+\f2\b0 issues the exit program in octave which should terminate the octave process.
+\f0\b \
+	
+\f2\b0 should be invoked before closing the pipes using closePipes.\
+		
+\f0\b \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs26 \cf2 Additional low-level commands:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0\fs24 \cf0 	
+\f0\b \
+eval(argString)\
+
+\f2\b0 	sends argString to the octave command pipe. \
+	argString should be a valid octave program code string.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 \
+send(matrix)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	sends a matrix to octave. To send scalar values or vectors, currently\
+	[[ value]], or [[x0,x1,x2...xn]] have to be used. \
+	send does not perform any matrix check: if row vectors differ in length, the pipe will\
+	get out of sync which will cause serious trouble!\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 receive()\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	receive data from octave. See examples below.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs28 \cf2 Octave functions and variables:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0\fs24 \cf0 \
+On initPipes, some global vars and functions are defined:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 \
+fdO2S
+\f2\b0 	\
+	file descriptor for sending data to sc\
+
+\f0\b \
+fdS2O
+\f2\b0 	\
+	file descriptor for receiving data from sc\
+\
+
+\f0\b scOUT(x)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0 \cf0 	function to send variable x to sc.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b \cf0 scINP
+\f2\b0 \
+	receives data from sc. \cf2 In\cf0  result a matrix is created. scalars and\
+	vectors are treated as special cases of a matrix.\
+	\
+		\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs28 \cf2 Examples\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 \
+o = \cf2 OctaveSC\cf0 .new; 	\cf7 // create a new octave interface\cf0 \
+o.octaveFlags = \cf3 ""\cf0 ;\cf7 // set octaveFlags to "" if you plan frequent function calls\cf0 \
+				\cf7 // else it starts with '-i' in interactive mode...\cf0 \
+o.init 			\cf7 // start octave process and open pipes\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 // currently X11 is required since startX is issued: TODO: solve Terminal problem\cf0 \
+\cf7 // alternatively, call\cf0 \
+\cf7 // -> o.start	 \cf0 \
+\cf7 // this currently generates a script file /tmp/octave_start.sh \cf0 \
+\cf7 // which then needs to be started manually from any Terminal session. \cf0 \
+\cf7 // after octave started, do\cf0 \
+\cf7 // -> o.initPipes \cf0 \
+\cf7 //    comment: octave starts up after the input pipe is opened from sc!\cf0 \
+\
+\cf7 // now use octave as explained below, e.g. \cf0 \
+o.value("b=fac*x*y'", [\\x, [[1,2,3], [2,3,4]], \\y, [5,3,5], \\fac, 7], [\\b]);\
+\
+\cf7 // this can now be written more readable as\cf0 \
+(\
+o[\\x]   = [[1,2,3],[2,3,4]];\
+o[\\y]   = [5,3,5];\
+o[\\fac] = 7;\
+o.value("b=fac*x*y'"); \
+o[\\b];\
+)\
+\
+o.value(\cf3 "b=fac*x*y'"\cf0 , [\cf8 \\x\cf0 , [[1,2,3], [2,3,4]], \cf8 \\y\cf0 , [5,3,5], \cf8 \\fac\cf0 , 7], [\cf8 \\b\cf0 ]); \
+o.value(\cf3 "d= ones(1,10)"\cf0 ); \cf7 // control without args\cf0 \
+o.value(\cf3 ""\cf0 , out: [\cf8 \\d\cf0 ])[0]; \cf7 // just return a variable - as array is returned access el 0\cf0 \
+o[\\d]\
+\
+o.cmdShell \cf7 // use cmdShell for external control of octave\cf0 \
+\cf7 // finish the octave interface with  \cf0 \
+o.finish   \cf7 // stop octave process, close pipes and remove temporary fifo files\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf2 High level control:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 o = \cf2 OctaveSC\cf0 .new; 	\cf7 // create a new octave interface\cf0 \
+o.init 			\cf7 // start octave process and open pipes\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf7 // evaluate an octave expression (can be several-line-program...)\cf0 \
+o.value(\cf3 "X=eye(4); Y=rand(4)"\cf0 );\
+\
+\cf7 // plus: input data from sc to octave before evaluation\cf0 \
+o.value(\cf3 "Z=c*inverse(data)"\cf0 , [\cf8 \\data\cf0 , [[1,2,3], [2,4,4], [2,8,1]], \cf8 \\c\cf0 , 10]);\
+\
+( \cf7 // this can also be written as\cf0 \
+o[\cf8 \\data\cf0 ]	= [[1,2,3], [2,4,4], [2,8,1]];\
+o[\cf8 \\c\cf0 ]	= 10;\
+o.value(\cf3 "Z=c*inverse(data)"\cf0 );\
+)\
+\
+\cf7 // plus: return octave results to sc3 (array of return args)\cf0 \
+o.value(\cf3 "Z=c*inverse(data)"\cf0 , [\cf8 \\data\cf0 , [[1,2,3], [2,4,4], [2,8,1]], \cf8 \\c\cf0 , 10], [\\Z]);\
+\
+\cf7 // alternative: fetch it separately using at\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 o.value(\cf3 "Z=c*inverse(data)"\cf0 , [\cf8 \\data\cf0 , [[1,2,3], [2,4,4], [2,8,1]], \cf8 \\c\cf0 , 10]);\
+o[\\Z]\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 \
+// alternative: long form using keywords for arguments\cf0 \
+(\
+r = o.value(\cf3 "r0=17.123; r1=center(x); r2=eye(4);"\cf0 ,\
+	inp: [ \cf8 \\x\cf0 , (1..10)],\
+	out: [ \cf8 \\r0\cf0 , \cf8 \\r1\cf0 , \cf8 \\r2\cf0 ]\
+	)\
+)\
+r[0].postln; r[1].postln; r[2].postln; ""\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf2 Direct Invocation from SC3 Document / Editor or CommandShell:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 // 1. you can open a command shell to control octave\cf0 \
+o.cmdShell \cf7 // commands are piped directly to octave\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \
+\cf7 // 2. you can use the OSX Document editor as octave editor\cf0 \
+o.client \cf7 // register instance o of OctaveSC for interactive controls\cf0 \
+\cf7 \
+// the following block is octave code - execute by selecting line/block \
+// and type shortcut CTRL-RETURN\cf0 \
+(\
+d = eye(10)\
+plot(sin([1:0.1:12]))\
+)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 // some more examples for OctaveSC using a dictionary \cf0 \
+o = \cf2 OctaveSC\cf0 .new\
+o.init\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs20 \cf0 q = q ? (); \cf7 // dictionary\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 // example to use OctaveSC to center and plot an array\cf0 \
+q.ds = (1..100).scramble\
+o.("y = center(data); plot(data)", [\\data, q.ds]);\
+o[\\data].plot\
+\
+\cf7 // example to simply transfer sc data to octave\cf0 \
+o[\\data] = (1..100).collect \{|i| sin(0.1*i)\};\
+\cf7 \
+// now execute following lines via CTRL-RETURN\cf0 \
+data = data./std(data); ## normalize to standard deviation 0\
+plot(data) ## plot array using gnuplot\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf2 \
+Low level control for communicating with octave\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 (a) octave function invocation\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 o.eval(\cf3 "b=15+9"\cf0 ); \cf7 // simple octave interactions via command string\cf0 \
+\
+(\
+ \cf7 // creating a function in octave, no interfacing to sc...\cf0 \
+o.eval(\cf3 "\
+	function result = testfunc(v); \
+		result = v*eye(4); \
+	endfunction;\
+	"\cf0 );\
+)	\
+\
+o.eval(\cf3 "testfunc("\cf0  ++ 100.rand ++ \cf3 ")"\cf0 ); \cf7 // call above defined function\cf0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 (a) octave communication: receiving data from octave\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 // receive a string from octave\cf0 \
+o.eval(\cf3 "fprintf(fdO2S, \\"\cf0 test %d\\\cf8 \\n\cf0 \\\cf3 ", 123); fflush(fdO2S)"\cf0 );\
+o.pipeO2S.getLine\
+\
+\cf7 // receive a double\cf0 \
+o.eval(\cf3 "fwrite(fdO2S, 1234.567, \\"\cf0 double\\\cf3 ", 0, \\"\cf0 native\\\cf3 "); fflush(fdO2S);"\cf0 ); o.pipeO2S.getDouble\
+\
+\cf7 // receive a vector of floats\cf0 \
+o.eval(\cf3 "fwrite(fdO2S, [1.0, 2.3, 3.4], \\"\cf0 float\\\cf3 "); fflush(fdO2S);"\cf0 );\
+o.pipeO2S.getFloat; \
+o.pipeO2S.getFloat; \
+o.pipeO2S.getFloat; \
+\
+\cf7 // to send more complex data from octave to sc, use the octave scOUT function\cf0 \
+o.eval(\cf3 "scOUT(\\[1,3,4; 5,7,6\\]);"\cf0 ); o.receive\
+\
+o.eval(\cf3 "scOUT(135.2); scOUT(\\[1,2,3,4,5\\]); scOUT(\\[1,3,4; 5,7,6\\]);"\cf0 ); \
+o.receive\
+o.receive\
+o.receive\
+\
+\cf7 // concerning performance: here a larger matrix\cf0 \
+o.eval(\cf3 "scOUT(ones(5000,50));"\cf0 ); o.receive\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 (b) octave communication: sending data to octave\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 \
+o.pipeS2O.putInt32( 1234 ); o.pipeS2O.flush\
+o.eval(\cf3 "fread(fdS2O, 1, \\"\cf0 int32\\\cf3 ")"\cf0 );\
+\
+o.pipeS2O.putDouble( 1234.2 ); o.pipeS2O.flush;\
+o.eval(\cf3 "fread(fdS2O, 1, \\"\cf0 double\\\cf3 ")"\cf0 );\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 (c) octave communication: complex functions (send+receive)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1\b0\fs18 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 // given an example dataset\cf0 \
+~ds = (1..150).collect \{ \cf2 | i |\cf0  (1..5).collect \{ i.rand \} \};\
+\
+\cf7 // example how to do computations manually\cf0 \
+o.send(~ds)	\
+o.eval(\cf3 "x = scINP;"\cf0 );\
+o.eval(\cf3 "y = center(x);"\cf0 );\
+o.eval(\cf3 "scOUT(y);"\cf0 );\
+~result = o.receive;\
+\
+\cf7 // example for defining sc wrappers for octave functions\cf0 \
+\cf7 // here to center a dataset via octave center function\cf0 \
+(\
+~octcenter = \{ \cf2 | data |\cf0 \
+	\cf2 var\cf0  res;\
+	o.send(data);	o.eval(\cf3 "x = scINP;"\cf0 );		\cf7 // get data to octave\cf0 \
+	o.eval(\cf3 "xc = center(x); scOUT(xc);"\cf0 );		\cf7 // call octave fn\cf0 \
+	o.receive; 							\cf7 // fetch result back \cf0 \
+	\}\
+)	\
+\
+~ds2 = ~octcenter.(2*~ds);  \cf7 // then call your function as you like...\cf0 \
+\
+\cf7 ////////////// some debug information ////////////////////\cf0 \
+o.finish\
+o.quit;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs30 \cf2 Performance\cf0  \cf2 Issues
+\f1\b0\fs18 \cf0 \
+\
+o = \cf2 OctaveSC\cf0 .new; 	\cf7 // create a new octave interface\cf0 \
+\
+o.octaveFlags = \cf3 ""\cf0 ;\cf7 // set octaveFlags to "" if you plan frequent function calls\cf0 \
+				\cf7 // else it starts with '-i' in interactive mode...\cf0 \
+o.init 			\cf7 // start octave process and open pipes\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf7 // comparison of function calls:\cf0 \
+// calling an sc-internal function\
+(\
+~fntest = \{ \cf2 | i |\cf0  i*i \};\
+n = 5000; t = \{ n.do \{\cf2 |i|\cf0  ~fntest.value(i); \}; \}.bench;\
+postf("time per call: % msec\\n", t/n*1000); ""\
+)\
+\
+(\
+~fntest = \{ \cf2 | a |\cf0  o.value(\cf3 "x=i*i;"\cf0 , [\cf8 \\i\cf0 , a]); o[\\x];\};\
+n = 5000; t = \{ n.do \{\cf2 |i|\cf0  ~fntest.value(i); \}; \}.bench;\
+postf("time per call: % msec\\n", t/n*1000); ""\
+)\
+\
+\cf7 // times on my iBook G4:\
+//	sc: 		75e-6 secs/call\
+//	octave: 1800e-6 secs/call\cf0 \
+\cf7 // if octave is started with "-i" (see octaveFlags) it is worse because octave\
+// issues a new prompt per invocation\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\b\fs30 \cf2 What if Supercollider freezes\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f2\b0\fs24 \cf0 \
+First, make sure that the endianness is correct - if octave gives a alloc error message\
+even on trying to allocate a 1x3 matrix as 2143987263 bytes this is probably the case.\
+Then you might experiment with the OctaveSC.arch = "ieee-le" command.\
+\
+OctaveSC opens FIFO-pipes to communicate with Octave. \
+Problems arise for instance \
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\ql\qnatural\pardirnatural
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8259 	}if you read from an octave pipe and octave did not send anything before,  or \
+{\listtext	\uc0\u8259 	}if the octave process has quit due to an error...\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+On OSX the user sees the "rotating wheel of death" and Supercollider is not responding anymore.\
+There are some solutions for that which keep SuperCollider alife: \
+- On OSX: the simplest is to start Activity Monitor, show "All Processes, Hierarchically", \
+	find your SuperCollider process, and quit all the "sh" sub-processes that \
+	cause the blocking. After doing that SC3 is immediately responsive again..\
+- on other platforms: probably use your system's kill program for the appropriate shell processes...\
+- Alternatively: understand why the pipes are out of sync, and manually write on the FIFO either\
+using a cat, or fwrite in octave (see source code of OctaveSC).\
+}

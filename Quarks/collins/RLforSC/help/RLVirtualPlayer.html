@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="824.44">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #8f2116}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #002eaf}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Monaco}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Monaco; min-height: 19.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #606060}
+p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #662b20; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #662b20}
+span.s1 {color: #002eaf}
+span.s2 {color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>RLVirtualPlayer</b></p>
+<p class="p2"><br></p>
+<p class="p3">(working notes and client code, Nick Collins, under GNU GPL as per SC3)</p>
+<p class="p2"><br></p>
+<p class="p3">Research tests of reinforcement learning techniques for fast adaptation</p>
+<p class="p2"><br></p>
+<p class="p3">But what is the specific musical advantage of assigning a value to a state-action pair?<span class="Apple-converted-space"> </span></p>
+<p class="p3">why is top value over proximity a better policy?<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p2"><span class="Apple-tab-span">	</span></p>
+<p class="p4">//do this first:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="s1">MIDIIn</span><span class="s2">.connect; <span class="Apple-tab-span">	</span></span>// init for one port midi interface</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p4">//now:</p>
+<p class="p6"><span class="s2">m= </span>RLVirtualPlayer<span class="s2">(0.5,4);</span></p>
+<p class="p5"><br></p>
+<p class="p7">m.isecho=true;<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p7">//fixes; sarsa every time</p>
+<p class="p7">//learning rate modification</p>
+<p class="p5"><br></p>
+<p class="p7">m.trainLive;</p>
+<p class="p5"><br></p>
+<p class="p7">m.rlstates.size</p>
+<p class="p5"><br></p>
+<p class="p7">m.errorsum</p>
+<p class="p8">m.directerror</p>
+<p class="p8">m.dumberror</p>
+<p class="p5"><br></p>
+<p class="p7">//don't get too excited, but suddenly working better via eligibility traces?<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">m.errorsum=0;</p>
+<p class="p8">m.directerror=0.0</p>
+<p class="p8">m.dumberror=0.0</p>
+<p class="p9"><br></p>
+<p class="p8">note error over x frames?<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p7">Post &lt;&lt; m.recorderrors&lt;&lt; nl</p>
+<p class="p5"><br></p>
+<p class="p7">m.isimproving= false;</p>
+<p class="p7">m.isimproving= true;</p>
+<p class="p5"><br></p>
+<p class="p4">//must be false if want to batch repeat; learn without adding states</p>
+<p class="p7">m.isextending=<span class="s1">false</span>;</p>
+<p class="p7">m.isextending=<span class="s1">true</span>;</p>
+<p class="p5"><br></p>
+<p class="p7">(</p>
+<p class="p10"><span class="s2">m.trainFromMIDIFile(</span>"/Volumes/OS 9/moredata/coursedemodata/MIDIFile_sc3/book2-prelude12.mid"<span class="s2">);</span></p>
+<p class="p5"><br></p>
+<p class="p10"><span class="s2">m.trainFromMIDIFile(</span>"/Volumes/OS 9/moredata/coursedemodata/MIDIFile_sc3/book1-prelude01.mid"<span class="s2">);</span></p>
+<p class="p5"><br></p>
+<p class="p10"><span class="s2">m.trainFromMIDIFile(</span>"/Volumes/OS 9/moredata/coursedemodata/MIDIFile_sc3/book1-prelude02.mid"<span class="s2">);</span></p>
+<p class="p5"><br></p>
+<p class="p10"><span class="s2">m.trainFromMIDIFile(</span>"/Volumes/OS 9/moredata/coursedemodata/MIDIFile_sc3/book1-prelude14.mid"<span class="s2">);</span></p>
+<p class="p5"><br></p>
+<p class="p10"><span class="s2">m.trainFromMIDIFile(</span>"/Volumes/OS 9/moredata/coursedemodata/MIDIFile_sc3/book2-prelude02.mid"<span class="s2">);</span></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p10"><span class="s2">m.trainFromMIDIFile(</span>"/Volumes/OS 9/moredata/coursedemodata/MIDIFile_sc3/invention2part-no13.mid"<span class="s2">);</span></p>
+<p class="p10"><span class="s2">m.trainFromMIDIFile(</span>"/Volumes/OS 9/moredata/coursedemodata/MIDIFile_sc3/sonata-in-c.mid"<span class="s2">);</span></p>
+<p class="p7">)</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">m.islearning=<span class="s1">false</span>;</p>
+<p class="p7">m.islearning=<span class="s1">true</span>;</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p4"><span class="s2">m.owntime/0.5 </span>//frames examined</p>
+<p class="p5"><br></p>
+<p class="p7">m.owntime/60</p>
+<p class="p5"><br></p>
+<p class="p7">/5</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">(m.owntime/0.5)/7</p>
+<p class="p5"><br></p>
+<p class="p7">972 frames</p>
+<p class="p7">8.1 minutes</p>
+<p class="p5"><br></p>
+<p class="p7">m.rlstates.size</p>
+<p class="p5"><br></p>
+<p class="p7">b= m.rlstates[2].collect{<span class="s1">|val|</span> val.v};</p>
+<p class="p5"><br></p>
+<p class="p7">b= m.rlstates[3].collect{<span class="s1">|val|</span> val.v};</p>
+<p class="p5"><br></p>
+<p class="p7">m.rlstates[2].size</p>
+<p class="p7">//test over 235 states</p>
+<p class="p5"><br></p>
+<p class="p4">//now it jumps around faster! wow...</p>
+<p class="p5"><br></p>
+<p class="p7"><span class="s1">Post</span> &lt;&lt; b &lt;&lt; nl</p>
+<p class="p5"><br></p>
+<p class="p7">b.plot</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p4">//continuity of material favours convergence! if close successive states with respect to features, will favour k nearest predicting well and thus keep values high</p>
+<p class="p5"><br></p>
+<p class="p4">//winner takes all test- if successful 1, else 0!<span class="Apple-converted-space"> </span></p>
+<p class="p5"><br></p>
+<p class="p4">//play with both...</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">c= m.rlstates[1]</p>
+<p class="p5"><br></p>
+<p class="p7">d= c.collect{<span class="s1">|state|</span> state.touched}</p>
+<p class="p5"><br></p>
+<p class="p4">//times have a 1 = direct sarsa update</p>
+<p class="p7">e= c.collect{<span class="s1">|state|</span> state.touched.collect({<span class="s1">|val|</span> val[2]}).sum}</p>
+<p class="p5"><br></p>
+<p class="p7">e.mean</p>
+<p class="p5"><br></p>
+<p class="p4">//times have a 0 = side update</p>
+<p class="p7">f= c.collect{<span class="s1">|state|</span> state.touched.collect({<span class="s1">|val|</span> 1-val[2]}).sum}</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">f.mean</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">f.plot</p>
+<p class="p7">e.plot</p>
+<p class="p5"><br></p>
+<p class="p4">//mean wait betwen updates</p>
+<p class="p7">g= c.collect{<span class="s1">|state|</span> state.touched.collect({<span class="s1">|val|</span> val[0]}).mean}</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">g= c.select{<span class="s1">|state|</span> state.touched.notEmpty}</p>
+<p class="p5"><br></p>
+<p class="p7">h= g.collect{<span class="s1">|state|</span> state.touched.collect({<span class="s1">|val|</span> val[0]}).mean}</p>
+<p class="p5"><br></p>
+<p class="p7">h.minItem</p>
+<p class="p7">h.maxItem</p>
+<p class="p5"><br></p>
+<p class="p4">//mean wait of 9.7373 = 18 frames</p>
+<p class="p7">h.mean</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p4">//testing average change in score; always positive over this range...</p>
+<p class="p7">h= g.collect{<span class="s1">|state|</span> state.touched.collect({<span class="s1">|val|</span> val[1]}).mean}</p>
+<p class="p5"><br></p>
+<p class="p4">//now total<span class="Apple-converted-space"> </span></p>
+<p class="p7">h= g.collect{<span class="s1">|state|</span> state.touched.collect({<span class="s1">|val|</span> val[1]}).abs.sum}</p>
+<p class="p5"><br></p>
+<p class="p4"><span class="s2">h.plot; </span>//(shows convergence for older items)</p>
+<p class="p5"><br></p>
+<p class="p7">h.mean</p>
+<p class="p5"><br></p>
+<p class="p7">[1,2,0,5].select({<span class="s1">|val|</span> val&gt;1})</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">g.mean</p>
+<p class="p5"><br></p>
+<p class="p7">g.plot</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">g= c.collect{<span class="s1">|state|</span> state.touched.collect({<span class="s1">|val|</span> if(val[2]==1,{val[0]},0.0) }).mean}</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">d[0]</p>
+<p class="p5"><br></p>
+<p class="p7">//algorithmic generation!<span class="Apple-converted-space"> </span></p>
+<p class="p7">(</p>
+<p class="p7">{</p>
+<p class="p7"><span class="s1">inf</span>.do{</p>
+<p class="p7">m.rlstates[15.rand].choose.generate(0);</p>
+<p class="p7">0.5.wait;</p>
+<p class="p7">}</p>
+<p class="p7">}.fork</p>
+<p class="p7">)</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">(</p>
+<p class="p7">var count=0;</p>
+<p class="p7">{</p>
+<p class="p7"><span class="s1">inf</span>.do{</p>
+<p class="p7">m.rlstates[7].wrapAt(count).action.generate(0);</p>
+<p class="p7">count=count+1;</p>
+<p class="p7">0.5.wait;</p>
+<p class="p7">}</p>
+<p class="p7">}.fork</p>
+<p class="p7">)</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">m.rlstates[2][112].generate(4);</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">m.rlstates[12][15].generate(-12);</p>
+<p class="p7">m.rlstates[12][23].listMIDInotes</p>
+<p class="p7">m.rlstates[12][23].listOnsets</p>
+<p class="p5"><br></p>
+<p class="p4">//after swallowing three MIDI files and ten minutes of playing</p>
+<p class="p7">[ 18, 0, 1, 0, 50, 1, 3, 1, 385, 1, 1, 0, 280, 0, 0, 2, 113, 2, 0, 1, 11, 0, 0, 0, 24, 1, 0, 1, 100, 1, 1, 0, 107, 1, 0, 5, 82, 1, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 25, 1, 0, 0, 42, 0, 0, 0, 17, 0, 0, 0 ]</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p11"><br></p>
+<p class="p12">//next:</p>
+<p class="p2"><br></p>
+<p class="p3">brain dump; run for a while then check state of everything</p>
+<p class="p2"><br></p>
+<p class="p7">a= m.rlstates[0..15].collect{|val|<span class="Apple-converted-space">  </span>val.size}</p>
+<p class="p5"><br></p>
+<p class="p9"><br></p>
+<p class="p8">a=[ 30, 78, 360, 175, 51, 14, 29, 92, 80, 60, 28, 47, 88, 102, 125 ]</p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p7">a.sum</p>
+<p class="p5"><br></p>
+<p class="p7">a.plot</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">looking at this tonight:</p>
+<p class="p3">melodic motif comparison, rhythm comparison: look at deviations from quantised positions as measure of sync</p>
+<p class="p2"><br></p>
+<p class="p3">test midi file data is solid in playback by playing back chunks in order?<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">beat tracking/expectancy field</p>
+<p class="p2"><br></p>
+<p class="p3">keying off single major or minor; should really store proportions so have some sense of the divisions!<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">ensemble tactics:</p>
+<p class="p3">ensemble data versus individual data in local frame and in recent window</p>
+<p class="p2"><br></p>
+<p class="p3">parameters of analysis</p>
+<p class="p3">range (top-bottom)</p>
+<p class="p2"><br></p>
+<p class="p3">meanpitch</p>
+<p class="p2"><br></p>
+<p class="p3">sync</p>
+<p class="p2"><br></p>
+<p class="p3">keymatch</p>
+<p class="p2"><br></p>
+<p class="p3">density contribution</p>
+<p class="p2"><br></p>
+<p class="p3">measure over last two seconds: - multiple actions can be in progress? <span class="Apple-converted-space"> </span></p>
+<p class="p3">playing with X</p>
+<p class="p3">opposing (subgroup) Y</p>
+<p class="p2"><br></p>
+<p class="p3">ensemble behaviour; tradeoff of rewarding music making and boredom; want to inspire other, can drift apart<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">DONE MIDI File boot strapping for player personality</p>
+<p class="p2"><br></p>
+<p class="p3">LATER</p>
+<p class="p3">Saving personality; combination with offline processing after concert etc</p>
+<p class="p2"><br></p>
+<p class="p3">DONE</p>
+<p class="p3">k nearest<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">RL algorithm for value!<span class="Apple-converted-space"> </span></p>
+<p class="p3">did my own simple minded thing; update k predictions with their value</p>
+<p class="p2"><br></p>
+<p class="p3">next need to have update algorithm that removes oldest data and lowest utility predictions</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p3">always have option of zero followed by zero? (full rest is most ambiguous situation! need to promote bravery and also reticence! definite part of personality?)<span class="Apple-converted-space"> </span></p>
+<p class="p3">DONE don't store double zeroes! (if new new onsets and then no new onsets, plus no active notes, not interesting!)</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+</body>
+</html>

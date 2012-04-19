@@ -1,0 +1,60 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fswiss\fcharset77 ArialMT;
+\f3\fswiss\fcharset77 Helvetica-Oblique;\f4\fnil\fcharset77 Monaco;}
+{\colortbl;\red255\green255\blue255;\red80\green80\blue80;\red0\green0\blue255;\red0\green0\blue191;
+\red0\green0\blue0;\red191\green0\blue0;\red96\green96\blue96;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs20 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help
+\fs24 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 BBCSMIDIOut
+\f0\b0 \
+\
+The AV protocol class for passing MIDI information. \
+\
+See 
+\f2\fs20 \cf2 (2003) "Collins, N. & Olofsson, F. A Protocol for Audiovisual Cutting". Proceedings of the \cf3 \ul International Computer Music Conference\cf2 \ulnone , Singapore. PDF available via sicklincoln.org
+\f0\fs24 \cf0 \
+\
+
+\f1\b \ul Class Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b *new(instance, midiout)
+\f0\b0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b\fs22 \cf0 \ul Instance Methods\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\b0\fs24 \cf0 \ulnone \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f3\i \cf0 Examples- \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f4\i0\fs18 \cf0 \
+\cf4 MIDIClient\cf5 .init;\
+\cf4 Post\cf5  << \cf4 MIDIClient\cf5 .destinations<<nl;\
+\
+(	\cf6 //the same for a soundfile\cf5 \
+\cf4 var\cf5  sf, mo;\
+\
+sf= \cf4 SF3\cf5 .new(\cf7 "break"\cf5 ,8);\
+\
+mo = \cf4 MIDIOut\cf5 (0, \cf4 MIDIClient\cf5 .destinations.at(0).uid);\
+\
+\cf4 b=BBCut\cf5 ([\cf4 BBCutSynthSF\cf5 (sf),\cf4 BBCSMIDIOut\cf5 (0,mo)], \cf4 WarpCutProc1\cf5 .new).tempo_(2).go;\
+)\
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs24 \cf0 \
+\
+}

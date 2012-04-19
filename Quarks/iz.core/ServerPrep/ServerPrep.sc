@@ -25,12 +25,18 @@ ServerPrep {
 	/* ===== Internal stuff. See "Use these methods" section below for usage ===== */
 
 	init {
-		serverBootedResponder = OSCpathResponder(server.addr, ['/done', '/notify'], {
-			defs.addAllUdefs;
-			bufs.addAllBufferResources;
-			this.loadAllObjects;
-			this.notifyTree;
-		}).add;
+		serverBootedResponder = OSCpathResponder(
+			server.addr, 
+		//	['/done', '/notify'] // sent by server when boot complete. But: 
+		// better wait for root group to be created:
+			[ '/n_go', 1, 0, -1, -1, 1 ]
+			, {
+				defs.addAllUdefs;
+				bufs.addAllBufferResources;
+				this.loadAllObjects;
+				this.notifyTree;
+			}
+		).add;
 		bufs = BufLoader(this, server);			
 		defs = DefLoader(this, server);			
 		synths = SynthLoader(this, server);
@@ -38,7 +44,7 @@ ServerPrep {
 		actions = ServerActionLoader(this, server);
 		CmdPeriod.add(this);
 		// on Server *boot*: load all registered Udefs and BufferResources
-		ServerTree.add(this, server);
+		ServerTree.add(this, server); 
 	}
 
 	cmdPeriod { cmdPeriod = true }
@@ -47,8 +53,8 @@ ServerPrep {
 		if (cmdPeriod) {			// do not reload SynthDefs + Buffers on Server init tree
 			cmdPeriod = false;
 			this.loadAllObjects;	// load all objects added to the tree, in order
-			this.notifyTree;	/* add any functions from addToServerTree to actions
-			ensuring that their SynthDefs etc. will be started in the right order. */
+			this.notifyTree;	// add any functions from addToServerTree to actions
+			// ensuring that their SynthDefs etc. will be started in the right order. 
 		}
 	/* Load of objects and tree notification at boot time triggered by serverBootedResponder */
 	}
@@ -59,7 +65,7 @@ ServerPrep {
 	serverTreeMessage { ^\serverTree }
 
 	// bufs load defs when done, defs load synths when done etc
-	loadAllObjects { bufs.loadAllObjects; }
+	loadAllObjects { bufs.loadAllObjects; } 
 
 	/* loadDefs is received from bufs (BufLoader) when done.
 	proceed with loading defs (SynthDefs in DefLoader), then synths, routines, actions */

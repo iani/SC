@@ -1,0 +1,14 @@
+(
+	\name: "VBAPUGens",
+	\path: "VBAPUGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/VBAPUGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

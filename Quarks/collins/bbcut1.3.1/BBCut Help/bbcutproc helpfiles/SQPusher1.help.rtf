@@ -1,0 +1,196 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fnil\fcharset77 Monaco;
+}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green115\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help\
+
+\f1\b\fs30 \
+SQPusher1
+\f0\b0\fs24 \
+\
+
+\f1\b Superclass: BBCutProc
+\f0\b0 \
+\
+This cut procedure is derived from some analysis of the manic breaks work of Squarepusher, aka Tom Jenkinson. His innovation was to push the tempo range to around 200 bpm, and to create constantly varying beats with highly musical jazz inflected drum programming.\
+   His original work was with sampler/drum machine+sequencer but he uses many effects units and nowadays a laptop in his live shows. To my knowledge, all his programming is by hand, without algorithm.     \
+  This is an automated routine inspired by his style, which is obviously my take on things and in no way to represent the great  variety of great compositions Tom has created. The routine was inspired by transcribing drum patterns from Alive in Japan (disc 2, do you know squarepusher, warpcd97 2002). \
+  Note that the original Squarepusher material is created by specifying all the individual drum hits- this routine simulates that sequencing in one single line by cutting up a breakbeat sample, so it works on a sense of rhythmic aggregate, not an analysis of relative positions of kick/snare/hat. \
+\
+\
+
+\f1\b \ul Class Methods
+\f0\b0 \ulnone \
+\
+*
+\f1\b new(arg activity=0.1,fillfreq=4,fillscramble=0.0, sqweights, bpsd=0.5)
+\f0\b0    \
+Create a SQPusher1 object with the given parameters.\
+\
+Note that this cut procedure always works in 4/4 with one bar phrases. \
+\
+
+\f1\b activity
+\f0\b0  - Chance of semiquavers rather than quavers.\
+\
+
+\f1\b fillfreq 
+\f0\b0 - There are two types of bar, normal based on activity from the above parameter,\
+and fills based on musical motifs lifted from Squarepusher tracks. The fills occur every fourth bar by default, \
+but change their frequency with this parameter.   \
+\
+
+\f1\b fillscramble- 
+\f0\b0 chance of a fill being scrambled, rather than played back exactly as stored. \
+\
+
+\f1\b sqweights-
+\f0\b0  The chance of a semiquaver bias at each quaver of the bar. Used in combination with the activity\
+parameter to make cut sequences for normal non fill bars. \
+\
+
+\f1\b bpsd
+\f0\b0  - beats per sub division. Sets a primitive cut size resolution for choose offset messages. \
+\
+
+\f1\b \ul Instance Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b initSQPusher1
+\f0\b0 \
+\
+Examples- Use your rawest noisest breaks to hear this properly. Start with something that is running \
+quick so repitching doesn't cause too much chipmunkiness, or double the beats per sample value in SF3. \
+Otherwise you'll need to use BBCSAutoSplice to preserve the original pitch and reslice. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\fs18 \cf0 (	\cf2 //defaults\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\cf3 SQPusher1\cf0 .new).tempo_(3.33).go;\
+)\
+\
+(	\cf2 //fast cuts, half speed sample\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,16);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\cf3 SQPusher1\cf0 .new).tempo_(3.33).go;\
+)\
+\
+\
+\cf2 //UI controls\cf0 \
+(\
+\cf3 var\cf0  sf;\
+\cf3 var\cf0  w,offset, activity;\
+	\
+w = \cf3 SCWindow\cf0 (\cf4 "panel"\cf0 , \cf3 Rect\cf0 .new(200,200,230,130));\
+offset=\cf3 DDSlider\cf0 ( w, \cf3 Rect\cf0 .new(0,0,200,40), \cf4 "offset"\cf0 , 0.0, 1.0, \cf5 'linear'\cf0 , 0.01, 0.0);\
+activity=\cf3 DDSlider\cf0 ( w, \cf3 Rect\cf0 .new(0,50,200,40), \cf4 "activity"\cf0 , 0.0, 1.0, \cf5 'linear'\cf0 , 0.01, 0.0);\
+\
+w.front;	\
+\
+\cf2 //very funny-\
+//":Sounds:tailpiece:break04.aif" [8] at 7 bps! \
+//":Sounds:bogdan:dillbeat1" [16] at 4\cf0 \
+\cf2 //":Sounds:breaks:brkcl5.wav",":Sounds:breaks:roni4.wav", ":Sounds:finland:morednb1.wav", \
+//amusing ":Sounds:basing:beat2", ":Sounds:bogdan:dillbeat1" ace ":Sounds:bogdanunused:drumloop3" also good\
+//":Sounds:bogdanunused:bogdanbeat1" good   ":Sounds:feb21:public9.aif" sublime at either 4 or 8 beatspersound\
+//public5, ":Sounds:feb21:mebeat5.aif"  ":Sounds:tailpiece:break02.wav"\
+\cf0 sf=\cf3 SF3\cf0 (\cf4 ":Sounds:bogdan:dillbeat1"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf, offset),\cf3 SQPusher1\cf0 .new(\cf3 activity\cf0 )).tempo_(3.33).go;\
+)\
+\
+\
+\
+(	\cf2 //original pitch retained using BBCSKnownOffsets\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "\cf2 :Sounds:bogdan:dillbeat1\cf4 "\cf0 ,8);\
+sf.setKnown;\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCSKnownOffsets\cf0 (sf),\cf3 SQPusher1\cf0 .new).tempo_(3.33).go;\
+)\
+\
+\
+(	\cf2 //two at once- sounds great on my machine at least! \
+\cf3 var\cf0  sf;\
+\
+sf=\cf3 SF3.array\cf0 ([\cf4 ":Sounds:bogdan:dillbeat1"\cf0 ,\cf4 ":Sounds:bogdanunused:bogdanbeat1"\cf0 ],[8,8]);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf.at(0),0.3),\cf3 SQPusher1\cf0 (0.4)).tempo_(3.4).go;\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf.at(1),0.45),\cf3 SQPusher1\cf0 (0.3)).tempo_(3.4).go;\
+)\
+\
+\
+(	\cf2 //two run off same routine\
+\cf3 var\cf0  sf;\
+\
+sf=\cf3 SF3.array\cf0 ([\cf4 ":Sounds:bogdan:dillbeat1"\cf0 ,\cf4 ":Sounds:bogdanunused:bogdanbeat1"\cf0 ],[8,8]);\
+\
+\cf3 BBCut\cf0 ([[\cf3 BBCutSynthSF\cf0 (sf.at(0),0.3)],[\cf3 BBCutSynthSF\cf0 (sf.at(1),0.45)]],\cf3 SQPusher1\cf0 (0.4)).tempo_(3.4).go;\
+)\
+\
+\
+\
+(	\cf2 //virtuoso rhythms\cf0 \
+\cf3 var\cf0  sf;\
+\
+sf=SF3("a11wlk01.wav",8); //\cf4 ":Sounds:bogdan:dillbeat1"\cf0 , 8\
+\
+\cf3 BBCut\cf0 (\
+\cf3 [[BBCutSynthSF\cf0 (sf,\cf3 0.2\cf0 ,0.7,-0.5,dutycycle: 0.3)],\
+[\cf3 BBCutSynthSF\cf0 (sf,\cf3 0.5\cf0 ,0.8,0.5,dutycycle: 0.1)]],\
+\cf3 SQPusher1\cf0 (\cf3 0.5\cf0 ,1, 1.0)\
+).tempo_(4.5).go;\
+\
+)\
+\
+\
+\
+(	\cf2 //alternate normal and fill bars, always scramble fills, sometimes silent \
+\cf3 var\cf0  sf;\
+\
+sf=\cf3 SF3\cf0 (\cf4 ":Sounds:bogdan:dillbeat1"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf, \cf3 0.3\cf0 ,\{if(0.2.coin,\{0\},\{1\})\}, dutycycle: 0.7),\cf3 SQPusher1\cf0 (\cf3 0.3\cf0 ,2, 1.0)).tempo_(3.5).go;\
+)\
+\
+\
+\
+(	\cf2 //SQPusher fx\
+\cf3 var\cf0  sf;\
+\
+sf=\cf3 SF3.array\cf0 ([\cf4 ":Sounds:break2"\cf0 ],[4]);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf.at(0),0.3, \cf3 SQPushFXAmp\cf0 .new(0.15),0.0,\cf3 SQPushFXPitch\cf0 .new(0.96,pbchance:0.8)),\cf3 SQPusher1\cf0 (0.4, 3, 0.4)).tempo_(3.4).ar;\
+)\
+\
+(	\cf2 //SQPusher fx at original pitch of sample using BBCSKnownOffsets\
+\cf3 var\cf0  sf;\
+\
+sf=\cf3 SF3.array\cf0 ([\cf4 ":Sounds:break2"\cf0 ],[4]);\
+sf.at(0).setKnown;\
+\
+\cf3 BBCut\cf0 (\cf3 BBCSKnownOffsets\cf0 (sf.at(0),0.3, \cf3 SQPushFXAmp\cf0 .new(0.15),0.0,\cf3 SQPushFXPitch\cf0 .new(0.96,pbchance:0.8)),\cf3 SQPusher1\cf0 (0.4, 3, 0.4)).tempo_(3.4).ar;\
+)\
+\
+\
+\
+\cf2 //See also the simulating squarepusher talk in the examples \cf0 \
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs24 \cf0 \
+}

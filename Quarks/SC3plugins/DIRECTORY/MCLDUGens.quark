@@ -1,0 +1,14 @@
+(
+	\name: "MCLUGens",
+	\path: "MCLUGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/MCLUGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

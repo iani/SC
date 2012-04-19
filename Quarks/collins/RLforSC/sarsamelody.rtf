@@ -1,0 +1,313 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf410
+{\fonttbl\f0\fnil\fcharset77 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red191\green0\blue0;\red0\green0\blue191;
+\red0\green115\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs18 \cf2 \
+\cf3 //sarsa(lambda) p181 in ML book, using eligibility traces- drawback is requiring additional data point for each state, plus iteration over all states each time\cf2 \
+\
+\cf3 //states = 16 time steps, 24 notes gives 16*24 states but from each one 24 actions\cf2 \
+\cf3 //actually save a few since given starting note \cf2 \
+\cf3 //later variant; given ending note? big plus reward for ending episode on correct end note?\cf2 \
+\
+\cf3 //nomos= law   onomy\cf2 \
+\cf3 //logos= speak ology\cf2 \
+\
+\cf3 //speculations\cf2 \
+\
+\cf3 //states = parameters of sound synthesis algorithm\cf2 \
+\cf3 //actions = transitions to new parameter sets? \cf2 \
+\
+\
+\cf3 //train up one model for each chord transition; each heading to a given final note? Then layer models together to generate long melody sequences over innumerable chord transitions? \cf2 \
+\
+\
+\
+\cf3 //could also be done via DP? \cf2 \
+\
+\
+\cf3 //state= chord now, chord then, note then. action= choose note now. Reward from DP criteria; why not run one DP algorithm each state? \cf2 \
+\cf3 //chords = 4 types * roots = 4*12 = 48.   state= 48*48*24 action=24 48*48*24*24 = 1327104 state-action pairs\cf2 \
+\cf3 //2 types*12   24*24*24*24 = 331776 s-a pairs\cf2 \
+\cf3 //diatonic transitions 7 ->7  7*7*24*24 = 28224\cf2 \
+\cf3 //why not just store best choices for these situations! or just test all 24 options and take best scoring (though here are denying experience of long term reward?)\
+\
+//instead- optimisation problem; fitting hand around keys of piano? \
+\cf2 \
+\
+\
+(\
+\cf4 var\cf2  data;\
+\cf4 var\cf2  q, alpha, eta;\
+\cf4 var\cf2  s,a, r, s2, a2;  \cf3 //sarsa variables, a2 = a dash\cf2 \
+\cf4 var\cf2  etagreedyfunc;\
+\cf3 //var twelve;\cf2 \
+\cf4 var\cf2  gamma=0.9; \cf3 //reward propagation decay factor, undiscounted?\cf2 \
+\cf4 var\cf2  update;\
+\cf4 var\cf2  e; \
+\cf4 var\cf2  lambda;\
+\cf4 var\cf2  chords, diatonic; \
+\
+\cf3 //twelve= (0..11);\cf2 \
+\
+q= \cf4 Array\cf2 .fill(15*24*24,\{0.01.rand\}); \cf3 //random start for slight alterations\cf2 \
+\cf3 //will soon be disappointed, starting with too much reward to promote exploration\cf2 \
+\
+e= \cf4 Array\cf2 .fill(15*24*24,\{0\}); \cf3 //eligibility traces\cf2 \
+\
+chords= [[0,4,7],[2,7,11],[4,7,11],[0,5,9]]; \
+\
+chords = \cf4 Array\cf2 .fill(16,\{\cf4 arg\cf2  i; \cf4 var\cf2  now; now=(chords[i.div(4)]).copy; now++(now+12)\});\
+\
+diatonic =  [0,2,4,5,7,9,11];\
+\
+diatonic = diatonic + (diatonic+12);\
+\
+lambda= 0.9;\
+\
+\cf3 //given state, determine action \cf2 \
+etagreedyfunc=\{\cf4 |state|\cf2 \
+	\cf3 //var tmp; //, probdistr;\cf2 \
+	\cf4 var\cf2  choice, maxval, maxind; \
+	\
+	\cf3 //tmp= q[state..(state+23)];\cf2 \
+	\
+	choice= if(eta.coin,\{24.rand\},\{\
+	\
+	\cf3 //this is eta soft \cf2 \
+	\cf3 //tmp=tmp.normalizeSum;\cf2 \
+	\cf3 //twelve.wchoose(tmp);\cf2 \
+	\
+	\cf3 //find max index\cf2 \
+	\
+	maxval=(10000.neg);\
+	maxind=0;\
+	\
+	24.do\{\cf4 |j|\cf2  \cf4 var\cf2  now; now= q[state+j];  if(now>maxval,\{maxval=now; maxind= j\}); \};\
+	\
+	maxind;\
+	\});\
+	\
+	choice\
+\};\
+\
+alpha=0.1;\
+eta= 0.1; \cf3 //0.9;\cf2 \
+\
+\
+\cf3 //100 episodes = 100 melodies\cf2 \
+50000.do(\{\cf4 |i|\cf2 \
+	\cf4 var\cf2  tmp, preva;\
+	\cf4 var\cf2  sofar = \cf4 List\cf2 [];\
+	\
+	a=24.rand;\
+	preva=a;\
+	s = (0*24*24)+24*a;	\cf3 //starting point on grid\cf2 \
+	a= etagreedyfunc.value(s);\
+	\
+	\
+	\cf3 //16 time steps = 15 actions if given starting note\cf2 \
+	\cf3 //also given ending note\cf2 \
+	\cf3 //so state -1 = choose starting note, but then lose uniformity of state model, so choose\cf2 \
+	15.do\{\cf4 arg\cf2  j; \
+		\cf4 var\cf2  matchchord;\
+		\cf4 var\cf2  basepos; \
+		\
+		basepos= j*24*24;\
+		\
+		matchchord= chords[j+1];\
+		\
+		\cf3 //reward depends on a versus chord, and a versus s\cf2 \
+		\cf3 //if less than a tone travelled\cf2 \
+		r =if (abs(a-preva)<3,0,((a-preva).abs.neg*0.2));\
+		\
+		\cf3 //penalty for staying fixed\cf2 \
+		if(a==preva,\{r=r-1\});\
+		\
+		\cf3 //(implicit) explicit punishment for chromatic\cf2 \
+		if(matchchord.includes(a),\{r= r+ 1\},\{if(not(diatonic.includes(a)),\{r=r-1\})\}); 	\
+		\cf3 //WHAT ABOUT LAST STEP? NO ITERATION ON...\cf2 \
+		\
+		s= (j*24*24)+(24*preva);	\
+		s2=((j+1)*24*24)+(24*a); \
+		\
+		tmp=0; \
+		\
+		if(j<14,\{\
+		a2= etagreedyfunc.value(s2);\
+		\
+		tmp = gamma*(q[s2+a2]);\
+		\},\{\
+		\
+		\cf3 //bonus if target closing note\cf2 \
+		if(a%2==0,\{r=r+1\});\
+		\
+		\});\
+		\
+		update= q[s+a];\
+		update= alpha*(r + tmp - update);\
+	\
+		e[s+a] = e[s+a]+1; \cf3 //increment winner\cf2 \
+	\
+		sofar.add(s+a);\
+	\
+		\cf3 //store indices of e states so far; only need to iterate over those? \cf2 \
+		sofar.do \{\cf4 |index|\cf2 \
+			tmp= q[index];\
+			q[index] = tmp + (update*(e[index]));\
+			e[index] =  gamma * lambda * (e[index]);\
+		\};\
+				\
+		preva=a; \
+		a=a2;\
+		s=s2;\
+		\
+	\};\
+	\
+	\cf3 //reset eligibility traces for each new episode \cf2 \
+	sofar.do \{\cf4 |index|\cf2 \
+			e[index]=0.0;\
+			\};\
+	\
+	\
+	\
+	\cf3 //Post << sofar << nl;\cf2 \
+	\cf3 //Post << q.at(sofar.asArray) << nl;\cf2 \
+	\
+	\cf3 //restricting eta\cf2 \
+	\cf3 //if(i%10==0,\{eta= 1000/i;\});\cf2 \
+	\cf3 //eta=1/(max(0.1*(i+1),1))\cf2 \
+	\cf3 //eta= max(0.001,0.1 - (i/1000));\cf2 \
+\
+	\cf3 //eta= (1000/(i+1));\cf2 \
+\});\
+\
+\
+\cf3 //normalise\cf2 \
+\cf3 //q = q.clump(24).collect(\{|val| val.normalizeSum\}).flatten;\cf2 \
+\
+\
+~q=q;\
+\
+)\
+\
+\
+24*24*16\
+\cf3 //generate melodies using q\cf2 \
+(\
+\
+\
+\cf4 var\cf2  seq; \
+\cf4 var\cf2  last, base;\
+\cf4 var\cf2  maxreward, maxindex;\
+\
+24.do\{\cf4 |k|\cf2 \
+	\
+	seq= k.dup(16); \
+	\
+	last=k;\
+	\
+	15.do\{\cf4 |i|\cf2  \
+		\
+		base= (i*24*24)+(last*24);\
+		\
+		\cf3 //find best route\cf2 \
+		\
+		maxreward = (-9999.9);\
+		maxindex= 0;\
+		\
+		24.do\{\cf4 arg\cf2  j; \
+		\cf4 var\cf2  tmp; \
+		\
+		tmp = ~q[base+j];\
+		\
+		if((tmp>maxreward) && (0.9.coin),\{maxreward= tmp; maxindex=j\});  \
+		\
+		\}; \
+		\
+		seq[i+1]=maxindex;\
+		\
+		last = maxindex;\
+		\
+	\};\
+	\
+	\cf4 Post\cf2 << seq << nl; \
+	\
+\}\
+)\
+\
+\
+\cf3 //play melodies using q\cf2 \
+(\
+\cf4 var\cf2  seqgeneration, backing, lead;\
+\cf4 var\cf2  chords;\
+\
+chords= [[0,4,7],[2,7,11],[4,7,11],[0,5,9]];\
+\
+seqgeneration= \{\cf4 arg\cf2  k;\
+\cf4 var\cf2  seq; \
+\cf4 var\cf2  last, base;\
+\cf4 var\cf2  maxreward, maxindex;\
+\
+	seq= k.dup(16); \
+	\
+	last=k;\
+	\
+	15.do\{\cf4 |i|\cf2  \
+		\
+		base= (i*24*24)+(last*24);\
+		\
+		\cf3 //find best route\cf2 \
+		\
+		maxreward = (-9999.9);\
+		maxindex= 0;\
+		\
+		24.do\{\cf4 arg\cf2  j; \
+		\cf4 var\cf2  tmp; \
+		\
+		tmp = ~q[base+j];\
+		\
+		if((tmp>maxreward) && ((max((i-8).abs/5,1.0)-0.1).coin),\{maxreward= tmp; maxindex=j\});  \
+		\
+		\}; \
+		\
+		seq[i+1]=maxindex;\
+		\
+		last = maxindex;\
+		\
+	\};\
+	\
+	\cf4 Post\cf2 << seq << nl; \
+	\
+	seq;\
+\};\
+\
+\
+\
+backing= \cf4 Pbind\cf2 (\cf5 \\midinote\cf2 , 48+(\cf4 Pseq\cf2 (chords,\cf4 inf\cf2 ))); \
+\
+lead= \cf4 Pbind\cf2 (\cf5 \\amp\cf2 , 0.2, \cf5 \\dur\cf2 , 0.25, \cf5 \\midinote\cf2 , 60+\cf4 Pn\cf2 (\cf4 Plazy\cf2 (\{\cf4 Pseq\cf2 (seqgeneration.value(24.rand),1)\}),\cf4 inf\cf2 ));\
+\
+\cf4 Ppar\cf2 ([backing,lead]).play\
+)\
+\
+\
+\
+\
+a=[9,8,7,6]\
+\
+a.at(\cf4 List\cf2 [2,3].asArray)\
+\
+\
+~q2= ~q;\
+\
+\cf4 Post\cf2  << (~q) << nl;\
+\
+~q.plot;\
+\
+(~q2- ~q).plot\
+\
+squared.sum\
+\
+}

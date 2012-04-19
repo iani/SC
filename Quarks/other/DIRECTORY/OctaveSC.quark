@@ -1,0 +1,14 @@
+(
+	\name: "OctaveSC",
+	\path: "OctaveSC",
+	\summary: "a SC3 class to interface with Octave math package",
+	\helpdoc: "-",
+	\schelp: "Guides/OctaveSC",
+	\author: "Thomas Hermann",
+	\version: 0.0,
+	\organization: "",
+	\country: "Bielefeld, Germany",
+	\since: "2006",
+	\url: "http://sonification.de/projects/sc3/index.shtml",
+	\dependencies: []
+)

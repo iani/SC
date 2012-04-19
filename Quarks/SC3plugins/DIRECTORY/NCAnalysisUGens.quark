@@ -1,0 +1,14 @@
+(
+	\name: "NCAnalysisUGens",
+	\path: "NCAnalysisUGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/NCAnalysisUGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)
