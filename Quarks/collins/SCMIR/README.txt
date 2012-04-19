@@ -4,11 +4,10 @@ SuperCollider Music Information Retrieval (SCMIR) library version 0.6
 by Nick Collins
 http://www.cogs.susx.ac.uk/users/nc81/index.html
 
+
+This is a modified version by Ioannis Zannos, branched of SCMIR 0.7. 
+
 For SuperCollider 3, all code under GNU GPL 3 license, see COPYING file. 
-
-Installation: 
-Put the folder SCMIRExtensions in your extensions directory. If you need hints on how to do that, see the [Using-Extensions] help file in SuperCollider (also linked in Main Help)
-
 
 Note: 
 There is a small bug in the SC MFCC code in SuperCollider 3.4. Fixed in developer core and for later versions. If you are on 3.4 and have source files with perfect noise floor of 0.0 values, the MFCC then leads to infs, messing up normalization. Mac Intel build of MachineListening plugins included as a drop in replacement for those who this is an issue for (swap the plugin in your plugins folder in the app directory). 
