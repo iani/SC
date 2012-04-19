@@ -14,7 +14,13 @@ NaiveBayes {
 	*new {|numfeatures, numclasses| 
 			 
 		^super.new.initNaiveBayes(numfeatures, numclasses); 	 
-	}	 
+	}
+	
+	*newFromFile {|filename|       
+		 
+		^super.new.load(filename);        
+		  
+	} 	 
 	 
 	initNaiveBayes {|numf,numc| 
 			 
@@ -99,6 +105,41 @@ NaiveBayes {
 		^maxindex; 	 
 	} 
 		 
-		 
+	
+	
+	save { |filename| 
+		var a;   
+
+		filename = filename?? {SCMIR.tempdir++"naivebayes"++".scmirZ"}; 
+	
+		a = SCMIRZArchive.write(filename);  
+
+		a.writeItem(numfeatures);
+		a.writeItem(numclasses);  
+		a.writeItem(nummodels);
+		a.writeItem(means);  
+		a.writeItem(stddevs);  
+		
+		a.writeClose;  		  
+	}  
+	  
+	  
+	load { |filename| 
+		var a;   
+		  
+		filename = filename?? {SCMIR.tempdir++"naivebayes"++".scmirZ"};    
+		  
+		a = SCMIRZArchive.read(filename);  
+
+		numfeatures = a.readItem;   
+		numclasses = a.readItem;   
+		nummodels = a.readItem; 
+		means = a.readItem;   
+		stddevs = a.readItem;   
+				  
+		a.close;  
+		  
+	}  
+	 
 		 
 } 

@@ -1,0 +1,14 @@
+(
+	\name: "ATK",
+	\path: "ATK",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Classes/Atk",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

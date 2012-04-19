@@ -45,16 +45,15 @@
 		}); 
 		^array; 
 	}
-	  
+
 	plotFeatureTrail { | which = 0, starttime = 0.0, endtime |
 		this.getFeatureTrail(which, starttime, endtime).plot;
 	}
 	
 	//fork included since won't be using for batch processing
-	plotSelfSimilarity{ | unit = 10, stretch = 1, metric = 0 |
+	plotSelfSimilarity { | unit = 10, stretch = 1, metric = 0 |
 		var matrix;
 		matrix = this.similarityMatrix(unit, metric); 
-		matrix.plot(stretch);
+		^matrix.plot(stretch);
 	}	  
 }  
- 

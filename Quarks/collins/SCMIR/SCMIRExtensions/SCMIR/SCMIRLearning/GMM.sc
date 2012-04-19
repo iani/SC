@@ -193,7 +193,7 @@ GMM {
 	}
 	
 	//input vector; find best matching state
-	test {|input|
+	test {|input, outputscore=false|
 		
 			var file; 
 			var result, probs; 
@@ -240,6 +240,11 @@ GMM {
 			}
 			
 		};
+		
+		if(outputscore) {
+			^[result, bestscore]; 	
+		}
+		
 		
 		} {
 			file = SCMIRFile((SCMIR.tempdir++"gmmtest"), "wb");

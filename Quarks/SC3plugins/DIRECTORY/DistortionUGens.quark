@@ -1,0 +1,14 @@
+(
+	\name: "DistortionUGens",
+	\path: "DistortionUGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/DistortionUGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

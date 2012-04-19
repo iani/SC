@@ -44,7 +44,7 @@ SCMIRSimilarityMatrix(2, [[0, 2], [2, 0]]).calculate(1, 1).plot(100).matrix;
 SCMIRSimilarityMatrix(2, [[0, 1], [1, 0]]).calculate(1, 2).plot(100).matrix;
 SCMIRSimilarityMatrix(2, [[0, 1], [1, 0]]).calculate(1, 1).plot(100).matrix;
 
-//:Test multi dimensional data
+//:Test multi-dimensional data
 a = FloatArray.new.addAll((1..100).scramble).normalize;
 m = SCMIRSimilarityMatrix(4, [a, a]); // 4 dimensional data. Nested arrays are flattened!
 m.calculate(1, 1); 			//  create matrix of unit 1, metric 1 = Manhattan

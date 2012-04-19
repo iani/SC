@@ -31,7 +31,7 @@ numberedlist::
 
 Note that the cosine metric only gives non zero similarity values if the number of feature dimensions is greater than 1. Note also that the similarity value is 0.0 if two points are maximally close (hence, it is a distance matrix).
 
-The dtw method returns [minimum path cost, best path] where the best path is a List of (x,y) co-ordinates into the matrix. Larger x is further along sequence1, larger y is further along the other sequence (sequence 1 again for self similarity, or a different sequence 2).
+The dtw method returns [minimum path cost, best path] where the best path is a List of (x,y) co-ordinates into the matrix. Larger x is further along sequence1, larger y is further along the other sequence (sequence 1 again for self similarity, or a different sequence 2). DTW stands for "Dynamic Time Warping". 
 
 CLASSMETHODS::
 

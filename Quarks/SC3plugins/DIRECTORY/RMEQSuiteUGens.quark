@@ -1,0 +1,14 @@
+(
+	\name: "RMEQSuiteUGens",
+	\path: "RMEQSuiteUGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/RMEQSuiteUGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

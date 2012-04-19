@@ -3,9 +3,8 @@
 //from 1 to 3 seconds say 
  
 + SCMIRAudioFile {   
-	 
 	  
-	novelty {|matrix, kernelsize=10|  
+	novelty { | matrix, kernelsize = 10 |  
 		  
 		var file;  
 		var temp; 
@@ -63,7 +62,6 @@
 		  
 	} 
 	 
-	 
 	//must occur within a Routine 
 	findSections {|metric=0, unit= 10, kernelsize= 43|
 		
@@ -73,52 +71,30 @@
 		//features are every 1024 samples at 44.1kHz
 		//(1024/44100)*10 = 0.23219954648526
 		
-		conversion = (SCMIR.framerate.reciprocal)*unit; //(1024.0/44100)*unit; 
-		
+		conversion = (SCMIR.framerate.reciprocal) * unit; //(1024.0/44100)*unit; 
 		matrix = this.similarityMatrix(unit, metric);
-		
+
 		//taking account of about 10 second window around a given point 
-		noveltycurve = this.novelty(matrix,kernelsize); 
+		noveltycurve = this.novelty(matrix, kernelsize); 
 		
 		//could add values in to remove zeroes here
-		
-		#list,detectioncurve= SCMIR.peakPick(noveltycurve.normalize); 
+		#list, detectioncurve = SCMIR.peakPick(noveltycurve.normalize); 
 
 		//remove any from list within 43 of start or end, to avoid artefact jump from zeroes
-		
 		list = list.select{|val|  (val>kernelsize) && (val<(noveltycurve.size-kernelsize))};
+		convertedtimes = if (featuresbysegments) {
+			// list has beat times, look up in beatdata
+			list collect: { | listtime |   
+				var index;
+				index = listtime * unit;
+				if (index >= numsegments) { index = numsegments - 1};
+				 segmenttimes[index];  }
+		}{
+			list * conversion
+		};
 
-
-		convertedtimes = if(featuresbysegments) {
-			
-			//list has beat times, look up in beatdata
-			//list.collect{|listtime|   
-//				var index; 
-//				index =listtime*unit;  
-//				
-//				if(index>=numbeats,{index = numbeats-1}); 
-//				
-//				[index,listtime, index].postln;
-//				 beatdata[index];  }
-				 
-				 
-				//list has beat times, look up in beatdata
-			list.collect{|listtime|   
-				var index; 
-				index =listtime*unit;  
-				
-				if(index>=numsegments,{index = numsegments-1}); 
-				
-				//[index,listtime, index].postln;
-				 segmenttimes[index];  }	 
-				 
-			
-			} {list*conversion};
-
-		^(convertedtimes); //convert to actual times in seconds (accurate only roughly) 
-	} 
-	  
-	  
+		^convertedtimes; //convert to actual times in seconds (accurate only roughly) 
+	}
 } 
 
 

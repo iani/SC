@@ -4,18 +4,12 @@
 //Sakoe and Chiba (1978) Dynamic Programming Algorithm Optimization for Spoken Word Recognition, IEEE TRANSACTIONS ON ACOUSTICS, SPEECH, AND SIGNAL PROCESSING, VOL. ASSP-26, NO. 1, FEBRUARY 1978
 //symmetric algorithm, update a column at a time, only local paths of one horizontal, vertical or diagonal step (at 2*cost) allowed.  
  
-+ SCMIRSimilarityMatrix {   
-	 
-	 
++ SCMIRSimilarityMatrix {
 	//matrix is target, size is reducedcolumns by reducedrows 
-	dtw { | leeway = 10 |   
-		
-		//var result; //[totalcost, path]
-		
+	dtw { | leeway = 10 |
 		var sizea = reducedcolumns; 
 		var sizeb = reducedrows; 
 		var gradient = sizeb/sizea;
-		
 		var previouscolumn, currentcolumn; //paths in progress
 		var previoushighest;  
 		var currentcentre; 
@@ -24,7 +18,9 @@
 		var mincost; 
 		var minindex;
 				
-		if(matrix.isNil) {"SCMIRSimilarityMatrix:dtw: no similarity matrix has been calculated to work with".postln;  ^nil };
+		if (matrix.isNil) {
+			"SCMIRSimilarityMatrix:dtw: no similarity matrix has been calculated to work with".postln;  			^nil
+		};
 
 		//easiest for indexing is if take same size as actual column, then use real indices as go
 		previouscolumn = Array.fill(sizeb,{nil});
@@ -36,7 +32,10 @@
 		
 		previouscolumn[0] = [matrix[0],List[[0,0]]]; 
 		
-		(fitabove).do{|j| var last = previouscolumn[j];  previouscolumn[j+1] = [matrix[j+1]+(last[0]),last[1].copy.add([0,j+1])]}; 
+		fitabove do: { | j |
+			var last = previouscolumn[j];
+			previouscolumn[j+1] = [matrix[j+1]+(last[0]),last[1].copy.add([0,j+1])]
+		}; 
 
 		//(fitabove+1).do{|j|  previouscolumn[j] = [matrix[j],List[[0,j]]]}; 
 

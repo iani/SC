@@ -1,7 +1,7 @@
 CLASS:: SCMIRAudioFile
 summary:: Represents an audio file for the SCMIR analysis system
 categories:: Machine Listening
-related:: Classes/SCMIR, Guides/SCMIRguide, Classes/SCMIRSimilarityMatrix
+related:: Guides/SCMIRAudioFileExamples, Classes/SCMIR, Guides/SCMIRguide, Classes/SCMIRSimilarityMatrix
 
 DESCRIPTION::
 Use this class to load a sound file and run feature extraction, normalization, and subsequent similarity tasks. Audio processing uses non-realtime (NRT) mode for scsynth. The feature extraction method must be called within a Routine from outside; this supports running this across lots of files in batch processing without spawning multiple simultaneous scsynth instances, or trying to use the results of processing before they are actually calculated!  

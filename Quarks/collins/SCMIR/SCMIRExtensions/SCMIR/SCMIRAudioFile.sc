@@ -84,18 +84,18 @@ SCMIRAudioFile {
 		//analysispath = other.analysispath;   	     
 		//basename = other.basename;     
 		 
-		end = end ?? {other.duration}; 
+		end = end ?? { other.duration }; 
 		
-		framestart = (start/timeperhop).asInteger; //rounding down
-		frameend = (end/timeperhop).asInteger; 
+		framestart = (start / timeperhop).asInteger; //rounding down
+		frameend = (end / timeperhop).asInteger; 
 
-		if(framestart<0) {framestart=0};
-		if(framestart>top) {framestart=top};
-		if(frameend<0) {frameend=0};
-		if(frameend>top) {frameend=top};
+		if (framestart < 0) { framestart = 0 };
+		if(framestart > top) { framestart = top };
+		if(frameend < 0) { frameend = 0 };
+		if(frameend > top) { frameend = top };
 		
-		duration = (frameend-framestart)*timeperhop;      
-		numframes = frameend-framestart+1; 
+		duration = (frameend - framestart) * timeperhop;      
+		numframes = frameend - framestart + 1; 
 		numfeatures = other.numfeatures; 
 		featuredata = other.featuredata.copyRange(
 			framestart * numfeatures, (frameend + 1) * numfeatures - 1
@@ -376,25 +376,6 @@ SCMIRAudioFile {
 	archivePath { | filename, ending = ".scmirZ" |
 		^(filename ?? { sourcepath ++ basename ++ ending }).asAbsolutePath;
 	}
-	
-	similarityMatrix { | unit = 1, metric = 0, prepost = 0, reductiontype = 1, other = nil |
-		var matrix; 
-		var data1, data2; 
-		data1 = featuredata; 
-		unit = unit max: 1;
-		// check if self similarity or comparative
-		if (other.notNil) {	
-			data2 = other.featuredata;	// comparative
-			matrix = SCMIRSimilarityMatrix(numfeatures, data1, data2); 
-		}{
-			matrix = SCMIRSimilarityMatrix(numfeatures, data1);  // self similarity
-		};
-		"Calculating Similarity Matrix".postln;
-		matrix.calculate(unit, metric, prepost, reductiontype); 
-		"Calculated Similarity Matrix".postln;
-		^matrix;
-	} 
-
 
 	exportARFF { | filename |
 		var file; 

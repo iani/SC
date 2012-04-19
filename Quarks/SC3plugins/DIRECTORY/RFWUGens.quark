@@ -1,0 +1,14 @@
+(
+	\name: "RFWUGens",
+	\path: "RFWUGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/RFWUGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

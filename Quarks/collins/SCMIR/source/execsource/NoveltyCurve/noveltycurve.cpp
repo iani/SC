@@ -41,7 +41,7 @@ int main (int argc, char * const argv[]) {
 //		
 //	}
 	
-	float * output; 
+	float *output; 
 
 	output = new float[numcols]; 
 		
@@ -54,23 +54,23 @@ int main (int argc, char * const argv[]) {
 	float sum, mult; 
 	int colbaseindex; 
 	
-	for (i=0; i<numcols; ++i) {
+	for (i = 0; i < numcols; ++i) {
 	
-		if((i>=halfkernelsize) && (i<=top)) {
-			
+		if((i >= halfkernelsize) && (i <= top)) {
+
 			sum = 0.0; 
-			
+
 			//only need to calculate half, and above diagonal
-			for (j=(i-halfkernelsize); j<(i+halfkernelsize); ++j) {
+			for (j = (i - halfkernelsize); j < (i + halfkernelsize); ++j) {
 					
 				colbaseindex = j * numcols; 
 				
 				for (k=(j+1); k<=(i+halfkernelsize);++k) {
 				
 					//hard checkerboard for now
-					mult = ( (k<i) || (j>i) ) ? 1: (-1); 
+					mult = ( (k < i) || (j > i) ) ? 1: (-1); 
 					
-					sum += matrix[colbaseindex+k]; 
+					sum += matrix[colbaseindex + k]; 
 					
 				}
 				

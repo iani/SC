@@ -78,54 +78,37 @@ SCMIR {
 	}
 
 	*external { | command, scorerender = false, limit = 2000 | 
-
 		if (thisThread.class == Routine) {
 			SCMIR.waitOnUnixCmd(command, limit);
-			if (scorerender) {
-				//safety first, file not being written out quickly enough
-				0.2.wait;	
-			};
+			if (scorerender) { 0.2.wait; }; 	// safety first
 		}{
-			if (scorerender) {
-				systemCmd(command);	
-			}{
-				SCMIR.pipe(command);
-			};				
+			if (scorerender) { systemCmd(command); }{ SCMIR.pipe(command); };
 		}
 	}
-		 
+
 	//wait on process, assumed within Routine 
 	*processWait { | processname, limit = 2000|  
-			 
 		var a, count;  
 		var checkstring = "ps -xc | grep '"++processname++"'";  
-			 
 		count=0;  
-			 
 		0.01.wait; //make sure process running first (can be zero but better safe than sorry)   
-			 
-		while({      
+		while {      
 			a=checkstring.systemCmd; //256 if not running, 0 if running      
-			  
 			if(count%10==0,{(processname+"running for"+(count.div(10))+"seconds").postln});      
-			  
 			(a==0) and: {(count = count+1) <limit }      
-			},{      
-			0.1.wait;	      
-		});      
-		 
+		}{ 0.1.wait; };      
 		0.01.wait;   
-			 
 	} 
 	
-	*pipe {|command|  
+	*pipe { | command |  
 		var pipe, line; 	
-		//var timinginfo;
+		// var timinginfo;
 		
-		//SCMIR.waitOnUnixCmd(command); 
+		// SCMIR.waitOnUnixCmd(command); 
 			
-		//can't run while unix process blocks the app, so no updates	 
-		//timinginfo = {var time= 1; 0.wait; inf.do{("waiting"++time+"s").postln; time = time+1; 0.1.wait;} }.fork(SystemClock); 	 
+		// can't run while unix process blocks the app, so no updates	 
+		// timinginfo = {var time= 1; 0.wait; 
+		// inf.do{("waiting"++time+"s").postln; time = time+1; 0.1.wait;} }.fork(SystemClock); 	 
 		pipe = Pipe(command, "r");				
 		line = pipe.getLine;	
 		
@@ -134,11 +117,8 @@ SCMIR {
 		while({line.notNil}, {line.postln; line = pipe.getLine; });		// post until l = nil
 		pipe.close;	
 		//timinginfo.stop; 
-		 
 	}
 
-
-	
 	//would only run with {}.fork due to no calls of .wait on main Thread
 	//added external to force wait, but doesn't allow time for postln
 	*waitOnUnixCmd {|command, limit=2000|
@@ -146,44 +126,22 @@ SCMIR {
 		var count=1;
 		var checkstring,checkreturn; 
 		var processname = command.split($ )[0]; //assumption here if piping, but will do for now
-		
-		//"wait here!".postln;
 		ps = command.unixCmd;
-
 		0.01.wait;
 		checkstring = "ps -ax | grep '"++ps++" ' "; 
-
-		//"now here!".postln;
-
-		//0.01.wait; 
-			
-		while({ 
-			
-			//{"test this".postln;}.defer;
-			
+		while { 
 			checkreturn = checkstring.unixCmdGetStdOut; 
-			
-			//command
-			//[checkreturn,checkreturn.contains(command), checkreturn.split($\n)].postln;
-			
 			if(count%10==0,{("SCMIR: calculation running for"+(count.div(10))+"seconds").postln});      
-			
-			  //(checkreturn.split($\n).size)>3
 			(checkreturn.contains(processname)) and: {(count = count+1) <limit }  
-			 },{	 
-				
-			0.1.wait;	 
-			
+		}{ 0.1.wait;	 
 			//doesn't post since blocked by first process!  
 			//replace with call to external that simply forces a wait for specified time
 			//(SCMIR.executabledirectory++"waitinmain 100" + count).systemCmd; 
-			
-				 
-			}); 		
+		}; 		
 		0.01.wait;
 	}
 
-	//given one dimensional curve, typically already normalized 0.0 to 1.0, find peak locations 
+	// given one dimensional curve, typically already normalized 0.0 to 1.0, find peak locations 
 	*peakPick {|curve, reach=15, exaggeration = 5, threshold = 1.0, minseparation=20|  
 		var peakcurve;  
 		var maxindex = curve.size-1;  
@@ -205,11 +163,9 @@ SCMIR {
 			});  
 			sum 
 		});  
-			 
 		list = List[]; 	 
-			 
 		peakcurve do: { | val, i |
-			if(sep > 0) { sep = sep - 1; });
+			if (sep > 0) { sep = sep - 1; };
 			if ((val > threshold) and: (sep == 0)) { list add: i; sep = minseparation; } };
 		^[list, peakcurve] 
 	} 
@@ -242,49 +198,31 @@ SCMIR {
 	
 	// run normalization procedures for all standard features over all filenames in list, 
 	// obtaining global max and min, and mean and stddev
-	*findGlobalFeatureNorms {|filenamelist, featureinfo, normalizationtype=0|
-		var e; 
+	*findGlobalFeatureNorms { | filenamelist, featureinfo, normalizationtype = 0 |
+		var e;
 		var norms; 		
 		var framesum = 0, framesumr; 
 		var temp1, temp2; 
 		norms= nil!(filenamelist.size); 
-		
-		filenamelist.do {|filename,j|
-			
-		e = SCMIRAudioFile(filename,featureinfo, normalizationtype);
-		
-		e.extractFeatures(false); 
-	
-		norms[j] = [e.normalize(e.featuredata, true), e.numframes];     
-	
-		framesum = framesum + e.numframes; 
-	
+		filenamelist do: { | filename, j |
+			e = SCMIRAudioFile(filename, featureinfo, normalizationtype);
+			e.extractFeatures(false); 
+			norms[j] = [e.normalize(e.featuredata, true), e.numframes];     
+			framesum = framesum + e.numframes; 
 		};
-		
-		if(normalizationtype==0) {
-			
-			//normalize
-			temp1 = norms[0][0][0]; 
+		if (normalizationtype == 0) {
+			temp1 = norms[0][0][0]; //normalize
 			temp2 = norms[0][0][1]; 
-			
-			norms.do{|val| 
-				
+			norms do: { | val | 
 				temp1 = min(val[0][0],temp1); 
 				temp2 = max(val[0][1],temp2);
-				
-				}; 
-
+			}; 
 			//combine
 			globalfeaturenorms = [temp1,temp2];
-				
-		} {
-			
-			//standardize
-			framesumr = 1.0/framesum;
-			
+		}{
+			framesumr = 1.0/framesum; 	// standardize
 			temp1 = 0.0; 
 			temp2 = 0.0; 
-			
 			norms do: { | val | 
 				temp1 = temp1 + (val[0][0] * val[1] * framesumr);
 				temp2 = temp2 + (val[0][1] * val[1] * framesumr);
