@@ -5,8 +5,9 @@
 	  
 	//for batch processing, needs to be forked outside
 	//expose all the Onsets UGen parameters in case users want to try different settings      
-	extractOnsets { |threshold=0.5, odftype=\rcomplex, relaxtime=1,floor=0.1, mingap=10, medianspan=11, whtype=1|    
-		  
+	extractOnsets { | threshold = 0.5, odftype= \rcomplex, relaxtime = 1, floor = 0.1, 
+		mingap = 10, medianspan = 11, whtype = 1|    
+
 		var fftsize=512;    	//ASSUMES SR of 44100 or 48000    
 		var analysisfilename;       
 		var serveroptions;       
@@ -28,37 +29,29 @@
 			  
 			env=EnvGen.ar(Env([1,1],[length]),doneAction:2);		       
 			//stereo made mono       
-			input= if(numChannels==1,{      
+			input = if(numChannels == 1) {      
 				PlayBuf.ar(1, playbufnum, BufRateScale.kr(playbufnum), 1, 0, 0);      
-				},{      
-				Mix(PlayBuf.ar(numChannels, playbufnum, BufRateScale.kr(playbufnum), 1, 0, 0))/numChannels;        
-			});      
-			  
+				}{
+				Mix(PlayBuf.ar(numChannels, playbufnum, BufRateScale.kr(playbufnum), 1, 0, 0))
+					/ numChannels;        
+			};   
 			fft = FFT(LocalBuf(fftsize,1),input); //(,wintype:1);       
-			  
-			onsetoutput = Onsets.kr(fft, threshold, odftype, relaxtime,floor, mingap, medianspan, whtype);  
-			  
+			onsetoutput = Onsets.kr(fft, threshold, odftype, relaxtime, floor, 
+				mingap, medianspan, whtype);  
 			trig=HPZ1.kr(onsetoutput)-0.1; //stupid onset detector stays on 1 for multiple frames!   
 				 
 			//Sweep will time over course of playback  
 			featuresave = FeatureSave.kr(Sweep.kr(Impulse.kr(0),1.0), trig);           
-			  
 		}); //.writeDefFile;       
 			 
-		def.children.do{|val,i| if(val.class==FeatureSave,{ugenindex = val.synthIndex})}; 
-		 
+		def.children do: { | val, i | if (val.class == FeatureSave) { ugenindex = val.synthIndex } }; 
 		def.writeDefFile;      
-		  
-		  
-		//wait for SynthDef sorting just in case       
-		//0.1.wait;  
-		//SCMIR.waitIfRoutine(0.1);      
-		  
-		  
-		analysisfilename= analysispath++basename++"onsets.data";     
+
+		analysisfilename = analysispath ++ basename ++ "onsets.data";     
 		analysisfilename.postln;       
-		  
-		score = [        
+		
+
+		score = [      
 		[0.0, [\b_allocRead, 0, sourcepath, 0, 0]],       
 		[0.0, [ \s_new, \SCMIRAudioOnset, 1000, 0, 0,\playbufnum,0,\length, duration]], //plus any params for fine tuning      
 		[0.005,[\u_cmd, 1000, ugenindex, "createfile",analysisfilename]], //can't be at 0.0, needs allocation time for synth before calling u_cmd on it    
@@ -70,61 +63,43 @@
 		serveroptions.numOutputBusChannels = 1; // mono output       
 		 
 		//Score.recordNRT(score, "NRTanalysis", "NRToutput", nil,44100, "WAV", "int16", serveroptions); // synthesize       
-		//SCMIR.processWait("scsynth");      
-		Score.recordNRTSCMIR(score, "NRTanalysis", "NRToutput", nil,44100, "WAV", "int16", serveroptions); // synthesize
-		  
+		//SCMIR.processWait("scsynth");
+
+		Score.recordNRTSCMIR(score, "/tmp/NRTanalysis", "/tmp/NRToutput", nil, 44100, "WAV", "int16", serveroptions); // synthesize
+
 		//LOAD FEATURES    
 		//Have to be careful; Little Endian is standard for Intel processors    
-		file = SCMIRFile(analysisfilename,"rb");    
-		  
-		numonsets = file.getInt32LE;     
-		  
-		temp = file.getInt32LE;    
-		if (temp!= 1) {    
+		file = SCMIRFile(analysisfilename, "rb");    
+		numonsets = file.getInt32LE;		  
+		temp = file.getInt32LE;
+		if (temp != 1) {    
 			"extract onsets: mismatch of expectations in number of features ".postln;    
 			[1, temp].postln;     
-		};     
-		  
+		};
 		temp = numonsets*numfeatures;    
 		onsetdata= FloatArray.newClear(temp);       
-		  
-		  
+
 		//faster implementation?   
 		file.readLE(onsetdata);   
-		  
 		file.close;     
-		  
-		  
 		("rm "++ (analysisfilename.asUnixPath)).systemCmd;        
-		  
-		
 		"Onsets extracted".postln;	 
 	}  
-	  
-	  
-		 
-	setOnsetData{|inputonsetdata|  
-			 
+	setOnsetData{ | inputonsetdata |  
 		onsetdata = inputonsetdata;  
 		numonsets = onsetdata.size;  
 	}	 
 		 
-		 
 	//in general may need offset times as well as onsets, left ambiguous for now 
 	gatherFeaturesByOnsets {|replace=true, meanormax=0| 
-			 
 		if (featuredata.notNil) { 
-				 
 			if (onsetdata.notNil) { 
-					 
 				^this.gatherFeaturesBySegments(onsetdata, replace, meanormax);  
-				} { 
-					 
+			}{ 
 				"SCMIRAudioFile:gatherFeaturesByOnsets - no onsets extracted to act as segmentation guide".postln;	 
 			}; 
-			} { 
-				 
-			"SCMIRAudioFile:gatherFeaturesByOnsets - no feature extraction carried out yet!".postln;		 
+		}{ 
+			"SCMIRAudioFile:gatherFeaturesByOnsets - no feature extraction carried out yet!".postln;
 		} 
 	} 
 		 

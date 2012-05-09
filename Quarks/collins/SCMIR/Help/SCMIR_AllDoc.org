@@ -182,7 +182,6 @@ f = SCMIRAudioFile("/data/audio/mirdata/pixiesivebeentired.wav", [[MFCC, 13], [C
 	f.extractBeats();
 )
 
-
 f.numfeatures
 f.numframes
 
@@ -190,8 +189,9 @@ b = f.similarityMatrix(50, 2);
 b.plot(4,10);
 
 //by default, replaces old featuredata with beatwise features
-f.gatherFeaturesByBeats //after this operation, featuredata will be beat locked; if referencing specific frames, must use beatdata to get (starting) times
+f.gatherFeaturesByBeats //after this operation, featuredata will be beat locked; 
 
+// if referencing specific frames, must use beatdata to get (starting) times
 f.featuresbysegments //this flag has now been set to true
 
 //should now be same:
@@ -203,8 +203,6 @@ b.plot(5,10);
 
 l = f.findSections(0,1,20);
 
-l
-
 //comparison of beat locked features and standard feature vectors for section finding; on this track, get better estimates from beat-locked segments (if out by a second or two)
 //found by beat based feature vectors: [ 13.556099891663, 44.077278137207, 57.808979034424, 67.929977416992, 78.484901428223, 98.114463806152, 113.2437210083, 121.31120300293, 129.8851776123, 140.64761352539, 154.83645629883 ]
 //found by blocks of standard feature frames
@@ -213,8 +211,7 @@ l
 
 
 
-//test of onset detection
-
+** test of onset detection
 
 f = SCMIRAudioFile("/data/audio/mirdata/pixiesivebeentired.wav", [[MFCC, 13], [Chromagram, 12]]);
 //f = SCMIRAudioFile("sounds/a11wlk01.wav", [[MFCC, 13], [Chromagram, 12]]);
@@ -240,12 +237,8 @@ b.plot(1,10);
 
 l = f.findSections(0,1,20);
 
-l
-
 //found by onset detection, compare to above
 //[ 11.3429479599, 20.416145324707, 29.779592514038, 35.247890472412, 41.052879333496, 47.008796691895, 58.955463409424, 67.877731323242, 78.233833312988, 82.494697570801, 89.559364318848, 99.642631530762, 106.09777832031, 111.35709381104, 121.05142974854, 130.75736999512, 140.81161499023, 156.64181518555, 167.87446594238 ]
-
-
 
 //raw onset detection function as feature
 f = SCMIRAudioFile("/data/audio/mirdata/pixiesivebeentired.wav", [[Onsets,\rcomplex]]);
@@ -258,7 +251,7 @@ f.featuredata.plot
 
 f.duration
 
-//artificial segmentation: one per second
+* artificial segmentation: one onset per second
 a= (0.0,1.0..(f.duration))
 
 //averaging for each second
@@ -408,7 +401,7 @@ See also: SCMIRAudioFile, SCMIR
 
 a = FloatArray[0.05,0.1,0.5,0.8,1.2,1.4]; 
 
-m = SCMIRSimilarityMatrix(1,a); //1 dimensional data, stored in a
+m = SCMIRSimilarityMatrix(1,a); // 1-dimensional data, stored in a
 
 m.sequence1 //a
 m.sequence2 //also a

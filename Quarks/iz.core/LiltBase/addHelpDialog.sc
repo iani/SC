@@ -2,5 +2,5 @@
 Open help old style on a folder
 */
 
-+ Help { *dialog { Dialog.openPanel({ | paths | HelpQtCompatible(paths.first).gui }) } }
++ Help { *dialog { Dialog.openPanel({ | paths | HelpQtCompatible(paths.dirname).gui }) } }
 
