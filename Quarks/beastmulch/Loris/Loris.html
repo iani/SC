@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #001bec}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #bf0000}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000bf}
+p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #007300}
+span.s1 {text-decoration: underline}
+span.s2 {color: #000000}
+span.s3 {text-decoration: underline ; color: #0027ea}
+span.s4 {color: #002afb}
+span.s5 {color: #001dfd}
+span.s6 {text-decoration: underline ; color: #001bec}
+span.s7 {color: #0000bf}
+span.s8 {color: #606060}
+span.s9 {color: #007300}
+span.s10 {color: #bf0000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>Loris</b></p>
+<p class="p2"><br></p>
+<p class="p3">This document provides an overview of Loris in SuperCollider. The Loris SC implementation is part of the BEASTmulch project at the University of Birmingham, which supported by a research grant from the Arts and Humanities Research Council of the UK.</p>
+<p class="p2"><span class="Apple-converted-space"> </span></p>
+<p class="p4"><span class="s1"><a href="http://beast.bham.ac.uk/research/mulch.shtml">http://beast.bham.ac.uk/research/mulch.shtml</a></span></p>
+<p class="p4"><span class="s1"><a href="http://www.ahrc.ac.uk/">http://www.ahrc.ac.uk</a></span></p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s2"><b>See also: </b><a href="../../Help/BEASTmulch Library.html"><span class="s1">BEASTmulch Library</span></a></span></p>
+<p class="p2"><br></p>
+<p class="p5"><b>About Loris</b></p>
+<p class="p2"><br></p>
+<p class="p3">Loris is an Open Source sound modeling and processing software package based on the Reassigned Bandwidth-Enhanced Additive Sound Model. Loris supports modified resynthesis and manipulations of the model data, such as time- and frequency-scale modification and sound morphing.</p>
+<p class="p2"><br></p>
+<p class="p3">For more information about Loris and the Reassigned Bandwidth-Enhanced Additive Model, contact the developers at loris@cersloundgroup.org, or visit them at <a href="http://www.cerlsoundgroup.org/Loris/"><span class="s3">http://www.cerlsoundgroup.org/Loris/</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p3">The primary distribution point for Loris is SourceForge (<a href="http://loris.sourceforge.net/"><span class="s3">http://loris.sourceforge.net</span></a>) and its mirrors.</p>
+<p class="p2"><br></p>
+<p class="p5"><b>Loris in SC</b></p>
+<p class="p2"><br></p>
+<p class="p3">Loris' analysis facilities are not optimised for realtime use, and therefore have not been adapted for direct use in SC. Users can however produce SDIF files with RBEP (Loris) format frames for use with SC using the loris-analyze command line tool, or a third party program like SPEAR.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3">In SC Loris synthesis is accomplished using three classes, <a href="BEPartials.html"><span class="s4">BEPartials</span></a>, <a href="BEPartial.html"><span class="s5">BEPartial</span></a> and <a href="RBE_SDIF_File.html"><span class="s4">RBE_SDIF_File</span></a>, which are used to import and access partial data, and two UGens, <a href="BEOsc.html"><span class="s4">BEOsc</span></a> and <a href="LorisPhaseGen.html"><span class="s4">LorisPhaseGen</span></a>, which in combination with other UGens can be used for resynthesis.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s6"><a href="BEOsc.html">BEOsc</a></span> is similar to a normal sinusoidal oscillator, but with an additional bandwidth input, which is used to control a modulation process using filtered noise, thus recreating the noisy portions of a spectrum. Frequency, amplitude, and bandwidth are converted to Envs in SC, and EnvGens then used to drive the inputs of BEOsc. This allows for maximum flexibilty, since the parameters are subject to the same possibilities for manipulation as any SC UGens. Partial phase is a special case, and requires customised handling:</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s6"><a href="LorisPhaseGen.html">LorisPhaseGen</a></span> is a variant of <a href="SC://EnvGen"><span class="s4">EnvGen</span></a> which is used to drive the phase input of a BEOsc. Loris analysis allows for the 'collation' of partials, i.e. combining non-coincident partials into one, with silence in between, so as to save resources and reduce the overall number of partials. In oscillator bank resynthesis one normally worries only about initial phase, but collated parials require a phase reset when partials transition from zero to non-zero amplitude, i.e. at onset points. BEOsc accepts two special values at its phase input: -inf, meaning advance phase according to frequency, and +inf, meaning that this partial has ended and no further calculation will be necessary. Thus a specially formatted <a href="SC://Env"><span class="s5">Env</span></a>, with phase values at onset points, inf at its end, and -inf otherwise can be used with <a href="LorisPhaseGen.html"><span class="s5">LorisPhaseGen</span></a> to correctly control phase and maximise efficiency.</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s6"><a href="BEPartials.html">BEPartials</a></span> has an <b>ar</b> method which returns the properly configured EnvGens/LorisPhaseGen for controlling frequency, phase, bandwidth and amplitude.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p3"><b>N.B.</b> Since the number of partials in a Loris analysis may be very large (numbering at times in the thousands), it may be necessary to tweak analysis parameters to reduce them in order to make realtime synthesis possible. Collation is one way to do this, but it is also possible to access and edit the partial list of a BEPartials directly, which could allow one to thin the list on the basis of amplitude, duration, etc. (See example below.)<span class="Apple-converted-space">  </span>Similarly, each partial requires three EnvGens, one LorisPhaseGen, and a BEOsc, which can result in very large and complicated SynthDefs. For this reason it may be necessary to increase the <b>numWireBufs</b> in your <a href="SC://ServerOptions"><span class="s4">ServerOptions</span></a>, and to use load rather than send when sending a <a href="SC://SynthDef"><span class="s4">SynthDef</span></a> to a <a href="SC://Server"><span class="s4">Server</span></a>.</p>
+<p class="p2"><br></p>
+<p class="p5"><b>Examples</b></p>
+<p class="p6"><br></p>
+<p class="p7">s.boot;</p>
+<p class="p8"><span class="s2">f = </span><span class="s7">RBE_SDIF_File</span><span class="s2">(</span><span class="s8">"A.sdif"</span><span class="s2">.resolveRelative); </span>// open a SDIF file with RBEP frames</p>
+<p class="p9"><span class="s2">p = </span>BEPartials<span class="s2">(f);</span></p>
+<p class="p7">f.close;</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p7">(</p>
+<p class="p7"><span class="s7">SynthDef</span>(<span class="s9">\A</span>, { <span class="s7">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p7"><span class="s7">var</span> outmix, envs;</p>
+<p class="p10"><br></p>
+<p class="p8">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p7">envs = p.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p8">// pan each partial and mix</p>
+<p class="p7">outmix = <span class="s7">Mix</span>(<span class="s7">PanAz</span>.ar(2, <span class="s7">BEOsc</span>.ar(*envs), {<span class="s7">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s7">EnvGen</span>.ar(<span class="s7">Env</span>.linen(attack, p.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s7">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p7">}).load(s, dir: <span class="s8">""</span>.resolveRelative);</p>
+<p class="p7">)</p>
+<p class="p10"><br></p>
+<p class="p9">Synth<span class="s2">(</span><span class="s9">\A</span><span class="s2">);</span></p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\A</span>, [pitch: 0.5]);</p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\A</span>, [stretch: 3]);</p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\A</span>, [stretch: 3, bw:0]);</p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\A</span>, [stretch: 3, bw:2]);</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8">// inputs can be other UGens</p>
+<p class="p8">// works well for stretch</p>
+<p class="p7">(</p>
+<p class="p7"><span class="s7">SynthDef</span>(<span class="s9">\Astretch</span>, { <span class="s7">arg</span> pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p7"><span class="s7">var</span> outmix, envs;</p>
+<p class="p10"><br></p>
+<p class="p8">// normal onset, then hold....</p>
+<p class="p7">envs = p.ar(<span class="s7">EnvGen</span>.kr(<span class="s7">Env</span>([1, 1, 10], [0.1, 0.05])), pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p8">// pan each partial and mix</p>
+<p class="p7">outmix = <span class="s7">Mix</span>(<span class="s7">PanAz</span>.ar(2, <span class="s7">BEOsc</span>.ar(*envs), {<span class="s7">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s7">EnvGen</span>.ar(<span class="s7">Env</span>.linen(attack, p.dur * 10, release), gate, mul, doneAction: 2);</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s7">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p7">}).load(s, dir: <span class="s8">""</span>.resolveRelative);</p>
+<p class="p7">)</p>
+<p class="p11"><br></p>
+<p class="p12"><span class="s7">Synth</span><span class="s2">(</span>\Astretch<span class="s2">);</span></p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\Astretch</span>, [pitch: 0.5]); <span class="s10">// hello cello</span></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8">// can use Functions for BEPartials:ar</p>
+<p class="p8">// wobble partial pitch</p>
+<p class="p7">(</p>
+<p class="p7"><span class="s7">SynthDef</span>(<span class="s9">\ApitchWobble</span>, { <span class="s7">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p7"><span class="s7">var</span> outmix, envs;</p>
+<p class="p10"><br></p>
+<p class="p8">// randomly modulate pitch per partial</p>
+<p class="p7">envs = p.ar(stretch, {<span class="s7">SinOsc</span>.kr(<span class="s7">Rand</span>(4.0, 10.0)).range(0.995, 1.005)}, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p8">// pan each partial and mix</p>
+<p class="p7">outmix = <span class="s7">Mix</span>(<span class="s7">PanAz</span>.ar(2, <span class="s7">BEOsc</span>.ar(*envs), {<span class="s7">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s7">EnvGen</span>.ar(<span class="s7">Env</span>.linen(attack, p.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s7">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p7">}).load(s, dir: <span class="s8">""</span>.resolveRelative);</p>
+<p class="p7">)</p>
+<p class="p10"><br></p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\ApitchWobble</span>, [stretch: 3]);</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8">// rand pitch</p>
+<p class="p7">(</p>
+<p class="p7"><span class="s7">SynthDef</span>(<span class="s9">\ApitchRand</span>, { <span class="s7">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p7"><span class="s7">var</span> outmix, envs;</p>
+<p class="p10"><br></p>
+<p class="p8">// randomly scale pitch per partial with global scale</p>
+<p class="p7">envs = p.ar(stretch, {<span class="s7">Rand</span>(1.0, 2.0) * pitch}, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p8">// pan each partial and mix</p>
+<p class="p7">outmix = <span class="s7">Mix</span>(<span class="s7">PanAz</span>.ar(2, <span class="s7">BEOsc</span>.ar(*envs), {<span class="s7">Rand</span>(-1, 1)} ! p.size))<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s7">EnvGen</span>.ar(<span class="s7">Env</span>.linen(attack, p.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s7">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p7">}).load(s, dir: <span class="s8">""</span>.resolveRelative);</p>
+<p class="p7">)</p>
+<p class="p10"><br></p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\ApitchRand</span>, [stretch: 3]);</p>
+<p class="p8"><span class="s7">Synth</span><span class="s2">(</span><span class="s9">\ApitchRand</span><span class="s2">, [stretch: 3]); </span>// different every time</p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\ApitchRand</span>, [stretch: 3, bw: 0]);</p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\ApitchRand</span>, [stretch: 3, pitch: 0.5, bw: 5]); <span class="s10">// exaggerate noise components</span></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8">////// manipulate partialList directly</p>
+<p class="p10"><br></p>
+<p class="p8">// sort by frequency and then only odd numbered partials (numbers start at 0, so use 'even')</p>
+<p class="p7">q = p.copy;</p>
+<p class="p7">q.partialList = q.partialList.sort({<span class="s7">|a, b|</span> a.freqs.mean &lt;= b.freqs.mean }).select({<span class="s7">|item, i|</span> i.even });</p>
+<p class="p10"><br></p>
+<p class="p7">(</p>
+<p class="p7"><span class="s7">SynthDef</span>(<span class="s9">\Aodd</span>, { <span class="s7">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p7"><span class="s7">var</span> outmix, envs;</p>
+<p class="p10"><br></p>
+<p class="p8">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p7">envs = q.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p8">// pan each partial and mix</p>
+<p class="p7">outmix = <span class="s7">Mix</span>(<span class="s7">PanAz</span>.ar(2, <span class="s7">BEOsc</span>.ar(*envs), {<span class="s7">Rand</span>(-1, 1)} ! q.size))<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s7">EnvGen</span>.ar(<span class="s7">Env</span>.linen(attack, q.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s7">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p7">}).load(s, dir: <span class="s8">""</span>.resolveRelative);</p>
+<p class="p7">)</p>
+<p class="p10"><br></p>
+<p class="p9">Synth<span class="s2">(</span><span class="s9">\Aodd</span><span class="s2">);</span></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8">// thin partialList by keeping only loud partials</p>
+<p class="p7">r = p.copy;</p>
+<p class="p7">r.partialList = r.partialList.select({<span class="s7">|part|</span> part.amps.maxItem &gt; 0.005 });</p>
+<p class="p10"><br></p>
+<p class="p7">(</p>
+<p class="p7"><span class="s7">SynthDef</span>(<span class="s9">\Athin</span>, { <span class="s7">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p7"><span class="s7">var</span> outmix, envs;</p>
+<p class="p10"><br></p>
+<p class="p8">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p7">envs = r.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p8">// pan each partial and mix</p>
+<p class="p7">outmix = <span class="s7">Mix</span>(<span class="s7">PanAz</span>.ar(2, <span class="s7">BEOsc</span>.ar(*envs), {<span class="s7">Rand</span>(-1, 1)} ! r.size))<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s7">EnvGen</span>.ar(<span class="s7">Env</span>.linen(attack, r.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s7">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p7">}).load(s, dir: <span class="s8">""</span>.resolveRelative);</p>
+<p class="p7">)</p>
+<p class="p10"><br></p>
+<p class="p8"><span class="s7">Synth</span><span class="s2">(</span><span class="s9">\Athin</span><span class="s2">); </span>// reasonable quality sound but cheaper in CPU</p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p10"><br></p>
+<p class="p8">// thin partialList by keeping only quiet partials</p>
+<p class="p7">t = p.copy;</p>
+<p class="p7">t.partialList = t.partialList.select({<span class="s7">|part|</span> part.amps.maxItem &lt; 0.005 });</p>
+<p class="p10"><br></p>
+<p class="p7">(</p>
+<p class="p7"><span class="s7">SynthDef</span>(<span class="s9">\Aquiet</span>, { <span class="s7">arg</span> stretch = 1, pitch = 1, bw = 1, mul = 1, gate = 1, attack=0, release=0.1, out=0;</p>
+<p class="p7"><span class="s7">var</span> outmix, envs;</p>
+<p class="p10"><br></p>
+<p class="p8">// returns [[freqEnvGen, a LorisPhaseGen, bandwidthEnvGen, ampEnvGen] * numPartials]</p>
+<p class="p7">envs = t.ar(stretch, pitch, bw);<span class="Apple-converted-space"> </span></p>
+<p class="p10"><br></p>
+<p class="p8">// pan each partial and mix</p>
+<p class="p7">outmix = <span class="s7">Mix</span>(<span class="s7">PanAz</span>.ar(2, <span class="s7">BEOsc</span>.ar(*envs), {<span class="s7">Rand</span>(-1, 1)} ! t.size))<span class="Apple-converted-space"> </span></p>
+<p class="p7"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>* <span class="s7">EnvGen</span>.ar(<span class="s7">Env</span>.linen(attack, t.dur * stretch, release), gate, mul, doneAction: 2);</p>
+<p class="p10"><span class="Apple-tab-span">	</span></p>
+<p class="p7"><span class="s7">Out</span>.ar(out, outmix);<span class="Apple-converted-space"> </span></p>
+<p class="p7">}).load(s, dir: <span class="s8">""</span>.resolveRelative);</p>
+<p class="p7">)</p>
+<p class="p10"><br></p>
+<p class="p12"><span class="s7">Synth</span><span class="s2">(</span>\Aquiet<span class="s2">);</span></p>
+<p class="p7"><span class="s7">Synth</span>(<span class="s9">\Aquiet</span>, [stretch: 6, pitch: 0.125, bw: 2, mul: 6]);</p>
+</body>
+</html>

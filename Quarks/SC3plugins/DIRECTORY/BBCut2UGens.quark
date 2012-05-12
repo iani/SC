@@ -1,0 +1,14 @@
+(
+	\name: "BBCut2UGens",
+	\path: "BBCut2UGens",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/BBCut2UGens",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

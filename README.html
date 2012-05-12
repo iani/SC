@@ -7,8 +7,8 @@ lang="en" xml:lang="en">
 <title>Lilt2/Elemenb\'i (/Look Ma, No Boot/)</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-10-14 14:43:31 EEST"/>
-<meta name="author" content="Ioannis Zannos"/>
+<meta name="generated" content="2012-04-15 23:32:20 EEST"/>
+<meta name="author" content="I Z"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
 <style type="text/css">
@@ -89,15 +89,16 @@ lang="en" xml:lang="en">
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#sec-1">1 Credits, Download </a></li>
-<li><a href="#sec-2">2 Installation </a></li>
-<li><a href="#sec-3">3 Class ServerPrep </a></li>
-<li><a href="#sec-4">4 Class SynthResource </a></li>
-<li><a href="#sec-5">5 Class Chain, EventStream, Function:sched and Function:stream </a></li>
-<li><a href="#sec-6">6 Object methods for easy messaging via NotificationCenter </a></li>
-<li><a href="#sec-7">7 Class Code </a></li>
-<li><a href="#sec-8">8 Class Panes </a></li>
-<li><a href="#sec-9">9 Class Dock </a></li>
-<li><a href="#sec-10">10 Class Spectrograph </a></li>
+<li><a href="#sec-2">2 Copying (License) </a></li>
+<li><a href="#sec-3">3 Installation </a></li>
+<li><a href="#sec-4">4 Class ServerPrep </a></li>
+<li><a href="#sec-5">5 Class SynthResource </a></li>
+<li><a href="#sec-6">6 Class Chain, EventStream, Function:sched and Function:stream </a></li>
+<li><a href="#sec-7">7 Object methods for easy messaging via NotificationCenter </a></li>
+<li><a href="#sec-8">8 Class Code </a></li>
+<li><a href="#sec-9">9 Class Panes </a></li>
+<li><a href="#sec-10">10 Class Dock </a></li>
+<li><a href="#sec-11">11 Class Spectrograph </a></li>
 </ul>
 </div>
 </div>
@@ -116,6 +117,13 @@ Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 <li>
 Server GUI by Sergio Luque
 </li>
+<li>
+beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
+BEAST research team at the University of Birmingham. See: <a href="http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx">http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx</a>
+</li>
+<li>
+collins quark group ported from Nick Collin's work at: <a href="http://www.sussex.ac.uk/Users/nc81/code.html">http://www.sussex.ac.uk/Users/nc81/code.html</a>
+</li>
 </ul>
 
 
@@ -132,8 +140,20 @@ git clone git://github.com/iani/SC.git
 </div>
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> Installation </h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> Copying (License) </h2>
 <div class="outline-text-2" id="text-2">
+
+
+<p>
+This library is distributed under the GNU General Public License. It contains other libraries released under the same license, in particular work by Nick Collins. See full text of the GNU license in file: "COPYING.txt".
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Installation </h2>
+<div class="outline-text-2" id="text-3">
 
 
 <p>
@@ -176,9 +196,9 @@ Chains (Alternative score-writing class for scheduling execution of functions wi
 
 </div>
 
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> Class ServerPrep </h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Class ServerPrep </h2>
+<div class="outline-text-2" id="text-4">
 
 
 <ul>
@@ -231,9 +251,9 @@ Udef
 
 </div>
 
-<div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> Class SynthResource </h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Class SynthResource </h2>
+<div class="outline-text-2" id="text-5">
 
 
 <p>
@@ -289,9 +309,9 @@ Example of how SynthResource can simplify the code required:
 
 </div>
 
-<div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> Class Chain, EventStream, Function:sched and Function:stream </h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Class Chain, EventStream, Function:sched and Function:stream </h2>
+<div class="outline-text-2" id="text-6">
 
 
 <p>
@@ -373,9 +393,9 @@ Chain(Prand([ // choose from the following at random:
 
 </div>
 
-<div id="outline-container-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> Object methods for easy messaging via NotificationCenter </h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Object methods for easy messaging via NotificationCenter </h2>
+<div class="outline-text-2" id="text-7">
 
 
 <p>
@@ -388,9 +408,9 @@ One beneficial effect of this is that it is no longer needed to check whether an
 
 </div>
 
-<div id="outline-container-7" class="outline-2">
-<h2 id="sec-7"><span class="section-number-2">7</span> Class Code </h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Class Code </h2>
+<div class="outline-text-2" id="text-8">
 
 
 <p>
@@ -434,9 +454,9 @@ Command-alt-control-shift-}: Create OSCresponders for running the code segments 
 
 </div>
 
-<div id="outline-container-8" class="outline-2">
-<h2 id="sec-8"><span class="section-number-2">8</span> Class Panes </h2>
-<div class="outline-text-2" id="text-8">
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Class Panes </h2>
+<div class="outline-text-2" id="text-9">
 
 
 <p>
@@ -446,9 +466,9 @@ Arrange Document windows on the screen conveniently for maximum view area on the
 
 </div>
 
-<div id="outline-container-9" class="outline-2">
-<h2 id="sec-9"><span class="section-number-2">9</span> Class Dock </h2>
-<div class="outline-text-2" id="text-9">
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> Class Dock </h2>
+<div class="outline-text-2" id="text-10">
 
 
 <p>
@@ -475,9 +495,9 @@ closeDocListWindow : Close the document list window
 
 </div>
 
-<div id="outline-container-10" class="outline-2">
-<h2 id="sec-10"><span class="section-number-2">10</span> Class Spectrograph </h2>
-<div class="outline-text-2" id="text-10">
+<div id="outline-container-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> Class Spectrograph </h2>
+<div class="outline-text-2" id="text-11">
 
 
 <p>
@@ -492,9 +512,9 @@ Note: The Spectrograph may occasionally crash SuperCollider if it is running on 
 </div>
 </div>
 <div id="postamble">
-<p class="author"> Author: Ioannis Zannos
+<p class="author"> Author: I Z
 </p>
-<p class="date"> Date: 2011-10-14 14:43:31 EEST</p>
+<p class="date"> Date: 2012-04-15 23:32:20 EEST</p>
 <p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
 </div>
 </div>

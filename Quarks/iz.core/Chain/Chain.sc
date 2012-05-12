@@ -6,7 +6,7 @@ Chain {
 		^this.newCopyArgs(pattern, envir ? ()).init.start;
 	}
 	
-	init { /* { pattern.postln; } ! 5; */ CmdPeriod.doOnceFirst(this); }
+	init { CmdPeriod.doOnceFirst(this); }
 
 	cmdPeriod { this.stop; }
 
@@ -107,8 +107,8 @@ Pattern and stream support for looping Functions
 		}
 	}
 
-	/* Schedule functions for repeated evaluation in time, within Chain or otherwise */
-	// nicer to use this shorter word, but semantically acceptable?
+	/* Schedule functions for repeated evaluation in time, within Chain or otherwise. */
+	// Convenient to use this shorter word, but semantically acceptable?
 	stream { | times, envir, dtime = 0, clock, onEnd | 
 		^this.schedEnvir(times, envir, dtime, clock, onEnd)
 	}

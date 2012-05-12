@@ -1,0 +1,135 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs22 \cf0 //This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs32 \cf0 New additions and updates in BBCut releases\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs24 \cf0 \
+1.3.1\
+Fix to update OnsetDetectorUI, some other small changes\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs36 \cf0 1.3
+\fs24 \
+\
+OnsetDetector UI and realtime onset detection classes added. To use these facilities properly you'll need an update of SuperCollider built after Weds 18th Feb 2004, since they depend on some new UGen plugins. \
+\
+Added basic jitlib support. \
+\
+AV protocol classes for MIDI and OSC messaging of bbcut state. Not supported with any guarantee of stability- this stuff gets changed regularly for my gig purposes. \
+\
+A few bug fixes, additions. \
+\
+\
+1.2.2\
+(Re-) Introduction of BBCSKnownOffsets (used to be called BBCSAutoSplice) \
+BBCSData simple cut synthesiser for text.\
+A few small help file updates.\
+\
+1.2.1\
+a few initial bug fixes and addition of .go and .play methods in place of the backwards looking .ar\
+\
+
+\fs36 1.2
+\fs24 \
+\
+A sideways step, porting to SC Server. For the moment, the UI and Event Detection classes \
+have been removed.  \
+\
+As consolation, there are a variety of new cut procedures and new synthesis capabilities. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 ThrashCutProc1  
+\f0\b0 A breakbeat cutting routine that owes something to thrash and hardcore. \
+\
+
+\f1\b RecursiveCutProc1  
+\f0\b0 Explicit recursive cutting routine where you can specify the recusion level live\
+\
+
+\f1\b SQPusher1
+\f0\b0  A simulation of some aspects of Tom Jenkinson's drum programming style, namely,\
+going at 200bpm and doing a few tuplet rolls.  \
+\
+Example pieces are also supplied. \
+\
+Because of the shift to SC3 there has been a necessary change in the way the client code works. I've tried to keep relatively close to the SC2 version, but there are some differences. Things may change due to user feedback or the integration of the autosplice material. \
+ \
+ \
+ \
+ \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs36 \cf0 1.1
+\fs24 \
+\
+new cut procedures\
+\
+BBCSPermute \
+Assuming a target can be evenly subdivided, permute the slices with some arbitrary user provided function\
+\
+ChooseBlockProc A simplification of WarpCutProc1, based around choosing first a block size, then some\
+subdivisions. The tutorial on writing cut procedures in the paper The BBCut Library from ICMC2002 \
+develops this.\
+\
+MotifCutProc Introducing an intermediate hierachical layer between phrase and block of \
+a Motif, being a short rhythmic figure. \
+Motifs can be interactively evolved using this cut procedure with the GAParams Library.\
+\
+\
+new cut synths\
+\
+BBCSAudioIn2\
+A longer storage buffer ( a delay line) gives a longer memory of recent events and allows \
+offset jumping within the past. \
+\
+BBCSAutoSplice given a list of allowable offsets, this cut synth restricts offsetting to that list,\
+spawning at an appropriate time proportionate to the current tempo.  \
+Changes of groove are also supported, where the offsets can trigger early or late based on \
+some groove template. \
+\
+\
+\
+new facilities \
+\
+AutoSpliceUI An extensible event detection suite with user interface. Useful for finding good strong\
+offsets into source audio, and thereafter cutting up from that information with standard BBCut. \
+The results aren't restricted to BBCut use though. \
+\
+EventDetection Six time domain offset detection algorithms, EventDetection is the base class, \
+with a further five derived routines.  \
+\
+There are also the DataDisplaySlider and NamedNumView ui classes included to help\
+with the AutoSpliceUI interface. \
+\
+\
+major bug fixes\
+\
+before, tempo=0 would cause infinite length envelopes/ record buffer for AudioIn\
+Now assume BBCL restricts tempos to greater than 0.25 for enveloping.\
+it still schedules at whatever tempo, it just doesn't try to make infinite length envelopes.\
+See BBCutSynth.convertDuration\
+\
+(	//demonstrating tempo following\
+\{\
+var sf;\
+sf= SoundFiles3.new.init([":Sounds:break"],[8]);\
+\
+SetTempo.kr(nil,MouseX.kr(0,1));\
+\
+BBCut.ar(BBCutSynthParam.easysf(sf))\
+\}.play;\
+)\
+\
+\
+ }

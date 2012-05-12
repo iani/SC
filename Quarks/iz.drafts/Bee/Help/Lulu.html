@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138.32">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #0000ee}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #d00c0c; min-height: 12.0px}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #162bc4}
+span.s1 {color: #d00c0c}
+span.s2 {text-decoration: underline ; color: #0000ee}
+span.s3 {color: #162bc4}
+span.s4 {color: #000000}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">/* IZ 20111222</p>
+<p class="p1">Drawing Lulu's main twelve tone series</p>
+<p class="p2"><span class="s1">See: <a href="http://en.wikipedia.org/wiki/Lulu_(opera)#The_tone_rows"><span class="s2">http://en.wikipedia.org/wiki/Lulu_(opera)#The_tone_rows</span></a></span></p>
+<p class="p3"><br></p>
+<p class="p1">This example here will be extended to form a mechanism for visualising and analysing twelve tone construction techniques.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p1">The last example of the present file gives a representation of the Lulu tone row.<span class="Apple-converted-space"> </span></p>
+<p class="p3"><br></p>
+<p class="p1">*/</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p1">//:---</p>
+<p class="p5"><span class="s3">Bee</span>.draw({ <span class="s3">| b |</span> b.move(50); b.turn(pi / 6); }, repeats: 12, rate: 0);</p>
+<p class="p4"><br></p>
+<p class="p1">//:---<span class="Apple-converted-space"> </span></p>
+<p class="p5"><span class="s3">Bee</span>.draw({ <span class="s3">| b, i |</span> b.moveTo(<span class="s3">Polar</span>(100, i * pi / 6).asPoint + (200@200)); }, x: 100, y: 100, repeats: 12, rate: 0);</p>
+<p class="p4"><br></p>
+<p class="p1">//:----<span class="Apple-converted-space"> </span></p>
+<p class="p5">p = <span class="s3">Polar</span>(100, -1 * pi / 6).asPoint + (200@200);</p>
+<p class="p5"><span class="s3">Bee</span>.draw({ <span class="s3">| b, i |</span> b.moveTo(<span class="s3">Polar</span>(100, i * pi / 6).asPoint + (200@200)); }, x: p.x, y: p.y, repeats: 12, rate: 0);</p>
+<p class="p4"><br></p>
+<p class="p1">//:----</p>
+<p class="p5">a = (0..11);</p>
+<p class="p5">p = <span class="s3">Polar</span>(100, a[0] * pi / 6).asPoint + (200@200);</p>
+<p class="p5"><span class="s3">Bee</span>.draw(</p>
+<p class="p5"><span class="Apple-tab-span">	</span>{ <span class="s3">| b, i |</span> b.moveTo(<span class="s3">Polar</span>(100, a[i + 1] * pi / 6).asPoint + (200@200)); },</p>
+<p class="p5"><span class="Apple-tab-span">	</span>x: p.x, y: p.y, repeats: a.size - 1, rate: 0</p>
+<p class="p5">);</p>
+<p class="p4"><br></p>
+<p class="p1">//:----</p>
+<p class="p4"><br></p>
+<p class="p6"><span class="s4">f = { </span>| series |</p>
+<p class="p5"><span class="Apple-tab-span">	</span>series = series ?? { (0..11) };</p>
+<p class="p5"><span class="Apple-tab-span">	</span>p = <span class="s3">Polar</span>(100, series[0] * pi / 6).asPoint + (200@200);</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">Bee</span>.draw(</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">| b, i |</span> b.moveTo(<span class="s3">Polar</span>(100, series[i + 1] * pi / 6).asPoint + (200@200)); },</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>x: p.x, y: p.y, repeats: series.size - 1, rate: 0</p>
+<p class="p5"><span class="Apple-tab-span">	</span>);</p>
+<p class="p5">};</p>
+<p class="p4"><br></p>
+<p class="p5">f.(<span class="s3">Array</span>.rand(12, 0, 11))</p>
+<p class="p1">//:----<span class="Apple-converted-space"> </span></p>
+<p class="p5">f.([0, 7, 2, 9]);</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p1">//:----<span class="Apple-converted-space"> </span></p>
+<p class="p5">f.([0, 7, 2, 9]);</p>
+<p class="p4"><br></p>
+<p class="p1">//:----</p>
+<p class="p4"><br></p>
+<p class="p6"><span class="s4">f = { </span>| series |</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">var</span> pipi = pi / 6;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">var</span> origin = 200@200;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>series = series ?? { (0..11) };</p>
+<p class="p5"><span class="Apple-tab-span">	</span>series = series * 7 - 3 % 12;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>p = <span class="s3">Polar</span>(100, series[0] * pipi).asPoint + origin;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">Bee</span>.draw(</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">| b, i |</span> b.moveTo(<span class="s3">Polar</span>(100, series[i + 1] * pipi).asPoint + origin); },</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>x: p.x, y: p.y, repeats: series.size - 1, rate: 0</p>
+<p class="p5"><span class="Apple-tab-span">	</span>);</p>
+<p class="p5">};</p>
+<p class="p4"><br></p>
+<p class="p5">f.([0, 7, 2]);</p>
+<p class="p1">//:----<span class="Apple-converted-space"> </span></p>
+<p class="p5">f.([0, 7, 2, 9]);</p>
+<p class="p1">//:lulu series, tetrachord 1</p>
+<p class="p1"><span class="s4">f.([10, 3, 4, 9]);<span class="Apple-tab-span">	</span></span>// lulu series, tetrachord 1</p>
+<p class="p4"><br></p>
+<p class="p1">//:lulu series, tetrachord 1, transposition 1</p>
+<p class="p1"><span class="s4">f.([10, 3, 4, 9] + 2);<span class="Apple-tab-span">	</span></span>// lulu series, tetrachord 1, transposition 1<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p1">//:lulu series, tetrachord 1, transposition 2<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="s4">f.([10, 3, 4, 9] + 4);<span class="Apple-tab-span">	</span></span>// lulu series, tetrachord 1, transposition 2</p>
+<p class="p1">//:lulu series complete</p>
+<p class="p5">f.(([10, 3, 4, 9].dup(3) + [0, 2, 4]).flat);</p>
+<p class="p4"><br></p>
+<p class="p5">//:Moving towards closed shapes:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6"><span class="s4">f = { </span>| series |</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">var</span> pipi = pi / 6;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">var</span> origin = 200@200;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>series = series ?? { (0..11) };</p>
+<p class="p5">//<span class="Apple-tab-span">	</span>series = series.add(series[0]);</p>
+<p class="p5"><span class="Apple-tab-span">	</span>series = series * 7 - 3 % 12;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>p = <span class="s3">Polar</span>(100, series[0] * pipi).asPoint + origin;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">Bee</span>.draw(</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">| b, i |</span> b.moveTo(<span class="s3">Polar</span>(100, series[i + 1] * pipi).asPoint + origin); },</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>x: p.x, y: p.y, repeats: series.size - 1, rate: 0</p>
+<p class="p5"><span class="Apple-tab-span">	</span>).poly.color_(Color.hsv(0.7.rand, 0.7.rand, 0.7.rand, 0.7.rand)).drawMethod_(\fill);</p>
+<p class="p5">};</p>
+<p class="p4"><br></p>
+<p class="p5">f.([0, 7, 2, 11]);</p>
+<p class="p4"><br></p>
+<p class="p5">//:Multiple shapes on one bee</p>
+<p class="p4"><br></p>
+<p class="p5">b = Bee.new;</p>
+<p class="p4"><br></p>
+<p class="p6"><span class="s4">f = { </span>| series |</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">var</span> pipi = pi / 6;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">var</span> origin = 200@200;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>series = series ?? { (0..11) };</p>
+<p class="p5">//<span class="Apple-tab-span">	</span>series = series.add(series[0]);</p>
+<p class="p5"><span class="Apple-tab-span">	</span>series = series * 7 - 3 % 12;</p>
+<p class="p5"><span class="Apple-tab-span">	</span>p = <span class="s3">Polar</span>(100, series[0] * pipi).asPoint + origin;</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="s3">Bee</span>.draw(</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>{ <span class="s3">| b, i |</span> b.moveTo(<span class="s3">Polar</span>(100, series[i + 1] * pipi).asPoint + origin); },</p>
+<p class="p5"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>x: p.x, y: p.y, repeats: series.size - 1, rate: 0</p>
+<p class="p5"><span class="Apple-tab-span">	</span>).poly.color_(Color.hsv(0.7.rand, 0.7.rand, 0.7.rand, 0.7.rand)).drawMethod_(\fill);</p>
+<p class="p5">};</p>
+<p class="p4"><br></p>
+<p class="p5">f.([0, 7, 2, 11]);</p>
+<p class="p4"><br></p>
+<p class="p5">f.(([10, 3, 4, 9].dup(3) + [0, 2, 4]).flat);</p>
+<p class="p4"><br></p>
+<p class="p5">//:LULU</p>
+<p class="p5">a = Screen(name: "Lulu");</p>
+<p class="p5">([10, 3, 4, 9].dup(3) + [0, 2, 4]) do:<span class="Apple-converted-space">  </span>{ | s | p = PitchPoly.new; a add: p; s do: p.add(_) }</p>
+<p class="p4"><br></p>
+</body>
+</html>

@@ -1,22 +1,23 @@
                 Lilt2/Elemenb\'i (/Look Ma, No Boot/)
                 =====================================
 
-Author: Ioannis Zannos
-Date: 2011-10-14 17:27:25 EEST
+Author: I Z
+Date: 2012-04-15 23:32:17 EEST
 
 
 Table of Contents
 =================
 1 Credits, Download 
-2 Installation 
-3 Class ServerPrep 
-4 Class SynthResource 
-5 Class Chain, EventStream, Function:sched and Function:stream 
-6 Object methods for easy messaging via NotificationCenter 
-7 Class Code 
-8 Class Panes 
-9 Class Dock 
-10 Class Spectrograph 
+2 Copying (License) 
+3 Installation 
+4 Class ServerPrep 
+5 Class SynthResource 
+6 Class Chain, EventStream, Function:sched and Function:stream 
+7 Object methods for easy messaging via NotificationCenter 
+8 Class Code 
+9 Class Panes 
+10 Class Dock 
+11 Class Spectrograph 
 
 
 1 Credits, Download 
@@ -24,12 +25,20 @@ Table of Contents
 - Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
+- beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
+  BEAST research team at the University of Birmingham. See: [http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx]
+- collins quark group ported from Nick Collin's work at: [http://www.sussex.ac.uk/Users/nc81/code.html]
 
 Download from: [https://github.com/iani/SC]
 or:
  git clone git://github.com/iani/SC.git
 
-2 Installation 
+2 Copying (License) 
+~~~~~~~~~~~~~~~~~~~~
+
+This library is distributed under the GNU General Public License. It contains other libraries released under the same license, in particular work by Nick Collins. See full text of the GNU license in file: "COPYING.txt".
+
+3 Installation 
 ~~~~~~~~~~~~~~~
 
 As of 2011-06-08 The library is being reorganized to a modular plugin-form using quarks (thanks MC). To make these quarks available via a menu on MacOS X, make an alias of the folder "PutMyAliasInExtensions" and put the alias in:
@@ -47,7 +56,7 @@ Choose iz.local from the Quarks menu.  Recommended Quarks to try out are:
 - ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
 - Chains (Alternative score-writing class for scheduling execution of functions with patterns)
 
-3 Class ServerPrep 
+4 Class ServerPrep 
 ~~~~~~~~~~~~~~~~~~~
 
 - Obviate the need to boot the server manually before starting synths.
@@ -67,7 +76,7 @@ Classes involved:
 - UniqueBuffer
 - Udef
 
-4 Class SynthResource 
+5 Class SynthResource 
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
@@ -104,7 +113,7 @@ Example of how SynthResource can simplify the code required:
   }.fork;
   )
 
-5 Class Chain, EventStream, Function:sched and Function:stream 
+6 Class Chain, EventStream, Function:sched and Function:stream 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
@@ -162,14 +171,14 @@ Other example:
   )
 
 
-6 Object methods for easy messaging via NotificationCenter 
+7 Object methods for easy messaging via NotificationCenter 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 
-7 Class Code 
+8 Class Code 
 ~~~~~~~~~~~~~
 
 Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
@@ -187,13 +196,13 @@ Shortcuts provided are:
 - Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
 - Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
 
-8 Class Panes 
+9 Class Panes 
 ~~~~~~~~~~~~~~
 
 Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
 
-9 Class Dock 
-~~~~~~~~~~~~~
+10 Class Dock 
+~~~~~~~~~~~~~~
 
 Provide some useful shortcuts for common tasks: 
    browseUserClasses :    Open a list of all classes defined in the user's Application Support 
@@ -210,7 +219,7 @@ Provide some useful shortcuts for common tasks:
 
    closeDocListWindow : Close the document list window
 
-10 Class Spectrograph 
+11 Class Spectrograph 
 ~~~~~~~~~~~~~~~~~~~~~~
 
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 

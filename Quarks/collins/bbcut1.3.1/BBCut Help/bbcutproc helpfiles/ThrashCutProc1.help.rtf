@@ -1,0 +1,234 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fnil\fcharset77 Monaco;
+}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green115\blue0;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help\
+
+\f1\b\fs30 \
+ThrashCutProc1
+\f0\b0\fs24 \
+\
+
+\f1\b Superclass: BBCutProc
+\f0\b0 \
+\
+A cut procedure which uses the idea of fast roll figures like demisemiquavers or triplet sixteenth notes\
+(as in thrash guitar playing) to form blocks for breakbeat cutting. \
+\
+
+\f1\b \ul Class Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b *new(kickoffset, snareoffset, phraselength=4.0, blockdiv, chooseriff, shuffles=1, filltest, stopchance=0.125)   
+\f0\b0 \
+\
+Create a ThrashCutProc1 object with the given parameters.\
+\
+This cut procedure usually works in 4/4 bar phrases, but should survive other phraselengths.  \
+\
+
+\f1\b kickoffset
+\f0\b0  - Function returning kick offset positions, offsets being in the range 0.0 to 1.0. So for random\
+beats of a 4/4 source, try \{([0,1,2,3]/4).choose\}\
+\
+
+\f1\b snareoffset 
+\f0\b0 - choose snare offset positions. \
+\
+
+\f1\b phraselength- 
+\f0\b0 Typically 4.0 or 8.0.\
+\
+
+\f1\b blockdiv-
+\f0\b0  The way to do the fast ostinato thrash figure. [0.34,0.33,0.33] for triplets, [0.25,0.25,0.25,0.25]\
+for sixteenth/thirtytwoth, [0.25,0.25,0.5] for an irregular figure.\
+\
+
+\f1\b chooseriff
+\f0\b0  - Function giving choice of a new rhythmic riff from the database each bar:\
+ \{arg previous, howmany; if(0.1.coin,\{howmany.rand\},\{previous\});\}\
+\
+
+\f1\b shuffles
+\f0\b0  - Number of involutions of the source cut sequences to perform, to give some randomisation\
+for each play. \
+\
+
+\f1\b filltest
+\f0\b0  - chance of a fill pattern this bar. fills are the inverse of the normal patterns, in that rolls become straight\
+and straight become rolls, and kicks becomes snares and snares kicks...\
+\
+
+\f1\b stopchance
+\f0\b0  - chance of a zero amplitude block, ie, rest. Only one can happen per bar and the probability \
+tested on every block until it does happen or a new phrase begins.\
+\
+\
+
+\f1\b \ul Instance Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b initThrashCutProc1
+\f0\b0 \
+\
+Examples\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\fs18 \cf0 (	\cf2 //defaults\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\cf3 ThrashCutProc1\cf0 .new).tempo_(3.33).go;\
+)\
+\
+(	\cf2 //kick and snare offsetting choices- you may need to choose appropriate \cf0 \
+	\cf2 //ones for your break\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\cf3 ThrashCutProc1\cf0 .new(\{[0.0,0.5].choose\},\{[0.125,0.625].choose\},chooseriff:1 )).tempo_(3.33).go;\
+)\
+\
+\
+(	\cf2 //changing bar to bar more\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\cf3 ThrashCutProc1\cf0 .new(0.0,0.125,8.0,\{[0.25,0.25,0.5]\},\
+chooseriff: \{\cf3 arg\cf0  previous, howmany; if(0.5.coin,\{howmany.rand;\},\{previous\});\},\
+shuffles:\{2.rand\},\
+filltest:\{0.25.coin\}	\cf2 //inverts role of kick and snare\cf0 \
+)).tempo_(2).go;\
+)\
+\
+\
+\
+(	\cf2 //kick and snare offsetting choices- you may need to choose appropriate \cf0 \
+	\cf2 //ones for your break\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 .array([\cf4 ":Sounds:bogdan:dillbeat1"\cf0 ,\cf4 ":Sounds:bogdan:wrbreak(4)"\cf0 ],[8,4]);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf.at(0), pbsfunc:\cf3 BBCSPlayback1\cf0 .new(0.9)),\
+\cf3 ThrashCutProc1\cf0 .new(\{[0.0,0.5].choose\},\{[0.125,0.625].choose\},8.0,chooseriff:1)\
+).tempo_(3.33).ar;\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf.at(1), dutycycle:\cf3 BBCSPlayback1\cf0 .new(0.9,-1)),\
+\cf3 ThrashCutProc1\cf0 .new(\{[0.0,0.5].choose\},\{[0.25,0.75].choose\},10.0,chooseriff:2)\
+).tempo_(3.33).go;\
+\
+)\
+\
+(		\cf2 //quintuplet figure for blockdiv\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "a11wlk01.wav"\cf0 ,8);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf,pbsfunc:\cf3 BBCSPlayback1\cf0 .new(0.95)),\
+\cf3 ThrashCutProc1\cf0 .new(\{[0.7,0.2].choose\},\{[0.125,0.5].choose\}, \
+7, \{[0.2,0.2,0.1,0.1,0.2,0.2]\},\{2.rand+2\},\{5.rand\})\
+).tempo_(3.33).go;\
+\
+)\
+\
+\
+\cf2 //groove in UK Garage style- [0.32,0.18]\cf0 \
+(	\
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 ":Sounds:bogdan:dillbeat1"\cf0 ,8);\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf,pbsfunc:\cf3 BBCSPlayback1\cf0 .new(0.88)),\
+\cf3 ThrashCutProc1\cf0 .new(\{[0,0.25,0.5,0.75].choose\},\{[0.125,0.375,0.625,0.875].choose\}, \
+8, \{[0.32,0.18]\},\cf2 //groove passed as blockdiv function\cf0 \
+\{4.rand\},\{5.rand\})\
+).tempo_(2.4).go;\
+\
+)\
+\
+\
+\
+\cf2 //UI controls\cf0 \
+(\
+\cf3 var\cf0  sf;\
+\cf3 var\cf0  w,chooseriff, shuffles, fillchance, stopchance;\
+	\
+w = \cf3 SCWindow\cf0 (\cf4 "ThrashCutProc1 demo"\cf0 , \cf3 Rect\cf0 .new(200,200,300,150));\
+chooseriff=\cf3 DDSlider\cf0 ( w, \cf3 Rect\cf0 .new(0,0,150,40), \cf4 "chooseriff"\cf0 , 0, 3, \cf5 'linear'\cf0 , 1, 0);\
+shuffles=\cf3 DDSlider\cf0 ( w, \cf3 Rect\cf0 .new(0,50,150,40), \cf4 "shuffles"\cf0 , 0, 10, \cf5 'linear'\cf0 , 1, 0);\
+fillchance=\cf3 DDSlider\cf0 ( w, \cf3 Rect\cf0 .new(150,0,150,40), \cf4 "fillchance"\cf0 , 0.0, 1.0, \cf5 'linear'\cf0 , 0.01, 0.0);\
+stopchance=\cf3 DDSlider\cf0 ( w, \cf3 Rect\cf0 .new(150,50,150,40), \cf4 "stopchance"\cf0 , 0.0, 1.0, \cf5 'linear'\cf0 , 0.01, 0.0);\
+\
+w.front;	\
+\
+sf=\cf3 SF3\cf0 (\cf4 ":Sounds:feb21:public9.aif"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\
+\cf3 ThrashCutProc1\cf0 .new(0.0,0.125,8.0,[0.25,0.25,0.25,0.25],\
+\{chooseriff.value.round(1.0).asInteger\},\
+\{shuffles.value.round(1.0).asInteger\},\
+\{fillchance.value.coin\},\
+stopchance\
+)\
+).tempo_(3.33).go;\
+)\
+\
+\
+\
+\
+(	\cf2 //panning trick\cf0 \
+\cf3 var\cf0  sf;\
+\
+sf=\cf3 SF3\cf0 (\cf4 "a11wlk01.wav"\cf0 ,8); \
+\
+\cf3 BBCut\cf0 (\
+[[\cf3 BBCutSynthSF\cf0 (sf,0.2,0.7,-0.8,dutycycle: 0.2)],\
+[\cf3 BBCutSynthSF\cf0 (sf,0.5,0.4,0.8,dutycycle: 0.7)]],\
+\cf3 ThrashCutProc1\cf0 (0.0,0.3,7.5,chooseriff:\{\cf3 arg\cf0  last, num; num.rand\}, stopchance:0.5)\
+).tempo_(4.5).go;\
+\
+)\
+\
+\
+\
+(	\cf2 //always fills\cf0 \
+\cf3 var\cf0  sf;\
+\
+sf=\cf3 SF3\cf0 (\cf4 ":Sounds:bogdan:dillbeat1"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf, 0.3,\{if(0.2.coin,\{0\},\{1\})\}, dutycycle: 0.7),\
+\cf3 ThrashCutProc1\cf0 (0.0,0.125,5.5,chooseriff:\{\cf3 arg\cf0  last, num; (last+((num-1).rand))%num\},filltest:\cf3 true\cf0 , stopchance:1.0)\
+).tempo_(3.5).go;\
+)\
+\
+\
+\
+\
+(	\cf2 //change database- see the class file for the format of the data\cf0 \
+\cf3 var\cf0  sf, proc;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+proc= \cf3 ThrashCutProc1\cf0 (0,0.125, shuffles:0);\
+\
+proc.database=[[[0.5,2],[0.5,2],[0.5,0],[0.5,1],[0.5,3],[0.5,1],[0.5,2],[0.5,0]]];\
+\
+\cf2 //3.33bps= 200 bpm\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf, ampfunc:BBCSRollAmplitude.new),proc\cf3 )\cf0 .tempo_(2).go;\
+)\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs24 \cf0 \
+}

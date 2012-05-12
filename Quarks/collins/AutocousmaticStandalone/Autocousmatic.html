@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1038.35">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 26.0px Monaco; color: #0000ff}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px Monaco}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px Monaco; min-height: 20.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cd1713; min-height: 12.0px}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #cd1713}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #000000}
+p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #737373}
+span.s1 {color: #1738f5}
+span.s2 {color: #000000}
+span.s3 {color: #102ac3}
+span.s4 {color: #737373}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1">Autocousmatic</p>
+<p class="p2"><br></p>
+<p class="p3">Thank you for trying out this program!<span class="Apple-converted-space"> </span></p>
+<p class="p3">Please do consider filling in the short [<a href="AutocousmaticQuestionnaire.html"><span class="s1">AutocousmaticQuestionnaire</span></a>] to return to me.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">Autocousmatic is an automatic acousmatic music generator. Given some source sounds, it will attempt to create a multichannel electroacoustic work from them. It does this through a combination of algorithmic composition and machine listening, calculating through various iterations of activity as it moves from processing smaller sound files to rendering the complete work.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">If you're having issues getting the program to run, my apologies: feel free to send me bug reports as N dot Collins at sussex dot ac dot uk.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">A few things to watch out for:<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">-- Make sure you have specified a source directory, which contains at least one sound file in a standard format (no mp3s, wav is fine).<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">-- Make sure you have specified an output directory, which is where one or more mixes of your final work will be rendered to.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">-- Be patient. Rendering time is around 5 minutes per minute of output audio, dependent on how many channels you request. Long 20 minute pieces in 8 channels could take an hour to calculate.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">--if you don't have write permissions in your user account for the directories you're pointing to, or sufficient room on your hard drive for temporary files, you may get into difficulty.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p3">Underneath the surface, this application is really SuperCollider. You can run Autocousmatic with SC calls if you're comfortable with that. Instructions follow.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p5"><br></p>
+<p class="p5"><br></p>
+<p class="p6"><span class="s2">a= </span><span class="s3">Autocousmatic</span><span class="s2">(2,150.0); <span class="Apple-tab-span">	</span></span>//create an Autocousmatic object, 2 channel piece, 150 seconds length</p>
+<p class="p7"><br></p>
+<p class="p6">//you can set the directories manually (or hard code in the Autocousmatic class file)</p>
+<p class="p8">a.tempdir= <span class="s4">"/tmp/"</span>; <span class="Apple-converted-space"> </span></p>
+<p class="p9"><span class="s2">a.sourcedir=</span>"/Users/nickcollins/Desktop/source"<span class="s2">; <span class="Apple-converted-space"> </span></span></p>
+<p class="p9"><span class="s2">a.renderdir=</span>"/Users/nickcollins/Desktop/render"<span class="s2">;<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p6">//render</p>
+<p class="p6"><span class="s2">a.go(20,5); </span>//first number is mix density; 10-20 are good default values, though you could experiment. Second number is the number of output mixes to create</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8">(</p>
+<p class="p8">{</p>
+<p class="p6"><span class="s2">a.mix4(99); </span>//redo final mix by calling directly, creates render99.wav (assumes already went through earlier stages of calculation above)</p>
+<p class="p8">}.fork;</p>
+<p class="p8">)</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p6"><span class="s3">Autocousmatic</span><span class="s2">.clean<span class="Apple-tab-span">	</span></span>//remove all temp data</p>
+<p class="p7"><br></p>
+<p class="p2"><br></p>
+</body>
+</html>

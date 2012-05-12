@@ -20,7 +20,7 @@ Screen {
 	initViewFunc {
 		window.drawHook = {
 			this.setView;
-			graph.draw;
+			graph draw: window.view.bounds;
 		}
 	}
 

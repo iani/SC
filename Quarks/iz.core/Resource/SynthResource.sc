@@ -24,7 +24,7 @@ AbstractServerResource : Resource {
 		path = this.mainKey.add(server ? Server.default);
 		if (objects.atPath(path).isNil) { ^[] };
 		^objects.leaves(path);
-	}	
+	}
 }
 
 SynthResource : AbstractServerResource {

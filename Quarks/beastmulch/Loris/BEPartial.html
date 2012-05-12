@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.54">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #0000ff}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; color: #000000}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p7 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p8 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica}
+p.p9 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p10 {margin: 0.0px 0.0px 0.0px 85.0px; text-indent: -85.0px; font: 12.0px Helvetica}
+p.p11 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica}
+p.p12 {margin: 0.0px 0.0px 0.0px 57.0px; text-indent: -57.0px; font: 14.0px Helvetica; min-height: 17.0px}
+p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #c21d1c}
+p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; color: #c21d1c; min-height: 12.0px}
+span.s1 {font: 18.0px Helvetica}
+span.s2 {color: #000000}
+span.s3 {color: #0000ff}
+span.s4 {font: 11.0px Helvetica}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><span class="s1"><b>BEPartial<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b></span><b>a Loris Bandwidth Enhanced Partial</b><span class="s1"><b><span class="Apple-tab-span">	</span></b></span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>Inherits from: </b><a href="SC://Object"><b>Object</b></a><b> : </b><a href="SC://Collection"><b>Collection</b></a><b> : </b><a href="SC://SequenceableCollection"><b>SequenceableCollection</b></a><b> : </b><a href="SC://ArrayedCollection"><b>ArrayedCollection</b></a><b> : </b><a href="SC://Array"><b>Array</b></a></span></p>
+<p class="p4"><br></p>
+<p class="p1">BEPartial represents a single partial in the Loris Reassigned Bandwidth-Enhanced Additive Sound Model. Normally you would not create these directly, rather an instance of <a href="BEPartials.html"><span class="s3">BEPartials</span></a> would create them for you.</p>
+<p class="p2"><br></p>
+<p class="p1">This is essentially a subclass of <a href="SC://Array"><span class="s3">Array</span></a> with a few convenience methods added. Note that when modifying any of the partials elements, it is best practice to reassign back to the partial in case a new Array is returned, for example:</p>
+<p class="p2"><br></p>
+<p class="p5"><span class="Apple-tab-span">	</span>myPartial.times = myPartial.times.squared;</p>
+<p class="p2"><br></p>
+<p class="p3"><span class="s2"><b>See also:</b> <a href="Loris.html">Loris</a>, <a href="BEPartials.html">BEPartials</a>, <a href="BEOsc.html">BEOsc</a></span></p>
+<p class="p2"><br></p>
+<p class="p6"><b>Creation / Class Methods</b></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>*new</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BEPartial.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>*newFrom (array)</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Create a new BEPartial from an <a href="SC://Array"><span class="s3">Array</span></a> of breakpoint data.</p>
+<p class="p10"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span><b>array </b>- The breakpoint data, in the form [startTime, times, freqs, phases, bandwidths, amps]. All but startTime are Arrays, and they should be of the same size, except for times, which should be one smaller as its values indicate the duration of segments between partial breakpoints.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p11"><b>Instance Methods</b></p>
+<p class="p12"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>startTime_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>startTime</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set or get this partial's startTime in seconds.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>times_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>times</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set or get this partial's times <a href="SC://Array"><span class="s3">Array</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>freqs_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>freqs</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set or get this partial's freqs <a href="SC://Array"><span class="s3">Array</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>phases</b><span class="s4"><b>_</b></span></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>phases</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set or get this partial's phases <a href="SC://Array"><span class="s3">Array</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>bandwidths_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>bandwidths</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set or get this partial's bandwidths <a href="SC://Array"><span class="s3">Array</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>amps_</b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>amps</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Set or get this partial's amps <a href="SC://Array"><span class="s3">Array</span></a>.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>dur</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns this partial's duration in seconds, including its startTime.</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span>numBreakPoints</b></p>
+<p class="p9"><b><span class="Apple-tab-span">	</span></b></p>
+<p class="p8"><b><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span></b>Returns the number of breakpoints in this partial</p>
+<p class="p7"><br></p>
+<p class="p7"><br></p>
+<p class="p11"><b>Examples</b></p>
+<p class="p4"><br></p>
+<p class="p13">// see the <a href="Loris.html"><span class="s3">Loris</span></a> help file for general examples</p>
+<p class="p14"><br></p>
+<p class="p4"><br></p>
+</body>
+</html>

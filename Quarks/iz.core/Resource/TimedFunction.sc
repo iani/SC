@@ -2,7 +2,7 @@
 
 Prevent a functinn from being evaluated twice within a certain time interval. 
 
-Useful for preventing crashes when double clicking a window that is supposed to close on clid. 
+Useful for preventing crashes when double clicking a window that is supposed to close on mouse-click by user. 
 
 (
 fork {

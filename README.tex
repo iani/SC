@@ -1,7 +1,9 @@
-% Created 2011-10-14 Fri 14:42
-\documentclass[11pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+% Created 2012-03-17 Sat 20:10
+\documentclass[11pt, a4paper]{scrartcl}
+\usepackage{fontspec,xltxtra} 
+\setromanfont[Mapping=tex-text]{Times New Roman} 
+\setsansfont[Mapping=tex-text]{Arial} 
+\usepackage[backend=biber, natbib, authordate]{biblatex-chicago}
 \usepackage{fixltx2e}
 \usepackage{graphicx}
 \usepackage{longtable}
@@ -13,8 +15,13 @@
 \usepackage{wasysym}
 \usepackage{latexsym}
 \usepackage{amssymb}
+\addbibresource{~/Dropbox/orgshared/references/bib/references.bib}
+\addbibresource{~/Dropbox/orgshared/references/bib/ari.bib}
+\addbibresource{~/Dropbox/orgshared/references/bib/iani.bib}
 \usepackage{hyperref}
 \tolerance=1000
+\sloppy
+
 \providecommand{\alert}[1]{\textbf{#1}}
 \begin{document}
 
@@ -22,7 +29,7 @@
 
 \title{Lilt2/Elemenb\'i (\emph{Look Ma, No Boot})}
 \author{Ioannis Zannos}
-\date{14 October 2011}
+\date{17 March 2012}
 \maketitle
 
 \setcounter{tocdepth}{3}
@@ -36,6 +43,8 @@
 \item Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
 \item Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 \item Server GUI by Sergio Luque
+\item beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
+  BEAST research team at the University of Birmingham. See: \href{http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx}{http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx}
 \end{itemize}
 
 Download from: \href{https://github.com/iani/SC}{https://github.com/iani/SC}

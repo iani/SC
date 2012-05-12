@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138.32">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+li.li2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+li.li4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #0000ee}
+span.s1 {text-decoration: underline ; color: #0000ee}
+span.s2 {color: #000000}
+span.s3 {text-decoration: underline}
+span.s4 {color: #0000ee}
+span.s5 {color: #f8111b}
+ol.ol1 {list-style-type: decimal}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p2">IZ 2012 03 ff</p>
+<p class="p1"><br></p>
+<p class="p2">Building a library for analysing sound files with feature extraction / machine listening algorithms.</p>
+<p class="p1"><br></p>
+<p class="p3"><b>Basic considerations</b></p>
+<p class="p1"><br></p>
+<p class="p2"><b>Two approaches: Online and offline</b></p>
+<p class="p1"><br></p>
+<p class="p2">Online: Extract features from the source (a sound signal) during a performance, accumulate these in RAM or on file, and use the accumulated features to guide the performance as it is unfolding.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">Offline: Extract features from the source at a time independent from any performance, and save these on file. Then load these features at any time before or during a performance or composition process and use these already complete data for the performance or composition.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2"><b>Two types of features: Continuous and discrete</b></p>
+<p class="p1"><br></p>
+<p class="p2">Example of continuous feature: Amplitude</p>
+<p class="p1"><br></p>
+<p class="p2">To record continuous features, RecordBuf.kr can be used. Then to store the signal recorded in the Buffer to file, Buffer:write can be used.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">Example of discrete feature: Onsets</p>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+<p class="p3"><b>Non-Real-Time Extraction<span class="Apple-converted-space"> </span></b></p>
+<p class="p1"><br></p>
+<p class="p2">Non-real-time feature extraction has been implemented by Nick Collins in his SCMIR library (<a href="http://www.sussex.ac.uk/Users/nc81/code.html">http://www.sussex.ac.uk/Users/nc81/code.html</a>, http://www.sussex.ac.uk/Users/nc81/code/SCMIR.zip)<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">Additionally, SPEAR (<a href="http://www.klingbeil.com/spear/"><span class="s1">http://www.klingbeil.com/spear/</span></a>) could be used to analyse the files in non real time and provide data, which could be input in SC and processed further. A useful library for experimenting with these data in SC is the Loris library, which is part of the BEASTMulch library. (<a href="http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx"><span class="s1">http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx</span></a>)</p>
+<p class="p1"><br></p>
+<p class="p2">Sites to keep in mind:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<ol class="ol1">
+<li class="li4"><span class="s2">SPEAR: <a href="http://www.klingbeil.com/spear/"><span class="s3">http://www.klingbeil.com/spear/</span></a></span></li>
+<li class="li4"><span class="s2">LORIS homepage: <a href="http://www.cerlsoundgroup.org/Loris/"><span class="s3">http://www.cerlsoundgroup.org/Loris/</span></a></span></li>
+<li class="li4"><span class="s2">LORIS @ sourceforge: <a href="http://sourceforge.net/projects/loris/"><span class="s3">http://sourceforge.net/projects/loris/</span></a></span></li>
+<li class="li4"><span class="s2">BEASTMulch: <a href="http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx"><span class="s3">http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx</span></a></span></li>
+</ol>
+<p class="p1"><br></p>
+<p class="p2">Further sites to explore:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<ol class="ol1">
+<li class="li2"><span class="s4"><a href="http://opensmile.sourceforge.net/"><span class="s3">http://opensmile.sourceforge.net/</span></a></span> "The openSMILE feature extraction tool enables you to extract large audio feature spaces in realtime. It combines features from Music Information Retrieval and Speech Processing. SMILE is an acronym for <i>Speech &amp; Music Interpretation by Large-space Extraction</i>. "</li>
+<li class="li2"><span class="s4"><a href="http://yaafe.sourceforge.net/"><span class="s3">http://yaafe.sourceforge.net/</span></a></span> "Yaafe is an audio features extraction toolbox."</li>
+<li class="li2"><span class="s4"><a href="http://marsyas.info/"><span class="s3">http://marsyas.info/</span></a></span> "Marsyas (Music Analysis, Retrieval and Synthesis for Audio Signals) is an open source software framework for audio processing with specific emphasis on Music Information Retrieval applications. "</li>
+<li class="li2"><span class="s4"><a href="http://www.openaudio.eu/"><span class="s3">http://www.openaudio.eu/</span></a></span> "openBliSSART is a C++ framework and toolbox that provides "Blind Source Separation for Audio Recognition Tasks". Its areas of application include, but are not limited to, instrument separation (e.g. extraction of drum tracks from popular music), speech enhancement, and feature extraction. It features various source separation algorithms, with a strong focus on variants of Non-Negative Matrix Factorization (NMF)."</li>
+<li class="li2"><span class="s4"><a href="http://jmir.sourceforge.net/jAudio.html"><span class="s3">http://jmir.sourceforge.net/jAudio.html</span></a></span> "jAudio is a software package for extracting features from audio files as well as for iteratively developing and sharing new features. These extracted features can then be used in many areas of music information retrieval (MIR) research, often via processing with machine learning framework such as ACE."</li>
+<li class="li2"><span class="s4"><a href="http://libxtract.sourceforge.net/"><span class="s3">http://libxtract.sourceforge.net/</span></a></span> , <a href="http://sourceforge.net/projects/libxtract/"><span class="s1">http://sourceforge.net/projects/libxtract/</span></a> <span class="s5"><b>includes interface to Pure Data, Max/MSP, Python!</b></span> "LibXtract is a simple, portable, lightweight library of audio feature extraction functions. The purpose of the library is to provide a relatively exhaustive set of feature extraction primatives that are designed to be 'cascaded' to create a extraction hierarchies. For example, 'variance', 'average deviation', 'skewness' and 'kurtosis', all require the 'mean' of the input vector to be precomputed. However, rather than compute the 'mean' 'inside' each function, it is expected that the 'mean' will be passed in as an argument. This means that if the user wishes to use all of these features, the mean is calculated only once, and then passed to any functions that require it.This philosophy of 'cascading' features is followed throughout the library, for example with features that operate on the magnitude spectrum of a signal vector (e.g. 'irregularity'), the magnitude spectrum is not calculated 'inside' the respective function, instead, a pointer to the first element in an array containing the magnitude spectrum is passed in as an argument. Hopefully this not only makes the library more efficient when computing large numbers of features, but also makes it more flexible because extraction functions can be combined arbitrarily (one can take the irregularility of the Mel Frequency Cepstral Coefficients for example). LibXtract can be downloaded from http://www.sf.net/projects/libxtract</li>
+<li class="li2">http://www.fftw.org/ (used by libxtract above): "FFTW is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST). We believe that FFTW, which is free software, should become the FFT library of choice for most applications."</li>
+<li class="li2">http://puredata.info/downloads/pd-extended (used by libxtract above): Pure Data source code needed to install<span class="Apple-converted-space"> </span></li>
+<li class="li2"><span class="s4"><a href="http://www.isophonics.net/content/hackday"><span class="s3">http://www.isophonics.net/content/hackday</span></a></span> "This page contains links for some useful resources collected for Music Hack Day - London 2010 and Music Hack Day - Barcelona 2010. There are two main groups of resources: One is related to content based audio analysis (such as the extraction of Key, tempo, beats, etc.. form audio) and includes the QM Vamp Plugins, an open source C++ SDK and Python bindings for writing your own plugin and host programs, and command line tools to analyse large music collections locally or via the internet. We also provide an ontology (The Music Ontology) for describing music related information including editorial metadata, musicological data, and content-based features through various extensions, and a web resource DBTune exposing lots of music related data using this framework. You may also be interested in our tutorial about using these resources and technologies." Following sites are from the hackday page:</li>
+<li class="li2">http://vamp-plugins.org/download.html (Plugins for MacOS X from the Queen Mary collection here: <a href="http://isophonics.net/QMVampPlugins"><span class="s1">http://isophonics.net/QMVampPlugins</span></a>) "Vamp Plugins are feature extractor plugins for content based analysis of musical audio. " "The Vamp Plugin API is a C/C++ plugin API for audio feature extraction. The API is conceptually similar to audio processing plugin APIs such as LADSPA or VST, however Vamp plugins return structured data describing the results of content based analysis as opposed to processed audio. The Vamp plugin API comes with an easy to use C++ SDK."</li>
+<li class="li2">http://www.sonicvisualiser.org/ "Sonic Visualiser is a cross platform application for visualising content-based audio features. It can host Vamp or VamPy feature extractor plugins written in C/C++ or Python."</li>
+<li class="li2">http://www.omras2.org/SonicAnnotator "Sonic Annotator is a command line batch feature extractor. It hosts Vamp or VamPy plugins and produces results in RDF and CSV formats. It can analyse large collections of audio files on your machine or on a network resource."</li>
+<li class="li2">http://musicontology.com/ http://purl.org/ontology/mo/ "The Music Ontology is a Semantic Web ontology to describe music related information. It also provides the basis for numerous extensions including musicological and content-based features."</li>
+<li class="li2">http://www.omras2.org/GNAT http://sourceforge.net/projects/motools/ "GNAT is a small audio collection tool to associate local audio files with semantic web URIs."</li>
+</ol>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+</body>
+</html>

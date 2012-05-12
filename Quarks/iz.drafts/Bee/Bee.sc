@@ -21,6 +21,11 @@ Bee {
 		^this.newCopyArgs(poly, pace, orientation, angle ?? { pi / 2 }, index).init;
 	}
 
+	init {
+		poly = poly ?? { Polygon.new };	// provide default polygon
+		this.orientation = orientation;	// initialize x and y scale factors from orientation
+	}
+
 	// analogous to Turtle.draw:
 	
 	*draw { | patternFunc, window, x, y, orientation = 0, repeats = 1, rate = 0.1 |
@@ -41,6 +46,16 @@ Bee {
 		}.fork;
 		^bee;
 	}
+
+	*newWithWindow { | window, x, y, orientation = 0 |
+		var poly;
+		window = window ?? { Screen(nil, "Bee", Rect(700, 200, 500, 500)) };
+		x = x ?? { window.view.bounds.width / 2 };
+		y = y ?? { window.view.bounds.height / 2 };
+		poly = Polygon((x@y));
+		window add: poly;
+		^this.new(poly, nil, orientation);
+	}
 	
 	*draw1 { | func, window, x, y, orientation = 0 | 
 		// draw by creating a routine from fumction func
@@ -55,25 +70,10 @@ Bee {
 		^bee;
 	}
 
-	*newWithWindow { | window, x, y, orientation = 0 |
-		var poly;
-		window = window ?? { Screen(nil, "Bee", Rect(700, 200, 500, 500)) };
-		x = x ?? { window.view.bounds.width / 2 };
-		y = y ?? { window.view.bounds.height / 2 };
-		poly = Polygon((x@y));
-		window add: poly;
-		^this.new(poly, nil, orientation);
-	}
-
 	makeWindow { | name, bounds |
 		var screen;
 		screen = Screen(nil, name, bounds);
 		screen add: poly;
-	}
-
-	init {
-		poly = poly ?? { Polygon.new };	// provide default polygon
-		this.orientation = orientation;	// initialize x and y scale factors from orientation
 	}
 
 	pos {

@@ -1,22 +1,42 @@
 /* 
-Arrange Document windows so that they fill the entire area of the currently available main monitor screen. 
+Arrange Document windows so that they fill the entire area of the currently available main monitor screen. Provide 2 arrangement schemes: 
+
+1. post + tryout window + 1 window for editing 
+
+2. post + tryout window + as many windows as fit side by side horizontally to fill the screen, where each window is 640 pixels wide. 
+
 
 */
 
 Panes {
-	classvar <prefs, prefsFile="PanesPrefs.scd";
+	classvar <prefs, prefsFile = "PanesPrefs.scd";
 	classvar <>panePos, <>protoPanePos, <>listenerPos, <>tryoutPos;
 	classvar <currentPositionAction, <>defaultArrangementAction, <multiPaneAreaWidth;
-	
-	*defaults{
+	classvar <>miniServerWindow = false; // if true, rightmost pane will leave space for 
+	// Sergio Luque's modivied Server:makeWindow at the bottom right part of the screen
+
+	*defaults {
 		 ^(
-			listenerY: 200, listenerXdelta: 20 ,menuHeight: 22, multiPaneListenerHeight: 300
-			,multiPaneHeight: Window.screenBounds.height - 22
-			,multiPaneAreaWidth: Window.screenBounds.width //mc
-			,defaultArrangementMethod: \arrangeMultiPanes, tryoutName: "tryout.scd"
+			listenerY: 200, listenerXdelta: 20, menuHeight: 22, multiPaneListenerHeight: 300
+			, multiPaneHeight: Window.screenBounds.height - 22
+			, multiPaneAreaWidth: Window.screenBounds.width //mc
+			, defaultArrangementMethod: \arrangeMultiPanes, tryoutName: "tryout.scd"
 		)
 	}
-
+	
+	*updatePrefs { // iz 120304
+		// update preferences from Window.screenBounds to fit, 
+		// when using a computer monitor with different screen dimensions than previously
+		multiPaneAreaWidth = Window.screenBounds.width;
+		prefs.multiPaneAreaWidth = multiPaneAreaWidth;
+		prefs.multiPaneHeight = Window.screenBounds.height - prefs.menuHeight;
+		this.savePrefs;
+	}
+	
+	*savePrefs { // iz 120304
+		UserPrefs.save(prefsFile, prefs);
+	}
+	
 	*initClass { StartUp.add(this); }
 
 	*doOnStartUp {
@@ -31,7 +51,7 @@ Panes {
 		prefs = ().putAll(UserPrefs.load(prefsFile, this.defaults));
 		multiPaneAreaWidth = prefs.multiPaneAreaWidth;
 	}
-	
+
 	*start { this.activate } // synonym
 	*activate {
 		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
@@ -46,7 +66,18 @@ Panes {
 		defaultArrangementAction.value;
 		Dock.showDocListWindow(multiPaneAreaWidth); //mc
 		// confuses post and Untitled windows if not deferred on startup:
-		{ this.openTryoutWindow }.defer(0.5); 
+		{
+			this.openTryoutWindow;
+			this.placeListener.bounds =  listenerPos; // override toggling
+		}.defer(0.5);
+		 
+	}
+
+	*placeListener {
+		var listener;
+		listener = Document.allDocuments detect: { | d | d.name == " post " };
+		if (listener.notNil) { this placeDoc: listener };
+		^listener;
 	}
 
 	*stop { this.deactivate } // synonym
@@ -80,7 +111,7 @@ Panes {
 		}),
 		CocoaMenuItem.addToMenu("Utils", "maximize window (multi-pane mode)", ["M", false, false],
 		{
-			this.maximizeDocHight(Document.current);
+			this.maximizeDocHeight(Document.current);
 		}),
 		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (multi-pane mode)", 
 			["M", false, true], {	this.togglePaneAreaWidth;
@@ -203,33 +234,44 @@ Panes {
 	}
 	
 	*placeDoc { | doc |
-		if (doc.reallyIsListener) { ^doc.bounds = listenerPos };
+		if (doc.reallyIsListener) { ^doc.bounds = listenerPos; };
 		if (doc.name == prefs.tryoutName) { ^doc.bounds = tryoutPos };
 		doc.bounds = panePos;
 	}
 
 	*nextPane {
-		var left, top, multiPaneWidth = this.multiPaneWidth, multiPaneHeight = prefs.multiPaneHeight;
-		var screenTop = Window.screenBounds.height - prefs.menuHeight;
-		if (panePos.left == 0) { panePos = protoPanePos.copy }{
+		var left, top, multiPaneWidth, multiPaneHeight, screenTop;
+		multiPaneWidth = this.multiPaneWidth;
+		multiPaneHeight = prefs.multiPaneHeight;
+		screenTop = Window.screenBounds.height - prefs.menuHeight;
+		if (panePos.left == 0) {
+			panePos = protoPanePos.copy
+		}{
 			top = panePos.top - multiPaneHeight;
 			if (top >= 0) { panePos.top = top }{
 				left = panePos.left + multiPaneWidth;
-				if ((left + this.multiPaneWidth) > multiPaneAreaWidth) {
+				if (left + this.multiPaneWidth > multiPaneAreaWidth) {
 					panePos = tryoutPos.copy;		
 				}{
 					panePos.left = left;
 					panePos.top = screenTop - multiPaneHeight;
-		}}};
+				};
+				if (miniServerWindow and: {
+					panePos.width + panePos.left == Window.screenBounds.width
+				}) {
+					panePos.height_(panePos.height - 45).top_(45);
+				}				
+			}
+		};
 	}
-	*maximizeDocHight{
+	*maximizeDocHeight {
 		var height, doc = Document.current;
 		if (doc.reallyIsListener.not && (doc.name != prefs.tryoutName) && doc.bounds.left != 0) {
 			height = Window.screenBounds.height - prefs.menuHeight;
 			doc.bounds = doc.bounds.top_(height).height_(height)
 		}	
 	}
-	*togglePaneAreaWidth{
+	*togglePaneAreaWidth {
 		var newMultiPaneAreaWidth;
 		if (multiPaneAreaWidth == Window.screenBounds.width) {
 			newMultiPaneAreaWidth = prefs.multiPaneAreaWidth

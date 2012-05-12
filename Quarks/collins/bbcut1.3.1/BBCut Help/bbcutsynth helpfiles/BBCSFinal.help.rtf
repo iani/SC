@@ -1,0 +1,87 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fswiss\fcharset77 Helvetica-Oblique;
+\f3\fnil\fcharset77 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+\red0\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help
+\f1\b\fs30 \
+\
+BBCSFinal
+\f0\b0\fs24 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 Superclass: BBCutSynth
+\f0\b0 \
+\
+Convenient wrapper, which allows one to force the output to a certain bus,set the volume and add an fx function.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 \ul Class Methods
+\f0\b0 \ulnone \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 \
+*new(vol, outbus, fxfunc )  
+\f0\b0 \
+\
+
+\f1\b vol
+\f0\b0  
+\f1\b -
+\f0\b0  Float volume multiplier. \
+
+\f1\b outbus -
+\f0\b0  output bus number for the bbcutsynth. Typically 0.\
+
+\f1\b fxfunc -
+\f0\b0  Leave this nil if you just need basic functionality. Otherwise, fxfunc is of the form\
+\{arg in; LPF.ar(in, 1000)\} or whatever your unit generators will be and is used in making an on the fly SynthDef. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 \ul Instance Methods
+\f0\b0 \ulnone \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 initBBCSFinal
+\f0\b0 \
+
+\f1\b setup
+\f0\b0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\i \cf0 Examples- \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\i0 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f3\fs18 \cf2 //bbcutsynths rendered to an audio bus, then volume limited and played on main stereo out \cf0 \
+(	\
+\cf3 var\cf0  f, bus;\
+f= \cf3 SF3\cf0 .new(\cf4 "break"\cf0 ,8);\
+\
+bus= \cf3 Bus\cf0 .audio(\cf3 Server\cf0 .local, 2);\
+\cf3 BBCut\cf0 (\cf3 BBCG\cf0 ([\cf3 BBCSFinal\cf0 (0.1),\cf3 BBCutSynthSF\cf0 (f,0.2)], \cf3 nil\cf0 , bus.index)).tempo_(2.3).go\
+)\
+\
+\
+\cf2 //bbcutsynths rendered with an fx function \cf0 \
+(\cf5 	\
+\cf6 var\cf5  f, bus, fxfunc;\
+f= \cf6 SF3\cf5 .new(\cf7 "break"\cf5 ,8);\
+\
+fxfunc= \{\cf6 arg\cf5  in; \cf6 LPF\cf5 .ar(\cf6 CombN\cf5 .ar(in, 0.25, 0.25, 2), \cf6 LFTri\cf5 .kr(4, 0, 5000,6000))\};\
+\
+bus= \cf6 Bus\cf5 .audio(\cf6 Server\cf5 .local, 2);\
+\
+\cf6 BBCut\cf5 (\cf6 BBCG\cf5 ([\cf6 BBCSFinal\cf5 (1.0, 0, fxfunc),\cf6 BBCutSynthSF\cf5 (f,0.2)], \cf6 nil\cf5 , bus.index)).tempo_(2).go\
+\cf0 )\
+\
+}

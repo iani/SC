@@ -5,13 +5,18 @@
 */
 
 BufferListWindow : ListWindow {	
-	*new { | server |
+	*new { | server, action, message = "" |
 		server = server ? Server.default;
-		^super.new(format("Buffers on %", server.name).asSymbol, nil, 
+		action = action ?? { { | b | b.play } };
+		^super.new(format("Buffers on % %", server.name, message).asSymbol, Rect(500, 500, 500, 250), 
 			{ 
 				BufferResource.onServer(server).collect({ | b |
-					format("%(%) file: % num frames: %", b.key[2], b.bufnum, 
-						PathName(b.path ? "-").fileName, b.numFrames)->{ b.play }
+					format("%(%) file: % dur: %", 
+						b.key[2], 
+						b.bufnum, 
+						PathName(b.path ? "-").fileName, 
+						if (b.duration.notNil) { b.duration.minsecstring(0.001) } { "(unknown)" }
+					)->{ action.(b) }
 				}).sort({ | a, b | a.key < b.key });
 			},
 			{ | items |

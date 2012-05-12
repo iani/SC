@@ -1,0 +1,14 @@
+(
+	\name: "LadspaUGen",
+	\path: "LadspaUGen",
+	\summary: "-",
+	\helpdoc: "-",
+	\schelp: "Guides/LadspaUGen",
+	\author: " - ",
+	\version: 0,
+	\organization: " - ",
+	\country: " - ",
+	\since: " - ",
+	\url: "-",
+	\dependencies: []
+)

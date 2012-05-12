@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138.23">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.0px Helvetica}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica; min-height: 17.0px}
+span.Apple-tab-span {white-space:pre}
+</style>
+</head>
+<body>
+<p class="p1"><b>ConfigCCV</b></p>
+<p class="p2"><br></p>
+<p class="p3">Utility for configuring 'Community Core Vision.app' by changing entries in the config file: 'data/config.xml'.<span class="Apple-converted-space"> </span></p>
+<p class="p3">File data/config.xml is included in the current release of CCV. (CCV 1.2) and stores the current configuration of a ccv session. You need to restart ccv for changes to take effect.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p5"><b>Usage<span class="Apple-converted-space"> </span></b></p>
+<p class="p4"><br></p>
+<p class="p3"><b>*setConfigPath</b></p>
+<p class="p4"><br></p>
+<p class="p3">Choose the path of config.xml where the video path is stored for ccv.</p>
+<p class="p4"><br></p>
+<p class="p6">ConfigCCV.setConfigPath; <span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// choose the path of config.xml where the video path is stored for ccv</p>
+<p class="p4"><br></p>
+<p class="p3"><b>*setConfigPath</b></p>
+<p class="p4"><br></p>
+<p class="p3">Choose the path of the video file to be used by ccv</p>
+<p class="p4"><br></p>
+<p class="p6">ConfigCCV.setVideoPath;<span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>// choose the path of the video file to be used by ccv</p>
+<p class="p4"><br></p>
+<p class="p3"><i>Note: You should quit CCV before using this method, because CCV always stores its current configuration to config.xml when it quits, so if you quit CCV </i><b><i>after</i></b><i> changing the video path, CCV will overwrite your changes.<span class="Apple-converted-space"> </span></i></p>
+<p class="p4"><br></p>
+<p class="p3"><b>*openConfigFile</b></p>
+<p class="p4"><br></p>
+<p class="p3">Open the config.xml file specified by the user, using unix command: "open &lt;configPath&gt;".<span class="Apple-converted-space"> </span></p>
+<p class="p3">Note: This will open the config.xml file using the default application set for .xml.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p6">ConfigCCV.openConfigFile;</p>
+<p class="p4"><br></p>
+<p class="p5"><b>Other</b></p>
+<p class="p3">Intermediate checking methods (for development) are:<span class="Apple-converted-space"> </span></p>
+<p class="p3">ConfigCCV.getVideoPath;</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p3">This opens a dialog file for selecting the path for the video file to be used by Community Core Vision.<span class="Apple-converted-space">  </span>If ConfigCCV does not know the location of the config file of Community Core Vision, it will first open another dialog to get the path of the config.xml file from the user.<span class="Apple-converted-space"> </span></p>
+<p class="p4"><br></p>
+<p class="p3">TODO:</p>
+<p class="p3">Add method checkPaths; // ??? needed ???</p>
+<p class="p3">// ConfigCCV.postPaths;</p>
+<p class="p4"><br></p>
+<p class="p4"><br></p>
+<p class="p7"><b></b><br></p>
+<p class="p7"><b></b><br></p>
+</body>
+</html>

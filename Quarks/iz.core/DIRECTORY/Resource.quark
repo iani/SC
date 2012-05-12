@@ -9,6 +9,6 @@
 	\country: "Greece",
 	\since: "2011",
 	\url: "http://earlab.org",
-	\dependencies: ["ServerPrep"]
+	\dependencies: []
 )
 

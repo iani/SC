@@ -2,6 +2,8 @@ Polygon {
 	var <>origin, <>lines, <graph;
 	
 	var <left, <right, <top, <bottom;
+	var <drawMethod = \stroke;
+	var <color;
 	
 	*new { | origin, lines |
 		^this.newCopyArgs(origin, lines).init;
@@ -11,13 +13,16 @@ Polygon {
 		origin = origin ?? { 0@0 };
 		right = left = origin.x;
 		top = bottom = origin.y;
-		lines = List.new.addAll(lines);	
+		lines = List.new.addAll(lines);
+		color = Color.black;
 	}
 
 	value {
+		Pen.fillColor = color;
+		Pen.strokeColor = color;
 		Pen.moveTo(origin);
 		lines do: Pen.lineTo(_);
-		Pen.stroke;
+		Pen perform: drawMethod;
 	}
 	
 	add { | point |
@@ -32,6 +37,16 @@ Polygon {
 	graph_ { | argGraph |
 		// called by Graph:add
 		graph = argGraph;
+		graph.changed;
+	}
+
+	drawMethod_ { | method |
+		drawMethod = method;
+		graph.changed;
+	}
+
+	color_ { | argColor |
+		color = argColor;
 		graph.changed;
 	}
 	

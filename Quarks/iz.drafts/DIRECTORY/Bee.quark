@@ -2,7 +2,7 @@
 	\name: "Bee",
 	\path: "Bee",
 	\summary: "Turtle like graphics, but creating + moving on a Scene-Graph",
-	\helpdoc: "Help/Bee.html",
+	\helpdoc: "Help/Bee.schelp",
 	\author: "Ioannis Zannos",
 	\version: 0.01,
 	\organization: "Ionian University, Corfu",

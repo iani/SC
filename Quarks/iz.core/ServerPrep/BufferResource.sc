@@ -4,10 +4,11 @@ Works with ServerPrep, so that buffers are always loaded before any synths are s
 BufferResource : AbstractServerResource {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";
 	classvar >current;
-	var <path, <startFrame = 0, <numFrames, <numChannels = 1;
+	var <path, <startFrame = 0, <numFrames, <numChannels = 1, <sampleRate, <duration;
+	var <>completionAction;	// eval when buffer loaded. For sendCollection;
 
 	*initClass {
-		current = IdentityDictionary.new;	
+		current = IdentityDictionary.new;
 	}
 
 	*makeKey { | key, target, numFrames, numChannels, path |
@@ -30,52 +31,6 @@ BufferResource : AbstractServerResource {
 */
 	}
 
-	*read { | path, server, startFrame = 0, numFrames, play |
-		if (path.pathMatch.size == 0) {
-			^postf("Could not find Buffer at path: %\n", path);
-		};
-		^this.new(this.keyFromPath(path), server, numFrames, nil, path, startFrame, play);
-	}
-	
-	*load {
-		Dialog.getPaths({ | paths | this.loadPaths(paths) });
-	}
-	
-	*loadPaths { | paths | paths do: this.read(_);	}
-	
-	*saveList {
-		Dialog.savePanel({ | path |
-			var file;
-			file = File.open(path, "w");
-			file.putString(this.onServer.collect(_.path).select(_.notNil).asCompileString);
-			file.close;
-		});	
-	}
-	
-	*loadList {
-		Dialog.getPaths({ | paths |
-			var path, file, soundPaths;
-			path = paths.first;
-			file = File.open(path, "r");
-			soundPaths = file.readAllString;
-			file.close;
-			soundPaths = soundPaths.interpret;
-			soundPaths do: this.read(_);
-		});			
-	}
-
-	*list { BufferListWindow.new }
-
-	*postAll { this.onServer.postln }
-	*postNames { this.onServer.collect(_.name).asCompileString.postln }
-
-	*play { | func, name |
-		var ubuf;
-		if (name.isNil) { ubuf = this.current } { ubuf = this.getObject(this.makeKey(name)); };
-		if (ubuf.isNil) { ^postf("Could not find a BufferResource named: %\n", name); };
-		ubuf.play(func);
-	}
-
 	// this method just defines arguments similar to Buffer-new
 	// use it only to create buffers that do not read from a file
 	// to read buffers from file use *read
@@ -91,7 +46,108 @@ BufferResource : AbstractServerResource {
 		startFrame = argStartFrame;
 		ServerPrep(server).addBuffer(this);
 		NotificationCenter.notify(BufferResource, \created, this);
-		if (path.notNil) { current[server] = this; };
+		if (path.notNil) { current[server] = this };
+	}
+	
+	*sendCollection { | key, server, collection, numChannels = 1, wait = -1, action |
+		// like Meta_Buffer:sendCollection
+		var bufres;
+		bufres = this.new(key, server, collection.size, numChannels);
+		bufres.completionAction = { | b | b.sendCollection(collection, 0, wait, action); };
+			
+/*		NotificationCenter.registerOneShot(this, \loaded, bufres, {
+			bufres.object.sendCollection(collection, 0, wait, action);
+		});
+*/
+
+	}
+
+	sendCollection { | collection, startFrame = 0, wait = -1, action |
+		// like Buffer:sendCollection
+		if (object.notNil) {
+			object.sendCollection(collection, startFrame, wait, action);
+		}{
+			completionAction = { | b | 
+				b.sendCollection(collection, startFrame, wait, action); 
+			};
+		}
+	}
+
+	*saveDefaults {
+		// save all current instances to Archive.global;
+		Archive.global.put(this.name, (this.all.flat collect: { | b | b.key add: b.path }));
+		Archive.write;
+	}
+	
+	*loadDefaults {
+		// load all Server.default instances from Archive.global;
+		Archive.global.at(this.name) do: { | bspec |
+			if (bspec[3].notNil) { this.read(bspec[3], Server.named[bspec[2]]) };
+		};
+	}
+
+	*loadSCdefaults { this.loadPaths((this.defaultSoundsDir +/+ "a*").pathMatch;) }
+
+	*defaultSoundsDir { /* IZ 2012 03 22 
+		Return the current default path of the sounds folder belonging to the standard SuperCollider 		distribution. */
+		^Platform.resourceDir +/+ "sounds";
+	}
+
+	*load {
+		Dialog.getPaths({ | paths | this.loadPaths(paths) });
+	}
+
+	*loadPaths { | paths | paths do: this.read(_);	}
+
+	*read { | path, server, startFrame = 0, numFrames, play |
+		if (path.pathMatch.size == 0) {
+			^postf("Could not find Buffer at path: %\n", path);
+		};
+		^this.new(this.keyFromPath(path), server, numFrames, nil, path, startFrame, play);
+	}
+
+	*saveListDialog {
+		Dialog.savePanel({ | path |
+			var file;
+			file = File.open(path, "w");
+			file.putString(this.onServer.collect(_.path).select(_.notNil).asCompileString);
+			file.close;
+		});	
+	}
+
+	*loadListDialog {
+		Dialog.getPaths({ | paths |
+			var path, file, soundPaths;
+			this.loadList(paths.first);
+		});			
+	}
+	
+	*loadList { | path |
+		var file, soundPaths;
+		file = File.open(path, "r");
+		soundPaths = file.readAllString;
+		file.close;
+		soundPaths = soundPaths.interpret;
+		soundPaths do: this.read(_);
+	}
+
+	*list { BufferListWindow.new }
+	
+	*nameSelectionList { 
+		BufferListWindow(
+			action: { | b | postf("'%'.buffer.play;\n", b.name); },
+			message: ": Click to post name"
+		);
+	}
+
+	*postAll { this.onServer.postln }
+	*postNames { this.onServer.collect(_.name).asCompileString.postln }
+
+	*play { | func, name |
+		var ubuf;
+		if (name.isNil) { ubuf = this.current } { ubuf = this.getObject(this.makeKey(name)); };
+		if (ubuf.isNil) { ^postf("Could not find a BufferResource named: %\n", name); };
+		ubuf.play(func);
 	}
 
 	play { | func, target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args, name |
@@ -105,30 +161,40 @@ BufferResource : AbstractServerResource {
 
 	makePlayFunc { | func |
 		if (func.notNil) { ^func };
-		^{ | buf, rate = 1 | 
+		^{ | buf, rate = 1 |
 			PlayBuf.ar(buf.numChannels, buf, rate * BufRateScale.kr(buf), 0, 0, 0, 2); 
 		};
 	}
 
 	sendTo {
 		if (path.isNil) {
-			warn("allocating new buffer: %\n", this.key);
 			object = Buffer.alloc(server, (numFrames ? 1024), numChannels, 
-				completionMessage: { | b | this.loaded(b); }
+				completionMessage: { | b | 
+					postf("allocated buffer %: %\n", this.key[1..], b);
+					this.loaded(b);
+				}
 			);
 		}{
-			object = Buffer.read(server, path, startFrame, numFrames, { | b |
-				postf("Loaded buffer (%) '%' (% seconds)\n", 
-					b.bufnum, b.path.basename, (b.numFrames / b.sampleRate).round(0.01));
-				this.loaded(b);
-			});
+			object = Buffer.read(server, path, startFrame, numFrames, 
+				action: { | b |
+					postf("Loaded buffer (%) '%' (% seconds)\n", 
+						b.bufnum, b.path.basename, (b.numFrames / b.sampleRate).round(0.01)
+					);
+					this.loaded(b);
+				}
+			);
 		};
 	}
-	
+
 	loaded { | b |
-		numFrames = b.numFrames;
 		numChannels = b.numChannels;
-		NotificationCenter.notify(BufferResource, \loaded, this);
+		numFrames = b.numFrames;
+		sampleRate = b.sampleRate;
+		duration = b.numFrames / (b.sampleRate ? 44100);
+		// must defer, otherwise sendCollection does not work on server boot. Why?
+		{ completionAction.(b); }.defer(0.1);
+		// this seems problematic: (what use? note that buffer object is not present here yet!)
+		{ NotificationCenter.notify(BufferResource, \loaded, this); }.defer;
 	}
 
 	free {
@@ -144,10 +210,11 @@ BufferResource : AbstractServerResource {
 	}
 
 	isLoaded { ^object.notNil }
-	
+
 	bufnum { if (object.notNil) { ^object.bufnum } { ^nil } }
 	
-	name { ^key.last }
+
+	name { ^key[2] }
 
 	*menuItems {
 		^[
@@ -158,12 +225,24 @@ BufferResource : AbstractServerResource {
 				{ this.load; this.list; }.defer(0.1);
 			}),
 			CocoaMenuItem.addToMenu("Buffers", "Load buffer list", [], {
-				{ this.loadList; this.list; }.defer(0.1);
+				{ this.loadListDialog; this.list; }.defer(0.1);
 			}),
 			CocoaMenuItem.addToMenu("Buffers", "Save buffer list", [], {
-				{ this.saveList; }.defer(0.1);
+				{ this.saveListDialog; }.defer(0.1);
 			}),
+			CocoaMenuItem.addToMenu("Buffers", "Save lists to Archive", [], {
+				{ this.saveDefaults; }.defer(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Buffers", "Load lists from Archive", [], {
+				{ this.loadDefaults; }.defer(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Buffers", "Buffer selector list", [], {
+				{ this.nameSelectionList; }.defer(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Buffers", "Post current buffer", [], {
+				{ postf("'%'.buffer", this.current.key.last); }.defer(0.1);
+			}),
+
 		];
 	}
-
 }

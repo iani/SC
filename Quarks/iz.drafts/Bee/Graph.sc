@@ -11,7 +11,7 @@ Graph : Model {
 		node.graph = this;
 	}
 
-	draw { graph do: _.value }
+	draw { | bounds | graph do: _.(bounds) }
 	
 	//TODO
 

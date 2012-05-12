@@ -1,0 +1,105 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fswiss\fcharset77 Helvetica-Oblique;
+\f3\fnil\fcharset77 Monaco;}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs20 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs24 \cf0 \
+
+\f1\b\fs30 BBCutSynth\
+
+\f0\b0\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 Superclass: Object
+\f0\b0 \
+\
+A class representing a cut synthesiser that will render individual cuts, or apply fx based on cut information. There are basic event spawning BBCutSynths like BBCSAudioIn for input capture and BBCutSynthSF for soundfile manipulation, and fx based classes such as BBCSFilter1. The basic interface is given by this base class, responding to the update messages of the bbcut hierarchy, phrase/block/cut. \
+\
+The base class can be used on its own to hear out a cut procedure- it will bleep a middle C for each cut  it synthesises. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \ul Class Methods\ulnone \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 *initClass\
+*new
+\f0\b0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+\cf0 \ul Instance Methods\ulnone \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f1\b \cf0 initBBCutSynth\
+attach\
+setup\
+getOffset\
+getSource\
+frameOffset\
+\
+synthesiscut(repeat, cutinfo)
+\f0\b0 \
+\
+Synthesise an individual repeat/cut, number repeat in the block. Where cutinfo gives the array of parameters of the \
+cut in the form [inter onset interval, duration in seconds of cut, offset, amplitude, ...further optional arguments]\
+\
+
+\f1\b updatephrase(phrase, phraselength)
+\f0\b0 \
+\
+Called to trigger updates of synthesis parameters for phrase phrase.\
+\
+
+\f1\b updateblock(block,phraseprop,cuts,isroll)
+\f0\b0 \
+\
+Called to trigger updates of synthesis parameters for block block of this phrase, phraseprop proportion \
+through the current phrase, a block composed of the array of cutinfos given by cuts, and flagged if it is a roll by isroll.\
+\
+
+\f1\b chooseoffset(phrasepos,bpsd)
+\f0\b0 \
+\
+Assuming that an offset means anything, we are at position phrasepos beats into the current phrase and the \
+cut procedure indicates a granularity of cutting for offset derivation as bpsd.\
+\
+
+\f1\b setoffset(prop,phraselength)
+\f0\b0  \
+\
+This method allows a cut procedure to choose actual offset positions itself \
+within the target audio (assuming this means anything- so usually acting on a preloaded sound file). The \
+value prop gives the proportion with respect to the source's length to set as offset. Some bbcutsynths\
+might want to deal with setoffset by working with a proportion of the phraselength rather than the target audio,\
+in which case the second argument is provided.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f2\i \cf0 Examples
+\f0\i0 - \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f3\fs18 \cf2 //you won't hear anything because no synths are being spawned\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCutSynth\cf0 .new, \cf3 BBCutProc11\cf0 .new).tempo_(2).go\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f3\fs18 \cf2 //bleep rendering for debug\cf0 \
+\cf3 BBCut\cf0 (\cf3 BBCSTest\cf0 .new, \cf3 BBCutProc11\cf0 .new).tempo_(2).go\
+\
+\cf3 BBCut\cf0 (\cf3 BBCSTest\cf0 .new, \cf3 WarpCutProc1\cf0 .new).tempo_(2).go\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs24 \cf0 \
+\
+\
+}

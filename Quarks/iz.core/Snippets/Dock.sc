@@ -15,11 +15,12 @@ Dock {
 	*initClass { StartUp add: this }
 	
 	*doOnStartUp {
+		// Install Qt GUI if available, so that scope and freqscope work on local server:
+		if (GUI respondsTo: \qt) { GUI.qt };
+
 		shortcutDocMenuItems = Array.newClear(10);
 		shortcutDocs = Array.newClear(10);
-		if (File.exists(this.shortcutDocDir)) {
-			shortcutDocPaths = Object.readArchive(this.shortcutDocDir);
-		};
+		shortcutDocPaths = Archive.global at: \shortCutDocs;
 		if (shortcutDocPaths.isNil) {
 			shortcutDocPaths = Array.newClear(10);
 			shortcutDocPaths[0] = Platform.userAppSupportDir +/+ "tryout.scd";
@@ -27,7 +28,7 @@ Dock {
 		shortcutDocPaths do: this.makeDocShortcutMenuItem(_, _);
 	}
 
-	*shortcutDocDir { ^Platform.userExtensionDir +/+ "ShortcutDocs.scd" }
+//	*shortcutDocDir { ^Platform.userExtensionDir +/+ "ShortcutDocs.scd" }
 
 	*makeDocShortcutMenuItem { | path, i |
 		if (path.isNil) { ^this };
@@ -50,7 +51,8 @@ Dock {
 		if (shortcutDocMenuItems[i].notNil) { shortcutDocMenuItems[i].remove };
 		shortcutDocs[i] = doc;
 		shortcutDocPaths[i] = doc.path;
-		shortcutDocPaths.writeArchive(this.shortcutDocDir);
+		Archive.global.put(\shortCutDocs, shortcutDocPaths);
+//		shortcutDocPaths.writeArchive(this.shortcutDocDir);
 		this.makeDocShortcutMenuItem(doc.path ?? { doc.name }, i);
 	}
 
@@ -72,34 +74,21 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open / create class help", ["D", true, false], {
 				this.openCreateHelpFile;
 			}),
-			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
+/*			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
 				this.insertClassHelpTemplate;
 			}),
-			
-/*			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
-				{ 
-					var u;
-					Server.default = Server.internal;
-					WaitForServer(Server.internal);
-					u = Resource('stethoscope', { 
-						var s; 
-						s = Stethoscope(Server.internal);
-						s.window.onClose_(s.window.onClose addFunc: { u.remove });
-						s;
-					});
-					u.object.window.front;
-					// restart if server re-booted with scope on
-					ServerPrep(Server.internal).addObjectAction(u, { u.object.run });
-				}.fork(AppClock);
+*/			
+			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
+				Server.default.scope;
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
-				Spectrograph.small;
+				Server.default.freqscope;
 			}),
-*/			
+			
 		]		
 	}
 
-	*showDocListWindow {|multiPaneAreaWidth|
+	*showDocListWindow { | multiPaneAreaWidth |
 		var listwin;
 		multiPaneAreaWidth = multiPaneAreaWidth ?? { Window.screenBounds.width };
 		listwin = ListWindow('Documents', 
@@ -121,7 +110,7 @@ Dock {
 			delay: 0.1; // leave some time for Documents to update their name etc.
 		)
 		.addNotifier(Code, \openedCodeListWindow, {
-			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height / 2 - 70;
+			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height / 2 - 70
 		})
 		.addNotifier(Code, \closedCodeListWindow, {
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
@@ -140,7 +129,21 @@ Dock {
 			window.bounds = Rect((xPos - width).max(0), 87, width, Window.screenBounds.height - 87)
 		}
 	}
-	
+
+	*placeDocWindow { | x = -160, y = 200 |
+		/* 	IZ 120308 Hack to send Document list window to the other computer monitor screen. Try: 
+			Dock.placeDocWindow(-160, 200);
+			Note: Compare with Dock.positionDocListWindowLeftFrom which does not place the 
+			window entirely outside the current main monitor screen. 
+		*/
+		var docwin;
+		docwin = Window.allWindows select: { | w | w.name == "Documents" };
+		if (docwin.size > 0) {
+			docwin = docwin.first;
+			docwin.bounds = docwin.bounds.moveTo(x, y);
+		}
+	}
+
 	*browseUserClasses {
 		var windowName = 'User Classes';
 		ListWindow(windowName, nil, {
@@ -215,6 +218,7 @@ Dock {
 		};
 	}
 
+
 	*insertClassHelpTemplate {
 		var doc, class;
 		doc = Document.current;
@@ -277,8 +281,9 @@ Examples
 				doc.selectionStart, doc.selectionSize); 0.2.wait; 
 			doc.font_(Font("Helvetica-Bold", 12), 
 				doc.selectionStart, doc.string.size - doc.selectionStart); 
-		}.fork(AppClock);
-		
+		}.fork(AppClock);		
 		
 	}
+
+
 }

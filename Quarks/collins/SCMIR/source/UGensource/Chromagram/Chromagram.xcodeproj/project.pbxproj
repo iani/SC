@@ -1,0 +1,296 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		46C8367911C5C4AB0076CB84 /* sndfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 46C8367811C5C4AB0076CB84 /* sndfile.h */; };
+		46D8D1FF11DA70AB004B6854 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D8D1FE11DA70AB004B6854 /* Accelerate.framework */; };
+		46EB7D5912620E9D00111876 /* Chromagram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EB7D5812620E9D00111876 /* Chromagram.cpp */; };
+		46EB7DA912664BB800111876 /* SCComplex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46EB7DA812664BB800111876 /* SCComplex.cpp */; };
+		46EB7DAB12664C1D00111876 /* SCComplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 46EB7DAA12664C1D00111876 /* SCComplex.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		46C8367811C5C4AB0076CB84 /* sndfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sndfile.h; path = ../../../../../svnprojects/SC3.4tests/SuperCollider3/common/include/libsndfile/sndfile.h; sourceTree = SOURCE_ROOT; };
+		46D8D1FE11DA70AB004B6854 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
+		46EB7D5812620E9D00111876 /* Chromagram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chromagram.cpp; sourceTree = "<group>"; };
+		46EB7D5A12620EAA00111876 /* Chromagram.scx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Chromagram.scx; sourceTree = BUILT_PRODUCTS_DIR; };
+		46EB7DA812664BB800111876 /* SCComplex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SCComplex.cpp; path = ../../../../../svnprojects/SC3.4tests/SuperCollider3/common/Source/plugins/SCComplex.cpp; sourceTree = SOURCE_ROOT; };
+		46EB7DAA12664C1D00111876 /* SCComplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCComplex.h; path = ../../../../../svnprojects/SC3.4tests/SuperCollider3/common/Source/plugins/SCComplex.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289988505E68E00004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46D8D1FF11DA70AB004B6854 /* Accelerate.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* LLVMUGen */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+				46C8374A11C5ECEB0076CB84 /* Frameworks */,
+			);
+			name = LLVMUGen;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				46EB7DAA12664C1D00111876 /* SCComplex.h */,
+				46EB7DA812664BB800111876 /* SCComplex.cpp */,
+				46EB7D5812620E9D00111876 /* Chromagram.cpp */,
+				46C8367811C5C4AB0076CB84 /* sndfile.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				46EB7D5A12620EAA00111876 /* Chromagram.scx */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		46C8374A11C5ECEB0076CB84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				46D8D1FE11DA70AB004B6854 /* Accelerate.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC0600554660B00DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46C8367911C5C4AB0076CB84 /* sndfile.h in Headers */,
+				46EB7DAB12664C1D00111876 /* SCComplex.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC0620554660B00DB518D /* Chromagram */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB914A08733D8E0010E9CD /* Build configuration list for PBXNativeTarget "Chromagram" */;
+			buildPhases = (
+				D2AAC0600554660B00DB518D /* Headers */,
+				D2AAC0610554660B00DB518D /* Sources */,
+				D289988505E68E00004EDB86 /* Frameworks */,
+				46D8D27211DA8D4B004B6854 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Chromagram;
+			productName = LLVMUGen;
+			productReference = 46EB7D5A12620EAA00111876 /* Chromagram.scx */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB914E08733D8E0010E9CD /* Build configuration list for PBXProject "Chromagram" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* LLVMUGen */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC0620554660B00DB518D /* Chromagram */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		46D8D27211DA8D4B004B6854 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"$TARGET_BUILD_DIR/$PRODUCT_NAME\".scx /data/sc3code/plugins/Chromagram/\"$PRODUCT_NAME\".scx";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC0610554660B00DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46EB7D5912620E9D00111876 /* Chromagram.cpp in Sources */,
+				46EB7DA912664BB800111876 /* SCComplex.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB914B08733D8E0010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = scx;
+				EXECUTABLE_PREFIX = "";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
+				GCC_MODEL_TUNING = G4;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = SC_DARWIN;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include,
+					/usr/local/include,
+				);
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = Empty;
+				REZ_EXECUTABLE = YES;
+				SDKROOT = macosx10.6;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include /data/svnprojects/SC3.4tests/SuperCollider3/common/include/libsndfile /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/plugin_interface /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/common /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/server /data/svnprojects/SC3.4tests/SuperCollider3/common/include/libsndfile";
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		1DEB914C08733D8E0010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = scx;
+				EXECUTABLE_PREFIX = "";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
+				GCC_MODEL_TUNING = G4;
+				GCC_PREPROCESSOR_DEFINITIONS = SC_DARWIN;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include,
+					/usr/local/include,
+				);
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = Chromagram;
+				REZ_EXECUTABLE = YES;
+				SDKROOT = macosx10.6;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include /data/svnprojects/SuperCollider3/common/include/libsndfile /data/svnprojects/SuperCollider3/common/Headers/plugin_interface /data/svnprojects/SuperCollider3/common/Headers/common /data/svnprojects/SuperCollider3/common/Headers/server /data/svnprojects/SuperCollider3/common/include/libsndfile";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		1DEB914F08733D8E0010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = YES;
+				SDKROOT = macosx10.6;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include /data/svnprojects/SC3.4tests/SuperCollider3/common/include/libsndfile /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/plugin_interface /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/common /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/server /data/svnprojects/SC3.4tests/SuperCollider3/common/include/libsndfile";
+			};
+			name = Debug;
+		};
+		1DEB915008733D8E0010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = YES;
+				SDKROOT = macosx10.6;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include /data/svnprojects/SC3.4tests/SuperCollider3/common/include/libsndfile /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/plugin_interface /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/common /data/svnprojects/SC3.4tests/SuperCollider3/common/Headers/server /data/svnprojects/SC3.4tests/SuperCollider3/common/include/libsndfile";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB914A08733D8E0010E9CD /* Build configuration list for PBXNativeTarget "Chromagram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB914B08733D8E0010E9CD /* Debug */,
+				1DEB914C08733D8E0010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB914E08733D8E0010E9CD /* Build configuration list for PBXProject "Chromagram" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB914F08733D8E0010E9CD /* Debug */,
+				1DEB915008733D8E0010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

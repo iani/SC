@@ -1,0 +1,124 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf320
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green34\blue218;\red0\green19\blue254;\red0\green18\blue233;
+\red83\green83\blue83;\red0\green37\blue228;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\b\fs24 \cf0 RepQuarks is a code management mechanism for SuperCollider based on Quarks. 
+\b0 \
+\
+Authors: Martin Carle and Ioannis Zannos, 2011-2012. \
+\
+The source code for RepQuarks is currently included in the SC repository on Github. {\field{\*\fldinst{HYPERLINK "https://github.com/iani/SC"}}{\fldrslt https://github.com/iani/SC}}  under folder "PutMyAliasInExtensions". \
+\
+
+\b\fs36 Installation Instructions\
+
+\b0\fs24 \
+You can use the RepQuarks class without the library that it is part of, by putting a copy or alias of the RepClass.sc file in the Extensions folder of your 
+\f1 Platform.userAppSupportDir
+\f0 . \
+\
+Alternatively, if you want to use the rest of the quarks belonging to the library which contains RepQuarks, the make an alias of the folder "PutMyAliasInExtensions" and put it in the Extensions folder of your Platform.userAppSupportDir. Recompile SuperCollider and choose any quarks you want to include from the Quarks menu. Press the save button. Recompile the SuperCollider library when the message on the Quarks window tells you to. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\b\fs34 \cf0 Why RepQuarks?
+\fs28 \
+
+\b0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\fs24 \cf0 To add or modify Classes in SuperCollider one places the files that contain Class definition code inside the folder "Extensions" under 
+\f1 Platform.userAppSupportDir
+\f0  (for more info see {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Using-Extensions.html"}}{\fldrslt \cf2 \ul \ulc2 Using-Extensions}}). The\cf3  {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Quarks/Quarks.html"}}{\fldrslt \cf4 \ul \ulc4 Quarks}}\cf0  mechanism allows one package a group of classes in a folder and to add or remove it via GUI.  This makes it possible to organize code in packages, which makes code management easier. A Quark is installed by placing an alias of its folder in the Extensions directory. Normal Quarks are downloaded by SuperCollider with the statement 
+\f1 \cf5 Quarks.gui
+\f0 \cf0  and are all placed in the folder  
+\f1 Platform.userAppSupportDir ++ Quarks
+\f0 . RepQuarks makes it possible to combine different quark projects which exist independently in different folders, without having to copy these in the global Quarks directory. This gives additional freedom in working with multiple projects while keeping their files separate, and is especially valuable for sharing code with other people independently from the global Quarks. 
+\f1\fs18 \
+\
+
+\f0\b\fs36 What RepQuarks are and how they work
+\f1\b0\fs18 \
+
+\fs24 \
+
+\f0 RepQuarks are Quarks whose code resides locally, that is, on the computer where the SuperCollider client ("lang")  is running. There can be any number of local folders anywhere in the system that contain RepQuarks. To add the quarks of a local folder to SuperCollider, follow these 3 steps:\
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	1.	}Define an empty subclass of RepQuarks and puts its definition file at the top level of the folder containing the RepQuarks. The name of the subclass may be anything any valid unique class name. \
+{\listtext	2.	}Place an alias of the definition file in the Extensions folder of your 
+\f1 Platform.userAppSupportDir. 
+\f0 The name of the alias should end in .sc. \
+{\listtext	3.	}Recompile SuperCollider. A new menu entry for the new RepQuarks group is created in the Quarks menu. \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+The structure of a RepQuarks folder is the same as that of a normal Quarks folder. It is also possible to group several Quarks folders inside a RepQuarks folder, or to put these inside a subfolder named Quarks. All 4 different folder configuration types are described below. \
+\
+
+\b\fs36 How to configure code with RepQuarks\
+
+\b0\fs24 \
+Templates showing the structure of the 4 different kinds of setup possible with RepQuarks are provided in file RepQuarkTemplates.zip. Following are step-by-step instructions. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\b\fs28 \cf0 A. Basic Cases: A single quark folder with several quarks or several quark folders with several quarks each. 
+\b0\fs24 \
+\
+1. Simplest case: A single folder with one or more quarks\
+\
+\pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural
+\ls2\ilvl0\cf0 {\listtext	\'95	}Place your quarks are placed in one project folder. Each quark is a folder containing the classes and optionally the help files of the quark.\
+{\listtext	\'95	}Add a single folder named DIRECTORY, which contains one file for each quark. The format of the quark-definition-files in DIRECTORY is described in the help file for {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Quarks/Quark.html"}}{\fldrslt \cf6 Quark}}. \
+{\listtext	\'95	}Link to your quarks folder to the compile path of SuperCollider following the RepQuarks subclass mechanism described at the beginning of this document. \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 {{\NeXTGraphic ProjectEx1.jpg \width7536 \height3620
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+\
+\
+2. Several quark groups.\
+\
+Quarks can be grouped into several subfolders according to the topics they address. For example, there could be a group of quarks related to playing buffers, and another one for dealing with envelopes. Each group has the same structure as case 1 above. That is, it is a folder containing a subfolder named DIRECTORY and one or more subfolders where each subfolder contains a quark. The folders of all groups are put in a single folder. A menu item is created for each group in that folder. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 {{\NeXTGraphic ProjectEx2.jpg \width7795 \height5780
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\b\fs28 \cf0 B. Variations of 1 and 2 above: Put all quarks in one subfolder named "Quarks"\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\b0\fs24 \cf0 \
+If you want to add non-quark files to your project as for example extra documentation, project descriptions, or folders containing code for other environments than SuperCollider, then you may want to keep all the quarks organised in a single folder named Quarks, so that they are kept separate from the files with the additional information. Therefore, RepQuark also recognises the configurations 1 and 2 above if they are put in a folder named Quarks inside the top folder. This enables you to archive your project with the quarks and the additional non-quark folders in one repository (for example a git repository, a compressed archive etc.). \
+\
+3. One quark-folder inside a folder named Quarks inside a project folder.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 {{\NeXTGraphic ProjectEx3.jpg \width8635 \height5780
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+\
+4. Several quark-folders inside a folder named Quarks inside a project folder.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 {{\NeXTGraphic ProjectEx4.jpg \width11337 \height7940
+}¬}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+}

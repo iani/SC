@@ -29,7 +29,7 @@ ServerActionLoader {
 			postf("Loading % % to %\n", objects.size, this.objectKind, server);
 		};
 		while { objects.size > 0 } {
-			array = objects.asArray;
+			array = objects.asArray; // Set -> Array. Iteration and remove ok
 			array do: { | action |
 				objects remove: action; 
 				action.value;	

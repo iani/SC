@@ -1,0 +1,156 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;\f1\fswiss\fcharset77 Helvetica-Bold;\f2\fnil\fcharset77 Monaco;
+}
+{\colortbl;\red255\green255\blue255;\red191\green0\blue0;\red0\green0\blue191;\red96\green96\blue96;
+}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs18 \cf0 This file is part of The BBCut Library. Copyright (C) 2001  Nick M.Collins distributed under the terms of the GNU General Public License full notice in file BBCutLibrary.help\
+
+\f1\b\fs30 \
+StatBalProc2
+\f0\b0\fs24 \
+\
+
+\f1\b Superclass: ChooseCutProc
+\f0\b0 \
+\
+Extension of ChooseCutProc using Charles Ames' method of statistical feedback\
+to control state selection. The essential auxilliary class is StatBalNormStream. \
+This version changes weightings during the phrase itself so as to give changing structure to phrasing.\
+Because weights may temporarily go to zero, the normalisation version of statistical feedback is essential.\
+See StatBalProc for comparison.\
+\
+The technique of changing weightings is more noticeable than the influence of statistical feedback.\
+See the examples below for a comparison. Set heterogeneity high to simulate Lehmer style\
+dispersion characteristics. \
+\
+
+\f1\b \ul Class Methods
+\f0\b0 \ulnone \
+\
+*
+\f1\b new(cutarray, repeatarray, chet, rhet, phraselength, rollchance, rollallowed, bpsd)
+\f0\b0    \
+Create a ChooseCutProc object with the given parameters.\
+\
+
+\f1\b cutarray
+\f0\b0  - An array of 3 arrays of form [ [states], [startweights], [endweights ] ] where the states \
+are the possible cutsizes, and the start weights are those for the beginning of the phrase, the \
+endweights for the end. Linear interpolation is use internally to work out intermediate weights.\
+The endweights are reached at beat position currphraselength=rollallowed. \
+The three arrays must obviously be of the same size. \
+
+\f1\b repeatarray 
+\f0\b0 - As cutarray for the repeats parameter.\
+
+\f1\b chet
+\f0\b0  - heterogeneity for the StatBalNormStream that will be created from the cutarray.\
+
+\f1\b rhet
+\f0\b0  - heterogeneity for the StatBalNormStream that will be created from the cutarray.\
+
+\f1\b phraselength 
+\f0\b0 - Next length of phrase in beats.\
+
+\f1\b rollchance
+\f0\b0  - A probability of a roll near the end of a phrase.\
+
+\f1\b rollallowed
+\f0\b0  - number of beats within sight of the end of the current phrase within which a roll is permissible.\
+Further, position at which final weightings for a phrase will be acheived.\
+
+\f1\b bpsd
+\f0\b0  - beats per sub division. Sets a primitive cut size resolution for choose offset messages. \
+\
+
+\f1\b \ul Instance Methods
+\f0\b0 \ulnone \
+\
+
+\f1\b initStatBalProc2 
+\f0\b0 Called internally after a new.\
+\
+
+\f1\b cutsizedefault
+\f0\b0 , 
+\f1\b repeatfuncdefault
+\f0\b0  are overridden from ChooseCutProc.\
+\
+Examples- Substitute your own break sample to hear this properly\
+you may wish to add cuts.postln to the ChooseCutProc class temporarily to see the \
+chosen states being printed as they are selected\
+
+\f2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\fs18 \cf0 (	\cf2 //defaults\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\cf3 StatBalProc2\cf0 .new).tempo_(2.4).go;\
+)
+\fs24 \
+\
+\
+
+\fs18 (	\cf2 //defaults\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\cf3 StatBalProc2\cf0 .new\
+(\
+[[0.25,0.5,1.0,1.5],[0.0,0.0,0.8,0.2],[0.5,0.3,0.2,0.0]],\
+[[1,2,3],[0.1,0.5,0.4],[0.7,0.3,0.0]]\
+,phraselength:32.0	\
+,rollallowed:4.0\
+)\
+).tempo_(2.4).go;\
+)
+\fs24 \
+\
+\
+
+\fs18 (\cf2 //compare to ChooseCutProc with changing weights- above (Ames) is more rigid, below (Lehmer) more randomly dispersed\cf0 \
+\cf2 //can write further class ChangeWeightCutProc to do this properly- for now, hack below is sufficient to test\cf0 \
+\cf3 var\cf0  sf;\
+sf= \cf3 SF3\cf0 (\cf4 "break"\cf0 ,8);\
+\
+\cf3 BBCut\cf0 (\cf3 BBCutSynthSF\cf0 (sf),\
+\
+\cf3 ChooseCutProc\cf0 .new(\
+\{\cf3 arg\cf0  pos,currlength;\
+\cf2 //reduce effective currlength so reach weights end sooner (at point rolls become permissible)\cf0 \
+currlength= currlength-4.0;\
+\
+[0.25,0.5,1.0,1.5].wchoose([0.0,0.0,0.8,0.2].blend([0.5,0.3,0.2,0.0],(pos/currlength)));\
+\},\
+\{\cf2 //repeats\cf0 \
+\cf3 arg\cf0  cutsize,pos,currlength;\
+\cf2 //reduce effective currlength so reach weights end sooner (at point rolls become permissible)\cf0 \
+currlength= currlength-4.0;\
+\
+[1,2,3].wchoose([0.1,0.5,0.4].blend([0.7,0.3,0.0],(pos/currlength)));\
+\}\
+,\
+\cf3 nil\cf0 ,32.0,0.0,4.0\
+)\
+).tempo_(2.4).go;\
+\
+)
+\fs24 \
+\
+
+\fs18 \
+////////////\
+For additional data on the algorithm see\
+Nick Collins, "further automatic BreakBeat cutting methods",\
+Proceedings of Generative Art 2001\
+reproduced at http://www.axp.mdx.ac.uk/~nicholas15/\
+////////////\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
+
+\f0\fs24 \cf0 \
+\
+}

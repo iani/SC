@@ -48,9 +48,11 @@ BasicTurtle {
 	}
 	
 	*redraw {
-		if (defaultWindow.notNil) { defaultWindow.refresh };		
+		if (defaultWindow.notNil) { defaultWindow.refresh };
 	}
 	
+	*clear { this.draw(nil) }
+
 	*rescale {
 		/* set autoscale to true, refresh the window, and restore autoscale to its previous value
 		this redraws the drawing and scales it to fit to the size of the window */
@@ -104,7 +106,7 @@ BasicTurtle {
 	}
 	*makeWindow {
 		var view;
-		defaultWindow = Window("Turtle", Rect(10, 10, 800, 800).fromTop.fromRight);
+		defaultWindow = Window("Turtle", Rect(10, Window.screenBounds.height - 10, 800, 800));
 		defaultWindow.onClose = { defaultWindow = nil };
 		view = UserView(defaultWindow, defaultWindow.view.bounds);
 		view.background = Color.white;
@@ -135,7 +137,8 @@ BasicTurtle {
 				window.isClosed.not and: {
 					count = count + 1;
 					event[\count] = count;
-					format("%, ", count).post;
+//					format("%, ", count).post;
+					count.postln; "".postln;
 					(nextPoint = stream.next).notNil
 				}
 			}{
@@ -184,7 +187,7 @@ Turtle : BasicTurtle {
 		var xvert, yvert;
 		if (vertices.size <= 1) { ^this }; 
 		#xvert, yvert = vertices.slice(nil, 2).collect({ | p | [p.x, p.y] }).flop;
-		#minX, maxX, minY, maxY = [xvert.smallest, xvert.largest, yvert.smallest, yvert.largest];
+		#minX, maxX, minY, maxY = [xvert.minItem, xvert.maxItem, yvert.minItem, yvert.maxItem];
 		width = window.view.bounds.width min: window.view.bounds.height;
 //		this.updateBounds;
 		scaleFactor = width / ((maxX - minX) max: (maxY - minY) max: 200);
