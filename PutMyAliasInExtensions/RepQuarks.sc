@@ -31,9 +31,10 @@ RepQuarks : Quarks {
 		if (menu.isNil) {
 			menu = SCMenuGroup(nil, menuName, 10);
 		};
-		SCMenuItem(menu, "quarks").action = { Quarks.gui };
+		SCMenuItem(menu, "quarks").action = { RepQuarks.gui }; //mc 
+									// (tricky -> see diff of Quarks.sc in SC3.4 and SC3.5 !!!)
 		SCMenuItem(menu, "sc3-plugins").action = {
-			Quarks(localPath: (Platform.userAppSupportDir +/+ "sc3-plugins")).gui
+			RepQuarks(localPath: (Platform.userAppSupportDir +/+ "sc3-plugins")).gui //mc
 		};
 	}
 
@@ -162,10 +163,20 @@ RepQuarks : Quarks {
 		var	quarks;
 		var pageStart = 0, fillPage;
 
+//mc		
+if(Main.version.split($.)[1].asInt > 4) { 	
+		//^this.class.superclass.gui 
+		if( GUI.id === \qt ) { ^QuarksViewQt(this) } { ^QuarksView(this) }
+}{
+		this.logln("this is ReQuarks GUI");	
+
+		
+
 		// note, this doesn't actually contact svn
 		// it only reads the DIRECTORY entries you've already checked out
-//		postf("RepQuarks gui - repos: %\n", repos.postln.quarks);
-//		postf("RepQuarks gui - local: %\n", local.postln.quarks);
+		//postf("RepQuarks gui - repos: %\n", repos.postln.quarks);
+		//postf("RepQuarks gui - local: %\n", local.postln.quarks);
+
 		quarks = this.repos.quarks.copy
 			.sort({ |a, b| a.name < b.name });
 		
@@ -281,14 +292,27 @@ RepQuarks : Quarks {
 		GUI.staticText.new( window, 492 @ 1 ).background_( Color.grey );		window.view.decorator.nextLine;
 
 		flowLayout.margin_( 0 @0 ).gap_( 0@0 );
-		scrollview = GUI.scrollView.new(window, 500 @ (height - 165))
-			.resize_( 5 )
-			.autohidesScrollers_(true);
+
+//mc hack to prevent ScrollView hang on OSX 10.7.4 !!!	
+if( (thisProcess.platform.name == \osx)
+			&& (Main.version.split($.)[1].asInt < 5) 
+			&& ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4")) ) 
+		{
+			scrollview = GUI.compositeView.new(window, 500 @ (height - 165)) //mc compositeView
+				.resize_( 5 )
+				//.autohidesScrollers_(true) //mc off
+			;
+		}{ 
+			scrollview = GUI.scrollView.new(window, 500 @ (height - 165))				.resize_( 5 )
+				.autohidesScrollers_(true)
+			;
+		};
 		scrollview.decorator = FlowLayout( Rect( 0, 0, 500, quarks.size * 25 + 20 ));
 
 		window.front;
 		fillPage.(pageStart);
 		^window;
+}
 	}
 	
 	install { | name, includeDependencies = true, checkoutIfNeeded = true |
