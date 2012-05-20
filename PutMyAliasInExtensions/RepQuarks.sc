@@ -164,9 +164,11 @@ RepQuarks : Quarks {
 		var pageStart = 0, fillPage;
 
 //mc		
-if(Main.version.split($.)[1].asInt > 4) { 	
+// if((Main.version.split($.)[1].asInt > 4))
+if( ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4").not) || (GUI.id != \cocoa))
+{	
 		//^this.class.superclass.gui 
-		if( GUI.id === \qt ) { ^QuarksViewQt(this) } { ^QuarksView(this) }
+		if( GUI.id === \qt ) { ^QuarksViewQt(this) } { ^QuarkView(this) }
 }{
 		this.logln("this is ReQuarks GUI");	
 
@@ -294,8 +296,7 @@ if(Main.version.split($.)[1].asInt > 4) {
 		flowLayout.margin_( 0 @0 ).gap_( 0@0 );
 
 //mc hack to prevent ScrollView hang on OSX 10.7.4 !!!	
-if( (thisProcess.platform.name == \osx)
-			&& (Main.version.split($.)[1].asInt < 5) 
+if( (GUI.current == \CocoaGUI.asClass) // && (Main.version.split($.)[1].asInt < 5) 
 			&& ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4")) ) 
 		{
 			scrollview = GUI.compositeView.new(window, 500 @ (height - 165)) //mc compositeView

@@ -16,8 +16,9 @@ Dock {
 	
 	*doOnStartUp {
 		// Install Qt GUI if available, so that scope and freqscope work on local server:
-		if (GUI respondsTo: \qt) { GUI.qt };
-
+		// if (GUI respondsTo: \qt) { GUI.qt };
+//mc, nice but not within a class -> GUI selection should be done via startup file
+  
 		shortcutDocMenuItems = Array.newClear(10);
 		shortcutDocs = Array.newClear(10);
 		shortcutDocPaths = Archive.global at: \shortCutDocs;
