@@ -1,0 +1,16 @@
+(
+	\name: "LHC",
+	\path: "LHC",
+	\summary: "Simulator of Live Hardware Coding machine",
+//	\helpdoc: "Help/.html",
+	\author: "Ioannis Zannos, Giorgos Diapoulis",
+	\version: 0.01,
+	\organization: "Ionian University, Corfu / University of Crete",
+	\country: "Greece",
+	\since: "2012",
+	\url: "http://earlab.org",
+	\dependencies: []
+//	\dependencies: ["Resource"]
+)
+
+

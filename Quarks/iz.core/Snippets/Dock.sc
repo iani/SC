@@ -77,7 +77,6 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
 				Server.default.freqscope;
 			}),
-			
 		]		
 	}
 

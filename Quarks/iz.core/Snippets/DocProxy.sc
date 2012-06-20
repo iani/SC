@@ -19,7 +19,7 @@ DocProxy {
 		ShutDown add: this;
 	}
 
-	*doOnStartUp { 
+	*doOnStartUp {
 		proxies = IdentityDictionary.new;
 		docs = Array.newClear(10);
 			// Create and start a new ProxySpace on the current document
