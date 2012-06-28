@@ -1,3 +1,4 @@
+//mc: suggesting NR message variants as replacement candidates !
 
 /* 
 Shortcuts for establishing messaging communication between objects via NotificationCenter.
@@ -11,6 +12,15 @@ Shortcuts for establishing messaging communication between objects via Notificat
 			this.performList(message, args)
 		});
 	}
+//mc: why should a 'message' registration not been removed on objectClose ???
+//	what are the args doing here ???
+	addMessageNR { | notifier, message |
+		var nr = NotificationCenter.register(notifier, message, this, { | ... args | 
+			this.performList(message, args)
+		});
+		this onClose: { nr.remove }; notifier onClose: { nr.remove };
+		^nr
+	}
 
 	removeMessage { | notifier, message |
 		NotificationCenter.unregister(notifier, message, this);
@@ -22,6 +32,13 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		NotificationCenter.register(notifier, message, this, action);
 		this onClose: { NotificationCenter.unregister(notifier, message, this); };
 		notifier onClose: { NotificationCenter.unregister(notifier, message, this); };
+	}
+	addNotifierNR { | notifier, message, action |
+	// add self to do action when receiving message from notifier
+	// if either object (notifier or self) closes, remove the notication connection
+		var nr = NotificationCenter.register(notifier, message, this, action);
+		this onClose: { nr.remove }; notifier onClose: { nr.remove };
+		^nr
 	}
 	
 	removeNotifier { | notifier, message |
@@ -36,6 +53,13 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		NotificationCenter.register(this, message, listener, action);
 		this onClose: { NotificationCenter.unregister(this, message, listener); };
 		listener onClose: { NotificationCenter.unregister(this, message, listener); }
+	}
+	addListenerNR { | listener, message, action |
+	// add listener to do action when receiving message from self
+	// if either object (listener or self) closes, remove the notication connection
+		var nr = NotificationCenter.register(this, message, listener, action);
+		this onClose: { nr.remove }; listener onClose: { nr.remove };
+		^nr
 	}
 
 	removeListener { | listener, message |
@@ -56,11 +80,32 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	onClose { | action | this.onRemove(UniqueID.next, action) } 
 	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
 	doOnceOn { | message, receiver, func |
-		this.registerOneShot(message, receiver, { func.(this) });
+		this.registerOneShotNR(message, receiver, { func.(this) });
 	}
-	registerOneShot { | message, receiver, func |
+	registerOneShot { | message, receiver, func | //mc: please use another name for private arg order!
 		NotificationCenter.registerOneShot(this, message, receiver, func);
 	}
+	registerOneShotNR { | notifier, message, func | //mc: inconsitend args above!!!
+		^NotificationCenter.registerOneShot(notifier, message, this, func);
+	}
+	
+	//mc: or even better and really missing (since the oneShot may have been not triggert once ;-):	
+	addNotifierOneShot { | notifier, message, action |
+	// add self to do action when receiving message from notifier
+	// if either object (notifier or self) closes, remove the notication connection
+		var nr = NotificationCenter.registerOneShot(notifier, message, this, action);
+		this onClose: { nr.remove }; notifier onClose: { nr.remove };
+		^nr
+	}
+	
+	addListenerOneShot { | listener, message, action |
+	// add listener to do action when receiving message from self
+	// if either object (listener or self) closes, remove the notication connection
+		var nr = NotificationCenter.registerOneShot(this, message, listener, action);
+		this onClose: { nr.remove }; listener onClose: { nr.remove };
+		^nr
+	}
+	
 
 	addToServerTree { | function, server |
 		ServerPrep(server).addToServerTree(this, function);
