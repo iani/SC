@@ -9,8 +9,8 @@
 	asKey { ^this.hash }
 	fork { | clock | Code.fork(this, clock); }
 	evalPost {
-		this.eval.postln;
 		if (History.started) { History.enter(this) };
+		^this.eval.postln;
 	}
 	eval { ^this.interpret; }
 	window { | makeFunc | ^this.asSymbol.window(makeFunc); }
