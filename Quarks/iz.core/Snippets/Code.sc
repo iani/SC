@@ -75,17 +75,18 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
 			}),
+//			CocoaMenuItem.addToMenu("Code", "open proxy docs", ["W", true, false], {
+//				this.currentDocumentOpenProxyDocs;
+//			}),
 			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
-				this.evalCurrentSnippetInProxySpace;
+				Document.current.name.postln;
+				ProxyCode(Document.current).evalInProxySpace;
 			}),
 			CocoaMenuItem.addToMenu("Code", "play doc proxy", ["<", false, false], {
-				ProxyDoc.playCurrentDocProxy;
+				ProxyCode.new.playCurrentDocProxy;
 			}),
 			CocoaMenuItem.addToMenu("Code", "stop doc proxy", [">", false, false], {
-				ProxyDoc.stopCurrentDocProxy;
-			}),
-			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
-				this.evalCurrentSnippetInProxySpace;
+				ProxyCode.new.stopCurrentDocProxy;
 			}),
 			CocoaMenuItem.addToMenu("Code", "toggle server auto-boot", ["B", true, true], {
 				autoBoot = autoBoot.not;
@@ -154,6 +155,11 @@ Code {
 		^(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
 	}
 
+	getAllSnippetStrings {
+		// Note: skipping first snippet, as this is before the first //: comment separator
+		^(1..positions.size) collect: { | i | this.getSnippetStringAt(i) }
+	}
+
 	getSnippetAt { | index |
 		if (positions.size == 0) { ^[0, string.size - 1] };
 		if (index <= 0) { ^[0, positions[0][0] - 1] };
@@ -174,15 +180,10 @@ Code {
 	evalPostCurrentSnippet {
 		^this.performCodeAt(this.findIndexOfSnippet(doc), \evalPost );
 	}
-	
-	*evalCurrentSnippetInProxySpace {
-		^this.new(Document.current).evalCurrentSnippetInProxySpace;
-	}
 
-	evalCurrentSnippetInProxySpace {
-		^ProxyDoc.play(this.performCodeAt(this.findIndexOfSnippet(doc), \evalPost));
+	*currentDocumentOpenProxyDocs {
+		^ProxyDocGroup(Document.current);
 	}
-
 
 	*selectNextSnippet {
 		^this.new(Document.current).selectNextSnippet;	

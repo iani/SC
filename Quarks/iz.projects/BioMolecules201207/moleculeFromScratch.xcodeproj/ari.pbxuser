@@ -1,0 +1,198 @@
+// !$*UTF8*$!
+{
+	0202E80115A485C10013847D /* moleculeFromScratch */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = moleculeFromScratch;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	0202E80515A485E00013847D /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	0202E80615A485E00013847D /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	02267FCC15A6DE5400251356 /* ofGraphics.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = ofGraphics.h;
+		path = /Users/ari/Tools/openFrameworks/repository/of_0071_osx_release/libs/openFrameworks/graphics/ofGraphics.h;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1349, 3172}}";
+			sepNavSelRange = "{2546, 37}";
+			sepNavVisRange = "{1654, 1556}";
+		};
+	};
+	02267FD315A6DE7900251356 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 02267FCC15A6DE5400251356 /* ofGraphics.h */;
+		name = "ofGraphics.h: 74";
+		rLen = 37;
+		rLoc = 2546;
+		rType = 0;
+		vrLen = 1556;
+		vrLoc = 1654;
+	};
+	02267FD415A6DE7900251356 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 23";
+		rLen = 21;
+		rLoc = 676;
+		rType = 0;
+		vrLen = 1758;
+		vrLoc = 21;
+	};
+	02267FEB15A6EAED00251356 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 90";
+		rLen = 0;
+		rLoc = 2808;
+		rType = 0;
+		vrLen = 1526;
+		vrLoc = 1836;
+	};
+	02267FEC15A6EAED00251356 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1F0A3A1BDC003C02F2 /* testApp.h */;
+		name = "testApp.h: 40";
+		rLen = 0;
+		rLoc = 876;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	02655B6215A5AC79003C039A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */;
+		name = "testApp.cpp: 53";
+		rLen = 0;
+		rLoc = 1657;
+		rType = 0;
+		vrLen = 2807;
+		vrLoc = 682;
+	};
+	02655C0A15A5E9B3003C039A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1F0A3A1BDC003C02F2 /* testApp.h */;
+		name = "testApp.h: 27";
+		rLen = 0;
+		rLoc = 590;
+		rType = 0;
+		vrLen = 1041;
+		vrLoc = 0;
+	};
+	02655C1E15A5EA9A003C039A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = E4B69E1F0A3A1BDC003C02F2 /* testApp.h */;
+		name = "testApp.h: 40";
+		rLen = 0;
+		rLoc = 876;
+		rType = 0;
+		vrLen = 1041;
+		vrLoc = 0;
+	};
+	E4B69B4C0A3A1720003C02F2 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 0202E80115A485C10013847D /* moleculeFromScratch */;
+		activeTarget = E4B69B5A0A3A1756003C02F2 /* moleculeFromScratch */;
+		breakpoints = (
+		);
+		codeSenseManager = 0202E80615A485E00013847D /* Code sense */;
+		executables = (
+			0202E80115A485C10013847D /* moleculeFromScratch */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					561,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 363255319;
+			PBXWorkspaceStateSaveDate = 363255319;
+		};
+		perUserProjectItems = {
+			02267FD315A6DE7900251356 /* PBXTextBookmark */ = 02267FD315A6DE7900251356 /* PBXTextBookmark */;
+			02267FD415A6DE7900251356 /* PBXTextBookmark */ = 02267FD415A6DE7900251356 /* PBXTextBookmark */;
+			02267FEB15A6EAED00251356 /* PBXTextBookmark */ = 02267FEB15A6EAED00251356 /* PBXTextBookmark */;
+			02267FEC15A6EAED00251356 /* PBXTextBookmark */ = 02267FEC15A6EAED00251356 /* PBXTextBookmark */;
+			02655B6215A5AC79003C039A /* PBXTextBookmark */ = 02655B6215A5AC79003C039A /* PBXTextBookmark */;
+			02655C0A15A5E9B3003C039A /* PBXTextBookmark */ = 02655C0A15A5E9B3003C039A /* PBXTextBookmark */;
+			02655C1E15A5EA9A003C039A /* PBXTextBookmark */ = 02655C1E15A5EA9A003C039A /* PBXTextBookmark */;
+		};
+		sourceControlManager = 0202E80515A485E00013847D /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	E4B69B5A0A3A1756003C02F2 /* moleculeFromScratch */ = {
+		activeExec = 0;
+		executables = (
+			0202E80115A485C10013847D /* moleculeFromScratch */,
+		);
+	};
+	E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {789, 1963}}";
+			sepNavSelRange = "{2808, 0}";
+			sepNavVisRange = "{1836, 1526}";
+		};
+	};
+	E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {734, 745}}";
+			sepNavSelRange = "{876, 0}";
+			sepNavVisRange = "{0, 1041}";
+		};
+	};
+}
