@@ -38,6 +38,7 @@ ProxyCode {
 	init {
 		all[doc] = this;
 		proxySpace = ProxySpace.new;
+		doc.envir = proxySpace;
 	}
 
 	getProxy {
