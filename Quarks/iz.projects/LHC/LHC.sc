@@ -27,10 +27,11 @@ LHC {
 	classvar <>waitTime = 0.5, <routine;
 	classvar <>counter = 0, <>input = 0;
 	
-	classvar <fmsState = 0;
+	classvar <fsmDecoder;
 	
 	*start {
 		this.makeWindow;
+		fsmDecoder = FSMdecoder.new;
 		this.makeRoutine;	
 	}
 	
@@ -101,13 +102,13 @@ LHC.makeRoutine;
 					input = ([bit0.value, bit1.value, bit2.value] * [1, 2, 4]).sum;
 					{ 
 						positiveEdgeDisplay.value = 1;
-						(waitTime / 2).wait;
+						(waitTime / 3).wait;
 						positiveEdgeDisplay.value = 0;
 					}.fork(AppClock);
 					waitTime.wait;
 					counter = counter + input % 8;
 					counterDisplay.value = counter;
-					this.calculateFSMstate(counter);
+//					this.calculateFSMstate(counter);
 				}
 			}.fork(AppClock);
 		}	

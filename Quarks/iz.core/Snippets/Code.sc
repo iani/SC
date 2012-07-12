@@ -75,9 +75,9 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
 			}),
-//			CocoaMenuItem.addToMenu("Code", "open proxy docs", ["W", true, false], {
-//				this.currentDocumentOpenProxyDocs;
-//			}),
+			CocoaMenuItem.addToMenu("Code", "open proxy docs", ["W", true, false], {
+				ProxyCode(Document.current).proxyMixer;
+			}),
 			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
 				Document.current.name.postln;
 				ProxyCode(Document.current).evalInProxySpace;
@@ -88,6 +88,18 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "stop doc proxy", [">", false, false], {
 				ProxyCode.new.stopCurrentDocProxy;
 			}),
+			CocoaMenuItem.addToMenu("Code", "vol +0.1 doc proxy", ["<", false, true], {
+				ProxyCode.new.changeVol(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Code", "vol -0.1 doc proxy", [">", false, true], {
+				ProxyCode.new.changeVol(-0.1);
+			}),
+//			CocoaMenuItem.addToMenu("Code", "vol +0.3 doc proxy", ["<", true, true], {
+//				ProxyCode.new.changeVol(0.3);
+//			}),
+//			CocoaMenuItem.addToMenu("Code", "vol -0.3 doc proxy", [">", true, true], {
+//				ProxyCode.new.changeVol(-0.3);
+//			}),
 			CocoaMenuItem.addToMenu("Code", "toggle server auto-boot", ["B", true, true], {
 				autoBoot = autoBoot.not;
 				postf("Server auto-boot set to %\n", autoBoot);

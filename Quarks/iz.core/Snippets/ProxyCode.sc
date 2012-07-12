@@ -2,19 +2,10 @@
 Each Snippet plays in its own proxy. 
 Cooperates with Code. 
 
-
-Forked from ProxyDoc (which will be deprecated). 
-
-To replace ProxyDoc. 
-
-
-a = ProxyCode.new;
-a.inspect;
-
-ProxyCode.all
+Forked from ProxyDoc (which has been deprecated). 
+Replaces ProxyDoc. 
 
 */
-
 
 ProxyCode {
 	classvar all;
@@ -37,6 +28,11 @@ ProxyCode {
 
 	init {
 		all[doc] = this;
+		this.initProxySpace;
+	}
+
+
+	initProxySpace {
 		proxySpace = ProxySpace.new;
 		doc.envir = proxySpace;
 	}
@@ -48,6 +44,7 @@ ProxyCode {
 		snippet = code.getSnippetStringAt(index);
 		proxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
 		proxyName = (proxyName ?? { [0, format("out%", index)] })[1].asSymbol;
+		if (doc.envir.isNil) { this.initProxySpace };
 		proxy = proxySpace[proxyName];
 	}
 
@@ -55,7 +52,7 @@ ProxyCode {
 		this.getProxy;
 		postf("snippet: %\nproxy (%): %\n", snippet, proxyName, proxy);
 		proxy.source = snippet.interpret;
-		proxy.play;
+		if (proxy.rate === \audio) { proxy.play; };
 	}
 
 	playCurrentDocProxy {
@@ -68,6 +65,19 @@ ProxyCode {
 		this.getProxy;
 		proxy.stop;
 		postf("proxy % stopped: %\n", proxyName, proxy);
+	}
+
+	proxyMixer {
+		ProxyMixer(doc.envir);
+	}
+	
+	changeVol { | increment = 0.1 |
+		var vol1, vol2;
+		this.getProxy;
+		vol1 = proxy.vol;
+		vol2 = vol1 + increment;
+		proxy.vol = vol2;
+		postf("%: vol % -> %\n", proxyName, vol1.round(0.000001), vol2.round(0.000001));
 	}
 }
 
