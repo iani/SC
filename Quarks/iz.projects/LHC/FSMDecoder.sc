@@ -44,15 +44,13 @@ FSMdecoder  {
 
 	state_ { | newState |
 		state = newState;
-		postf("the new state is now: %\n", state.name);
-		this.changed(\state, state);
-		// here add some more behavior to communicate the change to gui and sound processes
+//		postf("the new state is now: %\n", state.name);
+//		this.changed(\state, state);
 	}
 
 	output { | output |
 		postf("my output is: %\n", output);
-		this.changed(\output, output);
-		// here notify other objects that display output in sound or image
+		this.changed(\symbol, output);
 	}
 }
 
