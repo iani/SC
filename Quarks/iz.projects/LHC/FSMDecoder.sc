@@ -14,26 +14,46 @@ f.value(input); 	// where input is 0 or 1.
 				// Calculate the output for this input if any, and the next state. 
 */
 
-FSMdecoder {
+FSMdecoder  {
 
-	var receiver;			// receives message \newSymbol whenever a new symbol is produced
-	var state = 0;		// scalar. Contains the integers 0, 1, or 2
-	var algorithm;		// this is the algorithm that produces the states and outputs
-						// it consists of instances of FSMstate, in an array;	
-	*new { | receiver |
-		^this.newCopyArgs(receiver);
+//	var receiver;			// receives message \newSymbol whenever a new symbol is produced
+	// no receiver: use changed/update mechanism to broadcast \newSymbol to dependants. 
+
+	var state;			// current FSMstate instance, i.e. current state of the fsm. 
+	var <fsm;				// this is the algorithm that produces the states and outputs
+						// it consists of instances of FSMstate, in a dictionary	
+	*new {
+		^super.new.init;
+	}
+	
+	init {
+		fsm = IdentityDictionary.new;
+		/* construct the fsm. may be parametrized later */
+		FSMstate(this, \S0, [\S0, \S1], [\A, nil]);
+		FSMstate(this, \S1, [\S0, \S2], [\B, nil]);
+		FSMstate(this, \S2, [\S0, \S0], [\C, \D]);
+		fsm do: _.getSuccessorStates;
+		state = fsm[\S0];
 	}
 
-	value { | input | 
+	input { | input | 
 		/* calculate the output and the next state, 
 		based on the input (argument), and the current state */
-		this.calcNextState(input); // not yet sure about this
-		this.output;				// not yet sure about this
+		state input: input;
 	}
 
-	
-	
-	
+	state_ { | newState |
+		state = newState;
+		postf("the new state is now: %\n", state.name);
+		this.changed(\state, state);
+		// here add some more behavior to communicate the change to gui and sound processes
+	}
+
+	output { | output |
+		postf("my output is: %\n", output);
+		this.changed(\output, output);
+		// here notify other objects that display output in sound or image
+	}
 }
 
 FSMstate {
@@ -42,16 +62,25 @@ FSMstate {
 	var <>nextStates = #[\S0, \S1];
 	var <>outputs = #[\A, nil];
 	
-	input { | binaryValue = 0 |
-		this nextState: binaryValue;
-		this.output;
+	*new { | decoder, name = \S0, states = #[\S0, \S1], outputs = #[\A, nil] |
+		^this.newCopyArgs(decoder, name, states, outputs).init;
 	}
 	
-	nextState { | binaryValue = 0 |
+	
+	init {
+		fsmDecoder.fsm[name] = this;	
+	}
+	
+	getSuccessorStates {
+		nextStates = nextStates collect: { | name |
+			fsmDecoder.fsm[name];
+		}
+	}
+	
+	input { | input = 0 |
 		var output;
-		fsmDecoder nextState: nextStates[binaryValue];
-		output = outputs[binaryValue];
-		if (output) { fsmDecoder output: output };
-	}
-	
+		output = outputs[input];
+		if (output.notNil) { fsmDecoder output: output };
+		fsmDecoder.state = nextStates[input];
+	}	
 }

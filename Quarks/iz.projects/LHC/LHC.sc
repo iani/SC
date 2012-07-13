@@ -26,12 +26,13 @@ LHC {
 	
 	classvar <>waitTime = 0.5, <routine;
 	classvar <>counter = 0, <>input = 0;
-	
+
 	classvar <fsmDecoder;
 	
 	*start {
 		this.makeWindow;
 		fsmDecoder = FSMdecoder.new;
+		fsmDecoder addDependant: this;
 		this.makeRoutine;	
 	}
 	
@@ -51,6 +52,7 @@ LHC {
 			.action_{|v| };
 		encoderDisplay = TextField.new(window,Rect(225, 100, 100, 100))
 			.action_{|v| }
+			.font_(Font("Monaco", 60))
 			.enabled_(false);
 		StaticText.new(window,Rect(230, 200, 100, 20))
 			.string_("ENCODER")
@@ -67,23 +69,17 @@ LHC {
 			.action_{| v | "bit 2 was pushed".postln; };
 		resetbutton = Button.new(window,Rect(430, 220, 50, 50))
 			.states_([ [ "RESET", Color(), Color(1.0) ] ])
-			.action_{| v | /* this.resetBits */ };
+			.action_{| v | counter = 0; };
 		window.view.keyDownAction =  { | view, char, modifiers, unicode, keycode |
 //			keycode.postln;
-			switch (keycode, 
-				2, { bit0.valueAction = 1 - bit0.value },
-				1, { bit1.valueAction = 1 - bit1.value  },
-				0, { bit2.valueAction = 1 - bit2.value  }
+			switch (char, 
+				$a, { bit0.valueAction = 1 - bit0.value },
+				$s, { bit1.valueAction = 1 - bit1.value  },
+				$d, { bit2.valueAction = 1 - bit2.value  }
 			);
 //			[char, modifiers, unicode, keycode].postln;
 		}
 	 }
-
-/*
-LHC.makeWindow;
-
-LHC.makeRoutine;
-*/
 
 	*windowClosed {
 		window = nil;
@@ -99,32 +95,41 @@ LHC.makeRoutine;
 		if (routine.isNil) {
 			routine = {
 				loop {
+					this.flashPositiveEdgeDisplay;
 					input = ([bit0.value, bit1.value, bit2.value] * [1, 2, 4]).sum;
-					{ 
-						positiveEdgeDisplay.value = 1;
-						(waitTime / 3).wait;
-						positiveEdgeDisplay.value = 0;
-					}.fork(AppClock);
-					waitTime.wait;
 					counter = counter + input % 8;
 					counterDisplay.value = counter;
-//					this.calculateFSMstate(counter);
+					this.calculateFSMstate(counter);
+					waitTime.wait;
 				}
 			}.fork(AppClock);
 		}	
+	}
+
+	*flashPositiveEdgeDisplay {
+		{ 
+			positiveEdgeDisplay.value = 1;
+			(waitTime / 3).wait;
+			positiveEdgeDisplay.value = 0;
+		}.fork(AppClock);
 	}
 	
 	*calculateFSMstate { | counter |
 		// current state + input = next state + output
 		{
 			counter.asBinaryString(3) do: { | digit |
-				if (digit == $1) {
-					this.nextState(1);
-				}{
-					this.nextState(0);
-				};
+				fsmDecoder input: (digit == $1).binaryValue;
 				(waitTime / 3).wait;
 			};
 		}.fork(AppClock);
 	}
+	
+	*update { | who, what, value |
+		postf("% updated: % to: %\n", who, what, value);
+		switch (what,
+			\output, { encoderDisplay.string = value.asString },
+			\state, { }
+		);
+	}
+	
 }
