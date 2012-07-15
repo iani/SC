@@ -20,6 +20,7 @@ a = LHC((
 
 a = LHC((
 	symbol: { | self, symbol |
+		self.soundOn.postln;
 		if (self.soundOn) { 
 			(degree: (A: 11, B: 12, C: 13, D: 14)[symbol]).play 
 		}
@@ -28,6 +29,7 @@ a = LHC((
 		if (counter > 0) {
 			(degree: counter).play;
 			self.soundOn = true;
+			self.soundOn.postln;
 		}{
 			self.soundOn = false
 		}

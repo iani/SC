@@ -13,7 +13,8 @@ LHCplayer : Event {
 	}
 	
 	update { | sender, command, argument |
-//		postf("lhc player received update: %, %, %\n", sender, command, argument);		this.perform(command, *argument);
+//		postf("lhc player received update: %, %, %\n", sender, command, argument);
+		this.perform(command, *argument);
 	}
 	
 	reset { | sender, command, argument |
