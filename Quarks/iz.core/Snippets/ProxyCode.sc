@@ -9,9 +9,24 @@ Replaces ProxyDoc.
 
 ProxyCode {
 	classvar all;
+	classvar <historyTimer;				// routine that counts time from last executed snippet
+	classvar <>historyEndInterval = 300;	// end History if nothing has been done for 5 minutes
  
  	var <doc;
 	var <proxySpace, proxy, proxyName, snippet, index;
+	
+	*initClass {
+		// since CmdPeriod stops routines, restart the historyTimer routine
+		StartUp add: { CmdPeriod add: { { this.startHistoryTimer }.defer(0.1) } };
+	}
+
+	*startHistoryTimer {
+		if (historyTimer.notNil) { historyTimer.stop };
+		historyTimer = {
+			historyEndInterval.wait;
+			History.end;
+		}.fork(AppClock);	
+	}
 
 	*new { | doc |
 		var new;
@@ -49,22 +64,42 @@ ProxyCode {
 	}
 
 	evalInProxySpace {
+		var index;
 		this.getProxy;
 		postf("snippet: %\nproxy (%): %\n", snippet, proxyName, proxy);
 		proxy.source = snippet.interpret;
-		if (proxy.rate === \audio) { proxy.play; };
+		if (History.started.not) {
+			History.clear;
+			History.start;
+			this.enterSnippet2History("ProxySpace.push");
+		};
+		index = snippet indexOf: $\n;
+		this.enterSnippet2History(
+			format("%~% = %", snippet[..index], proxyName, snippet[index + 1..]);
+		);
+		if (proxy.rate === \audio) {
+			proxy.play;
+			this.enterSnippet2History(format("~%.play;", proxyName));
+		};
+	}
+	
+	enterSnippet2History { | argSnippet |
+		History.enter(argSnippet);
+		this.class.startHistoryTimer;		
 	}
 
 	playCurrentDocProxy {
 		this.getProxy;
 		proxy.play;
 		postf("proxy % started: % \n", proxyName, proxy);
+		this.enterSnippet2History(format("~%.play", proxyName));
 	}
 	
 	stopCurrentDocProxy {
 		this.getProxy;
 		proxy.stop;
 		postf("proxy % stopped: %\n", proxyName, proxy);
+		this.enterSnippet2History(format("~%.stop", proxyName));
 	}
 
 	proxyMixer {
@@ -75,9 +110,10 @@ ProxyCode {
 		var vol1, vol2;
 		this.getProxy;
 		vol1 = proxy.vol;
-		vol2 = vol1 + increment;
+		vol2 = vol1 + increment max: 0;
 		proxy.vol = vol2;
 		postf("%: vol % -> %\n", proxyName, vol1.round(0.000001), vol2.round(0.000001));
+		this.enterSnippet2History(format("~%.vol = %", proxyName, vol2));
 	}
 }
 
