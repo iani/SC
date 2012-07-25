@@ -3,7 +3,6 @@
 
 A History that plays in its own ProxySpace. This makes it possible to play copies of the same History in parallel (concurrently) while keeping each copy in its own ProxySpace.
 
-
 ParallelHistory.play(optional: proxySpace, history);
 
 Make a copy of the history's lines, and play it in its own proxySpace. 
@@ -28,13 +27,9 @@ History.current = History.new;
 h = History.current;
 
 h.addLine(0, \me, "~out = { SinOsc.ar(~freq.kr, 0, LFPulse.kr(~rate.kr, 0.2)) * 0.1 };");
-h.addLine(0.1, \me, "~out.play;");
-h.addLine(2, \me, "~out.play;");
-h.addLine(2.4, \me, "~out.stop;");
-h.addLine(4.4, \me, "~out.play;");
-h.addLine(4.9, \me, "~out.stop;");
-h.addLine(8, \me, "~out.play;");
-h.addLine(10.5, \me, "~out.stop;");
+{ 0.5 rrand: 2.0 }.dup(10).integrate do: { | i, j |
+	h.addLine(i, \me, format("~out.%;", ["play", "stop"]@@j))
+};
 )
 // Construct two different proxy spaces to play the history in: 
 (
@@ -43,15 +38,15 @@ p[\freq] = NodeProxy.new.source = 500;
 p[\rate] = NodeProxy.new.source = 5;
 
 q = ProxySpace.new;
-q[\freq] = 550;
-q[\rate] = 5.5;
+q[\freq] = 600;
+q[\rate] = 7.5;
 )
 // Play two copies of History in parallel, using the different proxy spaces above:
 (
 {
-	1.wait;
+	0.1.wait;
 	ParallelHistory.play(p);
-	3.5.wait;
+	0.5.wait;
 	ParallelHistory.play(q);
 }.fork
 )
@@ -106,9 +101,9 @@ ParallelHistory : History {
 					lastTimePlayed = time;
 					waittime.wait;
 					if (e.verbose) { code.postln };
-					proxySpace.push;
+					proxySpace.push;	// use own ProxySpace
 					code.compile.value; // so it does not change cmdLine.
-					proxySpace.pop;
+					proxySpace.pop;	// restore external ProxySpace
 				};
 			};
 			0.5.wait;
