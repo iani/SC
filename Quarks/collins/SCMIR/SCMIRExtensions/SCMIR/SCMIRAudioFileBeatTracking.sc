@@ -60,7 +60,8 @@
 		//analysisfilename.postln;      
 		  
 		score = [       
-		[0.0, [\b_allocRead, 0, sourcepath, 0, 0]],      
+		//[0.0, [\b_allocRead, 0, sourcepath, 0, 0]],    
+		[0.0, [\b_allocRead, 0, sourcepath, loadstart, loadframes]],   
 		[0.0, [ \s_new, \SCMIRAudioBeatTrack, 1000, 0, 0,\playbufnum,0,\length, duration]], //plus any params for fine tuning     
 		[0.005,[\u_cmd, 1000, ugenindex, "createfile",analysisfilename]], //can't be at 0.0, needs allocation time for synth before calling u_cmd on it   
 		[duration,[\u_cmd, 1000, ugenindex, "closefile"]],      
@@ -85,13 +86,30 @@
 			[2, temp].postln;    
 		};    
 		  
-		temp = numbeats*numfeatures;   
+		//[beattime, localtempo] interleaved  
+		temp = numbeats*2; //*numfeatures;   
 		beatdata= FloatArray.newClear(temp);      
 		  
 		 
 		//faster implementation?  
 		file.readLE(beatdata);  
-		  
+		  		  
+		if((beatdata.size) != temp) {
+
+			file.close; 
+			
+			beatdata=nil; 
+			
+			SCMIR.clearResources; 
+							
+			file = SCMIRFile(analysisfilename,"rb");   
+			file.getInt32LE;
+			file.getInt32LE;
+			  
+			beatdata= FloatArray.newClear(temp);  
+			file.readLE(beatdata);  
+		};    
+    
 		file.close;    
 		  
 		  
@@ -125,8 +143,9 @@
 		
 		outputfilename = SCMIR.getTempDir ++ "output.txt"; 
 	
+		//extra quote marks to avoid issue with spaces in file path
 		//output.txt	
-		SCMIR.external("java -cp"+beatrootlocation+"at.ofai.music.beatroot.BeatRoot -o"+outputfilename+sourcepath);
+		SCMIR.external("java -cp"+beatrootlocation+"at.ofai.music.beatroot.BeatRoot -o"+outputfilename+("\""++sourcepath++"\""));
 		 
 		//reconstruct tempo as local estimate from IBI at every point 
 		 

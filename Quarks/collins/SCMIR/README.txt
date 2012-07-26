@@ -5,23 +5,45 @@ by Nick Collins
 http://www.cogs.susx.ac.uk/users/nc81/index.html
 
 
-This is a modified version by Ioannis Zannos, branched of SCMIR 0.7. 
+This is a modified version by Ioannis Zannos, branched of SCMIR 0.7,
+with fixes transferred from 0.8. 
+and extensions for easier loading of files and listening to sound excerpts.  
 
 For SuperCollider 3, all code under GNU GPL 3 license, see COPYING file. 
 
+Tested extensively under SC3.4.4 on OS X 
+Seems to work fine on 3.5, no schelp support yet.
+
+Installation: this is a RepQuark'ed version. 
+
 Note: 
+The MFCC-Ugen fix of Nick Collins has been removed here, because the standard MFCC version of SuperCollider 3.5.3 is needed to run with newer MacBook Intel architectures. Therefore the following does not apply to this release here:  
+
 There is a small bug in the SC MFCC code in SuperCollider 3.4. Fixed in developer core and for later versions. If you are on 3.4 and have source files with perfect noise floor of 0.0 values, the MFCC then leads to infs, messing up normalization. Mac Intel build of MachineListening plugins included as a drop in replacement for those who this is an issue for (swap the plugin in your plugins folder in the app directory). 
 
-
-
-
+============ 
 
 Announcements: 
+
+SCMIR: SuperCollider Music Information Retrieval Library for audio content analysis; version 0.8. 
+new additions and changes: 
+
+Symbolic time series analysis via variable order Prediction by Partial Match algorithm (PPMC class) and fixed order MarkovModel class 
+Support for feature extraction of Transient (WT_Transient from Wavelets code) and PolyPitch features
+Various bug fixes, and greater robustness to long run times (e.g. a database of hundreds of files, over many hours)
+Auto conversion of MP3s into temp directory wavs using lame: via code adapted from MP3 Quark (you don't need the MP3 Quark, but you must have /usr/local/bin/lame available or else adapt the path SCMIR.lamelocation (used in the SCMIRAudioFile:resolveMP3 method) to point to your lame installation)
+differentiateFeature and sumMultiFeature methods: useable, but may be subject to a more general revision in a future version
+
+http://www.sussex.ac.uk/Users/nc81/code.html
+http://www.sussex.ac.uk/Users/nc81/code/SCMIR.zip
 
 
 version 0.7
 
 Latest alpha release of SCMIR. 
+
+
+
 
 SCMIR: SuperCollider Music Information Retrieval Library for audio content analysis; version 0.7. 
 new additions and changes: 

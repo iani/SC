@@ -11,6 +11,27 @@ SCMIRFile : File {
 				 		
 	} 
 	
+	*new { arg pathName, mode;
+		^super.new(pathName, mode).initSCMIRFile(pathName, mode);
+	}
+	
+	initSCMIRFile {|path1,mode1|
+
+		//could try multiple times?
+		if(not(this.isOpen)) {
+			
+			//try again
+			this.close; 
+			
+			SCMIR.clearResources; 
+					
+			this.open(path1,mode1);
+			
+			}
+	}
+
+	
+	
 	//return boolean based on reading of LE binary file with one entry; file created dynamically by tiny test C executable
 	*testEndianness {
 		var def, ugenindex; 
@@ -70,6 +91,8 @@ SCMIRFile : File {
 	//only these calls used by SCMIR, so only ones overwritten
 	getInt32LE { ^if(littleendian){super.getInt32LE}{super.getInt32} }
 	getFloatLE { ^if(littleendian){super.getFloatLE}{super.getFloat} }
+	putInt32LE {arg anInteger; ^if(littleendian){super.putInt32LE(anInteger)}{super.putInt32(anInteger)} }
+	putFloatLE {arg aFloat; ^if(littleendian){super.putFloatLE(aFloat)}{super.putFloat(aFloat)} }
 	readLE {arg buffer; ^if(littleendian){super.readLE(buffer)}{super.read(buffer)} }
 	writeLE {arg item; ^if(littleendian){super.writeLE(item)}{super.write(item)} }
 

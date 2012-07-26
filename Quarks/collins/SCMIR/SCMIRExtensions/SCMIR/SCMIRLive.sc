@@ -73,59 +73,64 @@ SCMIRLive {
 				 
 		if(synthdefcalled.notNil) {synthdefname = synthdefcalled; oscname = synthdefname; }; 
 			 
-		def = SynthDef(synthdefname,{arg in=8, out=0;        
-			var env, input, trig, chain, centroid, features;      
-			var mfccfft, chromafft, specfft, onsetfft;       
+		def = SynthDef(synthdefname,{arg in=8, out=0;    
+			var env, input, features, trig;     
+			//var env, input, trig, chain, centroid, features;      
+//			var mfccfft, chromafft, specfft, onsetfft;       
 			var featuresave;    
 			  
 			input= In.ar(in,1); //mono only   
+			
+			
+			#features, trig = SCMIRAudioFile.resolveFeatures(input,featurehop,featureinfo); 
+			
 				 
-			if (featurehop == 1024) {  
-				mfccfft = FFT(LocalBuf(fftsizetimbre,1),input,1, wintype:1);      
-				chromafft = FFT(LocalBuf(fftsizepitch,1),input,0.25, wintype:1);      
-				//for certain spectral features 
-				specfft = FFT(LocalBuf(fftsizespec,1),input,0.5, wintype:1);      
-				onsetfft = FFT(LocalBuf(fftsizeonset,1),input,1);      
-				} { 
-				//else it should be 512 
-				mfccfft = FFT(LocalBuf(fftsizetimbre,1),input,0.5, wintype:1);      
-				chromafft = FFT(LocalBuf(fftsizepitch,1),input,0.125, wintype:1);      
-				//for certain spectral features 
-				specfft = FFT(LocalBuf(fftsizespec,1),input,0.25, wintype:1);      
-				onsetfft = FFT(LocalBuf(fftsizeonset,1),input,1); //will be smaller to start with 
-			};    
-			  
-			trig=chromafft;      
-			  
-			features= [];      
-			  
-			featureinfo.do{|featuregroup|       
-				 
-				features = features ++ (switch(featuregroup[0].asSymbol,     
-				\MFCC,{     
-					MFCC.kr(mfccfft,featuregroup[1]);       
-				},     
-				\Chromagram,{     
-					  
-					Chromagram.kr(chromafft,4096,featuregroup[1]);     
-				},  
-				\Tartini, {Tartini.kr(input, 0.93, 2048, 0, 2048-featurehop) }, 
-				\Loudness, {Loudness.kr(mfccfft) }, 
-				\SensoryDissonance,{SensoryDissonance.kr(specfft, 2048)}, 
-				\SpecCentroid,{SpecCentroid.kr(specfft)}, 
-				\SpecPcile,{SpecPcile.kr(specfft,featuregroup[1] ? 0.5)}, 
-				\SpecFlatness,{SpecFlatness.kr(specfft)}, 
-				\FFTCrest,{FFTCrest.kr(specfft,featuregroup[1] ? 0, featuregroup[2] ? 50000)}, 
-				\FFTSpread,{FFTSpread.kr(specfft)}, 
-				\FFTSlope,{FFTSlope.kr(specfft)}, 
-				//always raw detection function in this feature extraction context 
-				\Onsets,{Onsets.kr(onsetfft, odftype: (featuregroup[1] ?  \rcomplex), rawodf:1)}, 
-				//more to add: FFTRumble (in combination with pitch detection, energy under f0)  
-				\RMS,{Latch.kr(RunningSum.rms(input,1024),mfccfft)}, 
-				\ZCR,{Latch.kr(ZeroCrossing.ar(input),mfccfft)} 
-				));	   
-				  
-			};      
+			//if (featurehop == 1024) {  
+//				mfccfft = FFT(LocalBuf(fftsizetimbre,1),input,1, wintype:1);      
+//				chromafft = FFT(LocalBuf(fftsizepitch,1),input,0.25, wintype:1);      
+//				//for certain spectral features 
+//				specfft = FFT(LocalBuf(fftsizespec,1),input,0.5, wintype:1);      
+//				onsetfft = FFT(LocalBuf(fftsizeonset,1),input,1);      
+//				} { 
+//				//else it should be 512 
+//				mfccfft = FFT(LocalBuf(fftsizetimbre,1),input,0.5, wintype:1);      
+//				chromafft = FFT(LocalBuf(fftsizepitch,1),input,0.125, wintype:1);      
+//				//for certain spectral features 
+//				specfft = FFT(LocalBuf(fftsizespec,1),input,0.25, wintype:1);      
+//				onsetfft = FFT(LocalBuf(fftsizeonset,1),input,1); //will be smaller to start with 
+//			};    
+//			  
+//			trig=chromafft;      
+//			  
+//			features= [];      
+//			  
+//			featureinfo.do{|featuregroup|       
+//				 
+//				features = features ++ (switch(featuregroup[0].asSymbol,     
+//				\MFCC,{     
+//					MFCC.kr(mfccfft,featuregroup[1]);       
+//				},     
+//				\Chromagram,{     
+//					  
+//					Chromagram.kr(chromafft,4096,featuregroup[1]);     
+//				},  
+//				\Tartini, {Tartini.kr(input, 0.93, 2048, 0, 2048-featurehop) }, 
+//				\Loudness, {Loudness.kr(mfccfft) }, 
+//				\SensoryDissonance,{SensoryDissonance.kr(specfft, 2048)}, 
+//				\SpecCentroid,{SpecCentroid.kr(specfft)}, 
+//				\SpecPcile,{SpecPcile.kr(specfft,featuregroup[1] ? 0.5)}, 
+//				\SpecFlatness,{SpecFlatness.kr(specfft)}, 
+//				\FFTCrest,{FFTCrest.kr(specfft,featuregroup[1] ? 0, featuregroup[2] ? 50000)}, 
+//				\FFTSpread,{FFTSpread.kr(specfft)}, 
+//				\FFTSlope,{FFTSlope.kr(specfft)}, 
+//				//always raw detection function in this feature extraction context 
+//				\Onsets,{Onsets.kr(onsetfft, odftype: (featuregroup[1] ?  \rcomplex), rawodf:1)}, 
+//				//more to add: FFTRumble (in combination with pitch detection, energy under f0)  
+//				\RMS,{Latch.kr(RunningSum.rms(input,1024),mfccfft)}, 
+//				\ZCR,{Latch.kr(ZeroCrossing.ar(input),mfccfft)} 
+//				));	   
+//				  
+//			};      
 			  
 			//normalization 
 				 
@@ -141,7 +146,7 @@ SCMIRLive {
 						var maxval = normalizationinfo[1][j]; 
 						var diff = 1.0/(maxval-minval);
 							 
-						(val-minval)*diff;  
+						((val-minval)*diff); //.clip2(0.0,1.0); //make sure doesn't go outside this range?  
 					} 	 
 						 
 					} { 
@@ -165,7 +170,7 @@ SCMIRLive {
 			//'SCMIRLive'
 			if (sendosc) {
 				//["sendosc",oscname,whichlive].postln;
-			SendReply.kr(chromafft,oscname,features);    
+			SendReply.kr(trig,oscname,features);    
 			};
 			
 			if (controlbusses) {
@@ -201,15 +206,17 @@ SCMIRLive {
 	} 
 		 
 	//default live input 1 in 8 channel output system 
-	run {|inputbus=8| 
+	run {|inputbus=8, group| 
 			 
 		synth.free; //in case already started?  
 			 
 		if(controlbusses.isNil) { 
 			controlbusses = Bus.control(Server.default,numfeatures);  
 		}; 
+		
+		group = group ?? {Group.basicNew(Server.default,1)}; 
 			 
-		synth = Synth(synthdefname,[\in, inputbus, \out, controlbusses.index]);  
+		synth = Synth.head(group,synthdefname,[\in, inputbus, \out, controlbusses.index]);  
 			 
 		^synth;  
 	} 

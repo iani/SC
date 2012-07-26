@@ -12,11 +12,22 @@ e.plotFeatures;
 //:Similarity Matrix
 e.similarityMatrix.plot;
 
-//:---
+//:Similarity Matrix - bigger plot
+e.similarityMatrix.plot(4); // show each data item as a rectangle of 4 x 4 pixels
+
+//:
 e.inspect;
 
+//:Choosing files interactively
+Dialog.getPaths({ | path |
+	var sf;
+	path = path.first;
+	sf = SCMIRAudioFile(path, [[MFCC, 13], [Chromagram, 12]]);
+	{ sf.extractFeatures }.fork;
+	Library.put('scmir', path.basename.asSymbol, sf);
+});
 //:--
 
-SCMIRAudioFile:plotFeatures
+Library.put('test', { "Hello".postln });
 
-MFCC
+Library.at('test');
