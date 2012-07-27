@@ -42,20 +42,33 @@ ServerPrep {
 		synths = SynthLoader(this, server);
 		routines = RoutineLoader(this, server);
 		actions = ServerActionLoader(this, server);
-		CmdPeriod.add(this);
+//		CmdPeriod.add(this);
 		// on Server *boot*: load all registered Udefs and BufferResources
-		ServerTree.add(this, server); 
+//		ServerTree.add(this, server);
+		server onBootAdd: { this.serverBooted }
 	}
 
-	cmdPeriod { cmdPeriod = true }
+	/* TODO / DEBUG / NOTE: (2012 07)
+		the cmdPeriod doOnServerTree mechanism always reloads Buffers when cmd period is pressed. 
+		This must be corrected. Try the mechanism on a new class, make it work, and then 
+		use that class to notify this one. 
+	*/
+	// 2012 07 27 substituting here Server:onBootAdd
+//	cmdPeriod { // "cmd period was called and iw ill set cmdPerod to true".postln; 
+//		cmdPeriod = true }
 
-	doOnServerTree {
-		if (cmdPeriod) {			// do not reload SynthDefs + Buffers on Server init tree
-			cmdPeriod = false;
+
+	serverBooted {
+//	doOnServerTree { // }
+	//	postf("cmdPeriod was true? %\n", cmdPeriod);
+//		if (cmdPeriod.not) { // do not reload SynthDefs + Buffers on Server init tree
+	//		postf("cmdPeriod was false indeed and therefore will load all objects\n");			cmdPeriod = false; // hm  does not seem to be consisteng. DEBUG NEEDED!
+
+
 			this.loadAllObjects;	// load all objects added to the tree, in order
 			this.notifyTree;	// add any functions from addToServerTree to actions
 			// ensuring that their SynthDefs etc. will be started in the right order. 
-		}
+//		}
 	/* Load of objects and tree notification at boot time triggered by serverBootedResponder */
 	}
 

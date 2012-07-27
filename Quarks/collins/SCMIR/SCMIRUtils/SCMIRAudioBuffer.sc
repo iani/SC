@@ -16,7 +16,7 @@ w.buffer;
 w.featuredata.size;
 w.buffer.numFrames / w.featuredata.size;
 
-
+BufferResource.loadPaths("/Users/iani2/Music/sounds/osmosis_sounds_wav/seals_normalized/*.wav".pathMatch);
 
 w.buffer.play;
 
@@ -27,6 +27,8 @@ l = w.findSections;
 
 
 SCMIRAudioBuffer.load(Onsets);
+
+BufferResource
 
 */
 

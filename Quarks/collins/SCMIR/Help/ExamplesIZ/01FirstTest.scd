@@ -31,3 +31,7 @@ Dialog.getPaths({ | path |
 Library.put('test', { "Hello".postln });
 
 Library.at('test');
+
+Library.global
+
+SCMIR
