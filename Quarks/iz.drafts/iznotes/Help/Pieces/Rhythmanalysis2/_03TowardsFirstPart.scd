@@ -32,12 +32,6 @@ currentEnvironment.fadeTime = 3; // initialize global fading time at this stage
 //:map countingpan to countingmove
 ~countingpan.map(\pos, ~countingmove);
 
-//:unmap countingpan
-~countingpan.set(\pos, 0.5);
-
-//:stop countingpan
-~countingpan.end;
-
 //:countingbshift PV_BinShift
 { | amp = 1, stretch = 1, shift = 0 |
 	var in, chain;
@@ -46,48 +40,84 @@ currentEnvironment.fadeTime = 3; // initialize global fading time at this stage
 	chain = PV_BinShift(chain, stretch, shift);
 	amp * IFFT(chain);
 }
-
-//:
-~countingbshift.set(\stretch, 1);
-
-//:
-~countinsgbshift.stop;
-
-//:
-~countingbshift.set(\stretch, 2, \shift, 10);
-
-
 //:countingbshiftstretch
 { LFNoise2.kr(2).range(0.05, 0.4) }
-
-//:--
-
+//:-----
 ~countingbshift.map(\stretch, ~countingbshiftstretch);
 
-//:---
-~countingbshift.set(\stretch, 1);
 
-//:swallows without pan, without amp
+//================ SWALLOWS ================
 
-{ | buf, ampThreshold = 0.02, transpose = 2, srcAmp = 0, fxAmp = 1 |
+// ====== BASIC ======
+//:swallows
+{ | amp = 0.2 | PlayBuf.ar(1, \swallows.buffer, loop: 1) * amp };
+
+// ====== PAN ======
+//:swallowspan
+{ | pos = 0, level = 1, width = 2 | PanAz.ar(6, ~swallows.ar, pos, level, width); };
+
+//:swallowsmove
+{ LFNoise2.kr(0.1) }
+
+//:map countingpan to countingmove
+~swallowspan.map(\pos, ~swallowsmove);
+
+// ======= PITCH + PAN =========
+//:pswallows with PanAz, amp, freqlag, fxAmplag, srcAmplag
+{ 	|
+		buf, ampThreshold = 0.02, transpose = 1, srcAmp = 0, fxAmp = 1,
+		flag = 0, srcAmplag = 1, fxAmplag = 1,
+		fpos = 0, fwidth = 2, spos = 0, swidth = 2
+	|
 	var in, amp, freq, hasFreq, out;
-	in = PlayBuf.ar(1, \swallows.buffer, loop: 1);
+//	in = PlayBuf.ar(1, \swallows.buffer, loop: 1);
+	in = ~swallows.ar * 5;
+
 	amp = Amplitude.kr(in, 0.05, 0.05);
 	#freq, hasFreq = Pitch.kr(in, ampThreshold: ampThreshold, median: 7);
-	out = CombC.ar(LPF.ar(in, 1000), 0.1, (transpose * freq).reciprocal, -6).distort * 0.05;
-	out = out * hasFreq;
-	6.do({ out = AllpassN.ar(out, 0.040, [0.040.rand,0.040.rand], 2) });
-	[out * Lag.kr(fxAmp, 1), in * Lag.kr(srcAmp, 1)];
+	freq = Lag.kr(freq, flag);
+Ê	out = CombC.ar(LPF.ar(in, 1000), 0.1, (transpose * freq).reciprocal, -6).distort * 0.05;
+	out = out * amp * 150;
+	6.do({ out = AllpassN.ar(out, 0.040, 0.040.rand, 2) });
+	PanAz.ar(6, out * Lag.kr(fxAmp, fxAmplag), fpos, 1, fwidth);
 };
 
-//:swallows
-~swallows.set(\fxAmp, 0.4);
-~swallows.set(\srcAmp, 0.005);
-~swallows.set(\srcAmp, 0.000);
+//:pswallowsmove
+{ LFNoise2.kr(0.2) }
 
-//:---
+//:map countingpan to countingmove
+~pswallows.map(\fpos, ~pswallowsmove);
 
-~swallows.end;
+//:pswallowstpose
+{ LFNoise0.kr(0.2).range(0.2, 2) }
+
+//:map swallowstranspose
+~pswallows.map(\transpose, ~pswallowstpose);
+
+//================ SEALS ================
+
+//==== PLAIN ====
+//:weddell1
+{ | amp = 1 | PlayBuf.ar(1, \weddell.buffer, loop: 1) * amp };
+
+//:pswallows with PanAz, amp, freqlag, fxAmplag, srcAmplag
+{ 	|
+		buf, ampThreshold = 0.02, transpose = 1, srcAmp = 0, fxAmp = 1,
+		flag = 0, srcAmplag = 1, fxAmplag = 1,
+		fpos = 0, fwidth = 2, spos = 0, swidth = 2
+	|
+	var in, amp, freq, hasFreq, out;
+//	in = PlayBuf.ar(1, \swallows.buffer, loop: 1);
+	in = ~swallows.ar * 5;
+
+	amp = Amplitude.kr(in, 0.05, 0.05);
+	#freq, hasFreq = Pitch.kr(in, ampThreshold: ampThreshold, median: 7);
+	freq = Lag.kr(freq, flag);
+Ê	out = CombC.ar(LPF.ar(in, 1000), 0.1, (transpose * freq).reciprocal, -6).distort * 0.05;
+	out = out * amp * 150;
+	6.do({ out = AllpassN.ar(out, 0.040, 0.040.rand, 2) });
+	PanAz.ar(6, out * Lag.kr(fxAmp, fxAmplag), fpos, 1, fwidth);
+};
 
 //:weddell without pan, with amp
 
