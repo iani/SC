@@ -9,6 +9,12 @@ BufferResource.loadSCdefaults;
 Server.default.boot;
 
 //:Onsets
+
+
+
+
+\a11wlk01.buffer.play;
+
 //Use SendReply to store the onset values in an array
 
 o = [];	// this is the array that will store the onsets

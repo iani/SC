@@ -98,6 +98,7 @@ ProxyCode {
 	stopCurrentDocProxy {
 		this.getProxy;
 		proxy.stop;
+//		proxy.end; // fades out well, but not good if using as input to fx NodeProxy
 		postf("proxy % stopped: %\n", proxyName, proxy);
 		this.enterSnippet2History(format("~%.stop", proxyName));
 	}

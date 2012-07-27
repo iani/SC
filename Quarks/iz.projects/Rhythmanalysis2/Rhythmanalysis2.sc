@@ -41,7 +41,7 @@ Rclock {
 	//:---
 		if (window.notNil) { ^nil };
 		startTime = Date.getDate.bootSeconds;
-		window = Window("TIME!", Rect(1240, 50, 19a0, 100)).front;
+		window = Window("TIME!", Rect(1240, 50, 190, 100)).front;
 		timer = NumberBox(window, window.view.bounds);
 		timer.font = Font("Helvetica", 72);
 		timeRout = {
