@@ -46,41 +46,51 @@ ProxyCode {
 		this.initProxySpace;
 	}
 
-
 	initProxySpace {
 		proxySpace = ProxySpace.new;
 		doc.envir = proxySpace;
 	}
 
-	getProxy {
-		var code, string;
-		code = Code(doc);
-		index = code.findIndexOfSnippet;
-		snippet = code.getSnippetStringAt(index);
-		proxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
-		proxyName = (proxyName ?? { [0, format("out%", index)] })[1].asSymbol;
-		if (doc.envir.isNil) { this.initProxySpace };
-		proxy = proxySpace[proxyName];
-	}
-
-	evalInProxySpace {
-		var index;
-		this.getProxy;
-		postf("snippet: %\nproxy (%): %\n", snippet, proxyName, proxy);
-		proxy.source = snippet.interpret;
+	getSnippet {
+		var code;
 		if (History.started.not) {
 			History.clear;
 			History.start;
 			this.enterSnippet2History("ProxySpace.push");
 		};
-		index = snippet indexOf: $\n;
-		this.enterSnippet2History(
-			format("%~% = %", snippet[..index], proxyName, snippet[index + 1..]);
-		);
-		if (proxy.rate === \audio) {
-			proxy.play;
-			this.enterSnippet2History(format("~%.play;", proxyName));
-		};
+		if (doc.envir.isNil) { this.initProxySpace };
+		code = Code(doc);
+		index = code.findIndexOfSnippet;
+		snippet = code.getSnippetStringAt(index);		
+	}
+
+	getProxy {
+		proxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
+		proxyName = (proxyName ?? { [0, format("out%", index)] })[1].asSymbol;
+		proxy = proxySpace[proxyName];
+	}
+
+
+	evalInProxySpace {
+		var index, source;
+		this.getSnippet;
+		source = snippet.interpret;
+		if (source.isValidProxyCode) {
+			this.getProxy;
+			proxy.source = source;
+			postf("snippet: %\nproxy (%): %\n", snippet, proxyName, proxy);
+			index = snippet indexOf: $\n;
+			this.enterSnippet2History(
+				format("%~% = %", snippet[..index], proxyName, snippet[index + 1..]);
+			);
+			if (proxy.rate === \audio) {
+				proxy.play;
+				this.enterSnippet2History(format("~%.play;", proxyName));
+			};
+		}{
+			postf("snippet: %\n", snippet);
+			this.enterSnippet2History(snippet);
+		}
 	}
 	
 	enterSnippet2History { | argSnippet |
@@ -89,14 +99,19 @@ ProxyCode {
 	}
 
 	playCurrentDocProxy {
-		this.getProxy;
+		this.getSnippetAndProxy;
 		proxy.play;
 		postf("proxy % started: % \n", proxyName, proxy);
 		this.enterSnippet2History(format("~%.play", proxyName));
 	}
-	
+
+	getSnippetAndProxy {
+		this.getSnippet;
+		this.getProxy;	
+	}
+
 	stopCurrentDocProxy {
-		this.getProxy;
+		this.getSnippetAndProxy;
 		proxy.stop;
 //		proxy.end; // fades out well, but not good if using as input to fx NodeProxy
 		postf("proxy % stopped: %\n", proxyName, proxy);
@@ -109,7 +124,7 @@ ProxyCode {
 	
 	changeVol { | increment = 0.1 |
 		var vol1, vol2;
-		this.getProxy;
+		this.getSnippetAndProxy;
 		vol1 = proxy.vol;
 		vol2 = vol1 + increment max: 0;
 		proxy.vol = vol2;
