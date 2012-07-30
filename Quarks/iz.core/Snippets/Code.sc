@@ -75,7 +75,7 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
 			}),
-			CocoaMenuItem.addToMenu("Code", "open proxy docs", ["W", true, false], {
+			CocoaMenuItem.addToMenu("Code", "open proxy mixer", ["W", true, false], {
 				ProxyCode(Document.current).proxyMixer;
 			}),
 			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {

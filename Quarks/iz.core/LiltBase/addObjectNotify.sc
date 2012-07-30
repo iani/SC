@@ -20,8 +20,8 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	// add self to do action when receiving message from notifier
 	// if either object (notifier or self) closes, remove the notication connection
 		NotificationCenter.register(notifier, message, this, action);
-		this onClose: { NotificationCenter.unregister(notifier, message, this); };
-		notifier onClose: { NotificationCenter.unregister(notifier, message, this); };
+		this onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
+		notifier onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
 	}
 	
 	removeNotifier { | notifier, message |
@@ -53,7 +53,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 
 	removedMessage { ^\objectClosed }
 
-	onClose { | action | this.onRemove(UniqueID.next, action) } 
+	onObjectClosed { | action | this.onRemove(UniqueID.next, action) } 
 	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
 	doOnceOn { | message, receiver, func |
 		this.registerOneShot(message, receiver, { func.(this) });
