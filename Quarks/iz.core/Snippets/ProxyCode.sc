@@ -2,7 +2,7 @@
 Each Snippet plays in its own proxy. 
 Cooperates with Code. 
 
-Forked from ProxyDoc (which has been deprecated). 
+Forked from ProxyDoc. 
 Replaces ProxyDoc. 
 
 */
@@ -78,7 +78,7 @@ ProxyCode {
 		if (source.isValidProxyCode) {
 			this.getProxy;
 			proxy.source = source;
-			postf("snippet: %\nproxy (%): %\n", snippet, proxyName, proxy);
+			postf("doc: %, snippet: %\nproxy (%): %\n", doc.name, snippet, proxyName, proxy);
 			index = snippet indexOf: $\n;
 			this.enterSnippet2History(
 				format("%~% = %", snippet[..index], proxyName, snippet[index + 1..]);
@@ -119,7 +119,9 @@ ProxyCode {
 	}
 
 	proxyMixer {
-		ProxyMixer(doc.envir);
+//		ProxyMixer(doc.envir);
+//		if (doc.envir.isNil) { this.initProxySpace };
+		NanoKontrol2(proxySpace, doc.name);
 	}
 	
 	changeVol { | increment = 0.1 |

@@ -6,7 +6,12 @@ Make ProxyCode command-shift-w only perform <proxy>.source = <interpreted snippe
 */
 
 + Object  { isValidProxyCode { ^false } }
-+ NodeProxy { isValidProxyCode { ^false } } // !!! if you really want this, enter it using shift-return
++ NodeProxy {
+	isValidProxyCode { ^false } // !!! if you really want this, enter it using shift-return
+	controls {
+		
+	}
+} 
 + Function { isValidProxyCode { ^true } }
 + SimpleNumber { isValidProxyCode { ^true } }
 + Bus { isValidProxyCode { ^true } }
@@ -21,5 +26,5 @@ Make ProxyCode command-shift-w only perform <proxy>.source = <interpreted snippe
 + Tdef { isValidProxyCode { ^true } }
 + Event { isValidProxyCode { ^true } }
 + Association { isValidProxyCode { ^true } }
-+ AbstractPlayer { isValidProxyCode { ^true } }
-+ Instr { isValidProxyCode { ^true } }
+// + AbstractPlayer { isValidProxyCode { ^true } }
+// + Instr { isValidProxyCode { ^true } }

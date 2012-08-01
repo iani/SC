@@ -79,7 +79,7 @@ Code {
 				ProxyCode(Document.current).proxyMixer;
 			}),
 			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
-				Document.current.name.postln;
+//				Document.current.name.postln;
 				ProxyCode(Document.current).evalInProxySpace;
 			}),
 			CocoaMenuItem.addToMenu("Code", "play doc proxy", ["<", false, false], {
@@ -162,7 +162,7 @@ Code {
 		var start, end;
 		#start, end = this.getSnippetAt(index);
 		snippet = string[start..end];
-		postf("snippet: %\n", snippet);
+		postf("doc: %, snippet: %\n", doc.name, snippet);
 		this.notify(\snippet, snippet);
 		^(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
 	}
