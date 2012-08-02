@@ -1,7 +1,10 @@
 
 NanoK2Strip {
-	var <kontrol, <index = 0, <>knobProxy, <>sliderProxy, <>knobControl, <>sliderControl;
-	var knobProxyMenu, knobControlMenu, knob, knobMin, knobVal, knobMax, knobControlSpec;
+	var <kontrol;  	// NanoKontrol2 instance to which I belong
+	var <index = 0;	// my strip number in the gui from left to right (1 to 8)
+	var <>knobProxy, <>sliderProxy, <>knobControl, <>sliderControl;
+	var knobProxyMenu, knobControlMenu;
+	var knob, knobMin, knobVal, knobMax, knobControlSpec;
 	var sliderProxyMenu, sliderControlMenu;
 	var slider, sliderMin, sliderVal, sliderMax, sliderControlSpec;
 	var <proxyStartButton;
@@ -28,12 +31,16 @@ NanoK2Strip {
 					knobControl = me.item.asSymbol;
 				}),
 			HLayout(
-				knob = Knob()
-					.action_({ | s |
-						this.setControl(kontrol.proxySpace[knobProxy],
-							knobControlMenu, knobVal, knobControlSpec.map(s.value)
-						)
-					}),
+				VLayout(
+					Button().states_([["ed."]])
+						.action_({ kontrol.editNodeProxySource(knobProxy) }),
+					knob = Knob()
+						.action_({ | s |
+							this.setControl(kontrol.proxySpace[knobProxy],
+								knobControlMenu, knobVal, knobControlSpec.map(s.value)
+							)
+						})
+				),
 				VLayout(
 					knobMax = NumberBox().value_(1)
 						.action_({
@@ -64,6 +71,8 @@ NanoK2Strip {
 						.action_({
 							sliderControlSpec = ControlSpec(sliderMin.value, sliderMax.value);
 						}),
+					Button().states_([["edit"]])
+						.action_({ kontrol.editNodeProxySource(sliderProxy) }),
 					proxyStartButton = Button().states_([["start"], ["stop"]])
 						.action_({ | me |
 							this.perform([\stopProxy, \startProxy][me.value])
@@ -115,9 +124,7 @@ NanoK2Strip {
 		myProxy = proxyList[index];
 		if (myProxy.notNil and: { sliderProxyMenu.value == 0 }) {
 			this.setProxy(myProxy, 'sliderProxy_', sliderProxyMenu, sliderControlMenu);
-			if (proxy.isMonitoring) {
-				proxyStartButton.value = 1;
-			}
+			if (proxy.isMonitoring) { proxyStartButton.value = 1; }
 		}
 	}
 

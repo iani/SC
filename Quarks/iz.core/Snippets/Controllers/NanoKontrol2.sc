@@ -13,13 +13,15 @@ NanoKontrol2 {
 	classvar <>current; // current instance = top window instance
 	// Midi controller always addresses current instance
 
-	var <proxySpace, <docname, <proxies;
-	var <window;
-	var <presets, <currentPreset;
-	var <strips;
+	var <proxySpace, <docName; 
+	var <proxyCode; // ProxyCode instance that created me. Holds history of NodeProxy source code
+	var <proxies; // array of proxy names used for proxy selection menus
+	var <window;	// the main gui window;
+	var <presets, <currentPreset;	// store proxy, control, and spec configurations
+	var <strips;	// 8 control strips emulating those of the Korg NanoKontrol2 
 	
-	*new { | proxySpace, docname |
-		^this.newCopyArgs(proxySpace, docname).init;
+	*new { | proxySpace, docName, proxyCode |
+		^this.newCopyArgs(proxySpace, docName, proxyCode).init;
 	}
 
 	init {
@@ -33,7 +35,7 @@ NanoKontrol2 {
 		this.getProxies;
 		all = all add: this;
 	}
-	
+
 	getProxies {
 		proxySpace.envir.values do: { | proxy |
 			this addProxy: proxy;
@@ -67,7 +69,7 @@ NanoKontrol2 {
 
 
 	makeWindow {
-		window = Window("NanoK2 " ++ (docname ? "ps"), 
+		window = Window("NanoK2 " ++ (docName ? "ps"), 
 			Rect(Window.screenBounds.width - 800, 0, 800, 350));
 		window.layout = HLayout(
 			VLayout(*(presets collect: _.button)),
@@ -101,7 +103,13 @@ NanoKontrol2 {
 
 	savePreset { | preset |
 		currentPreset = preset ? currentPreset;
-		
+
+	}
+	
+	editNodeProxySource { | proxyName |
+		// received from NanoK2Strip. Edit the source code of the proxy
+		// (and replace source). 
+		proxyCode editNodeProxySource: proxyName;
 	}
 }
 

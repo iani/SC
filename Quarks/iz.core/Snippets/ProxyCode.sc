@@ -8,12 +8,13 @@ Replaces ProxyDoc.
 */
 
 ProxyCode {
-	classvar all;
+	classvar all;						// all ProxyCode instances in a Dictionary by Document
 	classvar <historyTimer;				// routine that counts time from last executed snippet
 	classvar <>historyEndInterval = 300;	// end History if nothing has been done for 5 minutes
  
  	var <doc;
 	var <proxySpace, proxy, proxyName, snippet, index;
+	var <proxyHistory; // holds all source code for each NodeProxy by key
 	
 	*initClass {
 		// since CmdPeriod stops routines, restart the historyTimer routine
@@ -49,6 +50,7 @@ ProxyCode {
 	initProxySpace {
 		proxySpace = ProxySpace.new;
 		doc.envir = proxySpace;
+		proxyHistory = IdentityDictionary.new;
 	}
 
 	getSnippet {
@@ -61,38 +63,73 @@ ProxyCode {
 		if (doc.envir.isNil) { this.initProxySpace };
 		code = Code(doc);
 		index = code.findIndexOfSnippet;
-		snippet = code.getSnippetStringAt(index);		
+		^snippet = code.getSnippetStringAt(index);	
 	}
 
 	getProxy {
 		proxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
 		proxyName = (proxyName ?? { [0, format("out%", index)] })[1].asSymbol;
-		proxy = proxySpace[proxyName];
+		^proxy = proxySpace[proxyName];
 	}
 
 
-	evalInProxySpace {
+	evalInProxySpace { | argSnippet, argProxy, argProxyName, start = true |
+		/* evaluate a code snippet and set it as source to a proxy
+		If argSnippet, argProxy, argProxyName are not given, then extract 
+		proxy, proxyName and snippet from the code of doc. 
+		If snippet begins with a comment, skip this when entering the code to History
+		*/ 
 		var index, source;
-		this.getSnippet;
+		snippet = argSnippet ?? { this.getSnippet };
 		source = snippet.interpret;
 		if (source.isValidProxyCode) {
-			this.getProxy;
+			proxy = argProxy ?? { this.getProxy };
+			argProxyName !? { proxyName = argProxyName };
 			proxy.source = source;
 			postf("doc: %, snippet: %\nproxy (%): %\n", doc.name, snippet, proxyName, proxy);
-			index = snippet indexOf: $\n;
-			this.enterSnippet2History(
-				format("%~% = %", snippet[..index], proxyName, snippet[index + 1..]);
-			);
-			if (proxy.rate === \audio) {
-				proxy.play;
-				this.enterSnippet2History(format("~%.play;", proxyName));
+			if (snippet[0] == $/) {
+				index = snippet indexOf: $\n;
+				this.enterSnippet2History(
+					format("%~% = %", snippet[..index], proxyName, snippet[index + 1..])
+				);
+			}{
+				this enterSnippet2History: format("~% = %", proxyName, snippet);
+			};
+			this.addNodeSourceCodeToHistory(proxyName, snippet);
+			if (proxy.rate === \audio and: { start }) {
+				this.startProxy(proxy, proxyName);
 			};
 		}{
 			postf("snippet: %\n", snippet);
 			this.enterSnippet2History(snippet);
 		}
 	}
+
+	addNodeSourceCodeToHistory { | argProxyName, argSnippet |
+		var nodeHistory;
+		argProxyName = argProxyName.asSymbol;
+		nodeHistory = proxyHistory[argProxyName];
+		nodeHistory = nodeHistory add: argSnippet;
+		proxyHistory[argProxyName] = nodeHistory;
+		this.notify(\proxySource, [argProxyName, nodeHistory])
+	}
+
+	editNodeProxySource { | proxyName |
+		// received from NanoK2Strip. Edit the source code of the proxy
+		// (and replace source).
+		ProxySourceEditor(this, proxyName);
+	}
 	
+	openProxySourceEditor {
+		// called by keyboard shortcut from Code
+		this.getSnippet;
+		this.getProxy;
+		proxyHistory[proxyName] !? {
+			this.addNodeSourceCodeToHistory(proxyName, snippet);
+		};
+		ProxySourceEditor(this, proxyName);		
+	}
+
 	enterSnippet2History { | argSnippet |
 		History.enter(argSnippet);
 		this.class.startHistoryTimer;		
@@ -112,16 +149,27 @@ ProxyCode {
 
 	stopCurrentDocProxy {
 		this.getSnippetAndProxy;
-		proxy.stop;
-//		proxy.end; // fades out well, but not good if using as input to fx NodeProxy
-		postf("proxy % stopped: %\n", proxyName, proxy);
-		this.enterSnippet2History(format("~%.stop", proxyName));
+		this.stopProxy(proxy, proxyName)
 	}
+
+	stopProxy { | argProxy, argProxyName |
+		argProxy.stop;
+//		argProxy.end; // fades out well, but not good if using as input to fx NodeProxy
+		postf("proxy % stopped: %\n", argProxyName, argProxy);
+		this.enterSnippet2History(format("~%.stop", argProxyName));
+	}
+
+	startProxy { | argProxy, argProxyName |
+		postf("proxy % started: %\n", argProxyName, argProxy);
+		this.enterSnippet2History(format("~%.play;", argProxyName));
+		argProxy.play;
+	}
+
 
 	proxyMixer {
 //		ProxyMixer(doc.envir);
 //		if (doc.envir.isNil) { this.initProxySpace };
-		NanoKontrol2(proxySpace, doc.name);
+		NanoKontrol2(proxySpace, doc.name, this);
 	}
 	
 	changeVol { | increment = 0.1 |

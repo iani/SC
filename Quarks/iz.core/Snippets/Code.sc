@@ -78,11 +78,14 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "open proxy mixer", ["W", true, false], {
 				ProxyCode(Document.current).proxyMixer;
 			}),
+			CocoaMenuItem.addToMenu("Code", "edit proxy", ["e", true, false], {
+				ProxyCode(Document.current).openProxySourceEditor;
+			}),
 			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
 //				Document.current.name.postln;
 				ProxyCode(Document.current).evalInProxySpace;
 			}),
-			CocoaMenuItem.addToMenu("Code", "play doc proxy", ["<", false, false], {
+			CocoaMenuItem.addToMenu("Code", "start doc proxy", ["<", false, false], {
 				ProxyCode.new.playCurrentDocProxy;
 			}),
 			CocoaMenuItem.addToMenu("Code", "stop doc proxy", [">", false, false], {
