@@ -65,7 +65,7 @@ NanoKontrol2 {
 		strips do: _.proxyStopped(name);
 	}
 
-	
+
 	makeWindow {
 		window = Window("NanoK2 " ++ (docname ? "ps"), 
 			Rect(Window.screenBounds.width - 800, 0, 800, 350));
@@ -93,12 +93,12 @@ NanoKontrol2 {
 		};
 		window.front
 	}
-	
+
 	loadPreset { | preset |
 		currentPreset = preset ? currentPreset;
 		
 	}
-	
+
 	savePreset { | preset |
 		currentPreset = preset ? currentPreset;
 		
@@ -108,10 +108,10 @@ NanoKontrol2 {
 NanoK2Preset {
 	var <number, <kontrol;
 	var data;
-	
+
 	*new { | number, kontrol | ^this.newCopyArgs(number, kontrol) }
-	
-	button { 
+
+	button {
 		^Button()
 			.states_([[number.asString]])
 			.action_({ this.loadPreset })
@@ -121,16 +121,16 @@ NanoK2Preset {
 				)
 			});
 	}
-	
+
 	loadPreset {
 		postf("loading preset %\n", number);
 		kontrol.loadPreset(this);
 	}
-	
+
 	storePreset {
 		postf("storing preset %\n", number);
 		kontrol.savePreset(this);
 	}
-	
+
 }
 

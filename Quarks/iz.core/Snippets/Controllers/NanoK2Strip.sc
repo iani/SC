@@ -134,9 +134,9 @@ NanoK2Strip {
 	}
 
 
-	startProxy { if (sliderProxy.notNil) { kontrol.proxySpace[sliderProxy].play } }
+	startProxy { sliderProxy !? { kontrol.proxySpace[sliderProxy].play } }
 
-	stopProxy { if (sliderProxy.notNil) { kontrol.proxySpace[sliderProxy].stop } }
+	stopProxy { sliderProxy !? { kontrol.proxySpace[sliderProxy].stop } }
 
 	getPresetData {
 		// return data array in form that can be used to load the data back to a preset 
