@@ -8,9 +8,6 @@ Make ProxyCode command-shift-w only perform <proxy>.source = <interpreted snippe
 + Object  { isValidProxyCode { ^false } }
 + NodeProxy {
 	isValidProxyCode { ^false } // !!! if you really want this, enter it using shift-return
-	controls {
-		
-	}
 } 
 + Function { isValidProxyCode { ^true } }
 + SimpleNumber { isValidProxyCode { ^true } }

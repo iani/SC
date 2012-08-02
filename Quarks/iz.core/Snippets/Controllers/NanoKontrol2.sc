@@ -9,8 +9,11 @@ n.window.bounds;
 */
 
 NanoKontrol2 {
+	classvar <all; // all open windows 
+	classvar <>current; // current instance = top window instance
+	// Midi controller always addresses current instance
 
-	var <proxySpace, <docname;
+	var <proxySpace, <docname, <proxies;
 	var <window;
 	var <presets, <currentPreset;
 	var <strips;
@@ -18,15 +21,50 @@ NanoKontrol2 {
 	*new { | proxySpace, docname |
 		^this.newCopyArgs(proxySpace, docname).init;
 	}
-	
+
 	init {
-//		this.addNotifier(proxySpace, \newProxy, { | ... args | postf("new proxy! %\n", args) });
-//		proxySpace.postln;
+		this.addNotifier(proxySpace, \newProxy, { | proxy |
+			{ this addProxy: proxy; }.defer(0.1); // wait to get source
+		});
 		presets = (0..9) collect: NanoK2Preset(_, this);
 		currentPreset = presets.first;
-		strips = { NanoK2Strip(this) } ! 8;
+		strips = { | i | NanoK2Strip(this, i + 1) } ! 8;
 		this.makeWindow;	
+		this.getProxies;
+		all = all add: this;
 	}
+	
+	getProxies {
+		proxySpace.envir.values do: { | proxy |
+			this addProxy: proxy;
+		};
+	}
+	
+	addProxy { | proxy |
+		var pxName, strip, stripProxyList;
+		pxName = proxySpace.envir.findKeyForValue(proxy);
+		this.addNotifiersForProxy(proxy, pxName);
+		proxies = proxies add: pxName;
+		stripProxyList = [' '] ++ proxies;
+		strips do: _.setProxies(stripProxyList, proxy);
+	}
+
+	addNotifiersForProxy { | proxy, pxName |
+		this.addNotifier(proxy, \play, { this.proxyStarted(proxy, pxName) });
+		this.addNotifier(proxy, \clear, { this.proxyStopped(proxy, pxName) });
+		this.addNotifier(proxy, \end, { this.proxyStopped(proxy, pxName) });
+		this.addNotifier(proxy, \free, { this.proxyStopped(proxy, pxName) });
+		this.addNotifier(proxy, \stop, { this.proxyStopped(proxy, pxName) });
+	}
+	
+	proxyStarted { | proxy, name |
+		strips do: _.proxyStarted(name);
+	}
+
+	proxyStopped { | proxy, name |
+		strips do: _.proxyStopped(name);
+	}
+
 	
 	makeWindow {
 		window = Window("NanoK2 " ++ (docname ? "ps"), 
@@ -35,8 +73,25 @@ NanoKontrol2 {
 			VLayout(*(presets collect: _.button)),
 			*(strips collect: _.widgets)
 		);
-		window.onClose { this.objectClosed; };
-		window.front;		
+		window.onClose = {
+			this.objectClosed;
+			all remove: this;
+			if (current === this and: { all.size > 0 }) {
+				all.first.window.toFrontAction.value;
+			};
+		};
+		window.toFrontAction = {
+			if (current === this) { } {
+				current = this;
+				window.view.background = Color(*([0.9, 0.8, 0.7].scramble));
+				all do: { | k |
+					if (k !== this and: { k.window.isClosed.not }) {
+						k.window.view.background = Color.grey(0.8)
+					}
+				};
+			}
+		};
+		window.front
 	}
 	
 	loadPreset { | preset |
@@ -77,171 +132,5 @@ NanoK2Preset {
 		kontrol.savePreset(this);
 	}
 	
-}
-
-NanoK2Strip {
-	var <kontrol, <>knobProxy, <>sliderProxy;
-	var knobProxyButton, knobControlButton, knob, knobMin, knobVal, knobMax, knobControlSpec;
-	var sliderProxyButton, sliderControlButton;
-	var slider, sliderMin, sliderVal, sliderMax, sliderControlSpec;
-	
-	*new { | kontrol | ^this.newCopyArgs(kontrol) }
-
-	widgets {
-		^VLayout(
-			knobProxyButton = Button()
-				.action_({ this.chooseProxy(knobProxyButton, 'knobProxy_') }),
-			knobControlButton = Button()
-				.action_({ this.chooseControl(knobControlButton) }),
-			HLayout(
-				knob = Knob(),
-				VLayout(
-					knobMin = NumberBox(),
-					knobVal = NumberBox(),
-					knobMax = NumberBox()
-				)
-			),
-			HLayout(
-				slider = Slider()
-					.action_({ | s | 
-						s.value.postln;
-					}),
-				VLayout(
-					sliderMin = NumberBox(),
-					sliderVal = NumberBox(),
-					sliderMax = NumberBox(),
-					Button().states_([["start"], ["stop"]])
-					.action_({ | me |
-						"NanoK2Strip start stop button action".postln;
-						this.perform([\stopProxy, \startProxy][me.value])
-					})
-				)
-			),
-			sliderProxyButton = Button()
-				.action_({ this.chooseProxy(sliderProxyButton, 'sliderProxy_') }),
-			sliderControlButton = Button()
-		)
-	}
-
-	chooseProxy { | widget, setter |
-		var proxyName, proxyIndex, proxyList, proxy, controlList, controlIndex = 0;
-		var controlListView;
-
-
-		kontrol.proxySpace.postln;
-		kontrol.proxySpace.envir.postln;
-		proxyList = kontrol.proxySpace.envir.keys.asArray.sort;
-//		postf("NanoK2Strip, proxylist is: %\n", proxyList);
-		
-		if ((proxyName = widget.states).isNil) {
-			proxyIndex = 0;
-			controlList = [];
-		}{
-			proxyName = proxyName.first.first.asSymbol;
-			proxyIndex = proxyList indexOf: proxyName;
-			proxy = kontrol.proxySpace[proxyName];
-//			[setter, proxy].postln;
-//			this.perform(setter, proxy);
-//			proxy.postln;
-
-			controlList = proxy.controlKeys ++ [\vol, \fadeTime];
-		};
-		controlListView = DoubleChoiceList(
-			"choose proxy + control", 
-			proxyList, 
-			{ | view |
-				if (view.items.size > 0) {
-//					view.items[view.value].postln;
-					widget.states = [[view.items[view.value]]];
-					proxy = kontrol.proxySpace[view.items[view.value].asSymbol];
-					this.perform(setter, proxy);      	
-				}
-			}, 
-			proxyIndex, controlList,
-			{
-			},
-			controlIndex
-		).listView2;
-	}
-
-	chooseControl { | widget |
-		postf("choosing proxy: %\n", widget);	
-	}
-
-	startProxy { 
-		"starting proxy ".post; sliderProxy.postln;
-		if (sliderProxy.notNil) { sliderProxy.play } }
-
-	stopProxy { if (sliderProxy.notNil) { sliderProxy.stop } }
-
-	getPresetData {
-		// return data array in form that can be used to load the data back to a preset 
-		^[	knobProxyButton.states[0], knobControlButton.states[0], 
-			knob.value, knobMin.value, knobVal.value, knobMax.value,
-			sliderProxyButton.states[0], sliderControlButton.states[0],
-			slider.value, sliderMin.value, sliderVal.value, sliderMax.value
-		]
-	}
-	
-	setPresetData { | data |
-		// set preset data from an array created by getPresetData		
-	}
-}
-
-ChoiceList {
-	var name, items, action, initItem = 0;
-	*new { | name, items, action, initItem = 0 |
-		^this.newCopyArgs(name, items, action, initItem).init;
-	}
-
-	init {
-		var window;
-		window = Window(name, Rect(400, 400, 400, 400));
-		ListView(window, window.view.bounds)
-			.action_(action)
-			.items_(items)
-			.value_(initItem)
-			.keyDownAction_({ | view, c, m, u, k | 
-				if (c.ascii == 13) {
-//					view.value.postln; 
-					view.doAction(view);
-					window.close;
-				};
-			});
-		window.front;
-	}
-}
-
-DoubleChoiceList {
-	var name, items1, action1, initItem1, items2, action2, initItem2;
-	var <listView1, <listView2;
-	*new { | name, items1, action1, initItem1, items2, action2, initItem2 |
-		^this.newCopyArgs(name, items1, action1, initItem1, items2, action2, initItem2).init;
-	}
-
-	init {
-		var window;
-		window = Window(name, Rect(400, 400, 400, 400));
-		window.layout = HLayout(
-			listView1 = ListView(window, window.view.bounds)
-				.action_(action1)
-				.items_(items1)
-				.keyDownAction_({ | view, c, m, u, k | 
-				.value_(initItem1)
-					if (c.ascii == 13) { view.doAction(view); };
-				}),
-			listView2 = ListView(window, window.view.bounds)
-				.action_(action2)
-				.items_(items2)
-				.value_(initItem2)
-				.keyDownAction_({ | view, c, m, u, k | 
-					if (c.ascii == 13) {
-						view.doAction(view);
-						window.close;
-					};
-				})
-		);
-		window.front;
-	}
 }
 
