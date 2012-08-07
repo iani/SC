@@ -32,7 +32,7 @@ ServerPrep {
 		// better wait for root group to be created:
 			[ '/n_go', 1, 0, -1, -1, 1 ]
 			, {
-				"ServerPrep: Received n_go".postln;
+//				"ServerPrep: Received n_go".postln; // received always after Cmd-.
 				if (afterBoot) {
 					defs.addAllUdefs;
 					bufs.addAllBufferResources;

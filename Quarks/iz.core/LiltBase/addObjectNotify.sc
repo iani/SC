@@ -15,15 +15,20 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	removeMessage { | notifier, message |
 		NotificationCenter.unregister(notifier, message, this);
 	}
+
+	addSelfNotifier { | notifier, message, action |
+		// for widgets that need to use themselves in the action to set their value
+		this.addNotifier(notifier, message, WidgetAction(this, action));
+	}
 	
 	addNotifier { | notifier, message, action |
 	// add self to do action when receiving message from notifier
-	// if either object (notifier or self) closes, remove the notication connection
+	// if either object (notifier or self) closes, remove the notifier->receiver connection
 		NotificationCenter.register(notifier, message, this, action);
 		this onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
 		notifier onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
 	}
-	
+
 	removeNotifier { | notifier, message |
 		// leaves the onClose connection dangling, 
 		// which will be removed when the object calls objectClosed
@@ -45,6 +50,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	objectClosed {	// remove all notifiers and listeners
 		NotificationCenter.notify(this, this.removedMessage);
 		this.removeAllNotifications;
+		Widget.removeModel(this);
 	}
 	
 	removeAllNotifications {

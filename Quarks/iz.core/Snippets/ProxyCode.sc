@@ -72,7 +72,6 @@ ProxyCode {
 		^proxy = proxySpace[proxyName];
 	}
 
-
 	evalInProxySpace { | argSnippet, argProxy, argProxyName, start = true |
 		/* evaluate a code snippet and set it as source to a proxy
 		If argSnippet, argProxy, argProxyName are not given, then extract 
@@ -83,6 +82,9 @@ ProxyCode {
 		snippet = argSnippet ?? { this.getSnippet };
 		source = snippet.interpret;
 		if (source.isValidProxyCode) {
+			/* TODO: If the snippet comes from a ProxySourceEditor, then parse proxy name
+			from snippet, and use that if available. Notify ProxySourceEditor to change 
+			proxy name */
 			proxy = argProxy ?? { this.getProxy };
 			argProxyName !? { proxyName = argProxyName };
 			proxy.source = source;
@@ -111,7 +113,15 @@ ProxyCode {
 		nodeHistory = proxyHistory[argProxyName];
 		nodeHistory = nodeHistory add: argSnippet;
 		proxyHistory[argProxyName] = nodeHistory;
-		this.notify(\proxySource, [argProxyName, nodeHistory])
+		this.notify(\proxySource, [argProxyName, nodeHistory]);
+	}
+
+	deleteNodeSourceCodeFromHistory { | argProxyName, snippetIndex |
+		var nodeHistory;
+		argProxyName = argProxyName.asSymbol;
+		nodeHistory = proxyHistory[argProxyName];
+		nodeHistory.removeAt(snippetIndex - 1);
+		this.notify(\proxySource, [argProxyName, nodeHistory]);
 	}
 
 	editNodeProxySource { | proxyName |
@@ -124,7 +134,7 @@ ProxyCode {
 		// called by keyboard shortcut from Code
 		this.getSnippet;
 		this.getProxy;
-		proxyHistory[proxyName] !? {
+		proxyHistory[proxyName] ?? {
 			this.addNodeSourceCodeToHistory(proxyName, snippet);
 		};
 		ProxySourceEditor(this, proxyName);		
