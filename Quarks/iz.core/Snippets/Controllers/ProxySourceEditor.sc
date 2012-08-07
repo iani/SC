@@ -21,9 +21,9 @@ ProxySourceEditor {
 	
 	// ======= GUI ITEMS: =======
 	var <window;
-	var <editor;		// TextView holding the code to be edited
-	var <startStopButton;
-	var <numSnippets, <currentSnippet; // NumberBoxes holding number of snippets and of current snippet
+//	var <editor;		// TextView holding the code to be edited
+//	var <startStopButton;
+//	var <numSnippets, <currentSnippet; // NumberBoxes holding number of snippets and of current snippet
 	var <>bounds; 	// saves original window bounds for reset after maximizing
 	var <controls;	// array of 8 control strips with GUIs for controlling proxy parameters
 
@@ -40,7 +40,7 @@ ProxySourceEditor {
 			];
 		}	
 	}
-	
+
 	*new { | proxyCode, proxyName |
 		var existingEditor;
 		existingEditor = all[proxyName];
@@ -51,12 +51,11 @@ ProxySourceEditor {
 	front { window.front }
 
 	init {
-		this setProxy: proxyName;
-		this.makeWindow;
-		this.lastSnippet;
 		this.addNotifier(proxyCode, \proxySource, { | argProxyName, argHistory |
 			this.updateHistory(argProxyName, argHistory);
 		});
+		this.makeWindow;
+		this setProxy: proxyName;
 		all[proxyName] = this;
 	}
 
@@ -67,24 +66,28 @@ ProxySourceEditor {
 			this.removeNotifier(proxy, \stop);
 		};
 		proxy = proxyCode.proxySpace[proxyName];
-		this.addNotifier(proxy, \play, { startStopButton.value = 1 });
-		this.addNotifier(proxy, \stop, { startStopButton.value = 0 });
+		this.addNotifier(proxy, \play, { this.setValue(\startStopButton, 1) });
+//		this.addNotifier(proxy, \stop, { startStopButton.value = 0 });
+		this.addNotifier(proxy, \stop, { this.setValue(\startStopButton, 0) });
+		if (proxy.isMonitoring) {
+			proxy.notify(\play);
+		}{
+			proxy.notify(\stop);
+		};
 		proxyHistory = proxyCode.proxyHistory[proxyName];
+		this.notify(\numSnippets, proxyHistory.size);
+		this.notify(\currentSnippet, proxyHistory.size);
 	}
 
 	makeWindow {
 		window = Window(proxyName, bounds = windowRects@@(all.size));
 		window.onClose = { this.closed };
 		window.layout = VLayout(
-			[editor = TextView().font_(Font("Monaco", 11)).string_(proxyHistory.last), s:10],
+			[TextView().font_(Font("Monaco", 11)).addModel(this, \editor).w, s:10],
 			[HLayout(
-				Button().states_([["enter"]]).action_({ this.evalSnippet }),
-				startStopButton = Button().states_([["start"], ["stop"]]).action_({ | me |
+				/* startStopButton = */ Button().states_([["start"], ["stop"]]).action_({ | me |
 					this.perform([\stopProxy, \startProxy][me.value])
-				}),
-				Button().states_([["reset specs"]]).action_({ this.resetSpecs; }),
-				Button().states_([["delete"]]).action_({ this.deleteSnippet }),
-//				Button().states_([["<<"]]).action_({ this.firstSnippet }),
+				}).addModel(this, \startStopButton).w,
 				Button().states_([["<<"]]).action_({
 					this.notify(\currentSnippet, 1);
 				}),
@@ -93,25 +96,30 @@ ProxySourceEditor {
 					widget = this.widget(\currentSnippet);
 					widget.valueAction = widget.value - 1;
 				}),
-//				Button().states_([[">"]]).action_({ this.nextSnippet }),
 				Button().states_([[">"]]).action_({
 					var widget;
 					widget = this.widget(\currentSnippet);
 					widget.valueAction = widget.value + 1;
 				}),
-				Button().states_([[">>"]]).action_({ this.lastSnippet }),
+				Button().states_([[">>"]]).action_({
+					this.notify(\currentSnippet, proxyHistory.size);
+				}),
+				Button().states_([["eval"]]).action_({ this.evalSnippet(false) }),
+				Button().states_([["add"]]).action_({ this.evalSnippet }),
+				Button().states_([["delete"]]).action_({ this.deleteSnippet }),
+				Button().states_([["reset specs"]]).action_({ this.resetSpecs; }),
 				StaticText().string_("current:"),
-				currentSnippet = NumberBox().value_(proxyHistory.size)
+				/* currentSnippet = */ NumberBox().value_(proxyHistory.size)
 					.addModel(this, \currentSnippet, action: { | val, widget |
 						val = val.clip(1, proxyHistory.size);
 						widget.value = val;
-						editor.string = proxyHistory[val - 1];
+						this.widget(\editor).widget.string = proxyHistory[val - 1];
 					}, updateFunc: { | val, me |
-//						["updateFunc arguments received:", val, me].postln;
 						me.valueAction = val;
 					}).w,
 				StaticText().string_("all:"),
-				numSnippets = NumberBox().value_(proxyHistory.size),
+				/* numSnippets = */ NumberBox().value_(proxyHistory.size)
+					.addModel(this, \numSnippets).w,
 				Button()
 					.states_([["maximize window"], ["minimize window"]])
 					.action_({ | me | this.resizeWindow(me.value); })
@@ -139,18 +147,28 @@ ProxySourceEditor {
 		this.objectClosed;
 	}
 
-	evalSnippet {
+	evalSnippet { | addToSourceHistory = true |
 		proxyCode.evalInProxySpace(
-			editor.string, proxyCode.proxySpace[proxyName], proxyName, false
+			this.widget(\editor).widget.string, 
+			proxyCode.proxySpace[proxyName], proxyName, false, addToSourceHistory
 		)
 	}
 
-	startProxy { proxyCode.startProxy(proxy, proxyName) }
+	startProxy {
+		if (proxy.source.isNil) {
+			proxyCode.evalInProxySpace(
+				this.widget(\editor).widget.string, 
+				proxyCode.proxySpace[proxyName], proxyName, true, false
+			);			
+		}{
+			proxyCode.startProxy(proxy, proxyName);
+		}
+	}
 	stopProxy { proxyCode.stopProxy(proxy, proxyName) }
 
 	resetSpecs {
 		var snippet, specString, specs;
-		snippet = editor.string;
+		snippet = this.widget(\editor).widget.string;
 		if (	snippet[0] != $/) { ^nil }; // or reparse from proxy??? 
 		specString = snippet.findRegexp("^//[^[]*([^\n]*)")[1][1];
 		specs = specString.interpret;
@@ -164,7 +182,8 @@ ProxySourceEditor {
 				StaticText().string_("Do you really want to delete this snippet?"),
 				HLayout(
 					Button().states_([["OK"]]).action_({
-						proxyCode.deleteNodeSourceCodeFromHistory(proxyName, currentSnippet.value);
+						proxyCode.deleteNodeSourceCodeFromHistory(
+							proxyName, this.widgetValue(\currentSnippet));
 						dialog.close;
 					}),
 					Button().states_([["CANCEL"]]).action_({
@@ -176,32 +195,14 @@ ProxySourceEditor {
 		).front;
 	}
 
-	firstSnippet {
-		currentSnippet.value = 1;
-		editor.string = proxyHistory[0];	
-	}
-
-	previousSnippet {
-		currentSnippet.value = currentSnippet.value - 1 max: 1;
-		editor.string = proxyHistory[currentSnippet.value - 1];
-	}
-
-	nextSnippet {
-		currentSnippet.value = currentSnippet.value + 1 min: proxyHistory.size;
-		editor.string = proxyHistory[currentSnippet.value - 1];
-	}
-
-	lastSnippet {
-		currentSnippet.value = proxyHistory.size;
-		editor.string = proxyHistory.last;	
-	}
-
 	updateHistory { | argProxyName, argHistory |
 		if (argProxyName === proxyName) {
 			proxyHistory = argHistory;
-			numSnippets.value = proxyHistory.size;
-			currentSnippet.value = proxyHistory.size;
-			editor.string = proxyHistory.last;
+			this.notify(\currentSnippet, proxyHistory.size);
+			this.notify(\numSnippets, proxyHistory.size);
+//			numSnippets.value = proxyHistory.size;
+//			currentSnippet.value = proxyHistory.size;
+			this.widget(\editor).widget.string = proxyHistory.last;
 		}
 	}
 	

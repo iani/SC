@@ -72,7 +72,7 @@ ProxyCode {
 		^proxy = proxySpace[proxyName];
 	}
 
-	evalInProxySpace { | argSnippet, argProxy, argProxyName, start = true |
+	evalInProxySpace { | argSnippet, argProxy, argProxyName, start = true, addToSourceHistory = true |
 		/* evaluate a code snippet and set it as source to a proxy
 		If argSnippet, argProxy, argProxyName are not given, then extract 
 		proxy, proxyName and snippet from the code of doc. 
@@ -97,14 +97,19 @@ ProxyCode {
 			}{
 				this enterSnippet2History: format("~% = %", proxyName, snippet);
 			};
-			this.addNodeSourceCodeToHistory(proxyName, snippet);
-			if (proxy.rate === \audio and: { start }) {
+			if (addToSourceHistory) { this.addNodeSourceCodeToHistory(proxyName, snippet); };
+			if (proxy.rate === \audio and: { start } and: { proxy.isMonitoring.not }) {
 				this.startProxy(proxy, proxyName);
 			};
 		}{
 			postf("snippet: %\n", snippet);
 			this.enterSnippet2History(snippet);
 		}
+	}
+
+	enterSnippet2History { | argSnippet |
+		History.enter(argSnippet);
+		this.class.startHistoryTimer;		
 	}
 
 	addNodeSourceCodeToHistory { | argProxyName, argSnippet |
@@ -114,6 +119,12 @@ ProxyCode {
 		nodeHistory = nodeHistory add: argSnippet;
 		proxyHistory[argProxyName] = nodeHistory;
 		this.notify(\proxySource, [argProxyName, nodeHistory]);
+	}
+
+	startProxy { | argProxy, argProxyName |
+		this.enterSnippet2History(format("~%.play;", argProxyName));
+		argProxy.play;
+		postf("proxy % started: %\n", argProxyName, argProxy);
 	}
 
 	deleteNodeSourceCodeFromHistory { | argProxyName, snippetIndex |
@@ -140,16 +151,16 @@ ProxyCode {
 		ProxySourceEditor(this, proxyName);		
 	}
 
-	enterSnippet2History { | argSnippet |
-		History.enter(argSnippet);
-		this.class.startHistoryTimer;		
-	}
-
 	playCurrentDocProxy {
 		this.getSnippetAndProxy;
-		proxy.play;
-		postf("proxy % started: % \n", proxyName, proxy);
-		this.enterSnippet2History(format("~%.play", proxyName));
+		if (proxy.source.isNil) {
+			^this.evalInProxySpace;
+		};
+		if (proxy.isMonitoring.not) {
+			proxy.play;
+			postf("proxy % started: % \n", proxyName, proxy);
+			this.enterSnippet2History(format("~%.play", proxyName));
+		}
 	}
 
 	getSnippetAndProxy {
@@ -168,13 +179,6 @@ ProxyCode {
 		postf("proxy % stopped: %\n", argProxyName, argProxy);
 		this.enterSnippet2History(format("~%.stop", argProxyName));
 	}
-
-	startProxy { | argProxy, argProxyName |
-		postf("proxy % started: %\n", argProxyName, argProxy);
-		this.enterSnippet2History(format("~%.play;", argProxyName));
-		argProxy.play;
-	}
-
 
 	proxyMixer {
 //		ProxyMixer(doc.envir);

@@ -89,7 +89,6 @@ Widget {
 
 	valueArray { | ... args |
 		// provide access to self when evaluated by receiving notification from model
-//		["valueArray method in Widget is calling updateFunc with these args: ", args add: this].postln;
 		updateFunc.valueArray(args add: this);
 	}
 	
@@ -143,22 +142,29 @@ Widget {
 		// return the widget registered for this object under name
 		^Widget.all.at(this, name);
 	}
+	
+	widgetValue { | name | 
+		// return the value of the widget registered for this object under name
+		^this.widget(name).value;
+	}
+	
 	widgets {
-		// return all widgets of this object 
+		// return all widgets of this object
 		var widgets;
 		widgets = Widget.all[this];
 		widgets !? { widgets = widgets.values };
 		^widgets;
 	}
 	setSpec { | name, spec | this.widget(name).spec = spec; }
-	setaction { | name, function | this.widget(name).action = function; }
+	setAction { | name, function | this.widget(name).action = function; }
+	setValue { | name, value | this.widget(name).value = value; }
+	setValueAction { | name, value | this.widget(name).valueAction = value; }
 	setNotify { | name, symbol | this.widget(name).notify = symbol; }
 	
 	enable { | inputType, disablePrevious = true |
 		/* Enable inputs whose class is kind of inputType from all widgets belonging to this object.
 		If disablePrevious is true, then the previously enabled object is sent the message disable */
-
-		this.widgets do: _.enableInput(inputType);
+		Widget.enable(this, inputType, disablePrevious);
 	}
 
 	disable { | inputType |
