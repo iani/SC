@@ -1,9 +1,10 @@
 /* IZ 2012 07 01
-Each Snippet plays in its own proxy. 
-Cooperates with Code. 
 
-Forked from ProxyDoc. 
-Replaces ProxyDoc. 
+Evaluate a snippet from a Document and set the resulting object as source to a proxy named after the name of the snippet. 
+Additional methods for starting, stopping, or incrementing / decrementing the volume of the proxy. 
+Add the proxy code in History but also add the snippet that was evaluated in a history of snippets for this proxy. 
+
+Some of the functionality is evoked by keyboard shortcuts set by Code, another part is used via gui through the ProxySourceEditor. 
 
 */
 
@@ -11,9 +12,15 @@ ProxyCode {
 	classvar all;						// all ProxyCode instances in a Dictionary by Document
 	classvar <historyTimer;				// routine that counts time from last executed snippet
 	classvar <>historyEndInterval = 300;	// end History if nothing has been done for 5 minutes
- 
- 	var <doc;
-	var <proxySpace, proxy, proxyName, snippet, index;
+
+ 	var <doc;			// the document from which this snippet was 
+	var <proxySpace; 
+	var <proxy;
+	var <proxyName; 
+	var <params;		// parameters and their specs, as parsed from the proxy and 
+					// from the initial comment line of the snippet
+	var <snippet; 
+	var <index;
 	var <proxyHistory; // holds all source code for each NodeProxy by key
 	
 	*initClass {
@@ -94,8 +101,10 @@ ProxyCode {
 				this.enterSnippet2History(
 					format("%~% = %", snippet[..index], proxyName, snippet[index + 1..])
 				);
+				this.parseArguments(proxy, snippet);
 			}{
 				this enterSnippet2History: format("~% = %", proxyName, snippet);
+				this.parseArguments(proxy);
 			};
 			if (addToSourceHistory) { this.addNodeSourceCodeToHistory(proxyName, snippet); };
 			if (proxy.rate === \audio and: { start } and: { proxy.isMonitoring.not }) {
@@ -106,6 +115,13 @@ ProxyCode {
 			this.enterSnippet2History(snippet);
 		}
 	}
+
+	parseArguments { | argProxy, argSnippet |
+		var mySpecs;
+		argSnippet !? { mySpecs = argSnippet.findRegexp("^//[^[]*([^\n]*)")[1][1].interpret; };
+		proxy.notify(\proxySpecs, MergeSpecs(argProxy, mySpecs));
+	}
+
 
 	enterSnippet2History { | argSnippet |
 		History.enter(argSnippet);

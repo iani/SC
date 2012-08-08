@@ -72,7 +72,10 @@ Widget {
 	}
 
 	defaultUpdateFunc {
-		^{ | value | widget.value = value = spec.unmap(value) }
+		^{ | value |
+			widget.value = value = spec.unmap(value);
+			action.(value, this);
+		}
 	}
 
 	value_ { | argValue |
