@@ -34,7 +34,7 @@ Widget {
 		input sources of widgets when a new model becomes active. 
 		See Widget class methods 'enable' and 'disable'.
 		It is a dictionary holding objects
-		whose widget inputs are enabled. There is one entry per input type. 
+		whose widget inputs are enabled. There is one entry per widget group. 
 		Common input types are: MIDIFunc, OSCFunc. */
 
 	var <>widget, <model, <name, <>notify, <>action, <>updateFunc, <>spec;
@@ -66,7 +66,6 @@ Widget {
 			notify !? { model.notify(notify, value, this) };
 		};
 		updateFunc ?? { updateFunc = this.defaultUpdateFunc };
-//		this.addNotifier(model, name, updateFunc);
 		this.addNotifier(model, name, this);
 		model onObjectClosed: { this.objectClosed };
 	}
@@ -95,39 +94,70 @@ Widget {
 		updateFunc.valueArray(args add: this);
 	}
 	
-	addMIDI { | type = 'cc', num, chan, src, action |
+	addMIDI { | type = 'cc', num, chan, src, argAction |
 		if (MIDIClient.initialized.not) {
 			MIDIIn.connectAll;
 		};
-		inputs = inputs add: MIDIFunc.perform(type, action ?? {{ | val |
-			{ widget.valueAction = val / 127; }.defer;
-		}}, num, chan, src);
+		argAction = argAction ?? {{ | me, val |
+			widget.valueAction = val / 127;
+		}}; 
+		inputs = inputs add: MIDIFunc.perform(type, 
+			{ | val, num, chan, src |  // See MIDIFunc help: number of args varies by MIDI msg type
+				{ argAction.(this, val, num, chan, src) }.defer;
+			}, num, chan, src);
 	}
 	
-	w { ^widget } // shortcut for accessing the widget, when used in Layouts 
-	view { ^widget } // shortcut for accessing the widget, when used in Layouts 
+	// shortcuts for accessing the widget, i.e. the view, when used in Layouts: 
+	w { ^widget }
+	view { ^widget }
 
-	*enable { | model, inputType, disablePrevious = true |
-		if (disablePrevious) { this.disable(enabled, inputType) };
+	*enable { | model, group, inputType, disablePrevious = true |
+		var previous;
+		group = group ?? { model.class };
+		if (disablePrevious and: { (previous = enabled[group]).notNil }) {
+			previous.disable(group, inputType);
+		};
 		model.widgets do: _.enableInput(inputType);
-		enabled[inputType] = model;	
+		enabled[group] = model;	
 	}
 
-	*disable { | model, inputType |
+	*disable { | model, group, inputType |
+		group = group ?? { model.class };
+		model = model ?? { enabled[group] };
 		model !? {
 			model.widgets do: _.disableInput(inputType);
-			if (inputType.isNil) {
-				enabled keysValuesDo: { | key, value |
-					if (value === model) { enabled[key] = nil };
-				};
-			}{
-				if (enabled[inputType] === model) { enabled[inputType] = nil }
-			}
+			enabled[group] = nil;
 		}
 	}
-	
+
+	enableInput { | inputType |
+		this.selectInputType(inputType) do: _.enable;
+	}
+
+	disableInput { | inputType |
+		this.selectInputType(inputType) do: _.disable;
+	}
+
+	selectInputType { | inputType |
+		if (inputType.isNil) {
+			^inputs
+		}{
+			^inputs select: { | i | i isKindOf: inputType }
+		}
+	}
+
 	objectClosed {
 		super.objectClosed;
+		this.disable;
+//		inputs do: _.free;
+	}
+	
+	toggle { | onval = 1 | this.valueAction = onval - value; }
+	increment { | inc = 1, limit = inf |
+		this.valueAction = value = value + 1 min: limit;
+	}
+	decrement { | inc = 1, limit = 0 |
+		this.valueAction = value = value - 1 max: limit;
 	}
 }
 
@@ -164,17 +194,32 @@ Widget {
 	setValueAction { | name, value | this.widget(name).valueAction = value; }
 	setNotify { | name, symbol | this.widget(name).notify = symbol; }
 	
-	enable { | inputType, disablePrevious = true |
+	enable { | group, inputType, disablePrevious = true |
 		/* Enable inputs whose class is kind of inputType from all widgets belonging to this object.
 		If disablePrevious is true, then the previously enabled object is sent the message disable */
-		Widget.enable(this, inputType, disablePrevious);
+		Widget.enable(this, group, inputType, disablePrevious);
 	}
 
-	disable { | inputType |
+	disable { | group, inputType |
 		/* Disable inputs whose class is kind of inputType from all widgets belonging to this object */
-		Widget.disable(this, inputType);
+		Widget.disable(this, group, inputType);
 	}
 
+	addMIDI { | specs |
+		/* specs is a Dictionary or an Array of form [key: value, ... ] 
+		Add midi to any widget whose name is included in a key, constructing the MIDIFunc from the 
+		specs. Specs must be of the form [\miditype, ... other specs], corresponding to the 
+		arguments required by Widget:addMIDI, which are: type = 'cc', num, chan, src, action
+		*/
+		var widgets;
+		widgets = Widget.all[this];
+		widgets !? {
+			specs keysValuesDo: { | widget, specs |
+				widget = widgets[widget];
+				widget !? { widget.addMIDI(*specs) }
+			}
+		};
+	}
 }
 
 
@@ -193,6 +238,6 @@ Widget {
 		
 	*/
 	addMIDI { | controller, device, action |
-
+	
 	}
 }

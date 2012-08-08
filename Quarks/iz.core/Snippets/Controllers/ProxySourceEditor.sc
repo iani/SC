@@ -7,6 +7,17 @@ Note: all should actually not be an IdentityDictionary. There should be one such
 
 ????? TODO: Always use global history from ProxyCode. Remove proxyHistory variable.
 
+============================= MIDI ===========================
+
+The MIDI settings of this version are for the U-Control UC-33e, using standard preset 1, as activated by button labeled "1" at the right part of the device. Different configurations can be installed easily by setting the midiSpecs class variable of ProxySourceEditor. For an example of the midiSpecs format see class method midiSpecs. 
+
+Configuration of action for the numeric buttons of UC-33e:
+
+| 1: previous snippet	| 2:	 eval				| 3: next snippet |
+| 1: first snippet		| 2:	 add					| 3: last snippet |
+| 1: reset specs		| 2:	 toggle window size 	| 3: delete       |
+| - 					| 0: start/stop			| -               |
+
 */
 
 ProxySourceEditor {
@@ -15,7 +26,10 @@ ProxySourceEditor {
 				// instances concurrently)
 	classvar <>windowRects;		// positions and sizes for windows for tiling entire laptop screen  
 	classvar <>extraSpecs;		// specs for vol and fadeTime, for all NodeProxies
-
+	classvar <>font;			// The font used for the first line of GUI items
+	classvar >midiSpecs;		/* Dictionary (Event) holding one MIDI spec for each GUI item 
+		
+	*/
 
 	var <proxyCode;	// ProxyCode instance that holds the ProxySpace, NodeProxies and History.
 	var <proxyName;	// Name of the current NodeProxy, whose code is being edited here
@@ -55,6 +69,7 @@ ProxySourceEditor {
 		var existingEditor;
 		existingEditor = all[proxyName];
 		existingEditor !? { ^existingEditor.front };
+		font = Font.default.size_(10);
 		^this.newCopyArgs(proxyCode, proxyName).init;
 	}
 
@@ -68,6 +83,7 @@ ProxySourceEditor {
 		this setProxy: proxyName;
 		all[proxyName] = this;
 		this.updateSpecs([]); // TODO: use resetSpecs instead ??? !!!
+		if (midiSpecs.isNil) { this.initMIDIspecs };
 	}
 
 	setProxy { | argProxyName |
@@ -95,48 +111,52 @@ ProxySourceEditor {
 		var knobMenus, sliderMenus;
 		window = Window(proxyName, bounds = windowRects@@(all.size));
 		window.onClose = { this.closed };
+		window.toFrontAction = { this.enable; };
 		window.layout = VLayout(
 			[TextView().font_(Font("Monaco", 11)).addModel(this, \editor).w, s:10],
 			[HLayout(
 				Button().states_([["start"], ["stop"]])
+					.font_(font)
 					.addModel(this, \startStopButton, action: { | me |
 						this.perform([\stopProxy, \startProxy][me.value])
 					}).w,
-				Button().states_([["<<"]]).action_({
-					this.notify(\currentSnippet, 1);
-				}),
-				Button().states_([["<"]]).action_({
-					var widget;
-					widget = this.widget(\currentSnippet);
-					widget.valueAction = widget.value - 1;
-				}),
-				Button().states_([["eval"]]).action_({ this.evalSnippet(false) }),
-				Button().states_([[">"]]).action_({
-					var widget;
-					widget = this.widget(\currentSnippet);
-					widget.valueAction = widget.value + 1;
-				}),
-				Button().states_([[">>"]]).action_({
-					this.notify(\currentSnippet, proxyHistory.size);
-				}),
-				Button().states_([["add"]]).action_({ this.evalSnippet }),
-				Button().states_([["delete"]]).action_({ this.deleteSnippet }),
-				Button().states_([["reset specs"]]).action_({ this.resetSpecs; }),
-				StaticText().string_("current:"),
-				NumberBox().value_(proxyHistory.size)
-					.addModel(this, \currentSnippet, action: { | val, widget |
-						val = val.clip(1, proxyHistory.size);
-						widget.value = val;
-						this.widget(\editor).widget.string = proxyHistory[val - 1];
-					}, updateFunc: { | val, me |
-						me.valueAction = val;
+				Button().states_([["<<"]]).font_(font)
+					.addModel(this, \firstSnippet, action: {
+						this.notify(\currentSnippet, 1);
 					}).w,
-				StaticText().string_("all:"),
-				NumberBox().value_(proxyHistory.size)
+				Button().states_([["<"]]).font_(font)
+					.addModel(this, \prevSnippet, action: {
+						this.widget(\currentSnippet).decrement(1, 1);
+					}).w,
+				Button().states_([["eval"]]).font_(font).action_({ this.evalSnippet(false) }),
+				Button().states_([[">"]]).font_(font)
+					.addModel(this, \nextSnippet, action: {
+						this.widget(\currentSnippet).increment(1, proxyHistory.size);
+					}).w,
+				Button().states_([[">>"]]).font_(font)
+					.addModel(this, \lastSnippet, action: {
+						this.notify(\currentSnippet, proxyHistory.size);
+					}).w,
+				Button().states_([["add"]]).font_(font)
+					.addModel(this, \add, action: { this.evalSnippet }).w,
+				Button().states_([["delete"]]).font_(font)
+					.addModel(this, \delete, action: { this.deleteSnippet }).w,
+				Button().states_([["reset specs"]]).font_(font)
+					.addModel(this, \resetSpecs, action: { this.resetSpecs; }).w,
+				StaticText().font_(font).string_("current:"),
+				NumberBox().font_(font).value_(proxyHistory.size)
+					.addModel(this, \currentSnippet, action: { | val, widget |
+						widget.widget.value = val = val max: 1 min: proxyHistory.size;
+						this.widget(\editor).widget.string = proxyHistory[val - 1];
+					}).w,
+				StaticText().font_(font).string_("all:"),
+				NumberBox().font_(font).value_(proxyHistory.size).enabled_(false)
 					.addModel(this, \numSnippets).w,
-				Button()
+				Button().font_(font)
 					.states_([["maximize window"], ["minimize window"]])
-					.action_({ | me | this.resizeWindow(me.value); })
+					.addModel(this, \toggleWindowSize, action: { | me |
+						this.resizeWindow(me.value);
+					}).w
 			), s:1],
 			[HLayout(
 				*({ | i |
@@ -149,7 +169,7 @@ ProxySourceEditor {
 					slidernum = format("slidernum%", i).asSymbol;
 					VLayout(
 						knobMenus = knobMenus add: 
-							PopUpMenu().items_(["-", "vol", "fadeTime", "freq"])
+							PopUpMenu().font_(font).items_(["-", "vol", "fadeTime", "freq"])
 								.addModel(this, knobmenu,
 									action: { | val, menuWidget |
 										this.setControlParameter(
@@ -159,7 +179,8 @@ ProxySourceEditor {
 										);
 									}
 								).w; knobMenus.last,
-						Knob().addModel(this, knob, knobnum).w,
+						Knob().addModel(this, knob, knobnum)
+							.w,
 						HLayout(
 							NumberBox().font_(Font.sansSerif(10)) 
 								.addModel(this, slidernum, slider).w,
@@ -167,9 +188,10 @@ ProxySourceEditor {
 								.addModel(this, knobnum, knob).w
 						),
 						Slider().orientation_(\horizontal)
-							.addModel(this, slider, slidernum).w,
+							.addModel(this, slider, slidernum)
+							.w,
 						sliderMenus = sliderMenus add: 
-							PopUpMenu().items_(['vol', 'fadeTime', '-'])
+							PopUpMenu().font_(font).items_(['vol', 'fadeTime', '-'])
 								.value_(2)
 								.addModel(this, slidermenu,
 									action: { | val, menuWidget |
@@ -185,8 +207,20 @@ ProxySourceEditor {
 			), s:2]
 		);
 		controlMenus = [sliderMenus, knobMenus].flop.flat;
+		this.addMIDI(this.midiSpecs);
 		this.front;
 	}
+
+	enable {
+		super.enable;
+		window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
+	}
+
+	disable {
+		super.disable;
+		window.view.background = Color(0.9, 0.9, 0.9, 0.3);
+	}
+
 
 	updateSpecs { | argSpecs |
 		var paramNames, menuItems, size;
@@ -254,7 +288,7 @@ ProxySourceEditor {
 				HLayout(
 					Button().states_([["OK"]]).action_({
 						proxyCode.deleteNodeSourceCodeFromHistory(
-							proxyName, this.widgetValue(\currentSnippet)
+							proxyName, this.widget(\currentSnippet).widget.value
 						);
 						dialog.close;
 					}),
@@ -282,5 +316,39 @@ ProxySourceEditor {
 		}{
 			window.bounds = bounds.copy.height_(850).top_(0);
 		}
+	}
+
+	midiSpecs {
+		if (midiSpecs.isNil) {
+			midiSpecs = [
+				knob0: [\cc, 10, 0],
+				knob1: [\cc, 10, 1],
+				knob2: [\cc, 10, 2],
+				knob3: [\cc, 10, 3],
+				knob4: [\cc, 10, 4],
+				knob5: [\cc, 10, 5],
+				knob6: [\cc, 10, 6],
+				knob7: [\cc, 10, 7],
+				slider0: [\cc, 7, 0],
+				slider1: [\cc, 7, 1],
+				slider2: [\cc, 7, 2],
+				slider3: [\cc, 7, 3],
+				slider4: [\cc, 7, 4],
+				slider5: [\cc, 7, 5],
+				slider6: [\cc, 7, 6],
+				slider7: [\cc, 7, 7],
+				startStopButton: [\cc, 18, 0, nil, { | me | me.toggle }],
+				prevSnippet: [\cc, 19, 0, nil, { | me | me.action.value }],
+				eval: [\cc, 20, 0, nil, { | me | me.action.value }],
+				nextSnippet: [\cc, 21, 0, nil, { | me | me.action.value }],
+				firstSnippet: [\cc, 22, 0, nil, { | me | me.action.value }],
+				add: [\cc, 23, 0, nil, { | me | me.action.value }],
+				lastSnippet: [\cc, 24, 0, nil, { | me | me.action.value }],
+				resetSpecs: [\cc, 25, 0, nil, { | me | me.action.value }],
+				toggleWindowSize: [\cc, 26, 0, nil, { | me | me.toggle }],
+				delete: [\cc, 27, 0, nil, { | me | me.action.value }],
+			]
+		};
+		^midiSpecs;
 	}
 }
