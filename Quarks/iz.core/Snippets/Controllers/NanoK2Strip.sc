@@ -21,18 +21,19 @@ NanoK2Strip {
 
 	widgets {
 		^VLayout(
-			knobProxyMenu = PopUpMenu()
+			knobProxyMenu = PopUpMenu().font_(Font.default.size_(10))
 				.action_({ | me |
 					this.setProxy(me.item.asSymbol, 'knobProxy_', knobProxyMenu, knobControlMenu);
 				}),
-			knobControlMenu = PopUpMenu()
+			knobControlMenu = PopUpMenu().font_(Font.default.size_(10))
 				.items_([" ", "vol"])
 				.action_({ | me |
 					knobControl = me.item.asSymbol;
 				}),
 			HLayout(
 				VLayout(
-					Button().states_([["ed."]])
+					Button().states_([["ed"]])
+						.font_(Font.default.size_(10))
 						.action_({ kontrol.editNodeProxySource(knobProxy) }),
 					knob = Knob()
 						.action_({ | s |
@@ -71,20 +72,22 @@ NanoK2Strip {
 						.action_({
 							sliderControlSpec = ControlSpec(sliderMin.value, sliderMax.value);
 						}),
-					Button().states_([["edit"]])
+					Button().states_([["ed"]])
+						.font_(Font.default.size_(10))
 						.action_({ kontrol.editNodeProxySource(sliderProxy) }),
-					proxyStartButton = Button().states_([["start"], ["stop"]])
+					proxyStartButton = Button().states_([[">"], ["||"]])
+						.font_(Font.default.size_(10))
 						.action_({ | me |
 							this.perform([\stopProxy, \startProxy][me.value])
 						})
 				)
 			),
-			sliderProxyMenu = PopUpMenu()
+			sliderProxyMenu = PopUpMenu().font_(Font.default.size_(10))
 				.action_({ | me |
 					this.setProxy(me.item.asSymbol, 'sliderProxy_', 
 						sliderProxyMenu, sliderControlMenu);
 				}),
-			sliderControlMenu = PopUpMenu()
+			sliderControlMenu = PopUpMenu().font_(Font.default.size_(10))
 				.items_([" ", "vol"])
 				.value_(1)
 				.action_({ | me |

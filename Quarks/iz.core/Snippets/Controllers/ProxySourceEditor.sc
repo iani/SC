@@ -91,7 +91,7 @@ ProxySourceEditor {
 		proxy !? {
 			this.removeNotifier(proxy, \play);
 			this.removeNotifier(proxy, \stop);
-			this.removeNotifier(proxy, \updateSpecs);
+			this.removeNotifier(proxy, \proxySpecs);
 		};
 		proxy = proxyCode.proxySpace[proxyName];
 		this.addNotifier(proxy, \play, { this.setValue(\startStopButton, 1) });
@@ -212,13 +212,14 @@ ProxySourceEditor {
 	}
 
 	enable {
+		var view;
 		super.enable;
 		window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
 	}
 
 	disable {
 		super.disable;
-		window.view.background = Color(0.9, 0.9, 0.9, 0.3);
+		window.view.background = Color(0.9, 0.9, 0.9, 0.5);
 	}
 
 

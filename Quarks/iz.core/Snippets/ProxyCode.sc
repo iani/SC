@@ -153,7 +153,6 @@ ProxyCode {
 
 	editNodeProxySource { | proxyName |
 		// received from NanoK2Strip. Edit the source code of the proxy
-		// (and replace source).
 		ProxySourceEditor(this, proxyName);
 	}
 	

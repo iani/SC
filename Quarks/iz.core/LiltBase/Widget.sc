@@ -37,7 +37,7 @@ Widget {
 		whose widget inputs are enabled. There is one entry per widget group. 
 		Common input types are: MIDIFunc, OSCFunc. */
 
-	var <>widget, <model, <name, <>notify, <>action, <>updateFunc, <>spec;
+	var <>widget, <model, <name, <>notifyTarget, <>action, <>updateFunc, <>spec;
 	var <>inputs;		/* MIDIFuncs, MIDIResponders etc.
 		Can be enabled or disabled individually or in groups
 		See Object:enable and Widget:enableInput */
@@ -53,8 +53,8 @@ Widget {
 		this.disable(object);
 	}
 
-	*new { | widget, model, name, notify, action, updateFunc, spec |
-		^this.newCopyArgs(widget, model, name, notify, action, updateFunc, spec).init
+	*new { | widget, model, name, notifyTarget, action, updateFunc, spec |
+		^this.newCopyArgs(widget, model, name, notifyTarget, action, updateFunc, spec).init
 	}
 
 	init {
@@ -63,9 +63,9 @@ Widget {
 		widget.action = { | me |
 			value = spec.map(me.value);
 			action.(value, this);
-			notify !? { model.notify(notify, value, this) };
+			notifyTarget !? { model.notify(notifyTarget, value, this) };
 		};
-		updateFunc ?? { updateFunc = this.defaultUpdateFunc };
+		updateFunc = updateFunc ?? { this.defaultUpdateFunc };
 		this.addNotifier(model, name, this);
 		model onObjectClosed: { this.objectClosed };
 	}
@@ -149,7 +149,6 @@ Widget {
 	objectClosed {
 		super.objectClosed;
 		this.disable;
-//		inputs do: _.free;
 	}
 	
 	toggle { | onval = 1 | this.valueAction = onval - value; }
@@ -159,6 +158,28 @@ Widget {
 	decrement { | inc = 1, limit = 0 |
 		this.valueAction = value = value - 1 max: limit;
 	}
+	
+	
+	// TODO!
+	proxyNodeSetter { | targetName, proxySpace, action, targetWidget |
+		/* When my widget's item changes, set the widget named targetName 
+		to watch the NodeProxy stored under this name in proxySpace */
+		ProxyNodeSetter(this, targetName, proxySpace, action, targetWidget);
+	}
+
+	proxyNodeWatcher { | playAction, stopAction, setWidgetAction = true, node |
+		// update state when a NodeProxy starts or stops playing
+		ProxyNodeWatcher(this, playAction, stopAction, setWidgetAction, node);
+	}
+
+	proxySpecWatcher { | action, node |
+		// update specs when the source of a NodeProxy changes
+		ProxySpecWatcher(this, action, node)
+	}
+	
+	proxySpaceWatcher {
+		// update state when a NodeProxy is added or removed from a ProxySpace 
+	}
 }
 
 
@@ -167,8 +188,8 @@ Widget {
 	/* Usage example:  
 		Slider().addModel(this, \slider1);
 	*/
-	addModel { | model, name, notify, action, updateFunc, spec, controller, device = \default |
-		^Widget(this, model, name, notify, action, updateFunc, spec);
+	addModel { | model, name, notifyTarget, action, updateFunc, spec, controller, device = \default |
+		^Widget(this, model, name, notifyTarget, action, updateFunc, spec);
 	}
 
 	widget { | name |
