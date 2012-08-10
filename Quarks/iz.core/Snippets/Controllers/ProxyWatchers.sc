@@ -7,7 +7,7 @@ TO DEFINE:
 
 ProxyNodeSetter -> set the node that another widget watches
 ProxyNodeWatcher -> notify widget when a NodeProxy plays or stops playing
-ProxySpecWatcher -> notify to update specs (or other stuff???) when the source of a NodeProxy changes
+ProxySpecWatcher -> notify to update specs when the source of a NodeProxy changes
 ProxySpaceWatcher -> notify when a ProxySpace creates or removes a NodeProxy 
 
 */
@@ -28,6 +28,8 @@ ProxyNodeSetter {
 		this.addNotifier(widget, \setNode, { | argNode |
 			this setNode: argNode });
 		proxySpace = proxySpace ?? { Document.current.envir };
+		// Permit model to perform an update once after all widgets have been created
+		widget.model.registerOneShot(\update, widget, { widget.widget.doAction });
 	}
 
 	setNode { | node |
@@ -47,7 +49,7 @@ ProxyNodeWatcher {
 	*/
 
 	var <widget, <>playAction, <>stopAction, <setWidgetAction, <node;
-	
+
 	*new { | widget, playAction, stopAction, setWidgetAction = true, node |
 		^this.newCopyArgs(widget, playAction, stopAction, setWidgetAction, node).init;
 	}
@@ -99,12 +101,23 @@ ProxySpecWatcher {
 		them and your widget
 	*/
 
+	classvar <specCache; // Store the most recently generated specs for access when switching
+
 	var <widget, <action, <node;
+
+	*initClass {
+		specCache = IdentityDictionary.new;
+	}
+	
+	*cacheSpecs { | argNodeProxy, argSpecs |
+		// ProxyCode stores most recent specs for all nodes here, for access when switching
+		specCache[argNodeProxy] = argSpecs;
+	}
 	
 	*new { | widget, action, node |
 		^this.newCopyArgs(widget, action, node).init;
 	}
-	
+
 	init {
 		this.addNotifier(widget, \setNode, { | argNode | this.setNode(argNode) });
 		action = action ?? { this.defaultAction };
@@ -114,12 +127,19 @@ ProxySpecWatcher {
 	defaultAction { ^{ | specs | this.setWidgetItems(specs) } }
 
 	setNode { | argNode |
+		var cachedSpecs;
 		this.removeNode;		// always remove node (!?)
 		argNode !? {
 			node = argNode;
 			this.addNotifier(node, \proxySpecs, { | ... specs |
 				action.(specs, this);
 			});
+			cachedSpecs = specCache[node];
+			if (cachedSpecs.notNil) {
+				action.(cachedSpecs, this);
+			}{
+				action.(MergeSpecs(node), this);
+			}
 		}
 	}
 
@@ -143,6 +163,10 @@ ProxySpaceWatcher {
 	}
 	
 	init {
+		action = action ?? {{ widget.widget.items = proxySpace.keys.asArray.sort }};
+		widget.addNotifier(proxySpace, \newProxy) { action.(this); };
 	}
+	
+	
 	
 }

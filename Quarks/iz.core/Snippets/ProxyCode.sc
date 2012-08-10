@@ -119,7 +119,9 @@ ProxyCode {
 	parseArguments { | argProxy, argSnippet |
 		var mySpecs;
 		argSnippet !? { mySpecs = argSnippet.findRegexp("^//[^[]*([^\n]*)")[1][1].interpret; };
-		proxy.notify(\proxySpecs, MergeSpecs(argProxy, mySpecs));
+		mySpecs = MergeSpecs(argProxy, mySpecs);
+		proxy.notify(\proxySpecs, mySpecs);
+		ProxySpecWatcher.cacheSpecs(argProxy, mySpecs);
 	}
 
 

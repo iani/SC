@@ -230,7 +230,8 @@ Widget {
 		/* specs is a Dictionary or an Array of form [key: value, ... ] 
 		Add midi to any widget whose name is included in a key, constructing the MIDIFunc from the 
 		specs. Specs must be of the form [\miditype, ... other specs], corresponding to the 
-		arguments required by Widget:addMIDI, which are: type = 'cc', num, chan, src, action
+		arguments required by Widget:addMIDI, which are: type = 'cc', num, chan, src, action.
+		For example, see ProxySourceEditor:makeWindow
 		*/
 		var widgets;
 		widgets = Widget.all[this];
@@ -243,22 +244,8 @@ Widget {
 	}
 }
 
-
-
 + Nil {
 	// nil as spec just returns the input argument as is
 	map { | value | ^value }
 	unmap { | value | ^value }		
-}
-
-+ QView {
-	/* 	Views can add themselves directly to a MIDIDevice controller. 
-		No automatic group switching, activate, deactivate or removal on close available here. 
-		
-		MAY HAVE TO BE REMOVED VERY SOON
-		
-	*/
-	addMIDI { | controller, device, action |
-	
-	}
 }

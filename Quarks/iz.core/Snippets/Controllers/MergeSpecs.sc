@@ -45,27 +45,34 @@ b pairsDo: { | key, val |
 */
 
 MergeSpecs {
-	var proxyArgs, snippetArgs, mergedSpecs;
-	
+	var proxyArgs, snippetArgs, rate, mergedSpecs;
+	classvar <>extraSpecs;		// specs for nil, vol and fadeTime, 
+
+	*initClass {
+		Class.initClassTree(Spec);
+		Class.initClassTree(ControlSpec);
+		extraSpecs = [['-', nil], [\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
+	}
+
 	*new { | proxy, snippetArgs |
-		^this.fromArgs(proxy.getKeysValues, snippetArgs);
+		^this.fromArgs(proxy.getKeysValues, snippetArgs, proxy.rate);
 	}
 	
-	*fromArgs { | proxyArgs, snippetArgs |
-		^this.newCopyArgs(proxyArgs, snippetArgs).mergeSpecs;
+	*fromArgs { | proxyArgs, snippetArgs, rate |
+		^this.newCopyArgs(proxyArgs, snippetArgs, rate).mergeSpecs;
 	}
 	
 	mergeSpecs {
-		var index, spec, keys, key, value;
-		snippetArgs = snippetArgs ?? { [] };
+		var index, spec, keys, key, value, snippetKeys, snippetVals;
+		#snippetKeys, snippetVals = (snippetArgs ?? { [] }).clump(2).flop;
 		proxyArgs do: { | keyValue |
 			#key, value = keyValue;
-			index = snippetArgs indexOf: key;
+			index = snippetKeys indexOf: key;
 			if (index.isNil) {
 				spec = key.asSpec ?? { \bipolar.asSpec };
 				value !? { spec.default = value };
 			}{
-				spec = snippetArgs[index + 1].asSpec
+				spec = snippetVals[index].asSpec
 			};
 			mergedSpecs = mergedSpecs add: [key, spec];
 		};
@@ -75,6 +82,10 @@ MergeSpecs {
 				mergedSpecs = mergedSpecs add: [key, value.asSpec]
 			}
 		};
-		^mergedSpecs
+		if (rate === \audio) {
+			^extraSpecs ++ mergedSpecs
+		}{
+			^[['-', nil]] ++ mergedSpecs
+		}
 	}
 }

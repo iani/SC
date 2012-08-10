@@ -25,7 +25,7 @@ ProxySourceEditor {
 				// (Yet see note above: Conflicts may arise if using multiple ProxyCode 
 				// instances concurrently)
 	classvar <>windowRects;		// positions and sizes for windows for tiling entire laptop screen  
-	classvar <>extraSpecs;		// specs for vol and fadeTime, for all NodeProxies
+//	classvar <>extraSpecs;		// specs for vol and fadeTime, for all NodeProxies
 	classvar <>font;			// The font used for the first line of GUI items
 	classvar >midiSpecs;		/* Dictionary (Event) holding one MIDI spec for each GUI item 
 		
@@ -34,13 +34,13 @@ ProxySourceEditor {
 	var <proxyCode;	// ProxyCode instance that holds the ProxySpace, NodeProxies and History.
 	var <proxyName;	// Name of the current NodeProxy, whose code is being edited here
 	var <proxy;		// The current NodeProxy
-	var <proxyHistory;	// array of source code strings in order of execution
+	var <proxyHistory;	// Array of source code strings in order of execution
 	var <specs;		/* Holds specs for controlling the parameters of the current NodeProxy, 
 		in the form of an array of pairs: [symbol, spec], where 
 		symbol is the name of the parameter,
 		spec is the ControlSpec for mapping GUI or MIDI input to the appropriate range,
 		 */
-
+	var specWatcher; /* A ProxySpecWatcher. Updates controlMenus when node controls change. */
 	
 	// ======= GUI ITEMS AND DATA =======
 	var <window;
@@ -49,9 +49,9 @@ ProxySourceEditor {
 	var <>bounds; 	// saves original window bounds for reset after maximizing
 
 	*initClass {
-		Class.initClassTree(Spec);
-		Class.initClassTree(ControlSpec);
-		extraSpecs = [[\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
+//		Class.initClassTree(Spec);
+//		Class.initClassTree(ControlSpec); // extraSpecs moved to MergeSpecs
+//		extraSpecs = [[\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
 		StartUp add: {
 			all = IdentityDictionary.new;
 			windowRects = [
@@ -80,10 +80,15 @@ ProxySourceEditor {
 			this.updateHistory(argProxyName, argHistory);
 		});
 		this.makeWindow;
+		specWatcher = ProxySpecWatcher(this, { | argSpecs | 
+			this.updateSpecs(argSpecs);
+		}); 
 		this setProxy: proxyName;
+		this.widget(\editor).widget.postln.string.postln;
+		proxyCode.parseArguments(proxy, this.widget(\editor).widget.string);
 		all[proxyName] = this;
-		this.updateSpecs([]); // TODO: use resetSpecs instead ??? !!!
-		if (midiSpecs.isNil) { this.initMIDIspecs };
+//		this.updateSpecs([]); // TODO: use resetSpecs instead ??? !!!
+//		if (midiSpecs.isNil) { this.initMIDIspecs };
 	}
 
 	setProxy { | argProxyName |
@@ -91,18 +96,20 @@ ProxySourceEditor {
 		proxy !? {
 			this.removeNotifier(proxy, \play);
 			this.removeNotifier(proxy, \stop);
-			this.removeNotifier(proxy, \proxySpecs);
+//			this.removeNotifier(proxy, \proxySpecs);
 		};
 		proxy = proxyCode.proxySpace[proxyName];
 		this.addNotifier(proxy, \play, { this.setValue(\startStopButton, 1) });
 		this.addNotifier(proxy, \stop, { this.setValue(\startStopButton, 0) });
-		this.addNotifier(proxy, \proxySpecs, { | ... specs | this.updateSpecs(specs) });
+//		this.addNotifier(proxy, \proxySpecs, { | ... specs | this.updateSpecs(specs) });
+		
 		if (proxy.isMonitoring) {
 			proxy.notify(\play);
 		}{
 			proxy.notify(\stop);
 		};
 		proxyHistory = proxyCode.proxyHistory[proxyName];
+		specWatcher.setNode(proxy);
 		this.notify(\numSnippets, proxyHistory.size);
 		this.notify(\currentSnippet, proxyHistory.size);
 	}
@@ -169,7 +176,7 @@ ProxySourceEditor {
 					slidernum = format("slidernum%", i).asSymbol;
 					VLayout(
 						knobMenus = knobMenus add: 
-							PopUpMenu().font_(font).items_(["-", "vol", "fadeTime", "freq"])
+							PopUpMenu().font_(font)  // items_(["-", "vol", "fadeTime", "freq"])
 								.addModel(this, knobmenu,
 									action: { | val, menuWidget |
 										this.setControlParameter(
@@ -191,7 +198,7 @@ ProxySourceEditor {
 							.addModel(this, slider, slidernum)
 							.w,
 						sliderMenus = sliderMenus add: 
-							PopUpMenu().font_(font).items_(['vol', 'fadeTime', '-'])
+							PopUpMenu().font_(font)  // .items_(['vol', 'fadeTime', '-'])
 								.value_(2)
 								.addModel(this, slidermenu,
 									action: { | val, menuWidget |
@@ -207,7 +214,7 @@ ProxySourceEditor {
 			), s:2]
 		);
 		controlMenus = [sliderMenus, knobMenus].flop.flat;
-		this.addMIDI(this.midiSpecs);
+//		this.addMIDI(this.midiSpecs);
 		this.front;
 	}
 
@@ -224,14 +231,15 @@ ProxySourceEditor {
 
 
 	updateSpecs { | argSpecs |
-		var paramNames, menuItems, size;
-		specs = extraSpecs;
-		argSpecs[0] !? { specs = specs ++ argSpecs };
-		paramNames = specs.flop.first;
-		menuItems = paramNames.copy add: '-';
-		paramNames do: { | m, i |
-			controlMenus[i].items_(menuItems).valueAction = i;
-		}
+		var paramNames, size; // , menuItems, size;
+		specs = argSpecs;
+		paramNames = argSpecs.flop.first;
+		size = paramNames.size;
+		controlMenus do: { | cm, i | 
+			cm.items = paramNames;
+			i = i + 1;
+			if (i < size) { cm.valueAction = i } { cm.valueAction = 0 }
+		};
 	}
 
 	setControlParameter { | controlWidget, menuWidget, specWidget |
