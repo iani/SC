@@ -43,7 +43,7 @@ ProxyCode {
 		if (new.isNil) { new = this.newCopyArgs(doc).init };
 		^new;
 	}
-	
+
 	*all {
 		if (all.isNil) { all = IdentityDictionary.new };
 		^all;

@@ -5,32 +5,70 @@ Code extracted from ProxySourceEditor, in order to be used also in other classes
 
 TO DEFINE: 
 
-ProxyNodeSetter -> set the node that another widget watches
+
+ProxySpaceWatcher -> notify when a ProxySpace creates or removes a NodeProxy 
+
+
+AbstractNodeWatcher -> Watch for changes that happen to a selected node
+					Can change the node watched
+					Abstract superclass for ProxyNodeWatcher, ProxySpecWatcher
 ProxyNodeWatcher -> notify widget when a NodeProxy plays or stops playing
 ProxySpecWatcher -> notify to update specs when the source of a NodeProxy changes
-ProxySpaceWatcher -> notify when a ProxySpace creates or removes a NodeProxy 
+
+ProxyNodeSetter -> set the node that another widget watches
+ProxySpecSetter -> set the spec of another widget when the chosen spec changes
 
 */
 
+
+ProxySpaceWatcher {
+	var <widget, <proxySpace, <>action;
+
+	*new { | widget, proxySpace, action |
+		^this.newCopyArgs(widget, proxySpace, action).init;
+	}
+
+	init {
+		proxySpace = proxySpace ?? {
+			Document.current.envir ?? { ProxySpace.push }
+		};
+		action = action ?? {{
+			// Wait for proxyspace to install the new proxy. Why does this take so long?
+			{ this.updateNodeProxyList; }.defer(0.1);
+		}};
+		widget.addNotifier(proxySpace, \newProxy, { action.(this) });
+	}
+	
+	updateNodeProxyList {
+		var currentItem, items, index;
+		widget.view.items !? { currentItem = widget.view.item; };
+		items = proxySpace.envir.keys.asArray.sort add: '-';
+		widget.view.items = items;
+		widget.view.value = items.indexOf(currentItem) ?? { items.size - 1 };
+	}
+}
+
 ProxyNodeSetter {
-	/* Note: multiple ProxyNodeSetters can be added to the same widget, to set the nodes
+	/* 	When a new node is seleted by my widget, set it as node in a target widget.
+		Note: multiple ProxyNodeSetters can be added to the same widget, to set the nodes
 		of multiple targets, such as a start-stop button or a menu of controls */
 	var <widget, <targetName, <proxySpace, <action, targetWidget;
 	
 	*new { | widget, targetName, proxySpace, action, targetWidget |
+		// if targetWidget is not provided, it is fetched from targetName
 		^this.newCopyArgs(widget, targetName, proxySpace, action, targetWidget).init;
 	}
 
 	init {
 		widget.action = action ?? {{ | val, me |
-			me.notify(\setNode, proxySpace[me.widget.item]) 
+			me.notify(\setNode, proxySpace[me.view.item]) 
 		}};
 		this.addNotifier(widget, \setNode, { | argNode |
 			this setNode: argNode });
 		proxySpace = proxySpace ?? { Document.current.envir };
 		// Permit model to perform an update once after all widgets have been created
-		widget.model.registerOneShot(\update, widget, { widget.widget.doAction });
-	}
+		widget.model.registerOneShot(\update, widget, { widget.view.doAction });
+	} 
 
 	setNode { | node |
 		this.targetWidget.notify(\setNode, node);
@@ -41,6 +79,34 @@ ProxyNodeSetter {
 		^targetWidget;
 	}
 
+}
+
+AbstractProxyNodeWatcher {
+	var <widget, <node;
+	
+	init {
+		this.addNotifier(widget, \setNode, { | argNode | this.setNode(argNode) });
+		this.setAction;
+		this.setNode(node);
+	}
+
+	setNode { | argNode |
+		this.removeNode;		// always remove node (!?)
+		argNode !? {
+			node = argNode;
+			this.addNotifiers;
+		};
+		this.updateState;
+	}
+
+	removeNode {
+		node !? { this.removeNotifiers };
+		node = nil;
+	}
+
+	setAction { this.subclassResponsibility(thisMethod) }
+	addNotifiers { this.subclassResponsibility(thisMethod) }
+	updateState { this.subclassResponsibility(thisMethod) }
 }
 
 ProxyNodeWatcher {
@@ -151,22 +217,10 @@ ProxySpecWatcher {
 	}
 	
 	setWidgetItems { | specs |
-		widget.widget.items = specs.flop.first;
+		widget.view.items = specs.flop.first;
 	}
 }
 
-ProxySpaceWatcher {
-	var <widget, <proxySpace, <>action;
-	
-	*new { | widget, proxySpace, action |
-		^this.newCopyArgs(widget, proxySpace, action).init;
-	}
-	
-	init {
-		action = action ?? {{ widget.widget.items = proxySpace.keys.asArray.sort }};
-		widget.addNotifier(proxySpace, \newProxy) { action.(this); };
-	}
-	
-	
+ProxySpecSetter {
 	
 }

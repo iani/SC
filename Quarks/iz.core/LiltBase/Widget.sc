@@ -35,9 +35,9 @@ Widget {
 		See Widget class methods 'enable' and 'disable'.
 		It is a dictionary holding objects
 		whose widget inputs are enabled. There is one entry per widget group. 
-		Common input types are: MIDIFunc, OSCFunc. */
+		*/
 
-	var <>widget, <model, <name, <>notifyTarget, <>action, <>updateFunc, <>spec;
+	var <>view, <model, <name, <>notifyTarget, <>action, <>updateFunc, <>spec;
 	var <>inputs;		/* MIDIFuncs, MIDIResponders etc.
 		Can be enabled or disabled individually or in groups
 		See Object:enable and Widget:enableInput */
@@ -53,14 +53,14 @@ Widget {
 		this.disable(object);
 	}
 
-	*new { | widget, model, name, notifyTarget, action, updateFunc, spec |
-		^this.newCopyArgs(widget, model, name, notifyTarget, action, updateFunc, spec).init
+	*new { | view, model, name, notifyTarget, action, updateFunc, spec |
+		^this.newCopyArgs(view, model, name, notifyTarget, action, updateFunc, spec).init
 	}
 
 	init {
-		value = widget.value;
+		value = view.value;
 		all.put(model, name, this);
-		widget.action = { | me |
+		view.action = { | me |
 			value = spec.map(me.value);
 			action.(value, this);
 			notifyTarget !? { model.notify(notifyTarget, value, this) };
@@ -72,21 +72,21 @@ Widget {
 
 	defaultUpdateFunc {
 		^{ | value |
-			widget.value = value = spec.unmap(value);
+			view.value = value = spec.unmap(value);
 			action.(value, this);
 		}
 	}
 
 	value_ { | argValue |
-		// also set the widgets value
+		// also set the views value
 		value = argValue;
-		widget.value = value;
+		view.value = value;
 	}
 	
 	valueAction_ { | argValue |
-		// set my value and perform my widget's action
+		// set my value and perform my view's action
 		value = argValue;
-		widget.valueAction = value;
+		view.valueAction = value;
 	}
 
 	valueArray { | ... args |
@@ -99,34 +99,43 @@ Widget {
 			MIDIIn.connectAll;
 		};
 		argAction = argAction ?? {{ | me, val |
-			widget.valueAction = val / 127;
+			view.valueAction = val / 127;
 		}}; 
 		inputs = inputs add: MIDIFunc.perform(type, 
 			{ | val, num, chan, src |  // See MIDIFunc help: number of args varies by MIDI msg type
 				{ argAction.(this, val, num, chan, src) }.defer;
 			}, num, chan, src);
 	}
-	
-	// shortcuts for accessing the widget, i.e. the view, when used in Layouts: 
-	w { ^widget }
-	view { ^widget }
+
+	// shortcut for accessing the view, when used in Layouts: 
+	v { ^view }
 
 	*enable { | model, group, inputType, disablePrevious = true |
 		var previous;
-		group = group ?? { model.class };
+		group = group ?? { this getGroup: model };
 		if (disablePrevious and: { (previous = enabled[group]).notNil }) {
 			previous.disable(group, inputType);
 		};
 		model.widgets do: _.enableInput(inputType);
 		enabled[group] = model;	
+		model.notify(\enable);
+	}
+
+	*getGroup { | model |
+		var group;
+		/* if no group is given, then try to get the group from the object or from its class */
+		(group = Library.at(\widgetGroups, model)) !? { ^group };
+		(group = Library.at(\widgetGroups, model.class)) !? { ^group };
+		^\global;
 	}
 
 	*disable { | model, group, inputType |
-		group = group ?? { model.class };
+		group = group ?? { this getGroup: model };
 		model = model ?? { enabled[group] };
 		model !? {
 			model.widgets do: _.disableInput(inputType);
 			enabled[group] = nil;
+			model.notify(\disable);
 		}
 	}
 
@@ -148,7 +157,7 @@ Widget {
 
 	objectClosed {
 		super.objectClosed;
-		this.disable;
+		this.disableInput;
 	}
 	
 	toggle { | onval = 1 | this.valueAction = onval - value; }
@@ -159,12 +168,15 @@ Widget {
 		this.valueAction = value = value - 1 max: limit;
 	}
 	
-	
-	// TODO!
-	proxyNodeSetter { | targetName, proxySpace, action, targetWidget |
-		/* When my widget's item changes, set the widget named targetName 
-		to watch the NodeProxy stored under this name in proxySpace */
-		ProxyNodeSetter(this, targetName, proxySpace, action, targetWidget);
+	proxySpaceWatcher { | space, argAction |
+		// update state when a NodeProxy is added or removed from a ProxySpace
+		ProxySpaceWatcher(this, space, argAction);
+	}
+
+	proxyNodeSetter { | targetName, proxySpace, argAction, targetWidget |
+		// Set the node of targetWidget when the node chosen by my widget change
+		// if targetWidget is not provided, it is fetched from targetName
+		ProxyNodeSetter(this, targetName, proxySpace, argAction, targetWidget);
 	}
 
 	proxyNodeWatcher { | playAction, stopAction, setWidgetAction = true, node |
@@ -172,19 +184,22 @@ Widget {
 		ProxyNodeWatcher(this, playAction, stopAction, setWidgetAction, node);
 	}
 
-	proxySpecWatcher { | action, node |
+	proxySpecWatcher { | argAction, node |
 		// update specs when the source of a NodeProxy changes
-		ProxySpecWatcher(this, action, node)
+		ProxySpecWatcher(this, argAction, node);
 	}
 	
-	proxySpaceWatcher {
-		// update state when a NodeProxy is added or removed from a ProxySpace 
+	proxySpecSetter { | targetName, argAction, targetWidget |
+		// set the specs of targetWidget when the specs of the parameter chosen by this widget change
+		// if targetWidget is not provided, it is fetched from targetName
+		ProxySpecSetter(this, targetName, argAction, targetWidget);
 	}
+
 }
 
 
 + Object {
-	// Add a widget such as a Slider to a model under a name, create default actions if needed
+	// Add a view such as a Slider to a model under a name, create default actions if needed
 	/* Usage example:  
 		Slider().addModel(this, \slider1);
 	*/

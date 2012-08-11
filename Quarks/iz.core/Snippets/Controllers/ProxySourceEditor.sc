@@ -27,9 +27,7 @@ ProxySourceEditor {
 	classvar <>windowRects;		// positions and sizes for windows for tiling entire laptop screen  
 //	classvar <>extraSpecs;		// specs for vol and fadeTime, for all NodeProxies
 	classvar <>font;			// The font used for the first line of GUI items
-	classvar >midiSpecs;		/* Dictionary (Event) holding one MIDI spec for each GUI item 
-		
-	*/
+	classvar >midiSpecs;		// Dictionary (Event) holding one MIDI spec for each GUI item 
 
 	var <proxyCode;	// ProxyCode instance that holds the ProxySpace, NodeProxies and History.
 	var <proxyName;	// Name of the current NodeProxy, whose code is being edited here
@@ -49,9 +47,6 @@ ProxySourceEditor {
 	var <>bounds; 	// saves original window bounds for reset after maximizing
 
 	*initClass {
-//		Class.initClassTree(Spec);
-//		Class.initClassTree(ControlSpec); // extraSpecs moved to MergeSpecs
-//		extraSpecs = [[\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
 		StartUp add: {
 			all = IdentityDictionary.new;
 			windowRects = [
@@ -84,11 +79,9 @@ ProxySourceEditor {
 			this.updateSpecs(argSpecs);
 		}); 
 		this setProxy: proxyName;
-		this.widget(\editor).widget.postln.string.postln;
-		proxyCode.parseArguments(proxy, this.widget(\editor).widget.string);
+//		this.widget(\editor).view.postln.string.postln;
+		proxyCode.parseArguments(proxy, this.widget(\editor).view.string);
 		all[proxyName] = this;
-//		this.updateSpecs([]); // TODO: use resetSpecs instead ??? !!!
-//		if (midiSpecs.isNil) { this.initMIDIspecs };
 	}
 
 	setProxy { | argProxyName |
@@ -96,13 +89,10 @@ ProxySourceEditor {
 		proxy !? {
 			this.removeNotifier(proxy, \play);
 			this.removeNotifier(proxy, \stop);
-//			this.removeNotifier(proxy, \proxySpecs);
 		};
 		proxy = proxyCode.proxySpace[proxyName];
 		this.addNotifier(proxy, \play, { this.setValue(\startStopButton, 1) });
 		this.addNotifier(proxy, \stop, { this.setValue(\startStopButton, 0) });
-//		this.addNotifier(proxy, \proxySpecs, { | ... specs | this.updateSpecs(specs) });
-		
 		if (proxy.isMonitoring) {
 			proxy.notify(\play);
 		}{
@@ -117,53 +107,64 @@ ProxySourceEditor {
 	makeWindow {
 		var knobMenus, sliderMenus;
 		window = Window(proxyName, bounds = windowRects@@(all.size));
-		window.onClose = { this.closed };
-		window.toFrontAction = { this.enable; };
+		WindowHandler(this, window, 
+			{ all[proxyName] = nil; },
+			enableAction: { 
+				if (window.isClosed.not) { 
+					window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
+				};
+			},
+			disableAction: { 
+				if (window.isClosed.not) {
+					window.view.background = Color(0.9, 0.9, 0.9, 0.5);
+				}; 
+			}
+		);
 		window.layout = VLayout(
-			[TextView().font_(Font("Monaco", 11)).addModel(this, \editor).w, s:10],
+			[TextView().font_(Font("Monaco", 11)).addModel(this, \editor).v, s:10],
 			[HLayout(
 				Button().states_([["start"], ["stop"]])
 					.font_(font)
 					.addModel(this, \startStopButton, action: { | me |
 						this.perform([\stopProxy, \startProxy][me.value])
-					}).w,
+					}).v,
 				Button().states_([["<<"]]).font_(font)
 					.addModel(this, \firstSnippet, action: {
 						this.notify(\currentSnippet, 1);
-					}).w,
+					}).v,
 				Button().states_([["<"]]).font_(font)
 					.addModel(this, \prevSnippet, action: {
 						this.widget(\currentSnippet).decrement(1, 1);
-					}).w,
+					}).v,
 				Button().states_([["eval"]]).font_(font).action_({ this.evalSnippet(false) }),
 				Button().states_([[">"]]).font_(font)
 					.addModel(this, \nextSnippet, action: {
 						this.widget(\currentSnippet).increment(1, proxyHistory.size);
-					}).w,
+					}).v,
 				Button().states_([[">>"]]).font_(font)
 					.addModel(this, \lastSnippet, action: {
 						this.notify(\currentSnippet, proxyHistory.size);
-					}).w,
+					}).v,
 				Button().states_([["add"]]).font_(font)
-					.addModel(this, \add, action: { this.evalSnippet }).w,
+					.addModel(this, \add, action: { this.evalSnippet }).v,
 				Button().states_([["delete"]]).font_(font)
-					.addModel(this, \delete, action: { this.deleteSnippet }).w,
+					.addModel(this, \delete, action: { this.deleteSnippet }).v,
 				Button().states_([["reset specs"]]).font_(font)
-					.addModel(this, \resetSpecs, action: { this.resetSpecs; }).w,
+					.addModel(this, \resetSpecs, action: { this.resetSpecs; }).v,
 				StaticText().font_(font).string_("current:"),
 				NumberBox().font_(font).value_(proxyHistory.size)
 					.addModel(this, \currentSnippet, action: { | val, widget |
-						widget.widget.value = val = val max: 1 min: proxyHistory.size;
-						this.widget(\editor).widget.string = proxyHistory[val - 1];
-					}).w,
+						widget.view.value = val = val max: 1 min: proxyHistory.size;
+						this.widget(\editor).view.string = proxyHistory[val - 1];
+					}).v,
 				StaticText().font_(font).string_("all:"),
 				NumberBox().font_(font).value_(proxyHistory.size).enabled_(false)
-					.addModel(this, \numSnippets).w,
+					.addModel(this, \numSnippets).v,
 				Button().font_(font)
 					.states_([["maximize window"], ["minimize window"]])
 					.addModel(this, \toggleWindowSize, action: { | me |
 						this.resizeWindow(me.value);
-					}).w
+					}).v
 			), s:1],
 			[HLayout(
 				*({ | i |
@@ -181,34 +182,34 @@ ProxySourceEditor {
 									action: { | val, menuWidget |
 										this.setControlParameter(
 											this.widget(knobnum),
-											menuWidget.widget,
+											menuWidget.view,
 											knob
 										);
 									}
-								).w; knobMenus.last,
+								).v; knobMenus.last,
 						Knob().addModel(this, knob, knobnum)
-							.w,
+							.v,
 						HLayout(
 							NumberBox().font_(Font.sansSerif(10)) 
-								.addModel(this, slidernum, slider).w,
+								.addModel(this, slidernum, slider).v,
 							NumberBox().font_(Font.sansSerif(10))
-								.addModel(this, knobnum, knob).w
+								.addModel(this, knobnum, knob).v
 						),
 						Slider().orientation_(\horizontal)
 							.addModel(this, slider, slidernum)
-							.w,
+							.v,
 						sliderMenus = sliderMenus add: 
-							PopUpMenu().font_(font)  // .items_(['vol', 'fadeTime', '-'])
+							PopUpMenu().font_(font)
 								.value_(2)
 								.addModel(this, slidermenu,
 									action: { | val, menuWidget |
 										this.setControlParameter(
 											this.widget(slidernum),
-											menuWidget.widget,
+											menuWidget.view,
 											slider
 										);
 									}
-								).w; sliderMenus.last
+								).v; sliderMenus.last
 					)
 				} ! 8)
 			), s:2]
@@ -217,18 +218,6 @@ ProxySourceEditor {
 //		this.addMIDI(this.midiSpecs);
 		this.front;
 	}
-
-	enable {
-		var view;
-		super.enable;
-		window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
-	}
-
-	disable {
-		super.disable;
-		window.view.background = Color(0.9, 0.9, 0.9, 0.5);
-	}
-
 
 	updateSpecs { | argSpecs |
 		var paramNames, size; // , menuItems, size;
@@ -256,22 +245,16 @@ ProxySourceEditor {
 
 	resetSpecs {
 		var snippet;
-		snippet = this.widget(\editor).widget.string;
+		snippet = this.widget(\editor).view.string;
 		if (	snippet[0] === $/) {
 			proxyCode.parseArguments(proxy, snippet);
 		}{
 			proxyCode.parseArguments(proxy)
 		};
 	}
-
-	closed {
-		all[proxyName] = nil;
-		this.objectClosed;
-	}
-
 	evalSnippet { | addToSourceHistory = true |
 		proxyCode.evalInProxySpace(
-			this.widget(\editor).widget.string, 
+			this.widget(\editor).view.string, 
 			proxyCode.proxySpace[proxyName], proxyName, false, addToSourceHistory
 		)
 	}
@@ -279,13 +262,14 @@ ProxySourceEditor {
 	startProxy {
 		if (proxy.source.isNil) {
 			proxyCode.evalInProxySpace(
-				this.widget(\editor).widget.string, 
+				this.widget(\editor).view.string, 
 				proxyCode.proxySpace[proxyName], proxyName, true, false
 			);
 		}{
 			proxyCode.startProxy(proxy, proxyName);
 		}
 	}
+
 	stopProxy { proxyCode.stopProxy(proxy, proxyName) }
 
 	deleteSnippet {
@@ -297,7 +281,7 @@ ProxySourceEditor {
 				HLayout(
 					Button().states_([["OK"]]).action_({
 						proxyCode.deleteNodeSourceCodeFromHistory(
-							proxyName, this.widget(\currentSnippet).widget.value
+							proxyName, this.widget(\currentSnippet).view.value
 						);
 						dialog.close;
 					}),
@@ -315,7 +299,7 @@ ProxySourceEditor {
 			proxyHistory = argHistory;
 			this.notify(\currentSnippet, proxyHistory.size);
 			this.notify(\numSnippets, proxyHistory.size);
-			this.widget(\editor).widget.string = proxyHistory.last;
+			this.widget(\editor).view.string = proxyHistory.last;
 		}
 	}
 	

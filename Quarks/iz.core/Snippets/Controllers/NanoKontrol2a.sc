@@ -4,11 +4,11 @@ A GUI emulating the controls of NanoKontrol2, with features:
 Means to map the controls of any NodeProxy in a ProxySpace to a slider or knob. 
 Etc. 
 
-n = NanoKontrol2(ProxySpace.push);
+n = NanoKontrol2a(ProxySpace.push);
 n.window.bounds;
 */
 
-NanoKontrol2 {
+NanoKontrol2a {
 	classvar <all; // all open windows 
 	classvar <>current; // current instance = top window instance
 	// Midi controller always addresses current instance
@@ -37,16 +37,16 @@ NanoKontrol2 {
 	}
 
 	getProxies {
-		proxySpace.envir.values do: { | proxy |
-			this addProxy: proxy;
-		};
+		proxySpace.envir.keys do: { | key |
+			this.addProxy(proxySpace.envir[key], key);
+		}
 	}
 	
-	addProxy { | proxy |
-		var pxName, strip, stripProxyList;
-		pxName = proxySpace.envir.findKeyForValue(proxy);
-		this.addNotifiersForProxy(proxy, pxName);
-		proxies = proxies add: pxName;
+	addProxy { | proxy, proxyName |
+		var strip, stripProxyList;
+		proxyName = proxyName ?? { proxySpace.envir.findKeyForValue(proxy); };
+		this.addNotifiersForProxy(proxy, proxyName);
+		proxies = proxies add: proxyName;
 		stripProxyList = [' '] ++ proxies;
 		strips do: _.setProxies(stripProxyList, proxy);
 	}

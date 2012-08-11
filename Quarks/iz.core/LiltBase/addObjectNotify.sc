@@ -47,8 +47,10 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		 NotificationCenter.unregister(this, message, listener);
 	}
 	
-	objectClosed {	// remove all notifiers and listeners
+	objectClosed {	// remove all notifiers and listeners // and inputs from widgets
 		NotificationCenter.notify(this, this.removedMessage);
+		// is the next one too cpu costly to do every time an object closes? 
+//		this.disable;	// free MIDI or osc inputs from all widgets
 		this.removeAllNotifications;
 		Widget.removeModel(this);
 	}

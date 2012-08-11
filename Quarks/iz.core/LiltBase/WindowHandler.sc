@@ -1,0 +1,65 @@
+/* IZ Fri 10 August 2012 11:23 PM EEST
+
+Encapsulate actions to do when a window comes to front, goes to back or closes. 
+This kind of behavior may be useful to objects belonging to different classes, and is therefore implemented here as a separate class. 
+
+This is a draft made after ProxySourceEditor and NanoKontrol2 of the Snippets quark. 
+
+Use of WindowHandler is illustrated by class WHExample. Try: 
+
+{ WHExample.new } ! 2;
+
+
+*/
+
+WindowHandler {
+	
+	var <model, <window, <>onClose, <>toFrontAction, <>endFrontAction;
+	var <>enableAction, <>disableAction;
+	
+	*new { | model, window, onClose, toFrontAction, endFrontAction, enableAction, disableAction |
+		^this.newCopyArgs(model, window, onClose, toFrontAction, endFrontAction,
+			enableAction, disableAction
+		).init;
+	}
+
+	init {
+		window.onClose = { this.doOnClose };
+		window.endFrontAction = { this.doEndFrontAction };
+		window.toFrontAction = { this.doToFrontAction };
+		enableAction !? { this.addNotifier(model, \enable, enableAction); };
+		disableAction !? { this.addNotifier(model, \disable, disableAction); };
+	}
+
+	doOnClose {
+		onClose.(this); // before disabling
+		model.disable;
+		model.objectClosed;
+	}
+	
+	doToFrontAction {
+		model.enable;
+		toFrontAction.(this); // after enabling
+	}
+
+	doEndFrontAction { endFrontAction.(this) } // only extras 
+
+}
+
+WHExample {
+	var <window, <wh;
+	*new { ^super.new.init; }
+	
+	init {
+		window = Window("WH Example", Rect(*({ 100 rrand: 400 } ! 4)));
+		wh = WindowHandler(this, window, 
+			enableAction: { 
+				if (window.isClosed.not) { window.view.background = (Color.red) };
+			},
+			disableAction: { 
+				if (window.isClosed.not) { window.view.background = (Color(*(0.5.dup(4)))) }; 
+			}
+		);
+		window.front;
+	}
+}
