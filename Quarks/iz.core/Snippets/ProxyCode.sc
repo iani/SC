@@ -55,7 +55,7 @@ ProxyCode {
 	}
 
 	initProxySpace {
-		proxySpace = ProxySpace.new;
+		proxySpace = doc.envir ?? { ProxySpace.new; };
 		doc.envir = proxySpace;
 		proxyHistory = IdentityDictionary.new;
 	}

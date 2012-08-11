@@ -229,7 +229,7 @@ Widget {
 	setValue { | name, value | this.widget(name).value = value; }
 	setValueAction { | name, value | this.widget(name).valueAction = value; }
 	setNotify { | name, symbol | this.widget(name).notify = symbol; }
-	
+
 	enable { | group, inputType, disablePrevious = true |
 		/* Enable inputs whose class is kind of inputType from all widgets belonging to this object.
 		If disablePrevious is true, then the previously enabled object is sent the message disable */

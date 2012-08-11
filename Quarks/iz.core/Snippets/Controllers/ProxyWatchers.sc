@@ -16,10 +16,10 @@ ProxyNodeWatcher -> notify widget when a NodeProxy plays or stops playing
 ProxySpecWatcher -> notify to update specs when the source of a NodeProxy changes
 
 ProxyNodeSetter -> set the node that another widget watches
-ProxySpecSetter -> set the spec of another widget when the chosen spec changes
+ProxySpecSetter -> set the spec of a target widget when the chosen spec changes
+	(Actually takes over the node-setting action of the target widget).
 
 */
-
 
 ProxySpaceWatcher {
 	var <widget, <proxySpace, <>action;
@@ -30,13 +30,14 @@ ProxySpaceWatcher {
 
 	init {
 		proxySpace = proxySpace ?? {
-			Document.current.envir ?? { ProxySpace.push }
+			Document.current.envir ?? { (Document.current.envir = ProxySpace.push).envir }
 		};
 		action = action ?? {{
 			// Wait for proxyspace to install the new proxy. Why does this take so long?
 			{ this.updateNodeProxyList; }.defer(0.1);
 		}};
 		widget.addNotifier(proxySpace, \newProxy, { action.(this) });
+		action.value;	// register any already existing nodes
 	}
 	
 	updateNodeProxyList {
@@ -60,12 +61,13 @@ ProxyNodeSetter {
 	}
 
 	init {
-		widget.action = action ?? {{ | val, me |
-			me.notify(\setNode, proxySpace[me.view.item]) 
-		}};
-		this.addNotifier(widget, \setNode, { | argNode |
-			this setNode: argNode });
 		proxySpace = proxySpace ?? { Document.current.envir };
+		// set my widgets action to notify me to set node:
+		widget.action = action ?? {{
+			widget.notify(\setNode, proxySpace[widget.view.item]) 
+		}};
+		// set me to perform my setNode method when I am notified from my widget
+		this.addNotifier(widget, \setNode, { | argNode | this setNode: argNode });
 		// Permit model to perform an update once after all widgets have been created
 		widget.model.registerOneShot(\update, widget, { widget.view.doAction });
 	} 
@@ -85,7 +87,10 @@ AbstractProxyNodeWatcher {
 	var <widget, <node;
 	
 	init {
+		// Make myself to change my widgets node whenever I am notified \setNode
 		this.addNotifier(widget, \setNode, { | argNode | this.setNode(argNode) });
+		/* 	Set the action that I will perform when notified of a change in the node's 
+			state which concerns me: */
 		this.setAction;
 		this.setNode(node);
 	}
@@ -106,74 +111,66 @@ AbstractProxyNodeWatcher {
 
 	setAction { this.subclassResponsibility(thisMethod) }
 	addNotifiers { this.subclassResponsibility(thisMethod) }
+	removeNotifiers { this.subclassResponsibility(thisMethod) }
 	updateState { this.subclassResponsibility(thisMethod) }
 }
 
-ProxyNodeWatcher {
+ProxyNodeWatcher : AbstractProxyNodeWatcher {
 	/*  Watch a NodeProxy's play / stop status. When the proxy starts, perform playAction, 
 		when it stops, perform stopAction
 	*/
 
-	var <widget, <>playAction, <>stopAction, <setWidgetAction, <node;
+	var <>playAction, <>stopAction, <setWidgetAction;
 
 	*new { | widget, playAction, stopAction, setWidgetAction = true, node |
-		^this.newCopyArgs(widget, playAction, stopAction, setWidgetAction, node).init;
+		^this.newCopyArgs(widget, node, playAction, stopAction, setWidgetAction).init;
 	}
-	
-	init {
-		this.addNotifier(widget, \setNode, { | argNode |
-			this.setNode(argNode)
-		});
+
+	setAction {
 		if (setWidgetAction) { widget.action = { | val | this playOrStopNode: val } };
 		playAction = playAction ?? { this.defaultPlayAction };
 		stopAction = stopAction ?? { this.defaultStopAction };
-		this.setNode(node);
 	}
 
 	defaultPlayAction { ^{ widget.value = 1 } }
 	defaultStopAction { ^{ widget.value = 0 } }
 
-	setNode { | argNode |
-		this.removeNode;		// always remove node (!?)
-		argNode !? {
-			node = argNode;
+	addNotifiers {
+		node !? {
 			this.addNotifier(node, \play, { playAction.(this) });
 			this.addNotifier(node, \stop, { stopAction.(this) });
-			if (node.isMonitoring) { playAction.(this) } { stopAction.(this) };
 		}
 	}
 
-	removeNode {
-		node !? { 
+	removeNotifiers {
+		node !? {
 			this.removeNotifier(node, \play);
 			this.removeNotifier(node, \stop);
-		};
-		node = nil;
+		}
+	}
+
+	updateState {
+		node !? { if (node.isMonitoring) { playAction.(this) } { stopAction.(this) } };
 	}
 	
 	playOrStopNode { | value = 1 |
-		node !? {
-			if (value > 0) {
-				node.play;
-			}{
-				node.stop;
-			}
-		}
+		node !? { if (value > 0) { node.play; }{ node.stop; } }
 	}
 }
 
-ProxySpecWatcher {
+ProxySpecWatcher : AbstractProxyNodeWatcher {
 	/*  	Watch a NodeProxy's specs status. When the specs of a proxy change, do something with
 		them and your widget
 	*/
 
-	classvar <specCache; // Store the most recently generated specs for access when switching
+	classvar <specCache; /* IdentityDictionary: Stores the most recently generated specs 
+		for each node, to access them when a widget switches to a new node */
 
-	var <widget, <action, <node;
+	var <action; /* Do this when new specs are received. Default: set my widget's items and
+				store the specs for access by other widgets that need them */
+	var <specs;
 
-	*initClass {
-		specCache = IdentityDictionary.new;
-	}
+	*initClass { specCache = IdentityDictionary.new; }
 	
 	*cacheSpecs { | argNodeProxy, argSpecs |
 		// ProxyCode stores most recent specs for all nodes here, for access when switching
@@ -181,46 +178,103 @@ ProxySpecWatcher {
 	}
 	
 	*new { | widget, action, node |
-		^this.newCopyArgs(widget, action, node).init;
+		^this.newCopyArgs(widget, node, action).init;
 	}
 
-	init {
-		this.addNotifier(widget, \setNode, { | argNode | this.setNode(argNode) });
-		action = action ?? { this.defaultAction };
-		this.setNode(node);
+	addNotifiers {
+		node !? { this.addNotifier(node, \proxySpecs, { | specs | action.(specs, this) }); }
 	}
 
-	defaultAction { ^{ | specs | this.setWidgetItems(specs) } }
-
-	setNode { | argNode |
-		var cachedSpecs;
-		this.removeNode;		// always remove node (!?)
-		argNode !? {
-			node = argNode;
-			this.addNotifier(node, \proxySpecs, { | ... specs |
-				action.(specs, this);
-			});
-			cachedSpecs = specCache[node];
-			if (cachedSpecs.notNil) {
-				action.(cachedSpecs, this);
-			}{
-				action.(MergeSpecs(node), this);
-			}
-		}
+	removeNotifiers {
+		node !? { this.removeNotifier(node, \proxySpecs); }
 	}
 
-	removeNode {
-		node !? {
-			this.removeNotifier(node, \proxySpecs);
-		};
-		node = nil;
+	setAction {
+		widget.action = { this.notifyCurrentSpec; };
+		action = action ?? {{ | specs | this.setWidgetItems(specs) }};
+	}
+
+	setWidgetItems { | argSpecs |
+		/* Default action to do when receiving new specs: store them and set my widget's items */
+		specs = argSpecs;
+		widget.view.items = argSpecs.flop.first;
 	}
 	
-	setWidgetItems { | specs |
-		widget.view.items = specs.flop.first;
+	updateState {
+		/* 	When switching to a new node, set my widget's items to the cached or parsed 
+			specs of that node */
+		var cachedSpecs;
+		if (node.isNil) {
+			cachedSpecs = MergeSpecs.nilSpecs;
+		}{
+			cachedSpecs = specCache[node];
+		}; 
+		if (cachedSpecs.notNil) {
+			action.(cachedSpecs, this);
+		}{
+			action.(MergeSpecs(node), this);
+		};		
+	}
+	
+	notifyCurrentSpec {
+		widget.view.items !? {
+			widget.notify(\currentSpec, [specs[widget.view.value], node]);
+		}
 	}
 }
 
 ProxySpecSetter {
+	/* 	When a new node control parameter is seleted by my widget, set the specs 
+		and the control function for my target widget.
+		Note: multiple ProxySpecSetters can be added to the same widget, to set the nodes
+		of multiple targets.
+		
+		Mechanism: 
+		- Start listening to notifications \currentSpec from your widget. 
+		  These are emitted by a ProxySpecWatcher, when it receives notification \proxySpecs
+		  from the widget. The widget is set to emit those notifications by the ProxySpecWatcher,
+		  
+		- Hijack the target Widget, by setting its action to your setParameter method.
+		- When your widget chooses a different parameter, then do the following: 
+			- set your target widget's spec;
+			- set your nodeParamSetterFunc depending on the parameter name.
+		 */
+	var <widget, <targetName, targetWidget, <parameter, <nodeParamSetterFunc, node;
 	
+	*new { | widget, targetName, targetWidget |
+		// if targetWidget is not provided, it is fetched from targetName
+		^this.newCopyArgs(widget, targetName, targetWidget).init;
+	}
+
+	init {
+		// set me to perform my setNode method when I am notified from my widget
+		this.addNotifier(widget, \currentSpec, { | spec, argNode |
+			node = argNode;
+			this.setParameter(spec[0]);
+			this.targetWidget.spec = spec[1];
+		});
+		// Permit model to perform an update once after all widgets have been created
+		widget.model.registerOneShot(\update, widget, { widget.view.doAction });
+	} 
+
+	targetWidget {
+		targetWidget ?? {
+			targetWidget = widget.model.widget(targetName);
+			targetWidget.action = { | val | this.setNodeParam(val); };
+		};
+		^targetWidget;
+	}
+
+	setNodeParam { | val | nodeParamSetterFunc.(val); }
+	
+	setParameter { | paramName |
+		parameter = paramName;
+		nodeParamSetterFunc = switch ( parameter,
+			'-', { {} },
+			\vol, { { | val | node.vol = val; } },
+			\fadeTime, { { | val | node.fadeTime = val; } },
+			{ { | val | node.set(parameter, val); } }
+		);
+
+	}
 }

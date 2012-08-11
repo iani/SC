@@ -61,7 +61,7 @@ MergeSpecs {
 	*fromArgs { | proxyArgs, snippetArgs, rate |
 		^this.newCopyArgs(proxyArgs, snippetArgs, rate).mergeSpecs;
 	}
-	
+
 	mergeSpecs {
 		var index, spec, keys, key, value, snippetKeys, snippetVals;
 		#snippetKeys, snippetVals = (snippetArgs ?? { [] }).clump(2).flop;
@@ -85,7 +85,9 @@ MergeSpecs {
 		if (rate === \audio) {
 			^extraSpecs ++ mergedSpecs
 		}{
-			^[['-', nil]] ++ mergedSpecs
+			^this.class.nilSpecs ++ mergedSpecs
 		}
 	}
+	
+	*nilSpecs { ^[extraSpecs[0]] }
 }
