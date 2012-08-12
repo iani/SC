@@ -54,6 +54,14 @@ MergeSpecs {
 		extraSpecs = [['-', nil], [\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
 	}
 
+	*parseArguments { | argProxy, argSnippet |
+		var mySpecs;
+		argSnippet !? { mySpecs = argSnippet.findRegexp("^//[^[]*([^\n]*)")[1][1].interpret; };
+		mySpecs = this.new(argProxy, mySpecs);
+		argProxy.notify(\proxySpecs, [mySpecs]);
+		ProxySpecWatcher.cacheSpecs(argProxy, mySpecs);
+	}
+
 	*new { | proxy, snippetArgs |
 		^this.fromArgs(proxy.getKeysValues, snippetArgs, proxy.rate);
 	}

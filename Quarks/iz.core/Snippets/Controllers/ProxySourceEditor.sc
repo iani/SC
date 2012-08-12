@@ -6,6 +6,7 @@ Created interactively from GUI of NanoKontrol2. See NanoKontrol2, NanoK2Strip, P
 Note: all should actually not be an IdentityDictionary. There should be one such dictionary for each instance of ProxyCode, if we intend to use multiple ProxyCode instances. But currently there are no practical reasons for doing that. In the future, this may be solved transparently by making all into a MultiLevelIdentityDictionary, storing a separate Node-Code dictionary for each instance of ProxyCode. The only methods affected would be initClass and new. 
 
 ????? TODO: Always use global history from ProxyCode. Remove proxyHistory variable.
+????? OR RATHER TODO: Lose the proxyCode. ???
 
 ============================= MIDI ===========================
 
@@ -25,7 +26,6 @@ ProxySourceEditor {
 				// (Yet see note above: Conflicts may arise if using multiple ProxyCode 
 				// instances concurrently)
 	classvar <>windowRects;		// positions and sizes for windows for tiling entire laptop screen  
-//	classvar <>extraSpecs;		// specs for vol and fadeTime, for all NodeProxies
 	classvar <>font;			// The font used for the first line of GUI items
 	classvar >midiSpecs;		// Dictionary (Event) holding one MIDI spec for each GUI item 
 
@@ -75,12 +75,11 @@ ProxySourceEditor {
 			this.updateHistory(argProxyName, argHistory);
 		});
 		this.makeWindow;
-		specWatcher = ProxySpecWatcher(this, { | argSpecs | 
+		specWatcher = ProxySpecWatcher(this, { | argSpecs |
 			this.updateSpecs(argSpecs);
-		}); 
+		}, setWidgetAction: false); 
 		this setProxy: proxyName;
-//		this.widget(\editor).view.postln.string.postln;
-		proxyCode.parseArguments(proxy, this.widget(\editor).view.string);
+		MergeSpecs.parseArguments(proxy, this.widget(\editor).view.string);
 		all[proxyName] = this;
 	}
 
@@ -229,6 +228,7 @@ ProxySourceEditor {
 			i = i + 1;
 			if (i < size) { cm.valueAction = i } { cm.valueAction = 0 }
 		};
+
 	}
 
 	setControlParameter { | controlWidget, menuWidget, specWidget |
@@ -247,9 +247,9 @@ ProxySourceEditor {
 		var snippet;
 		snippet = this.widget(\editor).view.string;
 		if (	snippet[0] === $/) {
-			proxyCode.parseArguments(proxy, snippet);
+			MergeSpecs.parseArguments(proxy, snippet);
 		}{
-			proxyCode.parseArguments(proxy)
+			MergeSpecs.parseArguments(proxy)
 		};
 	}
 	evalSnippet { | addToSourceHistory = true |
@@ -302,7 +302,7 @@ ProxySourceEditor {
 			this.widget(\editor).view.string = proxyHistory.last;
 		}
 	}
-	
+
 	resizeWindow { | type |
 		if (type == 0) {
 			window.bounds = bounds;

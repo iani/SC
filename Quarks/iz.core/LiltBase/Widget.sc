@@ -5,25 +5,29 @@ Simplify the task of adding and communicating with several widgets to any object
 (TODO: Use case example description needed here!) 
 
 Example: 
-a = WidgetInterconnect.new;
+(
+ProxySpace.push;
+w = Window.new.front;
+w.layout = VLayout(
+	PopUpMenu().addModel(w, \nodes)
+		.proxySpaceWatcher
+		.proxyNodeSetter(\button)
+		.proxyNodeSetter(\specmenu).v,
+	Button().states_([["start"], ["stop"]])
+		.addModel(w, \button).proxyNodeWatcher.v,
+	PopUpMenu()
+		.addModel(w, \specmenu)
+		.proxySpecWatcher
+		.proxySpecSetter(\knob).v,
+	Knob().addModel(w, \knob, \numbox).v,
+	NumberBox().addModel(w, \numbox, \knob).v
+);
+)
 
-WidgetInterconnect {
-	// test class
-	var <window;
-	*new { ^super.new.init; }
-	init {
-		window = Window("test interconnecting widgets");
-		window.onClose = { this.objectClosed };
-		window.layout = VLayout(
-			Slider().addModel(this, \slider1, \numberbox1).addMIDI(\noteOn).w,
-			NumberBox().addModel(this, \numberbox1, \slider1).w,
-			// Alternative coding style: Create new Widgets explicitly: 
-			Widget(Slider(), this, \slider2, \numberbox2, spec: \freq.asSpec).addMIDI.w,
-			Widget(NumberBox(), this, \numberbox2, \slider2).w
-		);
-		window.front;
-	}
-}
+~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+~out.play; // after that, check the first menu of the window above, and select 'out'
+// then select controls from the second menu, and use the knob to control selected parameter.
+
 */
 
 Widget {
@@ -184,9 +188,9 @@ Widget {
 		ProxyNodeWatcher(this, playAction, stopAction, setWidgetAction, node);
 	}
 
-	proxySpecWatcher { | argAction, node |
+	proxySpecWatcher { | argAction, setWidgetAction = true, node |
 		// update specs when the source of a NodeProxy changes
-		ProxySpecWatcher(this, argAction, node);
+		ProxySpecWatcher(this, argAction, setWidgetAction, node);
 	}
 	
 	proxySpecSetter { | targetName, argAction, targetWidget |

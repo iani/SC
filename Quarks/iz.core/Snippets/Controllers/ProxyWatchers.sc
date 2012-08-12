@@ -1,13 +1,9 @@
 /* IZ Thu 09 August 2012 10:20 AM EEST
 Perform actions on a widget whenever a node is created, starts or stops, or its source changes in the ProxySpace of a ProxyCode of a Document. 
 
-Code extracted from ProxySourceEditor, in order to be used also in other classes. 
-
-TO DEFINE: 
-
+Functionality extracted from ProxySourceEditor, in order to be used also in other classes. 
 
 ProxySpaceWatcher -> notify when a ProxySpace creates or removes a NodeProxy 
-
 
 AbstractNodeWatcher -> Watch for changes that happen to a selected node
 					Can change the node watched
@@ -17,8 +13,38 @@ ProxySpecWatcher -> notify to update specs when the source of a NodeProxy change
 
 ProxyNodeSetter -> set the node that another widget watches
 ProxySpecSetter -> set the spec of a target widget when the chosen spec changes
-	(Actually takes over the node-setting action of the target widget).
+	(Actually also takes over the node-setting action of the target widget).
 
+Example: 
+(
+w = Window.new.front;
+w.layout = VLayout(
+	PopUpMenu().addModel(w, \nodes)
+		.proxySpaceWatcher
+		.proxyNodeSetter(\button)
+		.proxyNodeSetter(\specmenu).v,
+	Button().states_([["start"], ["stop"]])
+		.addModel(w, \button).proxyNodeWatcher.v,
+	PopUpMenu()
+		.addModel(w, \specmenu)
+		.proxySpecWatcher
+		.proxySpecSetter(\knob).v,
+	Knob().addModel(w, \knob, \numbox).v,
+	NumberBox().addModel(w, \numbox, \knob).v
+);
+w.onClose = { w.objectClosed };
+)
+
+//==
+
+~out = { WhiteNoise.ar(0.1) };
+~out.play;
+
+~out2 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+~out2.play;
+
+~out3 = { GrayNoise.ar(0.1) };
+~out3.play;
 */
 
 ProxySpaceWatcher {
@@ -152,15 +178,19 @@ ProxyNodeWatcher : AbstractProxyNodeWatcher {
 	updateState {
 		node !? { if (node.isMonitoring) { playAction.(this) } { stopAction.(this) } };
 	}
-	
+
 	playOrStopNode { | value = 1 |
-		node !? { if (value > 0) { node.play; }{ node.stop; } }
+		node !? { if (value > 0) { node.play; } { node.stop; } }
 	}
 }
 
 ProxySpecWatcher : AbstractProxyNodeWatcher {
 	/*  	Watch a NodeProxy's specs status. When the specs of a proxy change, do something with
-		them and your widget
+		them and your widget.
+		
+		Optionally set the widget's action, to let you make the widget notify the spec it has chosen. 
+		This notification is caught by ProxySpecSetter, which sets the spec of 
+		and prepares the node-setting function for the target widget.
 	*/
 
 	classvar <specCache; /* IdentityDictionary: Stores the most recently generated specs 
@@ -168,21 +198,26 @@ ProxySpecWatcher : AbstractProxyNodeWatcher {
 
 	var <action; /* Do this when new specs are received. Default: set my widget's items and
 				store the specs for access by other widgets that need them */
-	var <specs;
+	var <setWidgetAction = true;	// if false, do not set the widget's action
+	var <specs;	// Widgets connected to my widget via ProxySpecSetter are sent these specs
 
-	*initClass { specCache = IdentityDictionary.new; }
+	*initClass { this.clearCache }
+	*clearCache { specCache = IdentityDictionary.new }
 	
 	*cacheSpecs { | argNodeProxy, argSpecs |
-		// ProxyCode stores most recent specs for all nodes here, for access when switching
+		// ProxyCode stores most recent specs nodes here, for access when switching
+		// Should updateState also cache new specs? 
 		specCache[argNodeProxy] = argSpecs;
 	}
 	
-	*new { | widget, action, node |
-		^this.newCopyArgs(widget, node, action).init;
+	*new { | widget, action, setWidgetAction = true, node |
+		^this.newCopyArgs(widget, node, action, setWidgetAction).init;
 	}
 
 	addNotifiers {
-		node !? { this.addNotifier(node, \proxySpecs, { | specs | action.(specs, this) }); }
+		node !? { this.addNotifier(node, \proxySpecs, { | argSpecs |
+			action.(argSpecs, this) });
+		}
 	}
 
 	removeNotifiers {
@@ -190,7 +225,7 @@ ProxySpecWatcher : AbstractProxyNodeWatcher {
 	}
 
 	setAction {
-		widget.action = { this.notifyCurrentSpec; };
+		if (setWidgetAction) { widget.action = { this.notifyCurrentSpec; }; };
 		action = action ?? {{ | specs | this.setWidgetItems(specs) }};
 	}
 
@@ -209,10 +244,15 @@ ProxySpecWatcher : AbstractProxyNodeWatcher {
 		}{
 			cachedSpecs = specCache[node];
 		}; 
-		if (cachedSpecs.notNil) {
-			action.(cachedSpecs, this);
-		}{
+		if (cachedSpecs.isNil) {
+// Should test this caching here. Commented code has not been tested yet.
+/*			cachedSpecs = MergeSpecs(node);
+			node !? { specCache[node] = cachedSpecs };
+			action.(cachedSpecs, this); 
+*/
 			action.(MergeSpecs(node), this);
+		}{
+			action.(cachedSpecs, this);
 		};		
 	}
 	
@@ -228,11 +268,11 @@ ProxySpecSetter {
 		and the control function for my target widget.
 		Note: multiple ProxySpecSetters can be added to the same widget, to set the nodes
 		of multiple targets.
-		
+
 		Mechanism: 
 		- Start listening to notifications \currentSpec from your widget. 
 		  These are emitted by a ProxySpecWatcher, when it receives notification \proxySpecs
-		  from the widget. The widget is set to emit those notifications by the ProxySpecWatcher,
+		  from the widget. The widget is set to emit those notifications by the ProxySpecWatcher.
 		  
 		- Hijack the target Widget, by setting its action to your setParameter method.
 		- When your widget chooses a different parameter, then do the following: 

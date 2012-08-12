@@ -6,6 +6,8 @@ Add the proxy code in History but also add the snippet that was evaluated in a h
 
 Some of the functionality is evoked by keyboard shortcuts set by Code, another part is used via gui through the ProxySourceEditor. 
 
+TODO: proxyHistory should be per proxySpace, not per document 
+
 */
 
 ProxyCode {
@@ -101,10 +103,10 @@ ProxyCode {
 				this.enterSnippet2History(
 					format("%~% = %", snippet[..index], proxyName, snippet[index + 1..])
 				);
-				this.parseArguments(proxy, snippet);
+				MergeSpecs.parseArguments(proxy, snippet);
 			}{
 				this enterSnippet2History: format("~% = %", proxyName, snippet);
-				this.parseArguments(proxy);
+				MergeSpecs.parseArguments(proxy);
 			};
 			if (addToSourceHistory) { this.addNodeSourceCodeToHistory(proxyName, snippet); };
 			if (proxy.rate === \audio and: { start } and: { proxy.isMonitoring.not }) {
@@ -115,15 +117,6 @@ ProxyCode {
 			this.enterSnippet2History(snippet);
 		}
 	}
-
-	parseArguments { | argProxy, argSnippet |
-		var mySpecs;
-		argSnippet !? { mySpecs = argSnippet.findRegexp("^//[^[]*([^\n]*)")[1][1].interpret; };
-		mySpecs = MergeSpecs(argProxy, mySpecs);
-		proxy.notify(\proxySpecs, mySpecs);
-		ProxySpecWatcher.cacheSpecs(argProxy, mySpecs);
-	}
-
 
 	enterSnippet2History { | argSnippet |
 		History.enter(argSnippet);
@@ -136,7 +129,7 @@ ProxyCode {
 		nodeHistory = proxyHistory[argProxyName];
 		nodeHistory = nodeHistory add: argSnippet;
 		proxyHistory[argProxyName] = nodeHistory;
-		this.notify(\proxySource, [argProxyName, nodeHistory]);
+		this.notify(\proxySource, [argProxyName, nodeHistory, this]);
 	}
 
 	startProxy { | argProxy, argProxyName |
@@ -150,7 +143,7 @@ ProxyCode {
 		argProxyName = argProxyName.asSymbol;
 		nodeHistory = proxyHistory[argProxyName];
 		nodeHistory.removeAt(snippetIndex - 1);
-		this.notify(\proxySource, [argProxyName, nodeHistory]);
+		this.notify(\proxySource, [argProxyName, nodeHistory, this]);
 	}
 
 	editNodeProxySource { | proxyName |
