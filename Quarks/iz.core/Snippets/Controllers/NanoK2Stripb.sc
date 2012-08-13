@@ -34,7 +34,7 @@ NanoK2Stripb {
 				),
 				HLayout(
 					Knob().addModel(this, \knob, \knobNumBox).v,
-					Button().states_([[">"], ["||"]]).font_(font)
+					Button().states_([[">"], ["||", Color.black, Color.red]]).font_(font)
 						.addModel(this, \knobStartStop)
 						.proxyNodeWatcher.v,
 				),
@@ -49,7 +49,7 @@ NanoK2Stripb {
 					Button().states_([["ed"]]).font_(font).action_({
 							this.editNodeSource(\sliderNodeMenu);
 						}),
-					Button().states_([[">"], ["||"]]).font_(font)
+					Button().states_([[">"], ["||", Color.black, Color.red]]).font_(font)
 						.addModel(this, \sliderStartStop)
 						.proxyNodeWatcher.v,
 				)
@@ -68,16 +68,12 @@ NanoK2Stripb {
 	}
 
 	editNodeSource { | menuID |
-		var menu;
-		menu = this.widget(menuID).view;
-		menu.items !? { ProxySourceEditor(proxyCode, menu.item) };
-	}
-
-	getPresetData {
-		// return data array in form that can be used to load the data back to a preset 
-	}
-	
-	setPresetData { | data |
-		// set preset data from an array created by getPresetData		
+		var widget, menu, theNode;
+		widget = this.widget(menuID);
+		menu = widget.view;
+		theNode = widget.getNode;
+		theNode !? { 
+			ProxySourceEditor(proxyCode, menu.item, theNode)
+		};
 	}
 }

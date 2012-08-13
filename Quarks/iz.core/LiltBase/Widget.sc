@@ -6,20 +6,23 @@ Simplify the task of adding and communicating with several widgets to any object
 
 Example: 
 (
+
+ /// TODO: MUST REVIEW METHOD NAMES in this example ... 
 ProxySpace.push;
 w = Window.new.front;
 w.layout = VLayout(
 	PopUpMenu().addModel(w, \nodes)
-		.proxySpaceWatcher
-		.proxyNodeSetter(\button)
-		.proxyNodeSetter(\specmenu).v,
+		.watchProxySpace.v,
 	Button().states_([["start"], ["stop"]])
-		.addModel(w, \button).proxyNodeWatcher.v,
+		.addModel(w, \button)
+		.getProxyFrom(\nodes)
+		.proxyOnOffButton.v,
 	PopUpMenu()
 		.addModel(w, \specmenu)
-		.proxySpecWatcher
-		.proxySpecSetter(\knob).v,
-	Knob().addModel(w, \knob, \numbox).v,
+		.getProxyFrom(\nodes)
+		.proxySpecChooser.v,
+	Knob().addModel(w, \knob, \numbox)
+		.getSpecFrom(\specmenu).v,
 	NumberBox().addModel(w, \numbox, \knob).v
 );
 )
@@ -27,6 +30,9 @@ w.layout = VLayout(
 ~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 ~out.play; // after that, check the first menu of the window above, and select 'out'
 // then select controls from the second menu, and use the knob to control selected parameter.
+
+
+
 
 */
 
@@ -40,16 +46,26 @@ Widget {
 		It is a dictionary holding objects
 		whose widget inputs are enabled. There is one entry per widget group. 
 		*/
+	classvar <specCache; /* IdentityDictionary: Stores the most recently generated specs 
+		for each node, to access them when a widget switches to a new node */
 
 	var <>view, <model, <name, <>notifyTarget, <>action, <>updateFunc, <>spec;
+	var <value = 0;		// the mapped value of the widget
 	var <>inputs;		/* MIDIFuncs, MIDIResponders etc.
 		Can be enabled or disabled individually or in groups
 		See Object:enable and Widget:enableInput */
-	var <value;		// the mapped value of the widget
+	var <proxySpace, <proxy, <proxySpecs;
+
+	*cacheSpecs { | argNodeProxy, argSpecs |
+		// MergeSpecs stores most recent specs nodes here, for access when switching
+		// Should updateState also cache new specs? 
+		specCache[argNodeProxy] = argSpecs;
+	}
 
 	*initClass {
 		all = MultiLevelIdentityDictionary.new;
 		enabled = IdentityDictionary.new;
+		specCache = IdentityDictionary.new;
 	}
 
 	*removeModel { | object |
@@ -75,9 +91,11 @@ Widget {
 	}
 
 	defaultUpdateFunc {
-		^{ | value |
-			view.value = value = spec.unmap(value);
-			action.(value, this);
+		^{ | argValue |
+			argValue !? {
+				view.value = value = spec.unmap(argValue);
+				action.(value, this);
+			}
 		}
 	}
 
@@ -86,7 +104,10 @@ Widget {
 		value = argValue;
 		view.value = value;
 	}
-	
+
+	setViewValue { | argValue | view.value = argValue } // not used by preset ...
+	setValue { | argValue | value = argValue } // used by preset
+
 	valueAction_ { | argValue |
 		// set my value and perform my view's action
 		value = argValue;
@@ -95,9 +116,9 @@ Widget {
 
 	valueArray { | ... args |
 		// provide access to self when evaluated by receiving notification from model
-		updateFunc.valueArray(args add: this);
+		updateFunc.valueArray(args /* add: this */);
 	}
-	
+
 	addMIDI { | type = 'cc', num, chan, src, argAction |
 		if (MIDIClient.initialized.not) {
 			MIDIIn.connectAll;
@@ -114,6 +135,7 @@ Widget {
 	// shortcut for accessing the view, when used in Layouts: 
 	v { ^view }
 
+	// MIDI and OSC input enabling / disabling
 	*enable { | model, group, inputType, disablePrevious = true |
 		var previous;
 		group = group ?? { this getGroup: model };
@@ -165,39 +187,175 @@ Widget {
 	}
 	
 	toggle { | onval = 1 | this.valueAction = onval - value; }
+
 	increment { | inc = 1, limit = inf |
 		this.valueAction = value = value + 1 min: limit;
 	}
 	decrement { | inc = 1, limit = 0 |
 		this.valueAction = value = value - 1 max: limit;
 	}
+
+
+	// ============= Interacting with proxies and other widgets ========
 	
-	proxySpaceWatcher { | space, argAction |
-		// update state when a NodeProxy is added or removed from a ProxySpace
-		ProxySpaceWatcher(this, space, argAction);
+	// Menu for choosing a proxy from a ProxySpace
+	watchProxySpace { | argProxySpace, argFunc |
+		proxySpace = argProxySpace ?? {
+			Document.current.envir ?? {
+				proxySpace = ProxySpace.push;
+				Document.current.envir = proxySpace;
+				proxySpace;
+			}
+		};
+		action = argFunc ?? {{
+			this.notify(\setProxy, this.getItemFromMenu({ | symbol | proxySpace[symbol] }));
+		}};
+		this.addNotifier(proxySpace, \newProxy, { | newProxy |
+			{ this.updateItemsAndValue(proxySpace.envir.keys.asArray.sort add: '-'); }.defer(0.1);
+		});
 	}
 
-	proxyNodeSetter { | targetName, proxySpace, argAction, targetWidget |
-		// Set the node of targetWidget when the node chosen by my widget change
-		// if targetWidget is not provided, it is fetched from targetName
-		ProxyNodeSetter(this, targetName, proxySpace, argAction, targetWidget);
-	}
-
-	proxyNodeWatcher { | playAction, stopAction, setWidgetAction = true, node |
-		// update state when a NodeProxy starts or stops playing
-		ProxyNodeWatcher(this, playAction, stopAction, setWidgetAction, node);
-	}
-
-	proxySpecWatcher { | argAction, setWidgetAction = true, node |
-		// update specs when the source of a NodeProxy changes
-		ProxySpecWatcher(this, argAction, setWidgetAction, node);
+	getItemFromMenu { | argFunc |
+		if (view.items.size == 0 or: { view.value.isNil } or: { view.item == '-' }) {
+			^nil
+		}{
+			^argFunc.(view.item, view.value);
+		}
 	}
 	
-	proxySpecSetter { | targetName, argAction, targetWidget |
-		// set the specs of targetWidget when the specs of the parameter chosen by this widget change
-		// if targetWidget is not provided, it is fetched from targetName
-		ProxySpecSetter(this, targetName, argAction, targetWidget);
+	updateItemsAndValue { | newItems, defaultItem = '-' |
+		var oldItem;
+		if (view.items.notNil and: { view.value.notNil }) {
+			oldItem = view.item;
+		}{
+			oldItem = defaultItem
+		};
+		value = newItems indexOf: oldItem;
+		view.items = newItems;
+		view.value = value;
 	}
+
+	// === Button for playing or stopping a proxy ===
+	proxyOnOffButton { | proxyOrWidgetName |
+		action = {
+			if (proxy.isNil) {
+				view.value = value = 0;
+			}{
+				if (value > 0) { proxy.play; } { proxy.stop; }
+			};
+		};
+		if (proxyOrWidgetName isKindOf: NodeProxy) {
+			proxy = proxyOrWidgetName;
+		}{
+			this.connectToSetterWidget(proxyOrWidgetName, \setProxy, { | argProxy |
+				this onOffButtonSetProxy: argProxy;
+			});
+		};
+		this.updateOnOffStateFromProxy;
+	}
+
+	connectToSetterWidget { | widgetName, message, argFunc |
+		this doOnUpdate: {
+			this.addNotifier(model.widget(widgetName), message, argFunc)
+		}
+	}
+
+	doOnUpdate { | argFunc | model.registerOneShot(\update, this, argFunc); }
+
+	onOffButtonSetProxy { | argProxy |
+		proxy !? {
+			this.removeNotifier(proxy, \play);
+			this.removeNotifier(proxy, \stop);
+		};
+		proxy = argProxy;
+		proxy !? {
+			this.addNotifier(proxy, \play, { view.value = value = 1 });
+			this.addNotifier(proxy, \stop, { view.value = value = 0 });
+			this.updateOnOffStateFromProxy;
+		}
+	}
+
+	updateOnOffStateFromProxy {
+		if (proxy.notNil and: { proxy.isMonitoring }) {
+			view.value = value = 1;
+		}{
+			view.value = value = 0;			
+		}
+	}
+
+	// === Menu for choosing the control parameter of a proxy ===
+	proxyControlsMenu { | proxyOrWidgetName, argFunc |
+		action = argFunc ?? {{ 
+			this.chooseAndNotifyControlSpec;
+		}};
+		if (proxyOrWidgetName isKindOf: NodeProxy) {
+			proxy = proxyOrWidgetName;
+		}{
+			this.connectToSetterWidget(proxyOrWidgetName, \setProxy, { | argProxy |
+				this controlMenuSetProxy: argProxy;
+			});
+		};
+		this.getControlSpecsFromProxyAndNotify;
+	}
+
+	chooseAndNotifyControlSpec {
+		this.notify(\setControlSpec, 
+			this.getItemFromMenu({ | name, index |
+				proxySpecs[index] add: proxy;
+			})
+		);
+	}
+
+	controlMenuSetProxy { | argProxy |
+		proxy !? {
+			this.removeNotifier(proxy, \proxySpecs);
+		};
+		proxy = argProxy;
+		if (proxy.notNil) {
+			this.addNotifier(proxy, \proxySpecs, { | argSpecs |
+				this.setAndNotifyProxySpecs(argSpecs);
+			});
+		};
+		this.getControlSpecsFromProxyAndNotify;
+	}
+
+	getControlSpecsFromProxyAndNotify {
+		var newSpecs;	// for clarity
+		if (proxy.isNil) {
+			newSpecs = MergeSpecs.nilSpecs;
+		}{
+			if ((newSpecs = specCache[proxy]).isNil) {
+				newSpecs = MergeSpecs(proxy);
+				specCache[proxy] = newSpecs;
+			};
+		};
+		this.setAndNotifyProxySpecs(newSpecs);
+	}
+
+	setAndNotifyProxySpecs { | argSpecs |
+		proxySpecs = argSpecs;
+		this.updateItemsAndValue(proxySpecs.flop.first);
+		this.chooseAndNotifyControlSpec;
+	}
+
+	// slider knob or other controller for setting NodeProxy parameters
+	getSpecsFrom { | argWidgetName |
+		this.connectToSetterWidget(argWidgetName, \setControlSpec, { | parameter, argSpec, argProxy |
+			parameter = parameter ? '-';
+			spec = argSpec;
+			proxy = argProxy;
+			action = switch ( parameter,
+				'-', { {} },
+				\vol, { { | val | proxy.vol = val; } },
+				\fadeTime, { { | val | proxy.fadeTime = val; } },
+				{ { | val | proxy.set(parameter, val); } }
+			);
+		})
+	}
+
+	// storing and restoring presets
+	preset { ^WidgetPreset(this); }
+	preset_ { | argPreset | argPreset.restore; }
 
 }
 
@@ -261,6 +419,10 @@ Widget {
 			}
 		};
 	}
+	
+	takeWidgetSnapshot { ^this.widgets collect: _.preset; }
+
+	restoreWidgetSnapshot { | widgetPresets | widgetPresets do: _.restore; }
 }
 
 + Nil {

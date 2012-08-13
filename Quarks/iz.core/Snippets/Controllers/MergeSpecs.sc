@@ -59,7 +59,7 @@ MergeSpecs {
 		argSnippet !? { mySpecs = argSnippet.findRegexp("^//[^[]*([^\n]*)")[1][1].interpret; };
 		mySpecs = this.new(argProxy, mySpecs);
 		argProxy.notify(\proxySpecs, [mySpecs]);
-		ProxySpecWatcher.cacheSpecs(argProxy, mySpecs);
+		Widget.cacheSpecs(argProxy, mySpecs);
 	}
 
 	*new { | proxy, snippetArgs |

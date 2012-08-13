@@ -3,7 +3,7 @@
 	makeProxy {
 		var proxy = NodeProxy.new;
 		this.initProxy(proxy);
-		this.notify(\newProxy, proxy, this);
+		this.notify(\newProxy, [proxy, this]);
 		^proxy
 	}
 /*

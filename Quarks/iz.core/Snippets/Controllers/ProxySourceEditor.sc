@@ -60,44 +60,46 @@ ProxySourceEditor {
 		}	
 	}
 
-	*new { | proxyCode, proxyName |
+	*new { | proxyCode, proxyName, proxy |
 		var existingEditor;
 		existingEditor = all[proxyName];
 		existingEditor !? { ^existingEditor.front };
 		font = Font.default.size_(10);
-		^this.newCopyArgs(proxyCode, proxyName).init;
+		^this.newCopyArgs(proxyCode, proxyName, proxy).init;
 	}
 
 	front { window.front }
 
 	init {
-		this.addNotifier(proxyCode, \proxySource, { | argProxyName, argHistory |
-			this.updateHistory(argProxyName, argHistory);
-		});
 		this.makeWindow;
 		specWatcher = ProxySpecWatcher(this, { | argSpecs |
 			this.updateSpecs(argSpecs);
 		}, setWidgetAction: false); 
-		this setProxy: proxyName;
+		this.setProxy(proxy, proxyName);
 		MergeSpecs.parseArguments(proxy, this.widget(\editor).view.string);
 		all[proxyName] = this;
 	}
 
-	setProxy { | argProxyName |
-		proxyName = proxyName.asSymbol;
+	setProxy { | argProxy, argProxyName |
+		proxyName = argProxyName.asSymbol;
 		proxy !? {
 			this.removeNotifier(proxy, \play);
 			this.removeNotifier(proxy, \stop);
+			this.removeNotifier(proxy, \proxySource);
 		};
-		proxy = proxyCode.proxySpace[proxyName];
+		proxy = argProxy;
 		this.addNotifier(proxy, \play, { this.setValue(\startStopButton, 1) });
 		this.addNotifier(proxy, \stop, { this.setValue(\startStopButton, 0) });
+		this.addNotifier(proxy, \proxySource, { | argHistory |
+			this.updateHistory(argHistory);
+		});
 		if (proxy.isMonitoring) {
 			proxy.notify(\play);
 		}{
 			proxy.notify(\stop);
 		};
-		proxyHistory = proxyCode.proxyHistory[proxyName];
+//		proxyHistory = proxyCode.proxyHistory[proxyName];
+		proxyHistory = ProxyCode.proxyHistory[proxy];
 		specWatcher.setNode(proxy);
 		this.notify(\numSnippets, proxyHistory.size);
 		this.notify(\currentSnippet, proxyHistory.size);
@@ -295,12 +297,12 @@ ProxySourceEditor {
 	}
 
 	updateHistory { | argProxyName, argHistory |
-		if (argProxyName === proxyName) {
+//		if (argProxyName === proxyName) {
 			proxyHistory = argHistory;
 			this.notify(\currentSnippet, proxyHistory.size);
 			this.notify(\numSnippets, proxyHistory.size);
 			this.widget(\editor).view.string = proxyHistory.last;
-		}
+//		}
 	}
 
 	resizeWindow { | type |

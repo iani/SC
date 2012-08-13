@@ -59,11 +59,12 @@ ProxySpaceWatcher {
 			Document.current.envir ?? { (Document.current.envir = ProxySpace.push).envir }
 		};
 		action = action ?? {{
-			// Wait for proxyspace to install the new proxy. Why does this take so long?
-			{ this.updateNodeProxyList; }.defer(0.1);
+			// Wait for proxyspace to install the new proxy. 
+			{ this.updateNodeProxyList; }.defer(0.1); // 0.1 was not sufficient?
 		}};
-		widget.addNotifier(proxySpace, \newProxy, { action.(this) });
-		action.value;	// register any already existing nodes
+		widget.addNotifier(proxySpace, \newProxy, { | proxy, space | action.(proxy, space, this) });
+//		action.value;	// register any already existing nodes
+		this.updateNodeProxyList; // register any already existing nodes immediately
 	}
 	
 	updateNodeProxyList {
@@ -71,7 +72,10 @@ ProxySpaceWatcher {
 		widget.view.items !? { currentItem = widget.view.item; };
 		items = proxySpace.envir.keys.asArray.sort add: '-';
 		widget.view.items = items;
-		widget.view.value = items.indexOf(currentItem) ?? { items.size - 1 };
+//		widget.view.value = items.indexOf(currentItem) ?? { items.size - 1 };
+		widget.value = items.indexOf(currentItem) ?? { items.size - 1 };
+		[this, thisMethod.name, "items", items, "widget view value:", widget.view.value,
+			"widget value: ", widget.value].postln;
 	}
 }
 
@@ -79,7 +83,7 @@ ProxyNodeSetter {
 	/* 	When a new node is seleted by my widget, set it as node in a target widget.
 		Note: multiple ProxyNodeSetters can be added to the same widget, to set the nodes
 		of multiple targets, such as a start-stop button or a menu of controls */
-	var <widget, <targetName, <proxySpace, <action, targetWidget;
+	var <widget, <targetName, <proxySpace, <action, targetWidget, <node;
 	
 	*new { | widget, targetName, proxySpace, action, targetWidget |
 		// if targetWidget is not provided, it is fetched from targetName
@@ -90,15 +94,31 @@ ProxyNodeSetter {
 		proxySpace = proxySpace ?? { Document.current.envir };
 		// set my widgets action to notify me to set node:
 		widget.action = action ?? {{
-			widget.notify(\setNode, proxySpace[widget.view.item]) 
+			[this, thisMethod.name, "widget view items: ", widget.view.items, 
+				"widget view value: ", widget.view.value].postln;
+			if (widget.view.value.isNil) {
+				"HERE I AVOIDED widget view item".postln;
+				"Lets have a look at the contents of the views items".postln;
+				widget.view.items.postln;
+				widget.view.value = widget.view.items.size - 1; // patch patch patch
+			};
+			if (widget.view.item === '-') {
+				widget.notify(\setNode, nil)
+			}{
+				widget.notify(\setNode, proxySpace[widget.view.item]) 
+			}
+			
 		}};
 		// set me to perform my setNode method when I am notified from my widget
 		this.addNotifier(widget, \setNode, { | argNode | this setNode: argNode });
+		// make my node available to the widget, and thus everywhere. 
+		this.addNotifier(widget, \getNode, { | ref | ref.value = node; });
 		// Permit model to perform an update once after all widgets have been created
 		widget.model.registerOneShot(\update, widget, { widget.view.doAction });
 	} 
 
-	setNode { | node |
+	setNode { | argNode |
+		node = argNode;
 		this.targetWidget.notify(\setNode, node);
 	}
 
@@ -115,6 +135,8 @@ AbstractProxyNodeWatcher {
 	init {
 		// Make myself to change my widgets node whenever I am notified \setNode
 		this.addNotifier(widget, \setNode, { | argNode | this.setNode(argNode) });
+		// Make my node available to the widget, and thus everywhere. 
+		this.addNotifier(widget, \getNode, { | ref | ref.value = node; });
 		/* 	Set the action that I will perform when notified of a change in the node's 
 			state which concerns me: */
 		this.setAction;
@@ -180,7 +202,11 @@ ProxyNodeWatcher : AbstractProxyNodeWatcher {
 	}
 
 	playOrStopNode { | value = 1 |
-		node !? { if (value > 0) { node.play; } { node.stop; } }
+		if (node.isNil) {
+			widget.view.value = 0
+		}{
+			if (value > 0) { node.play; } { node.stop; }
+		};
 	}
 }
 
@@ -245,7 +271,7 @@ ProxySpecWatcher : AbstractProxyNodeWatcher {
 			cachedSpecs = specCache[node];
 		}; 
 		if (cachedSpecs.isNil) {
-// Should test this caching here. Commented code has not been tested yet.
+// Should specs parsed from the new node be cached also?
 /*			cachedSpecs = MergeSpecs(node);
 			node !? { specCache[node] = cachedSpecs };
 			action.(cachedSpecs, this); 
@@ -257,8 +283,9 @@ ProxySpecWatcher : AbstractProxyNodeWatcher {
 	}
 	
 	notifyCurrentSpec {
+		[this, thisMethod.name, widget.name, widget.view.items, specs, node].postln;
 		widget.view.items !? {
-			widget.notify(\currentSpec, [specs[widget.view.value], node]);
+			widget.notify(\currentSpec, [specs[widget.view.value ? 0], node]);
 		}
 	}
 }
@@ -278,7 +305,7 @@ ProxySpecSetter {
 		- When your widget chooses a different parameter, then do the following: 
 			- set your target widget's spec;
 			- set your nodeParamSetterFunc depending on the parameter name.
-		 */
+	*/
 	var <widget, <targetName, targetWidget, <parameter, <nodeParamSetterFunc, node;
 	
 	*new { | widget, targetName, targetWidget |
@@ -295,6 +322,8 @@ ProxySpecSetter {
 		});
 		// Permit model to perform an update once after all widgets have been created
 		widget.model.registerOneShot(\update, widget, { widget.view.doAction });
+		// make my node available to the widget, and thus everywhere. 
+		this.addNotifier(widget, \getNode, { | ref | ref.value = node; });
 	} 
 
 	targetWidget {

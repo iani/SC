@@ -14,6 +14,7 @@ ProxyCode {
 	classvar all;						// all ProxyCode instances in a Dictionary by Document
 	classvar <historyTimer;				// routine that counts time from last executed snippet
 	classvar <>historyEndInterval = 300;	// end History if nothing has been done for 5 minutes
+	classvar <proxyHistory; // holds all source code for each NodeProxy by key
 
  	var <doc;			// the document from which this snippet was 
 	var <proxySpace; 
@@ -23,10 +24,10 @@ ProxyCode {
 					// from the initial comment line of the snippet
 	var <snippet; 
 	var <index;
-	var <proxyHistory; // holds all source code for each NodeProxy by key
 	
 	*initClass {
 		// since CmdPeriod stops routines, restart the historyTimer routine
+		proxyHistory = IdentityDictionary.new;
 		StartUp add: { CmdPeriod add: { { this.startHistoryTimer }.defer(0.1) } };
 	}
 
@@ -59,7 +60,7 @@ ProxyCode {
 	initProxySpace {
 		proxySpace = doc.envir ?? { ProxySpace.new; };
 		doc.envir = proxySpace;
-		proxyHistory = IdentityDictionary.new;
+//		proxyHistory = IdentityDictionary.new;
 	}
 
 	getSnippet {
@@ -108,7 +109,7 @@ ProxyCode {
 				this enterSnippet2History: format("~% = %", proxyName, snippet);
 				MergeSpecs.parseArguments(proxy);
 			};
-			if (addToSourceHistory) { this.addNodeSourceCodeToHistory(proxyName, snippet); };
+			if (addToSourceHistory) { this.addNodeSourceCodeToHistory(proxy, snippet); };
 			if (proxy.rate === \audio and: { start } and: { proxy.isMonitoring.not }) {
 				this.startProxy(proxy, proxyName);
 			};
@@ -123,13 +124,11 @@ ProxyCode {
 		this.class.startHistoryTimer;		
 	}
 
-	addNodeSourceCodeToHistory { | argProxyName, argSnippet |
-		var nodeHistory;
-		argProxyName = argProxyName.asSymbol;
-		nodeHistory = proxyHistory[argProxyName];
-		nodeHistory = nodeHistory add: argSnippet;
-		proxyHistory[argProxyName] = nodeHistory;
-		this.notify(\proxySource, [argProxyName, nodeHistory, this]);
+	addNodeSourceCodeToHistory { | proxy, argSnippet |
+		var history;
+		history = proxyHistory[proxy];
+		proxyHistory[proxy] = history = history add: argSnippet;
+		proxy.notify(\proxySource, [history]);
 	}
 
 	startProxy { | argProxy, argProxyName |
@@ -155,10 +154,10 @@ ProxyCode {
 		// called by keyboard shortcut from Code
 		this.getSnippet;
 		this.getProxy;
-		proxyHistory[proxyName] ?? {
-			this.addNodeSourceCodeToHistory(proxyName, snippet);
+		proxyHistory[proxy] ?? {
+			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
-		ProxySourceEditor(this, proxyName);		
+		ProxySourceEditor(this, proxyName, proxy);
 	}
 
 	playCurrentDocProxy {

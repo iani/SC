@@ -7,8 +7,21 @@ This is a draft made after ProxySourceEditor and NanoKontrol2 of the Snippets qu
 
 Use of WindowHandler is illustrated by class WHExample. Try: 
 
-{ WHExample.new } ! 2;
-
+(
+{ 	
+	var window;
+	window = Window("WH Example", Rect(*({ 100 rrand: 400 } ! 4)));
+	window.windowHandler(window, 
+		enableAction: { 
+			if (window.isClosed.not) { window.view.background = (Color.red) };
+		},
+		disableAction: { 
+			if (window.isClosed.not) { window.view.background = (Color(*(0.5.dup(4)))) }; 
+		}
+	);
+	window.front;
+} ! 2
+)
 
 */
 
@@ -38,6 +51,7 @@ WindowHandler {
 	}
 	
 	doToFrontAction {
+		model.notify(\update);	// widgets that need to connect to other widgets use this
 		model.enable;
 		toFrontAction.(this); // after enabling
 	}
@@ -46,20 +60,10 @@ WindowHandler {
 
 }
 
-WHExample {
-	var <window, <wh;
-	*new { ^super.new.init; }
-	
-	init {
-		window = Window("WH Example", Rect(*({ 100 rrand: 400 } ! 4)));
-		wh = WindowHandler(this, window, 
-			enableAction: { 
-				if (window.isClosed.not) { window.view.background = (Color.red) };
-			},
-			disableAction: { 
-				if (window.isClosed.not) { window.view.background = (Color(*(0.5.dup(4)))) }; 
-			}
-		);
-		window.front;
++ Object {
+	windowHandler { | window, onClose, toFrontAction, endFrontAction, enableAction, disableAction |
+		WindowHandler(
+			this, window, onClose, toFrontAction, endFrontAction, enableAction, disableAction
+		)
 	}
 }

@@ -19,7 +19,7 @@ NanoKontrol2a {
 	var <window;	// the main gui window;
 	var <presets, <currentPreset;	// store proxy, control, and spec configurations
 	var <strips;	// 8 control strips emulating those of the Korg NanoKontrol2 
-	
+
 	*new { | proxySpace, docName, proxyCode |
 		^this.newCopyArgs(proxySpace, docName, proxyCode).init;
 	}
