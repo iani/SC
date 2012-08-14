@@ -80,8 +80,12 @@ ProxySourceEditor {
 		all[proxyName] = this;
 	}
 
-	setProxy { | argProxy, argProxyName |
-		proxyName = argProxyName.asSymbol;
+	setProxy { | argProxy |
+		var newName;
+		newName = proxyCode.proxySpace.envir.findKeyForValue(argProxy);
+		if (newName.isNil) { ^"Cannot set my proxy to nil".postcln; };
+		proxyName = newName;
+		window.name = proxyName.asSymbol;
 		proxy !? {
 			this.removeNotifier(proxy, \play);
 			this.removeNotifier(proxy, \stop);
@@ -98,11 +102,11 @@ ProxySourceEditor {
 		}{
 			proxy.notify(\stop);
 		};
-//		proxyHistory = proxyCode.proxyHistory[proxyName];
 		proxyHistory = ProxyCode.proxyHistory[proxy];
 		specWatcher.setNode(proxy);
 		this.notify(\numSnippets, proxyHistory.size);
 		this.notify(\currentSnippet, proxyHistory.size);
+		this.widget(\proxyMenu).setItemByName(proxyName);
 	}
 
 	makeWindow {
@@ -118,12 +122,15 @@ ProxySourceEditor {
 			disableAction: { 
 				if (window.isClosed.not) {
 					window.view.background = Color(0.9, 0.9, 0.9, 0.5);
-				}; 
+				};
 			}
 		);
 		window.layout = VLayout(
 			[TextView().font_(Font("Monaco", 11)).addModel(this, \editor).v, s:10],
 			[HLayout(
+				PxMenu.widget(this, \proxyMenu, proxyCode.proxySpace) 
+					.addAction(\setProxy, { | argProxy |						this.setProxy(argProxy);
+					}).v.font_(font),
 				Button().states_([["start"], ["stop"]])
 					.font_(font)
 					.addModel(this, \startStopButton, action: { | me |
@@ -152,6 +159,10 @@ ProxySourceEditor {
 					.addModel(this, \delete, action: { this.deleteSnippet }).v,
 				Button().states_([["reset specs"]]).font_(font)
 					.addModel(this, \resetSpecs, action: { this.resetSpecs; }).v,
+				Button().states_([["history"]])
+				.action_({ proxyCode.openHistoryInDoc(proxy) }).font_(font),
+				Button().states_([["all"]])
+					.action_({ proxyCode.openHistoryInDoc(nil) }).font_(font),
 				StaticText().font_(font).string_("current:"),
 				NumberBox().font_(font).value_(proxyHistory.size)
 					.addModel(this, \currentSnippet, action: { | val, widget |
@@ -296,13 +307,11 @@ ProxySourceEditor {
 		).front;
 	}
 
-	updateHistory { | argProxyName, argHistory |
-//		if (argProxyName === proxyName) {
+	updateHistory { | argHistory |
 			proxyHistory = argHistory;
 			this.notify(\currentSnippet, proxyHistory.size);
 			this.notify(\numSnippets, proxyHistory.size);
 			this.widget(\editor).view.string = proxyHistory.last;
-//		}
 	}
 
 	resizeWindow { | type |
@@ -312,7 +321,24 @@ ProxySourceEditor {
 			window.bounds = bounds.copy.height_(850).top_(0);
 		}
 	}
-
+/*
+	openHistoryInDoc { // method is transfered to ProxyCode
+		var docString;
+		docString = proxyHistory.inject(
+		format(
+			"/* *********** HISTORY FOR % on % *********** */", proxyName, 
+			Date.getDate.format("%Y-%d-%e at %Hh:%m:%S'")
+		), 
+		{ | a, b, i |
+			a ++ format("\n\n// ========================= % ========================= \n", i) ++ b };
+		);
+		Document(format("History for %", proxyName), docString)
+	}
+	
+	openAllInDoc {
+		
+	}
+*/
 	midiSpecs {
 		if (midiSpecs.isNil) {
 			midiSpecs = [

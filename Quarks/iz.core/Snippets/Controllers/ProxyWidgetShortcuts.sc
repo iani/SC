@@ -48,50 +48,58 @@ w.windowHandler(w).front;
 
 */
 
-PxMenu { 
+PxWidget {
+	classvar widget;
+	*widget { | ... args |
+		this.new(*args);
+		^widget;
+	}	
+}
+
+PxMenu : PxWidget { 
 	*new { | model, name, proxySpace |
-		^PopUpMenu()
+		^(widget = PopUpMenu()
 			.addModel(model, name)
-			.watchProxySpace(proxySpace).view;
+			.watchProxySpace(proxySpace)).view;
 	}
 }
 
-PxControlsMenu {
+PxControlsMenu : PxWidget {
 	*new { | model, name, setterWidgetNameOrProxy |
-		^PopUpMenu()
+		^(widget = PopUpMenu()
 			.addModel(model, name)
-			.proxyControlsMenu(setterWidgetNameOrProxy).view;
+			.proxyControlsMenu(setterWidgetNameOrProxy)).view;
 	}
 }
 
-PxButton {
+PxButton : PxWidget {
 	*new { | model, name, setterWidgetNameOrProxy |
-		^Button()
+		^(widget = Button()
 			.addModel(model, name)
-			.proxyOnOffButton(setterWidgetNameOrProxy).view;
+			.proxyOnOffButton(setterWidgetNameOrProxy)).view;
 	}
 }
 
 
-PxSlider {
+PxSlider : PxWidget {
 	*new { | model, name, setterWidgetName, receiverWidgetName |
-		^Slider()
+		^(widget = Slider()
 			.addModel(model, name, receiverWidgetName)
-			.getSpecsFrom(setterWidgetName).view;	
+			.getSpecsFrom(setterWidgetName)).view;	
 	}
 }
 
 
-PxKnob {
+PxKnob : PxWidget {
 	*new { | model, name, setterWidgetName, receiverWidgetName |
-		^Knob()
+		^(widget = Knob()
 			.addModel(model, name, receiverWidgetName)
-			.getSpecsFrom(setterWidgetName).view;	
+			.getSpecsFrom(setterWidgetName)).view;	
 	}
 }
 
-PxNumberBox {
+PxNumberBox : PxWidget {
 	*new { | model, name, receiverWidgetName |
-		^NumberBox().addModel(model, name, receiverWidgetName).view
+		^(widget = NumberBox().addModel(model, name, receiverWidgetName)).view
 	}
 }

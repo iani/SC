@@ -195,6 +195,14 @@ Widget {
 	decrement { | inc = 1, limit = 0 |
 		this.valueAction = value = value - 1 max: limit;
 	}
+	
+	addAction { | argMessage, argAction |
+		/* 	add argAction function to be executed when this widget notifies argMessage
+			Can be used to add custom actions to Widgets that send message notifications
+			when NodeProxies or other things notify them. See watchProxySpace
+			Example: See ProxySourceEditor:makeWindow PxWindow ... .addAction(...) */
+			this.addNotifier(this, argMessage, argAction);
+	}
 
 	// ============= Interacting with proxies and other widgets ========
 	
@@ -235,9 +243,15 @@ Widget {
 		}{
 			oldItem = defaultItem
 		};
-		value = newItems indexOf: oldItem;
 		view.items = newItems;
+		value = newItems indexOf: oldItem;
 		view.value = value;
+	}
+
+	setItemByName { | itemName |
+		var index;
+		index = (view.items ?? { [] }) indexOf: itemName;
+		index !? { view.value = value = index };
 	}
 
 	// === Button for playing or stopping a proxy ===

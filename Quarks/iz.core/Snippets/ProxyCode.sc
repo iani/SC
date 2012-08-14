@@ -142,7 +142,7 @@ ProxyCode {
 		argProxyName = argProxyName.asSymbol;
 		nodeHistory = proxyHistory[argProxyName];
 		nodeHistory.removeAt(snippetIndex - 1);
-		this.notify(\proxySource, [argProxyName, nodeHistory, this]);
+		this.notify(\proxySource, [nodeHistory]);
 	}
 
 	editNodeProxySource { | proxyName |
@@ -203,6 +203,48 @@ ProxyCode {
 		proxy.vol = vol2;
 		postf("%: vol % -> %\n", proxyName, vol1.round(0.000001), vol2.round(0.000001));
 		this.enterSnippet2History(format("~%.vol = %", proxyName, vol2));
+	}
+	
+	// =========== Documenting code history ===========
+
+	openHistoryInDoc { | argProxy |
+		var title, docString;
+		title = proxyHistory[argProxy];
+		if (title.isNil) {
+			title = Date.getDate.format("History for all proxies on %Y-%d-%e at %Hh:%mm:%Ss");
+			docString = this.makeHistoryStringForAll;
+		}{
+			title = format("History for all % on %",
+				proxySpace.envir.findKeyForValue(proxy),
+				Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss")
+			);
+			docString = this.makeHistoryStringForProxy(proxy);
+		};
+		^Document(title, docString)
+	}
+
+	makeHistoryStringForAll {
+		var docString, histories;
+		docString = format(
+			"/* *********** HISTORY FOR ALL PROXIES on % *********** */\n",
+			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss")
+		);
+		histories = proxyHistory.keys collect: this.makeHistoryStringForProxy(_);
+//		^histories; // to be continued!
+		^histories.inject(docString, { | a, b | a ++ b });
+	}
+
+	makeHistoryStringForProxy { | proxy |
+		var myHistory, docString;
+		myHistory = proxyHistory[proxy];
+		docString = format(
+			"\n/* *********** HISTORY FOR % on % *********** */", 
+			proxySpace.envir.findKeyForValue(proxy), 
+			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
+		);
+		^myHistory.inject(docString, { | a, b, i |
+			a ++ format("\n\n// ========================= % ========================= \n", i) ++ b };
+		);
 	}
 }
 

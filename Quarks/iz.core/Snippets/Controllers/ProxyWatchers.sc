@@ -1,6 +1,9 @@
 /* IZ Thu 09 August 2012 10:20 AM EEST
 
-WILL BE REMOVED!!!!!!!
+Earlier implementations, rather complex.
+Easier versions are included as methods to Widget. 
+
+ProxyCodeEditor still uses 2 of these here. 
 
 
 Perform actions on a widget whenever a node is created, starts or stops, or its source changes in the ProxySpace of a ProxyCode of a Document. 
