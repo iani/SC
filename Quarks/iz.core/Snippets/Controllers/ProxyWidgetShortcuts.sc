@@ -21,6 +21,30 @@ w.windowHandler(w).front;
 ~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 ~out.play; // after that, check the first menu of the window above, and select 'out'
 
+// Commented version of the above: 
+
+(
+Document.current.envir = ProxySpace.push;
+w = Window.new;
+w.layout = VLayout(
+        /*  Create a self-updating menu for selecting a node from 
+            this Document's ProxySpace, an name it \nodes */
+	PxMenu(w, \nodes),
+        /* Create a button for starting and stopping the selected proxy,
+           and make its proxy settable by menu element named \nodes */
+	PxButton(w, \button, \nodes).states_([["start"], ["stop"]]),
+        /* Create a menu for selecting control parameters from the selected
+           node, name it \specs, make its node settable by menu \nodes */
+	PxControlsMenu(w, \specs, \nodes),
+        /* Create a knob named \knob, make its spec settable by menu named 
+           \specs, and make it set its mapped value to \numbox */
+	PxKnob(w, \knob, \specs, \numbox),
+        /* Create a NumberBox named \numbox, make it set its unmapped value
+           to element named \knob */
+	PxNumberBox(w, \numbox, \knob)
+);
+w.windowHandler(w).front;
+)
 
 */
 

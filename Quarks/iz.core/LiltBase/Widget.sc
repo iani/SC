@@ -2,10 +2,14 @@
 
 Simplify the task of adding and communicating with several widgets to any object, for representing and control different aspects of that object. 
 
-(TODO: Use case example description needed here!) 
+See also PxMenu, PxControlsMenu, PxKnob, PxSlider, PxNumberBox
 
-Example: 
+** Example
+
+First do this: 
+ 
 (
+Document.current.envir = ProxySpace.push; 
 w = Window.new;
 w.layout = VLayout(
 	PopUpMenu().addModel(w, \nodes)
@@ -20,14 +24,16 @@ w.layout = VLayout(
 );
 w.windowHandler(w).front;
 )
-//:sample
 
-{ | freq = 400, amp = 0.01 | Ringz.ar(PinkNoise.ar(amp), freq, 0.1) }
+Then do this: 
+
+//:sample - Run the following two lines. 
 
 
 ~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 ~out.play; // after that, check the first menu of the window above, and select 'out'
-// then select controls from the second menu, and use the knob to control selected parameter.
+
+Then select controls from the second menu, and use the knob to control selected parameter.
 
 */
 

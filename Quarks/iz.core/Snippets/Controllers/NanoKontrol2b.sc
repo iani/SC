@@ -5,6 +5,7 @@ Version 2: Refactoring using Widget and ProxyWatchers
 A GUI emulating the controls of NanoKontrol2, with features: 
 
 Means to map the controls of any NodeProxy in a ProxySpace to a slider or knob. 
+Presets, preset history.
 Etc. 
 
 n = NanoKontrol2a(ProxySpace.push);
@@ -12,7 +13,7 @@ n = NanoKontrol2a(ProxySpace.push);
 n = NanoKontrol2b();
 n.window.bounds;
 
-TODO: Lose the proxyCode. ???
+TODO: Implement auto-proxy-mode, provide MIDI specs for UC-33e, and for Korg NanoKontrol 2. 
 
 */
 
