@@ -2,7 +2,7 @@
                 =====================================
 
 Author: I Z
-Date: 2012-08-14 10:52:02 EEST
+Date: 2012-08-14 10:56:32 EEST
 
 
 Table of Contents
@@ -29,7 +29,7 @@ Table of Contents
 1 About 
 ~~~~~~~~
 
-This library contains SuperCollider tools and examples coded and collected from 2004 by Ioannis Zannos. It is organized in Quarks, and includes a utility for installing those Quarks from a menu, which is installed by putting an alias of the folder named "PutMyAliasInExtensions" into the user's SuperCollider/Extensions folder. 
+This library contains SuperCollider tools and examples coded and collected since 2003 by Ioannis Zannos, organized using the RepQuark by Martin Carl\'e. It is organized in Quarks, and includes a utility for installing those Quarks from a menu, which is installed by putting an alias of the folder named "PutMyAliasInExtensions" into the user's SuperCollider/Extensions folder. 
 
 1.1 New - Suggested 
 ====================
