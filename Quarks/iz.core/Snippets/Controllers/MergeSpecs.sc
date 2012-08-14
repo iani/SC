@@ -55,8 +55,13 @@ MergeSpecs {
 	}
 
 	*parseArguments { | argProxy, argSnippet |
-		var mySpecs;
-		argSnippet !? { mySpecs = argSnippet.findRegexp("^//[^[]*([^\n]*)")[1][1].interpret; };
+		var mySpecs, myName;
+		argSnippet !? {
+			myName = argSnippet.findRegexp("^//[^[]*([^\n]*)");
+			if (myName.size > 0) {
+				mySpecs = myName[1][1].interpret;
+			};
+		};
 		mySpecs = this.new(argProxy, mySpecs);
 		argProxy.notify(\proxySpecs, [mySpecs]);
 		Widget.cacheSpecs(argProxy, mySpecs);

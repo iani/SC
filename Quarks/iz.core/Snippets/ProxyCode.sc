@@ -60,7 +60,6 @@ ProxyCode {
 	initProxySpace {
 		proxySpace = doc.envir ?? { ProxySpace.new; };
 		doc.envir = proxySpace;
-//		proxyHistory = IdentityDictionary.new;
 	}
 
 	getSnippet {
@@ -77,9 +76,43 @@ ProxyCode {
 	}
 
 	getProxy {
+		// The proxyName part maybe should be replaced by getProxyName method
 		proxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
 		proxyName = (proxyName ?? { [0, format("out%", index)] })[1].asSymbol;
 		^proxy = proxySpace[proxyName];
+	}
+
+	getProxyName { | argSnippet, argIndex = 0 |
+		^(argSnippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1] ?? {
+			[0, format("out%", argIndex)] 
+		})[1].asSymbol;		
+	}
+	
+	makeProxyHistoryFromDoc { | eraseDuplicates = true |
+		// get all proxies and all snippets, and store them in proxyHistory.
+		// Can be used to open ProxySourceEditor on the entire document, with history ready.
+		// It will also create proxies for all snippets with different names on the comment line
+		// TODO: if eraseDuplicates is true, then remove from history
+		// identical snippets for the same proxy.
+		Code(doc).getAllSnippetStrings(skipFirstSnippet: false) do: { | newSnippet, argIndex |
+			this.addNodeSourceCodeToHistory(
+				proxySpace[this.getProxyName(newSnippet, argIndex).asSymbol],
+				newSnippet;
+			)
+		};
+	}
+
+	clearProxyHistory { // NOT TESTED
+		// when clearing history, notify any editors or other objects
+		var oldProxies;
+		oldProxies = proxyHistory.keys;
+		proxyHistory = IdentityDictionary.new;
+		oldProxies do: { | op | op.notify(\proxySource, [[]]); }
+	}
+
+	removeDuplicatesFromProxyHistory {
+		// under construction
+		// remove those snippets from proxyHistory that have been entered twice.
 	}
 
 	evalInProxySpace { | argSnippet, argProxy, argProxyName, start = true, addToSourceHistory = true |
@@ -124,11 +157,11 @@ ProxyCode {
 		this.class.startHistoryTimer;		
 	}
 
-	addNodeSourceCodeToHistory { | proxy, argSnippet |
+	addNodeSourceCodeToHistory { | argProxy, argSnippet |
 		var history;
-		history = proxyHistory[proxy];
-		proxyHistory[proxy] = history = history add: argSnippet;
-		proxy.notify(\proxySource, [history]);
+		history = proxyHistory[argProxy];
+		proxyHistory[argProxy] = history = history add: argSnippet;
+		argProxy.notify(\proxySource, [history]);
 	}
 
 	startProxy { | argProxy, argProxyName |
@@ -137,12 +170,11 @@ ProxyCode {
 		postf("proxy % started: %\n", argProxyName, argProxy);
 	}
 
-	deleteNodeSourceCodeFromHistory { | argProxyName, snippetIndex |
+	deleteNodeSourceCodeFromHistory { | argProxy, snippetIndex |
 		var nodeHistory;
-		argProxyName = argProxyName.asSymbol;
-		nodeHistory = proxyHistory[argProxyName];
+		nodeHistory = proxyHistory[argProxy];
 		nodeHistory.removeAt(snippetIndex - 1);
-		this.notify(\proxySource, [nodeHistory]);
+		argProxy.notify(\proxySource, [nodeHistory]);
 	}
 
 	editNodeProxySource { | proxyName |
@@ -230,7 +262,6 @@ ProxyCode {
 			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss")
 		);
 		histories = proxyHistory.keys collect: this.makeHistoryStringForProxy(_);
-//		^histories; // to be continued!
 		^histories.inject(docString, { | a, b | a ++ b });
 	}
 
@@ -243,7 +274,10 @@ ProxyCode {
 			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
 		);
 		^myHistory.inject(docString, { | a, b, i |
-			a ++ format("\n\n// ========================= % ========================= \n", i) ++ b };
+			a 
+			++ format("\n\n// ========================= % ========================= \n", i + 1)
+			++ b
+		};
 		);
 	}
 }

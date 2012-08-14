@@ -232,6 +232,10 @@ Widget {
 		}
 	}
 	
+	getProxy {
+		^this.getItemFromMenu({ | pname | proxySpace[pname] });
+	}
+	
 	updateProxies {
 		this.updateItemsAndValue(proxySpace.envir.keys.asArray.sort add: '-');
 	}

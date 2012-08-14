@@ -131,7 +131,8 @@ ProxySourceEditor {
 				PxMenu.widget(this, \proxyMenu, proxyCode.proxySpace) 
 					.addAction(\setProxy, { | argProxy |						this.setProxy(argProxy);
 					}).v.font_(font),
-				Button().states_([["start"], ["stop"]])
+				Button()
+					.states_([["start", Color.black, Color.green], ["stop", Color.black, Color.red]])
 					.font_(font)
 					.addModel(this, \startStopButton, action: { | me |
 						this.perform([\stopProxy, \startProxy][me.value])

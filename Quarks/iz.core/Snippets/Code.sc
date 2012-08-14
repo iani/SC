@@ -170,9 +170,11 @@ Code {
 		^(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
 	}
 
-	getAllSnippetStrings {
+	getAllSnippetStrings { | skipFirstSnippet = true |
 		// Note: skipping first snippet, as this is before the first //: comment separator
-		^(1..positions.size) collect: { | i | this.getSnippetStringAt(i) }
+		var start;
+		if (skipFirstSnippet) { start = 1 } { start = 0 };
+		^(start..positions.size) collect: { | i | this.getSnippetStringAt(i) }
 	}
 
 	getSnippetAt { | index |

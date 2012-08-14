@@ -48,12 +48,12 @@ NanoK2Stripb {
 	}
 
 	editNodeSource { | menuID |
-		var widget, menu, theNode;
+		var widget, menu, theProxy;
 		widget = this.widget(menuID);
 		menu = widget.view;
-		theNode = widget.getNode;
-		theNode !? { 
-			ProxySourceEditor(proxyCode, menu.item, theNode)
+		theProxy = widget.getProxy;
+		theProxy !? { 
+			ProxySourceEditor(proxyCode, menu.item, theProxy)
 		};
 	}
 }
