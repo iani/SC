@@ -1,28 +1,51 @@
-                Lilt2/Elemenb\'i (/Look Ma, No Boot/)
+                Lilt2/Elemenv\'i (/Look Ma, No Vars/)
                 =====================================
 
 Author: I Z
-Date: 2012-04-15 23:32:17 EEST
+Date: 2012-08-14 10:52:02 EEST
 
 
 Table of Contents
 =================
-1 Credits, Download 
-2 Copying (License) 
-3 Installation 
-4 Class ServerPrep 
-5 Class SynthResource 
-6 Class Chain, EventStream, Function:sched and Function:stream 
-7 Object methods for easy messaging via NotificationCenter 
-8 Class Code 
-9 Class Panes 
-10 Class Dock 
-11 Class Spectrograph 
+1 About 
+    1.1 New - Suggested 
+2 Credits, Download 
+3 Copying (License) 
+4 Installation 
+5 Widget 
+    5.1 Example 
+6 Object methods for easy messaging via NotificationCenter 
+7 Class Code 
+8 Class CodeProxy 
+9 Class ProxySourceEditor 
+10 Class Panes 
+11 Class Dock 
+12 Class Chain, EventStream, Function:sched and Function:stream 
+13 Class ServerPrep 
+14 Class SynthResource 
+15 Class Spectrograph 
 
 
-1 Credits, Download 
+1 About 
+~~~~~~~~
+
+This library contains SuperCollider tools and examples coded and collected from 2004 by Ioannis Zannos. It is organized in Quarks, and includes a utility for installing those Quarks from a menu, which is installed by putting an alias of the folder named "PutMyAliasInExtensions" into the user's SuperCollider/Extensions folder. 
+
+1.1 New - Suggested 
+====================
+
+See: iz.core folder, LiltBase, Snippets, Chain (require Resource, ServerPrep).
+
+- Widget: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also store and restore the settings of such elements in WidgetPresets. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
+
+- Snippet, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
+
+- ProxyCodeEditor, NanoKontrol2b: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
+
+2 Credits, Download 
 ~~~~~~~~~~~~~~~~~~~~
 - Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
+- Widget, ProxyCode, ProxySourceEditor by by Ioannis Zannos, May-August 2012
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
@@ -33,12 +56,12 @@ Download from: [https://github.com/iani/SC]
 or:
  git clone git://github.com/iani/SC.git
 
-2 Copying (License) 
+3 Copying (License) 
 ~~~~~~~~~~~~~~~~~~~~
 
 This library is distributed under the GNU General Public License. It contains other libraries released under the same license, in particular work by Nick Collins. See full text of the GNU license in file: "COPYING.txt".
 
-3 Installation 
+4 Installation 
 ~~~~~~~~~~~~~~~
 
 As of 2011-06-08 The library is being reorganized to a modular plugin-form using quarks (thanks MC). To make these quarks available via a menu on MacOS X, make an alias of the folder "PutMyAliasInExtensions" and put the alias in:
@@ -56,65 +79,111 @@ Choose iz.local from the Quarks menu.  Recommended Quarks to try out are:
 - ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
 - Chains (Alternative score-writing class for scheduling execution of functions with patterns)
 
-4 Class ServerPrep 
-~~~~~~~~~~~~~~~~~~~
+5 Widget 
+~~~~~~~~~
 
-- Obviate the need to boot the server manually before starting synths.
-- Ensure that Buffers and SynthDefs are allocated / sent to the server
-  before starting synths, efficiently. 
-- Provide a safe way for registering synth and routine processes to start automatically when the server boots
-  or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first.
+Simplify the task of adding and communicating with several widgets to any object, for representing and control different aspects of that object. 
 
-Classes involved: 
+5.1 Example 
+============
 
-- ServerPrep
-- ServerActionLoader
-- SynthLoader
-- DefLoader
-- BufLoader
-- RoutineLoader
-- UniqueBuffer
-- Udef
-
-5 Class SynthResource 
-~~~~~~~~~~~~~~~~~~~~~~
-
-Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
-controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
-
-Example of how SynthResource can simplify the code required: 
-
-/Without Symbol:mplay/
+First do this: 
 
 
   (
-  {
-     loop {
-        {    var synth;
-           synth = Synth(\default, [\freq, (25..50).choose.midicps]);
-           0.1.wait;
-           synth.release(exprand(0.01, 1.0));
-        }.fork;
-        [0.1, 0.2].choose.wait;
-     };
-  }.fork;
+  Document.current.envir = ProxySpace.push;
+  w = Window.new;
+  w.layout = VLayout(
+          /*  Create a self-updating menu for selecting a node from 
+              this Document's ProxySpace, an name it \nodes */
+          PxMenu(w, \nodes),
+          /* Create a button for starting and stopping the selected proxy,
+             and make its proxy settable by menu element named \nodes */
+          PxButton(w, \button, \nodes).states_([["start"], ["stop"]]),
+          /* Create a menu for selecting control parameters from the selected
+             node, name it \specs, make its node settable by menu \nodes */
+          PxControlsMenu(w, \specs, \nodes),
+          /* Create a knob named \knob, make its spec settable by menu named 
+             \specs, and make it set its mapped value to \numbox */
+          PxKnob(w, \knob, \specs, \numbox),
+          /* Create a NumberBox named \numbox, make it set its unmapped value
+             to element named \knob */
+          PxNumberBox(w, \numbox, \knob)
+  );
+  w.windowHandler(w).front;
   )
 
-/Using Symbol:mplay/
+Then do this: 
 
 
-  (
-  {
-     loop {
-        \default.mplay([\freq, (25..50).choose.midicps])
-           .dur(0.1, exprand(0.01, 1.0));
-        [0.1, 0.2].choose.wait;
-     };
-  }.fork;
-  )
+  //:sample - Run the following two lines. 
+  ~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+  ~out.play; // after that, check the first menu of the window above, and select 'out'
 
-6 Class Chain, EventStream, Function:sched and Function:stream 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Then select controls from the second menu, and use the knob to control selected parameter.
+
+
+6 Object methods for easy messaging via NotificationCenter 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
+
+One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+
+7 Class Code 
+~~~~~~~~~~~~~
+
+Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
+
+Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
+
+Shortcuts provided are:
+
+- Command-shift-x: Evaluate the code in an AppClock routine. Booting the default server if needed
+- Command-shift-alt-x: Evaluate the code in a SystemClock routine Boot default server if needed
+- Command-shift-v: Evaluate and post the results of the code, without routine or server booting
+- Command-shift-j: Select the next code part
+- Command-shift-k: Select the previous code part
+- Command-shift-}: open a list of the code segments of the current Document
+- Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
+- Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
+
+8 Class CodeProxy 
+~~~~~~~~~~~~~~~~~~
+
+Evaluate code snippets in a Document using Code-keyboard shortcuts in a ProxySpace, and create NodeProxies from the comments at the beginning of each Snippet. Parse additional argument specifications from the comments.  Provide essential play-stop and volume increase-decrease commands as keyboard shortcuts. 
+
+9 Class ProxySourceEditor 
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Edit the source code of a NodeProxy created from a snippet, provide controls for its arguments automatically, and browse the history of source code snippets for this proxy.  Also provide MIDI bindings for each proxy parameter control gui item. 
+
+10 Class Panes 
+~~~~~~~~~~~~~~~
+
+Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
+
+11 Class Dock 
+~~~~~~~~~~~~~~
+
+Provide some useful shortcuts for common tasks: 
+   browseUserClasses :    Open a list of all classes defined in the user's Application Support 
+      directory. Typing return on a selected item opens the code file with the definition of this class. 
+
+   insertClassHelpTemplate : Insert a template for documenting a class named after the name of the
+      document. Inserts listings of superclasses, class and instance variables and methods. 
+
+   openCreateHelpFile : Open a help file for a selected user class. Automatic creation of the file 
+         is reserved to code residing outside the distribution files of this library. 
+
+   showDocListWindow :  An auto-updating window listing all open Documents, with selection by mouse click
+               or by text search.
+
+   closeDocListWindow : Close the document list window
+
+12 Class Chain, EventStream, Function:sched and Function:stream 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
 
@@ -170,56 +239,64 @@ Other example:
   //: ---
   )
 
+13 Class ServerPrep 
+~~~~~~~~~~~~~~~~~~~~
 
-7 Object methods for easy messaging via NotificationCenter 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Obviate the need to boot the server manually before starting synths.
+- Ensure that Buffers and SynthDefs are allocated / sent to the server
+  before starting synths, efficiently. 
+- Provide a safe way for registering synth and routine processes to start automatically when the server boots
+  or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first.
 
-Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
+Classes involved: 
 
-One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+- ServerPrep
+- ServerActionLoader
+- SynthLoader
+- DefLoader
+- BufLoader
+- RoutineLoader
+- UniqueBuffer
+- Udef
 
-8 Class Code 
-~~~~~~~~~~~~~
+14 Class SynthResource 
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
+Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
+controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
 
-Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
+Example of how SynthResource can simplify the code required: 
 
-Shortcuts provided are:
+/Without Symbol:mplay/
 
-- Command-shift-x: Evaluate the code in an AppClock routine. Booting the default server if needed
-- Command-shift-alt-x: Evaluate the code in a SystemClock routine Boot default server if needed
-- Command-shift-v: Evaluate and post the results of the code, without routine or server booting
-- Command-shift-j: Select the next code part
-- Command-shift-k: Select the previous code part
-- Command-shift-}: open a list of the code segments of the current Document
-- Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
-- Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
 
-9 Class Panes 
-~~~~~~~~~~~~~~
+  (
+  {
+     loop {
+        {    var synth;
+           synth = Synth(\default, [\freq, (25..50).choose.midicps]);
+           0.1.wait;
+           synth.release(exprand(0.01, 1.0));
+        }.fork;
+        [0.1, 0.2].choose.wait;
+     };
+  }.fork;
+  )
 
-Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
+/Using Symbol:mplay/
 
-10 Class Dock 
-~~~~~~~~~~~~~~
 
-Provide some useful shortcuts for common tasks: 
-   browseUserClasses :    Open a list of all classes defined in the user's Application Support 
-      directory. Typing return on a selected item opens the code file with the definition of this class. 
+  (
+  {
+     loop {
+        \default.mplay([\freq, (25..50).choose.midicps])
+           .dur(0.1, exprand(0.01, 1.0));
+        [0.1, 0.2].choose.wait;
+     };
+  }.fork;
+  )
 
-   insertClassHelpTemplate : Insert a template for documenting a class named after the name of the
-      document. Inserts listings of superclasses, class and instance variables and methods. 
-
-   openCreateHelpFile : Open a help file for a selected user class. Automatic creation of the file 
-         is reserved to code residing outside the distribution files of this library. 
-
-   showDocListWindow :  An auto-updating window listing all open Documents, with selection by mouse click
-               or by text search.
-
-   closeDocListWindow : Close the document list window
-
-11 Class Spectrograph 
+15 Class Spectrograph 
 ~~~~~~~~~~~~~~~~~~~~~~
 
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 

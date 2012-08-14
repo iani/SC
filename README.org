@@ -1,7 +1,22 @@
-Lilt2/Elemenb\'i (/Look Ma, No Vars/)
+Lilt2/Elemenv\'i (/Look Ma, No Vars/)
+
+* About
+
+This library contains SuperCollider tools and examples coded and collected from 2004 by Ioannis Zannos. It is organized in Quarks, and includes a utility for installing those Quarks from a menu, which is installed by putting an alias of the folder named "PutMyAliasInExtensions" into the user's SuperCollider/Extensions folder. 
+
+** New - Suggested
+
+See: iz.core folder, LiltBase, Snippets, Chain (require Resource, ServerPrep).
+
+- Widget: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also store and restore the settings of such elements in WidgetPresets. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
+
+- Snippet, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
+
+- ProxyCodeEditor, NanoKontrol2b: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
 
 * Credits, Download
 - Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
+- Widget, ProxyCode, ProxySourceEditor by by Ioannis Zannos, May-August 2012
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
@@ -33,6 +48,50 @@ Choose iz.local from the Quarks menu.  Recommended Quarks to try out are:
 - ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
 - Chains (Alternative score-writing class for scheduling execution of functions with patterns)
 
+* Widget
+
+Simplify the task of adding and communicating with several widgets to any object, for representing and control different aspects of that object. 
+
+** Example
+
+First do this: 
+
+#+BEGIN_SRC cpp 
+(
+Document.current.envir = ProxySpace.push;
+w = Window.new;
+w.layout = VLayout(
+        /*  Create a self-updating menu for selecting a node from 
+            this Document's ProxySpace, an name it \nodes */
+	PxMenu(w, \nodes),
+        /* Create a button for starting and stopping the selected proxy,
+           and make its proxy settable by menu element named \nodes */
+	PxButton(w, \button, \nodes).states_([["start"], ["stop"]]),
+        /* Create a menu for selecting control parameters from the selected
+           node, name it \specs, make its node settable by menu \nodes */
+	PxControlsMenu(w, \specs, \nodes),
+        /* Create a knob named \knob, make its spec settable by menu named 
+           \specs, and make it set its mapped value to \numbox */
+	PxKnob(w, \knob, \specs, \numbox),
+        /* Create a NumberBox named \numbox, make it set its unmapped value
+           to element named \knob */
+	PxNumberBox(w, \numbox, \knob)
+);
+w.windowHandler(w).front;
+)
+#+END_SRC cpp
+
+Then do this: 
+
+#+BEGIN_SRC emacs-lisp 
+//:sample - Run the following two lines. 
+~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+~out.play; // after that, check the first menu of the window above, and select 'out'
+#+END_SRC emacs-lisp 
+
+
+Then select controls from the second menu, and use the knob to control selected parameter.
+
 
 * Object methods for easy messaging via NotificationCenter
 
@@ -40,7 +99,6 @@ Simplify the connection of objects for sending messages to each other via Notifi
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 
-* Class Widget
 * Class Code
 
 Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
@@ -58,7 +116,13 @@ Shortcuts provided are:
 - Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
 - Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
 
+* Class CodeProxy
+
+Evaluate code snippets in a Document using Code-keyboard shortcuts in a ProxySpace, and create NodeProxies from the comments at the beginning of each Snippet. Parse additional argument specifications from the comments.  Provide essential play-stop and volume increase-decrease commands as keyboard shortcuts. 
+
 * Class ProxySourceEditor
+
+Edit the source code of a NodeProxy created from a snippet, provide controls for its arguments automatically, and browse the history of source code snippets for this proxy.  Also provide MIDI bindings for each proxy parameter control gui item. 
 
 * Class Panes
 
