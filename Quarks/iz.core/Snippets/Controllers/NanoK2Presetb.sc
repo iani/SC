@@ -55,6 +55,8 @@ The previously selected preset stores its last state before leaving.
 - Red: autoSnapshot stored only - history is empty
 - Blue: Snapshots stored in history exist
 
+TODO: Implement "auto-proxy-mode".
+
 */
 
 NanoK2Presetb {

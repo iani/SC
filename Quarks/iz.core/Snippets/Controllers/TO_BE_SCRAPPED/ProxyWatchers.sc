@@ -1,4 +1,8 @@
 /* IZ Thu 09 August 2012 10:20 AM EEST
+
+WILL BE REMOVED!!!!!!!
+
+
 Perform actions on a widget whenever a node is created, starts or stops, or its source changes in the ProxySpace of a ProxyCode of a Document. 
 
 Functionality extracted from ProxySourceEditor, in order to be used also in other classes. 
@@ -47,37 +51,6 @@ w.onClose = { w.objectClosed };
 ~out3.play;
 */
 
-ProxySpaceWatcher {
-	var <widget, <proxySpace, <>action;
-
-	*new { | widget, proxySpace, action |
-		^this.newCopyArgs(widget, proxySpace, action).init;
-	}
-
-	init {
-		proxySpace = proxySpace ?? {
-			Document.current.envir ?? { (Document.current.envir = ProxySpace.push).envir }
-		};
-		action = action ?? {{
-			// Wait for proxyspace to install the new proxy. 
-			{ this.updateNodeProxyList; }.defer(0.1); // 0.1 was not sufficient?
-		}};
-		widget.addNotifier(proxySpace, \newProxy, { | proxy, space | action.(proxy, space, this) });
-//		action.value;	// register any already existing nodes
-		this.updateNodeProxyList; // register any already existing nodes immediately
-	}
-	
-	updateNodeProxyList {
-		var currentItem, items, index;
-		widget.view.items !? { currentItem = widget.view.item; };
-		items = proxySpace.envir.keys.asArray.sort add: '-';
-		widget.view.items = items;
-//		widget.view.value = items.indexOf(currentItem) ?? { items.size - 1 };
-		widget.value = items.indexOf(currentItem) ?? { items.size - 1 };
-		[this, thisMethod.name, "items", items, "widget view value:", widget.view.value,
-			"widget value: ", widget.value].postln;
-	}
-}
 
 ProxyNodeSetter {
 	/* 	When a new node is seleted by my widget, set it as node in a target widget.

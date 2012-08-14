@@ -10,61 +10,41 @@ NanoK2Stripb {
 	}
 	
 	disable { this.widgets do: _.disableInput }
-	enable { this.widgets do: _.enableInput }
+	enable { this.widgets do: _.enableInput; this.notify(\update) }
 
 	gui {
 		^VLayout(
-			PopUpMenu().font_(font)
-				.addModel(this, \knobNodeMenu)
-				.proxySpaceWatcher(kontrol.proxySpace)
-				.proxyNodeSetter(\knobControlMenu)
-				.proxyNodeSetter(\knobStartStop)
-				.v,
-			PopUpMenu().font_(font)
-				.addModel(this, \knobControlMenu)
-				.proxySpecWatcher
-				.proxySpecSetter(\knob).v,
+			PxMenu(this, \knobNodeMenu, kontrol.proxySpace).font_(font),
+			PxControlsMenu(this, \knobControlMenu, \knobNodeMenu).font_(font),
 			VLayout(
 				HLayout(
-					NumberBox().font_(font)
-						.addModel(this, \knobNumBox, \knob).v,
+					PxNumberBox(this, \knobNumBox, \knob).font_(font),
 					Button().states_([["ed"]]).font_(font).action_({
 							this.editNodeSource(\knobNodeMenu);
 						}),
 				),
 				HLayout(
-					Knob().addModel(this, \knob, \knobNumBox).v,
-					Button().states_([[">"], ["||", Color.black, Color.red]]).font_(font)
-						.addModel(this, \knobStartStop)
-						.proxyNodeWatcher.v,
+					PxKnob(this, \knob, \knobControlMenu, \knobNumBox),
+					PxButton(this, \knobStartStop, \knobNodeMenu)
+						.states_([[">"], ["||", Color.black, Color.red]])
+						.font_(font),
 				),
 			),
 			HLayout(
-				Slider()
-					.addModel(this, \slider, \sliderNumBox)
-					.proxyNodeWatcher.v,
+				PxSlider(this, \slider, \sliderControlMenu, \sliderNumBox),
 				VLayout(
-					NumberBox().font_(font)
-						.addModel(this, \sliderNumBox, \slider).v,
+					PxNumberBox(this, \sliderNumBox, \slider).font_(font),
 					Button().states_([["ed"]]).font_(font).action_({
 							this.editNodeSource(\sliderNodeMenu);
 						}),
-					Button().states_([[">"], ["||", Color.black, Color.red]]).font_(font)
-						.addModel(this, \sliderStartStop)
-						.proxyNodeWatcher.v,
+					PxButton(this, \sliderStartStop, \sliderNodeMenu)
+						.states_([[">"], ["||", Color.black, Color.red]])
+						.font_(font)
 				)
 			),
-			PopUpMenu().font_(font)
-				.addModel(this, \sliderNodeMenu)
-				.proxySpaceWatcher(kontrol.proxySpace)
-				.proxyNodeSetter(\sliderControlMenu)
-				.proxyNodeSetter(\sliderStartStop)
-				.v,
-			PopUpMenu().font_(font)
-				.addModel(this, \sliderControlMenu)
-				.proxySpecWatcher
-				.proxySpecSetter(\slider).v,
-		)
+			PxMenu(this, \sliderNodeMenu, kontrol.proxySpace).font_(font),
+			PxControlsMenu(this, \sliderControlMenu, \sliderNodeMenu).font_(font)
+		);
 	}
 
 	editNodeSource { | menuID |

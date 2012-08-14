@@ -61,7 +61,7 @@ NanoKontrol2b {
 					window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
 				};
 			},
-			disableAction: { 
+			disableAction: {
 				strips do: _.disable;
 				if (window.isClosed.not) {
 					window.view.background = Color(0.9, 0.9, 0.9, 0.5);

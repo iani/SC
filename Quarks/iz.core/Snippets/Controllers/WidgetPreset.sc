@@ -36,7 +36,7 @@ WidgetPreset {
 	restore {
 		var view;
 		view = widget.view;
-		widget.setValue = value;
+		widget setValue: value;
 		if (view respondsTo: \items) { view.items = items; };
 		view.value = viewValue;
 		widget.inputs = inputs;
@@ -46,6 +46,7 @@ WidgetPreset {
 		widget.proxySpecs = proxySpecs;
 		widget.action = action;
 		widget.updateFunc = updateFunc;
+		proxySpace !? { widget.updateProxies; };
 	}	
 }
 

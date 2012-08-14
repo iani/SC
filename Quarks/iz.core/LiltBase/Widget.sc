@@ -6,33 +6,28 @@ Simplify the task of adding and communicating with several widgets to any object
 
 Example: 
 (
-
- /// TODO: MUST REVIEW METHOD NAMES in this example ... 
-ProxySpace.push;
-w = Window.new.front;
+w = Window.new;
 w.layout = VLayout(
 	PopUpMenu().addModel(w, \nodes)
 		.watchProxySpace.v,
 	Button().states_([["start"], ["stop"]])
 		.addModel(w, \button)
-		.getProxyFrom(\nodes)
-		.proxyOnOffButton.v,
-	PopUpMenu()
-		.addModel(w, \specmenu)
-		.getProxyFrom(\nodes)
-		.proxySpecChooser.v,
-	Knob().addModel(w, \knob, \numbox)
-		.getSpecFrom(\specmenu).v,
-	NumberBox().addModel(w, \numbox, \knob).v
+		.proxyOnOffButton(\nodes).v,
+	PopUpMenu().addModel(w, \specs)
+		. (\nodes).v,
+	Knob().addModel(w, \knob)
+		.getSpecsFrom(\specs).v
 );
+w.windowHandler(w).front;
 )
+//:sample
+
+{ | freq = 400, amp = 0.01 | Ringz.ar(PinkNoise.ar(amp), freq, 0.1) }
+
 
 ~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 ~out.play; // after that, check the first menu of the window above, and select 'out'
 // then select controls from the second menu, and use the knob to control selected parameter.
-
-
-
 
 */
 
@@ -54,7 +49,7 @@ Widget {
 	var <>inputs;		/* MIDIFuncs, MIDIResponders etc.
 		Can be enabled or disabled individually or in groups
 		See Object:enable and Widget:enableInput */
-	var <proxySpace, <proxy, <proxySpecs;
+	var <>proxySpace, <>proxy, <>proxySpecs;
 
 	*cacheSpecs { | argNodeProxy, argSpecs |
 		// MergeSpecs stores most recent specs nodes here, for access when switching
@@ -195,7 +190,6 @@ Widget {
 		this.valueAction = value = value - 1 max: limit;
 	}
 
-
 	// ============= Interacting with proxies and other widgets ========
 	
 	// Menu for choosing a proxy from a ProxySpace
@@ -211,8 +205,9 @@ Widget {
 			this.notify(\setProxy, this.getItemFromMenu({ | symbol | proxySpace[symbol] }));
 		}};
 		this.addNotifier(proxySpace, \newProxy, { | newProxy |
-			{ this.updateItemsAndValue(proxySpace.envir.keys.asArray.sort add: '-'); }.defer(0.1);
+			{ this.updateProxies; }.defer(0.1);
 		});
+		this.updateProxies;
 	}
 
 	getItemFromMenu { | argFunc |
@@ -221,6 +216,10 @@ Widget {
 		}{
 			^argFunc.(view.item, view.value);
 		}
+	}
+	
+	updateProxies {
+		this.updateItemsAndValue(proxySpace.envir.keys.asArray.sort add: '-');
 	}
 	
 	updateItemsAndValue { | newItems, defaultItem = '-' |
@@ -260,6 +259,7 @@ Widget {
 		}
 	}
 
+	// maybe should be "doOnEnable ... registerOneShot(\enable ... )
 	doOnUpdate { | argFunc | model.registerOneShot(\update, this, argFunc); }
 
 	onOffButtonSetProxy { | argProxy |
