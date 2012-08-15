@@ -1,24 +1,36 @@
-/* IZ Fri 10 August 2012  7:33 PM EEST
+/* IZ Tue 14 August 2012  7:43 PM EEST
 
-Version 2: Refactoring using Widget and ProxyWatchers
+MainProxyMixer.new;
 
-A GUI emulating the controls of NanoKontrol2, with features: 
+Cloned from NanoKontrol2b
 
-Means to map the controls of any NodeProxy in a ProxySpace to a slider or knob. 
-Presets, preset history.
-Etc. 
+To become a mixer with fixed proxy allocation per strip. Proxies are allocated in the order that they are created or found when parsed from a document. 
 
-n = NanoKontrol2a(ProxySpace.push);
+16 channels total. When more nodes than 16 are created, these are allocated to the next preset. Presets thus function as banks. 
 
-n = NanoKontrol2b();
-n.window.bounds;
+============= IDEAS ============
 
-TODO: Implement auto-proxy-mode, provide MIDI specs for UC-33e, and for Korg NanoKontrol 2. 
+Substitute the top knob-node-selection menu with a drag item for mapping the output of a proxy to the parameter or input of another proxy. This is to be dragged to an input drag-sink on the ProxySourceEditor (next version, to be done). 
+
+Mappings may be saved as code-snippet? 
+
+What about making Snippets that are marked by beginning with //:- like this: 
+//:- 
+Be non-proxy snippets, and thus excepted from being allocated in the proxy mixer's channels? 
+These could then be shown in a different type of GUI that just allows to apply them. 
+This would be a snippet-button type of gui like CodeButtons, developed a while ago.
+
+In the ProxySourceEditor interface, the drag-sink field can be set to accept outputs from other proxies for mapping, or other objects such as numbers, for setting, or patterns, for streaming with asStream, (for NodeProxies playing Pbinds, etc. 
+
+
+===============================================================
+
+MainProxyMixer.new;
 
 */
 
-NanoKontrol2b {
-	classvar <all; // all open NanoKontrol2b instances 
+MainProxyMixer {
+	classvar <all; // all open instances
 
 	var <doc, <docName;
 	var <proxyCode; 	// ProxyCode instance that created me. Holds history of NodeProxy source code
@@ -49,7 +61,7 @@ NanoKontrol2b {
 
 	makeWindow {
 		window = Window(this.class.name ++ " : " ++ (docName ? "ps"), 
-			Rect(Window.screenBounds.width - 630, 0, 630, 290)
+			Rect(Window.screenBounds.width - 1000, 0, 1200, 290)
 		);
 		WindowHandler(this, window, 
 			{
@@ -71,7 +83,7 @@ NanoKontrol2b {
 		);
 		presets = (0..9) collect: NanoK2Presetb(_, this);
 		currentPreset = presets.first;
-		strips = { NanoK2Stripb(this) } ! 8;
+		strips = { NanoK2Stripb(this) } ! 16;
 		window.layout = HLayout(
 			VLayout(*(presets collect: _.gui)),
 			*(strips collect: _.gui)

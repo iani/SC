@@ -1,51 +1,30 @@
-                Lilt2/Elemenv\'i (/Look Ma, No Vars/)
-                =====================================
+                Lilt2/Elemenv\'i (/Look Ma: No Vars!/)
+                ======================================
 
-Author: I Z
-Date: 2012-08-14 10:56:32 EEST
-
-
-Table of Contents
-=================
-1 About 
-    1.1 New - Suggested 
-2 Credits, Download 
-3 Copying (License) 
-4 Installation 
-5 Widget 
-    5.1 Example 
-6 Object methods for easy messaging via NotificationCenter 
-7 Class Code 
-8 Class CodeProxy 
-9 Class ProxySourceEditor 
-10 Class Panes 
-11 Class Dock 
-12 Class Chain, EventStream, Function:sched and Function:stream 
-13 Class ServerPrep 
-14 Class SynthResource 
-15 Class Spectrograph 
+Author: Ioannis Zannos
+Date: 2012-08-15 03:14:19 EEST
 
 
-1 About 
-~~~~~~~~
+About 
+~~~~~~
 
 This library contains SuperCollider tools and examples coded and collected since 2003 by Ioannis Zannos, organized using the RepQuark by Martin Carl\'e. It is organized in Quarks, and includes a utility for installing those Quarks from a menu, which is installed by putting an alias of the folder named "PutMyAliasInExtensions" into the user's SuperCollider/Extensions folder. 
 
-1.1 New - Suggested 
-====================
+New - Suggested 
+================
 
 See: iz.core folder, LiltBase, Snippets, Chain (require Resource, ServerPrep).
 
 - Widget: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also store and restore the settings of such elements in WidgetPresets. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
 
-- Snippet, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
+- Code, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
 
 - ProxyCodeEditor, NanoKontrol2b: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
 
-2 Credits, Download 
-~~~~~~~~~~~~~~~~~~~~
-- Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
-- Widget, ProxyCode, ProxySourceEditor by by Ioannis Zannos, May-August 2012
+Credits, Download 
+~~~~~~~~~~~~~~~~~~
+- Code, Resource and Chain by Ioannis Zannos, March-May 2011
+- Widget, ProxyCode, ProxySourceEditor by Ioannis Zannos, May-August 2012
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
@@ -56,13 +35,13 @@ Download from: [https://github.com/iani/SC]
 or:
  git clone git://github.com/iani/SC.git
 
-3 Copying (License) 
-~~~~~~~~~~~~~~~~~~~~
+Copying (License) 
+~~~~~~~~~~~~~~~~~~
 
 This library is distributed under the GNU General Public License. It contains other libraries released under the same license, in particular work by Nick Collins. See full text of the GNU license in file: "COPYING.txt".
 
-4 Installation 
-~~~~~~~~~~~~~~~
+Installation 
+~~~~~~~~~~~~~
 
 As of 2011-06-08 The library is being reorganized to a modular plugin-form using quarks (thanks MC). To make these quarks available via a menu on MacOS X, make an alias of the folder "PutMyAliasInExtensions" and put the alias in:
 
@@ -79,13 +58,13 @@ Choose iz.local from the Quarks menu.  Recommended Quarks to try out are:
 - ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
 - Chains (Alternative score-writing class for scheduling execution of functions with patterns)
 
-5 Widget 
-~~~~~~~~~
+Widget 
+~~~~~~~
 
 Simplify the task of adding and communicating with several widgets to any object, for representing and control different aspects of that object. 
 
-5.1 Example 
-============
+Example 
+========
 
 First do this: 
 
@@ -124,15 +103,15 @@ Then do this:
 Then select controls from the second menu, and use the knob to control selected parameter.
 
 
-6 Object methods for easy messaging via NotificationCenter 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Object methods for easy messaging via NotificationCenter 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 
-7 Class Code 
-~~~~~~~~~~~~~
+Class Code 
+~~~~~~~~~~~
 
 Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
 
@@ -149,23 +128,23 @@ Shortcuts provided are:
 - Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
 - Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
 
-8 Class CodeProxy 
-~~~~~~~~~~~~~~~~~~
+Class CodeProxy 
+~~~~~~~~~~~~~~~~
 
 Evaluate code snippets in a Document using Code-keyboard shortcuts in a ProxySpace, and create NodeProxies from the comments at the beginning of each Snippet. Parse additional argument specifications from the comments.  Provide essential play-stop and volume increase-decrease commands as keyboard shortcuts. 
 
-9 Class ProxySourceEditor 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Class ProxySourceEditor 
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Edit the source code of a NodeProxy created from a snippet, provide controls for its arguments automatically, and browse the history of source code snippets for this proxy.  Also provide MIDI bindings for each proxy parameter control gui item. 
 
-10 Class Panes 
-~~~~~~~~~~~~~~~
+Class Panes 
+~~~~~~~~~~~~
 
 Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
 
-11 Class Dock 
-~~~~~~~~~~~~~~
+Class Dock 
+~~~~~~~~~~~
 
 Provide some useful shortcuts for common tasks: 
    browseUserClasses :    Open a list of all classes defined in the user's Application Support 
@@ -182,8 +161,8 @@ Provide some useful shortcuts for common tasks:
 
    closeDocListWindow : Close the document list window
 
-12 Class Chain, EventStream, Function:sched and Function:stream 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Class Chain, EventStream, Function:sched and Function:stream 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and access of Streams from Patterns and their use with Routines and Functions scheduled for repeated execution.  
 
@@ -239,8 +218,8 @@ Other example:
   //: ---
   )
 
-13 Class ServerPrep 
-~~~~~~~~~~~~~~~~~~~~
+Class ServerPrep 
+~~~~~~~~~~~~~~~~~
 
 - Obviate the need to boot the server manually before starting synths.
 - Ensure that Buffers and SynthDefs are allocated / sent to the server
@@ -259,8 +238,8 @@ Classes involved:
 - UniqueBuffer
 - Udef
 
-14 Class SynthResource 
-~~~~~~~~~~~~~~~~~~~~~~~
+Class SynthResource 
+~~~~~~~~~~~~~~~~~~~~
 
 Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
 controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
@@ -296,8 +275,8 @@ Example of how SynthResource can simplify the code required:
   }.fork;
   )
 
-15 Class Spectrograph 
-~~~~~~~~~~~~~~~~~~~~~~
+Class Spectrograph 
+~~~~~~~~~~~~~~~~~~~
 
 An example application showing some of the features of this library. Creates a window showing a live running spectrogram of one of the audio channels. The fft polling process for the spectrogram is persistent, that is, it starts as soon as the server boots and re-starts if the server's processes are killed by Command-. It (optionally) stops when the Spectrograph window is closed. 
 

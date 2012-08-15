@@ -21,3 +21,7 @@
 *.out
 *.toc
 *.aux
+*.bbl
+*.bcf
+*.blg
+*.run.xml

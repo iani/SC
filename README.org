@@ -1,4 +1,6 @@
-Lilt2/Elemenv\'i (/Look Ma, No Vars/)
+#+TITLE: Lilt2/Elemenv\'i (/Look Ma: No Vars!/)
+#+AUTHOR: Ioannis Zannos
+#+OPTIONS: toc:nil,num:nil
 
 * About
 
