@@ -4,11 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 lang="en" xml:lang="en">
 <head>
-<title>Lilt2/Elemenb\'i (/Look Ma, No Boot/)</title>
+<title>Lilt2/Elemenv\'i (/Look Ma: No Vars!/)</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-04-15 23:32:20 EEST"/>
-<meta name="author" content="I Z"/>
+<meta name="generated" content="2012-08-15 03:25:37 EEST"/>
+<meta name="author" content="Ioannis Zannos"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
 <style type="text/css">
@@ -81,35 +81,58 @@ lang="en" xml:lang="en">
 <body>
 <div id="content">
 
-<h1 class="title">Lilt2/Elemenb\'i (<i>Look Ma, No Boot</i>)</h1>
+<h1 class="title">Lilt2/Elemenv\'i (<i>Look Ma: No Vars!</i>)</h1>
 
-
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1 Credits, Download </a></li>
-<li><a href="#sec-2">2 Copying (License) </a></li>
-<li><a href="#sec-3">3 Installation </a></li>
-<li><a href="#sec-4">4 Class ServerPrep </a></li>
-<li><a href="#sec-5">5 Class SynthResource </a></li>
-<li><a href="#sec-6">6 Class Chain, EventStream, Function:sched and Function:stream </a></li>
-<li><a href="#sec-7">7 Object methods for easy messaging via NotificationCenter </a></li>
-<li><a href="#sec-8">8 Class Code </a></li>
-<li><a href="#sec-9">9 Class Panes </a></li>
-<li><a href="#sec-10">10 Class Dock </a></li>
-<li><a href="#sec-11">11 Class Spectrograph </a></li>
-</ul>
-</div>
-</div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Credits, Download </h2>
+<h2 id="sec-1">About </h2>
 <div class="outline-text-2" id="text-1">
+
+
+<p>
+This library contains SuperCollider tools and examples coded and collected since 2003 by Ioannis Zannos, organized using the RepQuark by Martin Carl\'e. It is organized in Quarks, and includes a utility for installing those Quarks from a menu, which is installed by putting an alias of the folder named "PutMyAliasInExtensions" into the user's SuperCollider/Extensions folder. 
+</p>
+
+</div>
+
+<div id="outline-container-1_1" class="outline-3">
+<h3 id="sec-1_1">New - Suggested </h3>
+<div class="outline-text-3" id="text-1_1">
+
+
+<p>
+See: iz.core folder, LiltBase, Snippets, Chain (require Resource, ServerPrep).
+</p>
+<ul>
+<li>
+Widget: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also store and restore the settings of such elements in WidgetPresets. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
+
+</li>
+<li>
+Code, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
+
+</li>
+<li>
+ProxyCodeEditor, NanoKontrol2b: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Credits, Download </h2>
+<div class="outline-text-2" id="text-2">
 
 <ul>
 <li>
-Snippets, Resource and Chain by Ioannis Zannos, March-May 2011
+Code, Resource and Chain by Ioannis Zannos, March-May 2011
+</li>
+<li>
+Widget, ProxyCode, ProxySourceEditor by Ioannis Zannos, May-August 2012
 </li>
 <li>
 Quarks modularisation scheme by Martin Carl\'e, September-October 2011
@@ -119,10 +142,10 @@ Server GUI by Sergio Luque
 </li>
 <li>
 beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
-BEAST research team at the University of Birmingham. See: <a href="http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx">http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx</a>
+BEAST research team at the University of Birmingham. \\ See: <a href="http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx">http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx</a>
 </li>
 <li>
-collins quark group ported from Nick Collin's work at: <a href="http://www.sussex.ac.uk/Users/nc81/code.html">http://www.sussex.ac.uk/Users/nc81/code.html</a>
+collins quarks ported from Nick Collins' work at: <a href="http://www.sussex.ac.uk/Users/nc81/code.html">http://www.sussex.ac.uk/Users/nc81/code.html</a>
 </li>
 </ul>
 
@@ -139,9 +162,9 @@ git clone git://github.com/iani/SC.git
 
 </div>
 
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> Copying (License) </h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">Copying (License) </h2>
+<div class="outline-text-2" id="text-3">
 
 
 <p>
@@ -151,9 +174,9 @@ This library is distributed under the GNU General Public License. It contains ot
 
 </div>
 
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> Installation </h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">Installation </h2>
+<div class="outline-text-2" id="text-4">
 
 
 <p>
@@ -196,122 +219,206 @@ Chains (Alternative score-writing class for scheduling execution of functions wi
 
 </div>
 
-<div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> Class ServerPrep </h2>
-<div class="outline-text-2" id="text-4">
-
-
-<ul>
-<li>
-Obviate the need to boot the server manually before starting synths.
-</li>
-<li>
-Ensure that Buffers and SynthDefs are allocated / sent to the server
-before starting synths, efficiently. 
-</li>
-<li>
-Provide a safe way for registering synth and routine processes to start automatically when the server boots
-or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first.
-</li>
-</ul>
-
-
-<p>
-Classes involved: 
-</p>
-<ul>
-<li>
-ServerPrep
-</li>
-<li>
-ServerActionLoader
-</li>
-<li>
-SynthLoader
-</li>
-<li>
-DefLoader
-</li>
-<li>
-BufLoader
-</li>
-<li>
-RoutineLoader
-</li>
-<li>
-UniqueBuffer
-</li>
-<li>
-Udef
-</li>
-</ul>
-
-
-</div>
-
-</div>
-
 <div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> Class SynthResource </h2>
+<h2 id="sec-5">Widget </h2>
 <div class="outline-text-2" id="text-5">
 
 
 <p>
-Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
-controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
+Simplify the task of adding and communicating with several widgets to any object, for representing and control different aspects of that object. 
 </p>
+
+</div>
+
+<div id="outline-container-5_1" class="outline-3">
+<h3 id="sec-5_1">Example </h3>
+<div class="outline-text-3" id="text-5_1">
+
+
 <p>
-Example of how SynthResource can simplify the code required: 
-</p>
-<p>
-<i>Without Symbol:mplay</i>
+First do this: 
 </p>
 
 
 
 <pre class="example">(
-{
-   loop {
-      {    var synth;
-         synth = Synth(\default, [\freq, (25..50).choose.midicps]);
-         0.1.wait;
-         synth.release(exprand(0.01, 1.0));
-      }.fork;
-      [0.1, 0.2].choose.wait;
-   };
-}.fork;
+Document.current.envir = ProxySpace.push;
+w = Window.new;
+w.layout = VLayout(
+        /*  Create a self-updating menu for selecting a node from 
+            this Document's ProxySpace, an name it \nodes */
+        PxMenu(w, \nodes),
+        /* Create a button for starting and stopping the selected proxy,
+           and make its proxy settable by menu element named \nodes */
+        PxButton(w, \button, \nodes).states_([["start"], ["stop"]]),
+        /* Create a menu for selecting control parameters from the selected
+           node, name it \specs, make its node settable by menu \nodes */
+        PxControlsMenu(w, \specs, \nodes),
+        /* Create a knob named \knob, make its spec settable by menu named 
+           \specs, and make it set its mapped value to \numbox */
+        PxKnob(w, \knob, \specs, \numbox),
+        /* Create a NumberBox named \numbox, make it set its unmapped value
+           to element named \knob */
+        PxNumberBox(w, \numbox, \knob)
+);
+w.windowHandler(w).front;
 )
 </pre>
 
 
 
 <p>
-<i>Using Symbol:mplay</i>
+Then do this: 
 </p>
 
 
 
-<pre class="example">
-(
-{
-   loop {
-      \default.mplay([\freq, (25..50).choose.midicps])
-         .dur(0.1, exprand(0.01, 1.0));
-      [0.1, 0.2].choose.wait;
-   };
-}.fork;
-)
+<pre class="example">//:sample - Run the following two lines. 
+~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+~out.play; // after that, check the first menu of the window above, and select 'out'
 </pre>
 
 
 
+
+<p>
+Then select controls from the second menu, and use the knob to control selected parameter.
+</p>
+
+</div>
 </div>
 
 </div>
 
 <div id="outline-container-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> Class Chain, EventStream, Function:sched and Function:stream </h2>
+<h2 id="sec-6">Object methods for easy messaging via NotificationCenter </h2>
 <div class="outline-text-2" id="text-6">
+
+
+<p>
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
+</p>
+<p>
+One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7">Class Code </h2>
+<div class="outline-text-2" id="text-7">
+
+
+<p>
+Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
+</p>
+<p>
+Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
+</p>
+<p>
+Shortcuts provided are:
+</p>
+<ul>
+<li>
+Command-shift-x: Evaluate the code in an AppClock routine. Booting the default server if needed
+</li>
+<li>
+Command-shift-alt-x: Evaluate the code in a SystemClock routine Boot default server if needed
+</li>
+<li>
+Command-shift-v: Evaluate and post the results of the code, without routine or server booting
+</li>
+<li>
+Command-shift-j: Select the next code part
+</li>
+<li>
+Command-shift-k: Select the previous code part
+</li>
+<li>
+Command-shift-}: open a list of the code segments of the current Document
+</li>
+<li>
+Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
+</li>
+<li>
+Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8">Class CodeProxy </h2>
+<div class="outline-text-2" id="text-8">
+
+
+<p>
+Evaluate code snippets in a Document using Code-keyboard shortcuts in a ProxySpace, and create NodeProxies from the comments at the beginning of each Snippet. Parse additional argument specifications from the comments.  Provide essential play-stop and volume increase-decrease commands as keyboard shortcuts. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9">Class ProxySourceEditor </h2>
+<div class="outline-text-2" id="text-9">
+
+
+<p>
+Edit the source code of a NodeProxy created from a snippet, provide controls for its arguments automatically, and browse the history of source code snippets for this proxy.  Also provide MIDI bindings for each proxy parameter control gui item. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10">Class Panes </h2>
+<div class="outline-text-2" id="text-10">
+
+
+<p>
+Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-11" class="outline-2">
+<h2 id="sec-11">Class Dock </h2>
+<div class="outline-text-2" id="text-11">
+
+
+<p>
+Provide some useful shortcuts for common tasks: 
+browseUserClasses :    Open a list of all classes defined in the user's Application Support 
+directory. Typing return on a selected item opens the code file with the definition of this class. 
+</p>
+<p>
+insertClassHelpTemplate : Insert a template for documenting a class named after the name of the
+document. Inserts listings of superclasses, class and instance variables and methods. 
+</p>
+<p>
+openCreateHelpFile : Open a help file for a selected user class. Automatic creation of the file 
+is reserved to code residing outside the distribution files of this library. 
+</p>
+<p>
+showDocListWindow :  An auto-updating window listing all open Documents, with selection by mouse click
+or by text search.
+</p>
+<p>
+closeDocListWindow : Close the document list window
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-12" class="outline-2">
+<h2 id="sec-12">Class Chain, EventStream, Function:sched and Function:stream </h2>
+<div class="outline-text-2" id="text-12">
 
 
 <p>
@@ -388,64 +495,57 @@ Chain(Prand([ // choose from the following at random:
 
 
 
-
 </div>
 
 </div>
 
-<div id="outline-container-7" class="outline-2">
-<h2 id="sec-7"><span class="section-number-2">7</span> Object methods for easy messaging via NotificationCenter </h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-13" class="outline-2">
+<h2 id="sec-13">Class ServerPrep </h2>
+<div class="outline-text-2" id="text-13">
+
+
+<ul>
+<li>
+Obviate the need to boot the server manually before starting synths.
+</li>
+<li>
+Ensure that Buffers and SynthDefs are allocated / sent to the server
+before starting synths, efficiently. 
+</li>
+<li>
+Provide a safe way for registering synth and routine processes to start automatically when the server boots
+or when the tree is inited, ensuring that SynthDefs and Buffers will be loaded first.
+</li>
+</ul>
 
 
 <p>
-Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
-</p>
-<p>
-One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
-</p>
-</div>
-
-</div>
-
-<div id="outline-container-8" class="outline-2">
-<h2 id="sec-8"><span class="section-number-2">8</span> Class Code </h2>
-<div class="outline-text-2" id="text-8">
-
-
-<p>
-Enable the selection of parts of a SuperCollider document separated by comments followed by :, the movement between such parts, and the execution of those parts through keyboard shortcuts. Additionally, wrap these code parts in a routine so that number.wait messages can be written straight in the code, without wrapping them in { }.fork or Routine({ }). 
-</p>
-<p>
-Also ensure that the code will run after the default server is booted and the Buffers and SynthDefs defined as Udefs in a Session have been loaded. 
-</p>
-<p>
-Shortcuts provided are:
+Classes involved: 
 </p>
 <ul>
 <li>
-Command-shift-x: Evaluate the code in an AppClock routine. Booting the default server if needed
+ServerPrep
 </li>
 <li>
-Command-shift-alt-x: Evaluate the code in a SystemClock routine Boot default server if needed
+ServerActionLoader
 </li>
 <li>
-Command-shift-v: Evaluate and post the results of the code, without routine or server booting
+SynthLoader
 </li>
 <li>
-Command-shift-j: Select the next code part
+DefLoader
 </li>
 <li>
-Command-shift-k: Select the previous code part
+BufLoader
 </li>
 <li>
-Command-shift-}: open a list of the code segments of the current Document
+RoutineLoader
 </li>
 <li>
-Command-alt-shift-}: open a widow with buttons for running the code segments of the current Document
+UniqueBuffer
 </li>
 <li>
-Command-alt-control-shift-}: Create OSCresponders for running the code segments of the current Document
+Udef
 </li>
 </ul>
 
@@ -454,50 +554,67 @@ Command-alt-control-shift-}: Create OSCresponders for running the code segments 
 
 </div>
 
-<div id="outline-container-9" class="outline-2">
-<h2 id="sec-9"><span class="section-number-2">9</span> Class Panes </h2>
-<div class="outline-text-2" id="text-9">
+<div id="outline-container-14" class="outline-2">
+<h2 id="sec-14">Class SynthResource </h2>
+<div class="outline-text-2" id="text-14">
 
 
 <p>
-Arrange Document windows on the screen conveniently for maximum view area on the screen. Provide 2 layouts: single pane and 2 panes side by side, with keyboard shortcuts for switching between them. Provide an auto-updating document list palette for selecting documents by mouse or by string search. Provide a way for switching between a dark colored document theme and the default document theme via keyboard shortcuts, with automatic updating of the coloring of all relevant documents. 
+Simplify the creation and control of Synths by storing them in a dictionary for later access, and by providing utility methods for
+controlling the duration and release time, for synchronizing the execution and life time of routines pertaining to a synth, and for attaching other objects that react to the start and end of a synth.
 </p>
+<p>
+Example of how SynthResource can simplify the code required: 
+</p>
+<p>
+<i>Without Symbol:mplay</i>
+</p>
+
+
+
+<pre class="example">(
+{
+   loop {
+      {    var synth;
+         synth = Synth(\default, [\freq, (25..50).choose.midicps]);
+         0.1.wait;
+         synth.release(exprand(0.01, 1.0));
+      }.fork;
+      [0.1, 0.2].choose.wait;
+   };
+}.fork;
+)
+</pre>
+
+
+
+<p>
+<i>Using Symbol:mplay</i>
+</p>
+
+
+
+<pre class="example">
+(
+{
+   loop {
+      \default.mplay([\freq, (25..50).choose.midicps])
+         .dur(0.1, exprand(0.01, 1.0));
+      [0.1, 0.2].choose.wait;
+   };
+}.fork;
+)
+</pre>
+
+
+
 </div>
 
 </div>
 
-<div id="outline-container-10" class="outline-2">
-<h2 id="sec-10"><span class="section-number-2">10</span> Class Dock </h2>
-<div class="outline-text-2" id="text-10">
-
-
-<p>
-Provide some useful shortcuts for common tasks: 
-browseUserClasses :    Open a list of all classes defined in the user's Application Support 
-directory. Typing return on a selected item opens the code file with the definition of this class. 
-</p>
-<p>
-insertClassHelpTemplate : Insert a template for documenting a class named after the name of the
-document. Inserts listings of superclasses, class and instance variables and methods. 
-</p>
-<p>
-openCreateHelpFile : Open a help file for a selected user class. Automatic creation of the file 
-is reserved to code residing outside the distribution files of this library. 
-</p>
-<p>
-showDocListWindow :  An auto-updating window listing all open Documents, with selection by mouse click
-or by text search.
-</p>
-<p>
-closeDocListWindow : Close the document list window
-</p>
-</div>
-
-</div>
-
-<div id="outline-container-11" class="outline-2">
-<h2 id="sec-11"><span class="section-number-2">11</span> Class Spectrograph </h2>
-<div class="outline-text-2" id="text-11">
+<div id="outline-container-15" class="outline-2">
+<h2 id="sec-15">Class Spectrograph </h2>
+<div class="outline-text-2" id="text-15">
 
 
 <p>
@@ -512,9 +629,9 @@ Note: The Spectrograph may occasionally crash SuperCollider if it is running on 
 </div>
 </div>
 <div id="postamble">
-<p class="author"> Author: I Z
+<p class="author"> Author: Ioannis Zannos
 </p>
-<p class="date"> Date: 2012-04-15 23:32:20 EEST</p>
+<p class="date"> Date: 2012-08-15 03:25:37 EEST</p>
 <p class="creator">HTML generated by org-mode 7.4 in emacs 23</p>
 </div>
 </div>

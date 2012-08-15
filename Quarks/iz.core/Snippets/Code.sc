@@ -75,6 +75,34 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
 				this.evalPostCurrentSnippet;
 			}),
+			CocoaMenuItem.addToMenu("Code", "open proxy mixer", ["W", true, false], {
+				ProxyCode(Document.current).proxyMixer;
+			}),
+			CocoaMenuItem.addToMenu("Code", "edit proxy", ["e", true, false], {
+				ProxyCode(Document.current).openProxySourceEditor;
+			}),
+			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
+//				Document.current.name.postln;
+				ProxyCode(Document.current).evalInProxySpace;
+			}),
+			CocoaMenuItem.addToMenu("Code", "start doc proxy", ["<", false, false], {
+				ProxyCode.new.playCurrentDocProxy;
+			}),
+			CocoaMenuItem.addToMenu("Code", "stop doc proxy", [">", false, false], {
+				ProxyCode.new.stopCurrentDocProxy;
+			}),
+			CocoaMenuItem.addToMenu("Code", "vol +0.1 doc proxy", ["<", false, true], {
+				ProxyCode.new.changeVol(0.1);
+			}),
+			CocoaMenuItem.addToMenu("Code", "vol -0.1 doc proxy", [">", false, true], {
+				ProxyCode.new.changeVol(-0.1);
+			}),
+//			CocoaMenuItem.addToMenu("Code", "vol +0.3 doc proxy", ["<", true, true], {
+//				ProxyCode.new.changeVol(0.3);
+//			}),
+//			CocoaMenuItem.addToMenu("Code", "vol -0.3 doc proxy", [">", true, true], {
+//				ProxyCode.new.changeVol(-0.3);
+//			}),
 			CocoaMenuItem.addToMenu("Code", "toggle server auto-boot", ["B", true, true], {
 				autoBoot = autoBoot.not;
 				postf("Server auto-boot set to %\n", autoBoot);
@@ -137,9 +165,16 @@ Code {
 		var start, end;
 		#start, end = this.getSnippetAt(index);
 		snippet = string[start..end];
-		postf("snippet: %\n", snippet);
+		postf("doc: %, snippet: %\n", doc.name, snippet);
 		this.notify(\snippet, snippet);
-		(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
+		^(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
+	}
+
+	getAllSnippetStrings { | skipFirstSnippet = true |
+		// Note: skipping first snippet, as this is before the first //: comment separator
+		var start;
+		if (skipFirstSnippet) { start = 1 } { start = 0 };
+		^(start..positions.size) collect: { | i | this.getSnippetStringAt(i) }
 	}
 
 	getSnippetAt { | index |
@@ -160,7 +195,11 @@ Code {
 	}
 
 	evalPostCurrentSnippet {
-		this.performCodeAt(this.findIndexOfSnippet(doc), \evalPost );
+		^this.performCodeAt(this.findIndexOfSnippet(doc), \evalPost );
+	}
+
+	*currentDocumentOpenProxyDocs {
+		^ProxyDocGroup(Document.current);
 	}
 
 	*selectNextSnippet {

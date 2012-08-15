@@ -13,7 +13,7 @@ Panes {
 	classvar <>panePos, <>protoPanePos, <>listenerPos, <>tryoutPos;
 	classvar <currentPositionAction, <>defaultArrangementAction, <multiPaneAreaWidth;
 	classvar <>miniServerWindow = false; // if true, rightmost pane will leave space for 
-	// Sergio Luque's modivied Server:makeWindow at the bottom right part of the screen
+	// Sergio Luque's modified Server:makeWindow at the bottom right part of the screen
 
 	*defaults {
 		 ^(
@@ -41,6 +41,7 @@ Panes {
 
 	*doOnStartUp {
 		this.loadPrefs; //mc
+		this.updatePrefs; // iz (TODO: sort ouf how updatePrefs and loadPrefs work together
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;

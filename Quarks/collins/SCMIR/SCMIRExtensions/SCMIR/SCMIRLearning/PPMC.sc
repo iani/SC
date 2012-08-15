@@ -34,6 +34,9 @@ PPMC {
 		//removes old structure   
 		trie = Dictionary[];     
 	}     
+	
+
+	
 	  
 	  
 	//can keep adding data	     

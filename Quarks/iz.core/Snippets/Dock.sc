@@ -72,20 +72,12 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "browse / open user classes", ["b", true, true], {
 				this.browseUserClasses;
 			}),
-			CocoaMenuItem.addToMenu("Utils", "open / create class help", ["D", true, false], {
-				this.openCreateHelpFile;
-			}),
-/*			CocoaMenuItem.addToMenu("Utils", "insert class help template", nil, {
-				this.insertClassHelpTemplate;
-			}),
-*/			
 			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
 				Server.default.scope;
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
 				Server.default.freqscope;
 			}),
-			
 		]		
 	}
 
@@ -165,32 +157,6 @@ Dock {
 			});
 		});
 	}
-	
-	*openCreateHelpFile {
-		var windowName = 'Select Class to open Help';
-		var class;
-		class = this.findClassFromSelection;
-		if (class.notNil) {
-			^class.openHelpFileLocally;	
-		};
-		ListWindow(windowName, nil, {
-			Class.allClasses.select({ | c |
-				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
-				and: { "Meta*".matchRegexp(c.name.asString).not }
-			}).collect({ | c | 
-				c.name.asSymbol->{ 
-					{ 
-						c.openHelpFileLocally;
-						{
-							if (ListWindow.at(windowName).notNil) {
-								ListWindow.at(windowName).close;
-							}; 
-						}.defer(0.5)
-					}.doOnceIn(0.75);
-				}
-			});
-		});		
-	}
 
 	*findClassFromSelection { // taken from Process class
 		var string, class, method, words;
@@ -218,73 +184,4 @@ Dock {
 			};
 		};
 	}
-
-
-	*insertClassHelpTemplate {
-		var doc, class;
-		doc = Document.current;
-		class = Document.current.name.splitext.first.asSymbol.asClass;
-		if (class.isNil) { ^this };
-		{
-			0.2.wait;
-			doc.string_(doc.string ++ format("%\n\nInherits from: %
-			
-Purpose
-
-Usage
-
-Related Classes
-
-Instance Creation
-
-Class variables
-
-%
-
-Instance variables
-
-%
-
-Class methods
-
-%
-
-Instance methods
-
-%
-
-Examples
-
-  ",
-				class.name.asString,
-				"".strcatList(class.superclasses collect: _.name),
-				"\t".strcatList((class.classVarNames ? [" -- "]).sort, " : \n\n\t"),
-				"\t".strcatList((class.instVarNames ? [" -- "]).sort, " : \n\n\t"),
-				"\t*".strcatList((class.class.methods.collect(_.name) ? [" -- "]).sort, " : \n\n\t*"),
-				"\t".strcatList((class.methods.collect(_.name) ? [" -- "]).sort, " : \n\n\t")			));
-			0.2.wait;
-			doc.selectLine(1);	 0.2.wait;
-			doc.font_(Font("Helvetica-Bold", 18), 
-				doc.selectionStart, doc.selectionSize);
-			0.2.wait;
-			doc.selectLine(2);		0.2.wait;
-			doc.font_(Font("Helvetica-Bold", 18), 
-				doc.selectionStart, doc.selectionSize); 0.2.wait;
-			doc.selectLine(3); 0.2.wait;
-			doc.font_(Font("Helvetica-Bold", 12), 
-				doc.selectionStart, doc.selectionSize); 
-			doc.selectLine(4); 0.2.wait;
-			doc.font_(Font("Helvetica", 12), 
-				doc.selectionStart, doc.selectionSize); 
-			doc.selectLine(5); 0.2.wait;
-			doc.selectLine(5); 0.2.wait;
-			doc.font_(Font("Helvetica", 12), 
-				doc.selectionStart, doc.selectionSize); 0.2.wait; 
-			doc.font_(Font("Helvetica-Bold", 12), 
-				doc.selectionStart, doc.string.size - doc.selectionStart); 
-		}.fork(AppClock);		
-		
-	}
-
-
 }

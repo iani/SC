@@ -140,6 +140,8 @@
 			};
 		  
 		  
+		  if(maxval!=minval) {
+		  
 		  maxminusminr = 1.0/(maxval-minval);
 		  
 		  temp = which;  
@@ -156,6 +158,12 @@
 			  
 			temp = temp+ numfeatures; 
 		});   
+		
+		} {
+		
+		//everything is already just one value, leave array alone	
+			
+		};
 		
 		^array;  
 	} 
@@ -198,6 +206,10 @@
 			},
 			\Tartini,{
 				numfeaturesnow = 2; 
+			},
+			\PolyPitch,{
+				
+				numfeaturesnow = (2*featurenow[1])+1; 
 			}
 			); 
 			  

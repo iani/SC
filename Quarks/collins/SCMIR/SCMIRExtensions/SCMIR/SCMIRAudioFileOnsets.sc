@@ -59,7 +59,8 @@
 		analysisfilename.postln;       
 		  
 		score = [        
-		[0.0, [\b_allocRead, 0, sourcepath, 0, 0]],       
+		//[0.0, [\b_allocRead, 0, sourcepath, 0, 0]],   
+		[0.0, [\b_allocRead, 0, sourcepath, loadstart, loadframes]],     
 		[0.0, [ \s_new, \SCMIRAudioOnset, 1000, 0, 0,\playbufnum,0,\length, duration]], //plus any params for fine tuning      
 		[0.005,[\u_cmd, 1000, ugenindex, "createfile",analysisfilename]], //can't be at 0.0, needs allocation time for synth before calling u_cmd on it    
 		[duration,[\u_cmd, 1000, ugenindex, "closefile"]],       
@@ -85,13 +86,29 @@
 			[1, temp].postln;     
 		};     
 		  
-		temp = numonsets*numfeatures;    
+		temp = numonsets; //*numfeatures;    
 		onsetdata= FloatArray.newClear(temp);       
 		  
 		  
 		//faster implementation?   
 		file.readLE(onsetdata);   
 		  
+		if((onsetdata.size) != temp) {
+
+			file.close; 
+			
+			onsetdata=nil; 
+			
+			SCMIR.clearResources; 
+							
+			file = SCMIRFile(analysisfilename,"rb");   
+			file.getInt32LE;
+			file.getInt32LE;
+			  
+			onsetdata= FloatArray.newClear(temp);  
+			file.readLE(onsetdata);  
+		};   
+  
 		file.close;     
 		  
 		  
@@ -153,7 +170,7 @@
 			{segments[i+1];} 
 			{ 
 				if(beatsegments) { 
-					if(tempi.notNil){min(starttime+tempi[i],duration)}{duration};  
+					if(tempi.notNil){min(starttime+(tempi[i]),duration)}{duration};  
 					} { 
 					duration; 	 
 				} 

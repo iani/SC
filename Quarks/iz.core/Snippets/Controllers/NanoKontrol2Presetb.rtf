@@ -1,0 +1,37 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue191;\red0\green0\blue255;\red102\green102\blue191;
+\red96\green96\blue96;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs18 \cf0 \
+\cf2 NanoK2Presetb\cf0  \{\
+	\cf3 var\cf0  <number, <kontrol;\
+	\cf3 var\cf0  data;\
+\
+	*new \{ \cf3 | number, kontrol |\cf0  ^\cf4 this\cf0 .newCopyArgs(number, kontrol) \}\
+\
+	button \{\
+		^\cf2 Button\cf0 ()\
+			.states_([[number.asString]])\
+			.action_(\{ \cf4 this\cf0 .loadPreset \})\
+			.keyDownAction_(\{ \cf3 | view, key |\cf0 \
+				switch (key,\
+					$s, \{ \cf4 this\cf0 .storePreset \}\
+				)\
+			\});\
+	\}\
+\
+	loadPreset \{\
+		postf(\cf5 "loading preset %\\n"\cf0 , number);\
+		kontrol.loadPreset(\cf4 this\cf0 );\
+	\}\
+\
+	storePreset \{\
+		postf(\cf5 "storing preset %\\n"\cf0 , number);\
+		kontrol.savePreset(\cf4 this\cf0 );\
+	\}\
+\
+\}\
+\
+}

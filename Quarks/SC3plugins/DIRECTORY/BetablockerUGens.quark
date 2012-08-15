@@ -1,6 +1,6 @@
 (
-	\name: "BetablockerGens",
-	\path: "BetablockerGens",
+	\name: "BetablockerUGens",
+	\path: "BetablockerUGens",
 	\summary: "-",
 	\helpdoc: "-",
 	\schelp: "Guides/BetablockerGens",

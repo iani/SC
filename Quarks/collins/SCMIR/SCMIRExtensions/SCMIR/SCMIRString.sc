@@ -21,5 +21,11 @@ asUnixPath {
 	
 	^ (this.replace(" ","\\ ").replace("(","\\(").replace(")","\\)").replace("&","\\&").replace("!","\\!").replace("'","\\'"));
 }
+
+
+	//Jonatan Liljedahl sc-dev 1 Feb
+	jlShellQuote {
+		^"'"++this.replace("'","'\\''")++"'"
+	}
 	
 }
