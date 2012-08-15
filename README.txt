@@ -2,7 +2,7 @@
                 ======================================
 
 Author: Ioannis Zannos
-Date: 2012-08-15 03:14:19 EEST
+Date: 2012-08-15 03:25:47 EEST
 
 
 About 
@@ -28,8 +28,8 @@ Credits, Download
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
 - Server GUI by Sergio Luque
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
-  BEAST research team at the University of Birmingham. See: [http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx]
-- collins quark group ported from Nick Collin's work at: [http://www.sussex.ac.uk/Users/nc81/code.html]
+  BEAST research team at the University of Birmingham. \\ See: [http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx]
+- collins quarks ported from Nick Collins' work at: [http://www.sussex.ac.uk/Users/nc81/code.html]
 
 Download from: [https://github.com/iani/SC]
 or:
