@@ -38,7 +38,6 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		this onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
 		notifier onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
 	}
-<<<<<<< HEAD
 	addNotifierNR { | notifier, message, action |
 	// add self to do action when receiving message from notifier
 	// if either object (notifier or self) closes, remove the notication connection
@@ -47,9 +46,6 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		^nr
 	}
 	
-=======
-
->>>>>>> 6da278488194b68a55debb8f0a48ad68f60ecc93
 	removeNotifier { | notifier, message |
 		// leaves the onClose connection dangling, 
 		// which will be removed when the object calls objectClosed
