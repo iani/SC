@@ -16,9 +16,14 @@ Dock {
 	
 	*doOnStartUp {
 		// Install Qt GUI if available, so that scope and freqscope work on local server:
+<<<<<<< HEAD
 		// if (GUI respondsTo: \qt) { GUI.qt };
 //mc, nice but not within a class -> GUI selection should be done via startup file
   
+=======
+//		if (GUI respondsTo: \qt) { GUI.qt };
+
+>>>>>>> 720d67923a3a2d3813f72e6b2a27787b1893bd4b
 		shortcutDocMenuItems = Array.newClear(10);
 		shortcutDocs = Array.newClear(10);
 		shortcutDocPaths = Archive.global at: \shortCutDocs;
@@ -73,12 +78,36 @@ Dock {
 				this.browseUserClasses;
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open scope", ["s", true, false], {
-				Server.default.scope;
+				this.openScope;
 			}),
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
-				Server.default.freqscope;
+				this.openFreqScope;
 			}),
 		]		
+	}
+
+	*openScope {
+		if (Server.default === Server.local) {
+			GUI.useID(\qt, { Server.default.scope; });
+		}{
+			Server.default.scope;			
+		}
+	}
+	
+	*openFreqScope {
+		var guiID;
+		if (Server.default === Server.local) {
+			{
+		// for some reason, GUI.useID did not seem to work???
+//			GUI.useID(\qt, { Server.default.freqscope; });
+				guiID = GUI.id;
+				GUI.qt;
+				Server.default.freqscope;
+				GUI.fromID(guiID);
+			}.value;
+		}{
+			Server.default.freqscope;			
+		}
 	}
 
 	*showDocListWindow { | multiPaneAreaWidth |
