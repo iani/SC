@@ -1,31 +1,94 @@
 /* IZ Wed 15 August 2012  9:14 PM EEST
-Trying whole different approach to the whole widget / value notification thing. 
+Trying whole different approach to the whole widget / value notification thing.
+
+User acts on view, setting a value 
+	view maps value (using an adapter = spec or other stuff, possibly function);
+	view sends app this message: app.setValue(key, value);
+
+
+Widgets that need to add extra actions like setting their specs, changing their state, etc., 
+can do it like this: 
+
+widget.addAction(<commandname>, action);
+
+So any widget can ask to be specifically notified when it needs to change something 
+different than its value. It needs not and should not store itself in the AppModel.
+
+First example: 
+
+//:
+AppModel().window({ | w, app |
+	w.view.layout = VLayout(
+		app.knob(\test).spec_(\freq).view,
+		app.numberBox(\test).view
+	)
+});
+//:
+
 */
 
 AppModel {
+
+	var <values;  /* IdentityDictionary: Adapters holding my values per name */
 	
-	var <values;  // IdentityDictionary
-	var <widgets; // IdentityDictionary
+	*new { ^this.newCopyArgs(IdentityDictionary.new, IdentityDictionary.new); }
+
+	getValue { | name | ^values[name].value; }
+
+	makeAdapter { | name, action | ^this.getAdapter(name).action = action; }
+
+	getAdapter { | name |
+		var adapter;
+		adapter = values[name];
+		if (adapter.isNil) {
+			adapter = Adapter();
+			values[name] = adapter;
+		};
+		^adapter;
+	}
 	
-	*new {
-		^this.newCopyArgs(IdentityDictionary.new, IdentityDictionary.new);
+	setValue { | name, value |
+		var adapter;
+		adapter = values[name];
+		adapter !? { adapter.value = value; }
 	}
 
-	addWidget { | name, widget |
-		
+	// =========== Adding views and windows ============
+	window { | windowInitFunc, onCloseFunc |
+		AppWindow(this, windowInitFunc, onCloseFunc);
 	}
 
-	getWidget { | name |
-		
-	}
-	
-	setWidgetValue { | name, value |
-		
-	}
-	
-	getWidgetValue { | name, value |
-		
-	}
+	view { | view | ^AppNamelessView(this, view) }
 
-
+	numberBox { | name | ^AppValueView(this, name, NumberBox()); }
+	knob { | name | ^AppValueView(this, name, Knob()); }
+	slider { | name | ^AppValueView(this, name, Slider()); }
+	button { | name | ^AppValueView(this, name, Button()); }
+	popUpMenu { ^AppValueView(this, PopUpMenu()); }
+	rangeSlider { | name | ^AppValueView(this, name, RangeSlider()); }
+	slider2D { | name | ^AppValueView(this, name, Slider2D()); }
+	textField { | name | 
+		^AppValueView(this, name, TextField(),
+			nil,
+			{ | view, string | view.string = string; },
+		); 
+	}
+	listView { | name | ^AppValueView(this, name, ListView()); }
+	staticText { | name | 
+		^AppValueView(this, name, StaticText(),
+			{ | ... args | [ "StaticText view action not implemented", args].postln; },
+			{ | view, string | view.string = string; },
+		); 
+	}
+	dragSource { | name | ^AppView(this, name, DragSource()); }
+	dragSink { | name | ^AppView(this, name, DragSink()); }
+	dragBoth { | name | ^AppView(this, name, DragBoth()); }
+	scopeView { | name | ^AppView(this, name, ScopeView()); }
+	multiSliderView { | name | ^AppValueView(this, name, MultiSliderView()); }
+	envelopeView { | name | ^AppValueView(this, name, EnvelopeView()); }
+	soundFileView { | name | ^AppView(this, name, SoundFileView()); }
+	movieView { | name | ^AppView(this, name, MovieView()); }
+	textView { | name | ^AppValueView(this, name, TextView()); }
 }
+
+

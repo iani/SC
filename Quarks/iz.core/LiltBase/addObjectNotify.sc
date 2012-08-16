@@ -39,8 +39,8 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	// add listener to do action when receiving message from self
 	// if either object (listener or self) closes, remove the notication connection
 		NotificationCenter.register(this, message, listener, action);
-		this onClose: { NotificationCenter.unregister(this, message, listener); };
-		listener onClose: { NotificationCenter.unregister(this, message, listener); }
+		this onObjectClosed: { NotificationCenter.unregister(this, message, listener); };
+		listener onObjectClosed: { NotificationCenter.unregister(this, message, listener); }
 	}
 
 	removeListener { | listener, message |
