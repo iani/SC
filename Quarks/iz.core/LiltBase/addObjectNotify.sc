@@ -28,6 +28,12 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		this onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
 		notifier onObjectClosed: { NotificationCenter.unregister(notifier, message, this); };
 	}
+	
+	addNotifierWithSelf { | notifier, message, action |
+		/* 	pass yourself as argument to your action. For adding notifers to objects
+			that are not previously stored in variables */
+		this.addNotifier(notifier, message, { | ... args | action.valueArray(this, args) });
+	}
 
 	removeNotifier { | notifier, message |
 		// leaves the onClose connection dangling, 

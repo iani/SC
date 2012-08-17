@@ -205,7 +205,7 @@ ProxySpecWatcher : AbstractProxyNodeWatcher {
 
 	*initClass { this.clearCache }
 	*clearCache { specCache = IdentityDictionary.new }
-	
+
 	*cacheSpecs { | argNodeProxy, argSpecs |
 		// ProxyCode stores most recent specs nodes here, for access when switching
 		// Should updateState also cache new specs? 

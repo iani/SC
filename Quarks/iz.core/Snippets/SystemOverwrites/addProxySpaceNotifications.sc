@@ -6,6 +6,12 @@
 		this.notify(\newProxy, [proxy, this]);
 		^proxy
 	}
+
+	removeNeutral {
+		envir.copy.keysValuesDo { arg key, val; if(val.isNeutral) { envir.removeAt(key) } };
+		this.notify(\removeNeutral, this);
+	}
+
 /*
 	allProxyNames {
 		var names;

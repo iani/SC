@@ -1,5 +1,7 @@
 /* IZ Sat 04 August 2012  9:45 AM EEST
 
+TODO: 
+
 Create array of ControlSpecs for a NodeProxy by merging specs created from the argument-default list pairs obtained by proxy.getKeysValues with any spec-specs provided in an array of form: 
 [parameter1: spec1, paramereter2: spec2 ...] 
 The spec-specs array is an optional part of the heading of snippets: 
@@ -45,13 +47,19 @@ b pairsDo: { | key, val |
 */
 
 MergeSpecs {
-	var proxyArgs, snippetArgs, rate, mergedSpecs;
-	classvar <>extraSpecs;		// specs for nil, vol and fadeTime, 
+	var proxy, proxyArgs, snippetArgs, rate, mergedSpecs;
+	classvar <>extraSpecs;		// specs for nil, vol and fadeTime
+	classvar <cachedSpecs;		// Dictionary of previously parsed specs for each proxy
 
 	*initClass {
 		Class.initClassTree(Spec);
 		Class.initClassTree(ControlSpec);
 		extraSpecs = [['-', nil], [\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
+		cachedSpecs = IdentityDictionary.new;
+	}
+
+	*getSpecsFor { | proxy |
+		^cachedSpecs[proxy] ?? { this.new(proxy) }
 	}
 
 	*parseArguments { | argProxy, argSnippet |
@@ -64,19 +72,20 @@ MergeSpecs {
 		};
 		mySpecs = this.new(argProxy, mySpecs);
 		argProxy.notify(\proxySpecs, [mySpecs]);
-		Widget.cacheSpecs(argProxy, mySpecs);
+		Widget.cacheSpecs(argProxy, mySpecs);  // TODO: REMOVE THIS!
 	}
 
 	*new { | proxy, snippetArgs |
-		^this.fromArgs(proxy.getKeysValues, snippetArgs, proxy.rate);
+		if (proxy.isNil) { ^this.nilSpecs };
+		^this.fromArgs(proxy, proxy.getKeysValues, snippetArgs, proxy.rate);
 	}
 	
-	*fromArgs { | proxyArgs, snippetArgs, rate |
-		^this.newCopyArgs(proxyArgs, snippetArgs, rate).mergeSpecs;
+	*fromArgs { | proxy, proxyArgs, snippetArgs, rate |
+		^this.newCopyArgs(proxy, proxyArgs, snippetArgs, rate).mergeSpecs;
 	}
 
 	mergeSpecs {
-		var index, spec, keys, key, value, snippetKeys, snippetVals;
+		var index, spec, keys, key, value, snippetKeys, snippetVals, finalSpecs;
 		#snippetKeys, snippetVals = (snippetArgs ?? { [] }).clump(2).flop;
 		proxyArgs do: { | keyValue |
 			#key, value = keyValue;
@@ -96,10 +105,12 @@ MergeSpecs {
 			}
 		};
 		if (rate === \audio) {
-			^extraSpecs ++ mergedSpecs
+			finalSpecs = extraSpecs ++ mergedSpecs
 		}{
-			^this.class.nilSpecs ++ mergedSpecs
-		}
+			finalSpecs = this.class.nilSpecs ++ mergedSpecs
+		};
+		cachedSpecs[proxy] = finalSpecs;
+		^finalSpecs;
 	}
 	
 	*nilSpecs { ^[extraSpecs[0]] }

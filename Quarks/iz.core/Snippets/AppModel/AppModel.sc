@@ -31,55 +31,49 @@ AppModel {
 
 	var <values;  /* IdentityDictionary: Adapters holding my values per name */
 	
-	*new { ^this.newCopyArgs(IdentityDictionary.new, IdentityDictionary.new); }
+	*new { ^this.newCopyArgs(IdentityDictionary.new); }
 
-	getValue { | name | ^values[name].value; }
-
-	makeAdapter { | name, action | ^this.getAdapter(name).action = action; }
-
-	getAdapter { | name |
+//	at { | name | ^values[name].value; }
+	at { | name | ^values[name].value; }
+	// creates value adapter if not present
+//	putValue { | name, value | this.getAdapter(name).valueAction = value }
+	put { | name, value | this.getAdapter(name).valueAction = value }
+ 
+	getAdapter { | name, innerAdapter |
+	// Access adapter.  
+	// if it does not exist, create it and set its adapter variable.
+	// Else return it as is. 
 		var adapter;
 		adapter = values[name];
 		if (adapter.isNil) {
-			adapter = Adapter();
+			adapter = Adapter(this);
 			values[name] = adapter;
+			adapter.adapter = innerAdapter;
 		};
 		^adapter;
 	}
-	
-	setValue { | name, value |
-		var adapter;
-		adapter = values[name];
-		adapter !? { adapter.value = value; }
-	}
+
+	getViewValue { | name | values[name].notify(\at) } // so far only used by AppTextView
+
 
 	// =========== Adding views and windows ============
 	window { | windowInitFunc, onCloseFunc |
-		AppWindow(this, windowInitFunc, onCloseFunc);
+		AppNamelessWindow(this, windowInitFunc, onCloseFunc);
 	}
-
+	
 	view { | view | ^AppNamelessView(this, view) }
 
 	numberBox { | name | ^AppValueView(this, name, NumberBox()); }
 	knob { | name | ^AppValueView(this, name, Knob()); }
 	slider { | name | ^AppValueView(this, name, Slider()); }
 	button { | name | ^AppValueView(this, name, Button()); }
-	popUpMenu { ^AppValueView(this, PopUpMenu()); }
+	popUpMenu { | name | ^AppItemSelectView(this, name, PopUpMenu()); }
+	listView { | name | ^AppItemSelectView(this, name, ListView()); }
 	rangeSlider { | name | ^AppValueView(this, name, RangeSlider()); }
 	slider2D { | name | ^AppValueView(this, name, Slider2D()); }
-	textField { | name | 
-		^AppValueView(this, name, TextField(),
-			nil,
-			{ | view, string | view.string = string; },
-		); 
-	}
-	listView { | name | ^AppValueView(this, name, ListView()); }
-	staticText { | name | 
-		^AppValueView(this, name, StaticText(),
-			{ | ... args | [ "StaticText view action not implemented", args].postln; },
-			{ | view, string | view.string = string; },
-		); 
-	}
+	textField { | name | ^AppTextValueView(this, name, TextField()); }
+	staticText { | name | ^AppStaticTextView(this, name); }
+	textView { | name | ^AppTextView(this, name); }
 	dragSource { | name | ^AppView(this, name, DragSource()); }
 	dragSink { | name | ^AppView(this, name, DragSink()); }
 	dragBoth { | name | ^AppView(this, name, DragBoth()); }
@@ -88,7 +82,6 @@ AppModel {
 	envelopeView { | name | ^AppValueView(this, name, EnvelopeView()); }
 	soundFileView { | name | ^AppView(this, name, SoundFileView()); }
 	movieView { | name | ^AppView(this, name, MovieView()); }
-	textView { | name | ^AppValueView(this, name, TextView()); }
 }
 
 

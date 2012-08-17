@@ -1,17 +1,7 @@
 /* IZ Thu 16 August 2012  4:02 PM EEST
-See AppModel
+See AppModel and Adapter
 
 */
-
-Adapter {
-	var <>action, <value;
-	
-	value_ { | argValue |
-		value = argValue;
-		action.(this);
-		this.notify(\value, value);
-	}
-}
 
 AppNamelessWidget {
 	var <model;
@@ -21,7 +11,7 @@ AppNamelessWidget {
 	}
 }
 
-AppWindow : AppNamelessWidget {
+AppNamelessWindow : AppNamelessWidget {
 	var <windowInitFunc, <onCloseFunc, <window;
 	
 	init {
@@ -39,20 +29,15 @@ AppWindow : AppNamelessWidget {
 AppNamelessView : AppNamelessWidget {
 	/*	For views that have no Adapter in the apps model, but do want to 
 	   	change their state using the notification mechanism
-	   	Such a view would do, for example: 
-	  	AppNamelessView(app, StaticText()).addAction(app, \setLabel, { | me, string |
-		  	me.view.string = string
-	  	});
-	  	
 	  	Use .view method for this: 
-	  	app.view(StaticText().addAction ...
-	  
+	  	app.view(StaticText().addAction ...)
 	*/
 	var <view, onObjectClosed;
 	init {
 		view.onClose = { this.objectClosed }
 	}
-	
+	// used to get string values from TextView with button click. Also present in AppView (refactor???)
+	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
 }
 
 AppNamedWidget : AppNamelessWidget {
@@ -66,6 +51,13 @@ AppNamedWidget : AppNamelessWidget {
 	}
 	
 	adapterAction { | action | adapter.action = action; }
+	
+	// add specialized adapters to your adapter
+	proxySelector { | proxySpace | adapter proxySelector: proxySpace; }
+	proxyState { | proxySelector | adapter proxyState: proxySelector; }
+	proxySpecSelector { | proxySelector | adapter proxySpecSelector: proxySelector; }
+	proxyControl { | proxySpecSelector | adapter proxyControl: proxySpecSelector; }
+
 }
 
 AppView : AppNamedWidget {
@@ -73,11 +65,16 @@ AppView : AppNamedWidget {
 
 	init {	
 		super.init;
+		this.initView;
+		this.initActions;
 		view onClose: { this.viewClosed; };
 	}
 	
+	initView { /* this.subclassResponsibility(thisMethod) */ }
+	initActions { /* this.subclassResponsibility(thisMethod) */ }
 	viewClosed { this.objectClosed; } // subclasses like AppWindow add more actions
-
+	// used to get string values from TextView with button click
+	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
 }
 
 AppValueView : AppView {
@@ -88,8 +85,6 @@ AppValueView : AppView {
 		this.initActions;
 		view.onClose = { this.objectClosed; }
 	}
-
-	initView { /* this.subclassResponsibility(thisMethod) */ }
 	
 	initActions {
 		this.initViewAction(viewAction);
@@ -97,15 +92,17 @@ AppValueView : AppView {
 	}
 
 	initUpdateAction { | argAction |
-		updateAction = argAction ?? {{ | argView, val | argView.value = val }};
+		updateAction = argAction ?? { this.defaultUpdateAction };
 	}
+	
+	defaultUpdateAction { ^{ | argView, val | argView.value = val } }
 
 	initViewAction { | argAction |
 		view.action = { viewAction.(view, this) };
-		viewAction = argAction ?? {{ | argView, myself |
-			myself.model.setValue(name, argView.value);
-		}};
+		viewAction = argAction ?? { this.defaultViewAction };
 	}
+
+	defaultViewAction { ^{ | argView, myself | myself.model.put(name, argView.value); } }
 
 	valueArray { | argValues |  updateAction.(view, *argValues) }
 	
@@ -113,8 +110,30 @@ AppValueView : AppView {
 		spec = spec.asSpec;
 		updateAction = { | argView, val | argView.value = spec.unmap(val) };
 		viewAction =  { | argView, myself |
-			myself.model.setValue(name, spec.map(argView.value));
+			myself.model.put(name, spec.map(argView.value));
 		}
 	}
+}
+
+AppTextValueView : AppValueView { // for StaticText, TextField, TextView
+	defaultUpdateAction { ^{ | view, string | view.string = string; } }
+}
+
+
+AppTextView : AppTextValueView {
+	initView {
+		view = TextView();
+		this.addNotifier(adapter, \at, { adapter.valueAction = view.string });
+	}
+}
+
+AppStaticTextView : AppTextValueView {
+	initView { view = StaticText(); }
+	defaultViewAction { ^{ | ... args | [ "StaticText view action not implemented", args].postln; } }
+}
+
+AppItemSelectView : AppValueView { // for ListView, PopUpMenu 
 	
+	defaultViewAction { ^{ adapter.valueAction = [view.value, view.items] } }
+	defaultUpdateAction { ^{ | v, val, items | v.items = items; v.value = val ? 0; } }
 }

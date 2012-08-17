@@ -25,3 +25,18 @@ Make ProxyCode command-shift-w only perform <proxy>.source = <interpreted snippe
 + Association { isValidProxyCode { ^true } }
 // + AbstractPlayer { isValidProxyCode { ^true } }
 // + Instr { isValidProxyCode { ^true } }
+
+/* IZ Fri 17 August 2012  2:35 PM EEST
+
+Make sure that the current document has a ProxySpace installed as currentEnvironment
+
+*/
+
++ Document {
+	*prepareProxySpace {
+		if (not(Document.current.envir isKindOf: ProxySpace)) {
+			Document.current.envir = ProxySpace.push;
+		};
+		^Document.current.envir;
+	}
+}
