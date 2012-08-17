@@ -53,6 +53,7 @@ AppNamedWidget : AppNamelessWidget {
 	adapterAction { | action | adapter.action = action; }
 	
 	// add specialized adapters to your adapter
+	mapper { | spec | adapter mapper: spec }
 	proxySelector { | proxySpace | adapter proxySelector: proxySpace; }
 	proxyState { | proxySelector | adapter proxyState: proxySelector; }
 	proxySpecSelector { | proxySelector | adapter proxySpecSelector: proxySelector; }
@@ -102,24 +103,15 @@ AppValueView : AppView {
 		viewAction = argAction ?? { this.defaultViewAction };
 	}
 
-	defaultViewAction { ^{ | argView, myself | myself.model.put(name, argView.value); } }
+	defaultViewAction { ^{ | argView | adapter.valueAction = argView.value; } }
 
 	valueArray { | argValues |  updateAction.(view, *argValues) }
-	
-//	spec_ { | spec |
-//
-//	}
+
 }
 
 AppSpecValueView : AppValueView {
-//	spec_ { | spec |
-//		spec = spec.asSpec;
-//		updateAction = { | argView, val | argView.value = spec.unmap(val) };
-//		viewAction =  { | argView, myself |
-//			myself.model.put(name, spec.map(argView.value));
-//		}
-//	}
-
+	defaultViewAction { ^{ | argView | adapter.adapter map: argView.value; } }
+	defaultUpdateAction { ^{ | argView, val | argView.value = adapter.adapter.unmappedValue; } }
 }
 
 AppTextValueView : AppValueView { // for StaticText, TextField, TextView

@@ -78,7 +78,7 @@ Adapter {
 	}
 
 	// methods for creating specialized adapters in my adapter instance variable
-
+	mapper { | spec | adapter = SpecAdapter(this, spec); }
 	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
 	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
 	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
@@ -89,6 +89,17 @@ AbstractAdapterElement {
 	var <>adapter;		// the adapter that contains me
 	*new { | adapter ... args | ^this.newCopyArgs(adapter, *args).init; }
 }
+
+SpecAdapter : AbstractAdapterElement {
+	var <>spec, <unmappedValue = 0;	
+	init { spec = spec.asSpec }
+	map { | value |
+		unmappedValue = value;
+		adapter.valueAction = spec map: value;
+	}
+	value { unmappedValue = spec unmap: adapter.value; }
+}
+
 
 ProxySelector : AbstractAdapterElement {
 	classvar <proxyNames;	// cache proxyNames from proxySpaces
@@ -230,7 +241,6 @@ ProxyControl : ProxyState {
 	}
 
 	setArgs { | argSpec |
-		proxy = 
 		[this, thisMethod.name, proxy, argSpec].postln;
 //		this.updateState;
 	}
@@ -244,3 +254,4 @@ ProxyControl : ProxyState {
 	
 	
 }
+

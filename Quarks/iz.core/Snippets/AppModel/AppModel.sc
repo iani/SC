@@ -64,16 +64,17 @@ AppModel {
 	view { | view | ^AppNamelessView(this, view) }
 
 	numberBox { | name | ^AppValueView(this, name, NumberBox()); }
-	knob { | name | ^AppValueView(this, name, Knob()); }
-	slider { | name | ^AppValueView(this, name, Slider()); }
+	knob { | name, spec | ^AppSpecValueView(this, name, Knob()).mapper(spec); }
+	slider { | name, spec | ^AppSpecValueView(this, name, Slider()).mapper(spec); }
 	button { | name | ^AppValueView(this, name, Button()); }
 	popUpMenu { | name | ^AppItemSelectView(this, name, PopUpMenu()); }
 	listView { | name | ^AppItemSelectView(this, name, ListView()); }
-	rangeSlider { | name | ^AppValueView(this, name, RangeSlider()); }
-	slider2D { | name | ^AppValueView(this, name, Slider2D()); }
 	textField { | name | ^AppTextValueView(this, name, TextField()); }
 	staticText { | name | ^AppStaticTextView(this, name); }
 	textView { | name | ^AppTextView(this, name); }
+	// following need review - possibly their own adapter classes
+	rangeSlider { | name | ^AppValueView(this, name, RangeSlider()); }
+	slider2D { | name | ^AppValueView(this, name, Slider2D()); }
 	dragSource { | name | ^AppView(this, name, DragSource()); }
 	dragSink { | name | ^AppView(this, name, DragSink()); }
 	dragBoth { | name | ^AppView(this, name, DragBoth()); }
