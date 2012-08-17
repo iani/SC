@@ -43,8 +43,6 @@ An element that wants to set the parameter of the proxy that is selected by the 
 4. ProxyControl ============================================
 
 Attaches its containing adapter to proxy spec selection adapter that contains a ProxySpecSelector. When the proxy 
-
-
 */
 
 Adapter {
@@ -78,7 +76,7 @@ Adapter {
 			this.valueAction = [newItems indexOf: value[1][value[0]] ?? 0, newItems]
 		}
 	}
-	
+
 	// methods for creating specialized adapters in my adapter instance variable
 
 	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
@@ -140,13 +138,18 @@ ProxyState : AbstractAdapterElement {
 	
 	init {
 		if (proxySelector isKindOf: Symbol) {
-			proxySelector = adapter.model.getAdapter(proxySelector).proxySelector;
+			this.getProxySelector(proxySelector);
 		};
 		this.addNotifier(proxySelector, \selection, { | proxy, args |
-			
+			[this, thisMethod.name, "received selection notification"].postln;
 			this.setProxy(proxy);
 			this.setArgs(args);
 		});
+		[this, thisMethod.name].postln;
+	}
+	
+	getProxySelector { | selector |
+		proxySelector = adapter.model.getAdapter(selector).proxySelector;
 	}
 
 	setProxy { | newProxy |
@@ -158,7 +161,7 @@ ProxyState : AbstractAdapterElement {
 		this.updateState;
 	}
 
-	setArgs { /* used by ProxyControl */ }
+	setArgs { [this, thisMethod.name].postln; /* used by ProxyControl */ }
 
 	removeNotifiers {
 		this.removeNotifier(proxy, \play);
@@ -189,9 +192,8 @@ ProxyState : AbstractAdapterElement {
 
 ProxySpecSelector : ProxyState {
 	var <>specs = #[['-', nil]];
-	removeNotifiers {
-		this.removeNotifier(proxy, \proxySpecs);
-	}
+	
+	removeNotifiers { this.removeNotifier(proxy, \proxySpecs); }
 
 	addNotifiers {
 		this.addNotifier(proxy, \proxySpecs, { | ... args | args.postln; });
@@ -202,14 +204,33 @@ ProxySpecSelector : ProxyState {
 		adapter.updateItemsAndValue(specs.flop[0]);
 	}
 	// notify listening ProxyControls of new specs
-	value { 
-		this.notify(\selection, [proxy, specs[adapter.value[0]]]); }
+	value {
+		adapter.notify(\selection, [proxy, specs[adapter.value[0]]]);
+	}
 }
 
 ProxyControl : ProxyState {
 	var <spec;			// the currently set spec
 
+/*	init {
+		if (proxySelector isKindOf: Symbol) {
+			this.getProxySelector(proxySelector);
+		};
+
+		[this, thisMethod, "selector: ", proxySelector].postln;
+		this.addNotifier(proxySelector, \selection, { | ... args |
+		[this, thisMethod, "select received: ", args].postln;
+		});
+	}
+*/
+	getProxySelector { | selector |
+//		[this, thisMethod.name, selector].postln;
+		proxySelector = adapter.model.getAdapter(selector);   // .proxySpecSelector;
+//		[this, thisMethod.name, selector].postln;
+	}
+
 	setArgs { | argSpec |
+		proxy = 
 		[this, thisMethod.name, proxy, argSpec].postln;
 //		this.updateState;
 	}
@@ -218,7 +239,7 @@ ProxyControl : ProxyState {
 	}
 	
 	updateState { 
-//		[this,
+//		
 	}
 	
 	

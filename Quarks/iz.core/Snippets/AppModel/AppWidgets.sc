@@ -106,13 +106,20 @@ AppValueView : AppView {
 
 	valueArray { | argValues |  updateAction.(view, *argValues) }
 	
-	spec_ { | spec |
-		spec = spec.asSpec;
-		updateAction = { | argView, val | argView.value = spec.unmap(val) };
-		viewAction =  { | argView, myself |
-			myself.model.put(name, spec.map(argView.value));
-		}
-	}
+//	spec_ { | spec |
+//
+//	}
+}
+
+AppSpecValueView : AppValueView {
+//	spec_ { | spec |
+//		spec = spec.asSpec;
+//		updateAction = { | argView, val | argView.value = spec.unmap(val) };
+//		viewAction =  { | argView, myself |
+//			myself.model.put(name, spec.map(argView.value));
+//		}
+//	}
+
 }
 
 AppTextValueView : AppValueView { // for StaticText, TextField, TextView

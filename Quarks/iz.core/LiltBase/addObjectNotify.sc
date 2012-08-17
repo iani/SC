@@ -3,7 +3,22 @@
 Shortcuts for establishing messaging communication between objects via NotificationCenter.
 */
 
++ NotificationCenter {
+	*registrations { ^registrations 	} // 201008 make registreations available for debugging. tmp.
+}
+
 + Object {
+	
+	// Next one is for debugging: 
+	registrations { | key |
+		if (key.isNil) {
+			^NotificationCenter.registrations.at(this);
+		}{
+			^NotificationCenter.registrations.at(this, key);
+		}
+	}
+	
+	// -----
 	notify { | message, args | NotificationCenter.notify(this, message, args); }
 	
 	addMessage { | notifier, message |
