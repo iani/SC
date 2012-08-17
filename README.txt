@@ -74,7 +74,7 @@ First do this:
   w = Window.new;
   w.layout = VLayout(
           /*  Create a self-updating menu for selecting a node from 
-              this Document's ProxySpace, an name it \nodes */
+              this Document's ProxySpace, and name it \nodes */
           PxMenu(w, \nodes),
           /* Create a button for starting and stopping the selected proxy,
              and make its proxy settable by menu element named \nodes */
@@ -106,7 +106,7 @@ Then select controls from the second menu, and use the knob to control selected 
 Object methods for easy messaging via NotificationCenter 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shortening and clarifying the code required to use NotificationCenter.
 
 One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
 
