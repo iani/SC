@@ -33,9 +33,11 @@ RepQuarks : Quarks {
 		};
 		SCMenuItem(menu, "quarks").action = { RepQuarks.gui }; //mc 
 									// (tricky -> see diff of Quarks.sc in SC3.4 and SC3.5 !!!)
-		SCMenuItem(menu, "sc3-plugins").action = {
-			RepQuarks(localPath: (Platform.userAppSupportDir +/+ "sc3-plugins")).gui //mc
-		};
+									
+//mc: switched off again, since new 'sc3-plugins-3.5.2' are not organised in Quarks anymore :-(
+//		SCMenuItem(menu, "sc3plugins").action = {
+//			RepQuarks(localPath: (Platform.userAppSupportDir +/+ "SC3plugins")).gui //mc
+//		};
 	}
 
 	*addToMenu { | itemName, path |
