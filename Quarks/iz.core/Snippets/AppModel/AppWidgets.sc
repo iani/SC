@@ -50,7 +50,7 @@ AppNamedWidget : AppNamelessWidget {
 		this.addNotifier(adapter, \value, this);
 	}
 	
-	adapterAction { | action | adapter.action = action; }
+	adapter_ { | action | adapter.adapter = action; }
 	
 	// add specialized adapters to your adapter
 	mapper { | spec | adapter mapper: spec }
@@ -73,7 +73,7 @@ AppView : AppNamedWidget {
 	
 	initView { /* this.subclassResponsibility(thisMethod) */ }
 	initActions { /* this.subclassResponsibility(thisMethod) */ }
-	viewClosed { this.objectClosed; } // subclasses like AppWindow add more actions
+	viewClosed { this.objectClosed; }
 	// used to get string values from TextView with button click
 	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
 }
@@ -98,9 +98,7 @@ AppValueView : AppView {
 	}
 
 	defaultViewAction { ^{ | argView | adapter.valueAction = argView.value; } }
-
 	valueArray { | argValues |  updateAction.(view, *argValues) }
-
 }
 
 AppSpecValueView : AppValueView {

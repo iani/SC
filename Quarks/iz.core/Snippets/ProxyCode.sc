@@ -41,7 +41,7 @@ ProxyCode {
 
 	*new { | doc |
 		var new;
-		doc = doc ?? { Document.current };
+		doc = doc ?? { Document.current; };
 		new = this.all[doc];
 		if (new.isNil) { new = this.newCopyArgs(doc).init };
 		^new;
@@ -58,8 +58,7 @@ ProxyCode {
 	}
 
 	initProxySpace {
-		proxySpace = doc.envir ?? { ProxySpace.new; };
-		doc.envir = proxySpace;
+		proxySpace = Document.prepareProxySpace(doc);
 	}
 
 	getSnippet {

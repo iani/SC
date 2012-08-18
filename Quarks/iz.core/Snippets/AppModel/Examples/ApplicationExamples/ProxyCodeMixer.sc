@@ -9,65 +9,77 @@ ProxyCode(Document.current);
 
 
 ProxyCodeMixer : AppModel {
-	var <doc, <proxyCode, <proxySpace;
+	var <doc, <>numStrips = 8, <proxyCode, <proxySpace, <strips;
+	var <presetHandler;
 	
-	*new { | doc | ^super.new.init; }
+	*new { | doc, numStrips = 8 | ^super.new(doc, numStrips).init; }
 
 	init {
 		doc = doc ?? { Document.current };
 		proxyCode = ProxyCode(doc);
-		proxySpace = proxyCode.proxySpace;
+		proxySpace = doc.envir;
+		strips = { ProxyCodeStrip(this) } ! numStrips;
+		presetHandler = ProxyCodePresetHandler(this);
+		this.makeNewProxyAction;
 		this.makeWindow;
-		this.initValues;
+		presetHandler.initPresets;
+		{ this.initStrips; }.defer(1); // proxies may take time to load if launched same time as me
+	}
+
+	makeNewProxyAction {
+		ProxySelector.addProxySelector(proxySpace, \proxyNames, { | pn, proxy |
+			this.addNewProxy(proxy, pn.size - 2);
+		});
+	}
+
+	addNewProxy { | proxy, index |
+		var presetNr, stripNr, strip;
+		stripNr = index % numStrips;
+		presetNr = index - stripNr / numStrips;
+		if (presetHandler.currentIndex == presetNr) {
+			strip = strips[stripNr];
+			{
+				this.setStripProxy(strip, ProxySelector.getProxyIndex(proxySpace, proxy)); 
+			}.defer(0.2); // wait for strip to update specs from proxy first
+		}{
+			
+		};
 	}
 
 	makeWindow {
+		var stripWidth = 80, winWidth;
+		winWidth = stripWidth * numStrips;
 		this.window({ | w, app |
-			w.layout = HLayout(
-				ProxyCodeStrip(this).gui,
-				ProxyCodeStrip(this).gui
-			)
+			w	.name_("Proxy Code Mixer : " ++ doc.name)
+				.bounds_(Rect(Window.screenBounds.width - winWidth, 0, winWidth, 250))
+				.layout = HLayout(
+					VLayout(*(presetHandler.gui)),
+					*(strips collect: _.gui)
+				)
 		})
 	}
 
-	initValues {
-		this.addNotifier(proxySpace, \newProxy, {
-			{ this.updateProxyNames }.defer(0.1); // wait for ProxySpace to register new Proxy
-		});
-		this.updateProxyNames;	// update list with any already existing proxies
+	initStrips {
+		var strip;
+		proxySpace.envir.size do: { | i |
+			strip = strips[i];
+			strip !? { this.setStripProxy(strip, i) };
+		};
 	}
-	
-	updateProxyNames {
-		var pn;
-		pn = proxySpace.envir.keys.asArray.sort;
-		this.putValue(\proxyNames, pn);
-		this.notify(\proxyNames, [pn add: '-']);
+
+	setStripProxy { | strip, proxyIndex |
+		strip.getAdapter(\proxySelector).selectItemAt(proxyIndex + 1);
+		this.setDefaultStripControls(strip);
 	}
+
+	setDefaultStripControls { | strip |
+		strip.getAdapter(\sliderSpecs).selectItemAt(1);
+		strip.getAdapter(\knobSpecs).selectItemAt(2);
+	}
+
+	makePreset { ^strips collect: _.makePreset; }
+
+	restorePreset { | argPreset | argPreset do: { | p, i | strips[i].restorePreset(p) } } 
+
 }
 
-ProxyCodeStrip : AppModel {
-	var <>proxyCodeMixer;
-	
-	*new { | proxyCodeMixer |
-		^super.new.init(proxyCodeMixer)
-	}
-	
-	init { | argProxyCodeMixer |
-		proxyCodeMixer = argProxyCodeMixer;
-
-	}
-
-	gui {
-		^VLayout(
-			this.popUpMenu(\proxyMenu)
-				.adapterAction({ | adapter |
-					 
-				})
-				.addNotifierWithSelf(proxyCodeMixer, \proxyNames, { | self, pnames | 
-					self.updateItemsAndValue(pnames)
-				}).view,
-			this.knob(\knob).view,
-			this.slider(\slider).view
-		)
-	}
-}

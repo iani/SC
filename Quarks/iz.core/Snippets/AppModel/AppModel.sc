@@ -31,12 +31,12 @@ AppModel {
 
 	var <values;  /* IdentityDictionary: Adapters holding my values per name */
 	
-	*new { ^this.newCopyArgs(IdentityDictionary.new); }
+	*new { | ... args | ^this.newCopyArgs(IdentityDictionary.new, *args); }
 
 	at { | name | ^values[name].value; }
 	put { | name, value | this.getAdapter(name).valueAction = value } 
 	getAdapter { | name, innerAdapter |
-	// Access adapter. Create one only if it does not already exist
+		// Access adapter. Create one only if it does not already exist
 		var adapter;
 		adapter = values[name];
 		if (adapter.isNil) { // if it does not exist, create it and set its adapter variable.

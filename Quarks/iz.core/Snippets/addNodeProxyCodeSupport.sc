@@ -33,10 +33,11 @@ Make sure that the current document has a ProxySpace installed as currentEnviron
 */
 
 + Document {
-	*prepareProxySpace {
-		if (not(Document.current.envir isKindOf: ProxySpace)) {
-			Document.current.envir = ProxySpace.push;
+	*prepareProxySpace { | doc |
+		doc = doc ?? { Document.current };
+		if (not(doc.envir isKindOf: ProxySpace)) {
+			doc.envir = ProxySpace.push;
 		};
-		^Document.current.envir;
+		^doc.envir;
 	}
 }

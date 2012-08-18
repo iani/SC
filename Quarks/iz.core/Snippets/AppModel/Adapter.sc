@@ -37,8 +37,6 @@ When the ProxyState sets its node, it gets the specs of the node by calling: Mer
 It also starts listening to \proxySpecs notifications from that proxy, so that it may update the specs of the proxy if they change in the meanwhile. \proxySpecs notifications are issued from the proxy in method Meta_MergeSpecs:parseArguments, which is called in places such as: [ProxyCode:evalInProxySpace], [ProxySourceEditor:init], [ProxySourceEditor:resetSpecs]. This enables the user modify the specifications provided by the proxy itself in order to add information not available in the proxy. 
 
 An element that wants to set the parameter of the proxy that is selected by the adapter that ProxySpecs is 
- 
-
 
 4. ProxyControl ============================================
 
@@ -57,9 +55,11 @@ Adapter {
 	}
 
 	valueAction_ { | argValue | // Also perform adapters action
-		value = argValue;
-		adapter.(this);
-		this.notify(\value, value.postln);
+		argValue !? { // nil causes too many problems
+			value = argValue;
+			adapter.(this);
+			this.notify(\value, value);
+		}
 	}
 
 	// list handling methods
@@ -67,6 +67,9 @@ Adapter {
 	item { /* When my value has the form: [index, array], return array[index]
 			For returning the selected item from a ListView or PopUpMenu */
 		if (value[0].isNil) { ^nil } { ^value[1][value[0]] };
+	}
+	selectItemAt { | index = 0 |
+		value !? { this.valueAction = [index.clip(0, value[1].size - 1), value[1]]; }
 	}
 	updateItemsAndValue { | newItems, defaultItem = '-' |
 		value = value ?? { [nil, []] };
@@ -78,11 +81,12 @@ Adapter {
 	}
 
 	// methods for creating specialized adapters in my adapter instance variable
-	mapper { | spec |
+
+	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
 		adapter ?? { adapter = SpecAdapter(this) };
 		if (spec.isNil) {
 			this.value ?? { this.value = 0; };
-			this.value = this.value;			// ensure update; 
+			this.value = this.value;			// ensure update 
 		}{
 			adapter.spec = spec; 
 		};
@@ -104,22 +108,34 @@ ProxySelector : AbstractAdapterElement {
 
 	*initClass { proxyNames = IdentityDictionary.new; }
 	
-	*addProxySelector { | proxySpace, selector |
+	*addProxySelector { | proxySpace, selector, action |
 		var pNames;
-		this.addNotifier(proxySpace, \newProxy, {
-			{  // only build the names list once
-				pNames = ['-'] ++ proxySpace.envir.keys.asArray.sort; 
-				proxyNames[proxySpace] = pNames;
-				this.notify(\proxyNames, [pNames]);
+		action = action ?? {{ | names | selector updateState: names }};
+		this.addNotifier(proxySpace, \newProxy, { | proxy |
+			{   // only build the names list once
+				pNames = this.updateProxyNames(proxySpace);
+				this.notify(\proxyNames, [pNames, proxy]);
 			}.defer(0.1); // wait for ProxySpace to register the new proxy
 		});
-		selector.addNotifier(this, \proxyNames, { | names | selector updateState: names });
+		proxyNames[proxySpace] ?? { this.updateProxyNames(proxySpace) };  // init the first time
+		selector.addNotifier(this, \proxyNames, action);
+	}
+
+	*updateProxyNames { | proxySpace |
+		var pNames;
+		pNames = ['-'] ++ proxySpace.envir.keys.asArray.sort; 
+		proxyNames[proxySpace] = pNames;
+		^pNames;
+	}
+
+	*getProxyIndex { | proxySpace, proxy |
+		^proxyNames[proxySpace] indexOf: proxySpace.envir.findKeyForValue(proxy);
 	}
 	
 	init {
 		proxySpace = proxySpace ?? { Document.prepareProxySpace };
 		this.class.addProxySelector(proxySpace, this);
-		this.updateState(proxyNames[proxySpace] ?? { [this.nilProxyName] });
+		this.updateState(proxyNames[proxySpace] /* ?? { [this.nilProxyName] } */);
 	}
 
 	updateState { | names | adapter.updateItemsAndValue(names); }
@@ -143,10 +159,16 @@ ProxySelector : AbstractAdapterElement {
 ProxyState : AbstractAdapterElement {
 	var <proxySelector; 	// proxy selector item that notifies me to set my proxy
 	var <proxy;			// the currently set proxy
-	
+
+	*initClass {
+		CmdPeriod add: { this.notify(\proxiesStoppedByCmdPeriod); }
+	}
 	init {
 		if (proxySelector isKindOf: Symbol) { this.getProxySelector(proxySelector); };
 		this.addSelectionNotifier;
+		if (this.class === ProxyState) { // exclude subclasses in a primitive way ...
+			this.addNotifier(ProxyState, \proxiesStoppedByCmdPeriod, { adapter.value = 0 });
+		};
 	}
 	
 	addSelectionNotifier {
@@ -217,13 +239,6 @@ SpecAdapter : AbstractAdapterElement {
 	spec_ { | argSpec |
 		spec = argSpec.asSpec;
 		adapter.value = spec map: unmappedValue;
-/*		[this, thisMethod.name, "mapped: ", spec map: unmappedValue, "unmapped", unmappedValue].postln;
-		{		
-		10 do: {
-			0.5.wait;
-			adapter.notify(\value, 	spec.map(unmappedValue).postln);
-		}}.fork(AppClock);
-*/
 	}
 	map { | value |
 		unmappedValue = value;

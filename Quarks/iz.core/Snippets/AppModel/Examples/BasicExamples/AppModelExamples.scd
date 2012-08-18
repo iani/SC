@@ -55,7 +55,7 @@ a = AppModel().window({ | w, app |
 //:
 
 a = AppModel().window({ | w, app |
-	w.name_("spec last").bounds_(Rect(800, 500, 400, 400).layout = VLayout(
+	w.name_("spec last").bounds_(Rect(800, 500, 400, 400)).layout = VLayout(
 		app.numberBox(\numbox2).view,
 		app.knob(\numbox2, \freq).view,
 	)
