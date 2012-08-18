@@ -6,8 +6,8 @@ tests for AppModel
 
 a = AppModel().window({ | w, app |
 	w.layout = HLayout(
-		app.knob(\test).spec_(\freq).view,
-		app.slider(\test).spec_(\freq).view,
+		app.knob(\test, \freq).view,
+		app.slider(\test).view,
 		app.numberBox(\test).view,
 		app.view(Button()).view
 			.states_([["randomize"]])
@@ -34,13 +34,15 @@ a = AppModel().window({ | w, app |
 	);
 });
 
-//: Getting fluent with one widget influenceing another aspect of another widget. 
-
-AppModel().window({ | w, app |
-	app.putValue(\synth, { | amp = 0.02 | WhiteNoise.ar(amp) }.play);
+a = AppModel().window({ | w, app |
 	w.layout = VLayout(
-		app.knob(\vol)
-			.adapterAction({ app.getValue(\synth).postln; })
-			.view;
+		app.popUpMenu(\nodes).proxySelector.view,
+		app.button(\startstop).proxyState(\nodes)
+			.view.states_([["start"], ["stop"]]),
+		(b = app.popUpMenu(\specs).proxySpecSelector(\nodes)).view, //,
+		app.numberBox(\control).proxyControl(\specs).view,
+//		app.knob(\control).proxyControl(\specs).view,
+		app.knob(\numbox, \freq).view,
+		app.numberBox(\numbox).view,
 	)
 })
