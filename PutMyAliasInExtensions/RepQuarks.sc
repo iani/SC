@@ -172,9 +172,7 @@ if( ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4").not) || (GUI.
 		//^this.class.superclass.gui 
 		if( GUI.id === \qt ) { ^QuarksViewQt(this) } { ^QuarkView(this) }
 }{
-		this.logln("this is ReQuarks GUI");	
-
-		
+		//this.logln("this is ReQuarks GUI");	
 
 		// note, this doesn't actually contact svn
 		// it only reads the DIRECTORY entries you've already checked out
@@ -298,8 +296,8 @@ if( ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4").not) || (GUI.
 		flowLayout.margin_( 0 @0 ).gap_( 0@0 );
 
 //mc hack to prevent ScrollView hang on OSX 10.7.4 !!!	
-if( (GUI.current == \CocoaGUI.asClass) // && (Main.version.split($.)[1].asInt < 5) 
-			&& ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4")) ) 
+if( (GUI.current == \CocoaGUI.asClass) && (Main.version.split($.)[1].asInt < 5) 
+			&& "sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4") ) 
 		{
 			scrollview = GUI.compositeView.new(window, 500 @ (height - 165)) //mc compositeView
 				.resize_( 5 )
