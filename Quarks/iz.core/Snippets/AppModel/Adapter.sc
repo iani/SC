@@ -78,7 +78,7 @@ Adapter {
 	}
 
 	// methods for creating specialized adapters in my adapter instance variable
-	mapper { | spec | adapter ?? { adapter = SpecAdapter(this, spec); } }
+	mapper { | spec | adapter ?? { adapter = SpecAdapter(this, spec); }  }
 	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
 	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
 	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
@@ -113,7 +113,7 @@ SpecAdapter : AbstractAdapterElement {
 ProxySelector : AbstractAdapterElement {
 	classvar <proxyNames;	// cache proxyNames from proxySpaces
 	var <proxySpace, <proxy;
-	
+
 	*initClass { proxyNames = IdentityDictionary.new; }
 	
 	*addProxySelector { | proxySpace, selector |
@@ -212,80 +212,18 @@ ProxyState : AbstractAdapterElement {
 
 ProxySpecSelector : ProxyState {
 	var <>specs = #[['-', nil]];
-	
-	init {
-		[this, thisMethod.name].postln;
-/*		if (proxySelector isKindOf: Symbol) {
-			this.getProxySelector(proxySelector);
-		};
-		this.addNotifier(proxySelector, \selection, { | proxy, args |
-			[this, thisMethod.name, "received selection notification", proxy, args].postln;
-			this.setProxy(proxy);
-			this.setArgs(args); ["ProxySelector sent args: ", args].postln
-		});
-		[this, thisMethod.name].postln;
-*/	}
-	
-	getProxySelector { | selector |
-//		proxySelector = adapter.model.getAdapter(selector).proxySelector;
-	}
-
-	setProxy { | newProxy |
-		[this, thisMethod.name, newProxy].postln;
-/*		if (proxy !== newProxy) {
-			proxy !? { this.removeNotifiers; };
-			proxy = newProxy;
-			proxy !? { this.addNotifiers; };
-		};
-		this.updateState;
-*/
-	}
 
 	setArgs { | myArgs |
-		[this, thisMethod.name, myArgs].postln; 
+//		[this, thisMethod.name, myArgs].postln; 
 	}
 
 	removeNotifiers {
-		[this, thisMethod.name].postln;
-
-//		this.removeNotifier(proxy, \play);
-//		this.removeNotifier(proxy, \stop);
-	}
+//		[this, thisMethod.name].postln;
+ 		this.removeNotifier(proxy, \proxySpecs); 
+ 	}
 
 	addNotifiers {
-		[this, thisMethod.name].postln;
-
-//		this.addNotifier(proxy, \play, { adapter.value = 1 });
-//		this.addNotifier(proxy, \stop, { adapter.value = 0 });
-	}
-
-	updateState {
-		[this, thisMethod.name].postln;
-
-/*		if (proxy.isNil) {
-			adapter.value = 0;
-		}{
-			if (proxy.isMonitoring) {  adapter.value = 1 } { adapter.value = 0 };
-		}
-*/
-	}
-
-	value {
-		[this, thisMethod.name].postln;
-/*
-
-		if (proxy.isNil) {
-			adapter.value = 0;
-		}{
-			if (adapter.value > 0) { proxy.play } { proxy.stop };
-		}
-*/
-	}
-	
-/*
-	removeNotifiers { this.removeNotifier(proxy, \proxySpecs); }
-
-	addNotifiers {
+//		[this, thisMethod.name].postln;
 		this.addNotifier(proxy, \proxySpecs, { | argSpecs |
 			specs = argSpecs;
 			adapter.updateItemsAndValue(specs.flop[0]);
@@ -293,40 +231,41 @@ ProxySpecSelector : ProxyState {
 	}
 
 	updateState {
-		specs = MergeSpecs(proxy);
-		[this, thisMethod.name, specs].postln;
-		adapter.updateItemsAndValue(specs.flop[0].postln);
+//		[this, thisMethod.name].postln;
+		adapter.updateItemsAndValue((specs = MergeSpecs.getSpecsFor(proxy)).flop[0]);
 	}
-	// notify ProxyControls of new specs
+
 	value {
-		"PROXYSPECSELECTOR VALUE DOING NOTHING".postln;
-//		adapter.notify(\selection, [proxy, specs[adapter.value[0]]]);
+//		[this, thisMethod.name, "========= sending =========", proxy, specs[adapter.value[0] ?? 0]].postln;
+		adapter.notify(\selection, [proxy, specs[adapter.value[0] ? 0]]);
 	}
-*/
 }
 
 ProxyControl : ProxyState {
 	var <spec;			// the currently set spec
 
 	init {
-		[this, thisMethod.name].postln;
-/*		if (proxySelector isKindOf: Symbol) {
+//		[this, thisMethod.name].postln;
+		if (proxySelector isKindOf: Symbol) {
 			this.getProxySelector(proxySelector);
 		};
+	//	this.registrations.postln;
 		this.addNotifier(proxySelector, \selection, { | proxy, args |
 			[this, thisMethod.name, "received selection notification", proxy, args].postln;
 			this.setProxy(proxy);
-			this.setArgs(args); ["ProxySelector sent args: ", args].postln
+			this.setArgs(args); // ["ProxySelector sent args: ", args].postln
 		});
-		[this, thisMethod.name].postln;
-*/	}
+	//	this.registrations.postln;
+//		[this, thisMethod.name].postln;
+	}
 	
 	getProxySelector { | selector |
-//		proxySelector = adapter.model.getAdapter(selector).proxySelector;
+		proxySelector = adapter.model.getAdapter(selector);
 	}
 
 	setProxy { | newProxy |
-		[this, thisMethod.name, newProxy].postln;
+//		[this, thisMethod.name, newProxy].postln;
+		proxy = newProxy;
 /*		if (proxy !== newProxy) {
 			proxy !? { this.removeNotifiers; };
 			proxy = newProxy;
@@ -336,8 +275,9 @@ ProxyControl : ProxyState {
 */
 	}
 
-	setArgs { | myArgs |
-		[this, thisMethod.name, myArgs].postln; 
+	setArgs { | argSpec |
+		[this, thisMethod.name, argSpec, adapter].postln;
+		spec = argSpec;
 	}
 
 	removeNotifiers {
