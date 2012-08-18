@@ -33,24 +33,20 @@ AppModel {
 	
 	*new { ^this.newCopyArgs(IdentityDictionary.new); }
 
-//	at { | name | ^values[name].value; }
 	at { | name | ^values[name].value; }
-	// creates value adapter if not present
-//	putValue { | name, value | this.getAdapter(name).valueAction = value }
-	put { | name, value | this.getAdapter(name).valueAction = value }
- 
+	put { | name, value | this.getAdapter(name).valueAction = value } 
 	getAdapter { | name, innerAdapter |
-	// Access adapter.  
-	// if it does not exist, create it and set its adapter variable.
-	// Else return it as is. 
+	// Access adapter. Create one only if it does not already exist
 		var adapter;
 		adapter = values[name];
-		if (adapter.isNil) {
+		if (adapter.isNil) { // if it does not exist, create it and set its adapter variable.
 			adapter = Adapter(this);
 			values[name] = adapter;
 			adapter.adapter = innerAdapter;
-		};
-		^adapter;
+			^adapter;
+		}{
+			^adapter; 	// Else return it as is
+		}
 	}
 
 	getViewValue { | name | values[name].notify(\at) } // so far only used by AppTextView
@@ -63,7 +59,7 @@ AppModel {
 	
 	view { | view | ^AppNamelessView(this, view) }
 
-	numberBox { | name | ^AppValueView(this, name, NumberBox()); }
+	numberBox { | name | ^AppValueView(this, name, NumberBox()).mapper; }
 	knob { | name, spec | ^AppSpecValueView(this, name, Knob()).mapper(spec); }
 	slider { | name, spec | ^AppSpecValueView(this, name, Slider()).mapper(spec); }
 	button { | name | ^AppValueView(this, name, Button()); }

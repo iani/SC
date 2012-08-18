@@ -80,13 +80,7 @@ AppView : AppNamedWidget {
 
 AppValueView : AppView {
 	var <>viewAction, <>updateAction;
-	init {
-		super.init;
-		this.initView;
-		this.initActions;
-		view.onClose = { this.objectClosed; }
-	}
-	
+
 	initActions {
 		this.initViewAction(viewAction);
 		this.initUpdateAction(updateAction);

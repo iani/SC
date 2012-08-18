@@ -91,13 +91,22 @@ AbstractAdapterElement {
 }
 
 SpecAdapter : AbstractAdapterElement {
-	var <>spec, <unmappedValue = 0;	
-	init { spec = spec.asSpec }
+	var <>spec, <unmappedValue = 0;
+	var <>action; // TODO: ProxyControl	
+	init {
+		spec !? { spec = spec.asSpec };
+		{ adapter.value = spec map: unmappedValue; }.defer(0.05);
+	}
 	map { | value |
 		unmappedValue = value;
 		adapter.valueAction = spec map: value;
 	}
-	value { unmappedValue = spec unmap: adapter.value; }
+	value {
+		var value;
+		value = adapter.value;
+		unmappedValue = spec unmap: value;
+		action.(value);
+	}
 }
 
 
@@ -252,6 +261,6 @@ ProxyControl : ProxyState {
 //		
 	}
 	
-	
+	unmappedValue {} // TODO: REMOVE THIS
 }
 
