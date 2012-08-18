@@ -90,26 +90,6 @@ AbstractAdapterElement {
 	*new { | adapter ... args | ^this.newCopyArgs(adapter, *args).init; }
 }
 
-SpecAdapter : AbstractAdapterElement {
-	var <>spec, <unmappedValue = 0;
-	var <>action; // TODO: ProxyControl	
-	init {
-		spec !? { spec = spec.asSpec };
-		{ adapter.value = spec map: unmappedValue; }.defer(0.05);
-	}
-	map { | value |
-		unmappedValue = value;
-		adapter.valueAction = spec map: value;
-	}
-	value {
-		var value;
-		value = adapter.value;
-		unmappedValue = spec unmap: value;
-		action.(value);
-	}
-}
-
-
 ProxySelector : AbstractAdapterElement {
 	classvar <proxyNames;	// cache proxyNames from proxySpaces
 	var <proxySpace, <proxy;
@@ -157,15 +137,15 @@ ProxyState : AbstractAdapterElement {
 	var <proxy;			// the currently set proxy
 	
 	init {
-		if (proxySelector isKindOf: Symbol) {
-			this.getProxySelector(proxySelector);
-		};
-		this.addNotifier(proxySelector, \selection, { | proxy, args |
-			[this, thisMethod.name, "received selection notification", proxy, args].postln;
-			this.setProxy(proxy);
-			this.setArgs(args); ["ProxySelector sent args: ", args].postln
+		if (proxySelector isKindOf: Symbol) { this.getProxySelector(proxySelector); };
+		this.addSelectionNotifier;
+	}
+	
+	addSelectionNotifier {
+		this.addNotifier(proxySelector, \selection, { | argProxy |
+			this.setProxy(argProxy);
 		});
-		[this, thisMethod.name].postln;
+
 	}
 	
 	getProxySelector { | selector |
@@ -180,8 +160,6 @@ ProxyState : AbstractAdapterElement {
 		};
 		this.updateState;
 	}
-
-	setArgs { [this, thisMethod.name].postln; /* used by ProxyControl */ }
 
 	removeNotifiers {
 		this.removeNotifier(proxy, \play);
@@ -213,164 +191,72 @@ ProxyState : AbstractAdapterElement {
 ProxySpecSelector : ProxyState {
 	var <>specs = #[['-', nil]];
 
-	setArgs { | myArgs |
-//		[this, thisMethod.name, myArgs].postln; 
-	}
-
-	removeNotifiers {
-//		[this, thisMethod.name].postln;
- 		this.removeNotifier(proxy, \proxySpecs); 
- 	}
-
+	removeNotifiers { this.removeNotifier(proxy, \proxySpecs); }
 	addNotifiers {
-//		[this, thisMethod.name].postln;
 		this.addNotifier(proxy, \proxySpecs, { | argSpecs |
 			specs = argSpecs;
 			adapter.updateItemsAndValue(specs.flop[0]);
 		});
 	}
+	updateState { adapter.updateItemsAndValue((specs = MergeSpecs.getSpecsFor(proxy)).flop[0]); }
+	value { adapter.notify(\selection, [proxy, specs[adapter.value[0] ? 0]]); }
+}
 
-	updateState {
-//		[this, thisMethod.name].postln;
-		adapter.updateItemsAndValue((specs = MergeSpecs.getSpecsFor(proxy)).flop[0]);
+SpecAdapter : AbstractAdapterElement {
+	var <spec, <unmappedValue = 0;
+	var <>action; // TODO: ProxyControl	
+	init {
+		spec !? { { this.spec = spec }.defer(0.05) };
 	}
-
+	spec_ { | argSpec |
+		spec = argSpec.asSpec;
+		adapter.value = spec map: unmappedValue;
+	}
+	map { | value |
+		unmappedValue = value;
+		adapter.valueAction = spec map: value;
+	}
 	value {
-//		[this, thisMethod.name, "========= sending =========", proxy, specs[adapter.value[0] ?? 0]].postln;
-		adapter.notify(\selection, [proxy, specs[adapter.value[0] ? 0]]);
+		var value;
+		value = adapter.value;
+		unmappedValue = spec unmap: value;
+		action.(value);
+	}
+	
+	updateValue { | argValue |
+		unmappedValue = spec unmap: argValue;
+		adapter.value = argValue;
 	}
 }
 
 ProxyControl : ProxyState {
-	var <spec;			// the currently set spec
+	var <parameter, <spec;
+	var <action;
 
-	init {
-//		[this, thisMethod.name].postln;
-		if (proxySelector isKindOf: Symbol) {
-			this.getProxySelector(proxySelector);
-		};
-	//	this.registrations.postln;
-		this.addNotifier(proxySelector, \selection, { | proxy, args |
-			[this, thisMethod.name, "received selection notification", proxy, args].postln;
-			this.setProxy(proxy);
-			this.setArgs(args); // ["ProxySelector sent args: ", args].postln
-		});
-	//	this.registrations.postln;
-//		[this, thisMethod.name].postln;
-	}
-	
-	getProxySelector { | selector |
-		proxySelector = adapter.model.getAdapter(selector);
-	}
+	getProxySelector { | selector | proxySelector = adapter.model.getAdapter(selector); }
 
-	setProxy { | newProxy |
-//		[this, thisMethod.name, newProxy].postln;
-		proxy = newProxy;
-/*		if (proxy !== newProxy) {
-			proxy !? { this.removeNotifiers; };
-			proxy = newProxy;
-			proxy !? { this.addNotifiers; };
-		};
-		this.updateState;
-*/
-	}
-
-	setArgs { | argSpec |
-		[this, thisMethod.name, argSpec, adapter].postln;
-		spec = argSpec;
-	}
-
-	removeNotifiers {
-		[this, thisMethod.name].postln;
-
-//		this.removeNotifier(proxy, \play);
-//		this.removeNotifier(proxy, \stop);
-	}
-
-	addNotifiers {
-		[this, thisMethod.name].postln;
-
-//		this.addNotifier(proxy, \play, { adapter.value = 1 });
-//		this.addNotifier(proxy, \stop, { adapter.value = 0 });
-	}
-
-	updateState {
-		[this, thisMethod.name].postln;
-
-/*		if (proxy.isNil) {
-			adapter.value = 0;
-		}{
-			if (proxy.isMonitoring) {  adapter.value = 1 } { adapter.value = 0 };
-		}
-*/
-	}
-
-	value {
-		[this, thisMethod.name].postln;
-/*
-
-		if (proxy.isNil) {
-			adapter.value = 0;
-		}{
-			if (adapter.value > 0) { proxy.play } { proxy.stop };
-		}
-*/
-	}
-	
-/*
-	removeNotifiers { this.removeNotifier(proxy, \proxySpecs); }
-
-	addNotifiers {
-		this.addNotifier(proxy, \proxySpecs, { | argSpecs |
-			specs = argSpecs;
-			adapter.updateItemsAndValue(specs.flop[0]);
+	addSelectionNotifier {
+		this.addNotifier(proxySelector, \selection, { | argProxy, argSpec |
+			proxy = argProxy;
+			#parameter, spec = argSpec;
+			adapter.adapter.spec = spec;
+			proxy !? { this.updateValueFromProxy };
+			action = switch ( parameter,
+				'-', { { } },
+				'vol', {{ | val | proxy.vol = adapter.value }},
+				'fadeTime', {{ | val | proxy.fadeTime = adapter.value }},
+				{{ proxy.set(parameter, adapter.value) }}
+			);
 		});
 	}
-
-	updateState {
-		specs = MergeSpecs(proxy);
-		[this, thisMethod.name, specs].postln;
-		adapter.updateItemsAndValue(specs.flop[0].postln);
+	updateValueFromProxy {
+		var currentParameterValue;
+		switch (parameter, 
+			'-', { },
+			'vol', { adapter.adapter updateValue: proxy.vol ? 0 },
+			'fadeTime', { adapter.adapter updateValue: proxy.fadeTime ? 0 },
+			{ adapter.adapter updateValue: proxy.get(parameter) ? 0 }
+		)
 	}
-	// notify ProxyControls of new specs
-	value {
-		"PROXYSPECSELECTOR VALUE DOING NOTHING".postln;
-//		adapter.notify(\selection, [proxy, specs[adapter.value[0]]]);
-	}
-*/
+	value { proxy !? { action.(adapter.value) } }
 }
-
-ProxyControlOLD : ProxyState {
-	var <spec;			// the currently set spec
-
-/*	init {
-		if (proxySelector isKindOf: Symbol) {
-			this.getProxySelector(proxySelector);
-		};
-
-		[this, thisMethod, "selector: ", proxySelector].postln;
-		this.addNotifier(proxySelector, \selection, { | ... args |
-		[this, thisMethod, "select received: ", args].postln;
-		});
-	}
-*/
-	getProxySelector { | selector |
-//		[this, thisMethod.name, selector].postln;
-		proxySelector = adapter.model.getAdapter(selector);   // .proxySpecSelector;
-//		[this, thisMethod.name, selector].postln;
-	}
-
-	setArgs { | argSpec |
-		[this, thisMethod.name, proxy, argSpec].postln;
-//		this.updateState;
-	}
-
-	value { }
-	
-	updateState { 
-//		
-	}
-	
-	unmappedValue {} // TODO: REMOVE THIS
-}
-
