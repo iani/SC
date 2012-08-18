@@ -59,7 +59,7 @@ Adapter {
 	valueAction_ { | argValue | // Also perform adapters action
 		value = argValue;
 		adapter.(this);
-		this.notify(\value, value);
+		this.notify(\value, value.postln);
 	}
 
 	// list handling methods
@@ -78,7 +78,15 @@ Adapter {
 	}
 
 	// methods for creating specialized adapters in my adapter instance variable
-	mapper { | spec | adapter ?? { adapter = SpecAdapter(this, spec); }  }
+	mapper { | spec |
+		adapter ?? { adapter = SpecAdapter(this) };
+		if (spec.isNil) {
+			this.value ?? { this.value = 0; };
+			this.value = this.value;			// ensure update; 
+		}{
+			adapter.spec = spec; 
+		};
+	}
 	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
 	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
 	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
@@ -204,13 +212,18 @@ ProxySpecSelector : ProxyState {
 
 SpecAdapter : AbstractAdapterElement {
 	var <spec, <unmappedValue = 0;
-	var <>action; // TODO: ProxyControl	
-	init {
-		spec !? { { this.spec = spec }.defer(0.05) };
-	}
+	var <>action;	
+	init { }
 	spec_ { | argSpec |
 		spec = argSpec.asSpec;
 		adapter.value = spec map: unmappedValue;
+/*		[this, thisMethod.name, "mapped: ", spec map: unmappedValue, "unmapped", unmappedValue].postln;
+		{		
+		10 do: {
+			0.5.wait;
+			adapter.notify(\value, 	spec.map(unmappedValue).postln);
+		}}.fork(AppClock);
+*/
 	}
 	map { | value |
 		unmappedValue = value;

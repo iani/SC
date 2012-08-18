@@ -34,15 +34,38 @@ a = AppModel().window({ | w, app |
 	);
 });
 
+//:
+
 a = AppModel().window({ | w, app |
 	w.layout = VLayout(
 		app.popUpMenu(\nodes).proxySelector.view,
 		app.button(\startstop).proxyState(\nodes)
 			.view.states_([["start"], ["stop"]]),
-		(b = app.popUpMenu(\specs).proxySpecSelector(\nodes)).view, //,
+		(b = app.popUpMenu(\specs).proxySpecSelector(\nodes)).view,
 		app.numberBox(\control).proxyControl(\specs).view,
-//		app.knob(\control).proxyControl(\specs).view,
+		app.knob(\control).proxyControl(\specs).view,
 		app.knob(\numbox, \freq).view,
 		app.numberBox(\numbox).view,
 	)
-})
+});
+
+~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.01) };
+~out.play;
+
+//:
+
+a = AppModel().window({ | w, app |
+	w.name_("spec last").bounds_(Rect(800, 500, 400, 400).layout = VLayout(
+		app.numberBox(\numbox2).view,
+		app.knob(\numbox2, \freq).view,
+	)
+});
+
+//:
+
+a = AppModel().window({ | w, app |
+	w.layout = VLayout(
+		app.knob(\numbox2, \freq).view,
+		app.numberBox(\numbox2).view,
+	)
+});
