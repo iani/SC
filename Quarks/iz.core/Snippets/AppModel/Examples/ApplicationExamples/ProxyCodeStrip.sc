@@ -51,10 +51,13 @@ ProxyCodeStrip : AppModel {
 	}
 	
 	restorePreset { | argPreset |
+		var selector;
 		argPreset use: {
-			~proxySelector[\adapter].valueAction = ~proxySelector[\value];
+			selector = ~proxySelector[\adapter];
+			selector.valueAction = ~proxySelector[\value];
 			~knobSpecs[\adapter].valueAction = ~knobSpecs[\value];
 			~sliderSpecs[\adapter].valueAction = ~sliderSpecs[\value];
+			selector.adapter.updateState(ProxySelector.proxyNames[proxyCodeMixer.proxySpace]);
 		}
 	}
 	

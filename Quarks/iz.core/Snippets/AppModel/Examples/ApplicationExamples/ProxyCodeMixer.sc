@@ -11,6 +11,7 @@ ProxyCode(Document.current);
 ProxyCodeMixer : AppModel {
 	var <doc, <>numStrips = 8, <proxyCode, <proxySpace, <strips;
 	var <presetHandler;
+	var <proxyList;
 	
 	*new { | doc, numStrips = 8 | ^super.new(doc, numStrips).init; }
 
@@ -20,10 +21,19 @@ ProxyCodeMixer : AppModel {
 		proxySpace = doc.envir;
 		strips = { ProxyCodeStrip(this) } ! numStrips;
 		presetHandler = ProxyCodePresetHandler(this);
-		this.makeNewProxyAction;
 		this.makeWindow;
 		presetHandler.initPresets;
 		{ this.initStrips; }.defer(1); // proxies may take time to load if launched same time as me
+	}
+
+	initStrips {
+		var proxy, proxyIndex;
+		ProxySelector.proxyNames[proxySpace][1..] do: { | pxName, i |
+			proxy = proxySpace[pxName];
+			proxyIndex = ProxySelector.getProxyIndexForName(proxySpace, pxName) - 1;
+			this.addNewProxy(proxy, proxyIndex);
+		};
+		this.makeNewProxyAction;
 	}
 
 	makeNewProxyAction {
@@ -34,16 +44,20 @@ ProxyCodeMixer : AppModel {
 
 	addNewProxy { | proxy, index |
 		var presetNr, stripNr, strip;
+		proxyList = proxyList add: proxy;
 		stripNr = index % numStrips;
 		presetNr = index - stripNr / numStrips;
 		if (presetHandler.currentIndex == presetNr) {
 			strip = strips[stripNr];
 			{
 				this.setStripProxy(strip, ProxySelector.getProxyIndex(proxySpace, proxy)); 
-			}.defer(0.2); // wait for strip to update specs from proxy first
-		}{
-			
-		};
+			}.defer(0.1); // wait for strip to register in ProsySpace first!
+		}
+	}
+
+	setStripProxy { | strip, proxyIndex |
+		strip.getAdapter(\proxySelector).selectItemAt(proxyIndex);
+		this.setDefaultStripControls(strip);
 	}
 
 	makeWindow {
@@ -59,19 +73,6 @@ ProxyCodeMixer : AppModel {
 		})
 	}
 
-	initStrips {
-		var strip;
-		proxySpace.envir.size do: { | i |
-			strip = strips[i];
-			strip !? { this.setStripProxy(strip, i) };
-		};
-	}
-
-	setStripProxy { | strip, proxyIndex |
-		strip.getAdapter(\proxySelector).selectItemAt(proxyIndex + 1);
-		this.setDefaultStripControls(strip);
-	}
-
 	setDefaultStripControls { | strip |
 		strip.getAdapter(\sliderSpecs).selectItemAt(1);
 		strip.getAdapter(\knobSpecs).selectItemAt(2);
@@ -79,7 +80,19 @@ ProxyCodeMixer : AppModel {
 
 	makePreset { ^strips collect: _.makePreset; }
 
-	restorePreset { | argPreset | argPreset do: { | p, i | strips[i].restorePreset(p) } } 
+	restorePreset { | argPreset, presetIndex |
+		var proxies, proxy, strip;
+		proxies = proxyList[(presetIndex * numStrips .. 1 + presetIndex * numStrips - 1)];
+		argPreset do: { | preset, i |
+			strip = strips[i];
+			strip.restorePreset(preset);
+			proxy = proxies[i];
+			proxy !? { 
+				if (preset[\proxySelector][\value][0] == 0) {
+					this.setStripProxy(strip, ProxySelector.getProxyIndex(proxySpace, proxy))				}
+			}
+		}
+	} 
 
 }
 

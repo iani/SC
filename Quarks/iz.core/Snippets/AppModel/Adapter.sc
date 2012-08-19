@@ -131,7 +131,9 @@ ProxySelector : AbstractAdapterElement {
 	*getProxyIndex { | proxySpace, proxy |
 		^proxyNames[proxySpace] indexOf: proxySpace.envir.findKeyForValue(proxy);
 	}
-	
+
+	*getProxyIndexForName { | proxySpace, name | ^proxyNames[proxySpace] indexOf: name }
+
 	init {
 		proxySpace = proxySpace ?? { Document.prepareProxySpace };
 		this.class.addProxySelector(proxySpace, this);

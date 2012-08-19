@@ -23,7 +23,7 @@ ProxyCodePreset : AppModel {
 				s.getAdapter(\proxySelector).selectItemAt(0);
 			}
 		}{
-			handler.proxyCodeMixer.restorePreset(preset)
+			handler.proxyCodeMixer.restorePreset(preset, index)
 		}
 	}
 
