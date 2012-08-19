@@ -100,6 +100,14 @@ AppValueView : AppView {
 	}
 	
 	defaultUpdateAction { ^{ | argView, val | view.value = val } }
+	
+	listSize { // make updateFunction tell you the size of the list in my list adapter
+		updateAction = { view.value = adapter.adapter.items.size };
+		view.enabled = false;
+		// below is not needed, since view is disabled
+		// viewAction = updateAction.value; // reset back to size of list
+	}
+	
 	adapterUpdate { | argAction |
 		// replace the update action with one that passes you the adapter as argument
 		updateAction = { | ... args | argAction.(adapter, *args) };
@@ -126,7 +134,6 @@ AppTextValueView : AppValueView { // for StaticText, TextField, TextView
 	defaultUpdateAction { ^{ | argView, string | view.string = string; } }
 	list { | items, replaceItems = true |
 		// set viewAction, updateAction to work with ListAdapter in your adapter
-//		adapter.adapter ?? { adapter.adapter = ListAdapter(adapter) };
 		super.list(items);
 		updateAction = { view.string = adapter.adapter.item;  };
 		if (replaceItems) {

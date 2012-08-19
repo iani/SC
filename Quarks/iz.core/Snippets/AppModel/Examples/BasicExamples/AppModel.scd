@@ -47,7 +47,6 @@ a.setValue(\test, 0.5);
 a.setValue(\st, "asdf".scramble);
 
 //:
-
 m = AppModel().window({ | w, app |
 	w.layout = VLayout(
 		app.numberBox(\index).list(["alpha", "beta", "gamma"]).view,
@@ -57,6 +56,7 @@ m = AppModel().window({ | w, app |
 				view.value = adapter.adapter.items.size
 			}).doUpdate.view,
 		app.textField(\index).list(replaceItems: false).view,
+		app.numberBox(\index).listSize.doUpdate.view // same as adapterUpdate above
 	)
 });
 

@@ -62,17 +62,43 @@ ProxyCodeEditor : AppModel {
 					this.button(\startStop).proxyState(\proxyMenu).view.font_(font)
 						.states_([["start", Color.black, Color.green], 
 							["stop", Color.black, Color.red]]),
-					Button().states_([["<<"]]).font_(font)
-						.action_({ this.put(\currentSnippet, 1) }),
-					Button().states_([["<"]]).font_(font).action_({
-						this.getAdapter(\currentSnippet).decrement(1) }),
+					this.button(\history).list(["a", "b", "c"])
+						.viewAction_({ | view, me |
+							me.adapter.adapter.first;
+							me.adapter.adapter.item.postln;
+						})
+						.updateAction_({})
+						.view.states_([["<<"]]).font_(font),
+					this.button(\history)
+						.viewAction_({ | view, me |
+							me.adapter.adapter.previous;
+							me.adapter.adapter.item.postln;
+						})
+						.updateAction_({})
+						.view.states_([["<"]]).font_(font),
 					Button().states_([["eval"]]).font_(font).action_({ this.evalSnippet(false) }),
-					Button().states_([["<"]]).font_(font).action_({
-						this.getAdapter(\currentSnippet).increment(history.size) }),
-					Button().states_([[">>"]]).font_(font).action_({
-						this.put(\currentSnippet, history.size);
-					}),
-					Button().states_([["add"]]).font_(font).action_({ this.evalSnippet }),
+					this.button(\history)
+						.viewAction_({ | view, me |
+							me.adapter.adapter.next;
+							me.adapter.adapter.item.postln;
+						})
+						.updateAction_({})
+						.view.states_([[">"]]).font_(font),
+					this.button(\history)
+						.viewAction_({ | view, me |
+							me.adapter.adapter.last;
+							me.adapter.adapter.item.postln;
+						})
+						.updateAction_({})
+						.view.states_([[">>"]]).font_(font),
+					this.button(\history)
+						.viewAction_({ | view, me |
+							me.adapter.adapter.last;
+							me.adapter.adapter.item.postln;
+						})
+						.updateAction_({})
+						.view.states_([["add"]]).font_(font),
+//					Button().states_([["add"]]).font_(font).action_({ this.evalSnippet }),
 					Button().states_([["delete"]]).font_(font).action_({ this.deleteSnippet }),
 					Button().states_([["reset specs"]]).font_(font).action_({ this.resetSpecs }),
 					Button().states_([["history"]]).font_(font)

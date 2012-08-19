@@ -329,7 +329,7 @@ ListAdapter : AbstractAdapterElement {
 		adapter.updateListeners;
 	}
 	
-	value { adapter setValue: adapter.value.clip(1, items.size); }
+	value { adapter setValue: (adapter.value ? 0).clip(1, items.size); }
 	
 	item { ^items[adapter.value - 1] }
 
