@@ -45,23 +45,35 @@ Attaches its containing adapter to proxy spec selection adapter that contains a 
 
 Adapter {
 	var <model, <>adapter, <value;
-	
+
 	*new { | model | ^this.newCopyArgs(model) }
 
 	// value_ valueAction_, action_ are defined in analogy to View:value_, View:valueAction_ etc.
 	value_ { | argValue |		 // only set value and notify
 		value = argValue;
-		this.notify(\value, value);
+		this.updateListeners;
+	}
+
+	updateListeners {
+		this.notify(\value, value); // REMOVED: "this" convenient for custom AppWidget functions
+	}
+
+	setValue { | argValue |
+		// inner adapter may set value "silently" without notification, during valueAction_
+		value = argValue;
 	}
 
 	valueAction_ { | argValue | // Also perform adapters action
 		argValue !? { // nil causes too many problems
 			value = argValue;
 			adapter.(this);
-			this.notify(\value, value);
+			this.updateListeners;
 		}
 	}
-	 // set the adapter, as it can be my action.
+
+	// some basic utilities
+
+	// Like View:action_ : Set the adapter, since it can also function as my action.
 	action_ { | argFunc | adapter = argFunc }
 	// incrementing and decrementing 
 	increment { | upperLimit = inf, increment = 1 |
@@ -71,8 +83,8 @@ Adapter {
 		this.valueAction = value - decrement min: lowerLimit;
 	}
 
-	// list handling methods
-	
+	// list handling methods. NOTE: TODO: maybe use ListAdapter for ListView, popUpMenu instead / also?
+
 	item { /* When my value has the form: [index, array], return array[index]
 			For returning the selected item from a ListView or PopUpMenu */
 		if (value[0].isNil) { ^nil } { ^value[1][value[0]] };
@@ -99,8 +111,7 @@ Adapter {
 	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
 		adapter ?? { adapter = SpecAdapter(this) };
 		if (spec.isNil) {
-			this.value ?? { this.value = 0; };
-			this.value = this.value;			// ensure update 
+			if (this.value.isNil) {  this.value = 0; } { this.value = this.value } // ensure update 
 		}{
 			adapter.spec = spec; 
 		};
@@ -109,6 +120,10 @@ Adapter {
 	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
 	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
 	proxyControl { | proxySpecSelector | adapter.action = ProxyControl(this, proxySpecSelector); }
+	list { | items |
+		if (adapter.isKindOf(ListAdapter).not) { adapter = ListAdapter(this) };
+		items !? { adapter.items = items }
+	}
 }
 
 AbstractAdapterElement {
@@ -304,3 +319,63 @@ ProxyControl : ProxyState {
 	}
 	value { proxy !? { action.(adapter.value) } }
 }
+
+ListAdapter : AbstractAdapterElement {
+	var <items;
+	init { items = [] }
+	items_ { | argItems |
+		items = argItems;
+		this.value; 	// check index
+		adapter.updateListeners;
+	}
+	
+	value { adapter setValue: adapter.value.clip(1, items.size); }
+	
+	item { ^items[adapter.value - 1] }
+
+	next { adapter.valueAction = adapter.value + 1 }
+	previous { adapter.valueAction = adapter.value - 1 }
+	first { adapter.valueAction = 1 }
+	last { adapter.valueAction = items.size }
+	
+	add { | item | // analogous to Collection:add
+		this.items = items add: item;
+	}
+	
+	put { | item, index |	// analogous to Collection:put
+		index ?? { index = adapter.value };
+		if (index == 0) { ^"cannot insert item into empty list - try adding first".postcln; };
+		this.items = items[index - 1] = item;
+	}
+	
+	removeAt { | item, index | // analogous to Collection:removeAt
+		index ?? { index = adapter.value };
+		items removeAt: index;
+		this.items = items;	// update
+	}
+	
+	remove { | item | // analogous to Collection:remove
+		items remove: item;
+		this.items = items;	// update
+	}
+}
+/*
+
+
+
+m = AppModel().window({ | w, app |
+	w.layout = VLayout(
+		(a = app.numberBox(\index)).list.view,
+		(b = app.textView(\index)).updateAction_({ | v, val, m | 
+			v.string = m.adapter.item;  }).view
+	)
+});
+
+//:
+
+m.getAdapter(\index).adapter.items_(["a"]);
+m.getAdapter(\index).adapter.items_(["Hello", "a"]);
+
+m.getAdapter(\index).adapter.last
+
+*/

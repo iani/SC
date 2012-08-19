@@ -59,7 +59,9 @@ AppNamedWidget : AppNamelessWidget {
 	proxyState { | proxySelector | adapter proxyState: proxySelector; }
 	proxySpecSelector { | proxySelector | adapter proxySpecSelector: proxySelector; }
 	proxyControl { | proxySpecSelector | adapter proxyControl: proxySpecSelector; }
+	list { | items | adapter.list(items) }
 
+	// add listeners to notifications from your adapter
 	addAdapterListener { | listener, message, action |
 		listener.addNotifier(adapter, message, action);
 	}
@@ -97,7 +99,14 @@ AppValueView : AppView {
 		updateAction = argAction ?? { this.defaultUpdateAction };
 	}
 	
-	defaultUpdateAction { ^{ | argView, val | argView.value = val } }
+	defaultUpdateAction { ^{ | argView, val | view.value = val } }
+	adapterUpdate { | argAction |
+		// replace the update action with one that passes you the adapter as argument
+		updateAction = { | ... args | argAction.(adapter, *args) };
+	}
+	doUpdate { // perform the update action now. 
+		updateAction.(view, adapter.value)
+	}
 
 	initViewAction { | argAction |
 		view.action = { viewAction.(view, this) };
@@ -109,14 +118,25 @@ AppValueView : AppView {
 }
 
 AppSpecValueView : AppValueView {
-	defaultViewAction { ^{ | argView | adapter.adapter map: argView.value; } }
-	defaultUpdateAction { ^{ | argView, val | argView.value = adapter.adapter.unmappedValue; } }
+	defaultViewAction { ^{ adapter.adapter map: view.value; } }
+	defaultUpdateAction { ^{ view.value = adapter.adapter.unmappedValue; } }
 }
 
 AppTextValueView : AppValueView { // for StaticText, TextField, TextView
-	defaultUpdateAction { ^{ | view, string | view.string = string; } }
+	defaultUpdateAction { ^{ | argView, string | view.string = string; } }
+	list { | items, replaceItems = true |
+		// set viewAction, updateAction to work with ListAdapter in your adapter
+//		adapter.adapter ?? { adapter.adapter = ListAdapter(adapter) };
+		super.list(items);
+		updateAction = { view.string = adapter.adapter.item;  };
+		if (replaceItems) {
+			viewAction = { adapter.adapter.put(view.string) }
+		}{
+			viewAction = { adapter.adapter.add(view.string); }
+		};
+		updateAction.value;
+	}
 }
-
 
 AppTextView : AppTextValueView {
 	initView {

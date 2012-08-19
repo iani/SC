@@ -6,7 +6,7 @@ Edit Code of a proxy from ProxyCode snippets. Provide history of edited versions
 */
 
 ProxyCodeEditor : AppModel {
-	classvar <>all;	// all current instances of ProxyCodeEditor;
+	classvar <>all;	// all current instances of ProxyCodeEditor; // TODO: REVIEW THIS
 	classvar <>windowRects;
 	var <proxyCode, <proxyName, <proxy, <proxySpace, <>font;
 	var <history;
@@ -27,6 +27,7 @@ ProxyCodeEditor : AppModel {
 	}
 
 	init {
+		all[proxyName] = this; // TODO: Review this
 		proxySpace = proxyCode.proxySpace;
 		font = Font.default.size_(10);
 		this.makeWindow;
@@ -38,7 +39,7 @@ ProxyCodeEditor : AppModel {
 				.name_("Code Editor for : " ++ proxyName)
 				.bounds_(windowRects@@(all.size));
 			WindowHandler(this, window, 
-				{ all[proxyName] = nil; },
+				{ all[proxyName] = nil; }, // TODO: Review this
 				enableAction: { 
 					if (window.isClosed.not) { 
 						window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
@@ -97,11 +98,11 @@ ProxyCodeEditor : AppModel {
 	}
 	
 	setProxy { | argProxy, argProxyName |
-		[this, thisMethod.name, argProxy, argProxyName].postln;
 		argProxyName ?? { ^"Cannot set my proxy to nil".postcln; };
 		proxy = argProxy; 
 		proxyName = argProxyName;
-		this.notify(\setName, proxyName);
+		this.notify(\setName, proxyName); // set my window's name
+		
 	}
 }
 
