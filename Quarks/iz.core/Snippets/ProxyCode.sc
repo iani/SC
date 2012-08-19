@@ -224,7 +224,7 @@ ProxyCode {
 	proxyMixer {
 //		ProxyMixer(doc.envir);
 //		if (doc.envir.isNil) { this.initProxySpace };
-		NanoKontrol2(proxySpace, doc.name, this);
+		ProxyCodeMixer(doc, 8);
 	}
 	
 	changeVol { | increment = 0.1 |
