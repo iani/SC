@@ -49,8 +49,9 @@ AppNamedWidget : AppNamelessWidget {
 		name !? { adapter = model.getAdapter(name); }; // allow nameless option for convenience
 		this.addNotifier(adapter, \value, this);
 	}
-	
+
 	adapter_ { | action | adapter.adapter = action; }
+	action_ { | func | adapter.adapter = func;  } // synonym to adapter_ in analogy to View:action_
 	
 	// add specialized adapters to your adapter
 	mapper { | spec | adapter mapper: spec }
@@ -59,6 +60,12 @@ AppNamedWidget : AppNamelessWidget {
 	proxySpecSelector { | proxySelector | adapter proxySpecSelector: proxySelector; }
 	proxyControl { | proxySpecSelector | adapter proxyControl: proxySpecSelector; }
 
+	addAdapterListener { | listener, message, action |
+		listener.addNotifier(adapter, message, action);
+	}
+	addSelectionListener { | listener, action | // for ProxySelector, ProxySpecSelector
+		this.addAdapterListener(listener, \selection, action);
+	}
 }
 
 AppView : AppNamedWidget {

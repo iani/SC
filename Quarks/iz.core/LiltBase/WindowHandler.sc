@@ -67,7 +67,12 @@ WindowHandler {
 		toFrontAction.(this); // after enabling
 	}
 
-	doEndFrontAction { endFrontAction.(this) } // only extras 
+	doEndFrontAction { endFrontAction.(this) } // disable already done by doOnClose
+	
+	addAction { | message, action | 
+		this.addNotifier(model, message, { | ... args | action.value(window, *args) })
+	}
+	
 
 }
 

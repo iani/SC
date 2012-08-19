@@ -48,7 +48,7 @@ Adapter {
 	
 	*new { | model | ^this.newCopyArgs(model) }
 
-	// value_ and valueAction_ are defined in analogy to View:value_, View:valueAction_
+	// value_ valueAction_, action_ are defined in analogy to View:value_, View:valueAction_ etc.
 	value_ { | argValue |		 // only set value and notify
 		value = argValue;
 		this.notify(\value, value);
@@ -61,6 +61,15 @@ Adapter {
 			this.notify(\value, value);
 		}
 	}
+	 // set the adapter, as it can be my action.
+	action_ { | argFunc | adapter = argFunc }
+	// incrementing and decrementing 
+	increment { | upperLimit = inf, increment = 1 |
+		this.valueAction = value + increment min: upperLimit;
+	}
+	decrement { | lowerLimit = 0, decrement = 1 | 
+		this.valueAction = value - decrement min: lowerLimit;
+	}
 
 	// list handling methods
 	
@@ -70,6 +79,11 @@ Adapter {
 	}
 	selectItemAt { | index = 0 |
 		value !? { this.valueAction = [index.clip(0, value[1].size - 1), value[1]]; }
+	}
+	selectMatchingItem { | item |
+		var index;
+		index = value[1] indexOf: item;
+		index !? { this.valueAction = [index, value[1]] }
 	}
 	updateItemsAndValue { | newItems, defaultItem = '-' |
 		value = value ?? { [nil, []] };
@@ -152,7 +166,7 @@ ProxySelector : AbstractAdapterElement {
 		};
 		if (newProxy !== proxy) {
 			proxy = newProxy;
-			adapter.notify(\selection, newProxy);
+			adapter.notify(\selection, [newProxy, proxyName]);
 		};
 	}
 

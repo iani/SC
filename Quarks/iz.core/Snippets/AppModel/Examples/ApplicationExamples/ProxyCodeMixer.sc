@@ -69,7 +69,20 @@ ProxyCodeMixer : AppModel {
 				.layout = HLayout(
 					VLayout(*(presetHandler.gui)),
 					*(strips collect: _.gui)
-				)
+				);
+			WindowHandler(this, w, 
+				{ /* all[proxyName] = nil; */},
+				enableAction: { 
+					if (w.isClosed.not) { 
+						w.view.background = Color(*[0.9, 0.8, 0.7].scramble);
+					};
+				},
+				disableAction: { 
+					if (w.isClosed.not) {
+						w.view.background = Color(0.9, 0.9, 0.9, 0.5);
+					};
+				}
+			);
 		})
 	}
 

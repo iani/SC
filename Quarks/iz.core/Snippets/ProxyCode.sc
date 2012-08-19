@@ -188,7 +188,8 @@ ProxyCode {
 		proxyHistory[proxy] ?? {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
-		ProxySourceEditor(this, proxyName, proxy);
+//		ProxySourceEditor(this, proxyName, proxy);
+		ProxyCodeEditor(this, proxyName, proxy);
 	}
 
 	playCurrentDocProxy {
