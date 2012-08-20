@@ -75,6 +75,12 @@ Adapter {
 
 	// Like View:action_ : Set the adapter, since it can also function as my action.
 	action_ { | argFunc | adapter = argFunc }
+	
+	addValueListener { | listener, action |
+		// add listener with action to be performed when the value notification is sent:
+		listener.addNotifier(this, \value, { | ... args | action.(this, *args); })  
+	}
+	
 	// incrementing and decrementing 
 	increment { | upperLimit = inf, increment = 1 |
 		this.valueAction = value + increment min: upperLimit;
