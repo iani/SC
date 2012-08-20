@@ -67,6 +67,11 @@ NotificationCenter2 {
 
 NotificationRegistration2 {
 	var <>object,<>message,<>listener, <>action;
+	
+	== { | nr | 
+		^object === nr.object and: { message === nr.message } and: { listener === nr.listener }
+	}
+	
 	*new { | o, m, l, a | ^this.newCopyArgs(o, m, l, a) }
 	remove { NotificationCenter2.unregister(object, message, listener) }
 	valueArray { | args | ^action.valueArray(args) }
@@ -76,16 +81,21 @@ NotificationRegistration2 {
 OnObjectCloseRegistrations {
 	classvar <all;
 	
-	*initClass { all = MultiLevelIdentityDictionary.new; } // 1 nr per notifier/message/listener
+	*initClass { all = IdentityDictionary.new; } // 1 nr per notifier/message/listener
 	
 	*add { | registration |
 		var registrations, where;
 		where = registration.object;
-		registrations = all[where];
+		registrations = all[where] ?? { 
+			registrations = RegistrationList();
+			all[where] = registrations;
+		};
 		registrations = registrations add: registration;
-		all[where] = registrations;
 		where = registration.listener;		
-		registrations = all[where];
+		registrations = all[where] ?? { 
+			registrations = RegistrationList();
+			all[where] = registrations;
+		};
 		registrations = registrations add: registration;
 		all[where] = registrations;
 	}
@@ -95,13 +105,22 @@ OnObjectCloseRegistrations {
 		where = registration.object;
 		registrations = all[where];
 		registrations remove: registration;
-//		if (registrations.size == 0) { all[where] = nil };
-//		where = registration.listener;
-//		registrations = all[where];
-//		registrations remove: registration;
-//		if (registrations.size == 0) { all[where] = nil };
+		if (registrations.size == 0) { all[where] = nil };
+		where = registration.listener;
+		registrations = all[where];
+		registrations remove: registration;
+		if (registrations.size == 0) { all[where] = nil };
 	}
 	
 	*removeAllFor { | object | all[object].copy do: this.remove(_) }
 }
 
+RegistrationList : List {
+
+	add { | registration |
+		var old;
+		old = array detect: (_ == registration);
+		array remove: old;
+		array = array add: registration;
+	}
+}
