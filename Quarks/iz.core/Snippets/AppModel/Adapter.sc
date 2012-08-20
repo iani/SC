@@ -190,12 +190,12 @@ ProxySelector : AbstractAdapterElement {
 			adapter.notify(\selection, [newProxy, proxyName]);
 		};
 	}
-
 }
 
 ProxyState : AbstractAdapterElement {
 	var <proxySelector; 	// proxy selector item that notifies me to set my proxy
 	var <proxy;			// the currently set proxy
+	var <>additionalNotifiers; // additional notifiers for proxy change, eg: \historyChanged
 
 	*initClass {
 		CmdPeriod add: { this.notify(\proxiesStoppedByCmdPeriod); }
@@ -207,7 +207,7 @@ ProxyState : AbstractAdapterElement {
 			this.addNotifier(ProxyState, \proxiesStoppedByCmdPeriod, { adapter.value = 0 });
 		};
 	}
-	
+
 	addSelectionNotifier {
 		this.addNotifier(proxySelector, \selection, { | argProxy |
 			this.setProxy(argProxy);
@@ -231,11 +231,23 @@ ProxyState : AbstractAdapterElement {
 	removeNotifiers {
 		this.removeNotifier(proxy, \play);
 		this.removeNotifier(proxy, \stop);
+		this.removeAdditionalNotifiers;
 	}
 
+	removeAdditionalNotifiers {
+		additionalNotifiers pairsDo: this.removeNotifier(proxy, _);
+	}
 	addNotifiers {
 		this.addNotifier(proxy, \play, { adapter.value = 1 });
 		this.addNotifier(proxy, \stop, { adapter.value = 0 });
+		this.addAdditionalNotifiers;
+	}
+
+	addAdditionalNotifiers {
+		additionalNotifiers pairsDo: { | message, action |
+//			this.addNotifier(proxy, message, { | ... args | action.(this, *args) });
+			this.addNotifier(proxy, message, action); // simpler, but we may need the ProxyState?
+		}
 	}
 
 	updateState {
@@ -258,12 +270,16 @@ ProxyState : AbstractAdapterElement {
 ProxySpecSelector : ProxyState {
 	var <>specs = #[['-', nil]];
 
-	removeNotifiers { this.removeNotifier(proxy, \proxySpecs); }
+	removeNotifiers {
+		this.removeNotifier(proxy, \proxySpecs);
+		this.removeAdditionalNotifiers;
+	}
 	addNotifiers {
 		this.addNotifier(proxy, \proxySpecs, { | argSpecs |
 			specs = argSpecs;
 			adapter.updateItemsAndValue(specs.flop[0]);
 		});
+		this.addAdditionalNotifiers;
 	}
 	updateState { adapter.updateItemsAndValue((specs = MergeSpecs.getSpecsFor(proxy)).flop[0]); }
 	value { adapter.notify(\selection, [proxy, specs[adapter.value[0] ? 0]]); }
@@ -347,7 +363,7 @@ ListAdapter : AbstractAdapterElement {
 	add { | item | // analogous to Collection:add
 		this.items = items add: item;
 	}
-	
+
 	put { | item, index |	// analogous to Collection:put
 		index ?? { index = adapter.value };
 		if (index == 0) { ^"cannot insert item into empty list - try adding first".postcln; };

@@ -59,7 +59,13 @@ ProxyCodeEditor : AppModel {
 							this.setProxy(proxy, proxyName) 
 						})
 						.view.font_(font),
-					this.button(\startStop).proxyState(\proxyMenu).view.font_(font)
+					this.button(\proxyMainControl).proxyState(\proxyMenu)
+						.adapterDo({ | me | 
+							me.adapter.additionalNotifiers = 
+							[\proxyHistory, { | changer, history |
+								this.updateHistory(changer, history) }];
+						})
+						.view.font_(font)
 						.states_([["start", Color.black, Color.green], 
 							["stop", Color.black, Color.red]]),
 					this.button(\history).list(["a", "b", "c"])
@@ -106,12 +112,9 @@ ProxyCodeEditor : AppModel {
 					Button().states_([["all"]]).font_(font)
 						.action_({ proxyCode.openHistoryInDoc(nil) }),
 					StaticText().font_(font).string_("current:"),
-					this.numberBox(\currentSnippet).action_({ | me |
-						me.value = me.value max: 1 min: history.size;
-						this.put(\editor, history[me.value - 1]);
-					}).view.font_(font),
+					this.numberBox(\history).list.view.font_(font),
 					StaticText().font_(font).string_("all:"),
-					this.numberBox(\numSnippets).view.enabled_(false).font_(font),
+					this.numberBox(\history).listSize.view.font_(font),
 					this.button(\resizeWindow)
 						.action_({ | me | this.resizeWindow(me.value) })
 						.view.font_(font).states_([["maximize window"], ["minimize window"]])
@@ -128,7 +131,10 @@ ProxyCodeEditor : AppModel {
 		proxy = argProxy; 
 		proxyName = argProxyName;
 		this.notify(\setName, proxyName); // set my window's name
-		
+	}
+	
+	updateHistory { | argChanger, argHistory |
+		[this, thisMethod.name, argChanger, argHistory].postln;
 	}
 }
 

@@ -120,6 +120,19 @@ Shortcuts for establishing messaging communication between objects via Notificat
 
 	removedMessage { ^\objectClosed }
 
+	/* iz Mon 20 August 2012 10:30 AM EEST: 
+	Why do we need UniqueID.next here? ALTENRATIVES WITHOUT UniqueID NEEDED.
+	Example of why adding multiple oneShot notifications to same object is a problem:
+
+NotificationCenter.registerOneShot(\sender, \release, \receiver, { "release 1".postln; });
+NotificationCenter.registerOneShot(\sender, \release, \receiver, { "release 2".postln; });
+
+\sender.notify(\release);
+
+The second action overwrites the previous one instead of being added. 
+Should we add actions using the FunctionList mechanism, via NR maybe?
+
+	*/
 	onObjectClosed { | action | this.onRemove(UniqueID.next, action) } 
 	onRemove { | key, func | this.doOnceOn(this.removedMessage, key, func); }
 	doOnceOn { | message, receiver, func |

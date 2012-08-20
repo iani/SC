@@ -36,6 +36,13 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		this.addNotifier(notifier, message, WidgetAction(this, action));
 	}
 	
+	/* // IZ Mon 20 August 2012 11:55 AM EEST: The above should be replaced with this: 
+	   // Getting rid of WidgetAction! 
+	addSelfNotifier { | notifier, message, action |
+		this.addNotifier(notifier, message, { | ... args | action.(this, *args) }
+	}
+	*/
+
 	addNotifier { | notifier, message, action |
 	// add self to do action when receiving message from notifier
 	// if either object (notifier or self) closes, remove the notifier->receiver connection

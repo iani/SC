@@ -106,7 +106,11 @@ ProxyCode {
 		var oldProxies;
 		oldProxies = proxyHistory.keys;
 		proxyHistory = IdentityDictionary.new;
-		oldProxies do: { | op | op.notify(\proxySource, [[]]); }
+		oldProxies do: { | op | 
+//			op.notify(\proxyHistory, [[]]); 
+//			[this, thisMethod.name, "notifying history now:"].postln;
+			this.notifyHistoryChanged(this, op, [[]]);
+		}
 	}
 
 	removeDuplicatesFromProxyHistory {
@@ -155,14 +159,34 @@ ProxyCode {
 		History.enter(argSnippet);
 		this.class.startHistoryTimer;		
 	}
+	
+	// proxy history stuff 
+	
+	replaceProxyHistory { | argUpdater, argProxy, argHistory |
+		/* 	An application that changes my history sends the new version to me 
+			I notify all applications that I changed, so that they may update.
+			I send also who updated me, so that the updater will not re-update itself
+			(otherwise an endless loop would ensue).
+		*/
+		this.notifyHistoryChanged(argUpdater, argProxy, argHistory);
+	}
 
+	notifyHistoryChanged { | argChanger, argProxy, argHistory |
+		/* update interested applications of my new history for a proxy. 
+			Also tell them who did the change, so that the changer may avoid re-updating */
+		argProxy.notify(\proxyHistory, [argChanger, argHistory]);
+	}
+	
 	addNodeSourceCodeToHistory { | argProxy, argSnippet |
 		var history;
 		history = proxyHistory[argProxy];
 		proxyHistory[argProxy] = history = history add: argSnippet;
-		argProxy.notify(\proxySource, [history]);
+//		argProxy.notify(\proxyHistory, [history]);
+//		[this, thisMethod.name, "notifying history now:"].postln;
+		this.notifyHistoryChanged(this, argProxy, history);
 	}
 
+	
 	startProxy { | argProxy, argProxyName |
 		this.enterSnippet2History(format("~%.play;", argProxyName));
 		argProxy.play;
@@ -170,10 +194,12 @@ ProxyCode {
 	}
 
 	deleteNodeSourceCodeFromHistory { | argProxy, snippetIndex |
-		var nodeHistory;
-		nodeHistory = proxyHistory[argProxy];
-		nodeHistory.removeAt(snippetIndex - 1);
-		argProxy.notify(\proxySource, [nodeHistory]);
+		var history;
+		history = proxyHistory[argProxy];
+		history.removeAt(snippetIndex - 1);
+//		argProxy.notify(\proxyHistory, [history]);
+//		[this, thisMethod.name, "notifying history now:"].postln;
+		this.notifyHistoryChanged(this, argProxy, history);
 	}
 
 	editNodeProxySource { | proxyName |
