@@ -76,6 +76,8 @@ Adapter {
 	// Like View:action_ : Set the adapter, since it can also function as my action.
 	action_ { | argFunc | adapter = argFunc }
 	
+	addValueAction { | action | this.addValueListener(this, action) }
+	
 	addValueListener { | listener, action |
 		// add listener with action to be performed when the value notification is sent:
 		listener.addNotifier(this, \value, { | ... args | action.(this, *args); })  
