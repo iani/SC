@@ -10,7 +10,8 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	addNotifier { | notifier, message, action |
 	// add self to do action when receiving message from notifier
 	// if either object (notifier or self) closes, remove the notifier->receiver connection
-		OnObjectCloseRegistrations add: NotificationCenter2.register(notifier, message, this, action);
+		OnObjectCloseRegistrations add: 
+			NotificationCenter2.register(notifier, message, this, action);
 	}
 	
 	removeNotifier { | notifier, message |
@@ -48,6 +49,18 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		this.addNotifier(notifier, message, { | ... args | action.valueArray(this, args) });
 	}
 
+	addSelfNotifier { | notifier, message, action |
+		// for widgets that need to use themselves in the action to set their value
+		this.addNotifier(notifier, message, WidgetAction(this, action));
+	}
+	
+	/* // IZ Mon 20 August 2012 11:55 AM EEST: The above should be replaced with this: 
+	   // Getting rid of WidgetAction! 
+	addSelfNotifier { | notifier, message, action |
+		this.addNotifier(notifier, message, { | ... args | action.(this, *args) }
+	}
+	*/
+
 	notify { | message, args | NotificationCenter2.notify(this, message, args); }
 
 	addMessage { | notifier, message |
@@ -60,17 +73,6 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		NotificationCenter2.unregister(notifier, message, this);
 	}
 
-	addSelfNotifier { | notifier, message, action |
-		// for widgets that need to use themselves in the action to set their value
-		this.addNotifier(notifier, message, WidgetAction(this, action));
-	}
-	
-	/* // IZ Mon 20 August 2012 11:55 AM EEST: The above should be replaced with this: 
-	   // Getting rid of WidgetAction! 
-	addSelfNotifier { | notifier, message, action |
-		this.addNotifier(notifier, message, { | ... args | action.(this, *args) }
-	}
-	*/
 
 	registerOneShot { | message, receiver, func |
 		/* NOTE: registerOneShot is different from addNotifier, addListener etc because it

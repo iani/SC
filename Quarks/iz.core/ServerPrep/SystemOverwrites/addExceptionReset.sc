@@ -9,7 +9,7 @@ Reset ServerReady if an Exception occurs, to enable restarting the next time tha
 	*new { arg what;
 		var backtrace;
 	// permit to use Cmd-Shift-X for evaluating code again. See classes Code and ServerPrep
-		ServerPrep.initClass;
+		ServerPrep !? { ServerPrep.initClass; }; // Protect if ServerPrep class not present
 		if (debug) { backtrace = this.getBackTrace.caller };
 		^super.newCopyArgs(what ? this.name, backtrace)
 	}
