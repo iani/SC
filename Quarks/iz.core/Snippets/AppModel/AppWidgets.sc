@@ -92,6 +92,20 @@ AppView : AppNamedWidget {
 	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
 }
 
+AppWindow : AppView { // not tested. Use WindowHandler???
+	var <windowInitFunc, <onCloseFunc;
+	
+	init {
+		windowInitFunc.(view, model);
+		onCloseFunc !? { this.addNotifier(view, \windowClosed, onCloseFunc) };
+		view.onClose = {
+			view.notify(\windowClosed, this);
+			view.objectClosed;
+		};
+		view.front;
+	}
+}
+
 AppValueView : AppView {
 	var <>viewAction, <>updateAction;
 

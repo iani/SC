@@ -26,6 +26,10 @@ ProxyCodeEditor : AppModel {
 		^super.new(proxyCode, proxyName, proxy).init;
 	}
 
+	front {
+		
+	}
+
 	init {
 		all[proxyName] = this; // TODO: Review this
 		proxySpace = proxyCode.proxySpace;
