@@ -128,6 +128,7 @@ AppValueView : AppView {
 	}
 	
 	adapterUpdate { | argAction |
+		// TODO: this will become default action, and the present method will be deprecated
 		// replace the update action with one that passes you the adapter as argument
 		updateAction = { | ... args | argAction.(adapter, *args) };
 	}
@@ -141,7 +142,12 @@ AppValueView : AppView {
 	}
 
 	defaultViewAction { ^{ | argView | adapter.valueAction = argView.value; } }
-	valueArray { | argValues |  updateAction.(view, *argValues) }
+	valueArray { | argValues |  
+		[this, thisMethod.name, "arguments received: ", argValues].postln;
+		if (argValues[0] !== this) { // do not update if you were the setter
+			updateAction.(view, *argValues[1..]);
+		}
+	}
 }
 
 AppSpecValueView : AppValueView {

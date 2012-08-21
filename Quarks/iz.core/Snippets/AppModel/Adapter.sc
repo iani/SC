@@ -49,13 +49,13 @@ Adapter {
 	*new { | model | ^this.newCopyArgs(model) }
 
 	// value_ valueAction_, action_ are defined in analogy to View:value_, View:valueAction_ etc.
-	value_ { | argValue |		 // only set value and notify
+	value_ { | argValue, sender |		 // only set value and notify
 		value = argValue;
-		this.updateListeners;
+		this.updateListeners(sender);
 	}
 
-	updateListeners {
-		this.notify(\value, value); // REMOVED: "this" convenient for custom AppWidget functions
+	updateListeners { | sender |
+		this.notify(\value, [sender ? this, value]);
 	}
 
 	setValue { | argValue |
@@ -63,11 +63,11 @@ Adapter {
 		value = argValue;
 	}
 
-	valueAction_ { | argValue | // Also perform adapters action
+	valueAction_ { | argValue, sender | // Also perform adapters action
 		argValue !? { // nil causes too many problems
 			value = argValue;
-			adapter.(this);
-			this.updateListeners;
+			adapter.(this, sender);
+			this.updateListeners(sender);
 		}
 	}
 
@@ -347,10 +347,10 @@ ProxyControl : ProxyState {
 ListAdapter : AbstractAdapterElement {
 	var <items;
 	init { items = [] }
-	items_ { | argItems |
+	items_ { | argItems, argSender |
 		items = argItems;
 		this.value; 	// check index
-		adapter.updateListeners;
+		adapter.updateListeners(argSender);
 	}
 	
 	value { adapter setValue: (adapter.value ? 0).clip(1, items.size); }
