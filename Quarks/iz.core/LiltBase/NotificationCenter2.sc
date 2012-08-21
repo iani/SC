@@ -86,13 +86,15 @@ OnObjectCloseRegistrations {
 	*add { | registration |
 		var registrations, where;
 		where = registration.object;
-		registrations = all[where] ?? { 
+		registrations = all[where];
+		registrations ?? { 
 			registrations = RegistrationList();
 			all[where] = registrations;
 		};
 		registrations = registrations add: registration;
 		where = registration.listener;		
-		registrations = all[where] ?? { 
+		registrations = all[where];
+		registrations ?? { 
 			registrations = RegistrationList();
 			all[where] = registrations;
 		};
