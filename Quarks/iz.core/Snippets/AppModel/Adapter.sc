@@ -55,7 +55,7 @@ Adapter {
 	}
 
 	updateListeners { | sender |
-		this.notify(\value, [sender ? this, value]);
+		this.notify(\value, [sender, this]);
 	}
 
 	setValue { | argValue |
@@ -353,53 +353,38 @@ ListAdapter : AbstractAdapterElement {
 		adapter.updateListeners(argSender);
 	}
 	
-	value { adapter setValue: (adapter.value ? 0).clip(1, items.size); }
-	
-	item { ^items[adapter.value - 1] }
+	value { adapter setValue: (adapter.value ? 0).clip(0, items.size - 1); }
 
-	next { adapter.valueAction = adapter.value + 1 }
-	previous { adapter.valueAction = adapter.value - 1 }
-	first { adapter.valueAction = 1 }
-	last { adapter.valueAction = items.size }
+	item { ^items[adapter.value] }
+
+	next { | setter | adapter.valueAction_(adapter.value + 1, setter) }
+	previous { | setter | adapter.valueAction_(adapter.value - 1, setter) }
+	first { | setter | adapter.valueAction_(0, setter) }
+	last { | setter | adapter.valueAction_(items.size - 1, setter) }
 	
-	add { | item | // analogous to Collection:add
-		this.items = items add: item;
+	add { | item, setter | // analogous to Collection:add
+		this.items_(items add: item, setter);
 	}
 
-	put { | item, index |	// analogous to Collection:put
-		index ?? { index = adapter.value };
-		if (index == 0) { ^"cannot insert item into empty list - try adding first".postcln; };
-		this.items = items[index - 1] = item;
+	replace { | item, setter | this.put(item, adapter.value, setter); }
+
+	put { | item, index, setter |	// analogous to Collection:put
+		if (items.size == 0) { ^"cannot replace item in empty list - try adding first".postcln; };
+		index = (index ?? { index = adapter.value }) max: 0 min: (items.size - 1);
+		this.items_(items[index] = item, setter);
 	}
-	
-	removeAt { | item, index | // analogous to Collection:removeAt
-		index ?? { index = adapter.value };
-		items removeAt: index;
-		this.items = items;	// update
+
+	insert { | item, index, setter |
+		this.items_(items.insert(index ?? { adapter.value }, item), setter);
 	}
-	
-	remove { | item | // analogous to Collection:remove
+
+	removeAt { | item, index, setter | // analogous to Collection:removeAt
+		items.removeAt(index ?? { index = adapter.value });
+		this.items_(items, setter);	// update
+	}
+
+	remove { | item, setter | // analogous to Collection:remove
 		items remove: item;
-		this.items = items;	// update
+		this.items_(items, setter);	// update
 	}
 }
-/*
-
-
-
-m = AppModel().window({ | w, app |
-	w.layout = VLayout(
-		(a = app.numberBox(\index)).list.view,
-		(b = app.textView(\index)).updateAction_({ | v, val, m | 
-			v.string = m.adapter.item;  }).view
-	)
-});
-
-//:
-
-m.getAdapter(\index).adapter.items_(["a"]);
-m.getAdapter(\index).adapter.items_(["Hello", "a"]);
-
-m.getAdapter(\index).adapter.last
-
-*/

@@ -1,6 +1,5 @@
 /* IZ Thu 16 August 2012  4:02 PM EEST
 See AppModel and Adapter
-
 */
 
 AppNamelessWidget {
@@ -13,7 +12,7 @@ AppNamelessWidget {
 
 AppNamelessWindow : AppNamelessWidget {
 	var <windowInitFunc, <onCloseFunc, <window;
-	
+
 	init {
 		window = Window();
 		windowInitFunc.(window, model);
@@ -41,7 +40,7 @@ AppNamelessView : AppNamelessWidget {
 }
 
 AppNamedWidget : AppNamelessWidget {
-	var <adapter, <name;
+	var <adapter, <>name;
 	*new { | model, name ... args | 
 		^this.newCopyArgs(model, nil, name, *args).init;
 	}
@@ -59,7 +58,7 @@ AppNamedWidget : AppNamelessWidget {
 		func.(adapter, this)
 	}	
 	// add specialized adapters to your adapter
-	mapper { | spec | adapter mapper: spec }
+	mapper { | spec | adapter mapper: spec } // knob, slider etc. install spec in adapter
 	proxySelector { | proxySpace | adapter proxySelector: proxySpace; }
 	proxyState { | proxySelector | adapter proxyState: proxySelector; }
 	proxySpecSelector { | proxySelector | adapter proxySpecSelector: proxySelector; }
@@ -89,7 +88,15 @@ AppView : AppNamedWidget {
 	initActions { /* this.subclassResponsibility(thisMethod) */ }
 	viewClosed { this.objectClosed; }
 	// used to get string values from TextView with button click
-	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
+	getContents {	| widgetName, mode |
+		// make a button get the text from a TextView.
+		view.action = { adapter.notify(\getContents, widgetName, mode); }
+	}
+	// actions for navigating through a list of items
+	nextItem { view.action = { adapter.adapter.next; } }
+	previousItem { view.action = { adapter.adapter.previous; } }
+	firstItem { view.action = { adapter.adapter.first; } }
+	lastItem { view.action = { adapter.adapter.last; } }
 }
 
 AppWindow : AppView { // not tested. Use WindowHandler???
@@ -109,6 +116,12 @@ AppWindow : AppView { // not tested. Use WindowHandler???
 AppValueView : AppView {
 	var <>viewAction, <>updateAction;
 
+	valueArray { | argSenders |  
+		if (argSenders[0] !== this) { // do not update if you were the setter
+			updateAction.(view, *argSenders);
+		}
+	}
+
 	initActions {
 		this.initViewAction(viewAction);
 		this.initUpdateAction(updateAction);
@@ -117,14 +130,49 @@ AppValueView : AppView {
 	initUpdateAction { | argAction |
 		updateAction = argAction ?? { this.defaultUpdateAction };
 	}
+
+	defaultViewAction { ^{ adapter.valueAction_(view.value, this); } }
+	defaultUpdateAction { ^{ view.value = adapter.value } }
 	
-	defaultUpdateAction { ^{ | argView, val | view.value = val } }
-	
+	valueAction_ { | func |
+		view.action = { adapter.valueAction_(func.(this).postln, this) }
+	}
+
 	listSize { // make updateFunction tell you the size of the list in my list adapter
+		this.list;
 		updateAction = { view.value = adapter.adapter.items.size };
 		view.enabled = false;
-		// below is not needed, since view is disabled
-		// viewAction = updateAction.value; // reset back to size of list
+		this.doUpdate;
+	}
+
+	listItems { | items |
+		this.list(items);
+		updateAction = {
+			view.items = adapter.adapter.items;
+			view.value = adapter.value;
+		};
+		this.doUpdate;
+	}
+
+	listItem { | mode = \append | // could be "mode = \append" 
+		this.list;
+		switch (mode, 
+			\append, { viewAction = { adapter.adapter add: view.string } },
+			\replace, { viewAction = { adapter.adapter replace: view.string } },
+			\insert, { viewAction = { adapter.adapter insert: view.string } } // not implemented
+		);
+		updateAction = { view.string = adapter.adapter.items[adapter.value] }
+	}
+
+	listIndex { | startAt = 1 | 
+		viewAction = { 
+			adapter.valueAction_(view.value.round(1) - startAt max: 0, this);
+			this.doUpdate; 
+		};
+		updateAction = { 
+			view.value = adapter.value + startAt min: adapter.adapter.items.size;
+		};
+		this.doUpdate;
 	}
 	
 	adapterUpdate { | argAction |
@@ -140,14 +188,6 @@ AppValueView : AppView {
 		view.action = { viewAction.(view, this) };
 		viewAction = argAction ?? { this.defaultViewAction };
 	}
-
-	defaultViewAction { ^{ | argView | adapter.valueAction = argView.value; } }
-	valueArray { | argValues |  
-		[this, thisMethod.name, "arguments received: ", argValues].postln;
-		if (argValues[0] !== this) { // do not update if you were the setter
-			updateAction.(view, *argValues[1..]);
-		}
-	}
 }
 
 AppSpecValueView : AppValueView {
@@ -156,7 +196,9 @@ AppSpecValueView : AppValueView {
 }
 
 AppTextValueView : AppValueView { // for StaticText, TextField, TextView
-	defaultUpdateAction { ^{ | argView, string | view.string = string; } }
+	defaultViewAction { ^{ adapter.valueAction_(view.string, this); } }
+	defaultUpdateAction { ^{ view.string = adapter.value; } }
+
 	list { | items, replaceItems = true |
 		// set viewAction, updateAction to work with ListAdapter in your adapter
 		super.list(items);
@@ -168,22 +210,37 @@ AppTextValueView : AppValueView { // for StaticText, TextField, TextView
 		};
 		updateAction.value;
 	}
+
+	initActions {
+		super.initActions;
+		this.addNotifier(adapter, \getContents, { | argName, updateMode |
+			if (argName.isNil or: { argName === name }) {
+				switch ( updateMode,
+					\append, { adapter.adapter.add(view.string, this) },
+					\replace, { adapter.adapter.replace(view.string, this) },
+					\insert, { adapter.adapter.insert(view.string, nil, this) },
+					{ view.action.value }	// See list,  defaultUpdateAction
+				)
+			}
+		});
+	}
 }
 
 AppTextView : AppTextValueView {
-	initView {
-		view = TextView();
-		this.addNotifier(adapter, \at, { adapter.valueAction = view.string });
-	}
+	initView { view = TextView(); }
+	
 }
 
 AppStaticTextView : AppTextValueView {
 	initView { view = StaticText(); }
-	defaultViewAction { ^{ | ... args | [ "StaticText view action not implemented", args].postln; } }
+	defaultViewAction { ^{ /* view has no action */ } }
 }
 
+/*
 AppItemSelectView : AppValueView { // for ListView, PopUpMenu 
 	
 	defaultViewAction { ^{ adapter.valueAction = [view.value, view.items] } }
 	defaultUpdateAction { ^{ | v, val, items | v.items = items; v.value = val ? 0; } }
 }
+*/
+

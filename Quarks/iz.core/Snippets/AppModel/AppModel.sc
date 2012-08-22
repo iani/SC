@@ -59,15 +59,24 @@ AppModel {
 	
 	view { | view | ^AppNamelessView(this, view) }
 
-	numberBox { | name | ^AppValueView(this, name, NumberBox()).mapper; }
+	numberBox { | name | ^AppValueView(this, name, NumberBox()); }
 	knob { | name, spec | ^AppSpecValueView(this, name, Knob()).mapper(spec); }
 	slider { | name, spec | ^AppSpecValueView(this, name, Slider()).mapper(spec); }
 	button { | name | ^AppValueView(this, name, Button()); }
-	popUpMenu { | name | ^AppItemSelectView(this, name, PopUpMenu()); }
-	listView { | name | ^AppItemSelectView(this, name, ListView()); }
-	textField { | name | ^AppTextValueView(this, name, TextField()); }
-	staticText { | name | ^AppStaticTextView(this, name); }
-	textView { | name | ^AppTextView(this, name); }
+	popUpMenu { | name, items | ^AppValueView(this, name, PopUpMenu()).listItems(items); }
+	listView { | name, items | ^AppValueView(this, name, ListView()).listItems(items); }
+	textField { | adapterName, viewName | 
+		^AppTextValueView(this, adapterName, TextField()).name_(viewName ? adapterName)
+	}
+	staticText { | adapterName, string, viewName |
+		var widget;
+		widget = AppStaticTextView(this, adapterName).name_(viewName ? adapterName);
+		widget.view.string = string;
+		^widget;
+	}
+	textView { | adapterName, viewName | 
+		^AppTextView(this, adapterName).name_(viewName ? adapterName);
+	}
 	// following need review - possibly their own adapter classes
 	rangeSlider { | name | ^AppValueView(this, name, RangeSlider()); }
 	slider2D { | name | ^AppValueView(this, name, Slider2D()); }

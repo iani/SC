@@ -114,7 +114,7 @@ OnObjectCloseRegistrations {
 		if (registrations.size == 0) { all[where] = nil };
 	}
 	
-	*removeAllFor { | object | all[object].copy do: this.remove(_) }
+	*removeAll { | object | all[object].copy do: this.remove(_) }
 }
 
 RegistrationList : List {

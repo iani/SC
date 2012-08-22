@@ -38,10 +38,20 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	
 	removeAllNotifications {
 		NotificationCenter2.removeAll(this);
-		OnObjectCloseRegistrations.removeAllFor(this);
+		OnObjectCloseRegistrations.removeAll(this);
 	}
 
 	// ===== less used stuff =====
+
+	addMessage { | notifier, message |
+		NotificationCenter2.register(notifier, message, this, { | ... args | 
+			this.performList(message, args)
+		});
+	}
+
+	removeMessage { | notifier, message |
+		NotificationCenter2.unregister(notifier, message, this);
+	}
 
 	addNotifierWithSelf { | notifier, message, action |
 		/* 	pass yourself as argument to your action. For adding notifers to objects
@@ -63,17 +73,6 @@ Shortcuts for establishing messaging communication between objects via Notificat
 
 	notify { | message, args | NotificationCenter2.notify(this, message, args); }
 
-	addMessage { | notifier, message |
-		NotificationCenter2.register(notifier, message, this, { | ... args | 
-			this.performList(message, args)
-		});
-	}
-
-	removeMessage { | notifier, message |
-		NotificationCenter2.unregister(notifier, message, this);
-	}
-
-
 	registerOneShot { | message, receiver, func |
 		/* NOTE: registerOneShot is different from addNotifier, addListener etc because it
 		   in its name it does not "target" semantically the listener or notifier object. 
@@ -90,15 +89,6 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		}{
 			^NotificationCenter2.registrations.at(this, message);
 		}
-	}
-
-	// ===== ServerPrep stuff =====
-
-	addToServerTree { | function, server |
-		ServerPrep(server).addToServerTree(this, function);
-	}
-	removeFromServerTree { | function, server |
-		ServerPrep(server).removeFromServerTree(this);
 	}
 	
 	// ===== legacy stuff =====
