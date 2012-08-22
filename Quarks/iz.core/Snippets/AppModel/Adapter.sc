@@ -369,7 +369,7 @@ ListAdapter : AbstractAdapterElement {
 	replace { | item, setter | this.put(item, adapter.value, setter); }
 
 	put { | item, index, setter |	// analogous to Collection:put
-		if (items.size == 0) { ^"cannot replace item in empty list - try adding first".postcln; };
+		if (items.size == 0) { ^"Cannot replace item in empty list - try adding first".postcln; };
 		index = (index ?? { index = adapter.value }) max: 0 min: (items.size - 1);
 		this.items_(items[index] = item, setter);
 	}
@@ -378,7 +378,10 @@ ListAdapter : AbstractAdapterElement {
 		this.items_(items.insert(index ?? { adapter.value }, item), setter);
 	}
 
-	removeAt { | item, index, setter | // analogous to Collection:removeAt
+	delete { | setter | this.removeAt(nil, setter) }
+
+	removeAt { | index, setter | // analogous to Collection:removeAt
+		if (items.size == 0) { ^"Cannot remove item from an empty list".postcln; };
 		items.removeAt(index ?? { index = adapter.value });
 		this.items_(items, setter);	// update
 	}

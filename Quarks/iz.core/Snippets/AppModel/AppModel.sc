@@ -30,7 +30,7 @@ AppModel().window({ | w, app |
 AppModel {
 
 	var <values;  /* IdentityDictionary: Adapters holding my values per name */
-	
+
 	*new { | ... args | ^this.newCopyArgs(IdentityDictionary.new, *args); }
 
 	at { | name | ^values[name].value; }
@@ -63,8 +63,12 @@ AppModel {
 	knob { | name, spec | ^AppSpecValueView(this, name, Knob()).mapper(spec); }
 	slider { | name, spec | ^AppSpecValueView(this, name, Slider()).mapper(spec); }
 	button { | name | ^AppValueView(this, name, Button()); }
-	popUpMenu { | name, items | ^AppValueView(this, name, PopUpMenu()).listItems(items); }
-	listView { | name, items | ^AppValueView(this, name, ListView()).listItems(items); }
+	popUpMenu { | name, items, updateItems = true | 
+		^AppValueView(this, name, PopUpMenu()).listItems(items, updateItems);
+	}
+	listView { | name, items, updateItems = true |
+		^AppValueView(this, name, ListView()).listItems(items, updateItems);
+	}
 	textField { | adapterName, viewName | 
 		^AppTextValueView(this, adapterName, TextField()).name_(viewName ? adapterName)
 	}

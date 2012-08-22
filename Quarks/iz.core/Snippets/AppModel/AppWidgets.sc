@@ -87,11 +87,7 @@ AppView : AppNamedWidget {
 	initView { /* this.subclassResponsibility(thisMethod) */ }
 	initActions { /* this.subclassResponsibility(thisMethod) */ }
 	viewClosed { this.objectClosed; }
-	// used to get string values from TextView with button click
-	getContents {	| widgetName, mode |
-		// make a button get the text from a TextView.
-		view.action = { adapter.notify(\getContents, widgetName, mode); }
-	}
+
 	// actions for navigating through a list of items
 	nextItem { view.action = { adapter.adapter.next; } }
 	previousItem { view.action = { adapter.adapter.previous; } }
@@ -145,24 +141,41 @@ AppValueView : AppView {
 		this.doUpdate;
 	}
 
-	listItems { | items |
+	listItems { | items, updateItems = true |
 		this.list(items);
-		updateAction = {
-			view.items = adapter.adapter.items;
-			view.value = adapter.value;
+		if (updateItems) {
+			updateAction = {
+				view.items = adapter.adapter.items;
+				view.value = adapter.value;
+			};
+		}{
+			updateAction = { view.value = adapter.value; };
 		};
 		this.doUpdate;
 	}
 
-	listItem { | mode = \append | // could be "mode = \append" 
+	listItem { | mode = \append | // mode can be one of: \append, \replace, \insert
+		// Make a text view perform one of 4 actions on the list contained in my adapter
 		this.list;
 		switch (mode, 
-			\append, { viewAction = { adapter.adapter add: view.string } },
-			\replace, { viewAction = { adapter.adapter replace: view.string } },
-			\insert, { viewAction = { adapter.adapter insert: view.string } } // not implemented
+			\append, { viewAction = { adapter.adapter.add(view.string, this) } },
+			\replace, { viewAction = { adapter.adapter.replace(view.string, this) } },
+			\insert, { viewAction = { adapter.adapter.insert(view.string, nil, this) } },
+//			\delete, { viewAction = { adapter.adapter.removeAt(nil, this) } }, // does not make sense?
 		);
-		updateAction = { view.string = adapter.adapter.items[adapter.value] }
+		updateAction = { view.string = adapter.adapter.items[adapter.value] ? "<empty>" }
 	}
+
+	// used to get string values from TextView with button click
+	getContents {	| widgetName, mode |
+		// make a button get the text from a TextView.
+		// mode is one of \append, \replace, \insert, \delete
+		this.viewAction = {};
+		this.updateAction = {};
+		view.action = { 
+			adapter.notify(\getContents, [widgetName, mode]); }
+	}
+
 
 	listIndex { | startAt = 1 | 
 		viewAction = { 
@@ -174,7 +187,7 @@ AppValueView : AppView {
 		};
 		this.doUpdate;
 	}
-	
+ 
 	adapterUpdate { | argAction |
 		// TODO: this will become default action, and the present method will be deprecated
 		// replace the update action with one that passes you the adapter as argument
@@ -208,17 +221,20 @@ AppTextValueView : AppValueView { // for StaticText, TextField, TextView
 		}{
 			viewAction = { adapter.adapter.add(view.string); }
 		};
+		this.initListActions;
 		updateAction.value;
 	}
 
-	initActions {
-		super.initActions;
-		this.addNotifier(adapter, \getContents, { | argName, updateMode |
+	initListActions {
+		// add behavior for responding to buttons that make me do something with my contents
+		// on a list: 
+		this.addNotifier(adapter, \getContents, { | argName, updateMode = \append |
 			if (argName.isNil or: { argName === name }) {
 				switch ( updateMode,
 					\append, { adapter.adapter.add(view.string, this) },
 					\replace, { adapter.adapter.replace(view.string, this) },
 					\insert, { adapter.adapter.insert(view.string, nil, this) },
+					\delete, { adapter.adapter.delete(this) },
 					{ view.action.value }	// See list,  defaultUpdateAction
 				)
 			}
