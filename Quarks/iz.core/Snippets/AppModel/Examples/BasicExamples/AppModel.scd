@@ -25,14 +25,20 @@ AppModel().window({ | w, app |
 });
 
 //:PopUpMenu, ListView
-AppModel().window({ | w, app |
+a = AppModel().window({ | w, app |
 	w.layout = VLayout(
-		app.popUpMenu(\any_name, ["a", "b", "c"]).view,
+		app.popUpMenu(\any_name, ["SELECTED", "b", "c"]).view,
 		app.listView(\any_name).view,
 		StaticText().string_("update index only - do not update items:"),
 		app.listView(\any_name, nil, false).view.items_(["one", "2", "3", "4", "5"]),
 	);
 });
+
+//:When the items are changed, the index is adjusted to match the previously selected item:
+a.getAdapter(\any_name).adapter.items = ["c", "b", "a", "SELECTED", "e"];
+//:Checking adjustment of index again:
+a.getAdapter(\any_name).adapter.items = ["not selected", "SELECTED", "something else"];
+
 
 //:PopUpMenu, ListView with navigation buttons, index and display
 AppModel().window({ | w, app |

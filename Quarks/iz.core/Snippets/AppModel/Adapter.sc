@@ -182,14 +182,17 @@ ListAdapter : AbstractAdapterElement {
 	var <items;
 	init { items = [] }
 	items_ { | argItems, argSender |
-		items = argItems;
-		this.value; 	// check index
+		// NOTE: Adjust adapter's value to match the previously selected item, if found
+		var oldItem;
+		oldItem = this.item;
+		items = argItems ?? { [] };
+		adapter.setValue(items.indexOf(items.detect(_ == oldItem)) ? 0);
 		adapter.updateListeners(argSender);
 	}
 	
 	value { adapter setValue: (adapter.value ? 0).clip(0, items.size - 1); }
 
-	item { ^items[adapter.value] }
+	item { ^items[adapter.value ? 0] }
 
 	next { | setter | adapter.valueAction_(adapter.value + 1, setter) }
 	previous { | setter | adapter.valueAction_(adapter.value - 1, setter) }
