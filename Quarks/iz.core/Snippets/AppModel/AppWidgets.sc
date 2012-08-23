@@ -59,11 +59,19 @@ AppNamedWidget : AppNamelessWidget {
 	}	
 	// add specialized adapters to your adapter
 	mapper { | spec | adapter mapper: spec } // knob, slider etc. install spec in adapter
+	list { | items | adapter.list(items) }
+
+	// Proxy stuff
 	proxySelector { | proxySpace | adapter proxySelector: proxySpace; }
 	proxyState { | proxySelector | adapter proxyState: proxySelector; }
 	proxySpecSelector { | proxySelector | adapter proxySpecSelector: proxySelector; }
 	proxyControl { | proxySpecSelector | adapter proxyControl: proxySpecSelector; }
-	list { | items | adapter.list(items) }
+	// EXPERIMENTAL
+	// When these are ready, they will replace the old ProxySelection etc. classes: 
+	proxyControl2 { | proxySpecSelector | adapter.adapter = ProxyControl2(proxySpecSelector); }
+	proxySpecSelector2 { | proxySelector | adapter.adapter = ProxySpecSelector2(proxySelector); }
+	proxyState2 { | proxySelector | adapter.adapter = ProxyState2(proxySelector); }
+	proxySelector2 { | proxySpace | adapter = ProxySelector2(proxySpace); }
 
 	// add listeners to notifications from your adapter
 	addAdapterListener { | listener, message, action |
@@ -175,7 +183,6 @@ AppValueView : AppView {
 		view.action = { 
 			adapter.notify(\getContents, [widgetName, mode]); }
 	}
-
 
 	listIndex { | startAt = 1 | 
 		viewAction = { 
