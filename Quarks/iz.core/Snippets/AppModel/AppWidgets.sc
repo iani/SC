@@ -71,7 +71,8 @@ AppNamedWidget : AppNamelessWidget {
 	proxyControl2 { | proxySpecSelector | adapter.proxyControl2(proxySpecSelector); }
 	proxySpecSelector2 { | proxySelector | adapter.proxySpecSelector2(proxySelector); }
 	proxyState2 { | proxySelector | adapter.proxyState2(proxySelector); }
-	proxySelector2 { | proxySpace | adapter.proxySelector2(proxySpace); } // REVIEW???
+	proxySelector2 { | proxySpace | adapter.proxySelector2(proxySpace); }
+	proxyHistory { | proxySelector | adapter.proxyHistory(proxySelector); }
 
 	// add listeners to notifications from your adapter
 	addAdapterListener { | listener, message, action |
@@ -190,7 +191,7 @@ AppValueView : AppView {
 			this.doUpdate; 
 		};
 		updateAction = { 
-			view.value = adapter.value + startAt min: adapter.adapter.items.size;
+			view.value = (adapter.value ? 0) + startAt min: adapter.adapter.items.size;
 		};
 		this.doUpdate;
 	}

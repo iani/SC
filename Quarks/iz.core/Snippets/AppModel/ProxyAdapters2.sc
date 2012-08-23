@@ -170,6 +170,14 @@ ProxyHistory : AbstractProxyAdapter {
 			ProxyCode.replaceProxyHistory(this, proxy, items);
 		};
 	}
+	
+	updateState {
+		if (proxy.isNil) {
+			this.items_([])
+		}{
+			this.items_(ProxyCode.proxyHistory[proxy] ?? { [] }, proxy) 
+		}
+	}
 }
 
 

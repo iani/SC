@@ -137,6 +137,9 @@ Adapter {
 	proxySelector2 { | proxySpace | 
 		adapter = ProxySelector2(this).proxySpace_(proxySpace);
 	}
+	proxyHistory { | proxySelector | 
+		adapter = ProxyHistory(this).proxySelector_(proxySelector);
+	}
 
 	list { | items |
 		if (adapter.isKindOf(ListAdapter).not) { adapter = ListAdapter(this) };
