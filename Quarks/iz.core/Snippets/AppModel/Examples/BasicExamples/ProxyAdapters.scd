@@ -5,6 +5,7 @@ a = AppModel().window({ | w, app |
 		app.knob(\control).proxyControl2(\specSetter).view,
 		app.popUpMenu(\specSetter).proxySpecSelector2(\proxySelector).view,
 		app.popUpMenu(\proxySelector).proxySelector2.view,
+		app.button(\startstop).proxyState2(\proxySelector).view.states_([["start"],["stop"]]),
 	)
 })
 

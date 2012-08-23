@@ -23,7 +23,13 @@ ProxySelector2 : ListAdapter {
 		proxySpace.notify(\newProxy);	// perform an update at init time
 	}
 
-	value { proxy = proxySpace[this.item] }
+	value { 
+		if (this.item === '-') {
+			proxy = nil; 
+		}{
+			proxy = proxySpace[this.item]
+		}
+	}
 	
 }
 
