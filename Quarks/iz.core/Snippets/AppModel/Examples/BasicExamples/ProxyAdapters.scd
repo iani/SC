@@ -1,7 +1,9 @@
 
-AppModel().window({ | w, app |
+a = AppModel().window({ | w, app |
 	w.layout = VLayout(
-		app.popUpMenu(\proxy).proxySelector2.view;
+		app.knob(\proxy).proxyControl2.view,
+		app.numberBox(\proxy).view,
+		app.knob(\proxy, \freq).view,
 	)
 })
 

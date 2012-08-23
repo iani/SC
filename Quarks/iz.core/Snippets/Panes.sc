@@ -55,9 +55,9 @@ Panes {
 
 	*start { this.activate } // synonym
 	*activate {
-		NotificationCenter.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
+		NotificationCenter2.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
-			NotificationCenter.notify(this, \docOpened, doc);  
+			NotificationCenter2.notify(this, \docOpened, doc);  
 		};
 		Document.allDocuments do: this.setDocActions(_);
 //		postf("Panes: activate method, defaultArrangementAction is: %\n", defaultArrangementAction);
@@ -83,7 +83,7 @@ Panes {
 
 	*stop { this.deactivate } // synonym
 	*deactivate {
-		NotificationCenter.unregister(this, \docOpened, this);
+		NotificationCenter2.unregister(this, \docOpened, this);
 		Document.initAction = { | doc | doc.front; };
 //		this.removeMenu;
 //		Code.removeMenu;
@@ -294,11 +294,11 @@ Panes {
 	*setDocActions { | doc |
 		doc.toFrontAction = {
 			var selectionStart, selectionSize;
-			NotificationCenter.notify(this, \docToFront, doc);
+			NotificationCenter2.notify(this, \docToFront, doc);
 		};
-		doc.endFrontAction = { NotificationCenter.notify(this, \docEndFront, doc); };
-		doc.mouseUpAction = { NotificationCenter.notify(this, \docMouseUp, doc); };
-		doc.onClose = { NotificationCenter.notify(this, \docClosed, doc); };
+		doc.endFrontAction = { NotificationCenter2.notify(this, \docEndFront, doc); };
+		doc.mouseUpAction = { NotificationCenter2.notify(this, \docMouseUp, doc); };
+		doc.onClose = { NotificationCenter2.notify(this, \docClosed, doc); };
 	}
 	
 	*docNotifiers { ^[\docOpened, \docToFront, \docEndFront, \docMouseUp, \docClosed] }

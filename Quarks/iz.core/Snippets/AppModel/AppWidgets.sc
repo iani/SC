@@ -68,10 +68,10 @@ AppNamedWidget : AppNamelessWidget {
 	proxyControl { | proxySpecSelector | adapter proxyControl: proxySpecSelector; }
 	// EXPERIMENTAL
 	// When these are ready, they will replace the old ProxySelection etc. classes: 
-	proxyControl2 { | proxySpecSelector | adapter.adapter = ProxyControl2(proxySpecSelector); }
-	proxySpecSelector2 { | proxySelector | adapter.adapter = ProxySpecSelector2(proxySelector); }
-	proxyState2 { | proxySelector | adapter.adapter = ProxyState2(proxySelector); }
-	proxySelector2 { | proxySpace | adapter = ProxySelector2(proxySpace); }
+	proxyControl2 { | proxySpecSelector | adapter.proxyControl2(proxySpecSelector); }
+	proxySpecSelector2 { | proxySelector | adapter.proxySpecSelector2(proxySelector); }
+	proxyState2 { | proxySelector | adapter.proxyState2(proxySelector); }
+	proxySelector2 { | proxySpace | adapter = ProxySelector2(proxySpace); } // REVIEW???
 
 	// add listeners to notifications from your adapter
 	addAdapterListener { | listener, message, action |

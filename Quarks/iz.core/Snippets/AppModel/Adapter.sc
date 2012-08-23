@@ -117,15 +117,7 @@ Adapter {
 	// methods for creating specialized adapters in my adapter instance variable
 
 	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
-		adapter ?? { adapter = SpecAdapter(this) };
-		adapter.initSpec(spec)
-/*
-		if (spec.isNil) {
-			if (this.value.isNil) {  this.value = 0; } { this.value = this.value } // ensure update 
-		}{
-			adapter.spec = spec; 
-		};
-*/
+		(adapter ?? { adapter = SpecAdapter(this) }).initSpec(spec);
 	}
 	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
 	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
@@ -133,7 +125,9 @@ Adapter {
 	proxyControl { | proxySpecSelector | adapter.action = ProxyControl(this, proxySpecSelector); }
 
 	// Operate directly on AppNamedWidget methods ?????? NOT
-	proxyControl2 { | proxySpecSelector | adapter ?? { adapter = ProxyControl2(proxySpecSelector); } }
+	proxyControl2 { | proxySpecSelector |
+		adapter = ProxyControl2(this, proxySpecSelector);
+	}
 //	proxySpecSelector2 { | proxySelector | adapter ?? { adapter = ProxySpecSelector2(proxySelector); } }
 //	proxyState2 { | proxySelector | adapter ?? { adapter = ProxyState2(proxySelector); } }
 //	proxySelector2 { | proxySpace | adapter ?? { adapter = ProxySelector2(proxySpecSelector); } }
@@ -153,17 +147,18 @@ SpecAdapter : AbstractAdapterElement {
 	var <spec, <unmappedValue = 0;
 	var <>action;	
 	init { }
-	spec_ { | argSpec |
-		spec = argSpec.asSpec;
-		adapter.value = spec map: unmappedValue;
-	}
 
-	initSpec { | argSpec |
+	initSpec { | argSpec | 		// called by Adapter:mapper at creation time.
 		if (argSpec.isNil) {	// ensure update 
-			if (adapter.value.isNil) {  adapter.value = 0; } { adapter.value = adapter.value }
+			if (adapter.value.isNil) { adapter.value = 0; } { adapter.value = adapter.value }
 		}{
 			this.spec = argSpec; 
 		};
+	}
+
+	spec_ { | argSpec |
+		spec = argSpec.asSpec;
+		adapter.value = spec map: unmappedValue;
 	}
 
 	map { | value |
