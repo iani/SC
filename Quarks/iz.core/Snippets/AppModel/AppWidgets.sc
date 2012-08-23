@@ -71,7 +71,7 @@ AppNamedWidget : AppNamelessWidget {
 	proxyControl2 { | proxySpecSelector | adapter.proxyControl2(proxySpecSelector); }
 	proxySpecSelector2 { | proxySelector | adapter.proxySpecSelector2(proxySelector); }
 	proxyState2 { | proxySelector | adapter.proxyState2(proxySelector); }
-	proxySelector2 { | proxySpace | adapter = ProxySelector2(proxySpace); } // REVIEW???
+	proxySelector2 { | proxySpace | adapter.proxySelector2(proxySpace); } // REVIEW???
 
 	// add listeners to notifications from your adapter
 	addAdapterListener { | listener, message, action |

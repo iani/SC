@@ -35,7 +35,8 @@ a = AppModel().window({ | w, app |
 });
 
 //:When the items are changed, the index is adjusted to match the previously selected item:
-a.getAdapter(\any_name).adapter.items = ["c", "b", "a", "SELECTED", "e"];
+// Note that the items change, but the previously selected item remains selected: 
+a.getAdapter(\any_name).adapter.items = ["something else", "c", "b", "a", "SELECTED", "e"];
 //:Checking adjustment of index again:
 a.getAdapter(\any_name).adapter.items = ["not selected", "SELECTED", "something else"];
 

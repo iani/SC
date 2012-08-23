@@ -117,20 +117,26 @@ Adapter {
 	// methods for creating specialized adapters in my adapter instance variable
 
 	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
-		(adapter ?? { adapter = SpecAdapter(this) }).initSpec(spec);
+		(adapter ?? { adapter = SpecAdapter(this) }).postln.initSpec(spec);
 	}
 	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
 	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
 	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
-	proxyControl { | proxySpecSelector | adapter.action = ProxyControl(this, proxySpecSelector); }
+	proxyControl { | proxySpecSelector | this.adapter.action = ProxyControl(this, proxySpecSelector); }
 
 	// Operate directly on AppNamedWidget methods ?????? NOT
 	proxyControl2 { | proxySpecSelector |
 		adapter = ProxyControl2(this, proxySpecSelector);
 	}
-//	proxySpecSelector2 { | proxySelector | adapter ?? { adapter = ProxySpecSelector2(proxySelector); } }
-//	proxyState2 { | proxySelector | adapter ?? { adapter = ProxyState2(proxySelector); } }
-//	proxySelector2 { | proxySpace | adapter ?? { adapter = ProxySelector2(proxySpecSelector); } }
+	proxySpecSelector2 { | proxySelector | 
+		adapter = ProxySpecSelector2(this).proxySelector_(proxySelector);
+	}
+	proxyState2 { | proxySelector | 
+		adapter = ProxyState2(this).proxySelector_(proxySelector);
+	}
+	proxySelector2 { | proxySpace | 
+		adapter = ProxySelector2(this).proxySpace_(proxySpace);
+	}
 
 	list { | items |
 		if (adapter.isKindOf(ListAdapter).not) { adapter = ListAdapter(this) };
@@ -186,7 +192,7 @@ ListAdapter : AbstractAdapterElement {
 		var oldItem;
 		oldItem = this.item;
 		items = argItems ?? { [] };
-		adapter.setValue(items.indexOf(items.detect(_ == oldItem)) ? 0);
+		adapter.setValue(items.indexOf(items.detect(_ == oldItem)) ?? { adapter.value ? 0 });
 		adapter.updateListeners(argSender);
 	}
 	

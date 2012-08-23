@@ -8,44 +8,23 @@ EXPERIMENTAL
 When these are ready, they will replace the old ProxySelection etc. classes
 */
 
+ProxySelector2 : ListAdapter {
+	classvar <proxyNames;	// cache proxyNames from proxySpaces
+	var <proxySpace, <proxy;
 
+	*initClass { proxyNames = IdentityDictionary.new; }
 
-ProxyControl2 : SpecAdapter {
-	var <specSelector, <proxy, <parameter;
+	proxySpace_ { | argProxySpace |
+		proxySpace !? { this.removeNotifier(proxySpace, \newProxy) };
+		proxySpace = argProxySpace ?? { Document.prepareProxySpace };
+		this.addNotifier(proxySpace, \newProxy, {
+			{ this.items = ['-'] ++ proxySpace.envir.keys.asArray.sort; }.defer(0.2);
+		});
+		proxySpace.notify(\newProxy);	// perform an update at init time
+	}
+
+	value { proxy = proxySpace[this.item] }
 	
-	*new { | adapter, specSelector |
-		^super.new(adapter).specSelector_(specSelector);
-	}
-
-	init { this.inspect } // tmp debug
-
-	specSelector_ { | argSelector |
-		specSelector !? { this.removeNotifier(specSelector, \value); };
-		specSelector = adapter.model.getAdapter(argSelector);
-		this.addNotifier(specSelector, \value, { this.setControl(specSelector.getControl) });
-	}
-
-	setControl { | controlSpecs |
-		#proxy, parameter, spec = controlSpecs;
-		proxy !? { this.updateValueFromProxy };
-		action = switch ( parameter,
-			'-', { { } },
-			'vol', {{ proxy.vol = adapter.value }},
-			'fadeTime', {{ proxy.fadeTime = adapter.value }},
-			{{ proxy.set(parameter, adapter.value) }}
-		);
-	}
-
-	updateValueFromProxy {
-		switch (parameter, 
-			'-', { },
-			'vol', { adapter.adapter updateValue: proxy.vol ? 0 },
-			'fadeTime', { adapter.adapter updateValue: proxy.fadeTime ? 0 },
-			{ adapter.adapter updateValue: proxy.get(parameter) ? 0 }
-		)
-	}
-
-	value { proxy !? { action.value } }
 }
 
 AbstractProxyAdapter : ListAdapter {
@@ -54,10 +33,10 @@ AbstractProxyAdapter : ListAdapter {
 	var <proxy;			// the currently set proxy
 	var <>additionalNotifiers; // additional notifiers for proxy change, eg: \historyChanged
 
-	proxySelector_ { | argSelector |
+	proxySelector_ { | argSelector = \proxy |
 		proxySelector !? { this.removeNotifier(proxySelector, \value); };
 		proxySelector = adapter.model.getAdapter(argSelector);
-		this.addNotifier(proxySelector, \value, { this.setProxy(proxySelector.proxy); });
+		this.addNotifier(proxySelector, \value, { this.setProxy(proxySelector.adapter.proxy); });
 	}
 
 	setProxy { | newProxy |
@@ -93,6 +72,44 @@ ProxySpecSelector2 : AbstractProxyAdapter {
 
 	getControl { ^[proxy] ++ specs[adapter.value]; }
 
+}
+
+ProxyControl2 : SpecAdapter {
+	var <specSelector, <proxy, <parameter;
+	
+	*new { | adapter, specSelector |
+		^super.new(adapter).specSelector_(specSelector ? \parameterSelector);
+	}
+
+	init { /* this.inspect */ } // tmp debug
+
+	specSelector_ { | argSelector |
+		specSelector !? { this.removeNotifier(specSelector, \value); };
+		specSelector = adapter.model.getAdapter(argSelector);
+		this.addNotifier(specSelector, \value, { this.setControl(specSelector.adapter.getControl) });
+	}
+
+	setControl { | controlSpecs |
+		#proxy, parameter, spec = controlSpecs;
+		proxy !? { this.updateValueFromProxy };
+		action = switch ( parameter,
+			'-', { { } },
+			'vol', {{ proxy.vol = adapter.value }},
+			'fadeTime', {{ proxy.fadeTime = adapter.value }},
+			{{ proxy.set(parameter, adapter.value) }}
+		);
+	}
+
+	updateValueFromProxy {
+		switch (parameter, 
+			'-', { },
+			'vol', { adapter.adapter updateValue: proxy.vol ? 0 },
+			'fadeTime', { adapter.adapter updateValue: proxy.fadeTime ? 0 },
+			{ adapter.adapter updateValue: (proxy.get(parameter) ? 0) }
+		)
+	}
+
+	value { super.value; proxy !? { action.value } }
 }
 
 ProxyState2 : AbstractProxyAdapter {
@@ -149,21 +166,4 @@ ProxyHistory : AbstractProxyAdapter {
 	}
 }
 
-ProxySelector2 : ListAdapter {
-	classvar <proxyNames;	// cache proxyNames from proxySpaces
-	var <proxySpace, <proxy;
-
-	*initClass { proxyNames = IdentityDictionary.new; }
-	
-	proxySpace_ { | argProxySpace |
-		[this, thisMethod.name, argProxySpace].postln;
-		proxySpace = argProxySpace ?? { Document.prepareProxySpace };
-		
-	}
-
-	getControl {
-		
-	}
-
-}
 

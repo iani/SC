@@ -41,7 +41,7 @@ Panes {
 
 	*doOnStartUp {
 		this.loadPrefs; //mc
-		this.updatePrefs; // iz (TODO: sort ouf how updatePrefs and loadPrefs work together
+		this.updatePrefs; // iz (TODO: sort ouf how updatePrefs and loadPrefs work together)
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;

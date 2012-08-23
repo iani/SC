@@ -8,7 +8,6 @@ EXPERIMENTAL
 When these are ready, they will replace the old ProxySelection etc. classes
 */
 
-
 ProxySelector : AbstractAdapterElement {
 	classvar <proxyNames;	// cache proxyNames from proxySpaces
 	var <proxySpace, <proxy;
