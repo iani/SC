@@ -30,8 +30,8 @@ ProxyControl2 : SpecAdapter {
 		proxy !? { this.updateValueFromProxy };
 		action = switch ( parameter,
 			'-', { { } },
-			'vol', {{ | val | proxy.vol = adapter.value }},
-			'fadeTime', {{ | val | proxy.fadeTime = adapter.value }},
+			'vol', {{ proxy.vol = adapter.value }},
+			'fadeTime', {{ proxy.fadeTime = adapter.value }},
 			{{ proxy.set(parameter, adapter.value) }}
 		);
 	}
@@ -45,7 +45,7 @@ ProxyControl2 : SpecAdapter {
 		)
 	}
 
-	value { proxy !? { action.(adapter.value) } }
+	value { proxy !? { action.value } }
 }
 
 AbstractProxyAdapter : ListAdapter {
@@ -53,10 +53,6 @@ AbstractProxyAdapter : ListAdapter {
 	var <proxySelector; 	// proxy selector item that notifies me to set my proxy
 	var <proxy;			// the currently set proxy
 	var <>additionalNotifiers; // additional notifiers for proxy change, eg: \historyChanged
-
-	*initClass {
-		CmdPeriod add: { this.notify(\proxiesStoppedByCmdPeriod); }
-	}
 
 	proxySelector_ { | argSelector |
 		proxySelector !? { this.removeNotifier(proxySelector, \value); };
@@ -132,6 +128,24 @@ ProxyState2 : AbstractProxyAdapter {
 		}{
 			if (adapter.value > 0) { proxy.play } { proxy.stop };
 		}
+	}
+}
+
+ProxyHistory : AbstractProxyAdapter {
+
+	removeNotifiers { this.removeNotifier(proxy, \proxyHistory); }
+	addNotifiers {
+		this.addNotifier(proxy, \proxyHistory, { | argHistory, changer |
+			if (changer !== this) { this.items_(argHistory, changer); }
+		});
+	}
+
+	items_ { | argItems, argSender |
+		super.items_(argItems, argSender);
+		// Do not send back to proxy history if you just received from it
+		if (argSender !== proxy) {
+			ProxyCode.replaceProxyHistory(this, proxy, items);
+		};
 	}
 }
 
