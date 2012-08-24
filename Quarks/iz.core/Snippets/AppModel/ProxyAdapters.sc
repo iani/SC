@@ -8,86 +8,41 @@ EXPERIMENTAL
 When these are ready, they will replace the old ProxySelection etc. classes
 */
 
-ProxySelector : AbstractAdapterElement {
+ProxySelector : ListAdapter {
 	classvar <proxyNames;	// cache proxyNames from proxySpaces
 	var <proxySpace, <proxy;
 
 	*initClass { proxyNames = IdentityDictionary.new; }
-	
-	*addProxySelector { | proxySpace, selector, action |
-		var pNames;
-		action = action ?? {{ | names | selector updateState: names }};
-		this.addNotifier(proxySpace, \newProxy, { | proxy |
-			{   // only build the names list once
-				pNames = this.updateProxyNames(proxySpace);
-				this.notify(\proxyNames, [pNames, proxy]);
-			}.defer(0.1); // wait for ProxySpace to register the new proxy
+
+	proxySpace_ { | argProxySpace |
+		proxySpace !? { this.removeNotifier(proxySpace, \newProxy) };
+		proxySpace = argProxySpace ?? { Document.prepareProxySpace };
+		this.addNotifier(proxySpace, \newProxy, {
+			{ this.items = ['-'] ++ proxySpace.envir.keys.asArray.sort; }.defer(0.2);
 		});
-		proxyNames[proxySpace] ?? { this.updateProxyNames(proxySpace) };  // init the first time
-		selector.addNotifier(this, \proxyNames, action);
+		proxySpace.notify(\newProxy);	// perform an update at init time
 	}
 
-	*updateProxyNames { | proxySpace |
-		var pNames;
-		pNames = ['-'] ++ proxySpace.envir.keys.asArray.sort; 
-		proxyNames[proxySpace] = pNames;
-		^pNames;
+	value { 
+		if (this.item === '-') {
+			proxy = nil; 
+		}{
+			proxy = proxySpace[this.item]
+		}
 	}
-
-	*getProxyIndex { | proxySpace, proxy |
-		^proxyNames[proxySpace] indexOf: proxySpace.envir.findKeyForValue(proxy);
-	}
-
-	*getProxyIndexForName { | proxySpace, name | ^proxyNames[proxySpace] indexOf: name }
-
-	init {
-		proxySpace = proxySpace ?? { Document.prepareProxySpace };
-		this.class.addProxySelector(proxySpace, this);
-		this.updateState(proxyNames[proxySpace] /* ?? { [this.nilProxyName] } */);
-	}
-
-	updateState { | names | adapter.updateItemsAndValue(names); }
-
-	nilProxyName { ^'-' }
-
-	value { // notify related items when a new proxy is chosen
-		var newProxy, proxyName;
-		proxyName = adapter.item;
-		if (proxyName.notNil and: { proxyName !== this.nilProxyName }) {
-			newProxy = proxySpace[proxyName]
-		};
-		if (newProxy !== proxy) {
-			proxy = newProxy;
-			adapter.notify(\selection, [newProxy, proxyName]);
-		};
-	}
+	
 }
 
-ProxyState : AbstractAdapterElement {
+AbstractProxyAdapter : ListAdapter {
+
 	var <proxySelector; 	// proxy selector item that notifies me to set my proxy
 	var <proxy;			// the currently set proxy
 	var <>additionalNotifiers; // additional notifiers for proxy change, eg: \historyChanged
 
-	*initClass {
-		CmdPeriod add: { this.notify(\proxiesStoppedByCmdPeriod); }
-	}
-	init {
-		if (proxySelector isKindOf: Symbol) { this.getProxySelector(proxySelector); };
-		this.addSelectionNotifier;
-		if (this.class === ProxyState) { // exclude subclasses in a primitive way ...
-			this.addNotifier(ProxyState, \proxiesStoppedByCmdPeriod, { adapter.value = 0 });
-		};
-	}
-
-	addSelectionNotifier {
-		this.addNotifier(proxySelector, \selection, { | argProxy |
-			this.setProxy(argProxy);
-		});
-
-	}
-	
-	getProxySelector { | selector |
-		proxySelector = adapter.model.getAdapter(selector).proxySelector;
+	proxySelector_ { | argSelector = \proxy |
+		proxySelector !? { this.removeNotifier(proxySelector, \value); };
+		proxySelector = adapter.model.getAdapter(argSelector);
+		this.addNotifier(proxySelector, \value, { this.setProxy(proxySelector.adapter.proxy); });
 	}
 
 	setProxy { | newProxy |
@@ -99,26 +54,87 @@ ProxyState : AbstractAdapterElement {
 		this.updateState;
 	}
 
+	removeNotifiers { this.subclassResponsibility(thisMethod) }
+	addNotifiers { this.subclassResponsibility(thisMethod) }
+	updateState { this.subclassResponsibility(thisMethod) }
+//	value { this.subclassResponsibility(thisMethod) }
+}
+
+ProxySpecSelector : AbstractProxyAdapter {
+	var <>specs = #[['-', nil]];
+
+	removeNotifiers { this.removeNotifier(proxy, \proxySpecs); }
+	addNotifiers {
+		this.addNotifier(proxy, \proxySpecs, { | argSpecs |
+			specs = argSpecs;
+			this.items = specs.flop[0];
+		});
+	}
+
+	updateState {
+		specs = MergeSpecs.getSpecsFor(proxy);
+		this.items = specs.flop[0];
+	}
+
+	getControl { ^[proxy] ++ specs[adapter.value]; }
+
+}
+
+ProxyControl : SpecAdapter {
+	var <specSelector, <proxy, <parameter;
+	
+	*new { | adapter, specSelector |
+		^super.new(adapter).specSelector_(specSelector ? \parameterSelector);
+	}
+
+	init { /* this.inspect */ } // tmp debug
+
+	specSelector_ { | argSelector |
+		specSelector !? { this.removeNotifier(specSelector, \value); };
+		specSelector = adapter.model.getAdapter(argSelector);
+		this.addNotifier(specSelector, \value, { this.setControl(specSelector.adapter.getControl) });
+	}
+
+	setControl { | controlSpecs |
+		#proxy, parameter, spec = controlSpecs;
+		proxy !? { this.updateValueFromProxy };
+		action = switch ( parameter,
+			'-', { { } },
+			'vol', {{ proxy.vol = adapter.value }},
+			'fadeTime', {{ proxy.fadeTime = adapter.value }},
+			{{ proxy.set(parameter, adapter.value) }}
+		);
+	}
+
+	updateValueFromProxy {
+		switch (parameter, 
+			'-', { },
+			'vol', { adapter.adapter updateValue: proxy.vol ? 0 },
+			'fadeTime', { adapter.adapter updateValue: proxy.fadeTime ? 0 },
+			{ adapter.adapter updateValue: (proxy.get(parameter) ? 0) }
+		)
+	}
+
+	value { super.value; proxy !? { action.value } }
+}
+
+ProxyState : AbstractProxyAdapter {
+	*initClass {
+		CmdPeriod add: { this.notify(\proxiesStoppedByCmdPeriod); }
+	}
+
+	init {
+		this.addNotifier(this.class, \proxiesStoppedByCmdPeriod, { adapter.value = 0 });
+	}
+
 	removeNotifiers {
 		this.removeNotifier(proxy, \play);
 		this.removeNotifier(proxy, \stop);
-		this.removeAdditionalNotifiers;
 	}
 
-	removeAdditionalNotifiers {
-		additionalNotifiers pairsDo: this.removeNotifier(proxy, _);
-	}
 	addNotifiers {
 		this.addNotifier(proxy, \play, { adapter.value = 1 });
 		this.addNotifier(proxy, \stop, { adapter.value = 0 });
-		this.addAdditionalNotifiers;
-	}
-
-	addAdditionalNotifiers {
-		additionalNotifiers pairsDo: { | message, action |
-//			this.addNotifier(proxy, message, { | ... args | action.(this, *args) });
-			this.addNotifier(proxy, message, action); // simpler, but we may need the ProxyState?
-		}
 	}
 
 	updateState {
@@ -138,53 +154,30 @@ ProxyState : AbstractAdapterElement {
 	}
 }
 
-ProxySpecSelector : ProxyState {
-	var <>specs = #[['-', nil]];
+ProxyHistory : AbstractProxyAdapter {
 
-	removeNotifiers {
-		this.removeNotifier(proxy, \proxySpecs);
-		this.removeAdditionalNotifiers;
-	}
+	removeNotifiers { this.removeNotifier(proxy, \proxyHistory); }
 	addNotifiers {
-		this.addNotifier(proxy, \proxySpecs, { | argSpecs |
-			specs = argSpecs;
-			adapter.updateItemsAndValue(specs.flop[0]);
+		this.addNotifier(proxy, \proxyHistory, { | argHistory, changer |
+			if (changer !== this) { this.items_(argHistory, changer); }
 		});
-		this.addAdditionalNotifiers;
 	}
-	updateState { adapter.updateItemsAndValue((specs = MergeSpecs.getSpecsFor(proxy)).flop[0]); }
-	value { adapter.notify(\selection, [proxy, specs[adapter.value[0] ? 0]]); }
+
+	items_ { | argItems, argSender |
+		super.items_(argItems, argSender);
+		// Do not send back to proxy history if you just received from it
+		if (argSender !== proxy) {
+			ProxyCode.replaceProxyHistory(this, proxy, items);
+		};
+	}
+	
+	updateState {
+		if (proxy.isNil) {
+			this.items_([])
+		}{
+			this.items_(ProxyCode.proxyHistory[proxy] ?? { [] }, proxy) 
+		}
+	}
 }
 
 
-ProxyControl : ProxyState {
-	var <parameter, <spec;
-	var <action;
-
-	getProxySelector { | selector | proxySelector = adapter.model.getAdapter(selector); }
-
-	addSelectionNotifier {
-		this.addNotifier(proxySelector, \selection, { | argProxy, argSpec |
-			proxy = argProxy;
-			#parameter, spec = argSpec;
-			adapter.adapter.spec = spec;
-			proxy !? { this.updateValueFromProxy };
-			action = switch ( parameter,
-				'-', { { } },
-				'vol', {{ | val | proxy.vol = adapter.value }},
-				'fadeTime', {{ | val | proxy.fadeTime = adapter.value }},
-				{{ proxy.set(parameter, adapter.value) }}
-			);
-		});
-	}
-	updateValueFromProxy {
-		var currentParameterValue;
-		switch (parameter, 
-			'-', { },
-			'vol', { adapter.adapter updateValue: proxy.vol ? 0 },
-			'fadeTime', { adapter.adapter updateValue: proxy.fadeTime ? 0 },
-			{ adapter.adapter updateValue: proxy.get(parameter) ? 0 }
-		)
-	}
-	value { proxy !? { action.(adapter.value) } }
-}

@@ -2,10 +2,10 @@
 a = AppModel().window({ | w, app |
 	w.layout = VLayout(
 		app.numberBox(\control).view,
-		app.knob(\control).proxyControl2(\specSetter).view,
-		app.popUpMenu(\specSetter).proxySpecSelector2(\proxySelector).view,
-		app.popUpMenu(\proxySelector).proxySelector2.view,
-		app.button(\startstop).proxyState2(\proxySelector).view.states_([["start"],["stop"]]),
+		app.knob(\control).proxyControl(\specSetter).view,
+		app.popUpMenu(\specSetter).proxySpecSelector(\proxySelector).view,
+		app.popUpMenu(\proxySelector).proxySelector.view,
+		app.button(\startstop).proxyState(\proxySelector).view.states_([["start"],["stop"]]),
 		app.listView(\history).proxyHistory(\proxySelector).view,
 	)
 })
@@ -15,10 +15,10 @@ a = AppModel().window({ | w, app |
 a = AppModel().window({ | w, app |
 	w.layout = VLayout(
 		app.numberBox(\control).view,
-		app.knob(\control).proxyControl2(\specSetter).view,
-		app.popUpMenu(\specSetter).proxySpecSelector2(\proxySelector).view,
-		app.popUpMenu(\proxySelector).proxySelector2.view,
-		app.button(\startstop).proxyState2(\proxySelector).view.states_([["start"],["stop"]]),
+		app.knob(\control).proxyControl(\specSetter).view,
+		app.popUpMenu(\specSetter).proxySpecSelector(\proxySelector).view,
+		app.popUpMenu(\proxySelector).proxySelector.view,
+		app.button(\startstop).proxyState(\proxySelector).view.states_([["start"],["stop"]]),
 		app.textView(\history).listItem.proxyHistory(\proxySelector).view,
 		HLayout(
 			app.button(\history).firstItem.view.states_([["<<"]]),
@@ -30,7 +30,6 @@ a = AppModel().window({ | w, app |
 			[StaticText().string_("list size:"), s:2],
 			[app.numberBox(\history).listSize.view, s: 1],
 		),
-
 	)
 })
 

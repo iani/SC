@@ -45,6 +45,7 @@ Attaches its containing adapter to proxy spec selection adapter that contains a 
 
 Adapter {
 	var <model, <>adapter, <value;
+	var <inputs;	// Array of MIDIFunc and/or OSCFunc that send me input
 
 	*new { | model | ^this.newCopyArgs(model) }
 
@@ -119,23 +120,22 @@ Adapter {
 	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
 		(adapter ?? { adapter = SpecAdapter(this) }).postln.initSpec(spec);
 	}
-	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
-	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
-	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
-	proxyControl { | proxySpecSelector | this.adapter.action = ProxyControl(this, proxySpecSelector); }
+//	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
+//	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
+//	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
+//	proxyControl { | proxySpecSelector | this.adapter.action = ProxyControl(this, proxySpecSelector); }
 
 	// Operate directly on AppNamedWidget methods ?????? NOT
-	proxyControl2 { | proxySpecSelector |
-		adapter = ProxyControl2(this, proxySpecSelector);
+	proxyControl { | proxySpecSelector | adapter = ProxyControl(this, proxySpecSelector); }
+	proxySpecSelector { | proxySelector | 
+		adapter = ProxySpecSelector(this).proxySelector_(proxySelector); 
 	}
-	proxySpecSelector2 { | proxySelector | 
-		adapter = ProxySpecSelector2(this).proxySelector_(proxySelector);
+
+	proxyState { | proxySelector | 
+		adapter = ProxyState(this).proxySelector_(proxySelector);
 	}
-	proxyState2 { | proxySelector | 
-		adapter = ProxyState2(this).proxySelector_(proxySelector);
-	}
-	proxySelector2 { | proxySpace | 
-		adapter = ProxySelector2(this).proxySpace_(proxySpace);
+	proxySelector { | proxySpace | 
+		adapter = ProxySelector(this).proxySpace_(proxySpace);
 	}
 	proxyHistory { | proxySelector | 
 		adapter = ProxyHistory(this).proxySelector_(proxySelector);
@@ -144,6 +144,38 @@ Adapter {
 	list { | items |
 		if (adapter.isKindOf(ListAdapter).not) { adapter = ListAdapter(this) };
 		items !? { adapter.items = items }
+	}
+	
+	// MIDI and OSC
+	setMIDI { |  createMsg = \cc, func ... args |
+		// remove any previous MIDIFuncs before adding this one
+		this.removeMIDI;	// remove all previous MIDIFuncs from inputs
+		this.addMIDI(createMsg, func, *args);
+	}
+
+	removeMIDI {	// remove all previous MIDIFuncs from inputs
+		inputs.copy do: { | i | if (i isKindOf: MIDIFunc) { inputs remove: i } };
+	}
+
+	addMIDI { | createMsg = \cc, func ... args |
+		// Create and add a MIDIFunc to my inputs
+		inputs = inputs add: MIDIFunc.performList(createMsg, this.makeMIDIAction(func), args);
+	}
+
+	makeMIDIAction { | argFunc |
+		if (argFunc.isNil) { ^this.defaultMIDIAction } { ^{ | ... args | argFunc.(this, *args) } }
+	}
+
+	defaultMIDIAction {
+		if (adapter.isNil) {
+			^{ | ... args | this.valueAction_(args[0]) }
+		}{
+			
+		}
+	}
+
+	addOSC {
+		
 	}
 }
 
