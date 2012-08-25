@@ -14,8 +14,8 @@ a = AppModel().window({ | w, app |
 
 a = AppModel().window({ | w, app |
 	w.layout = VLayout(
-		app.numberBox(\control).view,
-		app.knob(\control).proxyControl(\specSetter).view,
+		app.numberBox(\control).proxyControl(\specSetter).view,
+		app.knob(\control).view,
 		app.popUpMenu(\specSetter).proxySpecSelector(\proxySelector).view,
 		app.popUpMenu(\proxySelector).proxySelector.view,
 		app.button(\startstop).proxyState(\proxySelector).view.states_([["start"],["stop"]]),

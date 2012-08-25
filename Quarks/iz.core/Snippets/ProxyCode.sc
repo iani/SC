@@ -209,9 +209,9 @@ ProxyCode {
 		this.notifyHistoryChanged(argProxy, history, argProxy);
 	}
 
-	editNodeProxySource { | proxyName |
+	editNodeProxySource { | proxy |
 		// received from NanoK2Strip. Edit the source code of the proxy
-		ProxySourceEditor(this, proxyName);
+		ProxyCodeEditor(this, proxy);
 	}
 	
 	openProxySourceEditor {
@@ -222,7 +222,7 @@ ProxyCode {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
 //		ProxySourceEditor(this, proxyName, proxy);
-		ProxyCodeEditor(this, proxyName, proxy);
+		ProxyCodeEditor(this, proxy);
 	}
 
 	playCurrentDocProxy {

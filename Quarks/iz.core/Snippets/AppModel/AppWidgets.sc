@@ -5,9 +5,9 @@ See AppModel and Adapter
 AppNamelessWidget {
 	var <model;
 	*new { | ... args | ^this.newCopyArgs(*args).init; }
-	addAction { | message, action |
-		this.addNotifier(model, message, { | ... args | action.(this, *args) });
-	}
+//	addAction { | message, action |
+//		this.addNotifier(model, message, { | ... args | action.(this, *args) });
+//	}
 }
 
 AppNamelessWindow : AppNamelessWidget {
@@ -21,7 +21,8 @@ AppNamelessWindow : AppNamelessWidget {
 			window.notify(\windowClosed, this);
 			window.objectClosed;
 		};
-		window.front;
+		window.front;	// Update views next, after window has drawn:
+		model.values do: _.updateListeners;  // update works only if views already visible 
 	}
 }
 
@@ -151,6 +152,7 @@ AppValueView : AppView {
 	}
 
 	listItems { | items, updateItems = true |
+		[this, thisMethod.name, items].postln;
 		this.list(items);
 		if (updateItems) {
 			updateAction = {

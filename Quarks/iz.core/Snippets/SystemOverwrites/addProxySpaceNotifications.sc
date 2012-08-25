@@ -1,27 +1,28 @@
 
 + ProxySpace {
-	makeProxy {
+/*	makeProxy {
 		var proxy = NodeProxy.new;
 		this.initProxy(proxy);
-		this.notify(\newProxy, [proxy, this]);
+		{ ProxySelector.updateProxyNames(this); }.defer(0.1);
 		^proxy
 	}
-
+*/
 	removeNeutral {
 		envir.copy.keysValuesDo { arg key, val; if(val.isNeutral) { envir.removeAt(key) } };
 		this.notify(\removeNeutral, this);
 	}
+}
 
-/*
-	allProxyNames {
-		var names;
-		names = SortedList(8, { |a,b| a < b });
-		this.keysValuesDo({ arg key, px;
-			if (px.rate === rate)  {
-				if (func.value(px, key), { pxs.add(key) })
-			}
-		});
-		^pxs;
-*/
++ LazyEnvir {
+	at { arg key;
+		var proxy;
+		proxy = super.at(key);
+		if(proxy.isNil) {
+			proxy = this.makeProxy(key);
+			envir.put(key, proxy);
+			ProxySelector.updateProxyNames(this, key);
+		};
+		^proxy
 
+	}	
 }

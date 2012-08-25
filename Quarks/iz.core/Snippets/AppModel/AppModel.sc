@@ -51,7 +51,6 @@ AppModel {
 
 	getViewValue { | name | values[name].notify(\at) } // so far only used by AppTextView
 
-
 	// =========== Adding views and windows ============
 	window { | windowInitFunc, onCloseFunc |
 		AppNamelessWindow(this, windowInitFunc, onCloseFunc);

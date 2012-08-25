@@ -245,26 +245,4 @@ a.value_("asdf");
 );
 
 
-//:
-
-a.getValue(\text)
-a.notify(\setLabel, "asdfasdf");
-
-
-//:
-
-AppWindow(a, { | w, app |
-	w.layout = VLayout(
-		app.knob(\test).spec_(\freq).view,
-		app.numberBox(\test).view
-	)
-});
-
-//:
-
-.window({ | w, app |
-	w.view.layout = VLayout(
-		app.knob(\test).spec_(\freq).view,
-		app.numberBox(\test).view
-	)
-};
+/

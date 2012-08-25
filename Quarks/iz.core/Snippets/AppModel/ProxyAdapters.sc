@@ -1,11 +1,43 @@
 /* IZ Wed 22 August 2012  4:05 PM EEST
 
-Attempt to redo ProxySelector, ProxyState, ProxySpecSelector, ProxyControl on the basis of ListAdapter. 
-Some of these may become subclasses of ListAdapter. 
+Adapter classes for dealing with NodeProxies
 
-EXPERIMENTAL
+1. ProxySelector ============================================
 
-When these are ready, they will replace the old ProxySelection etc. classes
+Used by item selection elements such as ListView or PopUpMenu to select a node by name from the existing nodes in a ProxySpace.
+
+Listens to message \newProxy from an instance of ProxySpace. When received, it sends the list of node names from the ProxySpace to its container, so that it updates its value, and sends the updated list to any gui or other elements attached, by notifying \setProxy, proxy. 
+
+2. ProxyState ============================================
+
+Used by proxy on-off buttons or similar elements, to play or stop a node, or to update the state of the watching elements when the node starts or stops. 
+
+Attaches itself to an adapter containing a ProxySelector. When that adapter \setProxy, proxy, the ProxyState sets its node and updates its own state. 
+
+When the ProxyState sets its proxy, it starts listending to \play and \stop notification from that proxy, so that it can update the state of the containing adapter to 0 or 1. The \play and \stop notifications are issued from the proxy from method calls BusPlug:play and BusPlug:stop. 
+
+Also, when its value is set to 0 or 1 via this.value = 0, this.value = 1, it stops or plays the selected proxy. 
+
+3. ProxySpecSelector ============================================
+
+Used by item selection elements such as ListView or PopUpMenu to select a control parameter by name from the existing parameters of a proxy. Also used by ProxyControl to set the parameter and its specs for any elements that want to set the parameter currently chosen by the item selection element. 
+
+Like ProxyState, this adapter attaches itself to an adapter containing a ProxySpaceWatcher. When that adapter sends an update (in the form of this.notify(\value, items), the ProxySpecs sets its node and updates its own state. 
+
+When the ProxyState sets its node, it gets the specs of the node by calling: MergeSpecs.getSpecsFor(proxy). 
+
+It also starts listening to \proxySpecs notifications from that proxy, so that it may update the specs of the proxy if they change in the meanwhile. \proxySpecs notifications are issued from the proxy in method Meta_MergeSpecs:parseArguments, which is called in places such as: [ProxyCode:evalInProxySpace], [ProxySourceEditor:init], [ProxySourceEditor:resetSpecs]. This enables the user modify the specifications provided by the proxy itself in order to add information not available in the proxy. 
+
+An element that wants to set the parameter of the proxy that is selected by the adapter that ProxySpecs is 
+
+4. ProxyControl ============================================
+
+Attaches its containing adapter to proxy spec selection adapter that contains a ProxySpecSelector. When the proxy 
+
+5. ProxyHistory ===========================================
+
+Keeps history of all code executed by ProxyCode for the selected proxy. 
+
 */
 
 ProxySelector : ListAdapter {
@@ -13,14 +45,24 @@ ProxySelector : ListAdapter {
 	var <proxySpace, <proxy;
 
 	*initClass { proxyNames = IdentityDictionary.new; }
+	
+	*updateProxyNames { | proxySpace, proxyName |
+		var theNames;
+		proxyNames[proxySpace] = theNames = proxyNames[proxySpace] add: proxyName;
+		proxySpace.notify(\proxyNames, [theNames]);
+	}
 
 	proxySpace_ { | argProxySpace |
-		proxySpace !? { this.removeNotifier(proxySpace, \newProxy) };
+		proxySpace !? { this.removeNotifier(proxySpace, \proxyNames) };
 		proxySpace = argProxySpace ?? { Document.prepareProxySpace };
-		this.addNotifier(proxySpace, \newProxy, {
-			{ this.items = ['-'] ++ proxySpace.envir.keys.asArray.sort; }.defer(0.2);
+		this.addNotifier(proxySpace, \proxyNames, { | names |
+			this.items = ['-'] ++ names;
 		});
-		proxySpace.notify(\newProxy);	// perform an update at init time
+// {
+		this.items = ['-'] ++ proxyNames[proxySpace];
+		[this, thisMethod.name,  ['-'] ++ proxyNames[proxySpace]].postln;
+//		adapter.updateListeners;
+// }.defer(0.1);
 	}
 
 	value { 
@@ -30,7 +72,8 @@ ProxySelector : ListAdapter {
 			proxy = proxySpace[this.item]
 		}
 	}
-	
+
+	proxy_ { | argProxy | this selectItem: proxySpace.envir.findKeyForValue(argProxy); }
 }
 
 AbstractProxyAdapter : ListAdapter {
@@ -41,7 +84,7 @@ AbstractProxyAdapter : ListAdapter {
 
 	proxySelector_ { | argSelector = \proxy |
 		proxySelector !? { this.removeNotifier(proxySelector, \value); };
-		proxySelector = adapter.model.getAdapter(argSelector);
+		proxySelector = adapter.model.getAdapter(argSelector).proxySelector;
 		this.addNotifier(proxySelector, \value, { this.setProxy(proxySelector.adapter.proxy); });
 	}
 

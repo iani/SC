@@ -8,43 +8,10 @@ The adapter variable can be a function, but it can be some other class that also
 Therefore we do not define any subclasses of the adapter.
 The action of the adapter can ba a "real" adapter that encapsulates data. Is is stored in the adapter variable of the Adapter, so that it can be accessed by other elements of the application. 
 
-In addition to the Adapter class, which is actually an "adapter-value container", here are four adapter element classes: 
-
-1. ProxySelector ============================================
-
-Used by item selection elements such as ListView or PopUpMenu to select a node by name from the existing nodes in a ProxySpace.
-
-Listens to message \newProxy from an instance of ProxySpace. When received, it sends the list of node names from the ProxySpace to its container, so that it updates its value, and sends the updated list to any gui or other elements attached, by notifying \setProxy, proxy. 
-
-2. ProxyState ============================================
-
-Used by proxy on-off buttons or similar elements, to play or stop a node, or to update the state of the watching elements when the node starts or stops. 
-
-Attaches itself to an adapter containing a ProxySelector. When that adapter \setProxy, proxy, the ProxyState sets its node and updates its own state. 
-
-When the ProxyState sets its proxy, it starts listending to \play and \stop notification from that proxy, so that it can update the state of the containing adapter to 0 or 1. The \play and \stop notifications are issued from the proxy from method calls BusPlug:play and BusPlug:stop. 
-
-Also, when its value is set to 0 or 1 via this.value = 0, this.value = 1, it stops or plays the selected proxy. 
-
-3. ProxySpecSelector ============================================
-
-Used by item selection elements such as ListView or PopUpMenu to select a control parameter by name from the existing parameters of a proxy. Also used by ProxyControl to set the parameter and its specs for any elements that want to set the parameter currently chosen by the item selection element. 
-
-Like ProxyState, this adapter attaches itself to an adapter containing a ProxySpaceWatcher. When that adapter sends an update (in the form of this.notify(\value, items), the ProxySpecs sets its node and updates its own state. 
-
-When the ProxyState sets its node, it gets the specs of the node by calling: MergeSpecs.getSpecsFor(proxy). 
-
-It also starts listening to \proxySpecs notifications from that proxy, so that it may update the specs of the proxy if they change in the meanwhile. \proxySpecs notifications are issued from the proxy in method Meta_MergeSpecs:parseArguments, which is called in places such as: [ProxyCode:evalInProxySpace], [ProxySourceEditor:init], [ProxySourceEditor:resetSpecs]. This enables the user modify the specifications provided by the proxy itself in order to add information not available in the proxy. 
-
-An element that wants to set the parameter of the proxy that is selected by the adapter that ProxySpecs is 
-
-4. ProxyControl ============================================
-
-Attaches its containing adapter to proxy spec selection adapter that contains a ProxySpecSelector. When the proxy 
 */
 
 Adapter {
-	var <model, <>adapter, <value;
+	var <model, <>adapter, <value = 0;
 	var <inputs;	// Array of MIDIFunc and/or OSCFunc that send me input
 
 	*new { | model | ^this.newCopyArgs(model) }
@@ -55,9 +22,7 @@ Adapter {
 		this.updateListeners(sender);
 	}
 
-	updateListeners { | sender |
-		this.notify(\value, [sender, this]);
-	}
+	updateListeners { | sender | [this, thisMethod.name, [sender, this]].postln; this.notify(\value, [sender, this]); }
 
 	setValue { | argValue |
 		// inner adapter may set value "silently" without notification, during valueAction_
@@ -76,9 +41,8 @@ Adapter {
 
 	// Like View:action_ : Set the adapter, since it can also function as my action.
 	action_ { | argFunc | adapter = argFunc }
-	
 	addValueAction { | action | this.addValueListener(this, action) }
-	
+
 	addValueListener { | listener, action |
 		// add listener with action to be performed when the value notification is sent:
 		listener.addNotifier(this, \value, { | ... args | action.(this, *args); })  
@@ -117,34 +81,29 @@ Adapter {
 
 	// methods for creating specialized adapters in my adapter instance variable
 
-	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
-		(adapter ?? { adapter = SpecAdapter(this) }).postln.initSpec(spec);
-	}
-//	proxySelector { | proxySpace | adapter = ProxySelector(this, proxySpace); }
-//	proxyState { | proxySelector | adapter = ProxyState(this, proxySelector); }
-//	proxySpecSelector { | proxySelector | adapter = ProxySpecSelector(this, proxySelector); }
-//	proxyControl { | proxySpecSelector | this.adapter.action = ProxyControl(this, proxySpecSelector); }
-
-	// Operate directly on AppNamedWidget methods ?????? NOT
-	proxyControl { | proxySpecSelector | adapter = ProxyControl(this, proxySpecSelector); }
-	proxySpecSelector { | proxySelector | 
-		adapter = ProxySpecSelector(this).proxySelector_(proxySelector); 
-	}
-
-	proxyState { | proxySelector | 
-		adapter = ProxyState(this).proxySelector_(proxySelector);
-	}
-	proxySelector { | proxySpace | 
-		adapter = ProxySelector(this).proxySpace_(proxySpace);
-	}
-	proxyHistory { | proxySelector | 
-		adapter = ProxyHistory(this).proxySelector_(proxySelector);
-	}
-
-	list { | items |
+	list { | items | // operate on lists of items
 		if (adapter.isKindOf(ListAdapter).not) { adapter = ListAdapter(this) };
 		items !? { adapter.items = items }
 	}
+
+	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
+		(adapter ?? { adapter = SpecAdapter(this) }).postln.initSpec(spec);
+	}
+
+	// Proxy related adapter creation
+	proxyControl { | proxySpecSelector | adapter = ProxyControl(this, proxySpecSelector); }
+	proxySpecSelector { | proxySelector |
+		adapter = ProxySpecSelector(this).proxySelector_(proxySelector); 
+	}
+	proxyState { | proxySelector | adapter = ProxyState(this).proxySelector_(proxySelector); }
+	proxySelector { | proxySpace |
+		if (adapter.isKindOf(ProxySelector) and: { proxySpace.notNil }) {
+			adapter.proxySpace = proxySpace;
+		}{
+			adapter = ProxySelector(this).proxySpace_(proxySpace); 
+		}
+	}
+	proxyHistory { | proxySelector | adapter = ProxyHistory(this).proxySelector_(proxySelector); }
 	
 	// MIDI and OSC
 	setMIDI { |  createMsg = \cc, func ... args |
@@ -267,5 +226,11 @@ ListAdapter : AbstractAdapterElement {
 	remove { | item, setter | // analogous to Collection:remove
 		items remove: item;
 		this.items_(items, setter);	// update
+	}
+	
+	selectItem { | item |
+		var newIndex;
+		newIndex = items.indexOf(items.detect(_ == item));
+		newIndex !? { adapter.setValue(newIndex) };
 	}
 }
