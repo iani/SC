@@ -22,7 +22,7 @@ Adapter {
 		this.updateListeners(sender);
 	}
 
-	updateListeners { | sender | [this, thisMethod.name, [sender, this]].postln; this.notify(\value, [sender, this]); }
+	updateListeners { | sender | this.notify(\value, [sender, this]); }
 
 	setValue { | argValue |
 		// inner adapter may set value "silently" without notification, during valueAction_
@@ -39,6 +39,18 @@ Adapter {
 
 	// some basic utilities
 
+	addAction { | func | // perform additional action when \value is notified by adapter
+//		this.addNotifier(adapter, \value, { func.(this) }); // NO GOOD: replaces previous action
+		func.addNotifier(this, \value, { | sender |
+			/* WARNING: actions that call value_ on this adapter, must send themselves as senders
+			   otherwise infinite loop results. Example of correct call: 
+			   anAdapter.addAction({ | adapter, func | adapter.value_(0, func) }); 
+			*/
+			if (sender !== func) { func.(this, func, sender) };
+		});
+	}
+
+	// Have the following 3 been used at all? 
 	// Like View:action_ : Set the adapter, since it can also function as my action.
 	action_ { | argFunc | adapter = argFunc }
 	addValueAction { | action | this.addValueListener(this, action) }
@@ -87,7 +99,7 @@ Adapter {
 	}
 
 	mapper { | spec | // adapter for mapping values with specs, for knobs and sliders etc.
-		(adapter ?? { adapter = SpecAdapter(this) }).postln.initSpec(spec);
+		(adapter ?? { adapter = SpecAdapter(this) }).initSpec(spec);
 	}
 
 	// Proxy related adapter creation
@@ -95,7 +107,11 @@ Adapter {
 	proxySpecSelector { | proxySelector |
 		adapter = ProxySpecSelector(this).proxySelector_(proxySelector); 
 	}
-	proxyState { | proxySelector | adapter = ProxyState(this).proxySelector_(proxySelector); }
+	proxyState { | proxySelector, playFunc, stopFunc |
+		adapter = ProxyState(this).proxySelector_(proxySelector);
+		playFunc !? { adapter.playFunc = playFunc };
+		stopFunc !? { adapter.stopFunc = stopFunc };
+	}
 	proxySelector { | proxySpace |
 		if (adapter.isKindOf(ProxySelector) and: { proxySpace.notNil }) {
 			adapter.proxySpace = proxySpace;
@@ -104,7 +120,7 @@ Adapter {
 		}
 	}
 	proxyHistory { | proxySelector | adapter = ProxyHistory(this).proxySelector_(proxySelector); }
-	
+
 	// MIDI and OSC
 	setMIDI { |  createMsg = \cc, func ... args |
 		// remove any previous MIDIFuncs before adding this one
@@ -228,9 +244,13 @@ ListAdapter : AbstractAdapterElement {
 		this.items_(items, setter);	// update
 	}
 	
-	selectItem { | item |
+	selectItem { | item, setter | // send setter to prevent infinite loops when setting from self
 		var newIndex;
 		newIndex = items.indexOf(items.detect(_ == item));
-		newIndex !? { adapter.setValue(newIndex) };
+		newIndex !? { adapter.value_(newIndex, setter) };
+	}
+	
+	selectAt { | index, setter | // send setter to prevent infinite loops when setting from self
+		adapter.value_(index max: 0 min: (items.size - 1), setter);
 	}
 }

@@ -105,7 +105,10 @@ a = AppModel().window({ | w, app |
 			app.button(\any_name).getContents(\itemEdit, \insert).view.states_([["insert"]]),
 			app.button(\any_name).getContents(\itemEdit, \replace).view.states_([["replace"]]),
 			app.button(\any_name).getContents(\itemEdit, \delete).view.states_([["delete"]]),
-		),
+			app.button(\any_name).getContents(\itemEdit, { | ... args |
+				args.postln;
+			}).view.states_([["custom action"]]),
+		)
 	);
 });
 

@@ -188,8 +188,6 @@ ProxyCode {
 		var history;
 		history = proxyHistory[argProxy];
 		proxyHistory[argProxy] = history = history add: argSnippet;
-//		argProxy.notify(\proxyHistory, [history]);
-//		[this, thisMethod.name, "notifying history now:"].postln;
 		this.notifyHistoryChanged(argProxy, history, argProxy);
 	}
 
@@ -302,13 +300,13 @@ ProxyCode {
 		var myHistory, docString;
 		myHistory = proxyHistory[proxy];
 		docString = format(
-			"\n/* *********** HISTORY FOR % on % *********** */", 
+			"\n/* =========== HISTORY FOR % on % =========== */", 
 			proxySpace.envir.findKeyForValue(proxy), 
 			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
 		);
 		^myHistory.inject(docString, { | a, b, i |
 			a 
-			++ format("\n\n// ========================= % ========================= \n", i + 1)
+			++ format("\n\n// ***** % ***** \n", i + 1)
 			++ b
 		};
 		);

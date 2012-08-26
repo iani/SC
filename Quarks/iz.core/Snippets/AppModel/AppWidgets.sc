@@ -53,7 +53,15 @@ AppNamedWidget : AppNamelessWidget {
 	adapter_ { | action | adapter.adapter = action; }
 	action_ { | func | adapter.adapter = func;  } // synonym to adapter_ in analogy to View:action_
 
-	adapterDo { | func |
+	addAction { | func | // perform additional action when \value is notified by adapter
+		/* WARNING: actions that call value_ on this adapter, must send themselves as senders
+		   otherwise infinite loop results. Example of correct call: 
+		   aWidget.addAction({ | adapter, func | adapter.value_(0, func) }); 
+		*/
+		adapter.addAction(func);
+	}
+
+	adapterDo { | func | // NOT USED?
 		/* perform func on the adapter. Needed to customize the adapter at create time,
 			while returning the view widget for further processing */
 		func.(adapter, this)
@@ -64,15 +72,11 @@ AppNamedWidget : AppNamelessWidget {
 
 	// Proxy stuff
 	proxySelector { | proxySpace | adapter proxySelector: proxySpace; }
-	proxyState { | proxySelector | adapter proxyState: proxySelector; }
+	proxyState { | proxySelector, playFunc, stopFunc |
+		adapter.proxyState(proxySelector, playFunc, stopFunc);
+	}
 	proxySpecSelector { | proxySelector | adapter proxySpecSelector: proxySelector; }
 	proxyControl { | proxySpecSelector | adapter proxyControl: proxySpecSelector; }
-	// EXPERIMENTAL
-	// When these are ready, they will replace the old ProxySelection etc. classes: 
-	proxyControl2 { | proxySpecSelector | adapter.proxyControl2(proxySpecSelector); }
-	proxySpecSelector2 { | proxySelector | adapter.proxySpecSelector2(proxySelector); }
-	proxyState2 { | proxySelector | adapter.proxyState2(proxySelector); }
-	proxySelector2 { | proxySpace | adapter.proxySelector2(proxySpace); }
 	proxyHistory { | proxySelector | adapter.proxyHistory(proxySelector); }
 
 	// add listeners to notifications from your adapter
@@ -122,7 +126,7 @@ AppWindow : AppView { // not tested. Use WindowHandler???
 AppValueView : AppView {
 	var <>viewAction, <>updateAction;
 
-	valueArray { | argSenders |  
+	valueArray { | argSenders | 
 		if (argSenders[0] !== this) { // do not update if you were the setter
 			updateAction.(view, *argSenders);
 		}
@@ -141,7 +145,7 @@ AppValueView : AppView {
 	defaultUpdateAction { ^{ view.value = adapter.value } }
 	
 	valueAction_ { | func |
-		view.action = { adapter.valueAction_(func.(this).postln, this) }
+		view.action = { adapter.valueAction_(func.(this), this) }
 	}
 
 	listSize { // make updateFunction tell you the size of the list in my list adapter
@@ -152,7 +156,6 @@ AppValueView : AppView {
 	}
 
 	listItems { | items, updateItems = true |
-		[this, thisMethod.name, items].postln;
 		this.list(items);
 		if (updateItems) {
 			updateAction = {
@@ -183,8 +186,7 @@ AppValueView : AppView {
 		// mode is one of \append, \replace, \insert, \delete
 		this.viewAction = {};
 		this.updateAction = {};
-		view.action = { 
-			adapter.notify(\getContents, [widgetName, mode]); }
+		view.action = { adapter.notify(\getContents, [widgetName, mode]); }
 	}
 
 	listIndex { | startAt = 1 | 
@@ -238,18 +240,24 @@ AppTextValueView : AppValueView { // for StaticText, TextField, TextView
 	initListActions {
 		// add behavior for responding to buttons that make me do something with my contents
 		// on a list: 
-		this.addNotifier(adapter, \getContents, { | argName, updateMode = \append |
+		this.addNotifier(adapter, \getContents, { | argName, updateAction = \append |
 			if (argName.isNil or: { argName === name }) {
-				switch ( updateMode,
+				switch ( updateAction,
 					\append, { adapter.adapter.add(view.string, this) },
 					\replace, { adapter.adapter.replace(view.string, this) },
 					\insert, { adapter.adapter.insert(view.string, nil, this) },
 					\delete, { adapter.adapter.delete(this) },
-					{ view.action.value }	// See list,  defaultUpdateAction
+					{ updateAction.(this) }
 				)
 			}
 		});
 	}
+	
+	proxyHistory { | proxySelector | 
+		this.listItem;
+		super.proxyHistory(proxySelector);
+	}
+
 }
 
 AppTextView : AppTextValueView {

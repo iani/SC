@@ -58,11 +58,7 @@ ProxySelector : ListAdapter {
 		this.addNotifier(proxySpace, \proxyNames, { | names |
 			this.items = ['-'] ++ names;
 		});
-// {
 		this.items = ['-'] ++ proxyNames[proxySpace];
-		[this, thisMethod.name,  ['-'] ++ proxyNames[proxySpace]].postln;
-//		adapter.updateListeners;
-// }.defer(0.1);
 	}
 
 	value { 
@@ -73,7 +69,11 @@ ProxySelector : ListAdapter {
 		}
 	}
 
-	proxy_ { | argProxy | this selectItem: proxySpace.envir.findKeyForValue(argProxy); }
+	proxy_ { | argProxy |
+		proxy = argProxy; 	// value method not called by update. Why? 
+		this selectItem: proxySpace.envir.findKeyForValue(argProxy);
+		adapter.updateListeners(this);
+	}
 }
 
 AbstractProxyAdapter : ListAdapter {
@@ -162,13 +162,20 @@ ProxyControl : SpecAdapter {
 }
 
 ProxyState : AbstractProxyAdapter {
+	var <>playFunc, <>stopFunc;
+
 	*initClass {
 		CmdPeriod add: { this.notify(\proxiesStoppedByCmdPeriod); }
 	}
 
 	init {
 		this.addNotifier(this.class, \proxiesStoppedByCmdPeriod, { adapter.value = 0 });
+		playFunc = playFunc ?? { this.defaultPlayFunc };
+		stopFunc = stopFunc ?? { this.defaultStopFunc };
 	}
+
+	defaultPlayFunc { ^{ proxy.play } }
+	defaultStopFunc { ^{ proxy.stop } }
 
 	removeNotifiers {
 		this.removeNotifier(proxy, \play);
@@ -192,7 +199,7 @@ ProxyState : AbstractProxyAdapter {
 		if (proxy.isNil) {
 			adapter.value = 0;
 		}{
-			if (adapter.value > 0) { proxy.play } { proxy.stop };
+			if (adapter.value > 0) { playFunc.(this) } { stopFunc.(this) };
 		}
 	}
 }
