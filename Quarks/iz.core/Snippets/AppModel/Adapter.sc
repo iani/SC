@@ -39,9 +39,8 @@ Adapter {
 
 	// some basic utilities
 
-	addAction { | func | // perform additional action when \value is notified by adapter
-//		this.addNotifier(adapter, \value, { func.(this) }); // NO GOOD: replaces previous action
-		func.addNotifier(this, \value, { | sender |
+	addAction { | func, key | // perform additional action when \value is notified by adapter
+		(key ? func).addNotifier(this, \value, { | sender |
 			/* WARNING: actions that call value_ on this adapter, must send themselves as senders
 			   otherwise infinite loop results. Example of correct call: 
 			   anAdapter.addAction({ | adapter, func | adapter.value_(0, func) }); 
@@ -49,6 +48,8 @@ Adapter {
 			if (sender !== func) { func.(this, func, sender) };
 		});
 	}
+
+	removeAction { | key | key.removeNotifier(this, \value) }
 
 	// Have the following 3 been used at all? 
 	// Like View:action_ : Set the adapter, since it can also function as my action.
@@ -145,18 +146,24 @@ Adapter {
 		if (adapter.isNil) {
 			^{ | ... args | this.valueAction_(args[0]) }
 		}{
-			
+			^adapter.defaultMIDIAction;
 		}
 	}
 
-	addOSC {
-		
+	addOSC { /* not yet implemented */ }
+	
+	objectClosed {
+		super.objectClosed;
+		inputs do: _.free;
+		inputs = nil;
 	}
 }
 
 AbstractAdapterElement {
 	var <>adapter;		// the adapter that contains me
 	*new { | adapter ... args | ^this.newCopyArgs(adapter, *args).init; }
+	
+	defaultMIDIAction { ^{ | argVal | { adapter.valueAction = argVal / 127  }.defer } }
 }
 
 SpecAdapter : AbstractAdapterElement {
@@ -192,6 +199,9 @@ SpecAdapter : AbstractAdapterElement {
 		unmappedValue = spec unmap: argValue;
 		adapter.value = argValue;
 	}
+
+	defaultMIDIAction { ^{ | argVal | { this.map(argVal / 127)  }.defer } }
+
 }
 
 ListAdapter : AbstractAdapterElement {

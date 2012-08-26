@@ -91,6 +91,12 @@ AppModel {
 	envelopeView { | name | ^AppValueView(this, name, EnvelopeView()); }
 	soundFileView { | name | ^AppView(this, name, SoundFileView()); }
 	movieView { | name | ^AppView(this, name, MovieView()); }
+	
+	addMIDI { | specs |
+		specs pairsDo: { | key, spec |
+			this.getAdapter(key).addMIDI(*spec);
+		}
+	}
 }
 
 

@@ -427,6 +427,7 @@ Widget {
 		Widget.disable(this, group, inputType);
 	}
 
+/*
 	addMIDI { | specs |
 		/* specs is a Dictionary or an Array of form [key: value, ... ] 
 		Add midi to any widget whose name is included in a key, constructing the MIDIFunc from the 
@@ -443,7 +444,7 @@ Widget {
 			}
 		};
 	}
-	
+*/	
 	takeWidgetSnapshot { ^this.widgets collect: _.preset; }
 
 	restoreWidgetSnapshot { | widgetPresets | widgetPresets do: _.restore; }

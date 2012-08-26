@@ -32,10 +32,8 @@ AppNamelessView : AppNamelessWidget {
 	  	Use .view method for this: 
 	  	app.view(StaticText().addAction ...)
 	*/
-	var <view, onObjectClosed;
-	init {
-		view.onClose = { this.objectClosed }
-	}
+	var <view; // var onObjectClosed;
+	init { view.onClose = { this.objectClosed } }
 	// used to get string values from TextView with button click. Also present in AppView (refactor???)
 	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
 }
@@ -49,17 +47,19 @@ AppNamedWidget : AppNamelessWidget {
 		name !? { adapter = model.getAdapter(name); }; // allow nameless option for convenience
 		this.addNotifier(adapter, \value, this);
 	}
-
+	
 	adapter_ { | action | adapter.adapter = action; }
 	action_ { | func | adapter.adapter = func;  } // synonym to adapter_ in analogy to View:action_
 
-	addAction { | func | // perform additional action when \value is notified by adapter
+	addAction { | func, key | // perform additional action when \value is notified by adapter
 		/* WARNING: actions that call value_ on this adapter, must send themselves as senders
 		   otherwise infinite loop results. Example of correct call: 
 		   aWidget.addAction({ | adapter, func | adapter.value_(0, func) }); 
 		*/
-		adapter.addAction(func);
+		adapter.addAction(func, key);
 	}
+
+	removeAction { | key | adapter.removeAction(key) }
 
 	adapterDo { | func | // NOT USED?
 		/* perform func on the adapter. Needed to customize the adapter at create time,
@@ -91,14 +91,14 @@ AppNamedWidget : AppNamelessWidget {
 AppView : AppNamedWidget {
 	var <>view;
 
-	init {	
+	init {
 		super.init;
 		this.initView;
 		this.initActions;
 		view onClose: { this.viewClosed; };
 	}
 	
-	initView { /* this.subclassResponsibility(thisMethod) */ }
+	initView { view.onClose = { this.objectClosed }; }
 	initActions { /* this.subclassResponsibility(thisMethod) */ }
 	viewClosed { this.objectClosed; }
 
@@ -257,16 +257,21 @@ AppTextValueView : AppValueView { // for StaticText, TextField, TextView
 		this.listItem;
 		super.proxyHistory(proxySelector);
 	}
-
 }
 
 AppTextView : AppTextValueView {
-	initView { view = TextView(); }
+	initView {
+		view = TextView();
+		super.initView;
+	}
 	
 }
 
 AppStaticTextView : AppTextValueView {
-	initView { view = StaticText(); }
+	initView {
+		view = StaticText();
+		super.initView;
+	}
 	defaultViewAction { ^{ /* view has no action */ } }
 }
 
