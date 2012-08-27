@@ -11,7 +11,12 @@ ProxyCode(Document.current);
 ProxyCodeMixer : AppModel {
 	var <doc, <>numStrips = 8, <proxyCode, <proxySpace, <strips;
 	var <presetHandler;
-	var <proxyList;
+
+	*initClass {
+		Class.initClassTree(MIDISpecs);
+		MIDISpecs.put(this, this.uc33eSpecs);
+	}
+
 	
 	*new { | doc, numStrips = 8 | ^super.new(doc, numStrips).init; }
 
@@ -19,46 +24,15 @@ ProxyCodeMixer : AppModel {
 		doc = doc ?? { Document.current };
 		proxyCode = ProxyCode(doc);
 		proxySpace = doc.envir;
-		strips = { ProxyCodeStrip(this) } ! numStrips;
+		strips = { | index | ProxyCodeStrip(this, index) } ! numStrips;
 		presetHandler = ProxyCodePresetHandler(this);
 		this.makeWindow;
+		this.reloadProxies;
 		presetHandler.initPresets;
-		{ this.initStrips; }.defer(1); // proxies may take time to load if launched same time as me
+		this.initMIDI;
 	}
 
-	initStrips {
-		var proxy, proxyIndex;
-		ProxySelector.proxyNames[proxySpace][1..] do: { | pxName, i |
-			proxy = proxySpace[pxName];
-			proxyIndex = ProxySelector.getProxyIndexForName(proxySpace, pxName) - 1;
-			this.addNewProxy(proxy, proxyIndex);
-		};
-		this.makeNewProxyAction;
-	}
-
-	makeNewProxyAction {
-		ProxySelector.addProxySelector(proxySpace, \proxyNames, { | pn, proxy |
-			this.addNewProxy(proxy, pn.size - 2);
-		});
-	}
-
-	addNewProxy { | proxy, index |
-		var presetNr, stripNr, strip;
-		proxyList = proxyList add: proxy;
-		stripNr = index % numStrips;
-		presetNr = index - stripNr / numStrips;
-		if (presetHandler.currentIndex == presetNr) {
-			strip = strips[stripNr];
-			{
-				this.setStripProxy(strip, ProxySelector.getProxyIndex(proxySpace, proxy)); 
-			}.defer(0.1); // wait for strip to register in ProsySpace first!
-		}
-	}
-
-	setStripProxy { | strip, proxyIndex |
-		strip.getAdapter(\proxySelector).selectItemAt(proxyIndex);
-		this.setDefaultStripControls(strip);
-	}
+	reloadProxies { proxySpace.notify(\proxyNames, [ProxySelector.proxyNames[proxySpace]]); }
 
 	makeWindow {
 		var stripWidth = 80, winWidth;
@@ -94,18 +68,38 @@ ProxyCodeMixer : AppModel {
 	makePreset { ^strips collect: _.makePreset; }
 
 	restorePreset { | argPreset, presetIndex |
-		var proxies, proxy, strip;
-		proxies = proxyList[(presetIndex * numStrips .. 1 + presetIndex * numStrips - 1)];
 		argPreset do: { | preset, i |
-			strip = strips[i];
-			strip.restorePreset(preset);
-			proxy = proxies[i];
-			proxy !? { 
-				if (preset[\proxySelector][\value][0] == 0) {
-					this.setStripProxy(strip, ProxySelector.getProxyIndex(proxySpace, proxy))				}
-			}
+			strips[i].restorePreset(preset);
+		};
+		{ this.reloadProxies; }.defer(1);
+	}
+
+	initMIDI {
+		var specs, knob, slider, strip;
+		specs = this.midiSpecs;
+		knob = specs[\knob];
+		slider = specs[\slider];
+		8.min(numStrips) do: { | i |
+			strips[i].addMIDI([slider: slider.add(i), knob: knob.add(i)]);
 		}
-	} 
+	}
+
+	*uc33eSpecs { // these specs are for M-Audio U-Control UC-33e, 1st program setting
+		^(
+			knob: [\cc, nil, 10],
+			slider: [\cc, nil, 7]
+/*			startStopButton: [\cc, { | me | me.toggle }, 18, 0],
+			prevSnippet: [\cc, { | me | me.action.value }, 19, 0],
+			eval: [\cc, { | me | me.action.value }, 20, 0],
+			nextSnippet: [\cc, { | me | me.action.value }, 21, 0],
+			firstSnippet: [\cc, { | me | me.action.value }, 22, 0],
+			add: [\cc, { | me | me.action.value }, 23, 0],
+			lastSnippet: [\cc, { | me | me.action.value }, 24, 0],
+			resetSpecs: [\cc,  { | me | me.action.value }, 25, 0],
+			toggleWindowSize: [\cc,  { | me | me.toggle }, 26, 0],
+			delete: [\cc,  { | me | me.action.value }, 27, 0],
+*/		)
+	}
 
 }
 

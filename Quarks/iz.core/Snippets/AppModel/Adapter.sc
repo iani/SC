@@ -208,11 +208,10 @@ ListAdapter : AbstractAdapterElement {
 	var <items;
 	init { items = [] }
 	items_ { | argItems, argSender |
-		// NOTE: Adjust adapter's value to match the previously selected item, if found
-		var oldItem;
+		var oldItem;	// Adjust adapter's value to match the previously selected item, if found
 		oldItem = this.item;
 		items = argItems ?? { [] };
-		adapter.setValue(items.indexOf(items.detect(_ == oldItem)) ?? { adapter.value ? 0 });
+		adapter.setValue(items.indexOf(items.detect(_ == oldItem)) ?? { /* adapter.value ? */ 0 });
 		adapter.updateListeners(argSender);
 	}
 	
@@ -257,10 +256,13 @@ ListAdapter : AbstractAdapterElement {
 	selectItem { | item, setter | // send setter to prevent infinite loops when setting from self
 		var newIndex;
 		newIndex = items.indexOf(items.detect(_ == item));
-		newIndex !? { adapter.value_(newIndex, setter) };
+//		newIndex !? { adapter.value_(newIndex, setter) };
+		newIndex !? { adapter.valueAction_(newIndex, setter) };
 	}
 	
 	selectAt { | index, setter | // send setter to prevent infinite loops when setting from self
-		adapter.value_(index max: 0 min: (items.size - 1), setter);
+//		[this, thisMethod.name, index, "items:", items, items[index]].postln;
+//		adapter.value_(index max: 0 min: (items.size - 1), setter);
+		adapter.valueAction_(index max: 0 min: (items.size - 1), setter);
 	}
 }
