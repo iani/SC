@@ -44,10 +44,10 @@ ProxyCodePresetHandler {
 
 	var <>proxyCodeMixer, <>presets, <>currentPreset;
 
-	*new { | mixer | ^this.newCopyArgs(mixer).init }
+	*new { | mixer, numPresets = 8 | ^this.newCopyArgs(mixer).init(numPresets) }
 
-	init {
-		presets = { | i | ProxyCodePreset(this, i) } ! 8;
+	init { | numPresets |
+		presets = { | i | ProxyCodePreset(this, i) } ! numPresets;
 		currentPreset = presets.first;		
 	}
 	
@@ -60,11 +60,7 @@ ProxyCodePresetHandler {
 	}
 	
 	initializePreset { | argPreset |
-		argPreset use: {
-			~proxySelector[\proxy] = '-';
-			~knobSpecs[\parameter] = '-';
-			~sliderSpecs[\parameter] = '-';
-		}
+		proxyCodeMixer.initializePreset(argPreset);
 	}
 
 	gui { ^presets collect: _.gui; }

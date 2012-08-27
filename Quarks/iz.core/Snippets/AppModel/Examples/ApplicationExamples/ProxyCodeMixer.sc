@@ -10,6 +10,7 @@ ProxyCode(Document.current);
 
 ProxyCodeMixer : AppModel {
 	var <doc, <>numStrips = 8, <proxyCode, <proxySpace, <strips;
+	var <stripWidth = 80, <numPresets = 8;
 	var <presetHandler;
 
 	*initClass {
@@ -17,25 +18,28 @@ ProxyCodeMixer : AppModel {
 		MIDISpecs.put(this, this.uc33eSpecs);
 	}
 
-	
 	*new { | doc, numStrips = 8 | ^super.new(doc, numStrips).init; }
 
 	init {
 		doc = doc ?? { Document.current };
 		proxyCode = ProxyCode(doc);
 		proxySpace = doc.envir;
-		strips = { | index | ProxyCodeStrip(this, index) } ! numStrips;
-		presetHandler = ProxyCodePresetHandler(this);
+		this.makeStrips;
+		presetHandler = ProxyCodePresetHandler(this, numPresets);
 		this.makeWindow;
 		this.reloadProxies;
 		presetHandler.initPresets;
 		this.initMIDI;
 	}
 
+	makeStrips {
+		strips = { | index | ProxyCodeStrip(this, index) } ! numStrips;
+	}
+
 	reloadProxies { proxySpace.notify(\proxyNames, [ProxySelector.proxyNames[proxySpace]]); }
 
 	makeWindow {
-		var stripWidth = 80, winWidth;
+		var winWidth;
 		winWidth = stripWidth * numStrips;
 		this.window({ | w, app |
 			w	.name_("Proxy Code Mixer : " ++ doc.name)
@@ -44,20 +48,35 @@ ProxyCodeMixer : AppModel {
 					VLayout(*(presetHandler.gui)),
 					*(strips collect: _.gui)
 				);
-			WindowHandler(this, w, 
-				{ /* all[proxyName] = nil; */},
-				enableAction: { 
-					if (w.isClosed.not) { 
-						w.view.background = Color(*[0.9, 0.8, 0.7].scramble);
-					};
-				},
-				disableAction: { 
-					if (w.isClosed.not) {
-						w.view.background = Color(0.9, 0.9, 0.9, 0.5);
-					};
-				}
-			);
+			this.addWindowActions(w);
 		})
+	}
+
+	addWindowActions { | window |
+		this.windowClosed(window, {
+			this.disable;
+			this.objectClosed;
+		});
+		this.windowToFront(window, { this.enable; });
+		this.windowEndFront(window, { this.disable; });
+		window.addNotifier(this, \colorEnabled, {
+			if (window.isClosed.not) { window.view.background = Color(*[0.9, 0.8, 0.7].scramble); }
+		});
+		window.addNotifier(this, \colorDisabled, {
+			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.5); };
+		});
+	}	
+
+	enable {
+		super.enable(true);
+		strips do: _.enable;
+		this.notify(\colorEnabled);
+	}
+
+	disable {
+		super.disable;
+		strips do: _.disable;
+		this.notify(\colorDisabled);
 	}
 
 	setDefaultStripControls { | strip |
@@ -66,6 +85,14 @@ ProxyCodeMixer : AppModel {
 	}
 
 	makePreset { ^strips collect: _.makePreset; }
+
+	initializePreset { | argPreset |
+		argPreset use: {
+			~proxySelector[\proxy] = '-';
+			~knobSpecs[\parameter] = '-';
+			~sliderSpecs[\parameter] = '-';
+		}
+	}
 
 	restorePreset { | argPreset, presetIndex |
 		argPreset do: { | preset, i |
@@ -80,14 +107,14 @@ ProxyCodeMixer : AppModel {
 		knob = specs[\knob];
 		slider = specs[\slider];
 		8.min(numStrips) do: { | i |
-			strips[i].addMIDI([slider: slider.add(i), knob: knob.add(i)]);
+			strips[i].addMIDI([slider: slider.put(3, i), knob: knob.put(3, i)]);
 		}
 	}
 
 	*uc33eSpecs { // these specs are for M-Audio U-Control UC-33e, 1st program setting
 		^(
-			knob: [\cc, nil, 10],
-			slider: [\cc, nil, 7]
+			knob: [\cc, nil, 10, 0],
+			slider: [\cc, nil, 7, 0]
 /*			startStopButton: [\cc, { | me | me.toggle }, 18, 0],
 			prevSnippet: [\cc, { | me | me.action.value }, 19, 0],
 			eval: [\cc, { | me | me.action.value }, 20, 0],

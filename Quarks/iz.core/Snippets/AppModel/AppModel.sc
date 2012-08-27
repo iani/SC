@@ -28,7 +28,7 @@ AppModel().window({ | w, app |
 */
 
 AppModel {
-
+	classvar <>enabled;	// previously enabled AppModel: Disabled when the next one becomes active
 	var <values;  /* IdentityDictionary: Adapters holding my values per name */
 
 	*new { | ... args | ^this.newCopyArgs(IdentityDictionary.new, *args); }
@@ -50,8 +50,15 @@ AppModel {
 	}
 	
 	// enabling and disabling MIDI and OSC input
-	enable { values do: _.enable; }
-	disable { values do: _.disable; }
+	enable { | disablePrevious = false |
+		if (disablePrevious) { enabled !? { enabled.disable }; };
+		values do: _.enable;
+		enabled = this;
+	}
+	disable {
+		values do: _.disable;
+		enabled = nil;
+	}
 
 	// =========== Adding views and windows ============
 	window { | windowInitFunc |

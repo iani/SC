@@ -202,16 +202,13 @@ ProxyCode {
 		var history;
 		history = proxyHistory[argProxy];
 		history.removeAt(snippetIndex - 1);
-//		argProxy.notify(\proxyHistory, [history]);
-//		[this, thisMethod.name, "notifying history now:"].postln;
 		this.notifyHistoryChanged(argProxy, history, argProxy);
 	}
 
 	editNodeProxySource { | proxy |
-		// received from NanoK2Strip. Edit the source code of the proxy
 		ProxyCodeEditor(this, proxy);
 	}
-	
+
 	openProxySourceEditor {
 		// called by keyboard shortcut from Code
 		this.getSnippet;
@@ -219,7 +216,6 @@ ProxyCode {
 		proxyHistory[proxy] ?? {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
-//		ProxySourceEditor(this, proxyName, proxy);
 		ProxyCodeEditor(this, proxy);
 	}
 
@@ -253,11 +249,13 @@ ProxyCode {
 	}
 
 	proxyMixer {
-//		ProxyMixer(doc.envir);
-//		if (doc.envir.isNil) { this.initProxySpace };
-		ProxyCodeMixer(doc, 8);
+		ProxyCodeMixer3(doc, 8);
 	}
 	
+	*proxyMixerNano { ^ProxyCodeMixer(Document.current, 8); }
+
+	*proxyMixer { ^ProxyCodeMixer3(Document.current, 8); } 
+
 	changeVol { | increment = 0.1 |
 		var vol1, vol2;
 		this.getSnippetAndProxy;

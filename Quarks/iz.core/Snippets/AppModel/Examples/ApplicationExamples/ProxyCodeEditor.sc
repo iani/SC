@@ -74,32 +74,38 @@ ProxyCodeEditor : AppModel {
 			}
 		});
 		this.windowClosed(window, { 
-			this.disable;
+			this.disable(window);
 			this.objectClosed;
 			all remove: this;
 		});
-		this.windowToFront(window, {
-			if (window.isClosed.not) {
-				this.enable;
-				window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
-			};			
+		this.windowToFront(window, { this.enable });
+		this.windowEndFront(window, { this.disable; });
+		window.addNotifier(this, \colorEnabled, {
+			if (window.isClosed.not) { window.view.background = Color(*[0.9, 0.8, 0.7].scramble); }
 		});
-		this.windowEndFront(window, {
-			if (window.isClosed.not) { 
-				this.disable;
-				window.view.background = Color(0.9, 0.9, 0.9, 0.5);
-			};
+		window.addNotifier(this, \colorDisabled, {
+			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.5); };
 		});
 	}	
+
+	enable { | window |
+		super.enable(true);
+		this.notify(\colorEnabled);
+	}
+
+	disable { | window |
+		super.disable;
+		this.notify(\colorDisabled);
+	}
 
 	addViews { | window |
 		window.layout = VLayout(
 			[this.textView(\history).proxyHistory(\proxy).name_(\editor)
 				.view.font_(Font("Monaco", 11)), s:10],
 			[HLayout(
-				this.popUpMenu(\proxy).proxySelector
+				[this.popUpMenu(\proxy).proxySelector
 					.addAction({ this.notify(\setName, this.proxyName) })
-					.view.font_(font),
+					.view.font_(font), s:10],
 				this.button(\proxyMainControl).proxyState(\proxy, { | widget |
 						var proxy = widget.adapter.adapter.proxy;
 						proxy !? {
@@ -142,12 +148,12 @@ ProxyCodeEditor : AppModel {
 				Button().states_([["all"]]).font_(font)
 					.action_({ proxyCode.openHistoryInDoc(nil) }),
 				StaticText().font_(font).string_("current:"),
-				this.numberBox(\history).listIndex.view.font_(font),
+				[this.numberBox(\history).listIndex.view.font_(font), s: 2],
 				StaticText().font_(font).string_("all:"),
-				this.numberBox(\history).listSize.view.font_(font),
+				[this.numberBox(\history).listSize.view.font_(font), s: 2],
 				this.button(\resizeWindow)
 					.action_({ | me | this.notify(\toggleWindowSize, me.value) })
-					.view.font_(font).states_([["maximize window"], ["minimize window"]]),
+					.view.font_(font).states_([["maximize"], ["minimize"]]),
 			), s:1],
 			[HLayout(
 				*({ | i |
