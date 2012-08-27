@@ -275,12 +275,3 @@ AppStaticTextView : AppTextValueView {
 	}
 	defaultViewAction { ^{ /* view has no action */ } }
 }
-
-/*
-AppItemSelectView : AppValueView { // for ListView, PopUpMenu 
-	
-	defaultViewAction { ^{ adapter.valueAction = [view.value, view.items] } }
-	defaultUpdateAction { ^{ | v, val, items | v.items = items; v.value = val ? 0; } }
-}
-*/
-
