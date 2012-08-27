@@ -11,18 +11,19 @@ AppNamelessWidget {
 }
 
 AppNamelessWindow : AppNamelessWidget {
-	var <windowInitFunc, <onCloseFunc, <window;
+	var <windowInitFunc, <window;
 
 	init {
 		window = Window();
 		windowInitFunc.(window, model);
-		onCloseFunc !? { this.addNotifier(window, \windowClosed, onCloseFunc) };
 		window.onClose = {
 			window.notify(\windowClosed, this);
 			window.objectClosed;
 		};
+		window.toFrontAction = { window.notify(\windowToFront, this) };
+		window.endFrontAction = { window.notify(\windowEndFront, this) };
 		window.front;	// Update views next, after window has drawn:
-		model.values do: _.updateListeners;  // update works only if views already visible 
+//		model.values do: _.updateListeners;  // update works only if views already visible 
 	}
 }
 

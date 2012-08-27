@@ -48,7 +48,7 @@ WindowHandler {
 	}
 
 	init {
-		window.onClose = { this.doOnClose };
+		window.onClose = { [this, thisMethod.name].postln; this.doOnClose };
 		window.endFrontAction = { this.doEndFrontAction };
 		window.toFrontAction = { this.doToFrontAction };
 		enableAction !? { this.addNotifier(model, \enable, enableAction); };
@@ -56,18 +56,22 @@ WindowHandler {
 	}
 
 	doOnClose {
+		 [this, thisMethod.name].postln; 
 		onClose.(this); // before disabling
 		model.disable;
 		model.objectClosed;
 	}
 	
 	doToFrontAction {
-		model.notify(\update);	// widgets that need to connect to other widgets use this
+//		model.notify(\update);	// widgets that need to connect to other widgets use this
 		model.enable;
 		toFrontAction.(this); // after enabling
 	}
 
-	doEndFrontAction { endFrontAction.(this) } // disable already done by doOnClose
+	doEndFrontAction {
+		endFrontAction.(this);
+//		model.disable;
+	}
 	
 	addAction { | message, action | 
 		this.addNotifier(model, message, { | ... args | action.value(window, *args) })

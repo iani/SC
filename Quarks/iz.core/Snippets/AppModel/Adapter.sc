@@ -123,6 +123,9 @@ Adapter {
 	proxyHistory { | proxySelector | adapter = ProxyHistory(this).proxySelector_(proxySelector); }
 
 	// MIDI and OSC
+	enable { inputs do: _.enable }
+	disable { inputs do: _.disable }
+	
 	setMIDI { |  createMsg = \cc, func ... args |
 		// remove any previous MIDIFuncs before adding this one
 		this.removeMIDI;	// remove all previous MIDIFuncs from inputs

@@ -48,16 +48,26 @@ AppModel {
 			^adapter; 	// Else return it as is
 		}
 	}
-
-	getViewValue { | name | values[name].notify(\at) } // so far only used by AppTextView
 	
-	
+	// enabling and disabling MIDI and OSC input
+	enable { values do: _.enable; }
+	disable { values do: _.disable; }
 
 	// =========== Adding views and windows ============
-	window { | windowInitFunc, onCloseFunc |
-		AppNamelessWindow(this, windowInitFunc, onCloseFunc);
+	window { | windowInitFunc |
+		AppNamelessWindow(this, windowInitFunc);
 	}
-	
+
+	windowClosed { | window, action |
+		this.addNotifier(window, \windowClosed, { | widget | action.(widget) })
+	}
+	windowToFront { | window, action |
+		this.addNotifier(window, \windowToFront, { | widget | action.(widget) })
+	}
+	windowEndFront { | window, action |
+		this.addNotifier(window, \windowEndFront, { | widget | action.(widget) })
+	}
+
 	view { | view | ^AppNamelessView(this, view) }
 
 	numberBox { | name | ^AppValueView(this, name, NumberBox()); }

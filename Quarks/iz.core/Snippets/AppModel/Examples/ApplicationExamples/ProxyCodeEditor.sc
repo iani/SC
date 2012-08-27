@@ -29,7 +29,7 @@ ProxyCodeEditor : AppModel {
 		^super.new(proxyCode).init(proxy);
 	}
 
-	front { this.notify(\windowToFront); }
+	front { this.notify(\windowToFront); } // bring window to front if it exists
 
 	init { | proxy |
 		all = all add: this;
@@ -42,7 +42,7 @@ ProxyCodeEditor : AppModel {
 
 	makeWindow {
 		this.window({ | window |
-			this.addWindowHandler(window);
+			this.addWindowActions(window);
 			this.addViews(window);
 			// add auto-allocation of controls from parsed NodeProxy parameters: 
 			controlMenus = [
@@ -57,33 +57,38 @@ ProxyCodeEditor : AppModel {
 		});
 	}
 
-	addWindowHandler { | window |
+	addWindowActions { | window |
 		var bounds;
 		bounds = windowRects@@(all.size - 1);
 		window.bounds = bounds;
-		WindowHandler(this, window, 
-			{ all remove: this; this.objectClosed; }, 
-			enableAction: { 
-				if (window.isClosed.not) { 
-					window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
-				};
-			},
-			disableAction: { 
-				if (window.isClosed.not) {
-					window.view.background = Color(0.9, 0.9, 0.9, 0.5);
-				};
-			}
-		).addAction(\windowToFront, { | window |
+		window.addNotifier(this, \windowToFront, { 
 			window.front;
 			window.toFrontAction.value;
-		})
-		.addAction(\setName, { | window, name | window.name = name })
-		.addAction(\toggleWindowSize, { | window, mode |
+		});
+		window.addNotifier(this, \setName, { | name | window.name = name });
+		window.addNotifier(this, \toggleWindowSize, { | mode |
 			if (mode == 1) {
 				window.bounds = bounds.copy.height_(850).top_(0);
 			}{
 				window.bounds = bounds;
 			}
+		});
+		this.windowClosed(window, { 
+			this.disable;
+			this.objectClosed;
+			all remove: this;
+		});
+		this.windowToFront(window, {
+			if (window.isClosed.not) {
+				this.enable;
+				window.view.background = Color(*[0.9, 0.8, 0.7].scramble);
+			};			
+		});
+		this.windowEndFront(window, {
+			if (window.isClosed.not) { 
+				this.disable;
+				window.view.background = Color(0.9, 0.9, 0.9, 0.5);
+			};
 		});
 	}	
 
