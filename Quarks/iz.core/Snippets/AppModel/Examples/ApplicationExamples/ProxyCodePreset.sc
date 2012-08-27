@@ -8,7 +8,7 @@ Stores and restores proxy and spec selections for a ProxyCodeMixer.
 
 ProxyCodePreset : AppModel {
 	var <>handler, <>index = 0, <>preset, <>font;
-	
+
 	*new { | ... args | ^super.new(*args).init; }
 
 	init {
@@ -44,10 +44,10 @@ ProxyCodePresetHandler {
 
 	var <>proxyCodeMixer, <>presets, <>currentPreset;
 
-	*new { | mixer | ^this.newCopyArgs(mixer).init }
+	*new { | mixer, numPresets = 8 | ^this.newCopyArgs(mixer).init(numPresets) }
 
-	init {
-		presets = { | i | ProxyCodePreset(this, i) } ! 8;
+	init { | numPresets |
+		presets = { | i | ProxyCodePreset(this, i) } ! numPresets;
 		currentPreset = presets.first;		
 	}
 	
@@ -60,11 +60,7 @@ ProxyCodePresetHandler {
 	}
 	
 	initializePreset { | argPreset |
-		argPreset use: {
-			~proxySelector[\value] = [0, ['-']];
-			~knobSpecs[\value] = nil;
-			~sliderSpecs[\value] = nil;
-		}
+		proxyCodeMixer.initializePreset(argPreset);
 	}
 
 	gui { ^presets collect: _.gui; }
@@ -75,9 +71,9 @@ ProxyCodePresetHandler {
 		}{
 			currentPreset.store;
 			currentPreset.setInactive;
+			currentPreset = argPreset; // used by strip auto-proxy allocation in next statement
 			argPreset.restore;
 			argPreset.setActive;
-			currentPreset = argPreset;
 		}
 	}
 	

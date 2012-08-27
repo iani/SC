@@ -14,7 +14,7 @@ ProxyCode {
 	classvar all;						// all ProxyCode instances in a Dictionary by Document
 	classvar <historyTimer;				// routine that counts time from last executed snippet
 	classvar <>historyEndInterval = 300;	// end History if nothing has been done for 5 minutes
-	classvar <proxyHistory; // holds all source code for each NodeProxy by key
+	classvar <proxyHistory; // holds all source code for each NodeProxy
 
  	var <doc;			// the document from which this snippet was 
 	var <proxySpace; 
@@ -106,10 +106,10 @@ ProxyCode {
 		var oldProxies;
 		oldProxies = proxyHistory.keys;
 		proxyHistory = IdentityDictionary.new;
-		oldProxies do: { | op | 
+		oldProxies do: { | oldProxy | 
 //			op.notify(\proxyHistory, [[]]); 
 //			[this, thisMethod.name, "notifying history now:"].postln;
-			this.notifyHistoryChanged(this, op, [[]]);
+			this.notifyHistoryChanged(oldProxy, [], oldProxy);
 		}
 	}
 
@@ -162,28 +162,33 @@ ProxyCode {
 	
 	// proxy history stuff 
 	
-	replaceProxyHistory { | argUpdater, argProxy, argHistory |
+	*replaceProxyHistory { | argProxy, argHistory, argChanger |
 		/* 	An application that changes my history sends the new version to me 
 			I notify all applications that I changed, so that they may update.
 			I send also who updated me, so that the updater will not re-update itself
 			(otherwise an endless loop would ensue).
 		*/
-		this.notifyHistoryChanged(argUpdater, argProxy, argHistory);
+		proxyHistory[argProxy] = argHistory;
+		this.notifyHistoryChanged(argProxy, argHistory, argChanger);
 	}
 
-	notifyHistoryChanged { | argChanger, argProxy, argHistory |
+	*notifyHistoryChanged { | argProxy, argHistory, argChanger |
 		/* update interested applications of my new history for a proxy. 
 			Also tell them who did the change, so that the changer may avoid re-updating */
-		argProxy.notify(\proxyHistory, [argChanger, argHistory]);
+		argProxy.notify(\proxyHistory, [argHistory, argChanger]);
+	}
+
+	notifyHistoryChanged { | argProxy, argHistory, argChanger  |
+		/* update interested applications of my new history for a proxy. 
+			Also tell them who did the change, so that the changer may avoid re-updating */
+		this.class.notifyHistoryChanged(argProxy, argHistory, argChanger);
 	}
 	
 	addNodeSourceCodeToHistory { | argProxy, argSnippet |
 		var history;
 		history = proxyHistory[argProxy];
 		proxyHistory[argProxy] = history = history add: argSnippet;
-//		argProxy.notify(\proxyHistory, [history]);
-//		[this, thisMethod.name, "notifying history now:"].postln;
-		this.notifyHistoryChanged(this, argProxy, history);
+		this.notifyHistoryChanged(argProxy, history, argProxy);
 	}
 
 	
@@ -197,16 +202,13 @@ ProxyCode {
 		var history;
 		history = proxyHistory[argProxy];
 		history.removeAt(snippetIndex - 1);
-//		argProxy.notify(\proxyHistory, [history]);
-//		[this, thisMethod.name, "notifying history now:"].postln;
-		this.notifyHistoryChanged(this, argProxy, history);
+		this.notifyHistoryChanged(argProxy, history, argProxy);
 	}
 
-	editNodeProxySource { | proxyName |
-		// received from NanoK2Strip. Edit the source code of the proxy
-		ProxySourceEditor(this, proxyName);
+	editNodeProxySource { | proxy |
+		ProxyCodeEditor(this, proxy);
 	}
-	
+
 	openProxySourceEditor {
 		// called by keyboard shortcut from Code
 		this.getSnippet;
@@ -214,8 +216,7 @@ ProxyCode {
 		proxyHistory[proxy] ?? {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
-//		ProxySourceEditor(this, proxyName, proxy);
-		ProxyCodeEditor(this, proxyName, proxy);
+		ProxyCodeEditor(this, proxy);
 	}
 
 	playCurrentDocProxy {
@@ -248,11 +249,13 @@ ProxyCode {
 	}
 
 	proxyMixer {
-//		ProxyMixer(doc.envir);
-//		if (doc.envir.isNil) { this.initProxySpace };
-		ProxyCodeMixer(doc, 8);
+		ProxyCodeMixer3(doc, 8);
 	}
 	
+	*proxyMixerNano { ^ProxyCodeMixer(Document.current, 8); }
+
+	*proxyMixer { ^ProxyCodeMixer3(Document.current, 8); } 
+
 	changeVol { | increment = 0.1 |
 		var vol1, vol2;
 		this.getSnippetAndProxy;
@@ -295,13 +298,13 @@ ProxyCode {
 		var myHistory, docString;
 		myHistory = proxyHistory[proxy];
 		docString = format(
-			"\n/* *********** HISTORY FOR % on % *********** */", 
+			"\n/* =========== HISTORY FOR % on % =========== */", 
 			proxySpace.envir.findKeyForValue(proxy), 
 			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
 		);
 		^myHistory.inject(docString, { | a, b, i |
 			a 
-			++ format("\n\n// ========================= % ========================= \n", i + 1)
+			++ format("\n\n// ***** % ***** \n", i + 1)
 			++ b
 		};
 		);

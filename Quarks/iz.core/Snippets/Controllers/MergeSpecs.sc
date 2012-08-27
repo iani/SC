@@ -72,7 +72,6 @@ MergeSpecs {
 		};
 		mySpecs = this.new(argProxy, mySpecs);
 		argProxy.notify(\proxySpecs, [mySpecs]);
-		Widget.cacheSpecs(argProxy, mySpecs);  // TODO: REMOVE THIS!
 	}
 
 	*new { | proxy, snippetArgs |

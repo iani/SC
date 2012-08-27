@@ -1,5 +1,7 @@
 /* IZ Fri 10 August 2012 11:23 PM EEST
 
+TO BE REMOVED soon ??? Mon 27 August 2012  6:51 PM EEST
+
 Encapsulate actions to do when a window comes to front, goes to back or closes. 
 This kind of behavior may be useful to objects belonging to different classes, and is therefore implemented here as a separate class. Also notify \update when a window opens the first time, necessary to interconnect any Widgets that depend on each other. 
 
@@ -48,7 +50,7 @@ WindowHandler {
 	}
 
 	init {
-		window.onClose = { this.doOnClose };
+		window.onClose = { [this, thisMethod.name].postln; this.doOnClose };
 		window.endFrontAction = { this.doEndFrontAction };
 		window.toFrontAction = { this.doToFrontAction };
 		enableAction !? { this.addNotifier(model, \enable, enableAction); };
@@ -56,18 +58,22 @@ WindowHandler {
 	}
 
 	doOnClose {
+		 [this, thisMethod.name].postln; 
 		onClose.(this); // before disabling
 		model.disable;
 		model.objectClosed;
 	}
 	
 	doToFrontAction {
-		model.notify(\update);	// widgets that need to connect to other widgets use this
+//		model.notify(\update);	// widgets that need to connect to other widgets use this
 		model.enable;
 		toFrontAction.(this); // after enabling
 	}
 
-	doEndFrontAction { endFrontAction.(this) } // disable already done by doOnClose
+	doEndFrontAction {
+		endFrontAction.(this);
+//		model.disable;
+	}
 	
 	addAction { | message, action | 
 		this.addNotifier(model, message, { | ... args | action.value(window, *args) })

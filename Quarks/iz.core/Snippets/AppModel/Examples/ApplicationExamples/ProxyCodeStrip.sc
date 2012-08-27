@@ -5,18 +5,18 @@ Strip of controls for a proxy. For use with ProxyCodeMixer
 */
 
 ProxyCodeStrip : AppModel {
-	var <>proxyCodeMixer;
+	var <>proxyCodeMixer, <>index;
 	var <>font, <>proxyOnColor;
 	
-	*new { | proxyCodeMixer |
-		^super.new.init(proxyCodeMixer)
+	*new { | proxyCodeMixer, index |
+		^super.new.init(proxyCodeMixer, index)
 	}
 	
-	init { | argProxyCodeMixer |
+	init { | argProxyCodeMixer, argIndex |
 		proxyCodeMixer = argProxyCodeMixer;
+		index = argIndex;
 		font = font ?? { Font.default.size_(10); };
 		proxyOnColor = proxyOnColor ?? { Color.red; };
-		
 	}
 
 	gui {
@@ -28,13 +28,33 @@ ProxyCodeStrip : AppModel {
 				VLayout(
 					this.numberBox(\knob).view.font_(font),
 					this.numberBox(\slider).view.font_(font),
-					this.button(\edit).view.states_([["ed"]]).font_(font),
+					this.button(\edit).proxyState(\proxySelector,
+						{  },
+						{ | state | ProxyCodeEditor(ProxyCode(proxyCodeMixer.doc), state.proxy); }
+						)
+						.view.states_([["ed"]]).font_(font),
 					this.button(\startstop).proxyState(\proxySelector)
 						.view.states_([[">"], ["||", nil, proxyOnColor]]).font_(font),
 				)
 			),
-			this.popUpMenu(\sliderSpecs).proxySpecSelector(\proxySelector).view.font_(font),
-			this.popUpMenu(\proxySelector).proxySelector.view.font_(font),
+			this.popUpMenu(\sliderSpecs).proxySpecSelector(\proxySelector)
+				.view.font_(font),
+			this.popUpMenu(\proxySelector).proxySelector
+				.addAction({ | adapter, func |
+					var proxyIndex, specAdapter;
+					proxyIndex = 
+						proxyCodeMixer.presetHandler.currentIndex 
+						* proxyCodeMixer.numStrips
+						+ index;
+					(ProxySelector.proxyNames[proxyCodeMixer.proxySpace] ?? { [] })[proxyIndex] !? {
+						adapter.adapter.selectAt(proxyIndex + 1, func);
+						specAdapter = this.getAdapter(\sliderSpecs).adapter;
+						{ 
+							if (specAdapter.items.size > 1) { specAdapter.selectAt(1, func) }; 
+						}.defer(0.1);
+					};
+				})
+				.view.font_(font),
 		)
 	}
 	
@@ -42,11 +62,11 @@ ProxyCodeStrip : AppModel {
 		var adapter;
 		^Event make: {
 			adapter = this.getAdapter(\proxySelector);
-			~proxySelector = (adapter: adapter, value: adapter.value);
+			~proxySelector = (adapter: adapter, proxy: adapter.adapter.item);
 			adapter = this.getAdapter(\knobSpecs);
-			~knobSpecs = (adapter: adapter, value: adapter.value);
+			~knobSpecs = (adapter: adapter, parameter: adapter.adapter.item);
 			adapter = this.getAdapter(\sliderSpecs);
-			~sliderSpecs = (adapter: adapter, value: adapter.value);
+			~sliderSpecs = (adapter: adapter, parameter: adapter.adapter.item);
 		}			
 	}
 	
@@ -54,10 +74,9 @@ ProxyCodeStrip : AppModel {
 		var selector;
 		argPreset use: {
 			selector = ~proxySelector[\adapter];
-			selector.valueAction = ~proxySelector[\value];
-			~knobSpecs[\adapter].valueAction = ~knobSpecs[\value];
-			~sliderSpecs[\adapter].valueAction = ~sliderSpecs[\value];
-			selector.adapter.updateState(ProxySelector.proxyNames[proxyCodeMixer.proxySpace]);
+			selector.adapter.selectItem(~proxySelector[\proxy], this);
+			~knobSpecs[\adapter].adapter.selectItem(~knobSpecs[\parameter]);
+			~sliderSpecs[\adapter].adapter.selectItem(~sliderSpecs[\parameter]);
 		}
 	}
 	
