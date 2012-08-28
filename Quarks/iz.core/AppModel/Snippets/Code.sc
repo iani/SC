@@ -118,9 +118,9 @@ Code {
 	}
 
 	*showCodeListWindow {
-		AppModel().stickyWindow(this, \snippetList, { | window, app |
-			var doc;
-			doc = Document.current;
+		var doc;
+		doc = Document.current;
+		AppModel().stickyWindow(doc, \snippetList, { | window, app |
 			window.bounds = Rect(Window.screenBounds.width - 300, 50, 300, 400);
 			window.name = doc.name ++ " : snippets";
 			window.layout = VLayout(
@@ -143,13 +143,13 @@ Code {
 	}
 
 	*showCodeButtonsWindow {
-		AppModel().stickyWindow(this, \snippetButtons, { | window, app |
-			var doc, code, headers, font;
-			font = Font.default.size_(10);
-			doc = Document.current;
-			code = Code(doc);
-			headers = code.headers;
-			window.name = doc.name ++ " : snippets";
+		var doc, code, headers, font;
+		font = Font.default.size_(10);
+		doc = Document.current;
+		code = Code(doc);
+		headers = code.headers;
+		AppModel().stickyWindow(doc, \snippetButtons, { | window, app |
+			window.name = doc.name ++ " : snippet buttons";
 			window.layout = VLayout(
 				*(headers collect: { | h, i | 
 					Button().states_([[h[3..]]])
