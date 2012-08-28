@@ -270,7 +270,7 @@ ProxyCode {
 		var title, docString;
 		title = proxyHistory[argProxy];
 		if (title.isNil) {
-			title = Date.getDate.format("History for all proxies on %Y-%d-%e at %Hh:%mm:%Ss");
+			title = Date.getDate.format("History for all proxies on %Y-%m-%e at %Hh:%Mm:%Ss");
 			docString = this.makeHistoryStringForAll;
 		}{
 			title = format("History for all % on %",
@@ -286,7 +286,7 @@ ProxyCode {
 		var docString, histories;
 		docString = format(
 			"/* *********** HISTORY FOR ALL PROXIES on % *********** */\n",
-			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss")
+			Date.getDate.format("%Y-%m-%e at %Hh:%Mm:%Ss")
 		);
 		histories = proxyHistory.keys collect: this.makeHistoryStringForProxy(_);
 		^histories.inject(docString, { | a, b | a ++ b });

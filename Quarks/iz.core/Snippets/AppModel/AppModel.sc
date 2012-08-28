@@ -60,6 +60,8 @@ AppModel {
 		enabled = nil;
 	}
 
+	updateListeners { values do: _.updateListeners }
+
 	// =========== Adding views and windows ============
 	window { | windowInitFunc |
 		AppNamelessWindow(this, windowInitFunc);

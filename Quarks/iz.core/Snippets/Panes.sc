@@ -45,8 +45,7 @@ Panes {
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;
-		BufferResource.addMenu;
-		{ this.start; }.defer(2); // wait for Lion to reopen last session windows before starting
+		{ this.start; }.defer(2); // wait for MacOS X to reopen last session windows before starting
 	}
 	*loadPrefs{ 
 		prefs = ().putAll(UserPrefs.load(prefsFile, this.defaults));

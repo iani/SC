@@ -9,6 +9,7 @@ BufferResource : AbstractServerResource {
 
 	*initClass {
 		current = IdentityDictionary.new;
+		StartUp add: { this.addMenu };
 	}
 
 	*makeKey { | key, target, numFrames, numChannels, path |
@@ -75,15 +76,52 @@ BufferResource : AbstractServerResource {
 
 	*saveDefaults {
 		// save all current instances to Archive.global;
-		Archive.global.put(this.name, (this.all.flat collect: { | b | b.key add: b.path }));
+		var bufferLists;
+		bufferLists = Archive.global.at(this.name);
+		bufferLists = bufferLists.add(
+			BufferList(
+				Date.getDate.format("%Y-%m-%e at %Hh:%Mm:%Ss"),
+				this.all.flat.select({ | b | b.path.notNil }) collect: _.path
+			)
+		);
+		Archive.global.put(this.name, bufferLists);
 		Archive.write;
 	}
 	
+	*clearDefaults { Archive.global.put(this.name, nil) }
+
 	*loadDefaults {
-		// load all Server.default instances from Archive.global;
-		Archive.global.at(this.name) do: { | bspec |
-			if (bspec[3].notNil) { this.read(bspec[3], Server.named[bspec[2]]) };
-		};
+		// Open list panel with all saved defaults, offering load and editing options: 
+		AppModel().stickyWindow(this, \bufferLists, { | window, app |
+			var lists, nl, backspace;
+			nl = 13.asAscii;
+			backspace = 8.asAscii;
+			lists = Archive.global.at('BufferResource');
+			window.bounds = window.bounds.copy.width = 600;
+			window.layout = VLayout(
+				app.listView(\bufferLists)
+					.items_(lists collect: _.name)
+					.addAction({ | adapter |
+						app.getAdapter(\buffers).adapter.items_(lists[adapter.value].buffers)
+					})
+					.keyDownAction_({ | view, char |
+						switch ( char,
+							nl, { lists[view.adapter.value].buffers do: BufferResource.read(_); },
+							backspace, { "deleting list - to implement".postln; },
+							$r, { "renaming list - to implement".postln }
+						)
+					})
+					.view,
+				app.listView(\buffers)
+					.keyDownAction_({ | view, char |
+						switch ( char,
+							nl, { BufferResource.read(view.adapter.adapter.item).play; },
+							backspace, { "deleting buffer - to implement".postln; }
+						)
+					})	
+					.view.font_(Font.default.size_(10))
+			);
+		})
 	}
 
 	*loadSCdefaults { this.loadPaths((this.defaultSoundsDir +/+ "a*").pathMatch;) }

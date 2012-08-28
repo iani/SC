@@ -23,6 +23,7 @@ AppNamelessWindow : AppNamelessWidget {
 		window.toFrontAction = { window.notify(\windowToFront, this) };
 		window.endFrontAction = { window.notify(\windowEndFront, this) };
 		window.front;	// Update views next, after window has drawn:
+		model.updateListeners;
 	}
 }
 
@@ -122,6 +123,12 @@ AppView : AppNamedWidget {
 	previousItem { view.action = { adapter.adapter.previous; } }
 	firstItem { view.action = { adapter.adapter.first; } }
 	lastItem { view.action = { adapter.adapter.last; } }
+	
+	keyDownAction_ { | func |
+		view.keyDownAction_({ | view, char, modifiers, unicode, keycode |
+			func.(this, char, modifiers, unicode, keycode);
+		})
+	} 
 }
 
 AppWindow : AppView { // not tested. Use WindowHandler???
