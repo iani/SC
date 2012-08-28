@@ -285,14 +285,39 @@ AppModel().window({ | window, app |
 	)
 });
 
-//:AppStickyWindow;
+//:Snippet Buttons;
 
-AppModel().stickyWindow(\test, \window1, { | window, app |
+
+AppModel().window({ | window, app |
+	var doc, code, headers, font;
+	font = Font.default.size_(10);
+	doc = Document.current;
+	code = Code(doc);
+	headers = code.headers;
+	window.name = doc.name ++ " : snippets";
 	window.layout = VLayout(
-		Knob()
+		*(headers collect: { | h, i | 
+			Button().states_([[h[3..]]])
+			.action_({ Code(doc).performCodeAt(i + 1, \fork, AppClock) })
+			.font_(font) })
+	)	
+})
+
+//:AppStickyWindow
+AppModel().stickyWindow(\test, \window1, { | window, app |
+	var code, headers, font;
+	font = Font.default(10);
+	code = Code(Document.current);
+	headers = code.headers;
+	window.layout = VLayout(
+		*(headers collect: { | h | Button().states_([[h[3..20]]]).font_(font) })
 	)	
 })
 
 
+//:Test osc commands from Code
 
+NetAddr.localAddr.sendMsg("/NumberBox");
+
+Code(Document.current);
 

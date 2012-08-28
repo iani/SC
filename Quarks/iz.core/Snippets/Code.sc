@@ -3,7 +3,7 @@ Select and execute code in a doc by typing command keys.
 */
 
 Code {
-	classvar <>autoBoot = true;	// if true, forking a string from code will boot the server
+	classvar <>autoBoot = false;	// if true, forking a string from code will boot the server
 	var <doc, <string, <canEvaluate = true;
 	var <positions; // , <functions, <keys;
 	var <snippetstart, <snippetend;
@@ -11,7 +11,11 @@ Code {
 	var <thissnippetstart, <thissnippetend;
 	var <nextsnippetstart, <nextsnippetend;
 	var <snippetSeparator = ":";
-	
+
+	*initClass {
+		StartUp add: { this.menuItems }
+	}
+
 	*new { | doc |
 		^this.newCopyArgs(doc).init;	
 	}
@@ -118,7 +122,7 @@ Code {
 			var doc;
 			doc = Document.current;
 			window.bounds = Rect(Window.screenBounds.width - 300, 50, 300, 400);
-			window.name = doc.name ++ ":Snippets";
+			window.name = doc.name ++ " : snippets";
 			window.layout = VLayout(
 				app.listView(\snippets)
 					.updateAction_({ | view, sender, adapter |
@@ -138,9 +142,43 @@ Code {
 		});
 	}
 
-	*showCodeButtonsWindow { ^CodeButtons(Document.current); }
+	*showCodeButtonsWindow {
+		AppModel().stickyWindow(this, \snippetButtons, { | window, app |
+			var doc, code, headers, font;
+			font = Font.default.size_(10);
+			doc = Document.current;
+			code = Code(doc);
+			headers = code.headers;
+			window.name = doc.name ++ " : snippets";
+			window.layout = VLayout(
+				*(headers collect: { | h, i | 
+					Button().states_([[h[3..]]])
+					.action_({ Code(doc).performCodeAt(i + 1, \fork, AppClock) })
+					.font_(font) })
+			)	
+		})
 
-	*makeCodeOSC { ^CodeOSC(Document.current); }
+	}
+
+	*makeCodeOSC {
+		var doc, path;
+		doc = Document.current;
+		Library.at(doc, \osc) do: _.free;
+		Library.put(doc, \osc, this.new(doc).headers collect: { | h, i |
+			path = h.findRegexp("//:([A-Za-z0-9]+)")[1];
+			if (path.size == 0) {
+				path = "snippet" ++ i.asString
+			}{
+				path = path[1]
+			};
+			OSCFunc({ "test".postln;
+				// error without defer. Why? 
+				{ Code(doc).performCodeAt(i + 1, \fork, AppClock) }.defer(0.0001); 
+			}, path)
+		});
+		"OSCFuncs generated with following paths:".postln;
+		Library.at(doc, \osc).collect(_.path).asCompileString.postln;
+	}
 
 	*forkCurrentSnippet { | clock |
 		^this.new(Document.current).forkCurrentSnippet(clock);

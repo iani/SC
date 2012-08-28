@@ -23,9 +23,23 @@ AppNamelessWindow : AppNamelessWidget {
 		window.toFrontAction = { window.notify(\windowToFront, this) };
 		window.endFrontAction = { window.notify(\windowEndFront, this) };
 		window.front;	// Update views next, after window has drawn:
-//		model.values do: _.updateListeners;  // update works only if views already visible 
 	}
 }
+
+AppStickyWindow : AppNamelessWindow {
+	*new { | model, owner, name, windowInitFunc |
+		var windowMaker;
+		windowMaker = Library.at(owner, name);
+		if (windowMaker.notNil) { 
+			windowMaker.showWindow;
+		}{
+			Library.put(owner, name, super.new(model, windowInitFunc));
+		}
+	}
+	showWindow { if (window.isClosed) { this.init } { window.front }; }
+}
+
+
 
 AppNamelessView : AppNamelessWidget {
 	/*	For views that have no Adapter in the apps model, but do want to 
@@ -180,6 +194,8 @@ AppValueView : AppView {
 		);
 		updateAction = { view.string = adapter.adapter.items[adapter.value] ? "<empty>" }
 	}
+
+	items_ { | items | adapter.adapter.items = items }
 
 	// used to get string values from TextView with button click
 	getContents {	| widgetName, mode |
