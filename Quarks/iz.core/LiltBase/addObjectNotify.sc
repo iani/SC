@@ -38,6 +38,10 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		OnObjectCloseRegistrations.removeAll(this);
 	}
 
+	addNotifierOneShot { | notifier, message, action |
+		NotificationCenter2.registerOneShot(notifier, message, this, action);
+	}
+
 	// ===== less used stuff =====
 
 	addMessage { | notifier, message |

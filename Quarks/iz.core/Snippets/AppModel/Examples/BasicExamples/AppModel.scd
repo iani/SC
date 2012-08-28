@@ -15,10 +15,15 @@ AppModel().window({ | w, app |
 //:TextView, TextField, StaticTextView
 AppModel().window({ | w, app |
 	w.layout = VLayout(
-		app.staticText(\any_name).view.string_("will be updated by others"), 
-		app.textField(\any_name).view.string_("change my string and press the return key"),
+		app.staticText(\any_name)
+			.initValue("will be updated by others")
+			.view,
+		app.textField(\any_name)
+			.initValue("change my string and press the return key")
+			.view,
 		app.textView(\any_name, 'AnyNameGoesHere')
-			.view.string_("change my string and push the accept text button"),
+			.initValue("change my string and push the accept text button")
+			.view,
 		app.button(\any_name).getContents('AnyNameGoesHere')
 			.view.states_([["accept text from TextView above"]]),
 	);
@@ -75,11 +80,14 @@ AppModel().window({ | w, app |
 			[app.numberBox(\any_name).listSize.view, s: 1],
 		),
 		app.textField(\any_name).listItem  // default mode is append
-			.view.string_("type return to append my text at the end of the list"),
+			.initValue("type return to append my text at the end of the list")
+			.view,
 		app.textField(\any_name).listItem(\insert)
-			.view.string_("type return to insert my text at the current position in the list"),
+			.initValue("type return to insert my text at the current position in the list")
+			.view,
 		app.textField(\any_name).listItem(\replace)
-			.view.string_("type return to replace the current item in the list with my text"),
+			.initValue("type return to replace the current item in the list with my text")
+			.view
 	);
 });
 
@@ -112,13 +120,6 @@ a = AppModel().window({ | w, app |
 	);
 });
 
-//:debugging:
-
-d = a.getAdapter(\any_name);
-
-
-d.notify(\getContents, \itemEdit);
-
 //:Many examples combined
 
 
@@ -136,19 +137,19 @@ AppModel().window({ | w, app |
 		app.popUpMenu(\menu, ["a", "b", "c"]).view,
 		app.listView(\menu).view,
 		HLayout(
-			[app.staticText(\label1, "selected item's index, starting on 0").view, s: 5],
+			[StaticText().string_("selected item's index, starting on 0"), s: 5],
 			app.numberBox(\menu).view,
 		),
 		HLayout(
-			[app.staticText(\label1, "selected item's index, 1-list size").view, s: 5],
+			[StaticText().string_("selected item's index, 1-list size"), s: 5],
 			app.numberBox(\menu).listIndex.view,
 		),
 		HLayout(
-			[app.staticText(\label1, "selected item (press return to add)").view, s: 5],
+			[StaticText().string_("press return to add"), s: 5],
 			app.textField(\menu).listItem.view,
 		),
 		HLayout(
-			app.staticText(\label1, "list size").view,
+			StaticText().string_("list size"),
 			app.numberBox(\menu).listSize.view,
 		),
 		HLayout(
@@ -160,48 +161,6 @@ AppModel().window({ | w, app |
 	)
 });
 
-//:OLD - need rechecking: 
-(a = AppModel()).window({ | w, app |
-	w.layout = VLayout(
-		HLayout(
-			app.knob(\test, \freq).view,
-			app.slider(\test, \freq).view.orientation_(\horizontal),
-			app.numberBox(\test).view,
-			app.view(Button()).view
-				.states_([["randomize"]])
-				.action_({ app.put(\test, 20 rrand: 20000) }),
-		),
-		HLayout(
-			app.view(StaticText())
-				.addAction(\setLabel, { | me, string |
-					me.view.string = string;
-				}).view.string_("test"),
-			app.button(\player).view.states_([["play"], ["stop"]]),
-			app.staticText(\text).view.string_("static?"),
-			app.textField(\text).view
-		)
-	);
-	app.addListener(w, \closeTestWindow, { w.close });
-}, { "HOHOHO and a barrel of rum".postln }
-);
-
-
-//:
-
-a = AppModel().window({ | w, app |
-	w.layout = VLayout(
-		app.textField(\st).view,
-		app.staticText(\st).view.string_("test")
-	)
-});
-
-//:
-
-a.setValue(\tf, "aua");
-
-
-a.setValue(\test, 0.5);
-a.setValue(\st, "asdf".scramble);
 
 //:
 m = AppModel().window({ | w, app |
@@ -216,36 +175,6 @@ m = AppModel().window({ | w, app |
 		app.numberBox(\index).listSize.doUpdate.view // same as adapterUpdate above
 	)
 });
-
-
-//:
-a = StaticText().front;
-a.value;
-a.value_("asdf");
-//:
-
-(a = AppModel()).window({ | w, app |
-	w.layout = VLayout(
-		HLayout(
-			app.knob(\test).spec_(\freq).view,
-			app.slider(\test).spec_(\freq).view.orientation_(\horizontal),
-			app.numberBox(\test).view,
-			app.view(Button()).view
-				.states_([["randomize"]])
-				.action_({ app.setValue(\test, 20 rrand: 20000) }),
-		),
-		HLayout(
-			app.view(StaticText())
-				.addAction(\setLabel, { | me, string |
-					me.view.string = string;
-				}).view.string_("test"),
-			app.button(\player).view.states_([["play"], ["stop"]]),
-			app.textField(\text).view.addAction(\value, { | ... args | args.postln })
-		)
-	);
-	app.addListener(w, \closeTestWindow, { w.close });
-}, { "HOHOHO and a barrel of rum".postln }
-);
 
 
 //:List of snippets
@@ -287,7 +216,6 @@ AppModel().window({ | window, app |
 
 //:Snippet Buttons;
 
-
 AppModel().window({ | window, app |
 	var doc, code, headers, font;
 	font = Font.default.size_(10);
@@ -303,7 +231,7 @@ AppModel().window({ | window, app |
 	)	
 })
 
-//:AppStickyWindow
+//:AppStickyWindow - Evaluate this again to bring existing window to front
 AppModel().stickyWindow(\test, \window1, { | window, app |
 	var code, headers, font;
 	font = Font.default(10);
@@ -315,9 +243,9 @@ AppModel().stickyWindow(\test, \window1, { | window, app |
 })
 
 
-//:Test osc commands from Code
-
+//:Test osc commands from Code - run this first: 
+Code.makeCodeOSC;
+//:Then test it by running the following: 
 NetAddr.localAddr.sendMsg("/NumberBox");
 
-Code(Document.current);
 
