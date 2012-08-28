@@ -12,6 +12,10 @@ Code {
 	var <nextsnippetstart, <nextsnippetend;
 	var <snippetSeparator = ":";
 	
+	*initClass {
+		StartUp add: { this.menuItems; }
+	}
+
 	*new { | doc |
 		^this.newCopyArgs(doc).init;	
 	}
@@ -39,22 +43,13 @@ Code {
 		/// This is a workarround for an erratic error (bug in findRegexp?)
 		if ((positions ? [])[0].isKindOf(String)) { this.init; };
 	}
-	
+
 	headers {
 		^string.findRegexp(format("^//%[^\n]*", snippetSeparator)).flop[1];
 	}
 
 	*menuItems {
 		^[
-			CocoaMenuItem.addToMenu("Code", "snippet list view", [/*{*/ "}", false, false], {
-				this.showCodeListWindow;
-			}),
-			CocoaMenuItem.addToMenu("Code", "snippet buttons", [/*{*/ "}", true, false], {
-				this.showCodeButtonsWindow;
-			}),
-			CocoaMenuItem.addToMenu("Code", "make osc snippet commands", [/*{*/ "}", true, true], {
-				this.makeCodeOSC;
-			}),
 			/* IZ 20110810: J for next, K for previous: compatibility with de facto standard
 				for movement by keyboard in most software since before the mouse: 
 				vi, gmail, google labs, ebib, many other apps and games. See HJKL keys: 
@@ -82,7 +77,6 @@ Code {
 				ProxyCode(Document.current).openProxySourceEditor;
 			}),
 			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
-//				Document.current.name.postln;
 				ProxyCode(Document.current).evalInProxySpace;
 			}),
 			CocoaMenuItem.addToMenu("Code", "start doc proxy", ["<", false, false], {
@@ -97,45 +91,35 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "vol -0.1 doc proxy", [">", false, true], {
 				ProxyCode.new.changeVol(-0.1);
 			}),
-//			CocoaMenuItem.addToMenu("Code", "vol +0.3 doc proxy", ["<", true, true], {
-//				ProxyCode.new.changeVol(0.3);
-//			}),
-//			CocoaMenuItem.addToMenu("Code", "vol -0.3 doc proxy", [">", true, true], {
-//				ProxyCode.new.changeVol(-0.3);
-//			}),
-			CocoaMenuItem.addToMenu("Code", "toggle server auto-boot", ["B", true, true], {
-				autoBoot = autoBoot.not;
-				postf("Server auto-boot set to %\n", autoBoot);
-			}),
-			CocoaMenuItem.addToMenu("Code", "Insert //:--", ["p", true, true], {
-				Document.current.string_("//:--\n", Document.current.selectedRangeLocation, 0);
-			}),
 		];
 	}
 
 	*showCodeListWindow {
-		AppModel().stickyWindow(this, \snippetList, { | window, app |
-			var doc;
-			doc = Document.current;
-			window.bounds = Rect(Window.screenBounds.width - 300, 50, 300, 400);
-			window.name = doc.name ++ ":Snippets";
-			window.layout = VLayout(
-				app.listView(\snippets)
-					.updateAction_({ | view, sender, adapter |
-						view.items = adapter.adapter.items collect: { | s | 
-							s[3..80].replace("\n", "-")
-						}
-					}).items_(Code(doc).getAllSnippetStrings)
-					.view.keyDownAction_({ | view, char | 
-						if (char.ascii == 13) { // when return key is pressed: evaluate snippet
-							app.getAdapter(\snippets).adapter.item.interpret
-						};
-						if (char == $ ) { // when space key is pressed: select snippet in document
-							Code(doc).selectSnippetAt(app.getAdapter(\snippets).value + 1);
-						};
-					}).font_(Font.default.size_(10))
-			)
+		var listWindow;
+		listWindow = ListWindow('Code Selector', 
+			Rect(
+				Window.screenBounds.width - Dock.width, Window.screenBounds.height / 2, 
+				Dock.width, Window.screenBounds.height / 2
+			), 
+			{ | ulistwin |
+				var code;
+				code = this.new(Document.current);
+				if (code.canEvaluate) {
+					ListWindow.front('Code Selector');
+					code.headers
+						.collect({ | h, i | (h[3..] + " ")->{ code.performCodeAt(i + 1) } })
+						.select({ | h | h.key[0] != $  });
+				}{
+					["---"->{ }]
+				};
+			},
+			nil,
+			Panes, [\docOpened, \docToFront, \docClosed],
+			delay: 0.1;
+		).onClose({ 
+			NotificationCenter.notify(this, \closedCodeListWindow, listWindow);
 		});
+		NotificationCenter.notify(this, \openedCodeListWindow, listWindow);
 	}
 
 	*showCodeButtonsWindow { ^CodeButtons(Document.current); }
@@ -172,12 +156,6 @@ Code {
 		var start;
 		if (skipFirstSnippet) { start = 1 } { start = 0 };
 		^(start..positions.size) collect: { | i | this.getSnippetStringAt(i) }
-	}
-
-	selectSnippetAt { | index |
-		var begin, end;
-		#begin, end = this.getSnippetAt(index);
-		doc.selectRange(begin, end - begin);
 	}
 
 	getSnippetAt { | index |

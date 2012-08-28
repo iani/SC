@@ -31,7 +31,7 @@ CodeButtons : WindowResource {
 	initSnippets { | argCode |
 		var view, rgb, bcolor, tcolor, numbuttons, height, bounds;
 		view = object.view;
-		view.background = Color(*Array.rand(3, 0.07, 0.3));
+		view.background = Color(*Array.rand(3, 0.7, 0.9).add(0.5));
 		tcolor = Color.red(0.7);
 		bcolor = Color.white;
 		code = argCode;
@@ -41,9 +41,9 @@ CodeButtons : WindowResource {
 				numbuttons = numbuttons + 1;
 				Button(view, Rect(0, 0, 328, 28))
 					.states_([[h[3..60], tcolor, bcolor]])
-					.font_(Font("ArialNarrow-Bold", 14))
+//					.font_(Font("ArialNarrow-Bold", 14))
 					.action_({ | me | 
-						code.performCodeAt(i + 1, \fork, SystemClock) });
+						code.performCodeAt(i + 1, \fork, AppClock) });
 			};
 		};
 		height = (numbuttons / 3).ceil.asInteger * 32 + 30;

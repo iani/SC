@@ -100,6 +100,7 @@ AbstractProxyAdapter : ListAdapter {
 	removeNotifiers { this.subclassResponsibility(thisMethod) }
 	addNotifiers { this.subclassResponsibility(thisMethod) }
 	updateState { this.subclassResponsibility(thisMethod) }
+//	value { this.subclassResponsibility(thisMethod) }
 }
 
 ProxySpecSelector : AbstractProxyAdapter {

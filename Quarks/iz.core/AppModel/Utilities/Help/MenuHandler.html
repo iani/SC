@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="1138">
+<style type="text/css">
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco; min-height: 12.0px}
+p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px Monaco}
+</style>
+</head>
+<body>
+<p class="p1"><br></p>
+<p class="p2">MenuHandler</p>
+<p class="p1"><br></p>
+<p class="p2">Provide menu handling functionality to any object by storing menu objects which that object may want to create in order to remove them later.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+<p class="p2">Add or remove a menu (a list of menu items) for an object. The object may be a class or instance. The object decides what the menu will be by responding to the message: menuItems. The method menuItems must return an array of CocoaMenuItems. Usually the object creates the menu items (thereby actually installing them on the Menu bar of SC) and then returns them. The Menu Handler stores these items as value in a Dictionary, using the object as key. This makes it possible for the object to remove the menu items by sending itself the message removeMenu. The method removeMenu looks the menu items up in the dictionary of MenuHandler, using the object as key, and lets MenuHandler remove those menu items.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><br></p>
+</body>
+</html>

@@ -1,0 +1,322 @@
+TITLE:: AppModel
+summary:: Simple framework to facilitate creation of GUIs. 
+categories:: Application Framework
+related:: Classes/Adapter, Classes/AppView
+
+DESCRIPTION::
+Holds values in a dictionary. Provides methods for creating GUI elements that 
+
+
+CLASSMETHODS::
+
+METHOD:: enabled
+
+Getter method to the class variable enabled. This variable contains the currently enabled AppModel. 
+
+returns:: The currently enabled application
+
+METHOD:: new
+
+Create a new instance of AppModel. 
+
+ARGUMENT::  ... args
+The f
+
+returns:: A new instance of AppModel.
+
+
+INSTANCEMETHODS::
+
+METHOD:: popUpMenu
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+ARGUMENT:: items
+(describe argument here)
+
+ARGUMENT:: updateItems
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: dragBoth
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: put
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+ARGUMENT:: value
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: windowEndFront
+(describe method here)
+
+ARGUMENT:: window
+(describe argument here)
+
+ARGUMENT:: action
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: knob
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+ARGUMENT:: spec
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: slider2D
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: dragSink
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: soundFileView
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: slider
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+ARGUMENT:: spec
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: at
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: textField
+(describe method here)
+
+ARGUMENT:: adapterName
+(describe argument here)
+
+ARGUMENT:: viewName
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: values
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: view
+(describe method here)
+
+ARGUMENT:: view
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: numberBox
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: listView
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+ARGUMENT:: items
+(describe argument here)
+
+ARGUMENT:: updateItems
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: window
+(describe method here)
+
+ARGUMENT:: windowInitFunc
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: rangeSlider
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: disable
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: windowToFront
+(describe method here)
+
+ARGUMENT:: window
+(describe argument here)
+
+ARGUMENT:: action
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: windowClosed
+(describe method here)
+
+ARGUMENT:: window
+(describe argument here)
+
+ARGUMENT:: action
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: getAdapter
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+ARGUMENT:: innerAdapter
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: button
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: multiSliderView
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: staticText
+(describe method here)
+
+ARGUMENT:: adapterName
+(describe argument here)
+
+ARGUMENT:: string
+(describe argument here)
+
+ARGUMENT:: viewName
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: envelopeView
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: dragSource
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: scopeView
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: addMIDI
+(describe method here)
+
+ARGUMENT:: specs
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: movieView
+(describe method here)
+
+ARGUMENT:: name
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: enable
+(describe method here)
+
+ARGUMENT:: disablePrevious
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: textView
+(describe method here)
+
+ARGUMENT:: adapterName
+(describe argument here)
+
+ARGUMENT:: viewName
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::

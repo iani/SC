@@ -107,6 +107,8 @@ ProxyCode {
 		oldProxies = proxyHistory.keys;
 		proxyHistory = IdentityDictionary.new;
 		oldProxies do: { | oldProxy | 
+//			op.notify(\proxyHistory, [[]]); 
+//			[this, thisMethod.name, "notifying history now:"].postln;
 			this.notifyHistoryChanged(oldProxy, [], oldProxy);
 		}
 	}

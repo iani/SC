@@ -65,10 +65,6 @@ AppModel {
 		AppNamelessWindow(this, windowInitFunc);
 	}
 
-	stickyWindow { | owner, name = \window, windowInitFunc |
-		AppStickyWindow(this, owner ? this, name, windowInitFunc);
-	}
-
 	windowClosed { | window, action |
 		this.addNotifier(window, \windowClosed, { | widget | action.(widget) })
 	}

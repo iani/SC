@@ -1,0 +1,18 @@
+title:: Configuring RepQuarks
+summary:: How to configure Quarks in groups of folders using RepQuarks
+categories:: Quarks, RepQuarks
+
+section:: Description
+
+There are 4 different ways to configure Quarks for use with RepQuarks, depending on whether one wants to put one or more groups of Quarks in a single folder, and whether one wants to put these groups at the top level or under a subfolder named "Quarks". The following section describes the different configurations in detail. 
+
+section::  Simplest case: A single folder with one or more quarks
+
+numberedlist::
+## Place your quarks are placed in one project folder. Each quark is a folder containing the classes and optionally the help files of the quark.
+## Add a single folder named DIRECTORY, which contains one file for each quark. The format of the quark-definition-files in DIRECTORY is described in the help file for Quark. 
+## Link to your quarks folder to the compile path of SuperCollider following the RepQuarks subclass mechanism described at the beginning of this document. 
+::
+
+image::ProjectEx1.png#Figure 1. Single Quarks Group::
+
