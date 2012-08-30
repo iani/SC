@@ -40,7 +40,7 @@ Dock {
 	*showDoc { | i |
 		var docPath, doc;
 		doc = shortcutDocs[i];
-		if (doc.notNil and: { Document.allDocuments includes: doc }) { ^doc.front.didBecomeKey };
+		if (doc.notNil and: { Document.allDocuments includes: doc }) { ^doc.front.didBecomeKey; };
 		docPath = shortcutDocPaths[i];
 		if (docPath.notNil) {
 			shortcutDocs[i] = Document open: docPath;
@@ -112,9 +112,7 @@ Dock {
 			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
 				d.name->{
 					d.front; 
-// sending a document to front does not make it current. Therefore compensate here: 
 					Document.current = d;
-//					d.didBecomeKey;
 				} };
 			},
 			{ | items |

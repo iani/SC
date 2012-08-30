@@ -38,7 +38,7 @@ ServerActionLoader {
 		this.done;
 	}
 
-	objectKind { ^"actions" }
+	objectKind { ^"Actions" }
 
 	done { isLoading = false; }
 }

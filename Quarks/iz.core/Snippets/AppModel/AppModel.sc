@@ -86,7 +86,13 @@ AppModel {
 	numberBox { | name | ^AppValueView(this, name, NumberBox()); }
 	knob { | name, spec | ^AppSpecValueView(this, name, Knob()).mapper(spec); }
 	slider { | name, spec | ^AppSpecValueView(this, name, Slider()).mapper(spec); }
-	button { | name | ^AppValueView(this, name, Button()); }
+	button { | name, action, updateAction | 
+		var vv;
+		vv = AppValueView(this, name, Button());
+		action !? { vv.view.action = { action.(vv) } };
+		updateAction !? { vv.updateAction = updateAction };
+		^vv;
+	}
 	popUpMenu { | name, items, updateItems = true | 
 		^AppValueView(this, name, PopUpMenu()).listItems(items, updateItems);
 	}

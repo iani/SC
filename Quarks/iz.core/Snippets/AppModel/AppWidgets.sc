@@ -51,7 +51,11 @@ AppNamelessView : AppNamelessWidget {
 	var <view; // var onObjectClosed;
 	init { view.onClose = { this.objectClosed } }
 	// used to get string values from TextView with button click. Also present in AppView (refactor???)
-	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
+//	makeViewValueGetter { | name | view.action = { model.getViewValue(name) } }
+
+	addModel { | object, message, action |
+		// make perform action whenever I receive "value"
+	}
 }
 
 AppNamedWidget : AppNamelessWidget {
@@ -61,7 +65,7 @@ AppNamedWidget : AppNamelessWidget {
 	}
 	init {
 		name !? { adapter = model.getAdapter(name); }; // allow nameless option for convenience
-		this.addNotifier(adapter, \value, this);
+		this.addNotifier(adapter, \value, this); // see AppValueView:valueArray
 	}
 	
 	adapter_ { | action | adapter.adapter = action; }
@@ -138,7 +142,8 @@ AppView : AppNamedWidget {
 	initItems { | items, value |
 		view.addNotifierOneShot(adapter, \value, {
 			{	// make sure you are after all other itializations
-				items !? { view.items = items };
+//				items !? { view.items = items };  // items collect: _.asString
+				items !? { view.items = items collect: _.asString };
 				value !? { view.value = value};
 			}.defer(0.01);
 		});
@@ -163,7 +168,7 @@ AppWindow : AppView { // not tested. Use WindowHandler???
 AppValueView : AppView {
 	var <>viewAction, <>updateAction;
 
-	valueArray { | argSenders | 
+	valueArray { | argSenders |
 		if (argSenders[0] !== this) { // do not update if you were the setter
 			updateAction.(view, *argSenders);
 		}
@@ -196,7 +201,7 @@ AppValueView : AppView {
 		this.list(items);
 		if (updateItems) {
 			updateAction = {
-				view.items = adapter.adapter.items;
+				view.items = adapter.adapter.items collect: _.asString;
 				view.value = adapter.value;
 			};
 		}{
@@ -211,10 +216,15 @@ AppValueView : AppView {
 		switch (mode, 
 			\append, { viewAction = { adapter.adapter.add(view.string, this) } },
 			\replace, { viewAction = { adapter.adapter.replace(view.string, this) } },
-			\insert, { viewAction = { adapter.adapter.insert(view.string, nil, this) } },
+			\rename, { viewAction = { adapter.adapter.rename(view.string, this) } },
+			\insert, { viewAction = { adapter.adapter.insert(nil, view.string, this) } },
 //			\delete, { viewAction = { adapter.adapter.removeAt(nil, this) } }, // does not make sense?
 		);
-		updateAction = { view.string = adapter.adapter.items[adapter.value] ? "<empty>" }
+		updateAction = {
+			var item;
+			item = adapter.adapter.items[adapter.value];
+			view.string = if (item.isNil) { "<empty>" } { item.asString };
+		}
 	}
 
 	items_ { | items | adapter.adapter.items = items }
@@ -266,9 +276,9 @@ AppTextValueView : AppValueView { // for StaticText, TextField, TextView
 	list { | items, replaceItems = true |
 		// set viewAction, updateAction to work with ListAdapter in your adapter
 		super.list(items);
-		updateAction = { view.string = adapter.adapter.item;  };
+		updateAction = { view.string = adapter.adapter.item.asString;  };
 		if (replaceItems) {
-			viewAction = { adapter.adapter.put(view.string) }
+			viewAction = { adapter.adapter.put(nil, view.string) }
 		}{
 			viewAction = { adapter.adapter.add(view.string); }
 		};
@@ -284,7 +294,8 @@ AppTextValueView : AppValueView { // for StaticText, TextField, TextView
 				switch ( updateAction,
 					\append, { adapter.adapter.add(view.string, this) },
 					\replace, { adapter.adapter.replace(view.string, this) },
-					\insert, { adapter.adapter.insert(view.string, nil, this) },
+					\rename, { adapter.adapter.rename(view.string, this) },
+					\insert, { adapter.adapter.insert(nil, view.string, this) },
 					\delete, { adapter.adapter.delete(this) },
 					{ updateAction.(this) }
 				)

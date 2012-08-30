@@ -8,6 +8,7 @@ The adapter variable can be a function, but it can be some other class that also
 Therefore we do not define any subclasses of the adapter.
 The action of the adapter can ba a "real" adapter that encapsulates data. Is is stored in the adapter variable of the Adapter, so that it can be accessed by other elements of the application. 
 
+
 */
 
 Adapter {
@@ -40,6 +41,8 @@ Adapter {
 	// some basic utilities
 
 	addAction { | func, key | // perform additional action when \value is notified by adapter
+		/* if 'key' is an object (e.g. a symbol) that is stored somewhere for later recall,
+		then this action can later be removed by this.removeAction(key); */
 		(key ? func).addNotifier(this, \value, { | sender |
 			/* WARNING: actions that call value_ on this adapter, must send themselves as senders
 			   otherwise infinite loop results. Example of correct call: 
@@ -229,23 +232,29 @@ ListAdapter : AbstractAdapterElement {
 	
 	add { | item, setter | // analogous to Collection:add
 		this.items_(items add: item, setter);
+		this.last;
 	}
 
-	replace { | item, setter | this.put(item, adapter.value, setter); }
+	replace { | item, setter | this.put(adapter.value, item, setter); }
 
-	put { | item, index, setter |	// analogous to Collection:put
+	rename { | newName, setter | 
+		this.item.name = newName;
+		this.items_(items, setter);	// update
+	}
+
+	put { | index, item, setter |	// analogous to ArrayedCollection:put
 		if (items.size == 0) { ^"Cannot replace item in empty list - try adding first".postcln; };
 		index = (index ?? { index = adapter.value }) max: 0 min: (items.size - 1);
 		this.items_(items[index] = item, setter);
 	}
 
-	insert { | item, index, setter |
+	insert { | index, item, setter |
 		this.items_(items.insert(index ?? { adapter.value }, item), setter);
 	}
 
 	delete { | setter | this.removeAt(nil, setter) }
 
-	removeAt { | index, setter | // analogous to Collection:removeAt
+	removeAt { | index, setter | // analogous to ArrayedCollection:removeAt
 		if (items.size == 0) { ^"Cannot remove item from an empty list".postcln; };
 		items.removeAt(index ?? { index = adapter.value });
 		this.items_(items, setter);	// update
@@ -259,13 +268,10 @@ ListAdapter : AbstractAdapterElement {
 	selectItem { | item, setter | // send setter to prevent infinite loops when setting from self
 		var newIndex;
 		newIndex = items.indexOf(items.detect(_ == item));
-//		newIndex !? { adapter.value_(newIndex, setter) };
 		newIndex !? { adapter.valueAction_(newIndex, setter) };
 	}
 	
 	selectAt { | index, setter | // send setter to prevent infinite loops when setting from self
-//		[this, thisMethod.name, index, "items:", items, items[index]].postln;
-//		adapter.value_(index max: 0 min: (items.size - 1), setter);
 		adapter.valueAction_(index max: 0 min: (items.size - 1), setter);
 	}
 }

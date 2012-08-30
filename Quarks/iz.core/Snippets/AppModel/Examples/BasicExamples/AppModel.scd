@@ -64,6 +64,18 @@ AppModel().window({ | w, app |
 	);
 });
 
+//:ListView with textField showing selected item
+AppModel().window({ | w, app |
+	w.layout = VLayout(
+		StaticText().string_("Selecting an item updates contents of text field"),
+		app.listView(\any_name).items_(["a", "b", "c", "four", "five"]).view,
+		app.textField(\any_name).listItem  // default mode is append
+			.initValue("type return to append my text at the end of the list")
+			.view,
+		StaticText().string_("field above edits + appends selected item")
+	);
+});
+
 //:PopUpMenu, ListView with item append, insert, replace from TextFields
 AppModel().window({ | w, app |
 	w.layout = VLayout(

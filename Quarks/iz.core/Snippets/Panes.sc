@@ -172,7 +172,8 @@ Panes {
 		}),
 
 		CocoaMenuItem.addToMenu("Utils", "Show tryout window", ["T", true, true], {
-			this.openTryoutWindow.front;
+			Document.current = this.openTryoutWindow.front;
+			Document.current.didBecomeKey;
 		}),
 		]
 	}

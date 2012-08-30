@@ -9,7 +9,7 @@ BufferResource : AbstractServerResource {
 
 	*initClass {
 		current = IdentityDictionary.new;
-		StartUp add: { this.addMenu };
+//		StartUp add: { this.addMenu };
 	}
 
 	*makeKey { | key, target, numFrames, numChannels, path |
@@ -77,17 +77,19 @@ BufferResource : AbstractServerResource {
 	*saveDefaults {
 		// save all current instances to Archive.global;
 		var bufferLists;
-		bufferLists = Archive.global.at(this.name);
+		bufferLists = Object.readArchive(this.archivePath);
 		bufferLists = bufferLists.add(
 			BufferList(
 				Date.getDate.format("%Y-%m-%e at %Hh:%Mm:%Ss"),
 				this.all.flat.select({ | b | b.path.notNil }) collect: _.path
 			)
 		);
-		Archive.global.put(this.name, bufferLists);
-		Archive.write;
+		bufferLists.writeArchive(this.archivePath);
 	}
 	
+	
+	*archivePath { ^Platform.userAppSupportDir +/+ "BufferLists.stxar"; }
+
 	*clearDefaults { Archive.global.put(this.name, nil) }
 
 	*loadDefaults {
@@ -96,7 +98,7 @@ BufferResource : AbstractServerResource {
 			var lists, nl, backspace;
 			nl = 13.asAscii;
 			backspace = 8.asAscii;
-			lists = Archive.global.at('BufferResource');
+			lists = Object.readArchive(this.archivePath);
 			window.bounds = window.bounds.copy.width = 600;
 			window.layout = VLayout(
 				app.listView(\bufferLists)
