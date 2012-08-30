@@ -4,5 +4,5 @@ Support for NamedBuffer. Experimental
 */
 
 + Symbol {
-	b { ^Library.at('NamedBuffers', this) }
+	b { ^Library.at('Buffers', this).item }
 }

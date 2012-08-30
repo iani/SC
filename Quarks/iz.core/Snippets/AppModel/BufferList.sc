@@ -10,107 +10,131 @@ Buffers are accessible by the name of the file from which they were loaded, with
 
 BufferListGui(); // create the gui
 
-// Buffers from lists are not loaded automatically. Use buttons "load list" or "play" to do that.
+BUfferItems from lists are not loaded automatically. Use buttons "load list" or "play" to do that.
 
-// Then: 
+Once a BufferItem is loaded, it will reload when the default server reboots.
 
-\SinedPink.b.play
+// To access or play a loaded buffer item: 
+
+\SinedPink.b; // accesses the buffer
+
+\SinedPink.b.play // accesses and plays the buffer
 
 
 */
 
 
+BufferListList : ItemList {
+	defaultItemClass { ^BufferList }
+	makeArchiveVersion { 
+		^this.copy.name_(name).itemClass_(itemClass).array = array collect: _.makeArchiveVersion 
+	}
+}
+
 BufferList : ItemList { 
-	defaultItemClass { ^NamedBuffer }
+	defaultItemClass { ^BufferItem }
 	
 	add { | path |
 		var item;
 		item = itemClass.new(path);
 		if (array.detect({ | b | b == item}).isNil) { array = array add: item }
 	}
+	
+	makeArchiveVersion { 
+		^this.copy.name_(name).itemClass_(itemClass).array = array collect: _.makeArchiveVersion
+	}
 }
 
-NamedBuffer : Buffer {
+BufferItem : NamedItem {
+	// name -> path. item -> Buffer
+	// Buffer allocated only and always when server boots or is booted.
+	classvar loadingBuffers; // Load buffers only one at a time. See method load.
+	
+	var <nameSymbol;
 	*initClass {
+		loadingBuffers = IdentityDictionary.new;
 		StartUp add: {
 			ServerBoot.add({
-				Library.at('NamedBuffers') do: _.load;
-			}, Server.default)
+				Library.at('Buffers') do: _.load;
+			}, Server.default);
+			ServerQuit.add({
+				Library.at('Buffers') do: _.serverQuit;
+			}, Server.default);
 		}
 	}
 
-	name { ^path }
-	asString { ^path }
-	== { | item |
-		if (item.isNil) {
-			^true
-		}{
-			^path == item.path
-		}
+	*new { | name | ^super.new(name).init }
+
+	// do not store buffer in archive: 
+	makeArchiveVersion { ^this.copy.item = nil }
+
+	init {
+		nameSymbol = PathName(name).fileNameWithoutExtension.asSymbol;
 	}
 
-
-	*new { | path |
-		var found;
-		found = Library.at('NamedBuffers', this.symbolName(path));
-		if (found.notNil) {
-			^found;
-		}{
-			^this.read(Server.default, path, action: { | buffer |
-				buffer.postInfo;
-				{ buffer.storeInLibrary; }.defer;
-			});
-		}
+	load { | extraAction | // mechanism for loading next buffer after this one is loaded
+		item !? { ^this };
+		Server.default.waitForBoot({
+			loadingBuffers[this] = { this.prLoad(extraAction); };
+			if (loadingBuffers.size == 1) { this.prLoad(extraAction); };
+		});
 	}
 
-	postInfo { postf("% : % \n", this.minSec, this.symbolName) }
+	prLoad { | extraAction | // called from loadingBuffers when previous buffer is loaded
+		Buffer.read(Server.default, name, action: { | buffer |
+			item = buffer;
+			this.postInfo;
+			this.storeInLibrary;
+			extraAction.(buffer);
+			loadingBuffers[this] = nil;
+			loadingBuffers.detect(true).value;
+		})	
+	}
+
+	serverQuit { item = nil; }
+
+	play {
+		item !? { ^item.play };
+		this.load({ item.play })
+	}
+
+	postInfo { postf("% : % \n", this.minSec, nameSymbol) }
 	
 	minSec {
 		var seconds;
-		seconds = numFrames / sampleRate round: 0.01;
+		seconds = item.numFrames / item.sampleRate round: 0.01;
 		^format("% min, % sec", seconds / 60 round: 1, seconds % 60);
 	}
 	
-	play {
-		Library.at('NamedBuffers', this.symbolName) !? { ^super.play };
-		this.allocRead(path, completionMessage: {
-			super.play;
-			this.storeInLibrary;
-		});
-	}
-	
-	load {
-		this.allocRead(path, completionMessage: {
-			this.storeInLibrary;
-			this.postInfo;
-//			this.updateInfo; // does this cause problems? superfluous?
-		});
-	}
-	
 	free {
-		super.free;
-		Library.put('NamedBuffers', this.symbolName, nil);
+		item !? { item.free; };
+		item = nil;
+		Library.put('Buffers', this.nameSymbol, nil);
 		this.updateLists;
 	}
 
-	updateLists { this.class.notify(\bufferList, [Library.at('NamedBuffers').keys.asArray.sort]); } 
+	updateLists { this.class.updateLists; }
+
+	*updateLists {
+		var buffers;
+		(buffers = Library.at('Buffers')) !? {
+			{ this.notify(\bufferList, [Library.at('Buffers').keys.asArray.sort]); }.defer;
+		}
+	}
 
 	storeInLibrary { 
-		Library.put('NamedBuffers', this.symbolName, this);
+		Library.put('Buffers', this.nameSymbol, this);
 		this.updateLists;
 	}
-	symbolName { ^this.class.symbolName(path) }
-	*symbolName { | path | ^PathName(path).fileNameWithoutExtension.asSymbol }
+
 	*openPanel { | doneFunc |
 		Dialog.openPanel({ | path | doneFunc.(this.new(path)); });
 	}
-	
 }
-
 
 BufferListGui : AppModel {
 	var listArchivePath = "BufferLists.sctxar";
-	var bufferLists, bufList1;
+	var bufferLists, bufList1; // bufList1 gets initialized with defaults if new
 
 	*initClass {
 		StartUp add: {
@@ -123,7 +147,7 @@ BufferListGui : AppModel {
 	makeWindow {
 		this.stickyWindow(this.class, \bufferListGui, { | w, app |
 			bufferLists = Object.readArchive(Platform.userAppSupportDir +/+ listArchivePath);
-			bufferLists = bufferLists ?? { ItemList("BufferLists.sctxar").itemClass_(BufferList) };
+			bufferLists = bufferLists ?? { BufferListList("BufferLists.sctxar") };
 			if (bufferLists.size == 0) {
 				bufferLists.add(Date.getDate.format("Buffer List %c"));
 				bufList1 = bufferLists.first;
@@ -135,8 +159,9 @@ BufferListGui : AppModel {
 			w.layout = VLayout(
 				HLayout(
 					StaticText().string_("Lists:"),
-					app.button(\bufferLists).getContents(\itemEdit, \append)
-						.view.states_([["add list"]]),
+					app.button(\bufferLists).getContents(\itemEdit, \append,
+						{ | string | string ++ Date.getDate.format(" %c") }
+					).view.states_([["add list"]]),
 					app.button(\bufferLists).getContents(\itemEdit, \rename)
 						.view.states_([["rename list"]]),
 					app.button(\bufferLists).getContents(\itemEdit, \delete)
@@ -146,7 +171,6 @@ BufferListGui : AppModel {
 					}),
 				),
 				app.textField(\bufferLists).list
-					.initValue(Date.getDate.format("Buffer List %c"))
 					.name_(\itemEdit).view,
 				app.listView(\bufferLists, bufferLists)
 					.addAction({ | adapter |
@@ -197,7 +221,7 @@ BufferListGui : AppModel {
 						})
 					),
 					app.listView(\currentlyLoaded)
-						.addNotifier(NamedBuffer, \bufferList, { | list |
+						.addNotifier(BufferItem, \bufferList, { | list |
 							app.getAdapter(\currentlyLoaded).adapter.items = list
 						})
 						.view.font_(Font.default.size_(10)),
