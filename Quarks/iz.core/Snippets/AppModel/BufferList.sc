@@ -74,9 +74,12 @@ BufferItem : NamedItem {
 
 	load { | extraAction | // mechanism for loading next buffer after this one is loaded
 		item !? { ^this };
-		loadingBuffers[this] = { this.prLoad(extraAction); };
-		if (loadingBuffers.size == 1) {
-			Server.default.waitForBoot({ this.prLoad(extraAction); })
+		if (Server.default.serverRunning) {
+			loadingBuffers[this] = { this.prLoad(extraAction); };
+			if (loadingBuffers.size == 1) { this.prLoad(extraAction); }
+		}{
+			this.storeInLibrary;
+			if (Server.default.serverBooting.not) { Server.default.boot };
 		};
 	}
 
