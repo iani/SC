@@ -73,6 +73,9 @@ BufferItem : NamedItem {
 	}
 
 	load { | extraAction | // mechanism for loading next buffer after this one is loaded
+		var registeredItem;
+		registeredItem = Library.at('Buffers', nameSymbol);
+		registeredItem !? { if (registeredItem !== this) { ^registeredItem.load(extraAction) }; };
 		item !? { ^this };
 		if (Server.default.serverRunning) {
 			loadingBuffers[this] = { this.prLoad(extraAction); };
@@ -110,6 +113,9 @@ BufferItem : NamedItem {
 	}
 	
 	free {
+		var registeredItem;
+		registeredItem = Library.at('Buffers', nameSymbol);
+		registeredItem !? { if (registeredItem !== this) { ^registeredItem.free }; };
 		item !? { item.free; };
 		item = nil;
 		Library.put('Buffers', this.nameSymbol, nil);
@@ -208,6 +214,9 @@ BufferListGui : AppModel {
 						buffer = widget.adapter.adapter.item;
 						buffer.free;
 						widget.adapter.adapter remove: buffer;
+					}).view.states_([["delete"]]),
+					app.button(\buffers, { | widget |
+						widget.adapter.adapter.item.free;
 					}).view.states_([["free"]]),
 				),
 				app.listView(\buffers).view.font_(Font.default.size_(10)),
