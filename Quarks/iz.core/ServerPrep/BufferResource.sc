@@ -1,5 +1,8 @@
 /* 
 Works with ServerPrep, so that buffers are always loaded before any synths are started. 
+
+As of Thu 30 August 2012  1:30 PM EEST, a better version is available. See Snippets quark, class BufferItem. 
+
 */
 BufferResource : AbstractServerResource {
 	classvar <>defaultPath = "sounds/a11wlk01.wav";

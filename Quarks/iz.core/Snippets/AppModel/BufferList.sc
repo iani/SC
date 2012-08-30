@@ -186,7 +186,7 @@ BufferListGui : AppModel {
 						app.getAdapter(\buffers).adapter.items_(adapter.adapter.item)
 					}).view,
 				HLayout(
-					StaticText().string_("Selected list:"),
+					StaticText().string_("Buffers:"),
 					app.button(\buffers, { | widget |
 						Dialog.openPanel({ | path |
 							widget.adapter.adapter.items add: path;
@@ -233,8 +233,13 @@ BufferListGui : AppModel {
 						})
 					),
 					app.listView(\currentlyLoaded)
+						.updateAction_({ | view, sender, adapter |
+							view.items = adapter.adapter.items collect: { | b | 
+								format("% : %", b, Library.at('Buffers', b).minSec)
+							};
+						})
 						.addNotifier(BufferItem, \bufferList, { | list |
-							app.getAdapter(\currentlyLoaded).adapter.items = list
+							app.getAdapter(\currentlyLoaded).adapter.items = list;
 						})
 						.view.font_(Font.default.size_(10)),
 				)
