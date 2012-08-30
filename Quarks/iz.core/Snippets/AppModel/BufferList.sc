@@ -20,9 +20,6 @@ Once a BufferItem is loaded, it will reload when the default server reboots.
 
 \SinedPink.b.play // accesses and plays the buffer
 
-
-TODO: FIX DOUBLES BEING ADDED TO LISTS WHEN LOADING. ONLY ONE COPY OF EACH BUFFER PER PATH SHOULD BE ALLOWED. OTHERWISE LOAD ERRORS OCCUR. For this, use classvar all in bufferlist.
-
 */
 
 

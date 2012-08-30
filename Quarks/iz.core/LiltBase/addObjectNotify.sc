@@ -29,15 +29,12 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		listener.removeNotifier(this, message);
 	}
 	
-	objectClosed {	// remove all notifiers and listeners // and inputs from widgets
-		this.removeAllNotifications;
-	}
-	
-	removeAllNotifications {
-		NotificationCenter2.removeAll(this);
+	objectClosed {	/* remove all notifiers and listeners
+		that were added by this.addNotifier or this.addListener, addMessage, addNotifierOneShot,
+		NotificationCenter2.register(...).  */
 		OnObjectCloseRegistrations.removeAll(this);
 	}
-
+	
 	addNotifierOneShot { | notifier, message, action |
 		NotificationCenter2.registerOneShot(notifier, message, this, action);
 	}

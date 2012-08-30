@@ -8,6 +8,13 @@ The adapter variable can be a function, but it can be some other class that also
 Therefore we do not define any subclasses of the adapter.
 The action of the adapter can ba a "real" adapter that encapsulates data. Is is stored in the adapter variable of the Adapter, so that it can be accessed by other elements of the application. 
 
+TODO: ListAdapter sends different update messages according to what changed:
+
+- When the index changes, do adapter.notify(\index, [index ... ])
+- When the list changes, do adapter.notify(\list, [list ...]);
+- When both the list and the index change, do: adapter.notify(\listAndIndex, [list, index])
+
+This is important for list views that want to update their lists only when the list changes. 
 
 */
 
@@ -70,29 +77,6 @@ Adapter {
 	}
 	decrement { | lowerLimit = 0, decrement = 1 | 
 		this.valueAction = value - decrement min: lowerLimit;
-	}
-
-	// list handling methods. NOTE: TODO: maybe use ListAdapter for ListView, popUpMenu instead / also?
-
-	item { /* When my value has the form: [index, array], return array[index]
-			For returning the selected item from a ListView or PopUpMenu */
-		if (value[0].isNil) { ^nil } { ^value[1][value[0]] };
-	}
-	selectItemAt { | index = 0 |
-		value !? { this.valueAction = [index.clip(0, value[1].size - 1), value[1]]; }
-	}
-	selectMatchingItem { | item |
-		var index;
-		index = value[1] indexOf: item;
-		index !? { this.valueAction = [index, value[1]] }
-	}
-	updateItemsAndValue { | newItems, defaultItem = '-' |
-		value = value ?? { [nil, []] };
-		if (value[0].isNil) {
-			this.valueAction = [newItems indexOf: defaultItem ?? 0, newItems]
-		}{
-			this.valueAction = [newItems indexOf: value[1][value[0]] ?? 0, newItems]
-		}
 	}
 
 	// methods for creating specialized adapters in my adapter instance variable
@@ -163,6 +147,31 @@ Adapter {
 		inputs do: _.free;
 		inputs = nil;
 	}
+
+	// OLDER: list handling methods. 
+	// These are under review for removal.
+
+	item { /* When my value has the form: [index, array], return array[index]
+			For returning the selected item from a ListView or PopUpMenu */
+		if (value[0].isNil) { ^nil } { ^value[1][value[0]] };
+	}
+	selectItemAt { | index = 0 |
+		value !? { this.valueAction = [index.clip(0, value[1].size - 1), value[1]]; }
+	}
+	selectMatchingItem { | item |
+		var index;
+		index = value[1] indexOf: item;
+		index !? { this.valueAction = [index, value[1]] }
+	}
+	updateItemsAndValue { | newItems, defaultItem = '-' |
+		value = value ?? { [nil, []] };
+		if (value[0].isNil) {
+			this.valueAction = [newItems indexOf: defaultItem ?? 0, newItems]
+		}{
+			this.valueAction = [newItems indexOf: value[1][value[0]] ?? 0, newItems]
+		}
+	}
+
 }
 
 AbstractAdapterElement {
@@ -220,6 +229,10 @@ ListAdapter : AbstractAdapterElement {
 		adapter.setValue(items.indexOf(items.detect(_ == oldItem)) ?? { /* adapter.value ? */ 0 });
 		adapter.updateListeners(argSender);
 	}
+
+	setItems { | argItems |
+		items = argItems;
+	}
 	
 	value { adapter setValue: (adapter.value ? 0).clip(0, items.size - 1); }
 
@@ -229,7 +242,7 @@ ListAdapter : AbstractAdapterElement {
 	previous { | setter | adapter.valueAction_(adapter.value - 1, setter) }
 	first { | setter | adapter.valueAction_(0, setter) }
 	last { | setter | adapter.valueAction_(items.size - 1, setter) }
-	
+
 	add { | item, setter | // analogous to Collection:add
 		this.items_(items add: item, setter);
 		this.last;

@@ -25,6 +25,7 @@ NotificationCenter2 {
 				if (registrations.at(object).size == 0) { registrations.removeAt(object); };
 			};
 		};
+		OnObjectCloseRegistrations.remove(nr);
 		^nr
 	}
 	
@@ -32,35 +33,32 @@ NotificationCenter2 {
 		var nr;
 		nr = NotificationRegistration2(object, message, listener, action);
 		registrations.put(object, message, listener, nr);
+		OnObjectCloseRegistrations.add(nr);
 		^nr;
 	}
 
-	*registerOneShot {  arg object,message,listener,action;
+	*registerOneShot {  | object, message, listener, action |
 		var nr;
-		nr = NotificationRegistration2(object,message,listener);
-		registrations.put(object,message,listener,
-			{ |args|
-				action.value(args);
-				this.unregister(object,message,listener)
-			});
+		nr = NotificationRegistration2(object, message, listener, { |args|
+			action.value(args);
+			this.unregister(object, message, listener);
+		});
+		registrations.put(object, message, listener, nr);
+		OnObjectCloseRegistrations.add(nr);
 		^nr
 	}
-	*clear {
-		registrations = MultiLevelIdentityDictionary.new;
+
+	*clear { registrations = MultiLevelIdentityDictionary.new; }
+
+	*registrationExists { | object, message, listener |
+		^registrations.at(object, message, listener).notNil
 	}
-	*registrationExists { |object,message,listener|
-		^registrations.at(object,message,listener).notNil
-	}
-	*initClass {
-		this.clear
-	}
-	*removeForListener { |listener|
-		registrations.removeAt(listener)
-	}
+
+	*initClass { this.clear }
+
+	*removeForListener { | listener | registrations.removeAt(listener) }
 	
-	*removeAll { | object |
-		registrations.removeEmptyAtPath([object]);
-	}	
+	*removeAll { | object | registrations.removeEmptyAtPath([object]); }
 
 }
 
@@ -104,12 +102,15 @@ OnObjectCloseRegistrations {
 	
 	*remove { | registration |
 		var registrations, where;
+		registration ?? { ^this };
 		where = registration.object;
 		registrations = all[where];
+		registration.remove;
 		registrations remove: registration;
 		if (registrations.size == 0) { all[where] = nil };
 		where = registration.listener;
 		registrations = all[where];
+		registration.remove;
 		registrations remove: registration;
 		if (registrations.size == 0) { all[where] = nil };
 	}

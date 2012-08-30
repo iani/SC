@@ -48,7 +48,12 @@ AppModel {
 			^adapter; 	// Else return it as is
 		}
 	}
-	
+
+	objectClosed { // not used yet?
+		super.objectClosed;
+		values do: _.objectClosed;
+	}
+
 	// enabling and disabling MIDI and OSC input
 	enable { | disablePrevious = false |
 		if (disablePrevious) { enabled !? { enabled.disable }; };

@@ -15,8 +15,6 @@ Dock {
 	*initClass { StartUp add: this }
 	
 	*doOnStartUp {
-		// Install Qt GUI if available, so that scope and freqscope work on local server:
-//		if (GUI respondsTo: \qt) { GUI.qt };
 
 		shortcutDocMenuItems = Array.newClear(10);
 		shortcutDocs = Array.newClear(10);
@@ -27,8 +25,6 @@ Dock {
 		};
 		shortcutDocPaths do: this.makeDocShortcutMenuItem(_, _);
 	}
-
-//	*shortcutDocDir { ^Platform.userExtensionDir +/+ "ShortcutDocs.scd" }
 
 	*makeDocShortcutMenuItem { | path, i |
 		if (path.isNil) { ^this };
@@ -120,7 +116,7 @@ Dock {
 				doc = Document.current.name;
 				items.indexOf(items detect: { | d | d.key == doc });
 			},
-			Panes, [\docOpened, \docToFront, \docClosed],
+			Document, [\docOpened, \docToFront, \docClosed],
 			delay: 0.1; // leave some time for Documents to update their name etc.
 		)
 		.addNotifier(Code, \openedCodeListWindow, {

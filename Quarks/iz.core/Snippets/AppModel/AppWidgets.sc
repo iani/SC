@@ -5,9 +5,17 @@ See AppModel and Adapter
 AppNamelessWidget {
 	var <model;
 	*new { | ... args | ^this.newCopyArgs(*args).init; }
-//	addAction { | message, action |
-//		this.addNotifier(model, message, { | ... args | action.(this, *args) });
-//	}
+	widgetDo { | func |
+		/* perform func on the widget. Needed to customize the widget at create time,
+			while returning the view widget for further processing.
+			Useful for adding notifiers to the widget from other sources than its AppModel,
+			for example, running processes, other system events. 
+			When the the view or window used by this widget closes, the notification is also 
+			removed. 
+			This is the preferable method for adding notifications from external sources. 
+		 */
+		func.(this)
+	}	
 }
 
 AppNamelessWindow : AppNamelessWidget {
@@ -81,9 +89,16 @@ AppNamedWidget : AppNamelessWidget {
 
 	removeAction { | key | adapter.removeAction(key) }
 
-	adapterDo { | func | // NOT USED?
+	adapterDo { | func |
 		/* perform func on the adapter. Needed to customize the adapter at create time,
-			while returning the view widget for further processing */
+			while returning the view widget for further processing.
+			Useful for adding notifiers to the adapter from other sources than its AppModel,
+			for example, running processes, other system events. 
+			However, note that notifiers added to the Adapter are not removed automatically
+			when the a view or window closes, and must be closed by calling anAppModel.objectClosed
+			So it is better to attach notifications to the widget through 
+			AppNamelessWidget:widgetDo
+		 */
 		func.(adapter, this)
 	}	
 	// add specialized adapters to your adapter
@@ -115,7 +130,7 @@ AppView : AppNamedWidget {
 		super.init;
 		this.initView;
 		this.initActions;
-		view onClose: { this.viewClosed; };
+		view.onClose = { this.viewClosed; };
 	}
 	
 	initView { view.onClose = { this.objectClosed }; }
@@ -142,7 +157,6 @@ AppView : AppNamedWidget {
 	initItems { | items, value |
 		view.addNotifierOneShot(adapter, \value, {
 			{	// make sure you are after all other itializations
-//				items !? { view.items = items };  // items collect: _.asString
 				items !? { view.items = items collect: _.asString };
 				value !? { view.value = value};
 			}.defer(0.01);

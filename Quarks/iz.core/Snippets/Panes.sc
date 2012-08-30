@@ -54,9 +54,10 @@ Panes {
 
 	*start { this.activate } // synonym
 	*activate {
-		NotificationCenter2.register(this, \docOpened, this, { | doc | this.docOpened(doc) });
+		this.addNotifier(Document, \docOpened, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
-			NotificationCenter2.notify(this, \docOpened, doc);  
+			Document.notify(\docOpened, doc); 
+			doc.onClose = { | doc | Document.notify(\docClosed, doc) };
 		};
 		Document.allDocuments do: this.setDocActions(_);
 //		postf("Panes: activate method, defaultArrangementAction is: %\n", defaultArrangementAction);
@@ -294,11 +295,11 @@ Panes {
 	*setDocActions { | doc |
 		doc.toFrontAction = {
 			var selectionStart, selectionSize;
-			NotificationCenter2.notify(this, \docToFront, doc);
+			Document.notify(\docToFront, doc);
 		};
-		doc.endFrontAction = { NotificationCenter2.notify(this, \docEndFront, doc); };
-		doc.mouseUpAction = { NotificationCenter2.notify(this, \docMouseUp, doc); };
-		doc.onClose = { NotificationCenter2.notify(this, \docClosed, doc); };
+		doc.endFrontAction = { Document.notify(\docEndFront, doc); };
+		doc.mouseUpAction = { Document.notify(\docMouseUp, doc); };
+		doc.onClose = { Document.notify(\docClosed, doc); };
 	}
 	
 	*docNotifiers { ^[\docOpened, \docToFront, \docEndFront, \docMouseUp, \docClosed] }
