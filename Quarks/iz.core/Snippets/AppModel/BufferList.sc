@@ -21,38 +21,40 @@ Once a BufferItem is loaded, it will reload when the default server reboots.
 \SinedPink.b.play // accesses and plays the buffer
 
 
+TODO: FIX DOUBLES BEING ADDED TO LISTS WHEN LOADING. ONLY ONE COPY OF EACH BUFFER PER PATH SHOULD BE ALLOWED. OTHERWISE LOAD ERRORS OCCUR. For this, use classvar all in bufferlist.
+
 */
 
 
 BufferListList : ItemList {
 	defaultItemClass { ^BufferList }
-	makeArchiveVersion { 
-		^this.copy.name_(name).itemClass_(itemClass).array = array collect: _.makeArchiveVersion 
-	}
+
+	rebuild { array do: _.rebuild }
 }
 
-BufferList : ItemList { 
+BufferList : ItemList {
 	defaultItemClass { ^BufferItem }
 	
-	add { | path |
-		var item;
-		item = itemClass.new(path);
-		if (array.detect({ | b | b == item}).isNil) { array = array add: item }
+	add { | item | 
+		// reject duplicates: 
+		if (array.detect({ | b | b === item}).isNil) { array = array add: item };
 	}
 	
-	makeArchiveVersion { 
-		^this.copy.name_(name).itemClass_(itemClass).array = array collect: _.makeArchiveVersion
-	}
+	rebuild { array = array collect: _.rebuild; }
+
 }
 
 BufferItem : NamedItem {
 	// name -> path. item -> Buffer
 	// Buffer allocated only and always when server boots or is booted.
 	classvar loadingBuffers; // Load buffers only one at a time. See method load.
+	classvar <>all;	// IdentityDictionary with one buffer per symbol. 
+					// prevent creating duplicate buffers with same path.
 	
-	var <nameSymbol;
+	var <>nameSymbol;
 	*initClass {
 		loadingBuffers = IdentityDictionary.new;
+		all = IdentityDictionary.new;
 		StartUp add: {
 			ServerBoot.add({
 				Library.at('Buffers') do: _.load;
@@ -63,19 +65,30 @@ BufferItem : NamedItem {
 		}
 	}
 
-	*new { | name | ^super.new(name).init }
+	*new { | name |
+		var nameSymbol, existing;
+		nameSymbol = PathName(name).fileNameWithoutExtension.asSymbol;
+		(existing = all[nameSymbol]) !? { ^existing };
+		^super.new(name).nameSymbol_(nameSymbol);
+	}
 
-	// do not store buffer in archive: 
-	makeArchiveVersion { ^this.copy.item = nil }
+	rebuild {
+		var existing;
+		item = nil;
+		existing = all[nameSymbol];
+		if (existing.notNil) {
+			^existing;
+		}{
+			all[nameSymbol] = this;
+			^this;  // (;-)
+		}
+	}
 
 	init {
 		nameSymbol = PathName(name).fileNameWithoutExtension.asSymbol;
 	}
 
 	load { | extraAction | // mechanism for loading next buffer after this one is loaded
-		var registeredItem;
-		registeredItem = Library.at('Buffers', nameSymbol);
-		registeredItem !? { if (registeredItem !== this) { ^registeredItem.load(extraAction) }; };
 		item !? { ^this };
 		if (Server.default.serverRunning) {
 			loadingBuffers[this] = { this.prLoad(extraAction); };
@@ -108,6 +121,7 @@ BufferItem : NamedItem {
 	
 	minSec {
 		var seconds;
+		item ?? { ^"?? min, ?? sec" };
 		seconds = item.numFrames / item.sampleRate round: 0.01;
 		^format("% min, % sec", seconds / 60 round: 1, seconds % 60);
 	}
@@ -156,6 +170,7 @@ BufferListGui : AppModel {
 	makeWindow {
 		this.stickyWindow(this.class, \bufferListGui, { | w, app |
 			bufferLists = Object.readArchive(Platform.userAppSupportDir +/+ listArchivePath);
+			bufferLists !? { bufferLists.rebuild };
 			bufferLists = bufferLists ?? { BufferListList("BufferLists.sctxar") };
 			if (bufferLists.size == 0) {
 				bufferLists.add(Date.getDate.format("Buffer List %c"));

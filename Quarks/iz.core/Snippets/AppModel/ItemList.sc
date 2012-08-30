@@ -28,10 +28,9 @@ ItemList : List {
 	
 	save {
 		postf("Saving % to %\n", this, Platform.userAppSupportDir +/+ name);
-		this.makeArchiveVersion.writeArchive(Platform.userAppSupportDir +/+ name);
+		this.writeArchive(Platform.userAppSupportDir +/+ name);
 	}
 	
-	makeArchiveVersion { ^this } // Subclasses can specialize what they archive. See BufferListList
 }
 
 NamedItem { // Not used. Draft. 
