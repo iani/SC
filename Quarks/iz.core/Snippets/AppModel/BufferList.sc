@@ -74,10 +74,10 @@ BufferItem : NamedItem {
 
 	load { | extraAction | // mechanism for loading next buffer after this one is loaded
 		item !? { ^this };
-		Server.default.waitForBoot({
-			loadingBuffers[this] = { this.prLoad(extraAction); };
-			if (loadingBuffers.size == 1) { this.prLoad(extraAction); };
-		});
+		loadingBuffers[this] = { this.prLoad(extraAction); };
+		if (loadingBuffers.size == 1) {
+			Server.default.waitForBoot({ this.prLoad(extraAction); })
+		};
 	}
 
 	prLoad { | extraAction | // called from loadingBuffers when previous buffer is loaded
