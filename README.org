@@ -1,4 +1,4 @@
-#+TITLE: Lilt2/Elemenv\'i (/Look Ma: No Vars!/)
+#+TITLE: Lilt2/Essi Eleng\'i (/Subclassing is No Good/)
 #+AUTHOR: Ioannis Zannos
 #+OPTIONS: toc:nil,num:nil
 
@@ -8,15 +8,21 @@ This library contains SuperCollider tools and examples coded and collected since
 
 ** New - Suggested
 
-See: iz.core folder, LiltBase, Snippets, Chain (require Resource, ServerPrep).
+See: iz.core folder, Snippets
 
-- Widget: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also store and restore the settings of such elements in WidgetPresets. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
+- AppModel, AppModel2: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
 
 - Code, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
 
-- ProxyCodeEditor, NanoKontrol2b: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
+- ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
 
-* Credits, Download
+* Download
+
+Download from: https://github.com/iani/SC
+or:
+ : git clone git://github.com/iani/SC.git
+
+* Credits
 - Code, Resource and Chain by Ioannis Zannos, March-May 2011
 - Widget, ProxyCode, ProxySourceEditor by Ioannis Zannos, May-August 2012
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
@@ -24,10 +30,8 @@ See: iz.core folder, LiltBase, Snippets, Chain (require Resource, ServerPrep).
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
   BEAST research team at the University of Birmingham. \\ See: http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx
 - collins quarks ported from Nick Collins' work at: http://www.sussex.ac.uk/Users/nc81/code.html
-
-Download from: https://github.com/iani/SC
-or:
- : git clone git://github.com/iani/SC.git
+- SC3PlugIns by the SuperCollider community, re-organized here as separate (Rep-)Quarks. 
+- Collection of older code and notes by Ioannis Zannos.
 
 * Copying (License)
 
@@ -50,52 +54,19 @@ Choose iz.local from the Quarks menu.  Recommended Quarks to try out are:
 - ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
 - Chains (Alternative score-writing class for scheduling execution of functions with patterns)
 
-* Widget
+* New Application Framework: AppModel 
 
-Simplify the task of adding and communicating with several widgets to any object, for representing and control different aspects of that object. 
+** AppModel, AppModelVersion2, Value, Widget
 
-** Example
+These are currently in quark iz.core/Snippets. 
 
-First do this: 
+Simplify the task of creating guis, connecting views to values by name and adding actions and update messages for each view.  Also simplify the tasks of adding MIDI and OSC to each object in the application, of re-opening closed windows (see AppStickyWindow, AppModel:stickyWindow), and of automatically switching MIDI control to the foremost window. 
 
-#+BEGIN_SRC cpp 
-(
-Document.current.envir = ProxySpace.push;
-w = Window.new;
-w.layout = VLayout(
-        /*  Create a self-updating menu for selecting a node from 
-            this Document's ProxySpace, an name it \nodes */
-	PxMenu(w, \nodes),
-        /* Create a button for starting and stopping the selected proxy,
-           and make its proxy settable by menu element named \nodes */
-	PxButton(w, \button, \nodes).states_([["start"], ["stop"]]),
-        /* Create a menu for selecting control parameters from the selected
-           node, name it \specs, make its node settable by menu \nodes */
-	PxControlsMenu(w, \specs, \nodes),
-        /* Create a knob named \knob, make its spec settable by menu named 
-           \specs, and make it set its mapped value to \numbox */
-	PxKnob(w, \knob, \specs, \numbox),
-        /* Create a NumberBox named \numbox, make it set its unmapped value
-           to element named \knob */
-	PxNumberBox(w, \numbox, \knob)
-);
-w.windowHandler(w).front;
-)
-#+END_SRC cpp
+A first prototype is tested with classes AppModel, Adapter, and the subclasses of AppNamelessView.  Example applications are built in BufferListGui, ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3.
 
-Then do this: 
+A second version of the above is given in classes AppModel2, Value, Widget, NumberAdapter, SpecAdapter2, ListAdapter2. This will gradually become the application framework for all applications in Lilt2, as it substantially simplifies coding. See first examples in folder AppModelVersion2/Examples. 
 
-#+BEGIN_SRC emacs-lisp 
-//:sample - Run the following two lines. 
-~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
-~out.play; // after that, check the first menu of the window above, and select 'out'
-#+END_SRC emacs-lisp 
-
-
-Then select controls from the second menu, and use the knob to control selected parameter.
-
-
-* Object methods for easy messaging via NotificationCenter
+* NotificatoinCenter2: Flexible messaging with cleanup "onObjectClosed" a
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 

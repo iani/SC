@@ -1,10 +1,21 @@
 /* IZ Mon 20 August 2012 11:44 PM EEST
-NotificationCenter modified to work with Object:addNotifier and related methods. 
+NotificationCenter modified to work with Object:addNotifier and related methods.
+
+Sat 01 September 2012  6:22 PM EEST: 
+OBSOLETE: Removing notifiers functionality on object closed has been incorporated into NotificationCenter. Extensions for doing this are currently in LiltBase Quark. 
+
 */
 
 NotificationCenter2 {
 
-	classvar <registrations;
+	classvar <>registrations;
+	classvar <>registrationLinks;
+
+	*initClass { this.clear; } 
+	*clear {
+		registrations = MultiLevelIdentityDictionary.new;
+		registrationLinks = IdentityDictionary.new; // 1 nr per notifier/message/listener
+	}
 
 	//			who		\didSomething
 	*notify { arg object, message, args;
@@ -25,7 +36,7 @@ NotificationCenter2 {
 				if (registrations.at(object).size == 0) { registrations.removeAt(object); };
 			};
 		};
-		OnObjectCloseRegistrations.remove(nr);
+		this.remove(nr);
 		^nr
 	}
 	
@@ -33,7 +44,7 @@ NotificationCenter2 {
 		var nr;
 		nr = NotificationRegistration2(object, message, listener, action);
 		registrations.put(object, message, listener, nr);
-		OnObjectCloseRegistrations.add(nr);
+		this.add(nr);
 		^nr;
 	}
 
@@ -44,21 +55,51 @@ NotificationCenter2 {
 			this.unregister(object, message, listener);
 		});
 		registrations.put(object, message, listener, nr);
-		OnObjectCloseRegistrations.add(nr);
+		this.add(nr);
 		^nr
 	}
-
-	*clear { registrations = MultiLevelIdentityDictionary.new; }
 
 	*registrationExists { | object, message, listener |
 		^registrations.at(object, message, listener).notNil
 	}
 
-	*initClass { this.clear }
-
-	*removeForListener { | listener | registrations.removeAt(listener) }
+	*removeForObject { |object| registrations.removeAt(object) }
 	
-	*removeAll { | object | registrations.removeEmptyAtPath([object]); }
+	*add { | registration |
+		var registrations, where;
+		where = registration.object;
+		registrations = registrationLinks[where];
+		registrations ?? { 
+			registrations = RegistrationList();
+			registrationLinks[where] = registrations;
+		};
+		registrations = registrations add: registration;
+		where = registration.listener;		
+		registrations = registrationLinks[where];
+		registrations ?? { 
+			registrations = RegistrationList();
+			registrationLinks[where] = registrations;
+		};
+		registrations = registrations add: registration;
+		registrationLinks[where] = registrations;
+	}
+	
+	*remove { | registration |
+		var registrations, where;
+		registration ?? { ^this };
+		where = registration.object;
+		registrations = registrationLinks[where];
+		registration.remove;
+		registrations remove: registration;
+		if (registrations.size == 0) { registrationLinks[where] = nil };
+		where = registration.listener;
+		registrations = registrationLinks[where];
+		registration.remove;
+		registrations remove: registration;
+		if (registrations.size == 0) { registrationLinks[where] = nil };
+	}
+	
+	*removeLinksForObject { | object | registrationLinks[object].copy do: this.remove(_) }
 
 }
 
@@ -75,7 +116,39 @@ NotificationRegistration2 {
 	valueArray { | args | ^action.valueArray(args) }
 }
 
+RegistrationList : List {
 
+	add { | registration |
+		var old;
+		old = array detect: (_ == registration);
+		array remove: old;
+		array = array add: registration;
+	}
+}
+
+/*
+
+NotificationCenter.registrations.do({ | r |
+	r.values.do({ | d |
+		var sender;
+		d.keysDo({ | key | 
+			if (key === \receiver) {
+				sender = NotificationCenter.registrations.dictionary.findKeyForValue(r);
+				d[key] = nil;
+				if (d.size == 0) { 
+					r[r.findKeyForValue(d)] = nil;
+					if (r.size == 0) {
+						NotificationCenter.registrations.put(sender, nil);
+					}
+				}
+			} 
+		})
+	}) 
+});
+
+
+*/
+/*
 OnObjectCloseRegistrations {
 	classvar <all;
 	
@@ -117,13 +190,4 @@ OnObjectCloseRegistrations {
 	
 	*removeAll { | object | all[object].copy do: this.remove(_) }
 }
-
-RegistrationList : List {
-
-	add { | registration |
-		var old;
-		old = array detect: (_ == registration);
-		array remove: old;
-		array = array add: registration;
-	}
-}
+*/

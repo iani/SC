@@ -55,7 +55,7 @@ Dock {
 
 	*menuItems {
 		^{ | i | 
-			CocoaMenuItem.add(["Add Doc shortcut", i.asString], { 
+			CocoaMenuItem.add(["Add Doc shortcut", i.asString], {
 				this.addDocShortcut(Document.current, i);
 			}).setShortCut(i.asString, true)
 		} ! 10 

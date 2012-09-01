@@ -58,7 +58,8 @@ AppModel().window({ | window, app |
 			});
 			me.addNotifier(Document, \docToFront, { | doc |
 				currentDocuments = currentDocuments add: doc;
-				me.view.value = me.adapter.adapter.items.indexOf(doc);
+				me.adapter.value = me.adapter.adapter.items.indexOf(doc);
+				me.view.value = me.adapter.value;
 			});
 			me.view.action_({ | view | me.adapter.adapter.items[view.value].front; });
 		})

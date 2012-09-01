@@ -3,6 +3,8 @@
 #+AUTHOR: Ioannis Zannos
 #+OPTIONS: toc:nil
 
+/This is an early release. More up to date code is found in iz.core/Snippets/AppModel, iz.core/Snippets/AppModelVersion2/
+
 This library provides a framework for creating GUIs for SuperCollider applications. 
 
 AppModel has methods for creating views named after the view creating methods of GUI. Additionally, it creates and stores Adapter instances which make it easy to interconnect different objects and views. 

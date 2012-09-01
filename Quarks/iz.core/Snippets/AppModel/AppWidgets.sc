@@ -1,5 +1,10 @@
 /* IZ Thu 16 August 2012  4:02 PM EEST
 See AppModel and Adapter
+
+Fri 31 August 2012 11:20 PM EEST: 
+
+All classes below AppStickyWindow will be replaced by new Widget class
+
 */
 
 AppNamelessWidget {
@@ -48,7 +53,12 @@ AppStickyWindow : AppNamelessWindow {
 	showWindow { if (window.isClosed) { this.init } { window.front }; }
 }
 
+/*
+Fri 31 August 2012 11:20 PM EEST: 
 
+All classes below here will be replaced by new Widget class
+
+*/
 
 AppNamelessView : AppNamelessWidget {
 	/*	For views that have no Adapter in the apps model, but do want to 
