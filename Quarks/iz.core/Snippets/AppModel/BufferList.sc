@@ -152,7 +152,7 @@ BufferItem : NamedItem {
 	}
 }
 
-BufferListGui : AppModel {
+BufferListGui : AppModel0 {
 	var listArchivePath = "BufferLists.sctxar";
 	var bufferLists, bufList1; // bufList1 gets initialized with defaults if new
 
@@ -177,6 +177,38 @@ BufferListGui : AppModel {
 				};
 			};
 			w.bounds = Rect(400, 100, 640, 650);
+
+			w.layout = VLayout(
+				HLayout(
+					StaticText().string_("Lists:"),
+					app.button(\bufferLists).getContents(\itemEdit, \append,
+						{ | string | string ++ Date.getDate.format(" %c") }
+					).view.states_([["add list"]]),
+					app.button(\bufferLists).getContents(\itemEdit, \rename)
+						.view.states_([["rename list"]]),
+					app.button(\bufferLists).getContents(\itemEdit, \delete)
+						.view.states_([["delete list"]]),
+					Button().states_([["save all"]]).action_({
+						app.getAdapter(\bufferLists).adapter.items.save;
+					}),
+				),
+				app.textField(\bufferLists).list
+					.name_(\itemEdit).view,
+				app.listView(\bufferLists, bufferLists)
+					.addAction({ | adapter |
+						app.getAdapter(\buffers).adapter.items_(adapter.adapter.item)
+					}).view,
+			);
+			app.windowClosed(w, {
+				app.getAdapter(\bufferLists).adapter.items.save;
+			})
+		})
+	}
+}
+
+
+/*
+
 			w.layout = VLayout(
 				HLayout(
 					StaticText().string_("Lists:"),
@@ -256,9 +288,6 @@ BufferListGui : AppModel {
 						.view.font_(Font.default.size_(10)),
 				)
 			);
-			app.windowClosed(w, {
-				app.getAdapter(\bufferLists).adapter.items.save;
-			})
-		})
-	}
-}
+
+
+*/

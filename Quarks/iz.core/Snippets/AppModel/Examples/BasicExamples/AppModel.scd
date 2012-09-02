@@ -3,7 +3,7 @@ tests for AppModel
 */
 
 //:NumberBox, Knob, Slider, Button
-AppModel().window({ | w, app |
+AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		app.numberBox(\any_name).view,
 		app.knob(\any_name).view, 
@@ -13,7 +13,7 @@ AppModel().window({ | w, app |
 });
 
 //:TextView, TextField, StaticTextView
-AppModel().window({ | w, app |
+AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		app.staticText(\any_name)
 			.initValue("will be updated by others")
@@ -30,7 +30,7 @@ AppModel().window({ | w, app |
 });
 
 //:PopUpMenu, ListView
-a = AppModel().window({ | w, app |
+a = AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		app.popUpMenu(\any_name, ["SELECTED", "b", "c"]).view,
 		app.listView(\any_name).view,
@@ -47,7 +47,7 @@ a.getAdapter(\any_name).adapter.items = ["not selected", "SELECTED", "something 
 
 
 //:PopUpMenu, ListView with navigation buttons, index and display
-AppModel().window({ | w, app |
+AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		app.popUpMenu(\any_name, ["a", "b", "c", "four", "five"]).view,
 		app.listView(\any_name).view,
@@ -65,7 +65,7 @@ AppModel().window({ | w, app |
 });
 
 //:ListView with textField showing selected item
-AppModel().window({ | w, app |
+AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		StaticText().string_("Selecting an item updates contents of text field"),
 		app.listView(\any_name).items_(["a", "b", "c", "four", "five"]).view,
@@ -77,7 +77,7 @@ AppModel().window({ | w, app |
 });
 
 //:PopUpMenu, ListView with item append, insert, replace from TextFields
-AppModel().window({ | w, app |
+AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		app.popUpMenu(\any_name, ["a", "b", "c", "four", "five"]).view,
 		app.listView(\any_name).view,
@@ -104,7 +104,7 @@ AppModel().window({ | w, app |
 });
 
 //:PopUpMenu, ListView with item append, insert, replace from a TextView, triggered via buttons
-a = AppModel().window({ | w, app |
+a = AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		app.popUpMenu(\any_name, ["a", "b", "c", "four", "five"]).view,
 		app.listView(\any_name).view,
@@ -133,9 +133,7 @@ a = AppModel().window({ | w, app |
 });
 
 //:Many examples combined
-
-
-AppModel().window({ | w, app |
+AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		HLayout(
 			app.numberBox(\numbox).view,
@@ -173,9 +171,8 @@ AppModel().window({ | w, app |
 	)
 });
 
-
 //:
-m = AppModel().window({ | w, app |
+m = AppModel0().window({ | w, app |
 	w.layout = VLayout(
 		app.numberBox(\index).list(["alpha", "beta", "gamma"]).view,
 		app.textField(\index).list.view,
@@ -190,7 +187,7 @@ m = AppModel().window({ | w, app |
 
 
 //:List of snippets
-AppModel().window({ | window, app |
+AppModel0().window({ | window, app |
 	window.bounds = Rect(Window.screenBounds.width - 180, 0, 180, 800);
 	window.layout = VLayout(
 		app.listView(\snippets, Code(Document.current).getAllSnippetStrings)
@@ -204,7 +201,7 @@ AppModel().window({ | window, app |
 
 
 //:List of snippets, one line per item
-AppModel().window({ | window, app |
+AppModel0().window({ | window, app |
 	var doc;
 	doc = Document.current;
 	window.bounds = Rect(Window.screenBounds.width - 180, 0, 180, 800);
@@ -228,7 +225,7 @@ AppModel().window({ | window, app |
 
 //:Snippet Buttons;
 
-AppModel().window({ | window, app |
+AppModel0().window({ | window, app |
 	var doc, code, headers, font;
 	font = Font.default.size_(10);
 	doc = Document.current;
@@ -244,7 +241,7 @@ AppModel().window({ | window, app |
 })
 
 //:AppStickyWindow - Evaluate this again to bring existing window to front
-AppModel().stickyWindow(\test, \window1, { | window, app |
+AppModel0().stickyWindow(\test, \window1, { | window, app |
 	var code, headers, font;
 	font = Font.default(10);
 	code = Code(Document.current);
