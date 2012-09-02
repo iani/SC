@@ -1,0 +1,51 @@
+#+TITLE: AppModel - Value - Widget Application Framework Overview
+#+OPTIONS: ^:nil, toc:nil
+
+
+The three classes AppModel, Value and Widget together with several Adapter classes: Adapter, NumberAdapter, ListAdapter, NamedListAdapter and AppNamelessWindow, AppStickyWindow provide a framework for creating applications containing any number of objects which communicate with each other and with input and display means such as Windows, Views (GUI items), MIDI and OSC. 
+
+Several needs are addressed: 
+
+- An application may involve many different objects. Each of these objects should be accessible for input and output. Instead of storing each object in a different instance variable, which would require defining the variable in a new class, AppModel stores all such objects in an IdentityDictionary and makes them available through a kay (a Symbol object) in which they are stored. 
+- Each object may have different interface. This means, the object responds to different types of messages. Additionally, each object may it may need to express in addition, it  To accommodate this, objects are stored in different types of Adapter objects that 
+- 
+
+* AppModel 
+
+Holds any number of objects in a dictionary (in instance variable "values"). These objects are accessible by name by calling: 
+
+anAppModel.getValue(key), where key is a Symbol under which the value is stored. 
+
+To create a new value, use the same method: anAppModel.getValue(key). If no value exists under key, it is created. 
+
+Each value is an object of class Value. See below on how Value stores objects and provides means for interacting with them. 
+
+Additionally, AppModel provides methods for:
+
+- creating windows 
+- creating views in windows. 
+- adding MIDI or OSC commands that operate on any of its Value instances.
+- activating and deactivating MIDI and OSC input for all of the Value instances. 
+
+
+** Window creation methods
+
+*** anAppModel.window(function)
+
+and
+
+*** anAppModel.stickyWindow(function)
+
+** View creation methods
+
+*** numberBox(...)
+
+** MIDI adding methods
+
+** Input activation and deactivation methods
+
+
+
+
+
+

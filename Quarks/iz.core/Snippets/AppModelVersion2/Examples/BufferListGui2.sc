@@ -7,38 +7,41 @@ UNDERWAY!
 */
 
 
-BufferListGui2 : AppModel2 {
+BufferListGui2 : AppModel {
 
 	var <>archivePath;
-	var bufferLists, bufList1; // bufList1 gets initialized with defaults if new
+	var <buffers; // Value holding current Buffers list;
 
-	*initClass {
-		StartUp add: {
-			CocoaMenuItem.add(["Buffers"], { this.new });
-			 
-		} 
-	}
+	*initClass { StartUp add: { CocoaMenuItem.add(["Buffers"], { this.new }); } }
 
 	*new { | archivePath |
-		^super.new.makeWindow(archivePath);
+		^super.new.init.makeWindow(archivePath);
 	}
 	
+	init { buffers = this.getValue(\buffers) }
+	
 	loadBufferLists { | me |
-		var bufferLists;
+		var bufferLists, defaultList;
 		bufferLists = Object.readArchive(Platform.userAppSupportDir +/+ archivePath);
-		bufferLists !? { bufferLists do: { | b | b do: _.rebuild } };
+		bufferLists !? { bufferLists do: { | bl |
+			bl.container = buffers;
+			bl do: _.rebuild; 
+		} };
 		bufferLists = bufferLists ?? { ListAdapter2(me.value) };
 		if (bufferLists.size == 0) {
-			bufferLists.add(
-				NamedListAdapter(this.getValue(\buffers))
-					.name_(Date.getDate.format("Buffer List %c"));
-			);
-			bufList1 = bufferLists.first;
+			bufferLists add: (defaultList = this.makeBufferList); 
 			(Platform.resourceDir +/+ "sounds/*").pathMatch do: { | path |
-				bufList1.add(path);
+				defaultList add: (BufferItem(path));
 			};
 		};
-		
+	}
+
+	makeBufferList { | name |
+		^NamedListAdapter(buffers).name = name ?? { Date.getDate.format("Buffer List %c") };
+	}
+	
+	addBuffer { | bufferList, buffer | // reject duplicates
+		bufferList.detect({ | b | b === buffer}) ?? { bufferList add: buffer };
 	}
 
 	makeWindow { | argArchivePath |

@@ -18,7 +18,7 @@ This is important for list views that want to update their lists only when the l
 
 */
 
-Adapter {
+Adapter0 {
 	var <model, <>adapter, <value = 0;
 	var <inputs;	// Array of MIDIFunc and/or OSCFunc that send me input
 

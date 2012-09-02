@@ -1,9 +1,33 @@
-/* IZ Fri 31 August 2012 10:08 PM EEST
+/* IZ Wed 15 August 2012  9:14 PM EEST
+Trying whole different approach to the whole widget / value notification thing.
 
-Redo of AppModel, with radically redone classes for values and views: Value and Widget classes.
+User acts on view, setting a value 
+	view maps value (using an adapter = spec or other stuff, possibly function);
+	view sends app this message: app.setValue(key, value);
+
+
+Widgets that need to add extra actions like setting their specs, changing their state, etc., 
+can do it like this: 
+
+widget.addAction(<commandname>, action);
+
+So any widget can ask to be specifically notified when it needs to change something 
+different than its value. It needs not and should not store itself in the AppModel.
+
+First example: 
+
+//:
+AppModel().window({ | w, app |
+	w.view.layout = VLayout(
+		app.knob(\test).spec_(\freq).view,
+		app.numberBox(\test).view
+	)
+});
+//:
+
 */
 
-AppModel2 {
+AppModel0 {
 	classvar <>enabled;	// previously enabled AppModel: Disabled when the next one becomes active
 	var <values;  /* IdentityDictionary: Adapters holding my values per name */
 
@@ -11,21 +35,20 @@ AppModel2 {
 
 	at { | name | ^values[name].value; }
 	put { | name, value | this.getAdapter(name).valueAction = value } 
-	getValue { | name, adapter |
+	getAdapter { | name, innerAdapter |
 		// Access adapter. Create one only if it does not already exist
-		var value;
-		value = values[name];
-		if (value.isNil) { // if it does not exist, create it and set its adapter variable.
-			value = Value(this);
-			values[name] = value;
-			value.adapter = adapter;
-			^value;
+		var adapter;
+		adapter = values[name];
+		if (adapter.isNil) { // if it does not exist, create it and set its adapter variable.
+			adapter = Adapter0(this);
+			values[name] = adapter;
+			adapter.adapter = innerAdapter;
+			^adapter;
 		}{
-			^value; 	// Else return it as is
+			^adapter; 	// Else return it as is
 		}
 	}
 
-	// removing connections and inputs
 	objectClosed { // not used yet?
 		super.objectClosed;
 		values do: _.objectClosed;
@@ -65,40 +88,35 @@ AppModel2 {
 
 	view { | view | ^AppNamelessView(this, view) }
 
-	numberBox { | name | ^Widget(this, name, NumberBox()).simpleNumber; }
-	knob { | name, spec | ^Widget(this, name, Knob()).mappedNumber(spec); }
-	slider { | name, spec | ^Widget(this, name, Slider()).mappedNumber(spec); }
-	button { | name, action | ^Widget(this, name, Button()).action_(action); }
-	textField { | adapterName | 
-		^Widget(this, adapterName, TextField()).text;
+	numberBox { | name | ^AppValueView(this, name, NumberBox()); }
+	knob { | name, spec | ^AppSpecValueView(this, name, Knob()).mapper(spec); }
+	slider { | name, spec | ^AppSpecValueView(this, name, Slider()).mapper(spec); }
+	button { | name, action, updateAction | 
+		var vv;
+		vv = AppValueView(this, name, Button());
+		action !? { vv.view.action = { action.(vv) } };
+		updateAction !? { vv.updateAction = updateAction };
+		^vv;
 	}
-	staticText { | adapterName, string = "<empty>" |
-		^Widget(this, adapterName, StaticText()).text.do({ | me | 
-			me.value.adapter.string_(me, string);
-		});
+	popUpMenu { | name, items, updateItems = true | 
+		^AppValueView(this, name, PopUpMenu()).listItems(items, updateItems);
+	}
+	listView { | name, items, updateItems = true |
+		^AppValueView(this, name, ListView()).listItems(items, updateItems);
+	}
+	textField { | adapterName, viewName | 
+		^AppTextValueView(this, adapterName, TextField()).name_(viewName ? adapterName)
+	}
+	staticText { | adapterName, string, viewName |
+		var widget;
+		widget = AppStaticTextView(this, adapterName).name_(viewName ? adapterName);
+		widget.view.string = string;
+		^widget;
 	}
 	textView { | adapterName, viewName | 
-		^Widget(this, adapterName, TextView()).textView;
+		^AppTextView(this, adapterName).name_(viewName ? adapterName);
 	}
-	listView { | name, getItemsFunc |
-		^Widget(this, name, ListView()).list(getItemsFunc);
-	}
-	popUpMenu { | name, getItemsFunc |
-		^Widget(this, name, PopUpMenu()).list(getItemsFunc);
-	}
-	listIndex { | name, viewClass, startAt = 1 | 
-		^Widget(this, name, (viewClass ? NumberBox).new).listIndex(startAt);
-	}
-	listSize { | name, viewClass |
-		^Widget(this, name, (viewClass ? NumberBox).new).listSize;
-	}
-	listItem { | name, viewClass, getItemFunc |
-		^Widget(this, name, (viewClass ? TextField).new).listItem;
-	}
-
 	// following need review - possibly their own adapter classes
-	
-/* // TODO
 	rangeSlider { | name | ^AppValueView(this, name, RangeSlider()); }
 	slider2D { | name | ^AppValueView(this, name, Slider2D()); }
 	dragSource { | name | ^AppView(this, name, DragSource()); }
@@ -109,10 +127,10 @@ AppModel2 {
 	envelopeView { | name | ^AppValueView(this, name, EnvelopeView()); }
 	soundFileView { | name | ^AppView(this, name, SoundFileView()); }
 	movieView { | name | ^AppView(this, name, MovieView()); }
-*/	
+	
 	addMIDI { | specs |
 		specs pairsDo: { | key, spec |
-			this.getValue(key).addMIDI(*spec);
+			this.getAdapter(key).addMIDI(*spec);
 		}
 	}
 }

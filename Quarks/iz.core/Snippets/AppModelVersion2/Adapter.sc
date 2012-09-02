@@ -113,7 +113,7 @@ NamedListAdapter : ListAdapter2 {
 Adapter2 is meant to store its additional "methods" or "variables" as environment variables. Its behavior is customizable. Not yet tested. 
 */
 
-Adapter2 : Event { 
+Adapter : Event { 
 	var <container, <value;
 
 	*new { | container | ^super.new.init(container) }
