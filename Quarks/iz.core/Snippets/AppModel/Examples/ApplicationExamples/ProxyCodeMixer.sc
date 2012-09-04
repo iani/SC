@@ -8,7 +8,7 @@ ProxyCode(Document.current);
 */
 
 
-ProxyCodeMixer : AppModel {
+ProxyCodeMixer : AppModel0 {
 	var <doc, <>numStrips = 8, <proxyCode, <proxySpace, <strips;
 	var <stripWidth = 80, <numPresets = 8;
 	var <presetHandler;

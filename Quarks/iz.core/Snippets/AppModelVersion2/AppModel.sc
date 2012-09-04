@@ -18,7 +18,10 @@ AppModel {
 		if (value.isNil) { // if it does not exist, create it and set its adapter variable.
 			value = Value(this);
 			values[name] = value;
-			value.adapter = adapter;
+			adapter !? {
+				value.adapter = adapter;
+				adapter.container = value;
+			};
 			^value;
 		}{
 			^value; 	// Else return it as is
@@ -86,14 +89,14 @@ AppModel {
 	popUpMenu { | name, getItemsFunc |
 		^Widget(this, name, PopUpMenu()).list(getItemsFunc);
 	}
-	listIndex { | name, viewClass, startAt = 1 | 
-		^Widget(this, name, (viewClass ? NumberBox).new).listIndex(startAt);
+	listIndex { | name, view, startAt = 1 | 
+		^Widget(this, name, view ?? { NumberBox() }).listIndex(startAt);
 	}
-	listSize { | name, viewClass |
-		^Widget(this, name, (viewClass ? NumberBox).new).listSize;
+	listSize { | name, view |
+		^Widget(this, name, view ?? { NumberBox() }).listSize;
 	}
-	listItem { | name, viewClass, getItemFunc |
-		^Widget(this, name, (viewClass ? TextField).new).listItem;
+	listItem { | name, view, getItemFunc |
+		^Widget(this, name, view ?? { TextField() }).listItem(getItemFunc);
 	}
 
 	// following need review - possibly their own adapter classes

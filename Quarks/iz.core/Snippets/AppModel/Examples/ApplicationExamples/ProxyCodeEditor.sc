@@ -5,7 +5,7 @@ Edit Code of a proxy from ProxyCode snippets. Provide history of edited versions
 
 */
 
-ProxyCodeEditor : AppModel {
+ProxyCodeEditor : AppModel0 {
 	classvar <>all;	// all current instances of ProxyCodeEditor; 
 	classvar <>windowRects;
 	var <proxyCode, <proxySpace, <>font;

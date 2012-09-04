@@ -12,7 +12,7 @@ See Value.org file for discussion.
 
 
 NumberAdapter {
-	var <container, <spec, <value = 0, <standardizedValue = 0;
+	var <>container, <spec, <value = 0, <standardizedValue = 0;
 
 	*new { | container, spec |
 		^this.newCopyArgs(container).spec_(spec);
@@ -39,7 +39,7 @@ NumberAdapter {
 }
 
 TextAdapter {
-	var <container, <string;
+	var <>container, <string;
 
 	*new { | container, string |
 		^this.newCopyArgs(container, string ? "<empty>");
@@ -55,7 +55,7 @@ TextAdapter {
 
 
 ListAdapter2 : List {
-	var <container, <index = 0, <item;
+	var <>container, <index = 0, <item;
 
 	*new { | container | ^super.new.init(container) }
 
@@ -65,14 +65,20 @@ ListAdapter2 : List {
 
 	updateMessage { ^\list }
 
+	items { ^array }
+
 	items_ { | changer, items |
-		array = items;
+		array = items ? #[];
 		index = array.indexOf(item) ? 0;
 		item = array[index];
-		container.notify(\list, changer);		
+		container !? { container.notify(\list, changer) }
 	}
 	
-	items { ^array }
+	index_ { | changer, argIndex |
+		index = argIndex max: 0 min: (this.size - 1);
+		item = array[index];
+		container.notify(\index, changer);
+	}
 
 	replace { | changer, argItem, argIndex |
 		this.put(argIndex ? index, argItem);
@@ -81,26 +87,21 @@ ListAdapter2 : List {
 	}
 
 	append { | changer, argItem |
-		array = array add: argItem;		
+		array = array add: argItem;
+		this.index_(changer, array.size - 1);
 		container.notify(\list, changer);
 	}
 
 	insert { | changer, argItem, argIndex |
 		super.insert(argIndex ? index, argItem);
+		this.index_(changer, argIndex ? index);
 		container.notify(\list, changer);
 	}
 
 	delete { | changer, argItem |
 		this.remove(argItem ? item);
-		index = array.indexOf(item) ? 0;
-		item = array[index];
+		this.index_(changer, index);
 		container.notify(\list, changer);
-	}
-
-	index_ { | changer, argIndex |
-		index = argIndex max: 0 min: (this.size - 1);
-		item = array[index];
-		container.notify(\index, changer);
 	}
 
 }
