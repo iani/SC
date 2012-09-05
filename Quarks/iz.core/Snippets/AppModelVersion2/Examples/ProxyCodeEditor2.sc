@@ -80,7 +80,7 @@ ProxyCodeEditor2 : AppModel {
 			this.objectClosed;
 			all remove: this;
 		});
-		this.windowToFront(window, { this.enable });
+		this.windowToFront(window, { this.enable; });
 		this.windowEndFront(window, { this.disable; });
 		window.addNotifier(this, \colorEnabled, {
 			if (window.isClosed.not) { window.view.background = Color(*[0.9, 0.8, 0.7].scramble); }
@@ -101,18 +101,19 @@ ProxyCodeEditor2 : AppModel {
 	}
 
 	addViews { | window, proxy |
-		[this, thisMethod.name, "proxy:", proxy].postln;
-		[this, thisMethod.name, "proxyItem:", proxySpace.proxyItem(proxy),
-			"proxyItem name:", proxySpace.proxyItem(proxy).name].postln;
 		window.layout = VLayout(
 			this.popUpMenu(\proxies, { | me | 
 				me.value.adapter.items collect: _.name 
-			}).items_(proxySpace.proxies).item_(
+			})
+			.items_(proxySpace.proxies)
+			.item_(
 				proxySpace.proxies detect: { | p | p.item === proxy }
 			).view,
-			this.textView(\editor).view,
+			this.textView(\editor).listItem.sublistOf(\proxies, { | item | item.history }).view,
+			// for testing new spec update mechanism: 
+			this.popUpMenu(\specs, { | me | me.value.adapter.items collect: _[0] })
+				.sublistOf(\proxies, { | item | item.specs }).view,
 		);
-		[this, thisMethod.name, this.getValue(\proxies).adapter.item].postln;
 	}
 	
 	proxy_ { | proxy |

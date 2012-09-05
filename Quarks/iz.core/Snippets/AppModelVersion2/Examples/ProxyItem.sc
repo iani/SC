@@ -27,10 +27,16 @@ ProxyItem : NamedItem {
 	init {
 		history = List.new;
 		specs = List.new;
+		item !? { this.addNotifier(item, \proxySpecs, { | specs | this.specs = specs }) };
 	}
 	
 	addSnippet { | snippet |
 		history.add(snippet);
 		history.notify(\list);
+	}
+
+	specs_ { | argSpecs |
+		specs.array = argSpecs;
+		specs.notify(\list);
 	}
 }

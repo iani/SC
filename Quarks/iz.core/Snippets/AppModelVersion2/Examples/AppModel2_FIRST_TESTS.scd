@@ -69,6 +69,20 @@ AppModel().window({ | window, app |
 	)
 });
 
+//:One list view obtains its items from sublists contained in another item
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list, { | me | me.value.adapter collect: { | l | 
+				format("a list of size: %", l.size)
+			}
+		}).items_([["alpha", "beta", "gamma"], ["delta", "epsilon"]])
+			.view,
+		app.listView(\sublist).sublistOf(\list).view
+	)
+});
+
+
+
 
 //:Creating list items by interpreting code from a text field
 // Note: The created elements only replace the elements on the list. 

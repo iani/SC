@@ -21,15 +21,16 @@ Value {
 	}
 
 	// make me get my list from the item of another list
-	sublistOf { | superList, getSublistAction |
-		this.adapter = ListAdapter2.new;
-		getSublistAction = { | sublist | sublist }; // vary this to get different parts of the item
-		if (superList isKindOf: Symbol) { model.getValue(superList); };
+	sublistOf { | superList, getListFunction |
+		this.adapter = ListAdapter2();
+		 // vary this to get different parts of the item
+		getListFunction ?? { getListFunction = { | sublist | sublist }; };
+		if (superList isKindOf: Symbol) { superList = model.getValue(superList); };
 		this.addNotifier(superList, \list, {
-			this.adapter.items_(this, getSublistAction.(superList.adapter.item));
+			this.adapter.items_(this, getListFunction.(superList.adapter.item));
 		});
 		this.addNotifier(superList, \index, {
-			this.adapter.items_(this, getSublistAction.(superList.adapter.item));
+			this.adapter.items_(this, getListFunction.(superList.adapter.item));
 		});
 	}
 
@@ -189,8 +190,8 @@ Widget {
 		this.updateAction(\index, { | sender | view.string = getItemFunc.(this) });
 	}	
 
-	sublistOf { | valueName | // make me get my list from the item of another list
-		value.sublistOf(valueName);
+	sublistOf { | valueName, getListFunction | // make me get my list from the item of another list
+		value.sublistOf(valueName, getListFunction);
 	}
 	// Other things to do with Lists: Insert, delete, replace, append, show index, show size
 

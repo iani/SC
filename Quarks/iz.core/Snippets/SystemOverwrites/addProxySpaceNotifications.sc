@@ -14,14 +14,18 @@
 }
 
 + LazyEnvir {
-	at { arg key, proxies;
+	at { arg key, proxies, proxyItem;
 		var proxy;
 		proxy = super.at(key);
 		if(proxy.isNil) {
 			proxy = this.makeProxy(key);
 			envir.put(key, proxy);
 			ProxySelector.updateProxyNames(this, key); // to be replaced by Library version below
-			this.proxies.add(ProxyItem(key, proxy)).notify(\list, this);
+			// new version: 
+			proxyItem = ProxyItem(key, proxy);
+			this.proxies.add(proxyItem).notify(\list, this); // proxies in order of creation
+			// Below not needed. Proxy spec update via \spec notification to ProxyItem
+//			Library.put('ProxyItems', proxy, proxyItem); // Access proxies for spec updates
 			this.notify(\proxies);
 		};
 		^proxy
