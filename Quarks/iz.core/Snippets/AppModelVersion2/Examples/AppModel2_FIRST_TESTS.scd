@@ -34,13 +34,41 @@ AppModel().window({ | window, app |
 			.view,
 		app.listItem(\list)
 			.append			// when return key is pushed, append new item to list
-			.replaceOn	// replace item if sent message \replace
-			.insertOn		// insert item if send message \insert
+			.replaceOn		// replace item if sent message \replace
+			.insertOn			// insert item if send message \insert
 			.view,
 		app.button(\list).notify(\replace).view.states_([["replace"]]),
 		app.button(\list).notify(\insert).view.states_([["insert"]]),
 	)
 });
+
+//:Indexing the same list independently from different views
+var list;
+list = List.newUsing(["a", "b", "c"]);
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list).do({ | me | me.value.adapter.items_(me, list) })
+			.view,
+		app.listItem(\list)
+			.append			// when return key is pushed, append new item to list
+			.replaceOn		// replace item if sent message \replace
+			.insertOn			// insert item if send message \insert
+			.view,
+		app.button(\list).notify(\replace).view.states_([["replace"]]),
+		app.button(\list).notify(\insert).view.states_([["insert"]]),
+		StaticText().string_("Same list, but independent index into it:"),
+		app.listView(\list2).do({ | me | me.value.adapter.items_(me, list) })
+			.view,
+		app.listItem(\list2)
+			.append			// when return key is pushed, append new item to list
+			.replaceOn		// replace item if sent message \replace
+			.insertOn			// insert item if send message \insert
+			.view,
+		app.button(\list2).notify(\replace).view.states_([["replace"]]),
+		app.button(\list2).notify(\insert).view.states_([["insert"]]),
+	)
+});
+
 
 //:Creating list items by interpreting code from a text field
 // Note: The created elements only replace the elements on the list. 

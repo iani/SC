@@ -25,26 +25,11 @@ ItemList : List {
 			^name == itemList.name
 		}
 	}
-	
+
 	save {
 		postf("Saving % to %\n", this, Platform.userAppSupportDir +/+ name);
 		this.writeArchive(Platform.userAppSupportDir +/+ name);
 	}
-	
-}
 
-NamedItem { // Not used. Draft. 
-	var <>name, <>item;
-
-	*new { | name | ^this.newCopyArgs(name) }
-
-	asString { ^name }
-	== { | item |
-		if (item.isNil) {
-			^true
-		}{
-			^name == item.name
-		}
-	}
 }
 

@@ -1,5 +1,7 @@
 /* IZ Sat 01 September 2012  6:47 PM EEST
 
+Revision: Wed 05 September 2012  1:55 PM BST
+
 BufferListGui();
 
 */
@@ -19,30 +21,27 @@ BufferListGui : AppModel {
 	}
 
 	init { | argArchivePath |
-		buffers = this.getValue(\buffers);
-		buffers.sublistOf(\bufferLists);
-		this.getValue(\bufferLists)
-			.adapter_(
-				ListAdapter2().items_(nil, this.loadBufferLists(argArchivePath))
-			);
+		var bufferLists;
+		bufferLists = this.getValue(\bufferLists, ListAdapter2());
+		bufferLists.items_(nil, this.loadBufferLists(argArchivePath));
+		buffers = this.getValue(\buffers, ListAdapter2());
+		buffers.items_(bufferLists.adapter.item);
+		buffers.sublistOf(bufferLists);
 	}
-	
+
 	loadBufferLists { | argArchivePath |
 		var bufferLists, defaultList;
 		archivePath = argArchivePath ?? { Platform.userAppSupportDir +/+ "BufferLists.sctxar"; };
 		bufferLists = Object.readArchive(archivePath);
 		bufferLists !? { bufferLists do: { | bl | bl do: _.rebuild; }};
-		if (bufferLists.size == 0) {
-			defaultList = NamedListAdapter(buffers).name_(Date.getDate.format("Buffer List %c"));
-			bufferLists = bufferLists add: defaultList;
-			this.readDefaults(defaultList);
-		};
-		^bufferLists;
+		^bufferLists ?? { [this.makeList] };
 	}
+
+	makeList { ^NamedList().name_(Date.getDate.format("Buffer List %c")) }
 
 	readDefaults { | bufferList |
 		(Platform.resourceDir +/+ "sounds/*").pathMatch do: { | path |
-			this.addBuffer(bufferList, (BufferItem(path)));
+			this.addBuffer(bufferList, BufferItem(path));
 		};
 		bufferList.container.updateListeners;	
 	}
@@ -50,10 +49,6 @@ BufferListGui : AppModel {
 	addBuffer { | bufferList, buffer | if (bufferList.includes(buffer).not) { bufferList add: buffer } }
 
 	makeWindow { | argArchivePath |
-		var newListFunc;
-		newListFunc = { | me |
-			NamedListAdapter(buffers).name_(me.view.string ++ Date.getDate.format(" %c"))
-		};
 		this.stickyWindow(this.class, \bufferListGui, { | w, app |
 			w.bounds = Rect(300, 100, 840, 650);
 			w.layout = VLayout(
@@ -67,16 +62,17 @@ BufferListGui : AppModel {
 					Button().action_({ 
 						this.init(archivePath);
 						this.updateListeners;
-					 }).states_([["revert"]])
+					}).states_([["revert"]]),
+					Button().action_({ this.saveLists }).states_([["save"]]),
 				),
 				app.listItem(\bufferLists, TextField(), { | me | me.value.adapter.item.name; })
 				.updateAction(\rename, { | sender, me | 
 					me.value.adapter.item.name = me.view.string;
 					me.value.updateListeners;
 				})
-				.append(newListFunc)
-				.appendOn(newListFunc)
-				.insertOn(newListFunc).view,
+				.append({ this.makeList })
+				.appendOn({ this.makeList })
+				.insertOn({ this.makeList }).view,
 				app.listView(\bufferLists, { | me | me.value.adapter.items collect: _.name }).view,
 				HLayout(
 					StaticText().string_("Buffers:"),
@@ -133,10 +129,7 @@ BufferListGui : AppModel {
 					s: 3]
 				)
 			);
-			app.windowClosed(w, {
-				app.getValue(\bufferLists).adapter.items.writeArchive(archivePath);
-				postf("Buffer lists saved to: \n%\n", archivePath);
-			});
+			app.windowClosed(w, { this.saveLists });
 			ShutDown add: { this.saveLists };
 		})
 	}

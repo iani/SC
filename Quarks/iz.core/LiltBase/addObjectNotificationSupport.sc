@@ -17,7 +17,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	
 	removeNotifier { | notifier, message |
 	// remove notifier notification registration as well as onObjectClose registrations. 
-		 ^NotificationCenter remove: NotificationCenter.unregister(notifier, message, this);
+		 ^NotificationCenter.unregister(notifier, message, this);
 	}
 
 	addListener { | listener, message, action |
@@ -36,7 +36,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		NotificationCenter.removeNotifiersOf(this);
 		NotificationCenter.removeListenersOf(this);
 	}
-	
+
 	addNotifierOneShot { | notifier, message, action |
 		NotificationCenter.registerOneShot(notifier, message, this, action);
 	}

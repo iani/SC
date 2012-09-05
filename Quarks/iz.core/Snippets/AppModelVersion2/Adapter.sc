@@ -54,7 +54,12 @@ TextAdapter {
 }
 
 
-ListAdapter2 : List {
+/* ListAdapter2 now contains the items separately, to permit independet indices on the same list.
+
+See ListAdapter2 in ListAdapter2.sc
+
+*/
+ListAdapter2OLD : List {
 	var <>container, <index = 0, <item;
 
 	*new { | container | ^super.new.init(container) }
@@ -104,10 +109,6 @@ ListAdapter2 : List {
 		container.notify(\list, changer);
 	}
 
-}
-
-NamedListAdapter : ListAdapter2 {
-	var <>name;
 }
 
 /*

@@ -20,15 +20,21 @@ Value {
 		this.updateListeners;
 	}
 
-	sublistOf { | valueName | // make me get my list from the item of another list
-		var superList;
-		superList = model.getValue(valueName);
+	// make me get my list from the item of another list
+	sublistOf { | superList, getSublistAction |
+		this.adapter = ListAdapter2.new;
+		getSublistAction = { | sublist | sublist }; // vary this to get different parts of the item
+		if (superList isKindOf: Symbol) { model.getValue(superList); };
 		this.addNotifier(superList, \list, {
-			this.adapter = superList.adapter.item;
+			this.adapter.items_(this, getSublistAction.(superList.adapter.item));
 		});
 		this.addNotifier(superList, \index, {
-			this.adapter = superList.adapter.item;
+			this.adapter.items_(this, getSublistAction.(superList.adapter.item));
 		});
+	}
+
+	items_ { | changer, items |
+		adapter.items_(changer, items);
 	}
 
 	// MIDI and OSC
@@ -165,15 +171,16 @@ Widget {
 		getListAction = getListAction ?? { { value.adapter.items collect: _.asString } };
 		view.action = { value.adapter.index_(this, view.value) };
 		this.updateAction(\list, { | sender |
-			if (sender !== this) {
 				view.items = getListAction.(this);
 				view.value = value.adapter.index;
-			};
 		});
 		this.updateAction(\index, { | sender |
 			if (sender !== this) { view.value = value.adapter.index }
 		});
 	}
+
+	items_ { | items | value.adapter.items_(this, items); }
+	item_ { | item | value.adapter.item_(this, item); }
 
 	listItem { | getItemFunc | // display currently selected item from a list.
 		value.adapter ?? { value.adapter = ListAdapter2() };

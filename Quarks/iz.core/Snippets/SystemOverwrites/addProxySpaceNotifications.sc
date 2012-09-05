@@ -14,15 +14,34 @@
 }
 
 + LazyEnvir {
-	at { arg key;
+	at { arg key, proxies;
 		var proxy;
 		proxy = super.at(key);
 		if(proxy.isNil) {
 			proxy = this.makeProxy(key);
 			envir.put(key, proxy);
-			ProxySelector.updateProxyNames(this, key);
+			ProxySelector.updateProxyNames(this, key); // to be replaced by Library version below
+			this.proxies.add(ProxyItem(key, proxy)).notify(\list, this);
+			this.notify(\proxies);
 		};
 		^proxy
-
-	}	
+	}
+	
+	proxies {
+		var proxies;
+		proxies = Library.at('Proxies', this);
+		if (proxies.isNil) { 
+			proxies = List.new.add(ProxyItem('-', nil)); 
+			Library.put('Proxies', this, proxies);
+		};
+		^proxies;
+	}
+	
+	proxyItem { | proxy |
+		var proxies, item;
+		proxies = this.proxies;
+		item = proxies.detect({ | p | p.item === proxy });
+		if (item.isNil) { proxies.add(item = ProxyItem(this.findKeyForValue(proxy), proxy)) };
+		^item;
+	}
 }

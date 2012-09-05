@@ -6,7 +6,7 @@ Add the proxy code in History but also add the snippet that was evaluated in a h
 
 Some of the functionality is evoked by keyboard shortcuts set by Code, another part is used via gui through the ProxySourceEditor. 
 
-TODO: proxyHistory should be per proxySpace, not per document 
+UNDERWAY: proxyHistory and proxy specs are stored per NodeProxy in ProxyItem. ProxyItems are stored separately for each proxy space in: Library.at('Proxies', proxySpace)
 
 */
 
@@ -24,7 +24,7 @@ ProxyCode {
 					// from the initial comment line of the snippet
 	var <snippet; 
 	var <index;
-	
+
 	*initClass {
 		// since CmdPeriod stops routines, restart the historyTimer routine
 		proxyHistory = IdentityDictionary.new;
@@ -159,6 +159,12 @@ ProxyCode {
 	}
 	
 	// proxy history stuff 
+	/* Under review: proxyHistory variable will be removed. proxy histories stored in 
+		Library.at('Proxies', proxySpace) inside ProxyItems. 
+		Views can alter the proxy history directly, with updates happening via the Value-ListAdapter
+		mechanism. 
+		The only method that remains then is: addNodeSourceCodeToHistory
+	*/
 	
 	*replaceProxyHistory { | argProxy, argHistory, argChanger |
 		/* 	An application that changes my history sends the new version to me 
@@ -183,13 +189,15 @@ ProxyCode {
 	}
 	
 	addNodeSourceCodeToHistory { | argProxy, argSnippet |
+		// This part to be removed: 
 		var history;
 		history = proxyHistory[argProxy];
 		proxyHistory[argProxy] = history = history add: argSnippet;
 		this.notifyHistoryChanged(argProxy, history, argProxy);
+		// This part to be kept. 
+		proxySpace.proxyItem(argProxy).addSnippet(argSnippet);
 	}
 
-	
 	startProxy { | argProxy, argProxyName |
 		this.enterSnippet2History(format("~%.play;", argProxyName));
 		argProxy.play;
@@ -204,7 +212,8 @@ ProxyCode {
 	}
 
 	editNodeProxySource { | proxy |
-		ProxyCodeEditor(this, proxy);
+//		ProxyCodeEditor(this, proxy);
+		ProxyCodeEditor2(this, proxy);
 	}
 
 	openProxySourceEditor {
@@ -214,7 +223,9 @@ ProxyCode {
 		proxyHistory[proxy] ?? {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
-		ProxyCodeEditor(this, proxy);
+//		ProxyCodeEditor(this, proxy);
+		[this, thisMethod.name, "proxy:", proxy].postln;
+		ProxyCodeEditor2(this, proxy);
 	}
 
 	playCurrentDocProxy {
