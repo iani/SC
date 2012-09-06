@@ -4,7 +4,7 @@ Redoing proxy containers for proxy history and spec lists.
 
 */
 
-NamedItem { // Not used. Draft. 
+NamedItem {
 	var <>name, <>item;
 
 	*new { | name, item | ^this.newCopyArgs(name, item) }

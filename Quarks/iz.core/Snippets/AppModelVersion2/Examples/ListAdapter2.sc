@@ -4,12 +4,17 @@ ListAdapter should contain the list as an independent object, so that multiple L
 
 */
 
-NamedList : List {
+NamedList : List {		// used for BufferListGui
 	var <>name;
 	
 }
 
 ListAdapter2 {
+	/* Actual list is contained in items variable. It should be a kind of List. 
+	Different views can hold different ListAdapter2 instances with the same list as items.
+	That way, the different views can operate on different items of the list, while updating 
+	themselves if the list changes.
+	*/
 	var <>container, <items, <index = 0, <item;
 
 	*new { | container | ^super.new.init(container) }
@@ -22,6 +27,8 @@ ListAdapter2 {
 	updateMessage { ^\list }
 
 	items_ { | changer, argItems |
+		/* 	Remove connection to previous list, and create connection to new list.
+			When the list changes, it notifies me, so that I can update my listeners. */
 		items !? { this.removeNotifier(items, \list); };
 		if (argItems isKindOf: Array) { argItems = List.newUsing(argItems) };
 		items = argItems ?? { List.new };

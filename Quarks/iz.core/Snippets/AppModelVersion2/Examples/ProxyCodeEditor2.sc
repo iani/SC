@@ -101,7 +101,7 @@ ProxyCodeEditor2 : AppModel {
 
 	addViews { | window, proxy |
 		window.layout = VLayout(
-			[this.textView(\editor).listItem.sublistOf(\proxy, { | item | 
+			[this.textView(\editor).makeStringGetter.listItem.sublistOf(\proxy, { | item | 
 				if (item.isNil) { "<empty" } { item.history }
 			}).view.font_(Font("Monaco", 10)), s: 10],
 			HLayout(
@@ -113,6 +113,15 @@ ProxyCodeEditor2 : AppModel {
 				).view.font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
 				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
+				this.button(\editor).action_({ | widget |
+					var proxy = this.proxy;
+					proxy !? { 
+						proxyCode.evalInProxySpace(
+							widget.getString, proxy, this.proxyName, 
+							start: false, addToSourceHistory: false
+						)
+					};
+				}).view.states_([["eval"]]).font_(font),
 				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
 				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
 			),
@@ -128,7 +137,7 @@ ProxyCodeEditor2 : AppModel {
 
 	proxy { ^this.proxyItem.item }
 	proxyName { ^this.proxyItem.name }
-	proxyItem { ^this.getValue(\proxy).item }
+	proxyItem { ^this.getValue(\proxy).adapter.item }
 
 	resizeWindow { this.notify(\toggleWindowSize) }
 

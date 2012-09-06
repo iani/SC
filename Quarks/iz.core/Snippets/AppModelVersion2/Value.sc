@@ -163,14 +163,28 @@ Widget {
 		});
 	}
 
-	textView { | message = \getText | // for TextView. Adds updateAction to get text via button
+	textView { | message = \updateText | // for TextView. 
+		// Adds updateAction to update text to adapter via button
 		this.text;
-		this.updateAction(message, { | sender |
+		this.updateAction(message, { | sender | // TODO: this update action no longer used? 
 			if (sender !== this) { value.adapter.string_(this, view.string) }
 		});
 	}
 
-	// List views: ListView, PopUpMenu
+	makeStringGetter { | message = \getString |
+		// get the string from a view attached to your Value, without updating the Value itself
+		this.updateAction(message, { | stringRef | stringRef.value = view.string; });
+	}
+
+	getString { | message = \getString | 
+		// Use getString to get the string of a TextView prepared with makeStringGetter
+		var string;
+		string = `"";
+		value.notify(message, string);
+		^string.value;
+	}
+
+	// ======== List views: ListView, PopUpMenu =======
 	list { | getListAction |
 		value.adapter ?? { value.adapter = ListAdapter2(value) };
 		getListAction = getListAction ?? { { value.adapter.items collect: _.asString } };
@@ -199,6 +213,7 @@ Widget {
 	sublistOf { | valueName, getListFunction | // make me get my list from the item of another list
 		value.sublistOf(valueName, getListFunction);
 	}
+
 	// Other things to do with Lists: Insert, delete, replace, append, show index, show size, navigate
 
 	// Actions for adding, deleting, replacing items in a list

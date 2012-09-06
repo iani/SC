@@ -27,6 +27,19 @@ AppModel().window({ | window, app |
 	)
 });
 
+//:Getting the string from a view without updating the Value
+// Note: Advanced. Used by ProxyCodeEditor.
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.textView(\text).makeStringGetter.view,
+		app.button(\text).action_({ | me |
+			"the string of the other view is: ".post; me.getString.postln;
+			"the string in the Value container is: ".post; me.value.adapter.string.postln;
+		}).view.states_([["get string without updating"]])
+	)
+})
+
+
 //:Examples for text and button views with lists
 AppModel().window({ | window, app |
 	window.layout = VLayout(
@@ -83,9 +96,6 @@ AppModel().window({ | window, app |
 		app.button(\sublist).sublistOf(\list).nextItem.view.states_([["next"]]),
 	)
 });
-
-
-
 
 //:Creating list items by interpreting code from a text field
 // Note: The created elements only replace the elements on the list. 
