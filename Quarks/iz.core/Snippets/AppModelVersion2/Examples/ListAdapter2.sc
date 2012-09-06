@@ -66,7 +66,7 @@ ListAdapter2 {
 	}
 	
 	previous { this.index_(this, index - 1 max: 0) }
-	next { this.index_(this, index - 1 min: (items.size - 1)) }
+	next { this.index_(this, index + 1 min: (items.size - 1)) }
 	first { this.index_(this, 0); }
 	last { this.index_(this, items.size - 1) }
 

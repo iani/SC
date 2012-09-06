@@ -32,6 +32,7 @@ AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\list).do({ | me | me.value.adapter.items_(me, ["a", "b", "c"]) })
 			.view,
+		StaticText().string_("Press return to append my string to the list:"),
 		app.listItem(\list)
 			.append			// when return key is pushed, append new item to list
 			.replaceOn		// replace item if sent message \replace
@@ -77,7 +78,9 @@ AppModel().window({ | window, app |
 			}
 		}).items_([["alpha", "beta", "gamma"], ["delta", "epsilon"]])
 			.view,
-		app.listView(\sublist).sublistOf(\list).view
+		app.listView(\sublist).sublistOf(\list).view,
+		app.textField(\sublist).sublistOf(\list).listItem.view,
+		app.button(\sublist).sublistOf(\list).nextItem.view.states_([["next"]]),
 	)
 });
 

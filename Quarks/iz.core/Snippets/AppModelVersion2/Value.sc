@@ -125,7 +125,11 @@ Widget {
 		// add notifier to self. Provides self as argument to function 
 		this.addNotifier(notifier, message, { | ... args | action.(this, *args) })
 	}
-	
+
+	addValueListener { | listener, message, action |
+		value.addListener(listener, message, { action.(value) })
+	}
+
 	notify { | message | // set my view's action to make value send notification message with me
 		view.action = { value.notify(message, this) };
 	}
@@ -171,12 +175,14 @@ Widget {
 		value.adapter ?? { value.adapter = ListAdapter2(value) };
 		getListAction = getListAction ?? { { value.adapter.items collect: _.asString } };
 		view.action = { value.adapter.index_(this, view.value) };
-		this.updateAction(\list, { | sender |
+		this.updateAction(\list, { // | sender |
 				view.items = getListAction.(this);
 				view.value = value.adapter.index;
 		});
-		this.updateAction(\index, { | sender |
-			if (sender !== this) { view.value = value.adapter.index }
+		this.updateAction(\index, { // | sender |
+			/* if (sender !== this) { */
+			view.value = value.adapter.index
+			// }
 		});
 	}
 
@@ -186,14 +192,14 @@ Widget {
 	listItem { | getItemFunc | // display currently selected item from a list.
 		value.adapter ?? { value.adapter = ListAdapter2() };
 		getItemFunc = getItemFunc ?? { { value.adapter.item.asString } };
-		this.updateAction(\list, { | sender | view.string = getItemFunc.(this) });
-		this.updateAction(\index, { | sender | view.string = getItemFunc.(this) });
+		this.updateAction(\list, { view.string = getItemFunc.(this) });
+		this.updateAction(\index, { view.string = getItemFunc.(this) });
 	}	
 
 	sublistOf { | valueName, getListFunction | // make me get my list from the item of another list
 		value.sublistOf(valueName, getListFunction);
 	}
-	// Other things to do with Lists: Insert, delete, replace, append, show index, show size
+	// Other things to do with Lists: Insert, delete, replace, append, show index, show size, navigate
 
 	// Actions for adding, deleting, replacing items in a list
 	replace { | itemCreationFunc | // replace current item in list with an item you created
@@ -238,6 +244,7 @@ Widget {
 		view.action = { value.adapter.delete(this); };
 	}
 
+	// Getting index of current item and size of list
 	listIndex { | startAt = 1 | // NumberBox displaying / setting index of element in list
 		value.adapter ?? { value.adapter = ListAdapter2() };
 		view.action = {
@@ -259,5 +266,11 @@ Widget {
 			if (sender !== this) { view.value = value.adapter.size }
 		});
 	}
+	
+	// Navigating to different items in list
+	firstItem { view.action = { value.adapter.first } }
+	lastItem { view.action = { value.adapter.last } }
+	previousItem { view.action = { value.adapter.previous } }
+	nextItem { view.action = { value.adapter.next } }
 }
 

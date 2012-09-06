@@ -67,7 +67,6 @@ ProxyCodeEditor2 : AppModel {
 			window.front;
 			window.toFrontAction.value;
 		});
-		window.addNotifier(this, \setName, { | name | window.name = name });
 		window.addNotifier(this, \toggleWindowSize, { | mode |
 			if (mode == 1) {
 				window.bounds = bounds.copy.height_(850).top_(0);
@@ -102,22 +101,29 @@ ProxyCodeEditor2 : AppModel {
 
 	addViews { | window, proxy |
 		window.layout = VLayout(
-			this.popUpMenu(\proxies, { | me | 
-				me.value.adapter.items collect: _.name 
-			})
-			.items_(proxySpace.proxies)
-			.item_(
-				proxySpace.proxies detect: { | p | p.item === proxy }
-			).view,
-			this.textView(\editor).listItem.sublistOf(\proxies, { | item | item.history }).view,
+			[this.textView(\editor).listItem.sublistOf(\proxy, { | item | 
+				if (item.isNil) { "<empty" } { item.history }
+			}).view.font_(Font("Monaco", 10)), s: 10],
+			HLayout(
+				this.popUpMenu(\proxy, { | me | me.value.adapter.items collect: _.name })
+				.addValueListener(window, \index, { | value | window.name = value.adapter.item.name })
+				.items_(proxySpace.proxies)
+				.item_(
+					proxySpace.proxies detect: { | p | p.item === proxy }
+				).view.font_(font),
+				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
+				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
+				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
+				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
+			),
 			// for testing new spec update mechanism: 
 			this.popUpMenu(\specs, { | me | me.value.adapter.items collect: _[0] })
-				.sublistOf(\proxies, { | item | item.specs }).view,
+			.sublistOf(\proxy, { | item | item.specs }).view,
 		);
 	}
 	
 	proxy_ { | proxy |
-		this.getValue(\proxies).item_(this, proxySpace.proxies detect: { | p | p.item === proxy });
+		this.getValue(\proxy).item_(this, proxySpace.proxies detect: { | p | p.item === proxy });
 	}
 
 	proxy { ^this.proxyItem.item }
