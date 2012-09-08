@@ -7,6 +7,11 @@ ListAdapter should contain the list as an independent object, so that multiple L
 NamedList : List {		// used for BufferListGui
 	var <>name;
 	
+	*new { | name, items |
+		^super.new.name_(name).array_(if (items.isKindOf(List)) { items } { List.newUsing(items) });
+	}
+	
+	items { ^array }
 }
 
 ListAdapter2 {
@@ -93,4 +98,5 @@ ListAdapter2 {
 	collect { | func | ^items collect: func }
 	detect { | func | ^items detect: func }
 	select { | func | ^items select: func }
+	size { ^items.size }
 }

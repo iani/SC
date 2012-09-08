@@ -4,7 +4,7 @@ Strip of controls for a proxy. For use with ProxyCodeMixer
 
 */
 
-ProxyCodeStrip : AppModel {
+ProxyCodeStrip : AppModel0 {
 	var <>proxyCodeMixer, <>index;
 	var <>font, <>proxyOnColor;
 	

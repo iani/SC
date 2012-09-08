@@ -101,16 +101,22 @@ ProxyCodeEditor2 : AppModel {
 
 	addViews { | window, proxy |
 		window.layout = VLayout(
-			[this.textView(\editor).makeStringGetter.listItem.sublistOf(\proxy, { | item | 
-				if (item.isNil) { "<empty" } { item.history }
+			[this.textView(\editor).makeStringGetter.listItem.appendOn
+			.sublistOf(\proxy, { | item | 
+				if (item.isNil) { "<empty>" } { item.history }
 			}).view.font_(Font("Monaco", 10)), s: 10],
-			HLayout(
-				this.popUpMenu(\proxy, { | me | me.value.adapter.items collect: _.name })
+			[HLayout(
+				[this.popUpMenu(\proxy, { | me | me.value.adapter.items collect: _.name })
 				.addValueListener(window, \index, { | value | window.name = value.adapter.item.name })
 				.items_(proxySpace.proxies)
 				.item_(
 					proxySpace.proxies detect: { | p | p.item === proxy }
-				).view.font_(font),
+				).view.font_(font), s:4],
+				this.button(\editor).action_({ | me |
+					[{ "stopping".postln; }, { "starting".postln; }][me.view.value].value;
+				}).view.states_(
+					[["start", Color.black, Color.green], ["stop", Color.black, Color.red]]
+				).font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
 				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
 				this.button(\editor).action_({ | widget |
@@ -124,7 +130,24 @@ ProxyCodeEditor2 : AppModel {
 				}).view.states_([["eval"]]).font_(font),
 				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
 				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
-			),
+				this.button(\editor).notify(\append).view.states_([["add"]]).font_(font),
+				this.button(\editor).delete.view.states_([["delete"]]).font_(font),
+				this.button(\editor).action_({ | widget |
+					var proxy = this.proxy;
+					proxy !? { MergeSpecs.parseArguments(proxy, widget.getString) };
+				}).view.states_([["reset specs"]]).font_(font),
+				Button().states_([["history"]]).font_(font)
+					.action_({ proxyCode.openHistoryInDoc(this.proxy) }),
+				Button().states_([["all"]]).font_(font)
+					.action_({ proxyCode.openHistoryInDoc(nil) }),
+				StaticText().font_(font).string_("current:"),
+				[this.numberBox(\editor).listIndex.view.font_(font), s: 2],
+				StaticText().font_(font).string_("all:"),
+				[this.numberBox(\editor).listSize.view.font_(font), s: 2],
+				this.button(\resizeWindow)
+					.action_({ | me | this.notify(\toggleWindowSize, me.view.value) })
+					.view.font_(font).states_([["maximize"], ["minimize"]]),
+			), s:1],			
 			// for testing new spec update mechanism: 
 			this.popUpMenu(\specs, { | me | me.value.adapter.items collect: _[0] })
 			.sublistOf(\proxy, { | item | item.specs }).view,

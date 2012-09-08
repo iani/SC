@@ -36,7 +36,9 @@ ProxyItem : NamedItem {
 	}
 
 	specs_ { | argSpecs |
-		specs.array = argSpecs;
+		specs.array = argSpecs collect: { | s |
+			Value(item, ProxyControl2().parameter_(s[0]).spec_(s[1]));
+		};
 		specs.notify(\list);
 	}
 }

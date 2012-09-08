@@ -6,7 +6,7 @@ Stores and restores proxy and spec selections for a ProxyCodeMixer.
 
 */
 
-ProxyCodePreset : AppModel {
+ProxyCodePreset : AppModel0 {
 	var <>handler, <>index = 0, <>preset, <>font;
 
 	*new { | ... args | ^super.new(*args).init; }

@@ -88,12 +88,19 @@ Widget {
 	var <value; 	// the Value instance that I interact with;
 	var <view;  	// my view
 
+	*initClass {
+		StartUp add: {
+			// Allow (proxy-watching) widgets to start and stop watching cmdPeriod notifications
+			CmdPeriod add: { CmdPeriod.notify(\cmdPeriod) }
+		}
+	}
+
 	*new { | model, name, view |
 		^this.newCopyArgs(model, name).init(view); // get value and initialize view's onClose action
 	}
 
 	init { | argView |
-		name !? { value = model.getValue(name); };
+		name !? { value = model.getValue(name); }; // nameless and valueless widgets permitted (?)
 		argView !? { this.view = argView; };
 	}
 
@@ -130,7 +137,7 @@ Widget {
 		value.addListener(listener, message, { action.(value) })
 	}
 
-	notify { | message | // set my view's action to make value send notification message with me
+	notifyAction { | message | // set my view's action to make value send notification message with me
 		view.action = { value.notify(message, this) };
 	}
 	
@@ -166,11 +173,17 @@ Widget {
 	textView { | message = \updateText | // for TextView. 
 		// Adds updateAction to update text to adapter via button
 		this.text;
-		this.updateAction(message, { | sender | // TODO: this update action no longer used? 
+		this.updateAction(message, { | sender |
 			if (sender !== this) { value.adapter.string_(this, view.string) }
 		});
 	}
 
+	getText { | message = \updateText |
+		// Make a button get the text from a TextView and update the Value adapter
+		this.notifyAction(message);
+	}
+
+	// Special case: get string from view, for further processing, without updating Value
 	makeStringGetter { | message = \getString |
 		// get the string from a view attached to your Value, without updating the Value itself
 		this.updateAction(message, { | stringRef | stringRef.value = view.string; });
@@ -277,9 +290,7 @@ Widget {
 	listSize { // NumberBox displaying number of elements in list (list size). 
 		value.adapter ?? { value.adapter = ListAdapter2() };
 		view.enabled = false;
-		this.updateAction(\list, { | sender |
-			if (sender !== this) { view.value = value.adapter.size }
-		});
+		this.updateAction(\list, { view.value = value.adapter.size })
 	}
 	
 	// Navigating to different items in list
@@ -287,5 +298,81 @@ Widget {
 	lastItem { view.action = { value.adapter.last } }
 	previousItem { view.action = { value.adapter.previous } }
 	nextItem { view.action = { value.adapter.next } }
+	
+	// NodeProxy stuff
+	
+	/* Make a button act as play/stop switch for any proxy chosen by another widget from
+	   a proxy space. The button should be created on the same Value item as the choosing widget.
+	   The choosing widget is created simply as a listView/popUpmenu on a ProxySpace's proxies. Eg:  
+		app.listView(\proxies).items_(proxySpace.proxies).view ...
+	   */
+	proxyWatcher { | playAction, stopAction |
+		playAction ?? { playAction = { this.checkProxy(value.adapter.item.item.play); } };
+		stopAction ?? { stopAction = { value.adapter.item.item.stop } };
+		view.action = { [stopAction, playAction][view.value].(this) };
+		this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
+		this.updateAction(\list, { this.prStartWatchingProxy(value.adapter.item.item) });
+		this.updateAction(\index, { this.prStartWatchingProxy(value.adapter.item.item) });
+		this.prStartWatchingProxy(value.adapter.item.item);
+	}
+	
+	prStartWatchingProxy { | proxy |
+		// used internally by proxyWatcher method to connect proxy and disconnect previous one
+		this.notify(\disconnectProxy);	// remove notifiers to self from previous proxy
+		if (proxy.isNil) { view.value = 0; ^this };
+		this.addNotifier(proxy, \play, { view.value = 1 });
+		this.addNotifier(proxy, \stop, { view.value = 0 });
+		proxy.addNotifierOneShot(this, \disconnectProxy, { // prepare this proxy for removal
+			this.removeNotifier(proxy, \play);
+			this.removeNotifier(proxy, \stop);
+		});
+		this.checkProxy(proxy);
+	}
+	
+	checkProxy { | proxy | // check if proxy is monitoring and update button state
+		if (proxy.notNil and: { proxy.isMonitoring }) { view.value = 1 } { view.value = 0 };
+	}
+	
+	
+	//: TODO: Add automatic update of specs via notification from proxy
+	proxyControlList { | proxySelector |
+		// make a list of proxy control names for the proxy selected by proxySelector
+		// These are updated from the ProxyItems specs List through the \list message
+		// This updating is currently served by ProxyCode. Question here: 
+		// Parse proxy args every time? Would that not create an inconsistency 
+		// with proxy specs parsed from snippets via ProxyCode
+		// Should proxies parse arguments every time that the source changes? 
+		this.sublistOf(proxySelector, { | item |
+			if (item.specs.size == 0) { // only parse specs here if not already provided!
+				MergeSpecs.parseArguments(item.item);
+			};
+// always connect to item specs because you need updates: ???? therefore not [['-'], nil]] array?
+			if (item.specs.size == 0) { [['-', nil]] } { item.specs };
+			// !!!!!!!!!!!!!!!! THE ITEMS SPECS ARE MY LIST:
+//			item.specs;	// always connect to item specs because you need updates
+		}); // ProxyItem sends updates to me over its specs when updated by MergeSpecs
+		this.list({ | me | me.value.adapter.items collect: _[0] });
+	}
+
+	// TODO: We need access to the proxy itself to control it.
+	// Testing here.
+	proxyControl { | proxySelector |
+		// for NumberBox, Slider, Knob or other numeric views
+		// make my view control a parameter of a NodeProxy, selected by a proxyControl List
+		// proxyControl shares value with a ProxyControlList of which it is a kind of listItem
+		// we need the proxySelector to get the proxy that we operate on: 
+		if (proxySelector isKindOf: Symbol) { proxySelector = model.getValue(proxySelector) };
+		this.updateAction(\list, { value.adapter.item[1].postln; });
+		this.updateAction(\index, { value.adapter.item[1].postln; });
+		view.action_({
+			// will proxySelector remain available throughout the lifetime of the Widget? Should be.
+			[this, thisMethod.name, "proxy item???", proxySelector.adapter.item].postln;
+			value.adapter.item.postln; // print the spec we operate with
+		});
+	}
+	
+	
+	
+	
 }
 

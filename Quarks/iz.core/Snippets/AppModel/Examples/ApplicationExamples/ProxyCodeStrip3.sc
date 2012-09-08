@@ -6,7 +6,7 @@ This is an early version with knobs and no numbers for the 2 upper rows.
 
 */
 
-ProxyCodeStrip3 : AppModel {
+ProxyCodeStrip3 : AppModel0 {
 	var <>proxyCodeMixer, <>index;
 	var <>font, <>proxyOnColor;
 	

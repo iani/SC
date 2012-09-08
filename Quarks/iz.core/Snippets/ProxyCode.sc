@@ -212,8 +212,8 @@ ProxyCode {
 	}
 
 	editNodeProxySource { | proxy |
-//		ProxyCodeEditor(this, proxy);
-		ProxyCodeEditor2(this, proxy);
+		ProxyCodeEditor(this, proxy);
+//		ProxyCodeEditor2(this, proxy);
 	}
 
 	openProxySourceEditor {
@@ -223,9 +223,9 @@ ProxyCode {
 		proxyHistory[proxy] ?? {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
-//		ProxyCodeEditor(this, proxy);
+		ProxyCodeEditor(this, proxy);
 //		[this, thisMethod.name, "proxy:", proxy].postln;
-		ProxyCodeEditor2(this, proxy);
+//		ProxyCodeEditor2(this, proxy);
 	}
 
 	playCurrentDocProxy {
