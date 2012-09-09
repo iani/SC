@@ -284,7 +284,7 @@ ProxyCode {
 			title = Date.getDate.format("History for all proxies on %Y-%m-%e at %Hh:%Mm:%Ss");
 			docString = this.makeHistoryStringForAll;
 		}{
-			title = format("History for all % on %",
+			title = format("History for % on %",
 				proxySpace.envir.findKeyForValue(proxy),
 				Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss")
 			);

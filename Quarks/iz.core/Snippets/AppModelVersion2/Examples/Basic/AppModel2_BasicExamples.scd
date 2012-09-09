@@ -43,7 +43,7 @@ AppModel().window({ | window, app |
 		app.staticText(\text).view,
 		app.textView(\text).do({ | widget | 
 			widget.value.adapter.string_(widget, "Edit my TextView + press button to update");
-		}).view.keyDownAction_({ | view, char | char.postln; }),
+		}).view,
 		app.button(\text).getText.view.states_([["press me to update edited text"]]),
 	)
 })
@@ -62,18 +62,6 @@ AppModel().window({ | window, app |
 				me.view.value = me.value.adapter.string.size; 
 			}).view
 		)
-	)
-})
-
-//:Getting the string from a view without updating the Value
-// Note: Advanced. Used by ProxyCodeEditor.
-AppModel().window({ | window, app |
-	window.layout = VLayout(
-		app.textView(\text).makeStringGetter.view,
-		app.button(\text).action_({ | me |
-			"the string of the other view is: ".post; me.getString.postln;
-			"the string in the Value container is: ".post; me.value.adapter.string.postln;
-		}).view.states_([["get string without updating"]])
 	)
 })
 
@@ -211,3 +199,19 @@ AppModel().window({ | window, app |
 		app.button(\list).notifyAction(\insert).view.states_([["insert"]]),
 	)
 });
+
+//:===================== Special cases
+
+//:Getting the string from a view without updating the Value
+// Note: Advanced. Used by ProxyCodeEditor.
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.textView(\text).makeStringGetter.view,
+		app.button(\text).action_({ | me |
+			"the string of the other view is: ".post; me.getString.postln;
+			"the string in the Value container is: ".post; me.value.adapter.string.postln;
+		}).view.states_([["get string without updating"]])
+	)
+})
+
+

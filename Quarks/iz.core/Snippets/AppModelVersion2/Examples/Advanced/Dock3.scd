@@ -10,7 +10,7 @@ Finally, the document list window could be incorporated in the Panes class.
 Document.openDocuments.first.front
 */
 
-AppModel2().window({ | window, app |
+AppModel().window({ | window, app |
 	var updateDocList, currentDocumentIndex;
 	var currentDocuments;  // keep track of last open document to retrieve when a document closes
 	currentDocuments = Document.openDocuments.copy add: Document.current;

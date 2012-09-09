@@ -221,6 +221,7 @@ Widget {
 		getItemFunc = getItemFunc ?? { { value.adapter.item.asString } };
 		this.updateAction(\list, { view.string = getItemFunc.(this) });
 		this.updateAction(\index, { view.string = getItemFunc.(this) });
+		this.replace;		// default action is replace 
 	}	
 
 	sublistOf { | valueName, getListFunction | // make me get my list from the item of another list
