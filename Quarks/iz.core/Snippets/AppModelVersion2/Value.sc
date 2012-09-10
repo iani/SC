@@ -364,12 +364,11 @@ Widget {
 	}
 	
 	
-	//: TODO: Add automatic update of specs via notification from proxy
 	proxyControlList { | proxySelector |
 		// make a list of proxy control names for the proxy selected by proxySelector
 		// These are updated from the ProxyItems specs List through the \list message
-		// This updating is currently served by ProxyCode. Question here: 
-		// Parse proxy args every time? Would that not create an inconsistency 
+		// Update messages are currently sent by ProxyCode:evalInProxySpace.  
+		// Questions: Parse proxy args every time? Would that not create an inconsistency 
 		// with proxy specs parsed from snippets via ProxyCode
 		// Should proxies parse arguments every time that the source changes? 
 		this.sublistOf(proxySelector, { | item |
