@@ -7,9 +7,24 @@ See also: ProxyItem, Widget:proxyControl.
 */
 
 ProxyControl2 : NumberAdapter {
-	var <>parameter;		// (a Symbol): name of parameter to set 
+	var <>proxy;			// the proxy which I control.
+	var <parameter;		// (a Symbol): name of parameter to set 
 	var <controlAction;	// action for setting the proxy's parameter
 
+	standardizedValue_ { | changer, mappedNumber |
+		super.standardizedValue_(changer, mappedNumber);
+		controlAction.value;
+	}
 
-	
+	parameter_ { | argParameter |
+		parameter = argParameter;
+		// set action according to type of parameter:
+		controlAction = switch ( parameter, 
+			'-', { { } },
+			'vol', { { proxy.vol = value } },
+			'fadeTime', { { proxy.fadeTime = value } },
+			{ { proxy.set(parameter, value) } }
+		);
+	}
+
 }

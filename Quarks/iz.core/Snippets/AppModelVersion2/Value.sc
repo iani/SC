@@ -118,6 +118,17 @@ Widget {
 		// set my view's action. Pass myself for access to my value etc. 
 		view.action = { action.(this) };
 	}
+	
+	/* Set my Value. Remove notification connections from any previous value, and prepare
+	   the new value to discnnect if replaced by another one later. Used by prSetControl method.
+	   The message notification setup on value must be done separately useing updateAction. */
+	value_ { | argValue ... messages |
+		this.notify(\disconnect); // Cause previous Value to remove notifications to myself
+		value = argValue;
+		value.addNotifierOneShot(this, \disconnect, {
+			messages do: { | m | this.removeNotifier(value, m); }
+		});
+	}  
 	// set my Value's adapter
 	adapter_ { | adapter | value.adapter = adapter; }
 	
@@ -196,7 +207,17 @@ Widget {
 		value.notify(message, string);
 		^string.value;
 	}
-
+	
+	// ======== Shortcuts (suggested by NC at demo in Leeds ==========
+	string_ { | string | value.adapter.string_(this, string); }
+	string { ^value.adapter.string }
+	// TODO: rename value variable and methods of SpecAdapter ????
+	// Name issues: number? magnitude? 
+	number_ { | string | value.adapter.value_(this, string); }
+	number { ^value.adapter.value }
+	standardizedNumber_ { | string | value.adapter.standardizedValue_(this, string); }
+	standardizedNumber { ^value.adapter.standardizedValue } // again: naming issues. See value above
+	
 	// ======== List views: ListView, PopUpMenu =======
 	list { | getListAction |
 		value.adapter ?? { value.adapter = ListAdapter2(value) };
@@ -214,7 +235,10 @@ Widget {
 	}
 
 	items_ { | items | value.adapter.items_(this, items); }
+	items { ^value.adapter.items }
 	item_ { | item | value.adapter.item_(this, item); }
+	item { ^value.adapter.item }
+	index { ^value.adapter.index }
 
 	listItem { | getItemFunc | // display currently selected item from a list.
 		value.adapter ?? { value.adapter = ListAdapter2() };
@@ -305,8 +329,13 @@ Widget {
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
 	   a proxy space. The button should be created on the same Value item as the choosing widget.
 	   The choosing widget is created simply as a listView/popUpmenu on a ProxySpace's proxies. Eg:  
-		app.listView(\proxies).items_(proxySpace.proxies).view ...
+		app.listView(\proxies).items_(proxySpace.proxies).view. 
+		Shortcut for listView for choosing proxies: proxyList. 
 	   */
+	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
+		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
+	}
+
 	proxyWatcher { | playAction, stopAction |
 		playAction ?? { playAction = { this.checkProxy(value.adapter.item.item.play); } };
 		stopAction ?? { stopAction = { value.adapter.item.item.stop } };
@@ -347,33 +376,33 @@ Widget {
 			if (item.specs.size == 0) { // only parse specs here if not already provided!
 				MergeSpecs.parseArguments(item.item);
 			};
-// always connect to item specs because you need updates: ???? therefore not [['-'], nil]] array?
-			if (item.specs.size == 0) { [['-', nil]] } { item.specs };
-			// !!!!!!!!!!!!!!!! THE ITEMS SPECS ARE MY LIST:
-//			item.specs;	// always connect to item specs because you need updates
-		}); // ProxyItem sends updates to me over its specs when updated by MergeSpecs
-		this.list({ | me | me.value.adapter.items collect: _[0] });
+			item.specs; // the specs are Value instances to which widgets connect
+		});
+		this.list({ | me | me.items collect: { | v | v.adapter.parameter } });
 	}
 
-	// TODO: We need access to the proxy itself to control it.
-	// Testing here.
-	proxyControl { | proxySelector |
-		// for NumberBox, Slider, Knob or other numeric views
-		// make my view control a parameter of a NodeProxy, selected by a proxyControl List
-		// proxyControl shares value with a ProxyControlList of which it is a kind of listItem
-		// we need the proxySelector to get the proxy that we operate on: 
-		if (proxySelector isKindOf: Symbol) { proxySelector = model.getValue(proxySelector) };
-		this.updateAction(\list, { value.adapter.item[1].postln; });
-		this.updateAction(\index, { value.adapter.item[1].postln; });
-		view.action_({
-			// will proxySelector remain available throughout the lifetime of the Widget? Should be.
-			[this, thisMethod.name, "proxy item???", proxySelector.adapter.item].postln;
-			value.adapter.item.postln; // print the spec we operate with
+	proxyControl {
+		var paramList;	// The list of the proxyControlList from which parameters are chosen. 
+		// Later my value inst var will be changed. So I keep the paramList as a copy:
+		paramList = value.adapter;
+		this.listItem({ | me | me.item !? { me.item.adapter.parameter } });
+		this.updateAction(\list, { | sender, list |
+			paramList.item !? { this.prSetControl(paramList.item); };
+		});
+		this.updateAction(\index, { | sender, list |
+			paramList.item !? { this.prSetControl(paramList.item); };
 		});
 	}
 	
+	prSetControl { | proxyControl |
+		this.value_(proxyControl, \number);
+		this.connectMappedNumber;
+	}
 	
-	
-	
+	connectMappedNumber { // For Knob, Slider. 
+		var adapter;
+		adapter = value.adapter;
+		view.action = { adapter.standardizedValue_(this, view.value) };
+		this.updateAction(\number, { view.value = adapter.standardizedValue });
+	}
 }
-

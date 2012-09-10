@@ -157,7 +157,7 @@ ProxyCode {
 		History.enter(argSnippet);
 		this.class.startHistoryTimer;		
 	}
-	
+
 	// proxy history stuff 
 	/* Under review: proxyHistory variable will be removed. proxy histories stored in 
 		Library.at('Proxies', proxySpace) inside ProxyItems. 
@@ -165,7 +165,7 @@ ProxyCode {
 		mechanism. 
 		The only method that remains then is: addNodeSourceCodeToHistory
 	*/
-	
+
 	*replaceProxyHistory { | argProxy, argHistory, argChanger |
 		/* 	An application that changes my history sends the new version to me 
 			I notify all applications that I changed, so that they may update.
@@ -187,7 +187,7 @@ ProxyCode {
 			Also tell them who did the change, so that the changer may avoid re-updating */
 		this.class.notifyHistoryChanged(argProxy, argHistory, argChanger);
 	}
-	
+
 	addNodeSourceCodeToHistory { | argProxy, argSnippet |
 		// This part to be removed: 
 		var history;

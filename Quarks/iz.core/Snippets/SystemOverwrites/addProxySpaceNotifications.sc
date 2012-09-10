@@ -24,8 +24,6 @@
 			// new version: 
 			proxyItem = ProxyItem(key, proxy);
 			this.proxies.add(proxyItem).notify(\list, this); // proxies in order of creation
-			// Below not needed. Proxy spec update via \spec notification to ProxyItem
-//			Library.put('ProxyItems', proxy, proxyItem); // Access proxies for spec updates
 			this.notify(\proxies);
 		};
 		^proxy

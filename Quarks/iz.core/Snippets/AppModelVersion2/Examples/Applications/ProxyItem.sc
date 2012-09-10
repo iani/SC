@@ -27,7 +27,9 @@ ProxyItem : NamedItem {
 	init {
 		history = List.new;
 		specs = List.new;
-		item !? { this.addNotifier(item, \proxySpecs, { | specs | this.specs = specs }) };
+		if (item.isNil) {
+			this.specs = [['-', nil]]
+		}{ this.addNotifier(item, \proxySpecs, { | specs | this.specs = specs }) };
 	}
 	
 	addSnippet { | snippet |
@@ -37,7 +39,7 @@ ProxyItem : NamedItem {
 
 	specs_ { | argSpecs |
 		specs.array = argSpecs collect: { | s |
-			Value(item, ProxyControl2().parameter_(s[0]).spec_(s[1]));
+			Value(item, ProxyControl2().proxy_(item).parameter_(s[0]).spec_(s[1]));
 		};
 		specs.notify(\list);
 	}
