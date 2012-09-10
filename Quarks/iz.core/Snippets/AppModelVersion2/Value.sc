@@ -396,13 +396,9 @@ Widget {
 	
 	prSetControl { | proxyControl |
 		this.value_(proxyControl, \number);
-		this.connectMappedNumber;
-	}
-	
-	connectMappedNumber { // For Knob, Slider. 
-		var adapter;
-		adapter = value.adapter;
-		view.action = { adapter.standardizedValue_(this, view.value) };
-		this.updateAction(\number, { view.value = adapter.standardizedValue });
+		/* provide appropriate view action and updateAction for a numerical value view.
+		The view sets these according to its Class.  */
+		view.connectToNumberValue(value.adapter, this);
+		value.adapter.getValueFromProxy;
 	}
 }

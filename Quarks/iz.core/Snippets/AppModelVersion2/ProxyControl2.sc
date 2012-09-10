@@ -16,6 +16,11 @@ ProxyControl2 : NumberAdapter {
 		controlAction.value;
 	}
 
+	value_ { | changer, mappedNumber |
+		super.value_(changer, mappedNumber);
+		controlAction.value;
+	}
+
 	parameter_ { | argParameter |
 		parameter = argParameter;
 		// set action according to type of parameter:
@@ -27,4 +32,13 @@ ProxyControl2 : NumberAdapter {
 		);
 	}
 
+	// Update own value and standardizeValue and notify 
+	getValueFromProxy {
+		super.value_(nil, switch ( parameter,
+			'-', { 0 },
+			'vol', { proxy.vol },
+			'fadeTime', { proxy.fadeTime },
+			{ proxy.get(parameter) }
+		));
+	}
 }

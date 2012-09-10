@@ -224,7 +224,6 @@ ProxyCode {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
 		ProxyCodeEditor(this, proxy);
-//		[this, thisMethod.name, "proxy:", proxy].postln;
 //		ProxyCodeEditor2(this, proxy);
 	}
 
