@@ -49,6 +49,7 @@ Since View Classes from different GUI kits have no way of knowing what "type of 
 	}
 }
 
+/*
 + JSCSlider {
 	connectToNumberValue { | adapter, widget |
 		this.action = { adapter.standardizedValue_(widget, this.value) };
@@ -56,7 +57,7 @@ Since View Classes from different GUI kits have no way of knowing what "type of 
 	}
 }
 
-+ JSCKnob {
++ JKnob {
 	connectToNumberValue { | adapter, widget |
 		this.action = { adapter.standardizedValue_(widget, this.value) };
 		widget.updateAction(\number, { this.value = adapter.standardizedValue });
@@ -70,4 +71,4 @@ Since View Classes from different GUI kits have no way of knowing what "type of 
 		widget.updateAction(\number, { this.value = adapter.value });
 	}
 }
-
+*/

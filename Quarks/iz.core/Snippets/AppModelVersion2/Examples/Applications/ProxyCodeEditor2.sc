@@ -103,18 +103,26 @@ ProxyCodeEditor2 : AppModel {
 		window.layout = VLayout(
 			[this.textView(\editor).makeStringGetter.listItem.appendOn
 			.sublistOf(\proxy, { | item | 
-				if (item.isNil) { "<empty>" } { item.history }
+				if (item.isNil) { "<empty>" } {
+					if (item.history.size == 0 and: { item.item.notNil }) { 
+						item.history.add(
+							format(
+								"//:%\n%", item.name, item.item.source.envirCompileString
+							)
+						)
+					};
+					item.history
+				}
 			}).view.font_(Font("Monaco", 10)), s: 10],
-			[HLayout(
-				[this.popUpMenu(\proxy, { | me | me.value.adapter.items collect: _.name })
+			[
+			HLayout(
+				[this.popUpMenu(\proxy).proxyList(proxySpace)
 				.addValueListener(window, \index, { | value | window.name = value.adapter.item.name })
-				.items_(proxySpace.proxies)
 				.item_(
 					proxySpace.proxies detect: { | p | p.item === proxy }
-				).view.font_(font), s:4],
-				this.button(\editor).action_({ | me |
-					[{ "stopping".postln; }, { "starting".postln; }][me.view.value].value;
-				}).view.states_(
+				)
+				.view.font_(font), s:4],
+				this.button(\proxy).proxyWatcher.view.states_(
 					[["start", Color.black, Color.green], ["stop", Color.black, Color.red]]
 				).font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
@@ -147,10 +155,8 @@ ProxyCodeEditor2 : AppModel {
 				this.button(\resizeWindow)
 					.action_({ | me | this.notify(\toggleWindowSize, me.view.value) })
 					.view.font_(font).states_([["maximize"], ["minimize"]]),
-			), s:1],			
-			// for testing new spec update mechanism: 
-			this.popUpMenu(\specs, { | me | me.value.adapter.items collect: _[0] })
-			.sublistOf(\proxy, { | item | item.specs }).view,
+			), 
+			s:1],
 		);
 	}
 	

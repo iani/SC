@@ -35,3 +35,22 @@ AppModel().window({ | window, app |
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
 
+//:Testing proxyList method
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\proxies).proxyList.view,
+	)
+})
+
+//:Testing ProxyCodeEditor2 class
+
+ProxyCodeEditor2();
+
+//:
+
+~out1;
+
+~out1.source;
+~out1.source.envirCompileString;
+
+.asCode;

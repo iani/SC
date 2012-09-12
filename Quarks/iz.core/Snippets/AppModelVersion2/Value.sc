@@ -363,7 +363,6 @@ Widget {
 		if (proxy.notNil and: { proxy.isMonitoring }) { view.value = 1 } { view.value = 0 };
 	}
 	
-	
 	proxyControlList { | proxySelector |
 		// make a list of proxy control names for the proxy selected by proxySelector
 		// These are updated from the ProxyItems specs List through the \list message
