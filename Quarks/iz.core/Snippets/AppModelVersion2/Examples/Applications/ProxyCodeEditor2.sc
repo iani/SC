@@ -101,7 +101,15 @@ ProxyCodeEditor2 : AppModel {
 
 	addViews { | window, proxy |
 		window.layout = VLayout(
-			[this.textView(\editor).makeStringGetter.listItem.appendOn
+			[this.textView(\editor).makeStringGetter
+			.listItem({ | me |
+				if (me.item.size == 0) {
+					"Please select a NodeProxy from the pop-up menu below left."
+				}{
+					me.item
+				}
+			})
+			.appendOn
 			.sublistOf(\proxy, { | item | 
 				if (item.isNil) { "<empty>" } {
 					if (item.history.size == 0 and: { item.item.notNil }) { 
@@ -122,11 +130,17 @@ ProxyCodeEditor2 : AppModel {
 					proxySpace.proxies detect: { | p | p.item === proxy }
 				)
 				.view.font_(font), s:4],
+/* TODO: Modify start function to get proxyName from editor's string contents, and then proxy from it.
+(Use editor's action below?). 
+User can thus create new proxies directly from the editor: */
 				this.button(\proxy).proxyWatcher.view.states_(
 					[["start", Color.black, Color.green], ["stop", Color.black, Color.red]]
 				).font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
 				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
+
+/* TODO: get proxyName from editor's string contents, and then proxy from it. 
+User can thus create new proxies directly from the editor: */
 				this.button(\editor).action_({ | widget |
 					var proxy = this.proxy;
 					proxy !? { 

@@ -47,10 +47,3 @@ AppModel().window({ | window, app |
 ProxyCodeEditor2();
 
 //:
-
-~out1;
-
-~out1.source;
-~out1.source.envirCompileString;
-
-.asCode;
