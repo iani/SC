@@ -1,5 +1,7 @@
 /* (IZ 2005-08-22)
 
+THIS FILE IS FOUND IN Lilt1 - where it is kept for backward compatibility.
+
 Map the input value from one range to another
 
 BiMap(inMin, inMax, inWarp, inStep, outMin, outMax, outWarp, outStep);
