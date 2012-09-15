@@ -14,8 +14,8 @@ AppModel().window({ | window, app |
 			var source, lines;
 			source = me.getString.postln;
 			lines = source.split($\n);
-			if (lines[0][0] !== $/) { 
-				lines = ["//: "] ++ lines;
+			if (lines[0][0] !== $/) {
+				lines = ["//:"] ++ lines;
 			};
 			if (lines[1][..2] != "var") {
 				lines = lines.insert(1, "var newbuffer = 'something'.p;");

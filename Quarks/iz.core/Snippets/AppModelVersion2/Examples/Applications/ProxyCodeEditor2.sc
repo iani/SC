@@ -10,8 +10,8 @@ ProxyCodeEditor2 : AppModel {
 	classvar <>all;	// all current instances of ProxyCodeEditor; 
 	classvar <>windowRects;
 	var <proxyCode, <proxySpace, <>font;
-	var <history;
 	var <controlMenus;	// control menu widgets for initializing parameters from NodeProxy
+	var <buffers;		// array of buffers selected by menus, inserted in code
 
 	*initClass {
 		windowRects = [
@@ -38,6 +38,7 @@ ProxyCodeEditor2 : AppModel {
 		font = Font.default.size_(10);
 		this.makeWindow(proxy);
 		this addMIDI: this.midiSpecs;
+		buffers = IdentityDictionary.new;
 	}
 
 	makeWindow { | proxy |
@@ -171,6 +172,25 @@ User can thus create new proxies directly from the editor: */
 					.view.font_(font).states_([["maximize"], ["minimize"]]),
 			), 
 			s:1],
+			// Buffer menus: 
+			[HLayout(
+				*({ | i |
+					var valName;
+					valName = format("buffer%", i).asSymbol;
+					this.popUpMenu(valName)
+					.updater(BufferItem, \bufferList, { | me, names | me.items_(names); })
+					.do({ | me | { // delay initialization: to not auto-resize of menu to big width:
+						me.items = ['-'] ++ Library.at['Buffers'].keys.asArray.sort 
+					}.defer(0.1) })
+					.addValueListener(this, \index, { | val | 
+						this.updateBuffers(valName, val.adapter.item) })
+					.view.font_(font)
+				} ! 8), 
+			// TODO: specify initial width to prevent menus growing wider because of buffer names
+			// view.maxWidth_(100) does not work here?
+			), s: 1],
+			
+			
 		);
 	}
 	
@@ -181,6 +201,15 @@ User can thus create new proxies directly from the editor: */
 	proxy { ^this.proxyItem.item }
 	proxyName { ^this.proxyItem.name }
 	proxyItem { ^this.getValue(\proxy).adapter.item }
+	updateBuffers { | valName, bufName |
+		var bufStrings, varString;
+		buffers[valName] = if (bufName === '-') { nil } { bufName };
+		bufStrings = buffers.keys.asArray.sort collect: { | bname |
+			Âformat("% = '%'.b", bname, buffers[bname]);
+		};
+		varString = bufStrings[1..].inject(bufStrings[0], { | vars, s | vars prCat: ", " ++ s });
+		varString.postln;
+	}
 
 	resizeWindow { this.notify(\toggleWindowSize) }
 
