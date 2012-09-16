@@ -4,6 +4,10 @@ Load synthdefs from SC code to Local Server at startup.  Provide GUI tools for b
 
 SynthDefs.makeGui;
 
+Sun 16 September 2012  2:45 PM EEST:
+	Removed references to TrigSpec, as this seems to have been removed from SCClassLibrary
+
+
 */
 
 SynthDefs { /* : Model */
@@ -18,7 +22,7 @@ SynthDefs { /* : Model */
 	*initClass {
 		// add some default to Spec
 		Class.initClassTree(ControlSpec);
-		Class.initClassTree(TrigSpec);	// don't let that change your gate and trig specs:
+//		Class.initClassTree(TrigSpec);	// don't let that change your gate and trig specs:
 		ControlSpec.specs.addAll([
 			\bufnum -> ControlSpec(0, 1023, \linear, 1, 0),
 			\trigger -> ControlSpec(0, 1, \linear, 1, 1),
@@ -29,8 +33,8 @@ SynthDefs { /* : Model */
 			\out -> ControlSpec(0, 4095, \linear, 1, 0),
 			// overwriting \gate, \trig - sorry Crucial. Crucial does not care about
 			// step anyway as far as I could gather so this would not bother his lib:
-			\gate -> TrigSpec(0, 1, \linear, 1, 0), // only change: Step = 1, not 0
-			\trig -> TrigSpec(0, 1, \linear, 1, 0), // only change: Step = 1, not 0
+//			\gate -> TrigSpec(0, 1, \linear, 1, 0), // only change: Step = 1, not 0
+//			\trig -> TrigSpec(0, 1, \linear, 1, 0), // only change: Step = 1, not 0
 			\pulse -> ControlSpec(0.1, 30, \exponential, 0, 1),
 			\attack -> ControlSpec(0.001, 5, \exponential, 0, 0.01),
 			\decay -> ControlSpec(0.001, 5, \exponential, 0, 0.25),
