@@ -151,6 +151,7 @@ ProxyCode {
 			postf("snippet: %\n", snippet);
 			this.enterSnippet2History(snippet);
 		}
+		^proxy;
 	}
 
 	enterSnippet2History { | argSnippet |

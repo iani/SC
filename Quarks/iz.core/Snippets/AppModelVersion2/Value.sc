@@ -20,6 +20,15 @@ Value {
 		this.updateListeners;
 	}
 
+	// Text utilities
+	getString { | message = \getString | // Get the string of a TextView prepared with makeStringGetter
+		var string;
+		string = `"";
+		this.notify(message, string);
+		^string.value;
+	}
+
+	// List utilities
 	// make me get my list from the item of another list
 	sublistOf { | superList, getListFunction |
 		this.adapter = ListAdapter2();
@@ -34,9 +43,8 @@ Value {
 		});
 	}
 
-	items_ { | changer, items |
-		adapter.items_(changer, items);
-	}
+	items_ { | changer, items | adapter.items_(changer, items); }
+	item_ { | changer, item | adapter.item_(changer, item); }
 
 	// MIDI and OSC
 	enable { inputs do: _.enable }
@@ -145,13 +153,14 @@ Widget {
 	}
 
 	addValueListener { | listener, message, action |
+		// make some other object perform an action whenever receiving a message from my Value
 		value.addListener(listener, message, { action.(value) })
 	}
 
 	notifyAction { | message | // set my view's action to make value send notification message with me
 		view.action = { value.notify(message, this) };
 	}
-	
+
 	// Initializing behavior for different types of views and functions
 
 	// Numeric value views: NumberBox, Slider, Knob
@@ -196,16 +205,13 @@ Widget {
 
 	// Special case: get string from view, for further processing, without updating Value
 	makeStringGetter { | message = \getString |
-		// get the string from a view attached to your Value, without updating the Value itself
+		// get the string from a view attached to some Value, without updating the Value itself
 		this.updateAction(message, { | stringRef | stringRef.value = view.string; });
 	}
 
 	getString { | message = \getString | 
 		// Use getString to get the string of a TextView prepared with makeStringGetter
-		var string;
-		string = `"";
-		value.notify(message, string);
-		^string.value;
+		^value.getString(message);
 	}
 	
 	// ======== Shortcuts (suggested by NC at demo in Leeds ==========
@@ -326,16 +332,15 @@ Widget {
 	
 	// NodeProxy stuff
 	
-	/* Make a button act as play/stop switch for any proxy chosen by another widget from
-	   a proxy space. The button should be created on the same Value item as the choosing widget.
-	   The choosing widget is created simply as a listView/popUpmenu on a ProxySpace's proxies. Eg:  
-		app.listView(\proxies).items_(proxySpace.proxies).view. 
-		Shortcut for listView for choosing proxies: proxyList. 
-	   */
 	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
 	}
 
+	/* Make a button act as play/stop switch for any proxy chosen by another widget from
+	a proxy space. The button should be created on the same Value item as the choosing widget.
+	The choosing widget is created simply as a listView/popUpmenu on a ProxySpace's proxies. Eg:  
+		app.listView(\proxies).items_(proxySpace.proxies).view. 
+	Shortcut for listView for choosing proxies: proxyList. */
 	proxyWatcher { | playAction, stopAction |
 		playAction ?? { playAction = { this.checkProxy(value.adapter.item.item.play); } };
 		stopAction ?? { stopAction = { value.adapter.item.item.stop } };
@@ -361,6 +366,7 @@ Widget {
 	
 	checkProxy { | proxy | // check if proxy is monitoring and update button state
 		if (proxy.notNil and: { proxy.isMonitoring }) { view.value = 1 } { view.value = 0 };
+		^proxy; // for further use if in another expression.
 	}
 	
 	proxyControlList { | proxySelector |

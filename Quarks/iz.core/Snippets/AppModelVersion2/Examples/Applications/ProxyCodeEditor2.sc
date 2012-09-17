@@ -105,7 +105,7 @@ ProxyCodeEditor2 : AppModel {
 			[this.textView(\editor).makeStringGetter
 			.listItem({ | me |
 				if (me.item.size == 0) {
-					"Please select a NodeProxy from the pop-up menu below left."
+					"//:out\n{ | freq = 440 | SinOsc.ar(freq, 0, 0.1) }"
 				}{
 					me.item
 				}
@@ -131,25 +131,23 @@ ProxyCodeEditor2 : AppModel {
 					proxySpace.proxies detect: { | p | p.item === proxy }
 				)
 				.view.font_(font), s:4],
-/* TODO: Modify start function to get proxyName from editor's string contents, and then proxy from it.
-(Use editor's action below?). 
-User can thus create new proxies directly from the editor: */
-				this.button(\proxy).proxyWatcher.view.states_(
+				this.button(\proxy).proxyWatcher({ | me |
+					if(me.item.item.isNil or: { me.item.item.source.isNil }) {
+						this.proxy = me.checkProxy(proxyCode.evalInProxySpace(
+							this.getValue(\editor).getString, start: true, addToSourceHistory: true
+						))
+					}{
+						me.checkProxy(me.item.item.play);
+					}
+				}).view.states_(
 					[["start", Color.black, Color.green], ["stop", Color.black, Color.red]]
 				).font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
 				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
-
-/* TODO: get proxyName from editor's string contents, and then proxy from it. 
-User can thus create new proxies directly from the editor: */
 				this.button(\editor).action_({ | widget |
-					var proxy = this.proxy;
-					proxy !? { 
-						proxyCode.evalInProxySpace(
-							widget.getString, proxy, this.proxyName, 
-							start: false, addToSourceHistory: false
-						)
-					};
+					this.proxy = proxyCode.evalInProxySpace(
+						widget.getString, start: false, addToSourceHistory: false
+					);
 				}).view.states_([["eval"]]).font_(font),
 				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
 				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
@@ -176,10 +174,10 @@ User can thus create new proxies directly from the editor: */
 			[HLayout(
 				*({ | i |
 					var valName;
-					valName = format("buffer%", i).asSymbol;
+					valName = format("b%", i).asSymbol;
 					this.popUpMenu(valName)
 					.updater(BufferItem, \bufferList, { | me, names | me.items_(names); })
-					.do({ | me | { // delay initialization: to not auto-resize of menu to big width:
+					.do({ | me | { // delay initialization: to not auto-resize menu to big width:
 						me.items = ['-'] ++ Library.at['Buffers'].keys.asArray.sort 
 					}.defer(0.1) })
 					.addValueListener(this, \index, { | val | 
@@ -193,22 +191,30 @@ User can thus create new proxies directly from the editor: */
 			
 		);
 	}
-	
+
 	proxy_ { | proxy |
 		this.getValue(\proxy).item_(this, proxySpace.proxies detect: { | p | p.item === proxy });
 	}
-
 	proxy { ^this.proxyItem.item }
 	proxyName { ^this.proxyItem.name }
 	proxyItem { ^this.getValue(\proxy).adapter.item }
-	updateBuffers { | valName, bufName |
-		var bufStrings, varString;
+	updateBuffers { | valName, bufName | // insert variable declaration for chosen buffers to code
+		var bufStrings, varString, editor, source, lines;
 		buffers[valName] = if (bufName === '-') { nil } { bufName };
 		bufStrings = buffers.keys.asArray.sort collect: { | bname |
-			Âformat("% = '%'.b", bname, buffers[bname]);
+			format("% = '%'.b", bname, buffers[bname]);
 		};
 		varString = bufStrings[1..].inject(bufStrings[0], { | vars, s | vars prCat: ", " ++ s });
-		varString.postln;
+		if (varString.notNil) { varString = "var " ++ varString ++ ";" };
+		editor = this.getValue(\editor);
+		source = editor.getString;
+		lines = source.split($\n);
+		if (lines[0][0] !== $/) { lines = ["//:"] ++ lines; };
+		if (lines[1][..2] == "var") { lines[1] = varString; } { lines = lines.insert(1, varString); };
+		lines remove: nil; // if no buffers chosen, then remove var declaration line
+		editor.adapter.replace(this, 
+			lines[1..].inject(lines[0], { | code, line | code prCat: "\n" ++ line })
+		);
 	}
 
 	resizeWindow { this.notify(\toggleWindowSize) }

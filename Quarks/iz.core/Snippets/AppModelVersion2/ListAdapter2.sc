@@ -54,6 +54,7 @@ ListAdapter2 {
 	}
 
 	replace { | changer, argItem, argIndex |
+		if (items.size == 0) { ^this.append(changer, argItem) };
 		items.put(argIndex ? index, argItem);
 		item = argItem;
 		items.notify(\list, changer);

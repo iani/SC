@@ -214,4 +214,14 @@ AppModel().window({ | window, app |
 	)
 })
 
-
+//:Changing the item of a list from another value widget.
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.popUpMenu(\list).items_(["alpha", "beta", "gamma"]).view,
+		app.listView(\list).view,
+		app.textField(\list).listItem.view,
+		app.button(\other).action_({ 
+			app.getValue(\list).adapter.replace(app, "testing testing testing")
+		}).states_([["test change item"]]);
+	)
+})
