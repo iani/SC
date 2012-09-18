@@ -74,12 +74,18 @@ ProxyCode {
 		^snippet = code.getSnippetStringAt(index);	
 	}
 
+	getProxy { | argSnippet, argIndex |
+		^proxy = proxySpace[this.getProxyName(argSnippet ? snippet, argIndex ? index)];
+	}
+
+/*
 	getProxy {
 		// The proxyName part maybe should be replaced by getProxyName method
 		proxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
 		proxyName = (proxyName ?? { [0, format("out%", index)] })[1].asSymbol;
 		^proxy = proxySpace[proxyName];
 	}
+*/
 
 	getProxyName { | argSnippet, argIndex = 0 |
 		^(argSnippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1] ?? {
@@ -299,8 +305,18 @@ ProxyCode {
 			"/* *********** HISTORY FOR ALL PROXIES on % *********** */\n",
 			Date.getDate.format("%Y-%m-%e at %Hh:%Mm:%Ss")
 		);
+		docString = docString ++ this.makeLoadBuffersString;
 		histories = proxyHistory.keys collect: this.makeHistoryStringForProxy(_);
 		^histories.inject(docString, { | a, b | a ++ b });
+	}
+
+	makeLoadBuffersString {
+		var buffers;
+		buffers = Library.at('Buffers').asArray;
+		if (buffers.size == 0) { ^"" };
+		^buffers.inject("\n// ====== BUFFERS ====== \n\n", { | str, b |
+			str ++ format("BufferItem(%).load;\n", b.name.asCompileString);
+		});
 	}
 
 	makeHistoryStringForProxy { | proxy |
@@ -317,6 +333,14 @@ ProxyCode {
 			++ b
 		};
 		);
+	}
+
+	// =========== Loading all Proxies from a Document ===========
+
+	loadAll {
+		Code(doc).getAllSnippetStrings do: { | snippet, index |
+			this.addNodeSourceCodeToHistory(this.getProxy(snippet, index), snippet);
+		};
 	}
 }
 

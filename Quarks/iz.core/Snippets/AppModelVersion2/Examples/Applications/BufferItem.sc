@@ -42,8 +42,10 @@ BufferItem : NamedItem {
 		var nameSymbol, existing;
 		nameSymbol = PathName(name).fileNameWithoutExtension.asSymbol;
 		(existing = all[nameSymbol]) !? { ^existing };
-		^super.new(name).nameSymbol_(nameSymbol);
+		^super.new(name).nameSymbol_(nameSymbol).register;
 	}
+
+	register { all[nameSymbol] = this }
 
 	rebuild {
 		var existing;
@@ -55,10 +57,6 @@ BufferItem : NamedItem {
 			all[nameSymbol] = this;
 			^this;  // (;-)
 		}
-	}
-
-	init {
-		nameSymbol = PathName(name).fileNameWithoutExtension.asSymbol;
 	}
 
 	load { | extraAction | // mechanism for loading next buffer after this one is loaded

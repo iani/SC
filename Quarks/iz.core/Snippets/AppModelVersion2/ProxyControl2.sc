@@ -12,6 +12,8 @@ ProxyControl2 : NumberAdapter {
 	var <controlAction;	// action for setting the proxy's parameter
 
 	standardizedValue_ { | changer, mappedNumber |
+		// prevent funny wiring of all nil-params? : ...
+//		if (parameter === '-') { ^this }; // ... No: leave it anyway, for efficiency. No harm done.
 		super.standardizedValue_(changer, mappedNumber);
 		controlAction.value;
 	}

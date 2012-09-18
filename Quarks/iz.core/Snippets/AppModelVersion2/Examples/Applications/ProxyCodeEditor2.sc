@@ -6,12 +6,11 @@ Edit Code of a proxy from ProxyCode snippets. Provide history of edited versions
 
 */
 
-ProxyCodeEditor2 : AppModel {
+ProxyCodeEditor : AppModel {
 	classvar <>all;	// all current instances of ProxyCodeEditor; 
 	classvar <>windowRects;
 	var <proxyCode, <proxySpace, <>font;
-	var <controlMenus;	// control menu widgets for initializing parameters from NodeProxy
-	var <buffers;		// array of buffers selected by menus, inserted in code
+	var <buffers;		// Dictionary of buffers selected by menus, inserted in code as variables
 
 	*initClass {
 		windowRects = [
@@ -45,17 +44,6 @@ ProxyCodeEditor2 : AppModel {
 		this.window({ | window |
 			this.addWindowActions(window);
 			this.addViews(window, proxy);
-			// add auto-allocation of controls from parsed NodeProxy parameters: 
-/*			controlMenus = [
-				{ | i | this.getValue(format("slidermenu%", i).asSymbol) } ! 8,
-				{ | i | this.getValue(format("knobmenu%", i).asSymbol) } ! 8,
-			].flop.flat;
-			controlMenus do: { | cm, i |
-				cm.addAction({ | adapter, func |
-					if (adapter.adapter.items.size - 1 > i) { adapter.adapter.selectAt(i + 1, func) }
-				})	
-			}
-*/
 		});
 
 	}
@@ -176,7 +164,7 @@ ProxyCodeEditor2 : AppModel {
 					var valName;
 					valName = format("b%", i).asSymbol;
 					this.popUpMenu(valName)
-					.updater(BufferItem, \bufferList, { | me, names | me.items_(names); })
+					.updater(BufferItem, \bufferList, { | me, names | me.items_(['-'] ++ names); })
 					.do({ | me | { // delay initialization: to not auto-resize menu to big width:
 						me.items = ['-'] ++ Library.at['Buffers'].keys.asArray.sort 
 					}.defer(0.1) })
@@ -187,7 +175,29 @@ ProxyCodeEditor2 : AppModel {
 			// TODO: specify initial width to prevent menus growing wider because of buffer names
 			// view.maxWidth_(100) does not work here?
 			), s: 1],
-			
+			[HLayout(
+				*({ | i |
+					var knobmenu, slidermenu;
+					knobmenu = format("knobmenu%", i).asSymbol;
+					slidermenu = format("slidermenu%", i).asSymbol;
+					VLayout(
+						this.popUpMenu(knobmenu).proxyControlList(\proxy, i * 2 + 2)
+						.view.font_(font),
+						HLayout(
+							this.slider(slidermenu).proxyControl
+									.view.orientation_(\vertical),
+							VLayout(
+								this.knob(knobmenu).proxyControl(knobmenu).view,
+								this.numberBox(knobmenu).proxyControl.view.font_(font),
+								this.numberBox(slidermenu).proxyControl.view.font_(font),
+							)
+						),
+						this.popUpMenu(slidermenu).proxyControlList(\proxy, i * 2 + 1)
+						.view.font_(font),
+					)
+
+				} ! 8)
+			), s:2]
 			
 		);
 	}

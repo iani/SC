@@ -3,9 +3,12 @@ Remaking ProxySourceEditor as AppModel.
 
 Edit Code of a proxy from ProxyCode snippets. Provide history of edited versions, and navigation amongst history and amongst different proxies. 
 
+REPLACED BY NEW VERSION OF ProxyCodeEditor: Tue 18 September 2012  4:00 PM EEST
+
+
 */
 
-ProxyCodeEditor : AppModel0 {
+ProxyCodeEditor0 : AppModel0 {
 	classvar <>all;	// all current instances of ProxyCodeEditor; 
 	classvar <>windowRects;
 	var <proxyCode, <proxySpace, <>font;

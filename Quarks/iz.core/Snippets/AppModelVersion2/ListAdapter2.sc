@@ -101,3 +101,4 @@ ListAdapter2 {
 	select { | func | ^items select: func }
 	size { ^items.size }
 }
+

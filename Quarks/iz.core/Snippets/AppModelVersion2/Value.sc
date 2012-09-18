@@ -20,7 +20,7 @@ Value {
 		this.updateListeners;
 	}
 
-	// Text utilities
+	// === Text utilities ===
 	getString { | message = \getString | // Get the string of a TextView prepared with makeStringGetter
 		var string;
 		string = `"";
@@ -28,7 +28,7 @@ Value {
 		^string.value;
 	}
 
-	// List utilities
+	// === List utilities ===
 	// make me get my list from the item of another list
 	sublistOf { | superList, getListFunction |
 		this.adapter = ListAdapter2();
@@ -46,7 +46,7 @@ Value {
 	items_ { | changer, items | adapter.items_(changer, items); }
 	item_ { | changer, item | adapter.item_(changer, item); }
 
-	// MIDI and OSC
+	// === MIDI and OSC ===
 	enable { inputs do: _.enable }
 	disable { inputs do: _.disable }
 
@@ -369,33 +369,50 @@ Widget {
 		^proxy; // for further use if in another expression.
 	}
 	
-	proxyControlList { | proxySelector |
+	proxyControlList { | proxySelector, autoSelect |
 		// make a list of proxy control names for the proxy selected by proxySelector
 		// These are updated from the ProxyItems specs List through the \list message
 		// Update messages are currently sent by ProxyCode:evalInProxySpace.  
 		// Questions: Parse proxy args every time? Would that not create an inconsistency 
 		// with proxy specs parsed from snippets via ProxyCode
 		// Should proxies parse arguments every time that the source changes? 
+		/* If autoSelect is given a positive integer value, then the widget will select
+		   the nth parameter, if available whenever the list of parameter changes */
 		this.sublistOf(proxySelector, { | item |
 			if (item.specs.size == 0) { // only parse specs here if not already provided!
 				MergeSpecs.parseArguments(item.item);
 			};
 			item.specs; // the specs are Value instances to which widgets connect
 		});
-		this.list({ | me | me.items collect: { | v | v.adapter.parameter } });
+		if (autoSelect.isNil) {
+			this.list({ | me |
+				me.items collect: { | v | v.adapter.parameter };
+			});			
+		}{
+			this.list({ | me |
+				if (autoSelect < me.items.size) { me.value.adapter.index_(nil, autoSelect); };
+				me.items collect: { | v | v.adapter.parameter };
+			});			
+		};
+		value.notify(\initProxyControls);	// Initialize proxyControls created before me
 	}
 
 	proxyControl {
 		var paramList;	// The list of the proxyControlList from which parameters are chosen. 
-		// Later my value inst var will be changed. So I keep the paramList as a copy:
-		paramList = value.adapter;
-		this.listItem({ | me | me.item !? { me.item.adapter.parameter } });
-		this.updateAction(\list, { | sender, list |
-			paramList.item !? { this.prSetControl(paramList.item); };
-		});
-		this.updateAction(\index, { | sender, list |
-			paramList.item !? { this.prSetControl(paramList.item); };
-		});
+		// Initialize myself only AFTER my proxyControlList has been created: 
+		if (value.adapter isKindOf: NumberAdapter) {
+			this.addNotifierOneShot(value, \initProxyControls, { this.proxyControl });
+		}{
+			// Later my value inst var will be changed. So I keep the paramList in this closure:
+			paramList = value.adapter;
+			this.listItem({ | me | me.item !? { me.item.adapter.parameter } });
+			this.updateAction(\list, { | sender, list |
+				paramList.item !? { this.prSetControl(paramList.item); };
+			});
+			this.updateAction(\index, { | sender, list |
+				paramList.item !? { this.prSetControl(paramList.item); };
+			});
+		}
 	}
 	
 	prSetControl { | proxyControl |

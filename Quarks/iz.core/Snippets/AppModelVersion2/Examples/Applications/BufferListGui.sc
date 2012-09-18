@@ -117,7 +117,7 @@ BufferListGui : AppModel {
 						me.value.adapter.items_(nil, names);
 					})
 						.do({ | me | 
-							me.value.adapter.items = Library.at['Buffers'].keys.asArray.sort 
+							me.value.adapter.items_(nil, Library.at['Buffers'].keys.asArray.sort);
 						})
 						.updateAction(\free, { | me |
 							Library.at('Buffers', me.value.adapter.item).free;
