@@ -2,7 +2,7 @@
             ==============================================
 
 Author: Ioannis Zannos
-Date: 2012-09-18 16:23:01 EEST
+Date: 2012-09-18 16:25:09 EEST
 
 
 About 
@@ -79,8 +79,8 @@ A first prototype is tested with classes AppModel, Adapter, and the subclasses o
 
 A second version of the above is given in classes AppModel2, Value, Widget, NumberAdapter, SpecAdapter2, ListAdapter2. This will gradually become the application framework for all applications in Lilt2, as it substantially simplifies coding. See first examples in folder AppModelVersion2/Examples. 
 
-NotificationCenter additions: Flexible messaging with cleanup "onObjectClosed" 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NotificationCenter additions: Flexible messaging with cleanup "objectClosed" 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
