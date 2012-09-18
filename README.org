@@ -1,4 +1,4 @@
-#+TITLE: Lilt2/Essi Eleng\'i (/Subclassing is No Good/)
+#+TITLE: Lilt2/Esci Eleng\'i (/Subclassing is No Good/)
 #+AUTHOR: Ioannis Zannos
 #+OPTIONS: toc:nil,num:nil
 
@@ -14,7 +14,9 @@ See: iz.core folder, Snippets
 
 - Code, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
 
-- ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
+- ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  Auto-insert variable declaration code for using loaded buffers in NodeProxy source functions. 
+
+- BufferListGui: GUI for managing lists of buffers, auto-saved as sctxar. Includes preview with play and with user custom code. Loaded buffers will automatically re-load when the server re-boots. Loaded buffers are available via Library.at('Buffers') for ProxyCodeEditor to insert in NodeProxy source code. 
 
 * Download
 
@@ -66,11 +68,11 @@ A first prototype is tested with classes AppModel, Adapter, and the subclasses o
 
 A second version of the above is given in classes AppModel2, Value, Widget, NumberAdapter, SpecAdapter2, ListAdapter2. This will gradually become the application framework for all applications in Lilt2, as it substantially simplifies coding. See first examples in folder AppModelVersion2/Examples. 
 
-* NotificatoinCenter2: Flexible messaging with cleanup "onObjectClosed" a
+* NotificationCenter additions: Flexible messaging with cleanup "onObjectClosed" 
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
-One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+The advantage gained is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message.  Notification connections can be removed by method objectClosed, which can be called when a view or other dependent object closes.
 
 * Class Code
 

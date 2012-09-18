@@ -1,4 +1,4 @@
-% Created 2012-09-01 Sat 09:15
+% Created 2012-09-18 Tue 16:22
 \documentclass[11pt, a4paper]{scrartcl}
 \usepackage{fontspec,xltxtra} 
 \setromanfont[Mapping=tex-text]{Times New Roman} 
@@ -27,9 +27,9 @@
 
 
 
-\title{Lilt2/Essi Eleng\'i (\emph{Subclassing is No Good})}
+\title{Lilt2/Esci Eleng\'i (\emph{Subclassing is No Good})}
 \author{Ioannis Zannos}
-\date{01 September 2012}
+\date{18 September 2012}
 \maketitle
 
 
@@ -47,7 +47,8 @@ See: iz.core folder, Snippets
 \begin{itemize}
 \item AppModel, AppModel2: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground.
 \item Code, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.
-\item ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.
+\item ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  Auto-insert variable declaration code for using loaded buffers in NodeProxy source functions.
+\item BufferListGui: GUI for managing lists of buffers, auto-saved as sctxar. Includes preview with play and with user custom code. Loaded buffers will automatically re-load when the server re-boots. Loaded buffers are available via Library.at(`Buffers') for ProxyCodeEditor to insert in NodeProxy source code.
 \end{itemize}
 \section*{Download}
 \label{sec-2}
@@ -113,13 +114,13 @@ Simplify the task of creating guis, connecting views to values by name and addin
 A first prototype is tested with classes AppModel, Adapter, and the subclasses of AppNamelessView.  Example applications are built in BufferListGui, ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3.
 
 A second version of the above is given in classes AppModel2, Value, Widget, NumberAdapter, SpecAdapter2, ListAdapter2. This will gradually become the application framework for all applications in Lilt2, as it substantially simplifies coding. See first examples in folder AppModelVersion2/Examples. 
-\section*{NotificatoinCenter2: Flexible messaging with cleanup "onObjectClosed" a}
+\section*{NotificationCenter additions: Flexible messaging with cleanup "onObjectClosed"}
 \label{sec-7}
 
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
 
-One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+The advantage gained is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message.  Notification connections can be removed by method objectClosed, which can be called when a view or other dependent object closes.
 \section*{Class Code}
 \label{sec-8}
 
