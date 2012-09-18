@@ -39,7 +39,7 @@ AppModel().window({ | window, app |
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
 
-//:Add parameter list and slider, knob, number box for setting any selected parameter of the proxy
+//:Testing the autoSelect parameter of proxyControlList
 AppModel().window({ | window, app |
 	var proxySpace;
 	proxySpace = Document.prepareProxySpace(Document.current);
@@ -47,7 +47,7 @@ AppModel().window({ | window, app |
 		app.listView(\proxies).items_(proxySpace.proxies).view, // list of proxies
 		app.button(\proxies).proxyWatcher.view.states_([["start"], ["stop"]]), // start stop button
 		// list of control parameters of selected button: 
-		app.listView(\proxyControls).proxyControlList(\proxies).view,
+		app.listView(\proxyControls).proxyControlList(\proxies, 3).view,
 		// Following views set the parameter selected above:
 		app.knob(\proxyControls).proxyControl.view,
 		app.numberBox(\proxyControls).proxyControl.view,

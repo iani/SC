@@ -6,7 +6,7 @@ Stores and restores proxy and spec selections for a ProxyCodeMixer.
 
 */
 
-ProxyCodePreset : AppModel0 {
+ProxyCodePreset : AppModel {
 	var <>handler, <>index = 0, <>preset, <>font;
 
 	*new { | ... args | ^super.new(*args).init; }
@@ -31,13 +31,14 @@ ProxyCodePreset : AppModel0 {
 		var label;
 		label = (index + 1).asString;
 		^this.button(\preset)
-			.adapter_({ handler.restorePreset(this) })
+			.action_({ handler.restorePreset(this) })
+			.updater(this, \setPresetState, { | me, state | me.view.value = state })
 			.view.states_([[label], [label, nil, Color.yellow]])
 			.font_(font);
 	}
 	
-	setActive { this.getAdapter(\preset).value = 1 }
-	setInactive { this.getAdapter(\preset).value = 0 }
+	setActive { this.notify(\setPresetState,  1) }
+	setInactive { this.notify(\setPresetState, 0) }
 }
 
 ProxyCodePresetHandler {

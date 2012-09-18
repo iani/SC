@@ -27,6 +27,23 @@ AppModel().window({ | window, app |
 	)
 })
 
+//:Setting the states of buttons
+/* Note: One can address any widget directly from any object by adding it as a listener to that
+object and message. That is the easiest way to set a buttons state from elsewhere. */
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.button(\number).action_({ | widget |
+			postf("my view's value is: %\n", widget.view.value); 
+		})
+		// Make the button widget listen to app updates on message \set_your_value:
+		.updater(app, \set_your_value, { | me, newValue | me.view.valueAction = newValue })
+		.view.states_([["not zero but one"], ["two"], ["three"], ["four"], ["five!"]]),
+	);
+	// Just a demo. The app can set the button's value based on any other input:
+	{ 10 do: { | n | app.notify(\set_your_value, n % 5); 0.5.wait; } }.fork(AppClock);
+})
+
+
 //:StaticText, TextField
 AppModel().window({ | window, app |
 	window.layout = VLayout(
@@ -222,6 +239,6 @@ AppModel().window({ | window, app |
 		app.textField(\list).listItem.view,
 		app.button(\other).action_({ 
 			app.getValue(\list).adapter.replace(app, "testing testing testing")
-		}).states_([["test change item"]]);
+		}).view.states_([["test change item"]]);
 	)
 })

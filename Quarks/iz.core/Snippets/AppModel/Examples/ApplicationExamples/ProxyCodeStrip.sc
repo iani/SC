@@ -21,13 +21,13 @@ ProxyCodeStrip : AppModel0 {
 
 	gui {
 		^VLayout(
-			this.popUpMenu(\knobSpecs).proxySpecSelector(\proxySelector).view.font_(font),
-			this.knob(\knob).proxyControl(\knobSpecs).view,
+			this.popUpMenu(\knobSpecs).proxyControlList(\proxy).view.font_(font),
+			this.knob(\knobSpecs).proxyControl.view,
 			HLayout(
-				this.slider(\slider).proxyControl(\sliderSpecs).view,
+				this.slider(\slider).proxyControl.view,
 				VLayout(
-					this.numberBox(\knob).view.font_(font),
-					this.numberBox(\slider).view.font_(font),
+					this.numberBox(\knob).proxyControl.view.font_(font),
+					this.numberBox(\slider).proxyControl.view.font_(font),
 					this.button(\edit).proxyState(\proxySelector,
 						{  },
 						{ | state | ProxyCodeEditor(ProxyCode(proxyCodeMixer.doc), state.proxy); }

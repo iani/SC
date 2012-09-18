@@ -8,7 +8,7 @@ ProxyCode(Document.current);
 */
 
 
-ProxyCodeMixer : AppModel0 {
+ProxyCodeMixer : AppModel {
 	var <doc, <>numStrips = 8, <proxyCode, <proxySpace, <strips;
 	var <stripWidth = 80, <numPresets = 8;
 	var <presetHandler;
@@ -54,7 +54,7 @@ ProxyCodeMixer : AppModel0 {
 
 	addWindowActions { | window |
 		this.windowClosed(window, {
-			this.disable;
+			this.disable(window);
 			this.objectClosed;
 		});
 		this.windowToFront(window, { this.enable; });
@@ -80,8 +80,8 @@ ProxyCodeMixer : AppModel0 {
 	}
 
 	setDefaultStripControls { | strip |
-		strip.getAdapter(\sliderSpecs).selectItemAt(1);
-		strip.getAdapter(\knobSpecs).selectItemAt(2);
+		strip.getValue(\sliderSpecs).selectItemAt(1);
+		strip.getValue(\knobSpecs).selectItemAt(2);
 	}
 
 	makePreset { ^strips collect: _.makePreset; }
@@ -106,6 +106,7 @@ ProxyCodeMixer : AppModel0 {
 		specs = this.midiSpecs;
 		knob = specs[\knob];
 		slider = specs[\slider];
+		// _mean_ shortcut creating midi specs by setting the channel number for each strip:
 		8.min(numStrips) do: { | i |
 			strips[i].addMIDI([slider: slider.put(3, i), knob: knob.put(3, i)]);
 		}
