@@ -45,6 +45,7 @@ Value {
 
 	items_ { | changer, items | adapter.items_(changer, items); }
 	item_ { | changer, item | adapter.item_(changer, item); }
+	item { ^adapter.item }
 
 	// === MIDI and OSC ===
 	enable { inputs do: _.enable }
@@ -69,12 +70,12 @@ Value {
 		if (argFunc.isNil) { ^this.defaultMIDIAction } { ^{ | ... args | argFunc.(this, *args) } }
 	}
 
-	defaultMIDIAction {
-		if (adapter.isNil) {
-			^{ | ... args | this.valueAction_(args[0]) }
-		}{
-			^adapter.defaultMIDIAction;
-		}
+	defaultMIDIAction { // default is for setting value of proxyControl. Other defaults?
+		^{ | ... args | this.setProxyParameter(args[0] / 127) }
+	}
+	
+	setProxyParameter { | argValue |
+		this.item.adapter.standardizedValue_(this, argValue)
 	}
 
 	addOSC { /* not yet implemented */ }
@@ -145,6 +146,15 @@ Widget {
 		// Pass the sender to the action, to avoid updating self if this is a problem.
 		// Also make myself available to the action function. 
 		this.addNotifier(value, message, { | sender | action.(sender, this) });
+	}
+	
+	addUpdateAction { | message, action |
+		// add action to be performed when receiving message from value.
+		// do not replace any previous action. 
+		NotificationCenter.registrations.put(value, message, this,
+			NotificationCenter.registrations.at(value, message, this) 
+				addFunc: { | ... args | action.(this, *args) } // important: provide access to self
+		);
 	}
 	
 	updater { | notifier, message, action |
@@ -245,6 +255,11 @@ Widget {
 	item_ { | item | value.adapter.item_(this, item); }
 	item { ^value.adapter.item }
 	index { ^value.adapter.index }
+	index_ { | index | value.adapter.index_(this, index) }
+	first { value.adapter.first }
+	last { value.adapter.last }
+	previous { value.adapter.previous }
+	next { value.adapter.next }
 
 	listItem { | getItemFunc | // display currently selected item from a list.
 		value.adapter ?? { value.adapter = ListAdapter2() };
@@ -334,6 +349,7 @@ Widget {
 	
 	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
+		value.notify(\initProxyControls);	// Initialize proxyWatchers created before me
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
@@ -342,13 +358,20 @@ Widget {
 		app.listView(\proxies).items_(proxySpace.proxies).view. 
 	Shortcut for listView for choosing proxies: proxyList. */
 	proxyWatcher { | playAction, stopAction |
-		playAction ?? { playAction = { this.checkProxy(value.adapter.item.item.play); } };
-		stopAction ?? { stopAction = { value.adapter.item.item.stop } };
-		view.action = { [stopAction, playAction][view.value].(this) };
-		this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
-		this.updateAction(\list, { this.prStartWatchingProxy(value.adapter.item.item) });
-		this.updateAction(\index, { this.prStartWatchingProxy(value.adapter.item.item) });
-		this.prStartWatchingProxy(value.adapter.item.item);
+		// Initialize myself only AFTER my proxyControlList has been created: 
+		if (value.adapter.isKindOf(ListAdapter2).not) {
+			this.addNotifierOneShot(value, \initProxyControls, {
+				this.proxyWatcher(playAction, stopAction);
+			});
+		}{
+			playAction ?? { playAction = { this.checkProxy(value.adapter.item.item.play); } };
+			stopAction ?? { stopAction = { value.adapter.item.item.stop } };
+			view.action = { [stopAction, playAction][view.value].(this) };
+			this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
+			this.updateAction(\list, { this.prStartWatchingProxy(value.adapter.item.item) });
+			this.updateAction(\index, { this.prStartWatchingProxy(value.adapter.item.item) });
+			this.prStartWatchingProxy(value.adapter.item.item);
+		}
 	}
 	
 	prStartWatchingProxy { | proxy |
@@ -378,23 +401,31 @@ Widget {
 		// Should proxies parse arguments every time that the source changes? 
 		/* If autoSelect is given a positive integer value, then the widget will select
 		   the nth parameter, if available whenever the list of parameter changes */
-		this.sublistOf(proxySelector, { | item |
-			if (item.specs.size == 0) { // only parse specs here if not already provided!
-				MergeSpecs.parseArguments(item.item);
-			};
-			item.specs; // the specs are Value instances to which widgets connect
-		});
-		if (autoSelect.isNil) {
-			this.list({ | me |
-				me.items collect: { | v | v.adapter.parameter };
-			});			
-		}{
-			this.list({ | me |
-				if (autoSelect < me.items.size) { me.value.adapter.index_(nil, autoSelect); };
-				me.items collect: { | v | v.adapter.parameter };
-			});			
+		if (proxySelector isKindOf: Symbol) {
+			proxySelector = model.getValue(proxySelector);
 		};
-		value.notify(\initProxyControls);	// Initialize proxyControls created before me
+		// Initialize myself only AFTER my proxyControlList has been created: 
+		if (proxySelector.value.adapter.isNil) {
+			this.addNotifierOneShot(proxySelector.value, \initProxyControls, {
+				this.proxyControlList(proxySelector, autoSelect);
+			});
+		}{
+			this.sublistOf(proxySelector, { | item |
+				if (item.specs.size < 2) { // only parse specs here if not already provided!
+					MergeSpecs.parseArguments(item.item);
+				};
+				item.specs; // the specs are Value instances to which widgets connect
+			});
+			if (autoSelect.isNil) {
+				this.list({ | me | me.items collect: { | v | v.adapter.parameter }; });			
+			}{
+				this.list({ | me |
+					if (autoSelect < me.items.size) { me.value.adapter.index_(nil, autoSelect); };
+					me.items collect: { | v | v.adapter.parameter };
+				});			
+			};
+			value.notify(\initProxyControls);	// Initialize proxyControls created before me
+		}
 	}
 
 	proxyControl {

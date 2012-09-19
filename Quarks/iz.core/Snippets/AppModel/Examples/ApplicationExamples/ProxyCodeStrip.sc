@@ -4,7 +4,7 @@ Strip of controls for a proxy. For use with ProxyCodeMixer
 
 */
 
-ProxyCodeStrip : AppModel0 {
+ProxyCodeStrip : AppModel {
 	var <>proxyCodeMixer, <>index;
 	var <>font, <>proxyOnColor;
 	
@@ -15,70 +15,63 @@ ProxyCodeStrip : AppModel0 {
 	init { | argProxyCodeMixer, argIndex |
 		proxyCodeMixer = argProxyCodeMixer;
 		index = argIndex;
+		[this, thisMethod.name, "index:", index].postln;
 		font = font ?? { Font.default.size_(10); };
 		proxyOnColor = proxyOnColor ?? { Color.red; };
 	}
 
 	gui {
 		^VLayout(
-			this.popUpMenu(\knobSpecs).proxyControlList(\proxy).view.font_(font),
-			this.knob(\knobSpecs).proxyControl.view,
+			this.popUpMenu(\knob).proxyControlList(\proxy).view.font_(font),
+			this.knob(\knob).proxyControl.view,
 			HLayout(
 				this.slider(\slider).proxyControl.view,
 				VLayout(
 					this.numberBox(\knob).proxyControl.view.font_(font),
 					this.numberBox(\slider).proxyControl.view.font_(font),
-					this.button(\edit).proxyState(\proxySelector,
-						{  },
-						{ | state | ProxyCodeEditor(ProxyCode(proxyCodeMixer.doc), state.proxy); }
-						)
-						.view.states_([["ed"]]).font_(font),
-					this.button(\startstop).proxyState(\proxySelector)
-						.view.states_([[">"], ["||", nil, proxyOnColor]]).font_(font),
+					this.button(\proxy).proxyWatcher(
+						{},	// this never gets triggered on a button with only one state
+						{ | me | ProxyCodeEditor(ProxyCode(proxyCodeMixer.doc), me.item.item); }
+					)
+					.view.states_([["ed"]]).font_(font),
+					this.button(\proxy).proxyWatcher
+					.view.states_([[">"], ["||", nil, proxyOnColor]]).font_(font),
 				)
 			),
-			this.popUpMenu(\sliderSpecs).proxySpecSelector(\proxySelector)
-				.view.font_(font),
-			this.popUpMenu(\proxySelector).proxySelector
-				.addAction({ | adapter, func |
-					var proxyIndex, specAdapter;
-					proxyIndex = 
-						proxyCodeMixer.presetHandler.currentIndex 
-						* proxyCodeMixer.numStrips
-						+ index;
-					(ProxySelector.proxyNames[proxyCodeMixer.proxySpace] ?? { [] })[proxyIndex] !? {
-						adapter.adapter.selectAt(proxyIndex + 1, func);
-						specAdapter = this.getAdapter(\sliderSpecs).adapter;
-						{ 
-							if (specAdapter.items.size > 1) { specAdapter.selectAt(1, func) }; 
-						}.defer(0.1);
-					};
-				})
+			this.popUpMenu(\slider).proxyControlList(\proxy).view.font_(font),
+			this.popUpMenu(\proxy).proxyList(proxyCodeMixer.proxySpace)
+				.addUpdateAction(\list, { | me | this.autoSetProxy(me) })
 				.view.font_(font),
 		)
 	}
-	
-	makePreset {
-		var adapter;
-		^Event make: {
-			adapter = this.getAdapter(\proxySelector);
-			~proxySelector = (adapter: adapter, proxy: adapter.adapter.item);
-			adapter = this.getAdapter(\knobSpecs);
-			~knobSpecs = (adapter: adapter, parameter: adapter.adapter.item);
-			adapter = this.getAdapter(\sliderSpecs);
-			~sliderSpecs = (adapter: adapter, parameter: adapter.adapter.item);
-		}			
+
+	autoSetProxy { | widget |
+		var proxyIndex, proxies;
+		proxyIndex = proxyCodeMixer.presetHandler.currentIndex * proxyCodeMixer.numStrips + index;
+		[this, thisMethod.name, proxyCodeMixer.presetHandler.currentIndex, proxyCodeMixer.numStrips,
+			"index:", index, proxyIndex, widget.items.size].postln;
+		if (widget.items.size - 1 == index) { widget.index = index }
 	}
-	
-	restorePreset { | argPreset |
-		var selector;
-		argPreset use: {
-			selector = ~proxySelector[\adapter];
-			selector.adapter.selectItem(~proxySelector[\proxy], this);
-			~knobSpecs[\adapter].adapter.selectItem(~knobSpecs[\parameter]);
-			~sliderSpecs[\adapter].adapter.selectItem(~sliderSpecs[\parameter]);
+
+	makePreset {
+		var value;
+		^Event make: {
+			value = this.getValue(\proxy);
+			~proxy = (value: value, item: value.item);
+			value = this.getValue(\knob);
+			~knobControl = (value: value, item: value.item);
+			value = this.getValue(\slider);
+			~sliderControl = (value: value, item: value.item);
 		}
 	}
 	
-}
+	restorePreset { | argPreset |
+		var value;
+		argPreset use: {
+			~proxy[\value].item_(nil, ~proxy[\item]);
+			~knobControl[\value].item_(nil, ~knobControl[\item]);
+			~sliderControl[\value].item_(nil, ~sliderControl[\item]);
+		}
+	}
 
+}

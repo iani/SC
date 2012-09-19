@@ -187,7 +187,7 @@ ProxyCodeEditor : AppModel {
 							this.slider(slidermenu).proxyControl
 									.view.orientation_(\vertical),
 							VLayout(
-								this.knob(knobmenu).proxyControl(knobmenu).view,
+								this.knob(knobmenu).proxyControl.view,
 								this.numberBox(knobmenu).proxyControl.view.font_(font),
 								this.numberBox(slidermenu).proxyControl.view.font_(font),
 							)

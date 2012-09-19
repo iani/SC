@@ -1,5 +1,13 @@
 /* IZ Wed 22 August 2012  4:05 PM EEST
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Note: this code is obsolete as of September 19 2012
+
+All functionality has been coded in methods of Widget.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 Adapter classes for dealing with NodeProxies
 
 1. ProxySelector ============================================

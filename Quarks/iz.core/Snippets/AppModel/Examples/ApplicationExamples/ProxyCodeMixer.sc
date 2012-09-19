@@ -87,12 +87,12 @@ ProxyCodeMixer : AppModel {
 	makePreset { ^strips collect: _.makePreset; }
 
 	initializePreset { | argPreset |
-		argPreset use: {
+/*		argPreset use: {
 			~proxySelector[\proxy] = '-';
 			~knobSpecs[\parameter] = '-';
 			~sliderSpecs[\parameter] = '-';
 		}
-	}
+*/	}
 
 	restorePreset { | argPreset, presetIndex |
 		argPreset do: { | preset, i |
