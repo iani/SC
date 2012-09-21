@@ -353,7 +353,7 @@ Widget {
 	
 	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
-		value.notify(\initProxyControls);	// Initialize proxyWatchers created before me
+		value.notify(\initProxyControls);	// Initialize proxyWatchers etc. created before me
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
@@ -362,7 +362,7 @@ Widget {
 		app.listView(\proxies).items_(proxySpace.proxies).view. 
 	Shortcut for listView for choosing proxies: proxyList. */
 	proxyWatcher { | playAction, stopAction |
-		// Initialize myself only AFTER my proxyControlList has been created: 
+		// Initialize myself only AFTER my proxySelector has been created: 
 		if (value.adapter.isKindOf(ListAdapter).not) {
 			this.addNotifierOneShot(value, \initProxyControls, {
 				this.proxyWatcher(playAction, stopAction);
@@ -408,7 +408,7 @@ Widget {
 		if (proxySelector isKindOf: Symbol) {
 			proxySelector = model.getValue(proxySelector);
 		};
-		// Initialize myself only AFTER my proxyControlList has been created: 
+		// Initialize myself only AFTER my proxySelector has been created: 
 		if (proxySelector.value.adapter.isNil) {
 			this.addNotifierOneShot(proxySelector.value, \initProxyControls, {
 				this.proxyControlList(proxySelector, autoSelect);
@@ -457,4 +457,16 @@ Widget {
 		view.connectToNumberValue(value.adapter, this);
 		value.adapter.getValueFromProxy;
 	}
+	
+	// SoundFile stuff
+
+	soundFileView {
+		value.adapter ?? { value.adapter = SoundFileAdapter(value) };
+		this.updateAction(\read, { | soundfile, startframe, frames |
+			view.soundfile = soundfile;
+			view.read(startframe, frames);
+		});
+	}
+	
+	
 }

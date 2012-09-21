@@ -137,6 +137,9 @@ AppModel {
 			.action_({ | me | me.view.value.postln; me.view.item.postln });
 	}
 
+
+	soundFileView { | name | ^Widget(this, name, SoundFileView()).soundFileView; }
+
 	// following need review - possibly their own adapter classes
 	
 /* // TODO
@@ -148,7 +151,6 @@ AppModel {
 	scopeView { | name | ^AppView(this, name, ScopeView()); }
 	multiSliderView { | name | ^AppValueView(this, name, MultiSliderView()); }
 	envelopeView { | name | ^AppValueView(this, name, EnvelopeView()); }
-	soundFileView { | name | ^AppView(this, name, SoundFileView()); }
 	movieView { | name | ^AppView(this, name, MovieView()); }
 */	
 	addMIDI { | specs |

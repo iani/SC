@@ -3,8 +3,12 @@ Preparing soundFileView method for AppModel.
 */
 
 //:
-AppModel().window({ | window, app |
+a = AppModel().window({ | window, app |
 	window.layout = VLayout(
-		app.widget(\soundFile, SoundFileView())
-	)	
-})
+		v = app.soundFileView(\soundFile).view
+	)
+});
+
+//:
+
+a.getValue(\soundFile).adapter.soundFile_('weddell3R'.b.path);
