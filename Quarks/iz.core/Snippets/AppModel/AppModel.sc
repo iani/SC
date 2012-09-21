@@ -68,6 +68,8 @@ AppModel {
 
 	view { | view | ^AppNamelessView(this, view) }
 
+	widget { | name, view | ^Widget(this, name, view) }
+
 	numberBox { | name | ^Widget(this, name, NumberBox()).simpleNumber; }
 	knob { | name, spec | ^Widget(this, name, Knob()).mappedNumber(spec); }
 	slider { | name, spec | ^Widget(this, name, Slider()).mappedNumber(spec); }
@@ -129,6 +131,11 @@ AppModel {
 			])
 	}
 
+	// under development! New type of ListAdapter needed here.
+	multiListView { | name, getItemFunc, selectionMode = \extended |  // can also be: \multi
+		^Widget(this, name, ListView().selectionMode = \extended)
+			.action_({ | me | me.view.value.postln; me.view.item.postln });
+	}
 
 	// following need review - possibly their own adapter classes
 	

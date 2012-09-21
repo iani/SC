@@ -144,6 +144,13 @@ AppModel().window({ | window, app |
 	)
 });
 
+//:Radio buttons from the items of a list
+a = AppModel().window({ | window, app |
+	window.layout = VLayout(
+		*app.radioButtons(\radio, ["a", "b", "c", "d", "e"], { | me | me.item.postln; })
+	)
+})
+
 //:===================== Special cases
 
 //:Getting the string from a view without updating the Value

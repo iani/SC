@@ -22,9 +22,9 @@ BufferListGui : AppModel {
 
 	init { | argArchivePath |
 		var bufferLists;
-		bufferLists = this.getValue(\bufferLists, ListAdapter2());
+		bufferLists = this.getValue(\bufferLists, ListAdapter());
 		bufferLists.items_(nil, this.loadBufferLists(argArchivePath));
-		buffers = this.getValue(\buffers, ListAdapter2());
+		buffers = this.getValue(\buffers, ListAdapter());
 		buffers.items_(bufferLists.adapter.item);
 		buffers.sublistOf(bufferLists);
 	}

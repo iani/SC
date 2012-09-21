@@ -1,17 +1,78 @@
-/* IZ Sat 01 September 2012  1:05 AM EEST
+/* IZ Sat 01 September 2012  1:05 AM EEST */
 
-*/
-
-
-//:Lists: PopUpMenu, ListView, and listItem accessing the chosen item in a list
+//:PopUpMenu, ListView accessing the same list
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.popUpMenu(\list).items_(["alpha", "beta", "gamma"]).view,
 		app.listView(\list).view,
-		StaticText().string_("Type 'return' to send edited text to list item:"),
+		StaticText().string_("Edit item below, then type 'return' to send changes to list:"),
 		app.textField(\list).listItem.view
 	)
 })
+
+// === List items: Widgets accessing the currently selected item of a list: 
+
+//:1. Text field for editing the item of a list. Default mode is replace contents.
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
+		StaticText().string_("Edit item below, then type 'return' to send changes to list:"),
+		app.textField(\list).listItem.view
+	)
+})
+
+//:2. Appending the contents of Text field to the list
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
+		StaticText().string_("Edit item below, then type 'return' to append to list:"),
+		app.textField(\list).listItem.append.view
+	)
+})
+
+//:3. Inserting the contents of a Text field at current position in list
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
+		StaticText().string_("Edit item below, then type 'return' to insert in list:"),
+		app.textField(\list).listItem.insert.view
+	)
+})
+
+//:4. Replace, append, insert combined in one window: 
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
+		HLayout(
+			StaticText().string_("Replace:"),
+			app.textField(\list).listItem.view
+		),
+		HLayout(
+			StaticText().string_("Append:"),
+			app.textField(\list).listItem.append.view
+		),
+		HLayout(
+			StaticText().string_("Insert:"),
+			app.textField(\list).listItem.insert.view
+		)
+	)
+})
+
+//:Indexing the same list independently from different views
+var list;
+list = List.newUsing(["a", "b", "c"]);
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list).do({ | me | me.value.adapter.items_(me, list) })
+			.view,
+		StaticText().string_("Same list, but independent index into it:"),
+		app.listView(\list2).items_(list).view,
+		HLayout(
+			[StaticText().string_("Edit, then press return to append to list:"), s: 3],
+			[app.listItem(\list2).append.view, s: 1]
+		)
+	)
+});
 
 //:Sublists: Lists accessing the lists inside a nested list
 AppModel().window({ | window, app |
@@ -19,7 +80,7 @@ AppModel().window({ | window, app |
 		app.popUpMenu(\list).items_([["alpha", 1], ["beta", 2], ["gamma", 3, 4, 5]]).view,
 		app.listView(\list).view,
 		app.listView(\sublist).sublistOf(\list).view,
-		StaticText().string_("Type 'return' to send edited text to list item:"),
+		StaticText().string_("Edit item below, then type 'return' to send changes to list:"),
 		app.textField(\sublist).listItem.view
 	)
 })
@@ -36,108 +97,20 @@ AppModel().window({ | window, app |
 			me.value.adapter.items collect: { | i | format("% : % elements", i.name, i.size) };
 		}).view,
 		app.listView(\sublist).sublistOf(\list).view,
-		StaticText().string_("Type 'return' to send edited text to list item:"),
+		StaticText().string_("Edit item below, then type 'return' to send changes to list:"),
 		app.textField(\sublist).listItem.view
 	)
 })
 
-//:Examples for text and button views with lists
+//:Multiple choice lists (!!!!!!!!!!!! UNDER DEVELOPMENT !!!!!!!!!!!!!)
+/* Note: No documentation or source code hints  are available about accessing the selected items in
+a QListView with \multi or \extended selection modes. */ 
 AppModel().window({ | window, app |
 	window.layout = VLayout(
-		app.listView(\list).do({ | me | me.value.adapter.items_(me, ["a", "b", "c"]) })
-			.view,
-		StaticText().string_("Press return to append my string to the list:"),
-		app.listItem(\list)
-			.append			// when return key is pushed, append new item to list
-			.replaceOn		// replace item if sent message \replace
-			.insertOn			// insert item if send message \insert
-			.view,
-		app.button(\list).notifyAction(\replace).view.states_([["replace"]]),
-		app.button(\list).notifyAction(\insert).view.states_([["insert"]]),
-	)
-});
-
-//:Indexing the same list independently from different views
-var list;
-list = List.newUsing(["a", "b", "c"]);
-AppModel().window({ | window, app |
-	window.layout = VLayout(
-		app.listView(\list).do({ | me | me.value.adapter.items_(me, list) })
-			.view,
-		app.listItem(\list)
-			.append			// when return key is pushed, append new item to list
-			.replaceOn		// replace item if sent message \replace
-			.insertOn			// insert item if send message \insert
-			.view,
-		app.button(\list).notifyAction(\replace).view.states_([["replace"]]),
-		app.button(\list).notifyAction(\insert).view.states_([["insert"]]),
-		StaticText().string_("Same list, but independent index into it:"),
-		app.listView(\list2).items_(list)
-			.view,
-		app.listItem(\list2)
-			.append			// when return key is pushed, append new item to list
-			.replaceOn		// replace item if sent message \replace
-			.insertOn			// insert item if send message \insert
-			.view,
-		app.button(\list2).notifyAction(\replace).view.states_([["replace"]]),
-		app.button(\list2).notifyAction(\insert).view.states_([["insert"]]),
-	)
-});
-
-//:One list view obtains its items from sublists contained in another item
-AppModel().window({ | window, app |
-	window.layout = VLayout(
-		app.listView(\list, { | me | me.value.adapter collect: { | l | 
-				format("a list of size: %", l.size)
-			}
-		}).items_([["alpha", "beta", "gamma"], ["delta", "epsilon"]])
-			.view,
-		app.listView(\sublist).sublistOf(\list).view,
-		app.textField(\sublist).sublistOf(\list).listItem.view,
-		app.button(\sublist).sublistOf(\list).nextItem.view.states_([["next"]]),
-	)
-});
-
-//:Creating list items by interpreting code from a text field
-// Note: The created elements only replace the elements on the list. 
-// Pre-existing Synths are not replaced. NodeProxies can be used for that. 
-AppModel().window({ | window, app |
-	window.layout = VLayout(
-		app.listView(\list).do({ | me | me.value.adapter.items_(me, ["a", "b", "c"]) })
-			.view,
-		app.listItem(\list, TextView())
-			.appendOn({ | me | me.view.string.interpret })
-			.replaceOn({ | me | me.view.string.interpret })
-			.insertOn({ | me | me.view.string.interpret })
-			.view,
-		app.button(\list).notifyAction(\append).view.states_([["append"]]),
-		app.button(\list).notifyAction(\replace).view.states_([["replace"]]),
-		app.button(\list).notifyAction(\insert).view.states_([["insert"]]),
-	)
-});
-
-//:===================== Special cases
-
-//:Getting the string from a view without updating the Value
-// Note: Advanced. Used by ProxyCodeEditor.
-AppModel().window({ | window, app |
-	window.layout = VLayout(
-		app.textView(\text).makeStringGetter.view,
-		app.button(\text).action_({ | me |
-			"the string of the other view is: ".post; me.getString.postln;
-			"the string in the Value container is: ".post; me.value.adapter.string.postln;
-		}).view.states_([["get string without updating"]])
+		v = app.multiListView(\list).view.items_(["alpha", "beta", "gamma", "delta", "epsilon"]),
 	)
 })
 
-//:Changing the item of a list from another value widget.
-AppModel().window({ | window, app |
-	window.layout = VLayout(
-		app.popUpMenu(\list).items_(["alpha", "beta", "gamma"]).view,
-		app.listView(\list).view,
-		app.textField(\list).listItem.view,
-		app.button(\other).action_({ 
-			app.getValue(\list).adapter.replace(app, "testing testing testing")
-		}).view.states_([["test change item"]]);
-	)
-})
+//:
+v
+
