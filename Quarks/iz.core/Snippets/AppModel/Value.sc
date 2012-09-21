@@ -457,4 +457,16 @@ Widget {
 		view.connectToNumberValue(value.adapter, this);
 		value.adapter.getValueFromProxy;
 	}
+	
+	// SoundFile stuff
+
+	soundFileView {
+		value.adapter ?? { value.adapter = SoundFileAdapter(value) };
+		this.updateAction(\read, { | soundfile, startframe, frames |
+			view.soundfile = soundfile;
+			view.read(startframe, frames);
+		});
+	}
+	
+	
 }
