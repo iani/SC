@@ -29,7 +29,7 @@ Value {
 	}
 
 	// === List utilities ===
-	list { | items | this.adapter = ListAdapter2(this, items) }
+	list { | items | this.adapter = ListAdapter(this, items) }
 	items_ { | changer, items | adapter.items_(changer, items); }
 	items { ^adapter.items }
 	item_ { | changer, item | adapter.item_(changer, item); }
@@ -39,7 +39,7 @@ Value {
 
 	// make me get my list from the item of another list
 	sublistOf { | superList, getListFunction |
-		this.adapter = ListAdapter2();
+		this.adapter = ListAdapter();
 		 // vary this to get different parts of the item
 		getListFunction ?? { getListFunction = { | sublist | sublist }; };
 		if (superList isKindOf: Symbol) { superList = model.getValue(superList); };
@@ -240,7 +240,7 @@ Widget {
 	
 	// ======== List views: ListView, PopUpMenu =======
 	list { | getListAction |
-		value.adapter ?? { value.adapter = ListAdapter2(value) };
+		value.adapter ?? { value.adapter = ListAdapter(value) };
 		getListAction = getListAction ?? { { value.adapter.items collect: _.asString } };
 		view.action = { value.adapter.index_(this, view.value) };
 		this.updateAction(\list, { // | sender |
@@ -266,7 +266,7 @@ Widget {
 	next { value.adapter.next }
 
 	listItem { | getItemFunc | // display currently selected item from a list.
-		value.adapter ?? { value.adapter = ListAdapter2() };
+		value.adapter ?? { value.adapter = ListAdapter() };
 		getItemFunc = getItemFunc ?? { { value.adapter.item.asString } };
 		this.updateAction(\list, { view.string = getItemFunc.(this) });
 		this.updateAction(\index, { view.string = getItemFunc.(this) });
@@ -324,7 +324,7 @@ Widget {
 
 	// Getting index of current item and size of list
 	listIndex { | startAt = 1 | // NumberBox displaying / setting index of element in list
-		value.adapter ?? { value.adapter = ListAdapter2() };
+		value.adapter ?? { value.adapter = ListAdapter() };
 		view.action = {
 			view.value = view.value max: startAt min: (value.adapter.size - 1 + startAt);
 			value.adapter.index_(this, view.value - startAt);
@@ -338,7 +338,7 @@ Widget {
 	}
 
 	listSize { // NumberBox displaying number of elements in list (list size). 
-		value.adapter ?? { value.adapter = ListAdapter2() };
+		value.adapter ?? { value.adapter = ListAdapter() };
 		view.enabled = false;
 		this.updateAction(\list, { view.value = value.adapter.size })
 	}
@@ -363,7 +363,7 @@ Widget {
 	Shortcut for listView for choosing proxies: proxyList. */
 	proxyWatcher { | playAction, stopAction |
 		// Initialize myself only AFTER my proxyControlList has been created: 
-		if (value.adapter.isKindOf(ListAdapter2).not) {
+		if (value.adapter.isKindOf(ListAdapter).not) {
 			this.addNotifierOneShot(value, \initProxyControls, {
 				this.proxyWatcher(playAction, stopAction);
 			});

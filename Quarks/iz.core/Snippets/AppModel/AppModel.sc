@@ -101,7 +101,7 @@ AppModel {
 
 	radioButtons { | name, items, selectFunc, unselectFunc, onState, offState |
 		// returns array of Button Views (not Widgets)
-		this.getValue(name).adapter = ListAdapter2(nil, items);
+		this.getValue(name).adapter = ListAdapter(nil, items);
 		^items collect: { | item, index | 
 			this.radioButton(name, item, index, selectFunc, unselectFunc, onState, offState, items)
 		}

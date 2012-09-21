@@ -6,7 +6,7 @@ See also: ProxyItem, Widget:proxyControl.
 
 */
 
-ProxyControl2 : NumberAdapter {
+ProxyControl : NumberAdapter {
 	var <>proxy;			// the proxy which I control.
 	var <parameter;		// (a Symbol): name of parameter to set 
 	var <controlAction;	// action for setting the proxy's parameter

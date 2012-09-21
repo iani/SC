@@ -7,6 +7,7 @@ Strip of controls for a proxy. For use with ProxyCodeMixer
 ProxyCodeStrip : AppModel {
 	var <>proxyCodeMixer, <>index;
 	var <>font, <>proxyOnColor;
+	var <presets;	// cache the presets value for faster access in autoSetProxy
 	
 	*new { | proxyCodeMixer, index |
 		^super.new.init(proxyCodeMixer, index)
@@ -20,6 +21,7 @@ ProxyCodeStrip : AppModel {
 	}
 
 	gui {
+		presets = proxyCodeMixer.getValue(\presets);
 		^VLayout(
 			this.proxySelectMenu,
 			this.popUpMenu(\knob).proxyControlList(\proxy, 3).view.font_(font),
@@ -39,7 +41,7 @@ ProxyCodeStrip : AppModel {
 
 	editButton {
 		^this.button(\proxy).proxyWatcher(
-			{},	// this never gets triggered on a button with only one state
+			{},	// : 0 state - never gets triggered on a button with only one state
 			{ | me | ProxyCodeEditor(ProxyCode(proxyCodeMixer.doc), me.item.item); }
 		)
 		.view.states_([["ed"]]).font_(font)
@@ -58,7 +60,7 @@ ProxyCodeStrip : AppModel {
 
 	autoSetProxy { | proxyWidget |
 		var proxyIndex, proxies;
-		proxyIndex = proxyCodeMixer.getValue(\presets).index * proxyCodeMixer.numStrips + index;
+		proxyIndex = presets.index * proxyCodeMixer.numStrips + index;
 		if (proxyWidget.items.size - 1 > index) { proxyWidget.index = index + 1; }
 	}
 	

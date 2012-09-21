@@ -20,11 +20,8 @@
 		if(proxy.isNil) {
 			proxy = this.makeProxy(key);
 			envir.put(key, proxy);
-			ProxySelector.updateProxyNames(this, key); // to be replaced by Library version below
-			// new version: 
 			proxyItem = ProxyItem(key, proxy);
 			this.proxies.add(proxyItem).notify(\list, this); // proxies in order of creation
-			this.notify(\proxies); // TODO: Review: do we need this?
 		};
 		^proxy
 	}

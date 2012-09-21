@@ -1,8 +1,50 @@
-/* IZ Wed 05 September 2012 10:09 AM BST
-
-ListAdapter should contain the list as an independent object, so that multiple ListAdapters contained in different Value objects can share the same list data but independent indices and items. 
-
+/* IZ Fri 31 August 2012  8:45 PM EEST
+See Value.org file for discussion. 
 */
+
+NumberAdapter {
+	var <>container, <spec, <value = 0, <standardizedValue = 0;
+
+	*new { | container, spec |
+		^this.newCopyArgs(container).spec_(spec);
+	}
+
+	spec_ { | argSpec |
+		spec = argSpec.asSpec;
+		value = spec map: standardizedValue;
+	}
+
+	value_ { | changer, number |
+		value = number;
+		standardizedValue = spec unmap: value;
+		container.notify(\number, changer);
+	}
+
+	standardizedValue_ { | changer, mappedNumber |
+		value = spec map: mappedNumber;
+		standardizedValue = mappedNumber;
+		container.notify(\number, changer);
+	}
+	
+	updateMessage { ^\number }
+}
+
+TextAdapter {
+	var <>container, <string;
+
+	*new { | container, string |
+		^this.newCopyArgs(container, string ? "<empty>");
+	}
+
+	string_ { | changer, argString |
+		string = argString ? "";
+		container.notify(\text, changer);
+	}	
+
+	updateMessage { ^\text }
+}
+
+
 
 NamedList : List {		// used for BufferListGui
 	var <>name;
@@ -14,12 +56,11 @@ NamedList : List {		// used for BufferListGui
 	items { ^array }
 }
 
-ListAdapter2 {
+ListAdapter {
 	/* Actual list is contained in items variable. It should be a kind of List. 
 	Different views can hold different ListAdapter2 instances with the same list as items.
-	That way, the different views can operate on different items of the list, while updating 
-	themselves if the list changes.
-	*/
+	That way, the different views can operate on different items of the list, and update themselves
+	when the list changes. */
 	var <>container, <items, <index = 0, <item;
 
 	*new { | container, items | ^super.new.init(container, items) }
@@ -105,4 +146,3 @@ ListAdapter2 {
 	select { | func | ^items select: func }
 	size { ^items.size }
 }
-
