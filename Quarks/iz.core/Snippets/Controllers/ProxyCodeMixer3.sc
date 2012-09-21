@@ -21,16 +21,6 @@ ProxyCodeMixer3 : ProxyCodeMixer {
 		strips = { | index | ProxyCodeStrip3(this, index) } ! numStrips;
 	}
 
-	initializePreset { | argPreset |
-		argPreset use: {
-			~proxySelector[\proxy] = '-';
-			~knobSpecs1[\parameter] = '-';
-			~knobSpecs2[\parameter] = '-';
-			~knobSpecs3[\parameter] = '-';
-			~sliderSpecs[\parameter] = '-';
-		}
-	}
-
 	initMIDI {
 		var specs, knob1, knob2, knob3, slider, strip;
 		specs = this.midiSpecs;

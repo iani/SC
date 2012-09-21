@@ -99,6 +99,37 @@ AppModel {
 		^Widget(this, name, view ?? { TextField() }).listItem(getItemFunc);
 	}
 
+	radioButtons { | name, items, selectFunc, unselectFunc, onState, offState |
+		// returns array of Button Views (not Widgets)
+		this.getValue(name).adapter = ListAdapter2(nil, items);
+		^items collect: { | item, index | 
+			this.radioButton(name, item, index, selectFunc, unselectFunc, onState, offState, items)
+		}
+	}
+	radioButton { | name, item, index, selectFunc, unselectFunc, onState, offState, items |
+		var updateAction;
+		updateAction = { | sender, me |
+			if (me.value.index == index) {
+				me.view.value = 0;
+				selectFunc.(me, sender);	// do this with the newly selected item
+			} { me.view.value = 1 };
+		};
+		onState ?? { onState = [index, nil, Color.yellow] };
+		offState ?? { offState = [index] };
+		^this.button(name)
+			.action_({ | me |
+				unselectFunc.(me);	// do this with the current item, before it changes.
+				me.index_(index)
+			})
+			.updateAction(\list, updateAction)
+			.updateAction(\index, updateAction)
+			.view.states_([
+				onState.(item, index, items, this), 
+				offState.(item, index, items, this)
+			])
+	}
+
+
 	// following need review - possibly their own adapter classes
 	
 /* // TODO

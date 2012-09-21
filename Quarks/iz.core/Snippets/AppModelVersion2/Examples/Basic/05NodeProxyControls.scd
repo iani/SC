@@ -97,15 +97,15 @@ a = AppModel().window({ | window, app |
 	~out2.play;
 });
 
-//:TMP: Test order independence of proxy widgets
+//:Storing and restoring proxy selection and proxyControl selection
+// Preset test, stage 1: Storing and restoring selected items in proxy and control lists
 a = AppModel().window({ | window, app |
 	var proxySpace;
 	proxySpace = Document.prepareProxySpace(Document.current);
 	window.layout = VLayout(
-		app.listView(\specs).proxyControlList(\proxies).view,
-		// make this list always select the most recently created proxy
 		app.listView(\proxies).proxyList(proxySpace).view,
-//		app.listView(\specs).proxyControlList(\proxies).view,
+		app.listView(\specs).proxyControlList(\proxies).view,
+		app.knob(\specs).proxyControl.view,
 	);
 	// create some node proxies in this Document's proxy space for testing: 
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
@@ -115,12 +115,40 @@ a = AppModel().window({ | window, app |
 });
 
 
+//:
+p = a.getValue(\proxies).item;
+
+c = a.getValue(\specs).item;
+//:
+a.getValue(\proxies).item_(nil, p);
+a.getValue(\specs).item_(nil, c);
+
+//:Presets stage 2: Packaging stored selections in Events
+a = AppModel().window({ | window, app |
+	var proxySpace;
+	proxySpace = Document.prepareProxySpace(Document.current);
+	window.layout = VLayout(
+		app.listView(\proxy).proxyList(proxySpace).view,
+		app.listView(\knob).proxyControlList(\proxy).view,
+		app.knob(\knob).proxyControl.view,
+	);
+	// create some node proxies in this Document's proxy space for testing: 
+	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
+	~out1.play;
+	~out2.play;
+});
+
 
 //:
-{ WhiteNoise.ar(0.1) };
+p = Event make: {
+	~proxy = [a.getValue(\proxy), a.getValue(\proxy).item];
+	~knob = [a.getValue(\knob), a.getValue(\knob).item];
+};
+
 
 //:
-ProxyCodeMixer();
-
-
-
+p use: { 
+	~proxy[0].item_(nil, ~proxy[1]);
+	~knob[0].item_(nil, ~knob[1]);
+};

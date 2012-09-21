@@ -24,7 +24,7 @@
 			// new version: 
 			proxyItem = ProxyItem(key, proxy);
 			this.proxies.add(proxyItem).notify(\list, this); // proxies in order of creation
-			this.notify(\proxies);
+			this.notify(\proxies); // TODO: Review: do we need this?
 		};
 		^proxy
 	}

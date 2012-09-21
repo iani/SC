@@ -7,9 +7,9 @@ See Value.org file for discussion.
 */
 
 Value {
-	var <>model;		// AppModel2 instance that contains me
-	var <adapter;	 // contains the object + the adapter? 
-	var <inputs;	// Array of MIDIFunc and/or OSCFunc that send me input
+	var <>model;		// AppModel instance that contains me
+	var <adapter;	 	// My value (object) + adapter interfacing to it
+	var <inputs;		// Array of MIDIFunc and/or OSCFunc that send me input
 
 	*new { | model, adapter | ^this.newCopyArgs(model).adapter_(adapter) }
 
@@ -29,6 +29,14 @@ Value {
 	}
 
 	// === List utilities ===
+	list { | items | this.adapter = ListAdapter2(this, items) }
+	items_ { | changer, items | adapter.items_(changer, items); }
+	items { ^adapter.items }
+	item_ { | changer, item | adapter.item_(changer, item); }
+	item { ^adapter.item }
+	index_ { | changer, index | adapter.index_(changer, index); }
+	index { ^adapter.index }
+
 	// make me get my list from the item of another list
 	sublistOf { | superList, getListFunction |
 		this.adapter = ListAdapter2();
@@ -42,10 +50,6 @@ Value {
 			this.adapter.items_(this, getListFunction.(superList.adapter.item));
 		});
 	}
-
-	items_ { | changer, items | adapter.items_(changer, items); }
-	item_ { | changer, item | adapter.item_(changer, item); }
-	item { ^adapter.item }
 
 	// === MIDI and OSC ===
 	enable { inputs do: _.enable }
@@ -266,7 +270,7 @@ Widget {
 		getItemFunc = getItemFunc ?? { { value.adapter.item.asString } };
 		this.updateAction(\list, { view.string = getItemFunc.(this) });
 		this.updateAction(\index, { view.string = getItemFunc.(this) });
-		this.replace;		// default action is replace 
+		this.replace;		// default action is replace item with your content
 	}	
 
 	sublistOf { | valueName, getListFunction | // make me get my list from the item of another list
@@ -417,7 +421,7 @@ Widget {
 				item.specs; // the specs are Value instances to which widgets connect
 			});
 			if (autoSelect.isNil) {
-				this.list({ | me | me.items collect: { | v | v.adapter.parameter }; });			
+				this.list({ | me | me.items collect: { | v | v.adapter.parameter }; });
 			}{
 				this.list({ | me |
 					if (autoSelect < me.items.size) { me.value.adapter.index_(nil, autoSelect); };

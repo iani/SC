@@ -49,7 +49,7 @@ ProxyCodePresetHandler {
 
 	init { | numPresets |
 		presets = { | i | ProxyCodePreset(this, i) } ! numPresets;
-		currentPreset = presets.first;		
+		currentPreset = presets.first;
 	}
 	
 	initPresets {

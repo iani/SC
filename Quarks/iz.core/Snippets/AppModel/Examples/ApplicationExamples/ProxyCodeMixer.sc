@@ -1,34 +1,33 @@
 /* IZ Thu 16 August 2012  6:28 PM EEST
 
-Redoing the NanoKontrol2b idea as a subclass of AppModel.
 
-ProxyCodeMixer.new;
 
-ProxyCode(Document.current);
 */
 
 
 ProxyCodeMixer : AppModel {
-	var <doc, <>numStrips = 8, <proxyCode, <proxySpace, <strips;
-	var <stripWidth = 80, <numPresets = 8;
-	var <presetHandler;
+	var <doc, <>numStrips = 8, <numPresets = 8, <proxyCode, <proxySpace, <proxyList, <strips;
+	var <stripWidth = 80;
+	var <>font;
+	var <valueCache;	// fast access to values for storing and restoring presets
 
 	*initClass {
 		Class.initClassTree(MIDISpecs);
 		MIDISpecs.put(this, this.uc33eSpecs);
 	}
 
-	*new { | doc, numStrips = 8 | ^super.new(doc, numStrips).init; }
+	*new { | doc, numStrips = 8, numPresets = 8 | ^super.new(doc, numStrips, numPresets).init; }
 
 	init {
+		font = Font.default.size_(9);
 		doc = doc ?? { Document.current };
 		proxyCode = ProxyCode(doc);
 		proxySpace = doc.envir;
+		proxyList = proxySpace.proxies;
 		this.makeStrips;
-		presetHandler = ProxyCodePresetHandler(this, numPresets);
 		this.makeWindow;
+		this.initPresets;
 		this.reloadProxies;
-		presetHandler.initPresets;
 		this.initMIDI;
 	}
 
@@ -36,7 +35,7 @@ ProxyCodeMixer : AppModel {
 		strips = { | index | ProxyCodeStrip(this, index) } ! numStrips;
 	}
 
-	reloadProxies { proxySpace.notify(\proxyNames, [ProxySelector.proxyNames[proxySpace]]); }
+	reloadProxies { proxyList.notify(\list, proxyList); }
 
 	makeWindow {
 		var winWidth;
@@ -45,11 +44,18 @@ ProxyCodeMixer : AppModel {
 			w	.name_("Proxy Code Mixer : " ++ doc.name)
 				.bounds_(Rect(Window.screenBounds.width - winWidth, 0, winWidth, 250))
 				.layout = HLayout(
-					VLayout(*(presetHandler.gui)),
+					VLayout(
+						*(this.radioButtons(
+							\presets, 
+							{ "just a placeholder" } ! numPresets,
+							{ | me | this.setPreset(me.item); },
+							{ | me | this.getPreset(me.item); },
+						) collect: _.font_(font))
+					),
 					*(strips collect: _.gui)
 				);
 			this.addWindowActions(w);
-		})
+		});
 	}
 
 	addWindowActions { | window |
@@ -79,27 +85,20 @@ ProxyCodeMixer : AppModel {
 		this.notify(\colorDisabled);
 	}
 
-	setDefaultStripControls { | strip |
-		strip.getValue(\sliderSpecs).selectItemAt(1);
-		strip.getValue(\knobSpecs).selectItemAt(2);
+	// PRESETS
+
+	initPresets {
+		var protoPreset;
+		valueCache = strips.collect(_.valueCache).flat;
+		protoPreset = valueCache collect: _.item;
+		this.getValue(\presets).items_(nil, { List.newUsing(protoPreset) } ! numPresets);
 	}
 
-	makePreset { ^strips collect: _.makePreset; }
+	getPreset { | preset | preset.array = valueCache collect: _.item; }
 
-	initializePreset { | argPreset |
-/*		argPreset use: {
-			~proxySelector[\proxy] = '-';
-			~knobSpecs[\parameter] = '-';
-			~sliderSpecs[\parameter] = '-';
-		}
-*/	}
+	setPreset { | preset | valueCache do: { | v, i | v.item_(nil, preset[i]) } }
 
-	restorePreset { | argPreset, presetIndex |
-		argPreset do: { | preset, i |
-			strips[i].restorePreset(preset);
-		};
-		{ this.reloadProxies; }.defer(1);
-	}
+	// MIDI
 
 	initMIDI {
 		var specs, knob, slider, strip;

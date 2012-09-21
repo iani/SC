@@ -22,11 +22,15 @@ ListAdapter2 {
 	*/
 	var <>container, <items, <index = 0, <item;
 
-	*new { | container | ^super.new.init(container) }
+	*new { | container, items | ^super.new.init(container, items) }
 
-	init { | argContainer |
-		container = argContainer;
-		items = List.new;
+	init { | argContainer, argItems |
+		container = argContainer;	// TODO: probably remove this part? 
+		if (argItems isKindOf: List) {
+			items = argItems;
+		}{
+			items = List newUsing: argItems;
+		};
 	}
 
 	updateMessage { ^\list }
