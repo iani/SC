@@ -9,6 +9,7 @@ This is an early version with knobs and no numbers for the 2 upper rows.
 ProxyCodeStrip3 : ProxyCodeStrip {
 
 	gui {
+		presets = proxyCodeMixer.getValue(\presets);
 		^VLayout(
 			this.proxySelectMenu,
 			this.knobGui(\knob3, 5),
