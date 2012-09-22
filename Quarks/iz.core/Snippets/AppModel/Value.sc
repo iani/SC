@@ -233,9 +233,9 @@ Widget {
 	string { ^value.adapter.string }
 	// TODO: rename value variable and methods of SpecAdapter ????
 	// Name issues: number? magnitude? 
-	number_ { | string | value.adapter.value_(this, string); }
+	number_ { | number | value.adapter.value_(this, number); }
 	number { ^value.adapter.value }
-	standardizedNumber_ { | string | value.adapter.standardizedValue_(this, string); }
+	standardizedNumber_ { | number | value.adapter.standardizedValue_(this, number); }
 	standardizedNumber { ^value.adapter.standardizedValue } // again: naming issues. See value above
 	
 	// ======== List views: ListView, PopUpMenu =======

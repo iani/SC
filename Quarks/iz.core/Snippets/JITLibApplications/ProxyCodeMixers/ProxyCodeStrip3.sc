@@ -32,7 +32,7 @@ ProxyCodeStrip3 : ProxyCodeStrip {
 		^HLayout(
 			this.knob(knobName).proxyControl.view,
 			VLayout(
-				this.numberBox(knobName).proxyControl.view.font_(font),
+				this.numberBox(knobName).proxyControl.view.fixedWidth_(40).font_(font),
 				this.popUpMenu(knobName).proxyControlList(\proxy, autoSelectNum)
 				.view.fixedWidth_(43).font_(font),
 			)

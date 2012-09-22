@@ -102,6 +102,8 @@ ProxyCodeEditor : AppModel {
 			.sublistOf(\proxy, { | item | 
 				if (item.isNil) { "<empty>" } {
 					if (item.history.size == 0 and: { item.item.notNil }) { 
+						[this, thisMethod.name, "adding source for empty history", 
+						item.name, item.item.source.envirCompileString].postln;
 						item.history.add(
 							format(
 								"//:%\n%", item.name, item.item.source.envirCompileString
@@ -139,7 +141,7 @@ ProxyCodeEditor : AppModel {
 				}).view.states_([["eval"]]).font_(font),
 				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
 				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
-				this.button(\editor).notify(\append).view.states_([["add"]]).font_(font),
+				this.button(\editor).notifyAction(\append).view.states_([["add"]]).font_(font),
 				this.button(\editor).delete.view.states_([["delete"]]).font_(font),
 				this.button(\editor).action_({ | widget |
 					var proxy = this.proxy;

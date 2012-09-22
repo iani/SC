@@ -66,7 +66,7 @@ ProxyCodeMixer : AppModel {
 		this.windowToFront(window, { this.enable; });
 		this.windowEndFront(window, { this.disable; });
 		window.addNotifier(this, \colorEnabled, {
-			if (window.isClosed.not) { window.view.background = Color(*[0.9, 0.8, 0.7].scramble); }
+			if (window.isClosed.not) { window.view.background = Color(*[0.7, 0.8, 0.9] /* .scramble */); }
 		});
 		window.addNotifier(this, \colorDisabled, {
 			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.5); };

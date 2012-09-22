@@ -10,11 +10,11 @@ AppModel().window({ | window, app |
 		app.numberBox(\number).view,
 		app.knob(\number, \freq).view,
 		app.button(\number).action_({ | widget |
-			widget.value.adapter.value_(widget, 20 rrand: 20000) 
+			widget.number_(20 rrand: 20000) 
 		}).view.states_([["random number between 20 and 20000"]]),
 		app.button(\number).action_({ | widget |
 			// standardizedValue refers to values in the "standard" range between 0 and 1.
-			widget.value.adapter.standardizedValue_(widget, [0, 0.25, 0.5, 0.75, 1].choose)
+			widget.standardizedNumber_([0, 0.25, 0.5, 0.75, 1].choose)
 		}).view.states_([["choose randomly between 5 values"]])
 	)
 })
@@ -43,9 +43,7 @@ AppModel().window({ | window, app |
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.staticText(\text).view,
-		app.textView(\text).do({ | widget | 
-			widget.value.adapter.string_(widget, "Edit my TextView + press button to update");
-		}).view,
+		app.textView(\text).string_("Edit my TextView + press button to update").view,
 		app.button(\text).getText.view.states_([["press me to update edited text"]]),
 	)
 })
@@ -54,9 +52,7 @@ AppModel().window({ | window, app |
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.staticText(\text).view,
-		app.textView(\text).do({ | widget | 
-			widget.value.adapter.string_(widget, "Edit my TextView + press button to update");
-		}).view,
+		app.textView(\text).string_("Edit my TextView + press button to update").view,
 		app.button(\text).getText.view.states_([["press me to update edited text"]]),
 		HLayout(
 			[StaticText().string_("Size of string in TextView:"), s: 4],
