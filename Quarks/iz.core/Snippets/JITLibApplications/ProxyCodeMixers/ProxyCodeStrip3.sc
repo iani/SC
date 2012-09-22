@@ -19,7 +19,8 @@ ProxyCodeStrip3 : ProxyCodeStrip {
 				this.slider(\slider).proxyControl.view,
 				VLayout(
 					this.numberBox(\slider).proxyControl.view.font_(font),
-					this.popUpMenu(\slider).proxyControlList(\proxy, 1).view.font_(font),
+					this.popUpMenu(\slider).proxyControlList(\proxy, 1)
+						.view.fixedWidth_(62).font_(font),
 					this.editButton,
 					this.startStopButton,
 				)
@@ -32,7 +33,8 @@ ProxyCodeStrip3 : ProxyCodeStrip {
 			this.knob(knobName).proxyControl.view,
 			VLayout(
 				this.numberBox(knobName).proxyControl.view.font_(font),
-				this.popUpMenu(knobName).proxyControlList(\proxy, autoSelectNum).view.font_(font),
+				this.popUpMenu(knobName).proxyControlList(\proxy, autoSelectNum)
+				.view.fixedWidth_(43).font_(font),
 			)
 		)
 	}
