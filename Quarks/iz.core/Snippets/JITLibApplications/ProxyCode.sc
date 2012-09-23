@@ -196,13 +196,6 @@ ProxyCode {
 	}
 
 	addNodeSourceCodeToHistory { | argProxy, argSnippet |
-		// This part to be removed: 
-//		var history;
-//		history = proxyHistory[argProxy];
-//		proxyHistory[argProxy] = history = history add: argSnippet;
-//		this.notifyHistoryChanged(argProxy, history, argProxy);
-		// This part to be kept. 
-		[this, thisMethod.name, argProxy, argSnippet].postln;
 		proxySpace.proxyItem(argProxy).addSnippet(argSnippet);
 	}
 
@@ -221,7 +214,6 @@ ProxyCode {
 
 	editNodeProxySource { | proxy |
 		ProxyCodeEditor(this, proxy);
-//		ProxyCodeEditor2(this, proxy);
 	}
 
 	openProxySourceEditor {
@@ -232,7 +224,6 @@ ProxyCode {
 			this.addNodeSourceCodeToHistory(proxy, snippet);
 		};
 		ProxyCodeEditor(this, proxy);
-//		ProxyCodeEditor2(this, proxy);
 	}
 
 	playCurrentDocProxy {

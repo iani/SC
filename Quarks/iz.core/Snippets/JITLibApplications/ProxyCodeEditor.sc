@@ -99,6 +99,7 @@ ProxyCodeEditor : AppModel {
 				}
 			})
 			.appendOn
+			.updateAction(\restore, { | string, me | me.view.string = string })
 			.sublistOf(\proxy, { | item | 
 				if (item.isNil) { "<empty>" } {
 					if (item.history.size == 0 and: { item.item.notNil }) { 
@@ -122,9 +123,11 @@ ProxyCodeEditor : AppModel {
 				)
 				.view.font_(font), s:4],
 				this.button(\proxy).proxyWatcher({ | me |
+					var addp = true;
+					me.item.item !? { addp = false };
 					if(me.item.item.isNil or: { me.item.item.source.isNil }) {
 						this.proxy = me.checkProxy(proxyCode.evalInProxySpace(
-							this.getValue(\editor).getString, start: true, addToSourceHistory: true
+							this.getValue(\editor).getString, start: true, addToSourceHistory: addp
 						))
 					}{
 						me.checkProxy(me.item.item.play);
@@ -134,10 +137,14 @@ ProxyCodeEditor : AppModel {
 				).font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
 				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
+				
+				// replaced by update from proxy history: 
 				this.button(\editor).action_({ | widget |
+					var string;
 					this.proxy = proxyCode.evalInProxySpace(
-						widget.getString, start: false, addToSourceHistory: false
-					);
+						string = widget.getString, start: false, addToSourceHistory: false
+					); // eval button must re-send current string to editor
+					widget.value.notify(\restore, string); // to restore from history update
 				}).view.states_([["eval"]]).font_(font),
 				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
 				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
