@@ -13,7 +13,7 @@ SoundFileAdapter {
 		soundFile !? { soundFile.close }; // close previous soundfile
 		soundFile = SoundFile();
 		soundFile.openRead(path);
-		container.notify(\read, [soundFile, startFrame, frames ?? { soundFile.numFrames }]);
+		container.notify(\read, [this, startFrame, frames]);
 	}
 
 	updateMessage { ^\refresh }	

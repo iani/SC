@@ -166,6 +166,18 @@ Widget {
 		this.addNotifier(notifier, message, { | ... args | action.(this, *args) })
 	}
 
+	// Access to views of values, for actions that require them: 
+	viewGetter { | name = \view | // name a widget's view for access by getView
+		this.updateAction(name, { | ref  | ref.value = view });
+	}
+
+	getView { | name = \view | // get the view of a widget named by viewGetter method
+		var ref;
+		value.notify(name, ref = `nil)
+		^ref.value;
+	}
+
+
 	addValueListener { | listener, message, action |
 		// make some other object perform an action whenever receiving a message from my Value
 		value.addListener(listener, message, { action.(value) })
@@ -463,9 +475,11 @@ Widget {
 	soundFileView {
 		value.adapter ?? { value.adapter = SoundFileAdapter(value) };
 		this.updateAction(\read, { | soundfile, startframe, frames |
-			view.soundfile = soundfile;
+			view.soundfile = soundfile.soundFile;
 			view.read(startframe, frames);
+			value.notify(\sfViewAction, this);
 		});
+		view.mouseUpAction = { | view | value.notify(\sfViewAction, this) };
 	}
 	
 	

@@ -79,13 +79,20 @@ ListAdapter {
 	items_ { | changer, argItems |
 		/* 	Remove connection to previous list, and create connection to new list.
 			When the list changes, it notifies me, so that I can update my listeners. */
-		items !? { this.removeNotifier(items, \list); };
+		var oldItem;
+		items !? {
+			this.removeNotifier(items, \list);
+			oldItem = items[index];
+		};
 		if (argItems isKindOf: Array) { argItems = List.newUsing(argItems) };
 		items = argItems ?? { List.new };
 		this.addNotifier(items, \list, { | changer | container.notify(\list, changer) });
 		index = items.indexOf(item) ? 0;
 		item = items[index];
-		container !? { container.notify(\list, changer) };
+		container !? {
+			container.notify(\list, changer);
+			if (item !== oldItem) { container.notify(\index, changer); };
+		};
 	}
 
 	item_ { | changer, argItem |

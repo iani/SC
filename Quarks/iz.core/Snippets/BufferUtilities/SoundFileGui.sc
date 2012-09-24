@@ -15,7 +15,7 @@ SoundFileGui : AppModel {
 	classvar <>font;
 
 	var <>archivePath;
-	var <buffers; // Value holding current Buffers list;
+	var <files; // Value holding current files list;
 
 	*initClass {
 		StartUp add: {
@@ -32,9 +32,9 @@ SoundFileGui : AppModel {
 		var bufferLists;
 		bufferLists = this.getValue(\bufferLists, ListAdapter());
 		bufferLists.items_(nil, this.loadBufferLists(argArchivePath));
-		buffers = this.getValue(\buffers, ListAdapter());
-		buffers.items_(bufferLists.adapter.item);
-		buffers.sublistOf(bufferLists);
+		files = this.getValue(\files, ListAdapter());
+		files.items_(bufferLists.adapter.item);
+		files.sublistOf(bufferLists);
 	}
 
 	loadBufferLists { | argArchivePath |
@@ -65,9 +65,14 @@ SoundFileGui : AppModel {
 					[VLayout(this.fileButtonRow, this.fileListDisplay), s: 2],
 					[this.bufferDisplay, s: 1],
 				),
-				// Here will follow the file display and functionality items
+				this.soundFileDisplay, 
+				this.soundFileItemsRow1,
+				// Here will follow the functionality items
+				[nil, s: 5],
 				
 			);
+			// load current file when re-opening
+			files.item !? { files.notify(\index, files); };
 			this.windowClosed(w, { this.saveLists });
 			ShutDown add: { this.saveLists };
 		})
@@ -108,19 +113,18 @@ SoundFileGui : AppModel {
 	fileButtonRow {
 		^HLayout(
 			StaticText().string_("Sound Files:").font_(font),
-			this.button(\buffers).notifyAction(\readNew).view.states_([["read new"]]).font_(font),
-			this.button(\buffers).notifyAction(\readDefaults)
+			this.button(\files).notifyAction(\readNew).view.states_([["read new"]]).font_(font),
+			this.button(\files).notifyAction(\readDefaults)
 			.view.states_([["read defaults"]]).font_(font),
-			this.button(\buffers).notifyAction(\loadSelected)
+			this.button(\files).notifyAction(\loadSelected)
 			.view.states_([["load selected"]]).font_(font),
-			this.button(\buffers).notifyAction(\loadAll).view.states_([["load all"]]).font_(font),
-			this.button(\buffers).notifyAction(\play).view.states_([["play"]]).font_(font),
-			this.button(\buffers).notifyAction(\delete).view.states_([["delete"]]).font_(font),
+			this.button(\files).notifyAction(\loadAll).view.states_([["load all"]]).font_(font),
+			this.button(\files).notifyAction(\delete).view.states_([["delete"]]).font_(font),
 		)
 	}
 
 	fileListDisplay {
-		^this.listView(\buffers, { | me | me.value.adapter.items collect: _.name })
+		^this.listView(\files, { | me | me.value.adapter.items collect: _.name })
 			.updateAction(\readNew, { | me |
 				Dialog.getPaths({ | paths |
 					paths do: { | p | this.addBuffer(me.value.adapter, BufferItem(p)) };
@@ -170,15 +174,74 @@ SoundFileGui : AppModel {
 	bufferActionList {
 		^this.listView(\bufferActions).items_(["dummy 1", "dummy 2", "dummy 3"]).view.font_(font)
 	}
-/*	
-	playBufferTextView {
-		^this.textView(\loadedBuffers).listItem({ | me |
-			format(this.bufferPlayCode, *me.value.adapter.item.dup(2))
+	
+	soundFileDisplay {
+		^this.soundFileView(\soundFileView)
+		.viewGetter(\sfView)
+		.updater(files, \index, { | me, list | 
+			me.value.adapter.soundFile_(list.item.name);
 		})
-			.updateAction(\play, { | me, widget | widget.view.string.interpret })
-			.view.font_(Font("Monaco", 10))
+		.view.timeCursorOn_(true)
 	}
-*/
+	
+	soundFileItemsRow1 {
+		^HLayout(
+			[StaticText().string_("num frames:").font_(font), s: 2],
+			this.numberBox(\soundFileView)
+			.updateAction(\read, { | sf, me | me.view.value = sf.soundFile.numFrames })
+			.view.font_(font),
+			[StaticText().string_("sample rate:").font_(font), s: 2],
+			[this.numberBox(\soundFileView)
+			.updateAction(\read, { | sf, me | me.view.value = sf.soundFile.sampleRate })
+			.view.font_(font), s: 1],
+			StaticText().string_("duration:").font_(font),
+			[this.numberBox(\soundFileView)
+			.updateAction(\read, { | sf, me | me.view.value = sf.soundFile.duration })
+			.view.font_(font), s: 1],
+			StaticText().string_("cursor:").font_(font),
+			this.numberBox(\soundFileView)
+			.updateAction(\sfViewAction, { | sfv, me |
+				me.view.value = sfv.view.timeCursorPosition; })
+			.view.font_(font),
+			StaticText().string_("time:").font_(font),
+			[this.numberBox(\soundFileView)
+			.updateAction(\sfViewAction, { | sfv, me | 
+				me.view.value = sfv.view.timeCursorPosition / sfv.view.soundfile.sampleRate; })
+			.view.font_(font), s: 1],
+			[StaticText().string_("selected frames:").font_(font), s: 2],
+			this.numberBox(\soundFileView)
+			.updateAction(\sfViewAction, { | sfv, me | 
+				me.view.value = sfv.view.selectionSize(sfv.view.currentSelection);
+			})
+			.view.font_(font),
+			[StaticText().string_("selected dur.:").font_(font), s: 2],
+			[this.numberBox(\soundFileView)
+			.updateAction(\sfViewAction, { | sfv, me | 
+				me.view.value = 
+					sfv.view.selectionSize(sfv.view.currentSelection) / 
+					sfv.view.soundfile.sampleRate; 
+			})
+			.view.font_(font), s: 1],
+			this.button(\files).notifyAction(\play).view.states_([["play"]]).font_(font),
+			this.button(\soundFileView)
+			.action_({ | me |
+				// TODO: CLOSE BUFFER WHEN DONE!
+				var sfv, selection, firstFrame, lastFrame;
+				sfv = me.getView(\sfView);
+				selection = sfv.currentSelection;
+				firstFrame = sfv.selectionStart(selection);
+				lastFrame = sfv.selectionStart(selection) + sfv.selectionSize(selection);
+				if (lastFrame <= firstFrame) { lastFrame = sfv.soundfile.numFrames };
+				sfv.soundfile.cue(
+				( 
+					firstFrame: firstFrame,
+					lastFrame: lastFrame,
+				), true)
+			})
+			.view.states_([["play sel"]]).font_(font),
+		)
+	}
+	
 	saveLists {
 		this.getValue(\bufferLists).adapter.items.writeArchive(archivePath);
 		postf("Buffer lists saved to: \n%\n", archivePath);
