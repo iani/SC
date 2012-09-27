@@ -14,7 +14,9 @@ ProxyCode {
 	classvar all;						// all ProxyCode instances in a Dictionary by Document
 	classvar <historyTimer;				// routine that counts time from last executed snippet
 	classvar <>historyEndInterval = 300;	// end History if nothing has been done for 5 minutes
-	classvar <proxyHistory; // holds all source code for each NodeProxy
+//	classvar <proxyHistory; /* holds all source code for each NodeProxy,
+//		as parsed from document, for initialization of history of proxies in ProxyCodeEditor
+//	*/
 
  	var <doc;			// the document from which this snippet was 
 	var <proxySpace; 
@@ -24,11 +26,16 @@ ProxyCode {
 					// from the initial comment line of the snippet
 	var <snippet; 
 	var <index;
+//	var <proxyHistory; /* holds all source code for each NodeProxy,
+//		as parsed from document, for initialization of history of proxies in ProxyCodeEditor
+//	*/
 
 	*initClass {
 		// since CmdPeriod stops routines, restart the historyTimer routine
-		proxyHistory = IdentityDictionary.new;
-		StartUp add: { CmdPeriod add: { { this.startHistoryTimer }.defer(0.1) } };
+		StartUp add: {
+			CmdPeriod add: { { this.startHistoryTimer }.defer(0.1) };
+			CocoaMenuItem.add(["Load all Snippet Proxies"], { this.loadAll });
+		};
 	}
 
 	*startHistoryTimer {
@@ -54,6 +61,7 @@ ProxyCode {
 
 	init {
 		all[doc] = this;
+//		proxyHistory = IdentityDictionary.new;
 		this.initProxySpace;
 	}
 
@@ -78,19 +86,10 @@ ProxyCode {
 		^proxy = proxySpace[this.getProxyName(argSnippet ? snippet, argIndex ? index)];
 	}
 
-/*
-	getProxy {
-		// The proxyName part maybe should be replaced by getProxyName method
-		proxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
-		proxyName = (proxyName ?? { [0, format("out%", index)] })[1].asSymbol;
-		^proxy = proxySpace[proxyName];
-	}
-*/
-
 	getProxyName { | argSnippet, argIndex = 0 |
 		^(argSnippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1] ?? {
 			[0, format("out%", argIndex)] 
-		})[1].asSymbol;		
+		})[1].asSymbol;
 	}
 	
 	makeProxyHistoryFromDoc { | eraseDuplicates = true |
@@ -107,6 +106,7 @@ ProxyCode {
 		};
 	}
 
+/*
 	clearProxyHistory { // NOT TESTED
 		// when clearing history, notify any editors or other objects
 		var oldProxies;
@@ -116,7 +116,7 @@ ProxyCode {
 			this.notifyHistoryChanged(oldProxy, [], oldProxy);
 		}
 	}
-
+*/
 	removeDuplicatesFromProxyHistory {
 		// under construction
 		// remove those snippets from proxyHistory that have been entered twice.
@@ -138,7 +138,6 @@ ProxyCode {
 			proxy = argProxy ?? { this.getProxy };
 			argProxyName !? { proxyName = argProxyName };
 			proxy.source = source;
-			postf("doc: %, snippet: %\nproxy (%): %\n", doc.name, snippet, proxyName, proxy);
 			if (snippet[0] == $/) {
 				index = snippet indexOf: $\n;
 				this.enterSnippet2History(
@@ -179,8 +178,8 @@ ProxyCode {
 			I send also who updated me, so that the updater will not re-update itself
 			(otherwise an endless loop would ensue).
 		*/
-		proxyHistory[argProxy] = argHistory;
-		this.notifyHistoryChanged(argProxy, argHistory, argChanger);
+//		proxyHistory[argProxy] = argHistory;
+//		this.notifyHistoryChanged(argProxy, argHistory, argChanger);
 	}
 
 	*notifyHistoryChanged { | argProxy, argHistory, argChanger |
@@ -207,9 +206,9 @@ ProxyCode {
 
 	deleteNodeSourceCodeFromHistory { | argProxy, snippetIndex |
 		var history;
-		history = proxyHistory[argProxy];
-		history.removeAt(snippetIndex - 1);
-		this.notifyHistoryChanged(argProxy, history, argProxy);
+//		history = proxyHistory[argProxy];
+//		history.removeAt(snippetIndex - 1);
+//		this.notifyHistoryChanged(argProxy, history, argProxy);
 	}
 
 	editNodeProxySource { | proxy |
@@ -218,12 +217,13 @@ ProxyCode {
 
 	openProxySourceEditor {
 		// called by keyboard shortcut from Code
+		var thisProxy;
 		this.getSnippet;
-		this.getProxy;
-		proxyHistory[proxy] ?? {
-			this.addNodeSourceCodeToHistory(proxy, snippet);
+		thisProxy = this.getProxy;
+		if (proxySpace.proxyItem(thisProxy).history.size == 0) {
+			this.addNodeSourceCodeToHistory(thisProxy, snippet);
 		};
-		ProxyCodeEditor(this, proxy);
+		ProxyCodeEditor(this, thisProxy);
 	}
 
 	playCurrentDocProxy {
@@ -277,13 +277,12 @@ ProxyCode {
 
 	openHistoryInDoc { | argProxy |
 		var title, docString;
-		title = proxyHistory[argProxy];
-		if (title.isNil) {
+		if (argProxy.isNil) {
 			title = Date.getDate.format("History for all proxies on %Y-%m-%e at %Hh:%Mm:%Ss");
 			docString = this.makeHistoryStringForAll;
 		}{
 			title = format("History for % on %",
-				proxySpace.envir.findKeyForValue(proxy),
+				proxySpace.proxyItem(argProxy).name,
 				Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss")
 			);
 			docString = this.makeHistoryStringForProxy(proxy);
@@ -298,7 +297,7 @@ ProxyCode {
 			Date.getDate.format("%Y-%m-%e at %Hh:%Mm:%Ss")
 		);
 		docString = docString ++ this.makeLoadBuffersString;
-		histories = proxyHistory.keys collect: this.makeHistoryStringForProxy(_);
+		histories = Library.at('Proxies', proxySpace) collect: this.makeHistoryStringForProxy(_);
 		^histories.inject(docString, { | a, b | a ++ b });
 	}
 
@@ -311,12 +310,12 @@ ProxyCode {
 		});
 	}
 
-	makeHistoryStringForProxy { | proxy |
+	makeHistoryStringForProxy { | proxyItem |
 		var myHistory, docString;
-		myHistory = proxyHistory[proxy];
+		myHistory = proxyItem.history;
 		docString = format(
 			"\n/* =========== HISTORY FOR % on % =========== */", 
-			proxySpace.envir.findKeyForValue(proxy), 
+			proxyItem.name;
 			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
 		);
 		^myHistory.inject(docString, { | a, b, i |
@@ -332,7 +331,9 @@ ProxyCode {
 	loadAll {
 		Code(doc).getAllSnippetStrings do: { | snippet, index |
 			this.addNodeSourceCodeToHistory(this.getProxy(snippet, index), snippet);
-		};
+		}
 	}
+	
+	*loadAll { ^this.new(Document.current).loadAll }
 }
 

@@ -44,10 +44,10 @@ Value {
 		getListFunction ?? { getListFunction = { | sublist | sublist }; };
 		if (superList isKindOf: Symbol) { superList = model.getValue(superList); };
 		this.addNotifier(superList, \list, {
-			this.adapter.items_(this, getListFunction.(superList.adapter.item));
+			this.adapter.items_(this, getListFunction.(superList.adapter.item, this));
 		});
 		this.addNotifier(superList, \index, {
-			this.adapter.items_(this, getListFunction.(superList.adapter.item));
+			this.adapter.items_(this, getListFunction.(superList.adapter.item, this));
 		});
 	}
 
@@ -473,7 +473,7 @@ Widget {
 	// SoundFile stuff
 
 	soundFileView {
-		value.adapter ?? { value.adapter = SoundFileAdapter(value) };
+		value.adapter = SoundFileAdapter(value);
 		this.updateAction(\read, { | soundfile, startframe, frames |
 			view.soundfile = soundfile.soundFile;
 			view.read(startframe, frames);

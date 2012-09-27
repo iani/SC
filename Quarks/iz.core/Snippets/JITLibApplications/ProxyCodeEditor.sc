@@ -45,7 +45,6 @@ ProxyCodeEditor : AppModel {
 			this.addWindowActions(window);
 			this.addViews(window, proxy);
 		});
-
 	}
 
 	addWindowActions { | window |
@@ -100,9 +99,9 @@ ProxyCodeEditor : AppModel {
 			})
 			.appendOn
 			.updateAction(\restore, { | string, me | me.view.string = string })
-			.sublistOf(\proxy, { | item | 
+			.sublistOf(\proxy, { | item, widget |
 				if (item.isNil) { "<empty>" } {
-					if (item.history.size == 0 and: { item.item.notNil }) { 
+					if (item.history.size == 0 and: { item.item.notNil }) {
 						[this, thisMethod.name, "adding source for empty history", 
 						item.name, item.item.source.envirCompileString].postln;
 						item.history.add(
@@ -111,13 +110,14 @@ ProxyCodeEditor : AppModel {
 							)
 						)
 					};
-					item.history
+					item.history;
 				}
 			}).view.font_(Font("Monaco", 10)), s: 10],
 			[
 			HLayout(
 				[this.popUpMenu(\proxy).proxyList(proxySpace)
-				.addValueListener(window, \index, { | value | window.name = value.adapter.item.name })
+				.addValueListener(window, \index, { | value |
+					window.name = value.adapter.item.name })
 				.item_(
 					proxySpace.proxies detect: { | p | p.item === proxy }
 				)
@@ -137,12 +137,23 @@ ProxyCodeEditor : AppModel {
 				).font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
 				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
-				
-				// replaced by update from proxy history: 
 				this.button(\editor).action_({ | widget |
-					var string;
+					/* Evaluate current code. If proxy name is provided in header line, use it.
+					Else use current proxy name */
+					var string, myProxyName;
+					string = widget.getString;
+					myProxyName = string.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
+					if (myProxyName.notNil) {
+						myProxyName = myProxyName[1].asSymbol;
+					}{
+						myProxyName = proxySpace.proxyItem(this.proxy).name;
+					};
 					this.proxy = proxyCode.evalInProxySpace(
-						string = widget.getString, start: false, addToSourceHistory: false
+						string = widget.getString, 
+						proxySpace[myProxyName],
+						myProxyName,
+						start: false, 
+						addToSourceHistory: false
 					); // eval button must re-send current string to editor
 					widget.value.notify(\restore, string); // to restore from history update
 				}).view.states_([["eval"]]).font_(font),
@@ -174,12 +185,12 @@ ProxyCodeEditor : AppModel {
 					valName = format("b%", i).asSymbol;
 					this.popUpMenu(valName)
 					.updater(BufferItem, \bufferList, { | me, names | me.items_(['-'] ++ names); })
-					.do({ | me | { // delay initialization: to not auto-resize menu to big width:
+					.do({ | me |
 						me.items = ['-'] ++ Library.at['Buffers'].keys.asArray.sort 
-					}.defer(0.1) })
+					})
 					.addValueListener(this, \index, { | val | 
 						this.updateBuffers(valName, val.adapter.item) })
-					.view.font_(font)
+					.view.font_(font).fixedWidth_(82)
 				} ! 8), 
 			// TODO: specify initial width to prevent menus growing wider because of buffer names
 			// view.maxWidth_(100) does not work here?

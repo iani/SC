@@ -85,6 +85,9 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "edit proxy", ["e", true, false], {
 				ProxyCode(Document.current).openProxySourceEditor;
 			}),
+			CocoaMenuItem.addToMenu("Code", "load all proxies", ["l", true, false], {
+				ProxyCode(Document.current).loadAll;
+			}),
 			CocoaMenuItem.addToMenu("Code", "eval in proxy space", ["W", false, false], {
 //				Document.current.name.postln;
 				ProxyCode(Document.current).evalInProxySpace;

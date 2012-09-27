@@ -15,7 +15,7 @@ NumberAdapter {
 	}
 
 	value_ { | changer, number |
-		value = number;
+		value = number ? 0;
 		standardizedValue = spec unmap: value;
 		container.notify(\number, changer);
 	}
