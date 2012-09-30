@@ -329,7 +329,7 @@ Widget {
 		});
 	}
 
-	delete { | message | // mostly for buttons
+	delete { // mostly for buttons
 		view.action = { value.adapter.delete(this); };
 	}
 

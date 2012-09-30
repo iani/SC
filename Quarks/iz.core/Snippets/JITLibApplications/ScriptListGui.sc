@@ -9,6 +9,7 @@ ScriptListGui : AppModel {
 
 	var <>archivePath;
 	var <files; // Value holding current files list;
+	var <snippetViews; // StackLayout. Can one make a Widget method for it? 
 
 	*initClass {
 		StartUp add: {
@@ -22,20 +23,23 @@ ScriptListGui : AppModel {
 	}
 
 	init { | argArchivePath |
-		var scriptLists;
+		var bufferScript, scriptData, scriptLists;
+		#bufferScript, scriptData = this.openScriptLists(argArchivePath);
+		bufferScript !? { bufferScript.interpret };
 		scriptLists = this.getValue(\scriptLists, ListAdapter());
-		scriptLists.items_(nil, this.openScriptLists(argArchivePath));
+		scriptLists.items_(nil, scriptData);
 		files = this.getValue(\scripts, ListAdapter());
 		files.items_(scriptLists.adapter.item);
 		files.sublistOf(scriptLists);
 	}
 
 	openScriptLists { | argArchivePath |
-		var scriptLists, defaultList;
+		var data, bufferScript, scriptLists, defaultList;
 		archivePath = argArchivePath ?? { Platform.userAppSupportDir +/+ "Scripts.sctxar"; };
-		scriptLists = Object.readArchive(archivePath);
+		data = Object.readArchive(archivePath);
+		data !? { #bufferScript, scriptLists = data };
 		scriptLists do: _.restoreFromArchive;
-		^scriptLists ?? { [this.makeList] };
+		^[bufferScript, scriptLists ?? { [this.makeList] }];
 	}
 
 	makeList { | argName |
@@ -51,7 +55,7 @@ ScriptListGui : AppModel {
 
 	makeWindow { | argArchivePath |
 		this.stickyWindow(this.class, \scriptListGui, { | w, app |
-//			w.bounds = Rect(400, 400, 1040, 650);
+			w.bounds = Rect(300, 50, 800, 800);
 			w.layout = VLayout(
 				HLayout(this.listButtonRow, this.fileButtonRow, this.scriptButtonRow),
 				HLayout(
@@ -61,8 +65,8 @@ ScriptListGui : AppModel {
 					[VLayout(this.scriptListDisplay), s: 5],
 					[this.proxyDisplay, s: 1],
 				),
-				this.scripItemsRow,
-				this.scriptDisplay,				
+				this.snippetButtons,
+				[this.snippetDisplay, s: 3],	
 			);
 			// open current file when re-opening
 			files.item !? { files.notify(\index, files); };
@@ -129,10 +133,10 @@ ScriptListGui : AppModel {
 				me.item !? {
 					ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, me.item); 
 				}
-			}).view.font_(font).states_([["edit selected"]]),
+			}).view.font_(font).states_([["gui selected"]]),
 			this.button(\proxies).action_({ | me |
 				me.items do: { | p | ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, p); };
-			}).view.font_(font).states_([["edit all"]]),
+			}).view.font_(font).states_([["gui all"]]),
 			this.button(\scripts).action_({ | me |
 				me.item !? { ProxyCodeMixer3(me.item.proxySpace) }
 			}).view.font_(font).states_([["mixer"]])
@@ -164,16 +168,60 @@ ScriptListGui : AppModel {
 
 	proxyDisplay {
 		^this.listView(\proxies, { | me | me.items collect: _.name }).sublistOf(\scripts, { | me | 
-			me !? { me.proxyItems /* collect: _.name */ }
+			me !? { me.proxyItems }
 		}).view.font_(font);
 	}
 
-	scripItemsRow { ^nil }
-	scriptDisplay { ^nil }
+	snippetButtons {
+		// UNDER DEVELOPMENT!!!
+		^HLayout(
+			this.button(\snippets)
+			.action_({ | me | snippetViews.index = me.view.value })
+				.view.font_(font).states_([["edit"], ["done"]]),
+			this.button(\snippets)
+				.view.font_(font).states_([["start"], ["stop"]])
+				.action_({ | me | snippetViews.index = me.value }),
+			this.button(\snippets)
+				.view.font_(font).states_([["eval"]])
+				.action_({ | me | snippetViews.index = me.value }),
+			this.button(\snippets)
+				.view.font_(font).states_([["insert"]])
+				.action_({ | me | snippetViews.index = me.value }),
+			this.button(\snippets)
+				.view.font_(font).states_([["append"]])
+				.action_({ | me | snippetViews.index = me.value }),
+			this.button(\snippets)
+				.view.font_(font).states_([["delete"]])
+				.action_({ | me | snippetViews.index = me.value }),
+			this.button(\snippets) // switch to performance gui? 
+				.view.font_(font).states_([["perform"]])
+				.action_({ | me | snippetViews.index = me.value }),
+		);		
+	}
+
+	snippetDisplay {
+		^snippetViews = StackLayout(
+			this.listView(\snippets).sublistOf(\proxies, { | me | me !? { me.history }; })
+				.appendOn
+				.insertOn
+				.replaceOn
+				.view.font_(Font("Monaco", 10)),
+			this.textView(\snippets).listItem.view.font_(Font("Monaco", 10)),
+		)
+	}
 	
 	saveLists {
-		this.getValue(\scriptLists).adapter.items.collect(_.makeArchiveCopy).writeArchive(archivePath);
+		[this.bufferScript, this.makeArchiveList].writeArchive(archivePath);
 		postf("Script lists saved to: \n%\n", archivePath);
 	}
+	
+	bufferScript {
+		^BufferItem.makeLoadBuffersString;
+	}
+	
+	makeArchiveList {
+		^this.getValue(\scriptLists).adapter.items.collect(_.makeArchiveCopy);
+	}
+	
 	
 }

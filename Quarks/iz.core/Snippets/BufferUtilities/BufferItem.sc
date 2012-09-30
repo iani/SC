@@ -123,4 +123,14 @@ BufferItem : NamedItem {
 	*openPanel { | doneFunc |
 		Dialog.openPanel({ | path | doneFunc.(this.new(path)); });
 	}
+
+	*makeLoadBuffersString {
+		var buffers;
+		buffers = Library.at('Buffers').asArray;
+		if (buffers.size == 0) { ^"" };
+		^buffers.inject("\n// ====== BUFFERS ====== \n\n", { | str, b |
+			str ++ format("BufferItem(%).load;\n", b.name.asCompileString);
+		});
+	}
+
 }

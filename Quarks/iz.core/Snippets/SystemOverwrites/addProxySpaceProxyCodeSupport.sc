@@ -89,13 +89,6 @@ TODO: Add option for switching to the new proxyspace right afer play.
 		^histories.inject(docString, { | a, b | a ++ b });
 	}
 
-	makeLoadBuffersString {
-		var buffers;
-		buffers = Library.at('Buffers').asArray;
-		if (buffers.size == 0) { ^"" };
-		^buffers.inject("\n// ====== BUFFERS ====== \n\n", { | str, b |
-			str ++ format("BufferItem(%).load;\n", b.name.asCompileString);
-		});
-	}
+	makeLoadBuffersString { ^BufferItem.makeLoadBuffersString }
 	
 }
