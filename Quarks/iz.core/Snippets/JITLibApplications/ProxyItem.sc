@@ -65,8 +65,32 @@ ProxyItem : NamedItem {
 		}
 //		^item;
 	}
-
+	checkEvalPlay {
+		/* If NodeProxy has no source yet, eval first snippet to give it source before playing */
+		if (item.source.isNil) {
+			this.evalSnippet(history.first, start: true, addToSourceHistory: false);
+		}{
+			item.play;
+		}
+	}
 	play { item.play }
 	stop { item.stop }
 	isMonitoring { ^item.isMonitoring }
+	
+	makeHistoryString {
+		var docString;
+		docString = format(
+			"\n/* =========== HISTORY FOR % on % =========== */", 
+			name,
+//			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
+			Date.getDate.format("%c")
+		);
+		^history.inject(docString, { | a, b, i |
+			a 
+			++ format("\n\n// ***** % ***** \n", i + 1)
+			++ b
+		};
+		);
+	}
+
 }

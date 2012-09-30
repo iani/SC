@@ -42,26 +42,29 @@ ProxyCodeStrip : AppModel {
 	editButton {
 		^this.button(\proxy).proxyWatcher(
 			{},	// : 0 state - never gets triggered on a button with only one state
-			{ | me | ProxyCodeEditor(ProxyCode(proxyCodeMixer.doc), me.item.item); }
+			{ | me | ProxyCodeEditor(proxyCodeMixer.proxySpace, me.item); }
 		)
 		.view.states_([["ed"]]).font_(font)
 	}
 	
 	startStopButton {
-		^this.button(\proxy).proxyWatcher
+		^this.button(\proxy).proxyWatcher({ | me | me.item.checkEvalPlay })
 			.view.states_([[">"], ["||", nil, proxyOnColor]]).font_(font)
 	}
 
 	proxySelectMenu {
 		^this.popUpMenu(\proxy).proxyList(proxyCodeMixer.proxySpace)
 			.addUpdateAction(\list, { | me | this.autoSetProxy(me) })
+			.updater(proxyCodeMixer, \autoSetProxy, { | me | this.autoSetProxy(me) })
 			.view.font_(font).background_(Color(0.7, 1, 0.8))
 	}
 
 	autoSetProxy { | proxyWidget |
 		var proxyIndex, proxies;
-		proxyIndex = presets.index * proxyCodeMixer.numStrips + index;
-		if (proxyWidget.items.size - 1 > index) { proxyWidget.index = index + 1; }
+		if (proxyWidget.index == 0) {
+			proxyIndex = presets.index * proxyCodeMixer.numStrips + index;
+			if (proxyWidget.items.size - 1 > proxyIndex) { proxyWidget.index = proxyIndex + 1; }
+		}
 	}
 	
 	// return my values to proxyCodeMixer for fast access to get and set presets

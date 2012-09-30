@@ -12,8 +12,13 @@ SoundFileAdapter {
 	soundFile_ { | path, startFrame = 0, frames |
 		soundFile !? { soundFile.close }; // close previous soundfile
 		soundFile = SoundFile();
-		soundFile.openRead(path);
-		container.notify(\read, [this, startFrame, frames]);
+		if (File.exists(path)) {
+			soundFile.openRead(path);
+			container.notify(\read, [this, startFrame, frames]);
+		}{
+			"SOUND FILE NOT FOUND!:".postln;
+			path.postln;
+		}
 	}
 
 	updateMessage { ^\refresh }	

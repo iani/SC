@@ -25,7 +25,7 @@ ScriptListGui : AppModel {
 		var scriptLists;
 		scriptLists = this.getValue(\scriptLists, ListAdapter());
 		scriptLists.items_(nil, this.openScriptLists(argArchivePath));
-		files = this.getValue(\files, ListAdapter());
+		files = this.getValue(\scripts, ListAdapter());
 		files.items_(scriptLists.adapter.item);
 		files.sublistOf(scriptLists);
 	}
@@ -34,22 +34,32 @@ ScriptListGui : AppModel {
 		var scriptLists, defaultList;
 		archivePath = argArchivePath ?? { Platform.userAppSupportDir +/+ "Scripts.sctxar"; };
 		scriptLists = Object.readArchive(archivePath);
+		scriptLists do: _.restoreFromArchive;
 		^scriptLists ?? { [this.makeList] };
 	}
 
 	makeList { | argName |
-		^NamedList().name_(argName ?? { format("Scripts_%", Date.getDate.stamp) });
+		^ScriptList().name_(argName ?? { format("Scripts_%", Date.getDate.stamp) });
 	}
 
-	addScript { | scriptList, script | if (scriptList.includes(script).not) { scriptList add: script } }
+	addScript { | scriptList, path | 
+		path = path.asSymbol;
+		if (scriptList.detect({ | s | s.path === path }).isNil) {
+			scriptList add: ProxyDoc(path, readFromDoc: true);
+		}
+	}
 
 	makeWindow { | argArchivePath |
 		this.stickyWindow(this.class, \scriptListGui, { | w, app |
 //			w.bounds = Rect(400, 400, 1040, 650);
 			w.layout = VLayout(
+				HLayout(this.listButtonRow, this.fileButtonRow, this.scriptButtonRow),
 				HLayout(
-					VLayout(this.listButtonRow, this.selectedListDisplay, this.listListDisplay),
-					[VLayout(this.fileButtonRow, this.fileListDisplay), s: 2],
+					VLayout(this.selectedListDisplay.fixedWidth_(200), 
+						this.listListDisplay.fixedWidth_(200)
+					),
+					[VLayout(this.scriptListDisplay), s: 5],
+					[this.proxyDisplay, s: 1],
 				),
 				this.scripItemsRow,
 				this.scriptDisplay,				
@@ -100,41 +110,70 @@ ScriptListGui : AppModel {
 	fileButtonRow {
 		^HLayout(
 			StaticText().string_("Scripts:").font_(font),
-			this.button(\files).notifyAction(\readNew).view.states_([["add ..."]]).font_(font),
-			this.button(\files).notifyAction(\openSelected)
-			.view.states_([["open selected"]]).font_(font),
-			this.button(\files).notifyAction(\openAll).view.states_([["open all"]]).font_(font),
-			this.button(\files).notifyAction(\delete).view.states_([["delete"]]).font_(font),
+			this.button(\scripts).notifyAction(\readNew).view.states_([["load ..."]]).font_(font),
+			this.button(\scripts)
+				.action_({ | me | me.item !? { me.item.proxySpace.openHistoryInDoc; } })
+				.view.states_([["make doc"]]).font_(font),
+			this.button(\scripts)
+//			.notifyAction(\makeDoc)
+			.action_({ | me | me.item !? { Document.open(me.item.path.asString); } })
+			.view.states_([["open doc"]]).font_(font),
+			this.button(\scripts).notifyAction(\delete).view.states_([["delete"]]).font_(font),
 		)
 	}
 
-	fileListDisplay {
-		^this.listView(\files, { | me |
-			me.value.adapter.items collect: _.name
+	scriptButtonRow {
+		^HLayout(
+			StaticText().string_("Proxies:").font_(font),
+			this.button(\proxies).action_({ | me |
+				me.item !? {
+					ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, me.item); 
+				}
+			}).view.font_(font).states_([["edit selected"]]),
+			this.button(\proxies).action_({ | me |
+				me.items do: { | p | ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, p); };
+			}).view.font_(font).states_([["edit all"]]),
+			this.button(\scripts).action_({ | me |
+				me.item !? { ProxyCodeMixer3(me.item.proxySpace) }
+			}).view.font_(font).states_([["mixer"]])
+		)
+	}
+
+	scriptListDisplay {
+		^this.listView(\scripts, { | me | me.items collect: _.path })
+		.updateAction(\readNew, { | me |
+			Dialog.getPaths({ | paths |
+				paths do: { | p | this.addScript(me.value.adapter, p) };
+				me.value.updateListeners;
+			});
 		})
-			.updateAction(\readNew, { | me |
-				Dialog.getPaths({ | paths |
-					paths do: { | p | this.addScript(me.value.adapter, ScriptItem(p)) };
-					me.value.updateListeners;
-				});
-			})
-			.updateAction(\readDefaults, { | me | this.readDefaults(me.value.adapter) })
-			.updateAction(\openAll, { | me |
-				me.value.adapter.items do: _.open;
-			})
-			.updateAction(\openSelected, { | me |
-				me.value.adapter.item !? { me.value.adapter.item.open }
-			})
-			.updateAction(\play, { | me |
-				me.value.adapter.item !? { me.value.adapter.item.play }
-			})
-			.updateAction(\delete, { | me | me.value.adapter.delete(me); })
-			.updateAction(\close, { | me | me.value.adapter.item.close })
-			.view.font_(font)
+		.updateAction(\readDefaults, { | me | this.readDefaults(me.value.adapter) })
+		.updateAction(\openAll, { | me |
+			me.value.adapter.items do: _.open;
+		})
+		.updateAction(\openSelected, { | me |
+			me.value.adapter.item !? { me.value.adapter.item.open }
+		})
+		.updateAction(\play, { | me |
+			me.value.adapter.item !? { me.value.adapter.item.play }
+		})
+		.updateAction(\delete, { | me | me.value.adapter.delete(me); })
+		.updateAction(\close, { | me | me.value.adapter.item.close })
+		.view.font_(font)
+	}
+
+	proxyDisplay {
+		^this.listView(\proxies, { | me | me.items collect: _.name }).sublistOf(\scripts, { | me | 
+			me !? { me.proxyItems /* collect: _.name */ }
+		}).view.font_(font);
 	}
 
 	scripItemsRow { ^nil }
 	scriptDisplay { ^nil }
 	
+	saveLists {
+		this.getValue(\scriptLists).adapter.items.collect(_.makeArchiveCopy).writeArchive(archivePath);
+		postf("Script lists saved to: \n%\n", archivePath);
+	}
 	
 }

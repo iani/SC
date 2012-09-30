@@ -93,8 +93,7 @@ BufferItem : NamedItem {
 	minSec {
 		var seconds;
 		item ?? { ^"?? min, ?? sec" };
-		seconds = item.numFrames / item.sampleRate round: 0.01;
-		^format("% min, % sec", seconds / 60 round: 1, seconds % 60 round: 0.00001);
+		^minSec(item.numFrames / item.sampleRate);
 	}
 
 	free {

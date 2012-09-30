@@ -1,15 +1,15 @@
 /* IZ Tue 04 September 2012 10:18 PM BST
 
-Third version of ProxyCodeEditor, using the new AppModel implementation
+Fourth version of ProxyCodeEditor, doing away with direct Document coupling. 
 
-Edit Code of a proxy from ProxyCode snippets. Provide history of edited versions, and navigation amongst history and amongst different proxies. 
+Edit Code of a proxy from snippets. Provide history of edited versions, and navigation amongst history and amongst different proxies. 
 
 */
 
 ProxyCodeEditor : AppModel {
-	classvar <>all;	// all current instances of ProxyCodeEditor; 
+	classvar <all;
 	classvar <>windowRects;
-	var <proxyCode, <proxySpace, <>font;
+	var <proxySpace, <>font;
 	var <buffers;		// Dictionary of buffers selected by menus, inserted in code as variables
 
 	*initClass {
@@ -19,37 +19,36 @@ ProxyCodeEditor : AppModel {
 		];
 		Class.initClassTree(MIDISpecs);
 		MIDISpecs.put(this, this.uc33eSpecs);
+		all = List.new;
 	}
 	
-	*new { | proxyCode, proxy |
-		var existingEditor;
-		existingEditor = all detect: { | pce | pce.proxy === proxy };
-		existingEditor !? { ^existingEditor.front };
-		proxyCode = proxyCode ?? { ProxyCode() };
-		^super.new(proxyCode).init(proxy);
+	*new { | proxySpace, proxyItem, rect |
+		var new;
+		new = all detect: { | ed | ed.proxyItem === proxyItem };
+		new !? { ^new.front };
+		^super.new(proxySpace).init(proxyItem, rect);
 	}
 
 	front { this.notify(\windowToFront); } // bring window to front if it exists
 
-	init { | proxy |
-		all = all add: this;
-		proxySpace = proxyCode.proxySpace;
+	init { | proxyItem, rect |
+		proxyItem = proxyItem ?? { proxySpace.proxies.first };
+		all add: this;
 		font = Font.default.size_(10);
-		this.makeWindow(proxy);
+		this.makeWindow(rect);
+		this.proxyItem = proxyItem; 
 		this addMIDI: this.midiSpecs;
 		buffers = IdentityDictionary.new;
 	}
 
-	makeWindow { | proxy |
+	makeWindow { | bounds |
 		this.window({ | window |
-			this.addWindowActions(window);
-			this.addViews(window, proxy);
+			this.addWindowActions(window, bounds ?? { windowRects@@(all.size - 1) });
+			this.addViews(window);
 		});
 	}
 
-	addWindowActions { | window |
-		var bounds;
-		bounds = windowRects@@(all.size - 1);
+	addWindowActions { | window, bounds |
 		window.bounds = bounds;
 		window.addNotifier(this, \windowToFront, { 
 			window.front;
@@ -62,7 +61,7 @@ ProxyCodeEditor : AppModel {
 				window.bounds = bounds;
 			}
 		});
-		this.windowClosed(window, { 
+		this.windowClosed(window, {
 			this.disable(window);
 			this.objectClosed;
 			all remove: this;
@@ -87,7 +86,7 @@ ProxyCodeEditor : AppModel {
 		this.notify(\colorDisabled);
 	}
 
-	addViews { | window, proxy |
+	addViews { | window |
 		window.layout = VLayout(
 			[this.textView(\editor).makeStringGetter
 			.listItem({ | me |
@@ -98,77 +97,52 @@ ProxyCodeEditor : AppModel {
 				}
 			})
 			.appendOn
+			.replaceOn
 			.updateAction(\restore, { | string, me | me.view.string = string })
 			.sublistOf(\proxy, { | item, widget |
-				if (item.isNil) { "<empty>" } {
-					if (item.history.size == 0 and: { item.item.notNil }) {
-						[this, thisMethod.name, "adding source for empty history", 
-						item.name, item.item.source.envirCompileString].postln;
-						item.history.add(
-							format(
-								"//:%\n%", item.name, item.item.source.envirCompileString
-							)
-						)
-					};
-					item.history;
-				}
+				if (item.isNil) { "<empty>" } { item.history; }
 			}).view.font_(Font("Monaco", 10)), s: 10],
 			[
 			HLayout(
 				[this.popUpMenu(\proxy).proxyList(proxySpace)
-				.addValueListener(window, \index, { | value |
-					window.name = value.adapter.item.name })
-				.item_(
-					proxySpace.proxies detect: { | p | p.item === proxy }
-				)
+				.addValueListener(window, \index, { | value | window.name = value.adapter.item.name })
 				.view.font_(font), s:4],
 				this.button(\proxy).proxyWatcher({ | me |
-					var addp = true;
+					var addp = true, editor, snippet;
 					me.item.item !? { addp = false };
-					if(me.item.item.isNil or: { me.item.item.source.isNil }) {
-						this.proxy = me.checkProxy(proxyCode.evalInProxySpace(
-							this.getValue(\editor).getString, start: true, addToSourceHistory: addp
-						))
+					editor = this.getValue(\editor);
+					snippet = editor.getString;
+					if (me.item.item.isNil or: { me.item.item.source.isNil }) {
+						this.evalSnippet(snippet, start: true, addToSourceHistory: false
+						);
 					}{
-						me.checkProxy(me.item.item.play);
-					}
+						me.item.play;
+					};
+					me.checkProxy(me.item);
+					editor.notify(\restore, snippet);
 				}).view.states_(
 					[["start", Color.black, Color.green], ["stop", Color.black, Color.red]]
 				).font_(font),
 				this.button(\editor).firstItem.view.states_([["<<"]]).font_(font),
 				this.button(\editor).previousItem.view.states_([["<"]]).font_(font),
 				this.button(\editor).action_({ | widget |
-					/* Evaluate current code. If proxy name is provided in header line, use it.
-					Else use current proxy name */
-					var string, myProxyName;
-					string = widget.getString;
-					myProxyName = string.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
-					if (myProxyName.notNil) {
-						myProxyName = myProxyName[1].asSymbol;
-					}{
-						myProxyName = proxySpace.proxyItem(this.proxy).name;
-					};
-					this.proxy = proxyCode.evalInProxySpace(
-						string = widget.getString, 
-						proxySpace[myProxyName],
-						myProxyName,
-						start: false, 
-						addToSourceHistory: false
-					); // eval button must re-send current string to editor
-					widget.value.notify(\restore, string); // to restore from history update
+					var snippet;
+					snippet = widget.value.getString;
+					this.evalSnippet(snippet, start: false, addToSourceHistory: false);
+					// eval button must re-send current string to editor
+					widget.value.notify(\restore, snippet); // to restore from history update
 				}).view.states_([["eval"]]).font_(font),
 				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
 				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
 				this.button(\editor).notifyAction(\append).view.states_([["add"]]).font_(font),
+				this.button(\editor).notifyAction(\replace).view.states_([["replace"]]).font_(font),
 				this.button(\editor).delete.view.states_([["delete"]]).font_(font),
 				this.button(\editor).action_({ | widget |
-					var proxy = this.proxy;
+					var proxy = this.proxyItem.item;
 					proxy !? { MergeSpecs.parseArguments(proxy, widget.getString) };
 				}).view.states_([["reset specs"]]).font_(font),
-				Button().states_([["history"]]).font_(font)
-					.action_({ proxyCode.openHistoryInDoc(this.proxy) }),
-				Button().states_([["all"]]).font_(font)
-					.action_({ proxyCode.openHistoryInDoc(nil) }),
+				Button().states_([["doc"]]).font_(font)
+					.action_({ proxySpace.openHistoryInDoc }),
 				StaticText().font_(font).string_("current:"),
 				[this.numberBox(\editor).listIndex.view.font_(font), s: 2],
 				StaticText().font_(font).string_("all:"),
@@ -192,8 +166,6 @@ ProxyCodeEditor : AppModel {
 						this.updateBuffers(valName, val.adapter.item) })
 					.view.font_(font).fixedWidth_(82)
 				} ! 8), 
-			// TODO: specify initial width to prevent menus growing wider because of buffer names
-			// view.maxWidth_(100) does not work here?
 			), s: 1],
 			[HLayout(
 				*({ | i |
@@ -222,12 +194,23 @@ ProxyCodeEditor : AppModel {
 		);
 	}
 
-	proxy_ { | proxy |
-		this.getValue(\proxy).item_(this, proxySpace.proxies detect: { | p | p.item === proxy });
-	}
-	proxy { ^this.proxyItem.item }
+	evalSnippet { | snippet, start = true, addToSourceHistory = false |
+		var myProxyName, myProxyItem;
+		myProxyName = snippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1];
+		if (myProxyName.notNil) {
+			myProxyItem = proxySpace proxyItem: proxySpace.at(myProxyName[1].asSymbol);
+		}{
+			myProxyItem = this.proxyItem;
+		};
+		this.proxyItem = myProxyItem;
+		if (myProxyItem.history.size == 0) { addToSourceHistory = true };
+		myProxyItem.evalSnippet(snippet, start: start, addToSourceHistory: addToSourceHistory);
+	}					
+
+	proxyItem_ { | proxyItem | this.getValue(\proxy).item_(this, proxyItem); }
 	proxyName { ^this.proxyItem.name }
 	proxyItem { ^this.getValue(\proxy).adapter.item }
+
 	updateBuffers { | valName, bufName | // insert variable declaration for chosen buffers to code
 		var bufStrings, varString, editor, source, lines;
 		buffers[valName] = if (bufName === '-') { nil } { bufName };

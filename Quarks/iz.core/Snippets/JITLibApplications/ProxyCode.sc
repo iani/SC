@@ -6,7 +6,7 @@ Add the proxy code in History but also add the snippet that was evaluated in a h
 
 Some of the functionality is evoked by keyboard shortcuts set by Code, another part is used via gui through the ProxySourceEditor. 
 
-New version Sat 29 September 2012 12:32 PM EEST, will work without doc, so that it can be used with data saved in sctxar by ScrpitListGui. See ProxyCodeParser
+New version Sat 29 September 2012 12:32 PM EEST, will work without doc, so that it can be used with data saved in sctxar by ScriptListGui. See ProxyCodeParser
 
 */
 
@@ -217,7 +217,7 @@ ProxyCode {
 		if (proxySpace.proxyItem(thisProxy).history.size == 0) {
 			this.addNodeSourceCodeToHistory(thisProxy, snippet);
 		};
-		ProxyCodeEditor(this, thisProxy);
+		ProxyCodeEditor(proxySpace, proxySpace.proxyItem(thisProxy));
 	}
 
 	playCurrentDocProxy {
@@ -268,7 +268,7 @@ ProxyCode {
 	}
 	
 	// =========== Documenting code history ===========
-
+	// These have been transferred to ProxySpace and ProxyItem
 	openHistoryInDoc { | argProxy |
 		var title, docString;
 		if (argProxy.isNil) {

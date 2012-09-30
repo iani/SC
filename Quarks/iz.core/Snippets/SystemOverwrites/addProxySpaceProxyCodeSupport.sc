@@ -7,14 +7,14 @@ TODO: Add option for switching to the new proxyspace right afer play.
 
 + LazyEnvir {
 	at { | key | // must be here. If in ProxySpace, then notifications do not work with super. 
-		var proxy, proxyItem;
+		var proxy, proxyItem, proxyList;
 		proxy = super.at(key);
 		if(proxy.isNil) {
 			proxy = this.makeProxy(key);
 			envir.put(key, proxy);
 			proxyItem = ProxyItem(key, proxy);
-			this.proxies.add(proxyItem);
-			this.notify(\list, this); // proxies in order of creation
+			proxyList = this.proxies.add(proxyItem);
+			this.notify(\list, [this, proxyList]); // proxies in order of creation
 		};
 		^proxy
 	}	
@@ -63,20 +63,39 @@ TODO: Add option for switching to the new proxyspace right afer play.
 		})[1].asSymbol;
 	}
 
-
-/*
-
-	*createIfNeededAndPlay { | name = \default, server, clock |
-		var proxySpace;
-		proxySpace = all[name];
-		if (proxySpace.isNil) {
-			proxySpace = ProxySpace(server ?? { Server.default }, name, clock ?? { TempoClock.new });
+	openHistoryInDoc { | proxyItem |
+		var title, docString;
+		if (proxyItem.isNil) {
+			title = Date.getDate.format("History for all proxies on %Y-%m-%e at %Hh:%Mm:%Ss");
+			docString = this.makeHistoryStringForAll;
+		}{
+			title = format("History for % on %",
+				proxyItem.name,
+				Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss")
+			);
+			docString = proxyItem.makeHistoryString;
 		};
-		server.waitForBoot({ 
-			proxySpace.play;
-		});
+		^Document(title, docString)
 	}
 
-*/
+	makeHistoryStringForAll {
+		var docString, histories;
+		docString = format(
+			"/* *********** HISTORY FOR ALL PROXIES on % *********** */\n",
+			Date.getDate.format("%Y-%m-%e at %Hh:%Mm:%Ss")
+		);
+		docString = docString ++ this.makeLoadBuffersString;
+		histories = this.proxies collect: _.makeHistoryString;
+		^histories.inject(docString, { | a, b | a ++ b });
+	}
+
+	makeLoadBuffersString {
+		var buffers;
+		buffers = Library.at('Buffers').asArray;
+		if (buffers.size == 0) { ^"" };
+		^buffers.inject("\n// ====== BUFFERS ====== \n\n", { | str, b |
+			str ++ format("BufferItem(%).load;\n", b.name.asCompileString);
+		});
+	}
 	
 }

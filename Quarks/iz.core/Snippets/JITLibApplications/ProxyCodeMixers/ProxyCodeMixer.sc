@@ -1,9 +1,6 @@
 /* IZ Thu 16 August 2012  6:28 PM EEST
 
-
-
 */
-
 
 ProxyCodeMixer : AppModel {
 	var <doc, <>numStrips = 8, <numPresets = 8, <proxyCode, <proxySpace, <proxyList, <strips;
@@ -20,9 +17,14 @@ ProxyCodeMixer : AppModel {
 
 	init {
 		font = Font.default.size_(9);
-		doc = doc ?? { Document.current };
-		proxyCode = ProxyCode(doc);
-		proxySpace = doc.envir;
+		/* PATCH: if proxySpace is provided, then use it and ignore doc */
+		if (doc isKindOf: ProxySpace) {
+			proxySpace = doc;
+		}{
+			doc = doc ?? { Document.current };
+			proxyCode = ProxyCode(doc);
+			proxySpace = doc.envir;
+		};
 		proxyList = proxySpace.proxies;
 		this.makeStrips;
 		this.makeWindow;
@@ -96,7 +98,10 @@ ProxyCodeMixer : AppModel {
 
 	getPreset { | preset | preset.array = valueCache collect: _.item; }
 
-	setPreset { | preset | valueCache do: { | v, i | v.item_(nil, preset[i]) } }
+	setPreset { | preset |
+		valueCache do: { | v, i | v.item_(nil, preset[i]) };
+		{ this.notify(\autoSetProxy); }.defer(0.5); // TODO: use layered views instead of presets
+	}
 
 	// MIDI
 
