@@ -177,7 +177,6 @@ Widget {
 		^ref.value;
 	}
 
-
 	addValueListener { | listener, message, action |
 		// make some other object perform an action whenever receiving a message from my Value
 		value.addListener(listener, message, { action.(value) })
@@ -256,8 +255,8 @@ Widget {
 		getListAction = getListAction ?? { { value.adapter.items collect: _.asString } };
 		view.action = { value.adapter.index_(this, view.value) };
 		this.updateAction(\list, { // | sender |
-				view.items = getListAction.(this);
-				view.value = value.adapter.index;
+			view.items = getListAction.(this);
+			view.value = value.adapter.index;
 		});
 		this.updateAction(\index, { // | sender |
 			/* if (sender !== this) { */
@@ -365,6 +364,7 @@ Widget {
 	
 	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
+		this.updater(proxySpace, \list, { this.items_(proxySpace.proxies) });
 		value.notify(\initProxyControls);	// Initialize proxyWatchers etc. created before me
 	}
 

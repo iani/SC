@@ -256,7 +256,7 @@ SoundFileGui : AppModel {
 				lastFrame = sfv.selectionStart(selection) + sfv.selectionSize(selection);
 				if (lastFrame <= firstFrame) { lastFrame = sfv.soundfile.numFrames };
 				sfv.soundfile.cue(
-				( 
+				(
 					firstFrame: firstFrame,
 					lastFrame: lastFrame,
 				), playNow: true, closeWhenDone: true)

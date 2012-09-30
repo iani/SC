@@ -1,0 +1,82 @@
+/* Utility function.
+Useful for preserving in History the creation and playing of different ProxySpaces
+IZ, 2011 08 17
+
+TODO: Add option for switching to the new proxyspace right afer play. 
+*/
+
++ LazyEnvir {
+	at { | key | // must be here. If in ProxySpace, then notifications do not work with super. 
+		var proxy, proxyItem;
+		proxy = super.at(key);
+		if(proxy.isNil) {
+			proxy = this.makeProxy(key);
+			envir.put(key, proxy);
+			proxyItem = ProxyItem(key, proxy);
+			this.proxies.add(proxyItem);
+			this.notify(\list, this); // proxies in order of creation
+		};
+		^proxy
+	}	
+}
+
++ ProxySpace {
+	removeNeutral {
+		envir.copy.keysValuesDo { arg key, val; if(val.isNeutral) { envir.removeAt(key) } };
+		this.notify(\removeNeutral, this);
+	}
+	
+	proxies {
+		var proxies;
+		proxies = Library.at('Proxies', this);
+		if (proxies.isNil) { 
+			proxies = List.new.add(ProxyItem('-', nil)); 
+			Library.put('Proxies', this, proxies);
+		};
+		^proxies;
+	}
+	
+	proxyItem { | proxy |
+		var proxies, item;
+		proxies = this.proxies;
+		item = proxies.detect({ | p | p.item === proxy });
+		if (item.isNil) { proxies.add(item = ProxyItem(this.findKeyForValue(proxy), proxy)) };
+		^item;
+	}
+	
+	parseSnippets { | string |
+		var positions, snippet;
+		positions = string.findRegexp("^//:").flop[0];
+		positions do: { | p, i |
+			snippet = string[p..(positions[i + 1] ?? { string.size }) - 1];
+			this.getProxyItemFromSnippet(snippet, i).addSnippet(snippet);
+		};
+	}
+
+	getProxyItemFromSnippet { | argSnippet, argIndex |
+		^this proxyItem: this.at(this.getProxyName(argSnippet, argIndex));
+	}
+
+	getProxyName { | argSnippet, argIndex = 0 |
+		^(argSnippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1] ?? {
+			[0, format("out%", argIndex)] 
+		})[1].asSymbol;
+	}
+
+
+/*
+
+	*createIfNeededAndPlay { | name = \default, server, clock |
+		var proxySpace;
+		proxySpace = all[name];
+		if (proxySpace.isNil) {
+			proxySpace = ProxySpace(server ?? { Server.default }, name, clock ?? { TempoClock.new });
+		};
+		server.waitForBoot({ 
+			proxySpace.play;
+		});
+	}
+
+*/
+	
+}

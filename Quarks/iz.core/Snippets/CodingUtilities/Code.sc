@@ -40,7 +40,7 @@ Code {
 		positions = string.findRegexp(format("^//%", snippetSeparator));
 		// if findRegexp returns an array of strings (which is not what we want), then
 		// repeat init. 
-		/// This is a workarround for an erratic error (bug in findRegexp?)
+		/// This is a workaround for an erratic error (bug in findRegexp?)
 		if ((positions ? [])[0].isKindOf(String)) { this.init; };
 	}
 	

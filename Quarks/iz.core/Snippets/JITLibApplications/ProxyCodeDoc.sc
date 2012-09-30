@@ -1,21 +1,17 @@
-/* IZ 2012 07 01
+/* IZ Sat 29 September 2012 12:27 PM EEST
 
-Evaluate a snippet from a Document and set the resulting object as source to a proxy named after the name of the snippet. 
-Additional methods for starting, stopping, or incrementing / decrementing the volume of the proxy. 
-Add the proxy code in History but also add the snippet that was evaluated in a history of snippets for this proxy. 
+Making ProxyCode independent from Document, for working with data stored in sctxar by ScriptListGui. 
 
-Some of the functionality is evoked by keyboard shortcuts set by Code, another part is used via gui through the ProxySourceEditor. 
-
-New version Sat 29 September 2012 12:32 PM EEST, will work without doc, so that it can be used with data saved in sctxar by ScrpitListGui. See ProxyCodeParser
+ProxyCodeDoc will store doc and use an instance of ProxyCode to do the proxy code parsing. 
 
 */
 
-ProxyCode {
-	classvar all;						// all ProxyCode instances in a Dictionary by ProxySpace
+ProxyCodeDoc {
+	classvar all;						// all ProxyCodeDoc instances in a Dictionary by Document
 	classvar <historyTimer;				// routine that counts time from last executed snippet
 	classvar <>historyEndInterval = 300;	// end History if nothing has been done for 5 minutes
 
- 	var <doc;			// the document from which this snippet was created.
+ 	var <doc;			// the document from which this snippet was 
 	var <proxySpace; 
 	var <proxy;
 	var <proxyName; 
