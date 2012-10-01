@@ -384,16 +384,16 @@ Widget {
 			stopAction ?? { stopAction = { value.adapter.item.item.stop } };
 			view.action = { [stopAction, playAction][view.value].(this) };
 			this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
-			this.updateAction(\list, { this.prStartWatchingProxy(value.adapter.item.item) });
-			this.updateAction(\index, { this.prStartWatchingProxy(value.adapter.item.item) });
-			this.prStartWatchingProxy(value.adapter.item.item);
+			this.updateAction(\list, { this.prStartWatchingProxy(value.adapter.item) });
+			this.updateAction(\index, { this.prStartWatchingProxy(value.adapter.item) });
+			this.prStartWatchingProxy(value.adapter.item);
 		}
 	}
 	
 	prStartWatchingProxy { | proxy |
 		// used internally by proxyWatcher method to connect proxy and disconnect previous one
 		this.notify(\disconnectProxy);	// remove notifiers to self from previous proxy
-		if (proxy.isNil) { view.value = 0; ^this };
+		if (proxy.isNil or: { (proxy = proxy.item).isNil } ) { view.value = 0; ^this };
 		this.addNotifier(proxy, \play, { view.value = 1 });
 		this.addNotifier(proxy, \stop, { view.value = 0 });
 		proxy.addNotifierOneShot(this, \disconnectProxy, { // prepare this proxy for removal
@@ -461,7 +461,7 @@ Widget {
 			});
 		}
 	}
-	
+
 	prSetControl { | proxyControl |
 		this.value_(proxyControl, \number);
 		/* provide appropriate view action and updateAction for a numerical value view.

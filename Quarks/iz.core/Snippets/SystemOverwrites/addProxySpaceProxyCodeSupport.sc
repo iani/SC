@@ -1,8 +1,8 @@
-/* Utility function.
-Useful for preserving in History the creation and playing of different ProxySpaces
-IZ, 2011 08 17
+/* 
+IZ, 2011 08 17ff
 
-TODO: Add option for switching to the new proxyspace right afer play. 
+TODO: Maybe \list notifications should be issued by the proxy list in Library, and not by ProxySpace.
+	Maybe ProxyItems should also store their ProxySpace
 */
 
 + LazyEnvir {
@@ -90,5 +90,12 @@ TODO: Add option for switching to the new proxyspace right afer play.
 	}
 
 	makeLoadBuffersString { ^BufferItem.makeLoadBuffersString }
-	
+
+	removeProxyItem { | proxyItem |
+		var proxyList;
+		proxyList = this.proxies;
+		this.removeAt(proxyItem.name);
+		proxyList.remove(proxyItem);
+		this.notify(\list, [this, proxyList]); // proxies in order of creation
+	}	
 }

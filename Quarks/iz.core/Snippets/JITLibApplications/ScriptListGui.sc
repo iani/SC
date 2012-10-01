@@ -8,8 +8,9 @@ ScriptListGui : AppModel {
 	classvar <>font;
 
 	var <>archivePath;
-	var <files; // Value holding current files list;
-	var <snippetViews; // StackLayout. Can one make a Widget method for it? 
+	var <files; 		// Value holding current files list
+	var snippetViews; // StackLayout containing snippet list + snippet TextView
+	var test;			// test hiding / showing of new proxy name TextField
 
 	*initClass {
 		StartUp add: {
@@ -66,7 +67,8 @@ ScriptListGui : AppModel {
 					[this.proxyDisplay, s: 1],
 				),
 				this.snippetButtons,
-				[this.snippetDisplay, s: 3],	
+				this.newProxyItems,
+				[this.snippetDisplay, s: 5],	
 			);
 			// open current file when re-opening
 			files.item !? { files.notify(\index, files); };
@@ -139,9 +141,14 @@ ScriptListGui : AppModel {
 			}).view.font_(font).states_([["gui all"]]),
 			this.button(\scripts).action_({ | me |
 				me.item !? { ProxyCodeMixer3(me.item.proxySpace) }
-			}).view.font_(font).states_([["mixer"]])
+			}).view.font_(font).states_([["mixer"]]),
+			this.button(\proxies).action_({ | me |
+				me.item !? { me.item delete: this.proxySpace; };
+			}).view.font_(font).states_([["delete"]]),
 		)
 	}
+
+	proxySpace { ^this.getValue(\scripts).item.proxySpace }
 
 	scriptListDisplay {
 		^this.listView(\scripts, { | me | me.items collect: _.path })
@@ -167,49 +174,98 @@ ScriptListGui : AppModel {
 	}
 
 	proxyDisplay {
-		^this.listView(\proxies, { | me | me.items collect: _.name }).sublistOf(\scripts, { | me | 
-			me !? { me.proxyItems }
+		var proxyDoc;
+		^this.listView(\proxies, { | me |
+			me.items collect: _.name;
+		}).sublistOf(\scripts, { | argProxyDoc, me |
+			if (proxyDoc.notNil) { me.removeNotifier(proxyDoc.proxySpace, \list); };
+			proxyDoc = argProxyDoc;
+			if (proxyDoc.notNil) {
+				me.addNotifier(proxyDoc.proxySpace, \list, { me.notify(\list); });
+				proxyDoc.proxyItems;
+			}{ [] };
 		}).view.font_(font);
-	}
-
-	snippetButtons {
-		// UNDER DEVELOPMENT!!!
-		^HLayout(
-			this.button(\snippets)
-			.action_({ | me | snippetViews.index = me.view.value })
-				.view.font_(font).states_([["edit"], ["done"]]),
-			this.button(\snippets)
-				.view.font_(font).states_([["start"], ["stop"]])
-				.action_({ | me | snippetViews.index = me.value }),
-			this.button(\snippets)
-				.view.font_(font).states_([["eval"]])
-				.action_({ | me | snippetViews.index = me.value }),
-			this.button(\snippets)
-				.view.font_(font).states_([["insert"]])
-				.action_({ | me | snippetViews.index = me.value }),
-			this.button(\snippets)
-				.view.font_(font).states_([["append"]])
-				.action_({ | me | snippetViews.index = me.value }),
-			this.button(\snippets)
-				.view.font_(font).states_([["delete"]])
-				.action_({ | me | snippetViews.index = me.value }),
-			this.button(\snippets) // switch to performance gui? 
-				.view.font_(font).states_([["perform"]])
-				.action_({ | me | snippetViews.index = me.value }),
-		);		
 	}
 
 	snippetDisplay {
 		^snippetViews = StackLayout(
 			this.listView(\snippets).sublistOf(\proxies, { | me | me !? { me.history }; })
-				.appendOn
-				.insertOn
-				.replaceOn
 				.view.font_(Font("Monaco", 10)),
-			this.textView(\snippets).listItem.view.font_(Font("Monaco", 10)),
+			this.listItem(\snippets, TextView()).makeStringGetter
+				.appendOn.insertOn.replaceOn.view.font_(Font("Monaco", 10)),
 		)
 	}
-	
+
+	snippetButtons {
+		^HLayout(
+			this.button(\snippets)
+			.action_({ | me |
+				snippetViews.index = me.view.value;
+				if (me.view.value == 0) { me.value.notify(\replace); }
+			})
+				.view.font_(font).states_([["edit", nil, Color.yellow], ["save", Color.red]]),
+			this.button(\snippets)
+				.action_({ | me |
+					var proxyItem;
+					proxyItem = this.getValue(\proxies).item;
+					this.getValue(\proxies).item !? {
+						proxyItem.evalSnippet(
+							me.getString,
+							start: false,
+							addToSourceHistory: proxyItem.history.size == 0
+						)
+					}
+				})
+				.view.font_(font).states_([["eval"]]),
+			this.button(\proxies).proxyWatcher
+				.view.font_(font).states_([["start", nil, Color.green], ["stop", nil, Color.red]]),
+			this.button(\snippets).insert({ | me | me.getString })
+				.view.font_(font).states_([["insert"]]),
+			this.button(\snippets).append({ | me | me.getString })
+				.view.font_(font).states_([["append"]]),
+			this.button(\snippets).delete.view.font_(font).states_([["delete"]]),
+			this.button(\proxies) // switch to performance gui in StackLayout snippetViews?
+				.action_({ | me |
+					ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, me.item);
+				})
+				.view.font_(font).states_([["gui"]]),
+			this.button(\proxies) // switch to performance gui in StackLayout snippetViews?
+				.updateAction(\doneNewProxy, { | nothing, me | me.view.value = 0; })
+				.action_({ | me | me.value.notify(\show, me.view.value == 1); })
+				.view.font_(font).states_([["new proxy"], ["cancel"]]),
+		);		
+	}
+
+	newProxyItems {
+		^HLayout(
+			[this.staticText(\proxies)
+				.updateAction(\show, { | showP, me | me.view.visible = showP })
+				.view.visible_(false).font_(font).string_(
+				"Enter name of new proxy (type 'return' to accept):"), s: 2],
+			[this.textField(\proxies).makeStringGetter
+				.action_({ | me |
+					var newProxy;
+					newProxy = this.makeProxy(me.getString);
+					me.value.notify(\show, false);
+					me.value.notify(\doneNewProxy);
+					// TODO: make proxies list view go to newly created proxy item.
+				})
+				.updateAction(\show, { | showP, me | me.view.visible = showP })
+				.view.visible_(false).font_(font).string_("out"), s: 3],
+			this.button(\proxies)
+				.action_({ | me | this.makeProxy(me.getString) })
+				.updateAction(\show, { | showP, me | me.view.visible = showP })
+				.view.visible_(false).font_(font)
+				.states_([["create"]]),
+		)
+	}	
+
+	makeProxy { | argName |
+		var script;
+		script = this.getValue(\scripts).item;
+		script !? { ^script.proxySpace.at(argName.asSymbol) };
+	}
+
 	saveLists {
 		[this.bufferScript, this.makeArchiveList].writeArchive(archivePath);
 		postf("Script lists saved to: \n%\n", archivePath);

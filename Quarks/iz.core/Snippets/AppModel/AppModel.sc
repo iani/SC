@@ -79,7 +79,7 @@ AppModel {
 	}
 	staticText { | adapterName, string = "<empty>" |
 		^Widget(this, adapterName, StaticText()).text.do({ | me | 
-			me.value.adapter.string_(me, string);
+			if (me.value.adapter isKindOf: TextAdapter) { me.value.adapter.string_(me, string); }
 		});
 	}
 	textView { | adapterName, viewName | 

@@ -76,14 +76,19 @@ ProxyItem : NamedItem {
 	play { item.play }
 	stop { item.stop }
 	isMonitoring { ^item.isMonitoring }
+	delete { | proxySpace |	
+		// TODO: Should ProxyItem store its ProxySpace?
+		if (item.notNil) { item.clear; };
+		proxySpace removeProxyItem: this;
+		
+	}
 	
 	makeHistoryString {
 		var docString;
 		docString = format(
 			"\n/* =========== HISTORY FOR % on % =========== */", 
 			name,
-//			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
-			Date.getDate.format("%c")
+			Date.getDate.format("%Y-%d-%e at %Hh:%mm:%Ss'")
 		);
 		^history.inject(docString, { | a, b, i |
 			a 
@@ -92,5 +97,4 @@ ProxyItem : NamedItem {
 		};
 		);
 	}
-
 }
