@@ -47,18 +47,39 @@ ScriptListGui : AppModel {
 		^ScriptList().name_(argName ?? { format("Scripts_%", Date.getDate.stamp) });
 	}
 
-	addScript { | scriptList, path | 
+	loadScript { | scriptList, path | 
 		path = path.asSymbol;
 		if (scriptList.detect({ | s | s.path === path }).isNil) {
 			scriptList add: ProxyDoc(path, readFromDoc: true);
 		}
 	}
 
+	makeScript { | widget |
+		widget.postln;
+		widget.value.postln;
+		widget.value.adapter.postln;
+		AppModel().window({ | w, app |
+			w.layout_(
+				VLayout(
+					StaticText().string_("Type name of new script, then 'return' key to create"),
+					app.textField(\name)
+					.string_("Script"++Date.getDate.stamp)
+					.action_({ | me |
+						widget.value.adapter add: ProxyDoc(me.view.string);
+						widget.value.updateListeners;
+						w.close;
+					}).view,
+					Button().action_({ w.close }).states_([["CANCEL"]]),
+				)
+			)
+		});		
+	}
+
 	makeWindow { | argArchivePath |
 		this.stickyWindow(this.class, \scriptListGui, { | w, app |
 			w.bounds = Rect(300, 50, 800, 800);
 			w.layout = VLayout(
-				HLayout(this.listButtonRow, this.fileButtonRow, this.scriptButtonRow),
+				HLayout(this.listButtonRow, this.fileButtonRow),
 				HLayout(
 					VLayout(this.selectedListDisplay.fixedWidth_(200), 
 						this.listListDisplay.fixedWidth_(200)
@@ -116,7 +137,10 @@ ScriptListGui : AppModel {
 	fileButtonRow {
 		^HLayout(
 			StaticText().string_("Scripts:").font_(font),
-			this.button(\scripts).notifyAction(\readNew).view.states_([["load ..."]]).font_(font),
+			this.button(\scripts).notifyAction(\makeProxyDoc).view.states_([["new"]]).font_(font),
+			this.button(\scripts).notifyAction(\loadProxyDoc).view.states_([["load"]]).font_(font),
+			this.button(\scripts).notifyAction(\loadProxyDoc).view.states_([["rename"]])
+				.font_(font),
 			this.button(\scripts)
 				.action_({ | me | me.item !? { me.item.proxySpace.openHistoryInDoc; } })
 				.view.states_([["make doc"]]).font_(font),
@@ -128,35 +152,18 @@ ScriptListGui : AppModel {
 		)
 	}
 
-	scriptButtonRow {
-		^HLayout(
-			StaticText().string_("Proxies:").font_(font),
-			this.button(\proxies).action_({ | me |
-				me.item !? {
-					ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, me.item); 
-				}
-			}).view.font_(font).states_([["gui selected"]]),
-			this.button(\proxies).action_({ | me |
-				me.items do: { | p | ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, p); };
-			}).view.font_(font).states_([["gui all"]]),
-			this.button(\scripts).action_({ | me |
-				me.item !? { ProxyCodeMixer3(me.item.proxySpace) }
-			}).view.font_(font).states_([["mixer"]]),
-			this.button(\proxies).action_({ | me |
-				me.item !? { me.item delete: this.proxySpace; };
-			}).view.font_(font).states_([["delete"]]),
-		)
-	}
-
 	proxySpace { ^this.getValue(\scripts).item.proxySpace }
 
 	scriptListDisplay {
 		^this.listView(\scripts, { | me | me.items collect: _.path })
-		.updateAction(\readNew, { | me |
+		.updateAction(\loadProxyDoc, { | me |
 			Dialog.getPaths({ | paths |
-				paths do: { | p | this.addScript(me.value.adapter, p) };
+				paths do: { | p | this.loadScript(me.value.adapter, p) };
 				me.value.updateListeners;
 			});
+		})
+		.updateAction(\makeProxyDoc, { | me |
+			this.makeScript(me);
 		})
 		.updateAction(\readDefaults, { | me | this.readDefaults(me.value.adapter) })
 		.updateAction(\openAll, { | me |
@@ -223,16 +230,28 @@ ScriptListGui : AppModel {
 				.view.font_(font).states_([["insert"]]),
 			this.button(\snippets).append({ | me | me.getString })
 				.view.font_(font).states_([["append"]]),
-			this.button(\snippets).delete.view.font_(font).states_([["delete"]]),
+			this.button(\snippets).delete.view.font_(font).states_([["delete snippet"]]),
+			this.button(\proxies) // switch to performance gui in StackLayout snippetViews?
+				.updateAction(\doneNewProxy, { | nothing, me | me.view.value = 0; })
+				.action_({ | me | me.value.notify(\show, me.view.value == 1); })
+				.view.font_(font).states_([["new proxy"], ["cancel"]]),
+			this.button(\proxies).action_({ | me |
+				me.item !? { me.item delete: this.proxySpace; };
+			}).view.font_(font).states_([["delete proxy"]]),
+			this.button(\proxies).action_({ | me |
+				me.item !? { me.item delete: this.proxySpace; };
+			}).view.font_(font).states_([["rename proxy"]]),
 			this.button(\proxies) // switch to performance gui in StackLayout snippetViews?
 				.action_({ | me |
 					ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, me.item);
 				})
 				.view.font_(font).states_([["gui"]]),
-			this.button(\proxies) // switch to performance gui in StackLayout snippetViews?
-				.updateAction(\doneNewProxy, { | nothing, me | me.view.value = 0; })
-				.action_({ | me | me.value.notify(\show, me.view.value == 1); })
-				.view.font_(font).states_([["new proxy"], ["cancel"]]),
+			this.button(\proxies).action_({ | me |
+				me.items do: { | p | ProxyCodeEditor(this.getValue(\scripts).item.proxySpace, p); };
+			}).view.font_(font).states_([["gui*"]]),
+			this.button(\scripts).action_({ | me |
+				me.item !? { ProxyCodeMixer3(me.item.proxySpace) }
+			}).view.font_(font).states_([["mixer"]]),
 		);		
 	}
 
@@ -252,11 +271,6 @@ ScriptListGui : AppModel {
 				})
 				.updateAction(\show, { | showP, me | me.view.visible = showP })
 				.view.visible_(false).font_(font).string_("out"), s: 3],
-			this.button(\proxies)
-				.action_({ | me | this.makeProxy(me.getString) })
-				.updateAction(\show, { | showP, me | me.view.visible = showP })
-				.view.visible_(false).font_(font)
-				.states_([["create"]]),
 		)
 	}	
 
