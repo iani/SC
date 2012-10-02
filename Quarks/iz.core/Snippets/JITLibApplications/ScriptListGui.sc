@@ -214,18 +214,24 @@ ScriptListGui : AppModel {
 		^HLayout(
 			this.button(\snippets)
 			.action_({ | me |
-				me.item ?? { 
-					me.value.adapter.append(me, this.defaultSnippet(this.getValue(\proxies).item))
+				var proxyItem;
+				proxyItem = this.getValue(\proxies).item;
+				if (proxyItem.isNil) {
+					"Please (create and/or) select a proxy to start editing snippets".postln;
+				}{
+					me.item ?? {
+						me.value.adapter.append(me, this.defaultSnippet(proxyItem))
+					};
+					snippetViews.index = me.view.value;
+					if (me.view.value == 0) { me.value.notify(\replace); }
 				};
-				snippetViews.index = me.view.value;
-				if (me.view.value == 0) { me.value.notify(\replace); }
 			})
-				.view.font_(font).states_([["edit", nil, Color.yellow], ["save", Color.red]]),
+			.view.font_(font).states_([["edit", nil, Color.yellow], ["save", Color.red]]),
 			this.button(\snippets)
 				.action_({ | me |
 					var proxyItem;
 					proxyItem = this.getValue(\proxies).item;
-					this.getValue(\proxies).item !? {
+					proxyItem !? {
 						proxyItem.evalSnippet(
 							me.getString,
 							start: false,
@@ -247,7 +253,7 @@ ScriptListGui : AppModel {
 				me.item !? { me.item delete: this.proxySpace; };
 			}).view.font_(font).states_([["delete proxy"]]),
 			this.button(\proxies).action_({ | me |
-				me.item !? { me.item delete: this.proxySpace; };
+				"NOT YET IMPLEMENTED".postln;
 			}).view.font_(font).states_([["rename proxy"]]),
 			this.button(\proxies) // switch to performance gui in StackLayout snippetViews?
 				.action_({ | me |
@@ -296,7 +302,7 @@ ScriptListGui : AppModel {
 
 	defaultSnippet { | proxyItem |
 		^format(
-	"//:% [rate: [2, 20]]\n{ | rate = 5 | WhiteNoise.ar(Decay.kr(Impulse.kr(rate, 0, 0.1))) }",			proxyItem.name
+	"//:% [rate: [2, 20]]\n{ | rate = 5 | WhiteNoise.ar(Decay.kr(Impulse.kr(rate, 0, 0.1))) }",			if (proxyItem.isNil) { "out" } { proxyItem.name }
 		)
 	}
 
