@@ -33,9 +33,13 @@ Value {
 	items_ { | changer, items | adapter.items_(changer, items); }
 	items { ^adapter.items }
 	item_ { | changer, item | adapter.item_(changer, item); }
-	item { ^adapter.item }
+//	item { ^adapter.item } // does not work with multiple values on same List.
+	item { ^adapter.items[adapter.index] }	// works with independent indices on same List
 	index_ { | changer, index | adapter.index_(changer, index); }
 	index { ^adapter.index }
+	append { | item | adapter.append(this, item) }
+	insert { | item, index | adapter.insert(this, item, index) }
+	replace { | item, index | adapter.append(this, item, index) }
 
 	// make me get my list from the item of another list
 	sublistOf { | superList, getListFunction |
@@ -150,6 +154,11 @@ Widget {
 		// Pass the sender to the action, to avoid updating self if this is a problem.
 		// Also make myself available to the action function. 
 		this.addNotifier(value, message, { | sender | action.(sender, this) });
+	}
+	
+	updateActionArray { | message, action |
+		// Like updateAction, but for passing multiple arguments
+		this.addNotifier(value, message, { | ... args | action.(*(args add: this)) });
 	}
 	
 	addUpdateAction { | message, action |
@@ -268,9 +277,10 @@ Widget {
 	items_ { | items | value.adapter.items_(this, items); }
 	items { ^value.adapter.items }
 	item_ { | item | value.adapter.item_(this, item); }
-//	item { ^value.adapter.item } // This does now work when replacing items in
+//	item { ^value.adapter.item } // This does not work when replacing items in
 			// lists that are shared by multiple views with independent indices!
-	item { ^value.adapter.items[value.adapter.index] }
+//	item { ^value.adapter.items[value.adapter.index] }
+	item { ^value.item }	// value now uses correct item access
 	index { ^value.adapter.index }
 	index_ { | index | value.adapter.index_(this, index) }
 	first { value.adapter.first }
@@ -404,7 +414,7 @@ Widget {
 		});
 		this.checkProxy(proxy);
 	}
-	
+
 	checkProxy { | proxy | // check if proxy is monitoring and update button state
 		if (proxy.notNil and: { proxy.isMonitoring }) { view.value = 1 } { view.value = 0 };
 		^proxy; // for further use if in another expression.
@@ -471,7 +481,7 @@ Widget {
 		view.connectToNumberValue(value.adapter, this);
 		value.adapter.getValueFromProxy;
 	}
-	
+
 	// SoundFile stuff
 
 	soundFileView {
@@ -483,16 +493,37 @@ Widget {
 		});
 		view.mouseUpAction = { | view | value.notify(\sfViewAction, this) };
 	}
-	
+
 	// Hiding views
 	showOn { | message = \show, show = true |
-		// send this to prepare a view for hiding
+		// send this to make my view toggle its visibility when notified message (true/false)
 		this.updateAction(message, { | showP, me | me.view.visible = showP });
 		view.visible = show;
 	}
-	
+
 	show { | show = true, message = \show |
 		/* Sending this from my value hides views of all widgets prepared with showOn */
 		value.notify(message, show);
+	}
+
+	toggleShow { | message = \show |
+		// make a button toggle visibility of other views with its value (0 = hide, 1 = show)
+		// other views must be connected with showOn method.
+		this.action_({ | me | me.value.notify(message, me.view.value == 1); })
+	}
+
+	// add action to existing action function
+	// Example: A button prepared with toggleShow adds additional functions to perform when clicked.
+	addAction { | action | view.addAction({ action.(this) }); }
+
+	resetOn { | message = \reset, resetValue = 0 |
+		// make a button (or other view accepting numeric value) reset to 
+		// provided default value when receiving a given message. 
+		this.updateAction(message, { | sender, me | me.view.value = resetValue; })
+	}
+
+	reset { | message = \reset, resetValue = 0 |
+		// send reset notification for any widgets prepared with presetOn
+		value.notify(message, resetValue);
 	}
 }
