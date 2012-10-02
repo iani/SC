@@ -88,7 +88,7 @@ ScriptListGui : AppModel {
 					[this.proxyDisplay, s: 1],
 				),
 				this.snippetButtons,
-				this.newProxyItems,
+				this.proxyItems,
 				[this.snippetDisplay, s: 5],	
 			);
 			// open current file when re-opening
@@ -188,25 +188,42 @@ ScriptListGui : AppModel {
 			if (proxyDoc.notNil) { me.removeNotifier(proxyDoc.proxySpace, \list); };
 			proxyDoc = argProxyDoc;
 			if (proxyDoc.notNil) {
-				me.addNotifier(proxyDoc.proxySpace, \list, { me.notify(\list); });
-				proxyDoc.proxyItems;
+				me.addNotifier(proxyDoc.proxySpace, \list, {
+					me.value.notify(\proxies, [proxyDoc.proxyItems[1..]]);
+				});
+				proxyDoc.proxyItems[1..];
 			}{ [] };
-		}).view.font_(font);
+		})
+		.updateAction(\proxies, { | proxies, me | me.items = proxies; })
+		.view.font_(font);
 	}
 
 	snippetDisplay {
 		^snippetViews = StackLayout(
-			this.listView(\snippets).sublistOf(\proxies, { | me | me !? { me.history }; })
+			this.listView(\snippets).sublistOf(\proxies, { | me | me !? {
+					if (me.history.size == 0) { me.addSnippet(this.defaultSnippet(me)) };
+					me.history;
+				}; })
 				.view.font_(Font("Monaco", 10)),
-			this.listItem(\snippets, TextView()).makeStringGetter
+			this.listItem(\snippets, TextView().background_(Color(0.9, 0.95, 0.95))).makeStringGetter
 				.appendOn.insertOn.replaceOn.view.font_(Font("Monaco", 10)),
 		)
 	}
+
+	defaultSnippet { | proxyItem |
+		^format(
+	"//:% [rate: [2, 20]]\n{ | rate = 5 | WhiteNoise.ar(Decay.kr(Impulse.kr(rate, 0, 0.1))) }",			proxyItem.name
+		)
+	}
+
 
 	snippetButtons {
 		^HLayout(
 			this.button(\snippets)
 			.action_({ | me |
+				me.item ?? { 
+					me.value.adapter.append(me, this.defaultSnippet(this.getValue(\proxies).item))
+				};
 				snippetViews.index = me.view.value;
 				if (me.view.value == 0) { me.value.notify(\replace); }
 			})
@@ -255,29 +272,29 @@ ScriptListGui : AppModel {
 		);		
 	}
 
-	newProxyItems {
+	proxyItems {
 		^HLayout(
-			[this.staticText(\proxies)
-				.updateAction(\show, { | showP, me | me.view.visible = showP })
-				.view.visible_(false).font_(font).string_(
-				"Enter name of new proxy (type 'return' to accept):"), s: 2],
-			[this.textField(\proxies).makeStringGetter
+			[this.staticText(\proxies).showOn(show: false).view.font_(font)
+				.string_("Enter name of new proxy (type 'return' to accept):"), s: 2],
+			[this.textField(\proxies)
 				.action_({ | me |
-					var newProxy;
-					newProxy = this.makeProxy(me.getString);
-					me.value.notify(\show, false);
+					this.makeProxy(me.view.string);
+					me.show(false);
 					me.value.notify(\doneNewProxy);
-					// TODO: make proxies list view go to newly created proxy item.
+					me.last;
 				})
-				.updateAction(\show, { | showP, me | me.view.visible = showP })
-				.view.visible_(false).font_(font).string_("out"), s: 3],
+				.showOn(show: false).view.font_(font).string_("out"), s: 3],
 		)
 	}	
 
 	makeProxy { | argName |
 		var script;
 		script = this.getValue(\scripts).item;
-		script !? { ^script.proxySpace.at(argName.asSymbol) };
+		if (script.notNil) {
+			script.proxySpace.at(argName.asSymbol);
+		}{
+			"Please choose a script to add the new proxy in".postln;
+		}
 	}
 
 	saveLists {

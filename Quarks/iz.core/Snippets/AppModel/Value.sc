@@ -268,7 +268,9 @@ Widget {
 	items_ { | items | value.adapter.items_(this, items); }
 	items { ^value.adapter.items }
 	item_ { | item | value.adapter.item_(this, item); }
-	item { ^value.adapter.item }
+//	item { ^value.adapter.item } // This does now work when replacing items in
+			// lists that are shared by multiple views with independent indices!
+	item { ^value.adapter.items[value.adapter.index] }
 	index { ^value.adapter.index }
 	index_ { | index | value.adapter.index_(this, index) }
 	first { value.adapter.first }
@@ -278,9 +280,9 @@ Widget {
 
 	listItem { | getItemFunc | // display currently selected item from a list.
 		value.adapter ?? { value.adapter = ListAdapter() };
-		getItemFunc = getItemFunc ?? { { value.adapter.item.asString } };
-		this.updateAction(\list, { view.string = getItemFunc.(this) });
-		this.updateAction(\index, { view.string = getItemFunc.(this) });
+		getItemFunc = getItemFunc ?? { { this.item.asString } };
+		this.updateAction(\list, { { view.string = getItemFunc.(this) }.defer(0.2) });
+		this.updateAction(\index, { { view.string = getItemFunc.(this) }.defer(0.2) });
 		this.replace;		// default action is replace item with your content
 	}	
 
@@ -482,5 +484,15 @@ Widget {
 		view.mouseUpAction = { | view | value.notify(\sfViewAction, this) };
 	}
 	
+	// Hiding views
+	showOn { | message = \show, show = true |
+		// send this to prepare a view for hiding
+		this.updateAction(message, { | showP, me | me.view.visible = showP });
+		view.visible = show;
+	}
 	
+	show { | show = true, message = \show |
+		/* Sending this from my value hides views of all widgets prepared with showOn */
+		value.notify(message, show);
+	}
 }

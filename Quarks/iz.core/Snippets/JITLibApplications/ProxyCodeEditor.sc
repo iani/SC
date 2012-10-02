@@ -93,7 +93,7 @@ ProxyCodeEditor : AppModel {
 				if (me.item.size == 0) {
 					"//:out\n{ | freq = 440 | SinOsc.ar(freq, 0, 0.1) }"
 				}{
-					me.item
+					me.item;
 				}
 			})
 			.appendOn
