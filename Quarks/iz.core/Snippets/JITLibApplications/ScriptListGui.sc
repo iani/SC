@@ -110,9 +110,9 @@ ScriptListGui : AppModel {
 				"Edit name, press 'return' key to insert new script:",
 				"Script_", \scripts,
 				 { | list, string | list insert: ProxyDoc(string) }, "insert"
-			), 
+			),
 //			this.button(\nameList).notifyAction(\makeProxyDoc).view.states_([["new"]]).font_(font),
-			this.button(\nameList).notifyAction(\loadProxyDoc).view.states_([["load"]]).font_(font),
+			this.button(\scripts).notifyAction(\loadProxyDoc).view.states_([["load"]]).font_(font),
 //			this.button(\nameList).notifyAction(\loadProxyDoc).view.states_([["rename"]])
 //				.font_(font),
 			this.makeNameButton(
@@ -124,9 +124,13 @@ ScriptListGui : AppModel {
 			this.button(\scripts)
 				.action_({ | me | me.item !? { me.item.proxySpace.openHistoryInDoc; } })
 				.view.states_([["make doc"]]).font_(font),
-			this.button(\scripts)
-			.action_({ | me | me.item !? { Document.open(me.item.path.asString); } })
-			.view.states_([["open doc"]]).font_(font),
+			// TODO: Revisit this: Not all Scripts have paths any more. What to do?
+//			this.button(\scripts)
+//			.action_({ | me | me.item !? {
+//				// HOW TO FIND IF THERE IS NO VALID PATH? Must change unique check to ID.
+//				Document.open(me.item.path.asString);
+//			} })
+//			.view.states_([["open doc"]]).font_(font),
 		)
 	}
 
