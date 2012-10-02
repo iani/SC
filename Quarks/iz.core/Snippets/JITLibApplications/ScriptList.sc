@@ -3,6 +3,9 @@
 ScriptList knows how to make a copy of itself that can be archived,
 and how to restore its ProxyDoc items from data stored in archive. 
 
+TODO: Create separeate class for archiving - dearchiving, with future classes corresponding to different phases in the development of the archiving format of ScriptList. 
+
+
 */
 
 ScriptList : NamedList {
