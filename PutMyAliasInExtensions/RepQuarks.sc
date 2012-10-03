@@ -170,7 +170,7 @@ RepQuarks : Quarks {
 if( ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4").not) || (GUI.id != \cocoa))
 {	
 		//^this.class.superclass.gui 
-		if( GUI.id === \qt ) { ^QuarksViewQt(this) } { ^QuarkView(this) }
+		if( GUI.id === \qt ) { ^QuarksViewQt(this) } { ^QuarksView(this) }
 }{
 		//this.logln("this is ReQuarks GUI");	
 
