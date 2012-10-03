@@ -18,7 +18,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 		var nr = NotificationCenter.register(notifier, message, this, { | ... args | 
 			this.performList(message, args)
 		});
-		this onClose: { nr.remove }; notifier onClose: { nr.remove };
+		this onObjectClosed: { nr.remove }; notifier onObjectClosed: { nr.remove };
 		^nr
 	}
 
@@ -42,12 +42,12 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	// add self to do action when receiving message from notifier
 	// if either object (notifier or self) closes, remove the notication connection
 		var nr = NotificationCenter.register(notifier, message, this, action);
-		this onClose: { nr.remove }; notifier onClose: { nr.remove };
+		this onObjectClosed: { nr.remove }; notifier onObjectClosed: { nr.remove };
 		^nr
 	}
 	
 	removeNotifier { | notifier, message |
-		// leaves the onClose connection dangling, 
+		// leaves the onObjectClosed connection dangling, 
 		// which will be removed when the object calls objectClosed
 		 NotificationCenter.unregister(notifier, message, this);
 	}
@@ -56,14 +56,14 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	// add listener to do action when receiving message from self
 	// if either object (listener or self) closes, remove the notication connection
 		NotificationCenter.register(this, message, listener, action);
-		this onClose: { NotificationCenter.unregister(this, message, listener); };
-		listener onClose: { NotificationCenter.unregister(this, message, listener); }
+		this onObjectClosed: { NotificationCenter.unregister(this, message, listener); };
+		listener onObjectClosed: { NotificationCenter.unregister(this, message, listener); }
 	}
 	addListenerNR { | listener, message, action |
 	// add listener to do action when receiving message from self
 	// if either object (listener or self) closes, remove the notication connection
 		var nr = NotificationCenter.register(this, message, listener, action);
-		this onClose: { nr.remove }; listener onClose: { nr.remove };
+		this onObjectClosed: { nr.remove }; listener onObjectClosed: { nr.remove };
 		^nr
 	}
 
@@ -102,7 +102,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	// add self to do action when receiving message from notifier
 	// if either object (notifier or self) closes, remove the notication connection
 		var nr = NotificationCenter.registerOneShot(notifier, message, this, action);
-		this onClose: { nr.remove }; notifier onClose: { nr.remove };
+		this onObjectClosed: { nr.remove }; notifier onObjectClosed: { nr.remove };
 		^nr
 	}
 	
@@ -110,7 +110,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	// add listener to do action when receiving message from self
 	// if either object (listener or self) closes, remove the notication connection
 		var nr = NotificationCenter.registerOneShot(this, message, listener, action);
-		this onClose: { nr.remove }; listener onClose: { nr.remove };
+		this onObjectClosed: { nr.remove }; listener onObjectClosed: { nr.remove };
 		^nr
 	}
 	
