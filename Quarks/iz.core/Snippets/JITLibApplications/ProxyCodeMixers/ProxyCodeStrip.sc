@@ -24,7 +24,7 @@ ProxyCodeStrip : AppModel {
 		presets = proxyCodeMixer.getValue(\presets);
 		^VLayout(
 			this.proxySelectMenu,
-			this.popUpMenu(\knob).proxyControlList(\proxy, 3).view.font_(font),
+			this.popUpMenu(\knob).proxyControlList(\proxy, 3).view.font_(font).fixedWidth_(40),
 			this.knob(\knob).proxyControl.view,
 			HLayout(
 				this.slider(\slider).proxyControl.view,

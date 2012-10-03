@@ -20,7 +20,7 @@ ProxyCodeStrip3 : ProxyCodeStrip {
 				VLayout(
 					this.numberBox(\slider).proxyControl.view.font_(font),
 					this.popUpMenu(\slider).proxyControlList(\proxy, 1)
-						.view.fixedWidth_(62).font_(font),
+						.view.fixedWidth_(52).font_(font),
 					this.editButton,
 					this.startStopButton,
 				)
@@ -32,9 +32,9 @@ ProxyCodeStrip3 : ProxyCodeStrip {
 		^HLayout(
 			this.knob(knobName).proxyControl.view,
 			VLayout(
-				this.numberBox(knobName).proxyControl.view.fixedWidth_(40).font_(font),
+				this.numberBox(knobName).proxyControl.view.fixedWidth_(30).font_(font),
 				this.popUpMenu(knobName).proxyControlList(\proxy, autoSelectNum)
-				.view.fixedWidth_(43).font_(font),
+				.view.fixedWidth_(33).font_(font),
 			)
 		)
 	}

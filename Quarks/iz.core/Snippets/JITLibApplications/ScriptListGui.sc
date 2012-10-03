@@ -3,6 +3,36 @@
 Store lists of ProxyCode-style script files. 
 The lists are stored in Platform.userAppSupportDir +/+ "Scripts.sctxar", together with the scripts themselves. Scripts edited through ProxyCodeEditor are thus automatically saved there. 
 
+===== TODO: =====
+(Wed 03 October 2012 11:07 AM EEST)
+- Rename ScriptListGui to ScriptLibGui
+- Possibly split into 2 classes: ScriptLib (data) and ScriptLibGui (gui)
+- Make new Library menu items like this: 
+
+	- Library
+		- ScriptLib
+			- new 
+			- open
+			- open recent
+
+- Add new mixer type: 
+	- has 4 preset sets of 8 channels each. 
+	- Each preset set corresponds to the keys of a row on the computer keyboard: 
+		(1) 1, 2, 3, 4, 5, 6, 7, 8, (2) q, w, e, r, t, ,y, u, i (3) a, s, d, f, g, h, j (etc.) 
+	- Each preset is pre-initialized to a proxy that is named after that key. 
+	- Typing one of the keys above when a snippet is selected from the snippet list of the
+		ScriptListGui sends the snippet to the corresponding proxy on the keyboard.
+	- Issue: How to display the names of the proxy/snippets on the top row of the mixer? 
+		This requires some modification!
+	
+	Implementation classes: ProxyKeyMixer, ProxyKeyStrip. 
+	SEE ProxyKeyStrip Class FOR TEMPLATE AND INTERFACE IDEA DETAILS
+		
+- Backward compatibility as the format of ScriptLib data changes: 
+  Make separate class for storing and loading ScriptLib instances into archive. 
+  To reload ScriptLib instances from different formats, 
+  one would use a different class that corresponds to the format. 
+
 */
 ScriptListGui : AppModel {
 	classvar <>font;
@@ -111,10 +141,7 @@ ScriptListGui : AppModel {
 				"Script_", \scripts,
 				 { | list, string | list insert: ProxyDoc(string) }, "insert"
 			),
-//			this.button(\nameList).notifyAction(\makeProxyDoc).view.states_([["new"]]).font_(font),
 			this.button(\scripts).notifyAction(\loadProxyDoc).view.states_([["load"]]).font_(font),
-//			this.button(\nameList).notifyAction(\loadProxyDoc).view.states_([["rename"]])
-//				.font_(font),
 			this.makeNameButton(
 				"Edit name, press 'return' key to rename selected list:",
 				{ this.getValue(\scripts).item.name ++ "_" }, \scripts,
@@ -150,21 +177,6 @@ ScriptListGui : AppModel {
 			s: 3],
 		)
 	}	
-
-/*
-	selectedListDisplay {
-		^this.listItem(\scriptLists, TextField(), { | me |
-			me.value.adapter.item !? { me.value.adapter.item.name; }
-		})
-		.updateAction(\rename, { | sender, me | 
-			me.value.adapter.item.name = me.view.string;
-			me.value.updateListeners;
-		})
-		.append({ this.makeList })
-		.appendOn({ this.makeList })
-		.insertOn({ this.makeList }).view.font_(font)
-	}
-*/
 
 	listDisplay {
 		^this.listView(\scriptLists, { | me | me.items collect: _.name }).view.font_(font)
@@ -377,6 +389,4 @@ ScriptListGui : AppModel {
 	makeArchiveList {
 		^this.getValue(\scriptLists).adapter.items.collect(_.makeArchiveCopy);
 	}
-	
-	
 }

@@ -12,7 +12,7 @@ ProxyCodeMixer3 : ProxyCodeMixer {
 	}
 
 	init {
-		stripWidth = 100;
+		stripWidth = 90;
 		numPresets = 10;
 		super.init;
 	}
