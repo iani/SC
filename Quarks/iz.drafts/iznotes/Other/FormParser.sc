@@ -2,9 +2,12 @@
 
 Very rudimentary first steps. 
 
-FormParser.read;
+// FormParser.read; // NOT THIS ONE
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! DO THIS ONE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 FormParser.readAndProcess;
 
+// Following are tries only 
 FormParser.makeValuePairs;
 
 FormParser.makeStatistics;
@@ -14,6 +17,11 @@ FormParser.statistics.keys;
 a = FormParser.all.asArray.first;
 
 a.replace("a:", "a_")
+
+a.inspect;
+
+
+FormParser.all
 
 ======================
 
@@ -85,7 +93,19 @@ FormParser {
 				File(path.postln, "r").readAllString.interpret;
 			};
 			this.makeStatistics;
+			this.saveStatistics;
 		});
 	}
-	
+
+	*saveStatistics {
+		var file;
+		file = File.open(Platform.userAppSupportDir +/+ "protimiseis_1eton.txt", "w");
+		statistics.keys.asArray.sort do: { | key |
+			file.putString("\n\n ==================================== ");
+			file.putString(key.asString);
+			file.putString(" ====================================\n\n");
+			file.putString(statistics[key].asCompileString);
+		};
+		file.close;
+	}
 }

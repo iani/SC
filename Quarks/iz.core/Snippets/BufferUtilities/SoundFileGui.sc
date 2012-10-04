@@ -137,10 +137,10 @@ SoundFileGui : AppModel {
 			me.value.adapter.items collect: _.name
 		})
 			.updateAction(\readNew, { | me |
-				Dialog.getPaths({ | paths |
+				Dialog.openPanel({ | paths |
 					paths do: { | p | this.addBuffer(me.value.adapter, BufferItem(p)) };
 					me.value.updateListeners;
-				});
+				}, multipleSelection: true);
 			})
 			.updateAction(\readDefaults, { | me | this.readDefaults(me.value.adapter) })
 			.updateAction(\loadAll, { | me |

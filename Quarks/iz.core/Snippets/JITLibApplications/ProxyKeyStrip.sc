@@ -16,10 +16,11 @@ ProxyKeyStrip : ProxyCodeStrip {
 	proxySelectMenu {
 		/* TODO: change the code below copied from ProxyCodeStrip to implement snippet selection. 
 		*/
-		^this.popUpMenu(\proxy).proxyList(proxyCodeMixer.proxySpace)
-			.addUpdateAction(\list, { | me | this.autoSetProxy(me) })
-			.updater(proxyCodeMixer, \autoSetProxy, { | me | this.autoSetProxy(me) })
+		^this.popUpMenu(\snippet).snippetList(proxyCodeMixer.proxySpace)
+			.addUpdateAction(\list, { | me | this.setSnippetList(me) })
+			.updater(proxyCodeMixer, \setSnippet, { | me | this.setSnippet(me) })
 			.view.font_(font).background_(Color(0.7, 1, 0.8))
 	}
+
 }
 

@@ -27,6 +27,7 @@ Value {
 		this.notify(message, string);
 		^string.value;
 	}
+	string_ { | string | adapter.string_(this, string) }
 
 	// === List utilities ===
 	list { | items | this.adapter = ListAdapter(this, items) }

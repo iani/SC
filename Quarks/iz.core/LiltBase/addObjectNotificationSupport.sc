@@ -1,6 +1,6 @@
 
 /* 
-Shortcuts for establishing messaging communication between objects via NotificationCenter2.
+Shortcuts for establishing messaging communication between objects via NotificationCenter.
 */
 
 + Object {
@@ -32,7 +32,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	
 	objectClosed {	/* remove all notifiers and listeners
 		that were added by this.addNotifier or this.addListener, addMessage, addNotifierOneShot,
-		NotificationCenter2.register(...).  */
+		NotificationCenter.register(...).  */
 		NotificationCenter.removeNotifiersOf(this);
 		NotificationCenter.removeListenersOf(this);
 	}
@@ -62,7 +62,7 @@ Shortcuts for establishing messaging communication between objects via Notificat
 	registerOneShot { | message, receiver, func |
 		/* NOTE: registerOneShot is different from addNotifier, addListener etc because it
 		   in its name it does not "target" semantically the listener or notifier object. 
-		   Therefore preserve the argument order of NotificationCenter2:register etc. 
+		   Therefore preserve the argument order of NotificationCenter:register etc. 
 		*/
 		NotificationCenter.registerOneShot(this, message, receiver, func);
 	}

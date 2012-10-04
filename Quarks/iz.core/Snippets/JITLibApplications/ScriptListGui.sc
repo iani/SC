@@ -27,11 +27,17 @@ The lists are stored in Platform.userAppSupportDir +/+ "Scripts.sctxar", togethe
 	
 	Implementation classes: ProxyKeyMixer, ProxyKeyStrip. 
 	SEE ProxyKeyStrip Class FOR TEMPLATE AND INTERFACE IDEA DETAILS
+
+	- Evaluating a new snippet checks proxy for channel number mismatch and clears previous
+	  proxy if needed, to restart proxy with new number of channel. 
+	  This must be done at NodeProxy method level. 
 		
 - Backward compatibility as the format of ScriptLib data changes: 
   Make separate class for storing and loading ScriptLib instances into archive. 
   To reload ScriptLib instances from different formats, 
-  one would use a different class that corresponds to the format. 
+  one would use a different class that corresponds to the format.
+  
+
 
 */
 ScriptListGui : AppModel {

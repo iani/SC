@@ -47,7 +47,7 @@ AppModel {
 
 	updateListeners { values do: _.updateListeners }
 
-	// =========== Adding views and windows ============
+	// =========== Adding windows ============
 	window { | windowInitFunc |
 		AppNamelessWindow(this, windowInitFunc);
 	}
@@ -66,6 +66,7 @@ AppModel {
 		this.addNotifier(window, \windowEndFront, { | widget | action.(widget) })
 	}
 
+	// =========== Adding views ============
 	view { | view | ^AppNamelessView(this, view) }
 
 	widget { | name, view | ^Widget(this, name, view) }
@@ -137,20 +138,26 @@ AppModel {
 			.action_({ | me | me.view.value.postln; me.view.item.postln });
 	}
 
-
 	soundFileView { | name | ^Widget(this, name, SoundFileView()).soundFileView; }
 
 	// following need review - possibly their own adapter classes
 	
 /* // TODO
-	rangeSlider { | name | ^AppValueView(this, name, RangeSlider()); }
-	slider2D { | name | ^AppValueView(this, name, Slider2D()); }
+	rangeSlider { | name, loSpec, hiSpec |
+		^Widget(this, name, RangeSlider()).biMappedNumber(loSpec, hiSpec); 
+	}
+	slider2D { | name, xSpec, ySpec  |
+		^Widget(this, name, Slider2D()).biMappedNumber(xSpec, ySpec); 
+	}
+	multiSliderView { | name | ^AppValueView(this, name, MultiSliderView()); }
+
+	envelopeView { | name | ^AppValueView(this, name, EnvelopeView()); }
+
 	dragSource { | name | ^AppView(this, name, DragSource()); }
 	dragSink { | name | ^AppView(this, name, DragSink()); }
 	dragBoth { | name | ^AppView(this, name, DragBoth()); }
 	scopeView { | name | ^AppView(this, name, ScopeView()); }
 	multiSliderView { | name | ^AppValueView(this, name, MultiSliderView()); }
-	envelopeView { | name | ^AppValueView(this, name, EnvelopeView()); }
 	movieView { | name | ^AppView(this, name, MovieView()); }
 */	
 	addMIDI { | specs |
