@@ -87,7 +87,7 @@ FormParser {
 	}
 	
 	*readAndProcess {
-		Dialog.getPaths({ | paths |
+		Prefs.getPathList(this, \paths, { | paths |
 			paths do: { | path |
 				all[PathName(path).fileNameWithoutExtension.asSymbol] = 
 				File(path.postln, "r").readAllString.interpret;

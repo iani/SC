@@ -2,6 +2,8 @@
 
 Facilitate the saving of data between sessions.
 
+See also: RecentPaths (Keep a history of n recent paths for an object)
+
 Stores selected preferences in Archive.global, using the object that they belong to, and the symbol that names each preference as path.  
 
 If a preference or a set of preferences have not been found, provides a dialog window for setting it, and then performs an action with the object and the preferences 
@@ -38,9 +40,28 @@ Prefs : AppModel {
 		};
 	}
 
+	*clearPrefs { | object |
+		if (object.isNil) {
+			allPrefs = IdentityDictionary();
+			this.savePrefsToArchive;
+		}{
+			this.loadPrefsFromArchive;
+			allPrefs[object.asSymbol] = IdentityDictionary();
+			this.savePrefsToArchive;
+		}
+	}
+
 	*archiveFilePath { ^prefPath ?? { Platform.userAppSupportDir +/+ "Prefs.sctxar" } }
 
 	*savePrefsToArchive { allPrefs.writeTextArchive(this.archiveFilePath); }
+
+	*getPath { | object, pathPrefName = \path, action |
+		this.openPanel( object, pathPrefName = \path, action, false );
+	}
+
+	*getPathList { | object, pathPrefName = \path, action |
+		this.openPanel( object, pathPrefName = \path, action, true );
+	}
 
 	*openPanel { | object, pathPrefName = \path, action, multipleSelection = false |
 		var pref, path;
@@ -49,7 +70,7 @@ Prefs : AppModel {
 			Dialog.openPanel({ | argPaths |
 				pref.storePrefInObject(pathPrefName, argPaths, action);
 				this.savePrefsToArchive;
-			}, multipleSelection)
+			}, multipleSelection: multipleSelection)
 		}{
 			pref.storePrefInObject(pathPrefName, path, action);
 		};
