@@ -204,7 +204,7 @@ Code {
 		#start, end = this.getSnippetAt(index);
 		snippet = string[start..end];
 		postf("doc: %, snippet: %\n", doc.name, snippet);
-		this.notify(\snippet, snippet);
+		this.changed(\snippet, snippet);
 		^(string[start..end] ?? { "{ }" }).perform(message, clock ? AppClock);
 	}
 

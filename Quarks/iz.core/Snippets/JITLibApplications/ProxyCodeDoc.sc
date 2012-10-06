@@ -98,12 +98,12 @@ ProxyCodeDoc {
 
 /*
 	clearProxyHistory { // NOT TESTED
-		// when clearing history, notify any editors or other objects
+		// when clearing history, changed any editors or other objects
 		var oldProxies;
 		oldProxies = proxyHistory.keys;
 		proxyHistory = IdentityDictionary.new;
 		oldProxies do: { | oldProxy | 
-			this.notifyHistoryChanged(oldProxy, [], oldProxy);
+			this.changedHistoryChanged(oldProxy, [], oldProxy);
 		}
 	}
 */
@@ -123,7 +123,7 @@ ProxyCodeDoc {
 		source = snippet.interpret;
 		if (source.isValidProxyCode) {
 			/* TODO: If the snippet comes from a ProxySourceEditor, then parse proxy name
-			from snippet, and use that if available. Notify ProxySourceEditor to change 
+			from snippet, and use that if available. changed ProxySourceEditor to change 
 			proxy name */
 			proxy = argProxy ?? { this.getProxy };
 			argProxyName !? { proxyName = argProxyName };
@@ -164,24 +164,24 @@ ProxyCodeDoc {
 
 	*replaceProxyHistory { | argProxy, argHistory, argChanger |
 		/* 	An application that changes my history sends the new version to me 
-			I notify all applications that I changed, so that they may update.
+			I changed all applications that I changed, so that they may update.
 			I send also who updated me, so that the updater will not re-update itself
 			(otherwise an endless loop would ensue).
 		*/
 //		proxyHistory[argProxy] = argHistory;
-//		this.notifyHistoryChanged(argProxy, argHistory, argChanger);
+//		this.changedHistoryChanged(argProxy, argHistory, argChanger);
 	}
 
-	*notifyHistoryChanged { | argProxy, argHistory, argChanger |
+	*changedHistoryChanged { | argProxy, argHistory, argChanger |
 		/* update interested applications of my new history for a proxy. 
 			Also tell them who did the change, so that the changer may avoid re-updating */
-		argProxy.notify(\proxyHistory, [argHistory, argChanger]);
+		argProxy.changed(\proxyHistory, [argHistory, argChanger]);
 	}
 
-	notifyHistoryChanged { | argProxy, argHistory, argChanger  |
+	changedHistoryChanged { | argProxy, argHistory, argChanger  |
 		/* update interested applications of my new history for a proxy. 
 			Also tell them who did the change, so that the changer may avoid re-updating */
-		this.class.notifyHistoryChanged(argProxy, argHistory, argChanger);
+		this.class.changedHistoryChanged(argProxy, argHistory, argChanger);
 	}
 
 	addNodeSourceCodeToHistory { | argProxy, argSnippet |
@@ -198,7 +198,7 @@ ProxyCodeDoc {
 		var history;
 //		history = proxyHistory[argProxy];
 //		history.removeAt(snippetIndex - 1);
-//		this.notifyHistoryChanged(argProxy, history, argProxy);
+//		this.changedHistoryChanged(argProxy, history, argProxy);
 	}
 
 	editNodeProxySource { | proxy |

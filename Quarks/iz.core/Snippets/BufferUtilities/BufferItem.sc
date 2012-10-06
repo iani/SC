@@ -111,7 +111,7 @@ BufferItem : NamedItem {
 	*updateLists {
 		var buffers;
 		(buffers = Library.at('Buffers')) !? {
-			{ this.notify(\bufferList, [Library.at('Buffers').keys.asArray.sort]); }.defer;
+			{ this.changed(\bufferList, [Library.at('Buffers').keys.asArray.sort]); }.defer;
 		}
 	}
 

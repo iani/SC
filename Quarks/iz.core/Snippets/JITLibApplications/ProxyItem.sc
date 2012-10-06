@@ -35,14 +35,14 @@ ProxyItem : NamedItem {
 	
 	addSnippet { | snippet |
 		history.add(snippet);
-		history.notify(\list);
+		history.changed(\list);
 	}
 
 	specs_ { | argSpecs |
 		specs.array = argSpecs collect: { | s |
 			Value(item, ProxyControl().proxy_(item).parameter_(s[0]).spec_(s[1]));
 		};
-		specs.notify(\list);
+		specs.changed(\list);
 	}
 
 	evalSnippet { | argSnippet, start = true, addToSourceHistory = true |

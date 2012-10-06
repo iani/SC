@@ -14,13 +14,13 @@ Notify system when node state changes to enable gui and other updates
 		);
 		// homeServer: multi client support: monitor only locally
 		bundle.schedSend(this.homeServer, this.clock ? TempoClock.default, this.quant);
-		this.notify(\play, [out, numChannels, group, multi, vol, fadeTime, addAction]);
+		this.changed(\play, [out, numChannels, group, multi, vol, fadeTime, addAction]);
 	}
 
 	stop { | fadeTime = 0.1, reset = false |
 		monitor.stop(fadeTime);
 		if(reset) { monitor = nil };
-		this.notify(\stop, [fadeTime, reset]);
+		this.changed(\stop, [fadeTime, reset]);
 	}
 }
 
@@ -33,7 +33,7 @@ Notify system when node state changes to enable gui and other updates
 		monitor = nil;
 		this.freeBus;	 // free the bus from the server allocator
 		this.init;	// reset the environment
-		this.notify(\clear, fadeTime);
+		this.changed(\clear, fadeTime);
 	}
 
 	end { | fadeTime, reset = false |
@@ -43,7 +43,7 @@ Notify system when node state changes to enable gui and other updates
 			(dt + (server.latency ? 0)).wait;
 			this.stop(0, reset);
 		};
-		this.notify(\end, [fadeTime, reset]);
+		this.changed(\end, [fadeTime, reset]);
 	}
 
 	free { | fadeTime, freeGroup = true |
@@ -57,30 +57,30 @@ Notify system when node state changes to enable gui and other updates
 			};
 			bundle.send(server);
 		};
-		this.notify(\free, [fadeTime, freeGroup]);
+		this.changed(\free, [fadeTime, freeGroup]);
  	}
 
 	pause {
 		if(this.isPlaying) { objects.do { |item| item.pause(clock, quant) } };
 		paused = true;
-		this.notify(\pause);
+		this.changed(\pause);
 	}
 
 	resume {
 		paused = false;
 		if(this.isPlaying) { objects.do { |item| item.resume(clock, quant) } };
-		this.notify(\resume);
+		this.changed(\resume);
 	}
 
 	fadeTime_ { | dur |
 		if(dur.isNil) { this.unset(\fadeTime) } { this.set(\fadeTime, dur) };
-		this.notify(\fadeTime, dur);
+		this.changed(\fadeTime, dur);
 	}
 
 	// setting the source
 
 	put { | index, obj, channelOffset = 0, extraArgs, now = true |		var container, bundle, orderIndex;
- 		this.notify(\put, [index, obj, channelOffset, extraArgs, now]);
+ 		this.changed(\put, [index, obj, channelOffset, extraArgs, now]);
 		if(obj.isNil) { this.removeAt(index); ^this };
 		if(index.isSequenceableCollection) { 						^this.putAll(obj.asArray, index, channelOffset)
 		};

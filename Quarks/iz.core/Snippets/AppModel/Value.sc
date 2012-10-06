@@ -13,7 +13,7 @@ Value {
 
 	*new { | model, adapter | ^this.newCopyArgs(model).adapter_(adapter) }
 
-	updateListeners { adapter !? { this.notify(adapter.updateMessage); } }
+	updateListeners { adapter !? { this.changed(adapter.updateMessage); } }
 
 	adapter_ { | argAdapter | 
 		argAdapter !? { adapter = argAdapter.container_(this) };
@@ -24,7 +24,7 @@ Value {
 	getString { | message = \getString | // Get the string of a TextView prepared with makeStringGetter
 		var string;
 		string = `"";
-		this.notify(message, string);
+		this.changed(message, string);
 		^string.value;
 	}
 	string_ { | string | adapter.string_(this, string) }
@@ -88,7 +88,7 @@ Value {
 	}
 
 	addOSC { /* not yet implemented */ }
-	
+
 	objectClosed {
 		super.objectClosed;
 		inputs do: _.free;
@@ -109,7 +109,7 @@ Widget {
 	*initClass {
 		StartUp add: {
 			// Allow (proxy-watching) widgets to start and stop watching cmdPeriod notifications
-			CmdPeriod add: { CmdPeriod.notify(\cmdPeriod) }
+			CmdPeriod add: { CmdPeriod.changed(\cmdPeriod) }
 		}
 	}
 
@@ -141,7 +141,7 @@ Widget {
 	   the new value to discnnect if replaced by another one later. Used by prSetControl method.
 	   The message notification setup on value must be done separately useing updateAction. */
 	value_ { | argValue ... messages |
-		this.notify(\disconnect); // Cause previous Value to remove notifications to myself
+		this.changed(\disconnect); // Cause previous Value to remove notifications to myself
 		value = argValue;
 		value.addNotifierOneShot(this, \disconnect, {
 			messages do: { | m | this.removeNotifier(value, m); }
@@ -183,7 +183,7 @@ Widget {
 
 	getView { | name = \view | // get the view of a widget named by viewGetter method
 		var ref;
-		value.notify(name, ref = `nil)
+		value.changed(name, ref = `nil)
 		^ref.value;
 	}
 
@@ -192,8 +192,8 @@ Widget {
 		value.addListener(listener, message, { action.(value) })
 	}
 
-	notifyAction { | message | // set my view's action to make value send notification message with me
-		view.action = { value.notify(message, this) };
+	changedAction { | message | // set my view's action to make value send notification message with me
+		view.action = { value.changed(message, this) };
 	}
 
 	// Initializing behavior for different types of views and functions
@@ -378,7 +378,7 @@ Widget {
 	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
 		this.updater(proxySpace, \list, { this.items_(proxySpace.proxies) });
-		value.notify(\initProxyControls);	// Initialize proxyWatchers etc. created before me
+		value.changed(\initProxyControls);	// Initialize proxyWatchers etc. created before me
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
@@ -405,7 +405,7 @@ Widget {
 	
 	prStartWatchingProxy { | proxy |
 		// used internally by proxyWatcher method to connect proxy and disconnect previous one
-		this.notify(\disconnectProxy);	// remove notifiers to self from previous proxy
+		this.changed(\disconnectProxy);	// remove notifiers to self from previous proxy
 		if (proxy.isNil or: { (proxy = proxy.item).isNil } ) { view.value = 0; ^this };
 		this.addNotifier(proxy, \play, { view.value = 1 });
 		this.addNotifier(proxy, \stop, { view.value = 0 });
@@ -453,7 +453,7 @@ Widget {
 					me.items collect: { | v | v.adapter.parameter };
 				});			
 			};
-			value.notify(\initProxyControls);	// Initialize proxyControls created before me
+			value.changed(\initProxyControls);	// Initialize proxyControls created before me
 		}
 	}
 
@@ -490,9 +490,9 @@ Widget {
 		this.updateAction(\read, { | soundfile, startframe, frames |
 			view.soundfile = soundfile.soundFile;
 			view.read(startframe, frames);
-			value.notify(\sfViewAction, this);
+			value.changed(\sfViewAction, this);
 		});
-		view.mouseUpAction = { | view | value.notify(\sfViewAction, this) };
+		view.mouseUpAction = { | view | value.changed(\sfViewAction, this) };
 	}
 
 	// Hiding views
@@ -504,13 +504,13 @@ Widget {
 
 	show { | show = true, message = \show |
 		/* Sending this from my value hides views of all widgets prepared with showOn */
-		value.notify(message, show);
+		value.changed(message, show);
 	}
 
 	toggleShow { | message = \show |
 		// make a button toggle visibility of other views with its value (0 = hide, 1 = show)
 		// other views must be connected with showOn method.
-		this.action_({ | me | me.value.notify(message, me.view.value == 1); })
+		this.action_({ | me | me.value.changed(message, me.view.value == 1); })
 	}
 
 	// add action to existing action function
@@ -525,6 +525,6 @@ Widget {
 
 	reset { | message = \reset, resetValue = 0 |
 		// send reset notification for any widgets prepared with presetOn
-		value.notify(message, resetValue);
+		value.changed(message, resetValue);
 	}
 }

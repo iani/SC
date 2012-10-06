@@ -49,7 +49,7 @@ BufferResource : AbstractServerResource {
 		path = argPath;
 		startFrame = argStartFrame;
 		ServerPrep(server).addBuffer(this);
-		NotificationCenter.notify(BufferResource, \created, this);
+		NotificationCenter.changed(BufferResource, \created, this);
 		if (path.notNil) { current[server] = this };
 	}
 	
@@ -237,7 +237,7 @@ BufferResource : AbstractServerResource {
 		// must defer, otherwise sendCollection does not work on server boot. Why?
 		{ completionAction.(b); }.defer(0.1);
 		// this seems problematic: (what use? note that buffer object is not present here yet!)
-		{ NotificationCenter.notify(BufferResource, \loaded, this); }.defer;
+		{ NotificationCenter.changed(BufferResource, \loaded, this); }.defer;
 	}
 
 	free {
@@ -248,7 +248,7 @@ BufferResource : AbstractServerResource {
 
 	freed {
 		object = nil;
-		NotificationCenter.notify(this.class, \free, this);
+		NotificationCenter.changed(this.class, \free, this);
 		if (current[server] === this) { current[server] = nil; /* this.class.default */ };
 	}
 

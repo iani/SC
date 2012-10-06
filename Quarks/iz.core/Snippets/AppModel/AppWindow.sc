@@ -27,11 +27,11 @@ AppNamelessWindow : AppNamelessWidget {
 		window = Window();
 		windowInitFunc.(window, model);
 		window.onClose = {
-			window.notify(\windowClosed, this);
+			window.changed(\windowClosed, this);
 			window.objectClosed;
 		};
-		window.toFrontAction = { window.notify(\windowToFront, this) };
-		window.endFrontAction = { window.notify(\windowEndFront, this) };
+		window.toFrontAction = { window.changed(\windowToFront, this) };
+		window.endFrontAction = { window.changed(\windowEndFront, this) };
 		window.front;	// Update views next, after window has drawn:
 		model.updateListeners;
 	}

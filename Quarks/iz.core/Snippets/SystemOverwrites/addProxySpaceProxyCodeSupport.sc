@@ -14,7 +14,7 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 			envir.put(key, proxy);
 			proxyItem = ProxyItem(key, proxy);
 			proxyList = this.proxies.add(proxyItem);
-			this.notify(\list, [this, proxyList]); // proxies in order of creation
+			this.changed(\list, this, proxyList); // proxies in order of creation
 		};
 		^proxy
 	}	
@@ -23,7 +23,7 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 + ProxySpace {
 	removeNeutral {
 		envir.copy.keysValuesDo { arg key, val; if(val.isNeutral) { envir.removeAt(key) } };
-		this.notify(\removeNeutral, this);
+		this.changed(\removeNeutral, this);
 	}
 	
 	proxies {
@@ -96,6 +96,6 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 		proxyList = this.proxies;
 		this.removeAt(proxyItem.name);
 		proxyList.remove(proxyItem);
-		this.notify(\list, [this, proxyList]); // proxies in order of creation
+		this.changed(\list, this, proxyList); // proxies in order of creation
 	}	
 }

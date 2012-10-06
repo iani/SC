@@ -147,13 +147,13 @@ ScriptListGui : AppModel {
 				"Script_", \scripts,
 				 { | list, string | list insert: ProxyDoc(string) }, "insert"
 			),
-			this.button(\scripts).notifyAction(\loadProxyDoc).view.states_([["load"]]).font_(font),
+			this.button(\scripts).changedAction(\loadProxyDoc).view.states_([["load"]]).font_(font),
 			this.makeNameButton(
 				"Edit name, press 'return' key to rename selected list:",
 				{ this.getValue(\scripts).item.name ++ "_" }, \scripts,
 				{ | list, string | list.item.name = string; list.notify(\list) }, "rename"
 			),
-			this.button(\scripts).notifyAction(\delete).view.states_([["delete"]]).font_(font),
+			this.button(\scripts).changedAction(\delete).view.states_([["delete"]]).font_(font),
 			this.button(\scripts)
 				.action_({ | me | me.item !? { me.item.proxySpace.openHistoryInDoc; } })
 				.view.states_([["make doc"]]).font_(font),

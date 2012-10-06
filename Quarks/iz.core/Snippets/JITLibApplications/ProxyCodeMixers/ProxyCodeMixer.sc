@@ -37,7 +37,7 @@ ProxyCodeMixer : AppModel {
 		strips = { | index | ProxyCodeStrip(this, index) } ! numStrips;
 	}
 
-	reloadProxies { proxyList.notify(\list, proxyList); }
+	reloadProxies { proxyList.changed(\list, proxyList); }
 
 	makeWindow {
 		var winWidth;
@@ -78,13 +78,13 @@ ProxyCodeMixer : AppModel {
 	enable {
 		super.enable(true);
 		strips do: _.enable;
-		this.notify(\colorEnabled);
+		this.changed(\colorEnabled);
 	}
 
 	disable {
 		super.disable;
 		strips do: _.disable;
-		this.notify(\colorDisabled);
+		this.changed(\colorDisabled);
 	}
 
 	// PRESETS
@@ -100,7 +100,7 @@ ProxyCodeMixer : AppModel {
 
 	setPreset { | preset |
 		valueCache do: { | v, i | v.item_(nil, preset[i]) };
-		{ this.notify(\autoSetProxy); }.defer(0.5); // TODO: use layered views instead of presets
+		{ this.changed(\autoSetProxy); }.defer(0.5); // TODO: use layered views instead of presets
 	}
 
 	// MIDI

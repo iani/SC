@@ -33,7 +33,7 @@ MergeSpecs {
 			};
 		};
 		mySpecs = this.new(argProxy, mySpecs);
-		argProxy.notify(\proxySpecs, [mySpecs]);
+		argProxy.changed(\proxySpecs, mySpecs);
 	}
 
 	*new { | proxy, snippetArgs |

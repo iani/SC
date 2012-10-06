@@ -29,7 +29,7 @@ ProxyCodeEditor : AppModel {
 		^super.new(proxySpace).init(proxyItem, rect);
 	}
 
-	front { this.notify(\windowToFront); } // bring window to front if it exists
+	front { this.changed(\windowToFront); } // bring window to front if it exists
 
 	init { | proxyItem, rect |
 		proxyItem = proxyItem ?? { proxySpace.proxies.first };
@@ -78,12 +78,12 @@ ProxyCodeEditor : AppModel {
 
 	enable { | window |
 		super.enable(true);
-		this.notify(\colorEnabled);
+		this.changed(\colorEnabled);
 	}
 
 	disable { | window |
 		super.disable;
-		this.notify(\colorDisabled);
+		this.changed(\colorDisabled);
 	}
 
 	addViews { | window |
@@ -119,7 +119,7 @@ ProxyCodeEditor : AppModel {
 						me.item.play;
 					};
 					me.checkProxy(me.item);
-					editor.notify(\restore, snippet);
+					editor.changed(\restore, snippet);
 				}).view.states_(
 					[["start", Color.black, Color.green], ["stop", Color.black, Color.red]]
 				).font_(font),
@@ -130,12 +130,12 @@ ProxyCodeEditor : AppModel {
 					snippet = widget.value.getString;
 					this.evalSnippet(snippet, start: false, addToSourceHistory: false);
 					// eval button must re-send current string to editor
-					widget.value.notify(\restore, snippet); // to restore from history update
+					widget.value.changed(\restore, snippet); // to restore from history update
 				}).view.states_([["eval"]]).font_(font),
 				this.button(\editor).nextItem.view.states_([[">"]]).font_(font),
 				this.button(\editor).lastItem.view.states_([[">>"]]).font_(font),
-				this.button(\editor).notifyAction(\append).view.states_([["add"]]).font_(font),
-				this.button(\editor).notifyAction(\replace).view.states_([["replace"]]).font_(font),
+				this.button(\editor).changedAction(\append).view.states_([["add"]]).font_(font),
+				this.button(\editor).changedAction(\replace).view.states_([["replace"]]).font_(font),
 				this.button(\editor).delete.view.states_([["delete"]]).font_(font),
 				this.button(\editor).action_({ | widget |
 					var proxy = this.proxyItem.item;
@@ -148,7 +148,7 @@ ProxyCodeEditor : AppModel {
 				StaticText().font_(font).string_("all:"),
 				[this.numberBox(\editor).listSize.view.font_(font), s: 2],
 				this.button(\resizeWindow)
-					.action_({ | me | this.notify(\toggleWindowSize, me.view.value) })
+					.action_({ | me | this.changed(\toggleWindowSize, me.view.value) })
 					.view.font_(font).states_([["maximize"], ["minimize"]]),
 			), 
 			s:1],
@@ -230,7 +230,7 @@ ProxyCodeEditor : AppModel {
 		);
 	}
 
-	resizeWindow { this.notify(\toggleWindowSize) }
+	resizeWindow { this.changed(\toggleWindowSize) }
 
 	*uc33eSpecs { // these specs are for M-Audio U-Control UC-33e, 1st program setting
 		^[

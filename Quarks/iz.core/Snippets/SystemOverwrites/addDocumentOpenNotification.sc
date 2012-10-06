@@ -17,7 +17,7 @@ Add notification when a Document opens so that document management guis such as 
 		} {
 			currentEnvironment = env
 		};
-		this.notify(\docOpened, doc);
+		this.changed(\docOpened, doc);
 		^doc
 	}
 }

@@ -17,13 +17,13 @@ NumberAdapter {
 	value_ { | changer, number |
 		value = number ? 0;
 		standardizedValue = spec unmap: value;
-		container.notify(\number, changer);
+		container.changed(\number, changer);
 	}
 
 	standardizedValue_ { | changer, mappedNumber |
 		value = spec map: mappedNumber;
 		standardizedValue = mappedNumber;
-		container.notify(\number, changer);
+		container.changed(\number, changer);
 	}
 	
 	updateMessage { ^\number }
@@ -38,7 +38,7 @@ TextAdapter {
 
 	string_ { | changer, argString |
 		string = argString ? "";
-		container.notify(\text, changer);
+		container.changed(\text, changer);
 	}	
 
 	updateMessage { ^\text }
@@ -86,12 +86,12 @@ ListAdapter {
 		};
 		if (argItems isKindOf: Array) { argItems = List.newUsing(argItems) };
 		items = argItems ?? { List.new };
-		this.addNotifier(items, \list, { | changer | container.notify(\list, changer) });
+		this.addNotifier(items, \list, { | changer | container.changed(\list, changer) });
 		index = items.indexOf(item) ? 0;
 		item = items[index];
 		container !? {
-			container.notify(\list, changer);
-			if (item !== oldItem) { container.notify(\index, changer); };
+			container.changed(\list, changer);
+			if (item !== oldItem) { container.changed(\index, changer); };
 		};
 	}
 
@@ -102,32 +102,32 @@ ListAdapter {
 	index_ { | changer, argIndex |
 		index = argIndex max: 0 min: (items.size - 1);
 		item = items[index];
-		container.notify(\index, changer);
+		container.changed(\index, changer);
 	}
 
 	replace { | changer, argItem, argIndex |
 		if (items.size == 0) { ^this.append(changer, argItem) };
 		items.put(argIndex ? index, argItem);
 		item = argItem;
-		items.notify(\list, changer);
+		items.changed(\list, changer);
 	}
 
 	append { | changer, argItem |
 		items add: argItem;
 		this.index_(changer, items.size - 1);
-		items.notify(\list, changer);
+		items.changed(\list, changer);
 	}
 
 	insert { | changer, argItem, argIndex |
 		items.insert(argIndex ? index, argItem);
 		this.index_(changer, argIndex ? index);
-		items.notify(\list, changer);
+		items.changed(\list, changer);
 	}
 
 	delete { | changer, argItem |
 		items.remove(argItem ? item);
 		this.index_(changer, index);
-		items.notify(\list, changer);
+		items.changed(\list, changer);
 	}
 	
 	previous { this.index_(this, index - 1 max: 0) }
@@ -139,11 +139,11 @@ ListAdapter {
 	add { | argItem | 
 		items.add(argItem);
 		item ?? { this.last };
-		container.notify(\list, this);
+		container.changed(\list, this);
 	}
 	put { | argIndex, argItem | 
 		items.put(argIndex, item);
-		container.notify(\list, this);
+		container.changed(\list, this);
 	}
 
 	includes { | item | ^items includes: item }
