@@ -20,7 +20,9 @@ SoundFileGui : AppModel {
 	*initClass {
 		StartUp add: {
 			CocoaMenuItem.add(["Sound File Manager"], { this.new });
-			font = Font.default.size_(10);
+			if (GUI.current == CocoaGUI) { font = SCFont.monospace(10).postln } { //mc
+				font = Font.default.size_(10);
+			}; //mc
 		};
 	}
 
