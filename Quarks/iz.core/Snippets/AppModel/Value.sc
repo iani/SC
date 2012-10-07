@@ -387,7 +387,7 @@ Widget {
 		app.listView(\proxies).items_(proxySpace.proxies).view. 
 	Shortcut for listView for choosing proxies: proxyList. */
 	proxyWatcher { | playAction, stopAction |
-		// Initialize myself only AFTER my proxySelector has been created: 
+		// Initialize myself only AFTER my proxyList has been created: 
 		if (value.adapter.isKindOf(ListAdapter).not) {
 			this.addNotifierOneShot(value, \initProxyControls, {
 				this.proxyWatcher(playAction, stopAction);
@@ -421,8 +421,8 @@ Widget {
 		^proxy; // for further use if in another expression.
 	}
 	
-	proxyControlList { | proxySelector, autoSelect |
-		// make a list of proxy control names for the proxy selected by proxySelector
+	proxyControlList { | proxyList, autoSelect |
+		// make a list of proxy control names for the proxy selected by proxyList
 		// These are updated from the ProxyItems specs List through the \list message
 		// Update messages are currently sent by ProxyCode:evalInProxySpace.  
 		// Questions: Parse proxy args every time? Would that not create an inconsistency 
@@ -430,28 +430,33 @@ Widget {
 		// Should proxies parse arguments every time that the source changes? 
 		/* If autoSelect is given a positive integer value, then the widget will select
 		   the nth parameter, if available whenever the list of parameter changes */
-		if (proxySelector isKindOf: Symbol) {
-			proxySelector = model.getValue(proxySelector);
+		if (proxyList isKindOf: Symbol) {
+			proxyList = model.getValue(proxyList);
 		};
-		// Initialize myself only AFTER my proxySelector has been created: 
-		if (proxySelector.value.adapter.isNil) {
-			this.addNotifierOneShot(proxySelector.value, \initProxyControls, {
-				this.proxyControlList(proxySelector, autoSelect);
+		// Initialize myself only AFTER my proxyList has been created: 
+		if (proxyList.value.adapter.isNil) {
+			this.addNotifierOneShot(proxyList.value, \initProxyControls, {
+				this.proxyControlList(proxyList, autoSelect);
 			});
 		}{
-			this.sublistOf(proxySelector, { | item |
+			this.sublistOf(proxyList, { | item |
+				[this, thisMethod.name, item, item.specs].postln;
 				if (item.specs.size < 2) { // only parse specs here if not already provided!
 					MergeSpecs.parseArguments(item.item);
 				};
 				item.specs; // the specs are Value instances to which widgets connect
 			});
 			if (autoSelect.isNil) {
-				this.list({ | me | me.items collect: { | v | v.adapter.parameter }; });
+				this.list({ | me |
+					[this, thisMethod.name, "my value, adapter, items, parameters:",
+					me.value, me.value.adapter, me.value.adapter.items,
+					me.value.adapter.items collect: { | v | v.adapter.parameter }].postln;
+					me.items collect: { | v | v.adapter.parameter }; });
 			}{
 				this.list({ | me |
 					if (autoSelect < me.items.size) { me.value.adapter.index_(nil, autoSelect); };
 					me.items collect: { | v | v.adapter.parameter };
-				});			
+				});
 			};
 			value.changed(\initProxyControls);	// Initialize proxyControls created before me
 		}
@@ -465,12 +470,16 @@ Widget {
 		}{
 			// Later my value inst var will be changed. So I keep the paramList in this closure:
 			paramList = value.adapter;
+//			["Printing Paramlist!!!", this, thisMethod.name, paramList].postln;
+//			paramList.inspect;
 			this.listItem({ | me | me.item !? { me.item.adapter.parameter } });
 			this.updateAction(\list, { | sender, list |
-				paramList.item !? { this.prSetControl(paramList.item); };
+//				["LIST", this, thisMethod.name, sender, list, paramList].postln;
+//				paramList.item !? { this.prSetControl(paramList.item); };
 			});
 			this.updateAction(\index, { | sender, list |
-				paramList.item !? { this.prSetControl(paramList.item); };
+//				["INDEX", this, thisMethod.name, sender, list, paramList].postln;
+//				paramList.item !? { this.prSetControl(paramList.item); };
 			});
 		}
 	}

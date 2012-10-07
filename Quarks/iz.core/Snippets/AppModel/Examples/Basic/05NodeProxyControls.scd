@@ -2,6 +2,8 @@
 
 Basic example of connecting proxies to views. 
 
+~out1.source = { | freq = 440, rate = 1 | LFTri.ar(freq, 0, 0.1) };
+
 */
 
 //:A proxy selector list and a button for starting / stopping the selected proxy
@@ -30,9 +32,9 @@ AppModel().window({ | window, app |
 		// list of control parameters of selected button: 
 		app.listView(\proxyControls).proxyControlList(\proxies).view,
 		// Following views set the parameter selected above:
-		app.knob(\proxyControls).proxyControl.view,
-		app.slider(\proxyControls).proxyControl.view.orientation_(\horizontal),
-		app.numberBox(\proxyControls).proxyControl.view,
+//		app.knob(\proxyControls).proxyControl.view,
+//		app.slider(\proxyControls).proxyControl.view.orientation_(\horizontal),
+//		app.numberBox(\proxyControls).proxyControl.view,
 	);
 	// create some node proxies in this Document's proxy space for testing: 
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
