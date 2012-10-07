@@ -18,6 +18,8 @@ a = LHC((
 	counter: { | self, counter | if (counter > 0) { (degree: counter).play } }
 )).start;
 
+
+//:
 a = LHC((
 	symbol: { | self, symbol |
 		self.soundOn.postln;

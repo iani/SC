@@ -1,8 +1,8 @@
-                Lilt2/Elemenv\'i (/Look Ma: No Vars!/)
-                ======================================
+            Lilt2/Esci Eleng\'i (/Subclassing is No Good/)
+            ==============================================
 
 Author: Ioannis Zannos
-Date: 2012-08-15 03:25:47 EEST
+Date: 2012-09-18 16:25:09 EEST
 
 
 About 
@@ -13,16 +13,25 @@ This library contains SuperCollider tools and examples coded and collected since
 New - Suggested 
 ================
 
-See: iz.core folder, LiltBase, Snippets, Chain (require Resource, ServerPrep).
+See: iz.core folder, Snippets
 
-- Widget: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also store and restore the settings of such elements in WidgetPresets. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
+- AppModel, AppModel2: Interconnect GUI elements between themselves and to NodeProxy objects, without having to save GUI elements to variables. Also add MIDI and OSC funcs easily, and enable / disable input from these in groups when a window containing those widgets comes to the foreground. 
 
 - Code, ProxyCode: Navigate, select and run code snippets between comments. Evaluate them in ProxySpace, and add basic control of the resulting NodeProxies from the keyboard.  
 
-- ProxyCodeEditor, NanoKontrol2b: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  
+- ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3: Edit code of NodeProxies created from ProxyCode, navigate the history of all source code snippets for each proxy, automatically parse, create menus and map control parameters for each proxy to MIDI-mappable sliders and knobs.  Auto-insert variable declaration code for using loaded buffers in NodeProxy source functions. 
 
-Credits, Download 
-~~~~~~~~~~~~~~~~~~
+- BufferListGui: GUI for managing lists of buffers, auto-saved as sctxar. Includes preview with play and with user custom code. Loaded buffers will automatically re-load when the server re-boots. Loaded buffers are available via Library.at('Buffers') for ProxyCodeEditor to insert in NodeProxy source code. 
+
+Download 
+~~~~~~~~~
+
+Download from: [https://github.com/iani/SC]
+or:
+ git clone git://github.com/iani/SC.git
+
+Credits 
+~~~~~~~~
 - Code, Resource and Chain by Ioannis Zannos, March-May 2011
 - Widget, ProxyCode, ProxySourceEditor by Ioannis Zannos, May-August 2012
 - Quarks modularisation scheme by Martin Carl\'e, September-October 2011
@@ -30,10 +39,8 @@ Credits, Download
 - beastmulch quark containing BEASTmulch UGens by Scott Wilson and the 
   BEAST research team at the University of Birmingham. \\ See: [http://www.birmingham.ac.uk/facilities/BEAST/research/mulch.aspx]
 - collins quarks ported from Nick Collins' work at: [http://www.sussex.ac.uk/Users/nc81/code.html]
-
-Download from: [https://github.com/iani/SC]
-or:
- git clone git://github.com/iani/SC.git
+- SC3PlugIns by the SuperCollider community, re-organized here as separate (Rep-)Quarks. 
+- Collection of older code and notes by Ioannis Zannos.
 
 Copying (License) 
 ~~~~~~~~~~~~~~~~~~
@@ -58,57 +65,27 @@ Choose iz.local from the Quarks menu.  Recommended Quarks to try out are:
 - ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
 - Chains (Alternative score-writing class for scheduling execution of functions with patterns)
 
-Widget 
-~~~~~~~
 
-Simplify the task of adding and communicating with several widgets to any object, for representing and control different aspects of that object. 
+New Application Framework: AppModel 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Example 
-========
+AppModel, AppModelVersion2, Value, Widget 
+==========================================
 
-First do this: 
+These are currently in quark iz.core/Snippets. 
 
+Simplify the task of creating guis, connecting views to values by name and adding actions and update messages for each view.  Also simplify the tasks of adding MIDI and OSC to each object in the application, of re-opening closed windows (see AppStickyWindow, AppModel:stickyWindow), and of automatically switching MIDI control to the foremost window. 
 
-  (
-  Document.current.envir = ProxySpace.push;
-  w = Window.new;
-  w.layout = VLayout(
-          /*  Create a self-updating menu for selecting a node from 
-              this Document's ProxySpace, and name it \nodes */
-          PxMenu(w, \nodes),
-          /* Create a button for starting and stopping the selected proxy,
-             and make its proxy settable by menu element named \nodes */
-          PxButton(w, \button, \nodes).states_([["start"], ["stop"]]),
-          /* Create a menu for selecting control parameters from the selected
-             node, name it \specs, make its node settable by menu \nodes */
-          PxControlsMenu(w, \specs, \nodes),
-          /* Create a knob named \knob, make its spec settable by menu named 
-             \specs, and make it set its mapped value to \numbox */
-          PxKnob(w, \knob, \specs, \numbox),
-          /* Create a NumberBox named \numbox, make it set its unmapped value
-             to element named \knob */
-          PxNumberBox(w, \numbox, \knob)
-  );
-  w.windowHandler(w).front;
-  )
+A first prototype is tested with classes AppModel, Adapter, and the subclasses of AppNamelessView.  Example applications are built in BufferListGui, ProxyCodeEditor, ProxyCodeMixer, ProxyCodeMixer3.
 
-Then do this: 
+A second version of the above is given in classes AppModel2, Value, Widget, NumberAdapter, SpecAdapter2, ListAdapter2. This will gradually become the application framework for all applications in Lilt2, as it substantially simplifies coding. See first examples in folder AppModelVersion2/Examples. 
 
-
-  //:sample - Run the following two lines. 
-  ~out = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
-  ~out.play; // after that, check the first menu of the window above, and select 'out'
-
-
-Then select controls from the second menu, and use the knob to control selected parameter.
-
-
-Object methods for easy messaging via NotificationCenter 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NotificationCenter additions: Flexible messaging with cleanup "objectClosed" 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shortening and clarifying the code required to use NotificationCenter.
 
-One beneficial effect of this is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message. 
+The advantage gained is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message.  Notification connections can be removed by method objectClosed, which can be called when a view or other dependent object closes.
 
 Class Code 
 ~~~~~~~~~~~

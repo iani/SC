@@ -1,0 +1,51 @@
+title:: AppModel Examples
+categories:: Application Framework
+summary:: Examples of AppModel
+related:: Classes/AppModel, Classes/Adapter, Classes/AppView
+
+DESCRIPTION::
+Each of these examples creates a window with items for interacting with values contained in an AppModel instance.
+::
+
+section:: Basic
+
+subsection:: NumberBox, Knob, Slider, Button
+
+code::
+AppModel().window({ | w, app |
+	w.layout = VLayout(
+		app.numberBox(\any_name).view,
+		app.knob(\any_name).view, 
+		app.slider(\any_name, \freq).view.orientation_(\horizontal),
+		app.button(\any_name).valueAction_({ 20 rrand: 2000 }).view.states_([["randomize"]]),
+	);
+});
+::
+
+subsection:: TextView, TextField, StaticTextView
+code::
+AppModel().window({ | w, app |
+	w.layout = VLayout(
+		app.staticText(\any_name).view.string_("will be updated by others"), 
+		app.textField(\any_name).view.string_("change my string and press the return key"),
+		app.textView(\any_name, 'AnyNameGoesHere')
+			.view.string_("change my string and push the accept text button"),
+		app.button(\any_name).getContents('AnyNameGoesHere')
+			.view.states_([["accept text from TextView above"]]),
+	);
+});
+::
+
+subsection:: PopUpMenu, ListView
+code::
+a = AppModel().window({ | w, app |
+	w.layout = VLayout(
+		app.popUpMenu(\any_name, ["SELECTED", "b", "c"]).view,
+		app.listView(\any_name).view,
+		StaticText().string_("update index only - do not update items:"),
+		app.listView(\any_name, nil, false).view.items_(["one", "2", "3", "4", "5"]),
+	);
+});
+
+::
+

@@ -1,0 +1,20 @@
+TITLE:: AppModel Examples
+summary:: Examples of using AppModel to create GUIs
+categories:: Application Framework
+related:: Classes/Adapter, Classes/AppView
+
+section:: Basic
+
+subsection:: NumberBox, Slider, Knob, Button
+
+code::
+AppModel().window({ | w, app |
+	w.layout = VLayout(
+		app.numberBox(\any_name).view,
+		app.knob(\any_name).view, 
+		app.slider(\any_name, \freq).view.orientation_(\horizontal),
+		app.button(\any_name).valueAction_({ 20 rrand: 2000 }).view.states_([["randomize"]]),
+	);
+});
+
+::

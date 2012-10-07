@@ -582,7 +582,7 @@ SCMIRAudioFile {
 		//SCMIR.soundfile.close;     
 		  
 		("rm "++ (analysisfilename.asUnixPath)).systemCmd;      
-		  
+		this.notify(\extractionDone, this);
 		"Feature extraction complete".postln;  
 	}    
 	 

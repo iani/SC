@@ -1,0 +1,24 @@
+#+TITLE: Value: AppModel v 2 redo discussion
+#+OPTIONS: ^:nil, toc:nil
+
+Redo of Adapter idea from scratch, with radical simplification of principle 
+
+In AppModel2, the Value class will take the place of the Adapter class from AppModel. 
+
+Widget takes the place of AppView.
+
+* Considerations
+
+** Simplify Notification - Response Mechanism
+
+Simplify the notification - response mechanism to avoid having to check argument usage and order for each different subclass or case. Principle: 
+
+- When Widget calls some message on the Value's adapter 
+
+** Generalized widget actions and adapters
+
+Can we have generalized widgets with many actions in response to many notifiers, added
+in Event or IdentityDictionary? 
+
+The same holds for the side of Value: Use some specialized adapters such as SpecAdapter2 or 
+TextAdapter or even ListAdapter, but also work out a generalized adapter where many notifications and many messages can be added for many values. 
