@@ -30,7 +30,7 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 		var proxies;
 		proxies = Library.at('Proxies', this);
 		if (proxies.isNil) { 
-			proxies = List.new.add(ProxyItem('-', nil)); 
+			proxies = List.new; // .add(ProxyItem('-', nil)); 
 			Library.put('Proxies', this, proxies);
 		};
 		^proxies;

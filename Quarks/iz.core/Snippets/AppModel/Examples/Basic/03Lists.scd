@@ -74,7 +74,17 @@ AppModel().window({ | window, app |
 	)
 });
 
-//:Sublists: Lists accessing the lists inside a nested list
+//   Sublists: Lists accessing the lists inside a nested list
+
+//:Basic sublist
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\list).items_([["alpha", 1], ["beta", 2], ["gamma", 3, 4, 5]]).view,
+		app.listView(\sublist).sublistOf(\list).view,
+	)
+})
+
+//:more sublists
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.popUpMenu(\list).items_([["alpha", 1], ["beta", 2], ["gamma", 3, 4, 5]]).view,

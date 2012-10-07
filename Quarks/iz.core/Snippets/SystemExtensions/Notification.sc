@@ -52,7 +52,9 @@ Notification {
 		all = MultiLevelIdentityDictionary.new; 
 	} 
 
-	*new { | notifier, message, listener, action | 
+	*new { | notifier, message, listener, action |
+		// First remove previous notification of same address, if it exists: 
+		this.remove(notifier, message, listener);
 		^this.newCopyArgs(notifier, message, listener, action).init; 
 	} 
 

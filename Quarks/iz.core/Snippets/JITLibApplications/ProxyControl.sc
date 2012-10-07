@@ -11,6 +11,12 @@ ProxyControl : NumberAdapter {
 	var <parameter;		// (a Symbol): name of parameter to set 
 	var <controlAction;	// action for setting the proxy's parameter
 
+	spec_ { | paramSpec |
+		this.parameter = paramSpec[0];
+		spec = paramSpec[1];
+		value = spec map: standardizedValue;
+	}
+
 	standardizedValue_ { | changer, mappedNumber |
 		// prevent funny wiring of all nil-params? : ...
 //		if (parameter === '-') { ^this }; // ... No: leave it anyway, for efficiency. No harm done.

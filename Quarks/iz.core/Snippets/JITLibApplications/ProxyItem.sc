@@ -7,7 +7,6 @@ ProxyItem is the place to put snippet parsing code.
 
 NamedItem {
 	var <>name, <>item;
-
 	*new { | name, item | ^this.newCopyArgs(name, item) }
 
 	asString { ^name }
@@ -21,28 +20,41 @@ NamedItem {
 }
 
 ProxyItem : NamedItem {
+	classvar <>extraSpecs;
 	var <history, <specs;
+
+	*initClass {
+		Class.initClassTree(Spec);
+		Class.initClassTree(ControlSpec);
+		extraSpecs = [[\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
+//		cachedSpecs = IdentityDictionary.new;
+	}
 	
 	*new { | name, item | ^this.newCopyArgs(name, item).init }
 	
 	init {
 		history = List.new;
 		specs = List.new;
-		if (item.isNil) {
-			this.specs = [['-', nil]]
-		}{ this.addNotifier(item, \proxySpecs, { | specs | this.specs = specs }) };
+		this.addNotifier(item, \source, { this.getParamsFromProxy });
 	}
-	
-	addSnippet { | snippet |
-		history.add(snippet);
-		history.changed(\list);
+
+	getParamsFromProxy {
+		this.specs =
+			(if (item.rate === \audio) { extraSpecs } { [] })
+			++ 
+			(item.getKeysValues collect: { | keyVal |
+				[keyVal[0], (keyVal[0].asSpec ?? { \bipolar.asSpec }).default_(keyVal[1])] 
+			});
 	}
 
 	specs_ { | argSpecs |
-		specs.array = argSpecs collect: { | s |
-			Value(item, ProxyControl().proxy_(item).parameter_(s[0]).spec_(s[1]));
-		};
+		specs.array = argSpecs collect: { | spec | Value(item, ProxyControl(item, spec)); };
 		specs.changed(\list);
+	}
+
+	addSnippet { | snippet |
+		history.add(snippet);
+		history.changed(\list);
 	}
 
 	evalSnippet { | argSnippet, start = true, addToSourceHistory = true |
@@ -67,6 +79,7 @@ ProxyItem : NamedItem {
 	}
 
 	parseArguments { | argSnippet |
+/*
 		var proxyArgs, paramNames, paramValues;
 		var snippetHeader, snippetKeys, snippetVals;
 		var finalSpecs;
@@ -84,7 +97,7 @@ ProxyItem : NamedItem {
 		};
 		cachedSpecs[proxy] = finalSpecs;
 		^finalSpecs;
-	}
+*/	}
 
 	nilSpecs { ^['-', nil] }
 

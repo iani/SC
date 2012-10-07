@@ -46,12 +46,15 @@ Value {
 	sublistOf { | superList, getListFunction |
 		this.adapter = ListAdapter();
 		 // vary this to get different parts of the item
-		getListFunction ?? { getListFunction = { | sublist | sublist }; };
+		getListFunction ?? { getListFunction = { | sublist |
+			"****default**** sublist func SETS NEW LIST FOR THE SUBLIST!".postln; sublist }; };
 		if (superList isKindOf: Symbol) { superList = model.getValue(superList); };
 		this.addNotifier(superList, \list, {
+			"sublistOf method of Value Class DOES CALL!: getListFunction, for 'list'".postln;
 			this.adapter.items_(this, getListFunction.(superList.adapter.item, this));
 		});
 		this.addNotifier(superList, \index, {
+			"sublistOf method of Value Class DOES CALL!: getListFunction, for 'index'".postln;
 			this.adapter.items_(this, getListFunction.(superList.adapter.item, this));
 		});
 	}
@@ -153,7 +156,8 @@ Widget {
 	updateAction { | message, action | // Add a response to a message from my value
 		// Add an action to be done when receiving the specified message from my value-adapter.
 		// Pass the sender to the action, to avoid updating self if this is a problem.
-		// Also make myself available to the action function. 
+		// Also make myself available to the action function.
+		[this, thisMethod.name, "ADDING NOTIFIER!", name, this.hash, "message", message].postln;
 		this.addNotifier(value, message, { | sender | action.(sender, this) });
 	}
 	
@@ -262,13 +266,20 @@ Widget {
 	// ======== List views: ListView, PopUpMenu =======
 	list { | getListAction |
 		value.adapter ?? { value.adapter = ListAdapter(value) };
-		getListAction = getListAction ?? { { value.adapter.items collect: _.asString } };
+		getListAction = getListAction ?? { { 
+
+			postf("WIDGET: '%' DEFAULT getlist action from Widget:list, for 'list' GETS CURRENT LIST ITEMS\n", name);
+			
+			
+			value.adapter.items collect: _.asString } };
 		view.action = { value.adapter.index_(this, view.value) };
 		this.updateAction(\list, { // | sender |
+			postf("WIDGET: '%' : performing 'list'. WILL NOW CALL getListAction:...\n", name);
 			view.items = getListAction.(this);
 			view.value = value.adapter.index;
 		});
 		this.updateAction(\index, { // | sender |
+			postf("WIDGET: '%' performing 'index'. Will NOT call the getListAction\n", name);
 			/* if (sender !== this) { */
 			view.value = value.adapter.index
 			// }
@@ -278,10 +289,7 @@ Widget {
 	items_ { | items | value.adapter.items_(this, items); }
 	items { ^value.adapter.items }
 	item_ { | item | value.adapter.item_(this, item); }
-//	item { ^value.adapter.item } // This does not work when replacing items in
-			// lists that are shared by multiple views with independent indices!
-//	item { ^value.adapter.items[value.adapter.index] }
-	item { ^value.item }	// value now uses correct item access
+	item { ^value.item }
 	index { ^value.adapter.index }
 	index_ { | index | value.adapter.index_(this, index) }
 	first { value.adapter.first }
@@ -422,14 +430,6 @@ Widget {
 	}
 	
 	proxyControlList { | proxyList, autoSelect |
-		// make a list of proxy control names for the proxy selected by proxyList
-		// These are updated from the ProxyItems specs List through the \list message
-		// Update messages are currently sent by ProxyCode:evalInProxySpace.  
-		// Questions: Parse proxy args every time? Would that not create an inconsistency 
-		// with proxy specs parsed from snippets via ProxyCode
-		// Should proxies parse arguments every time that the source changes? 
-		/* If autoSelect is given a positive integer value, then the widget will select
-		   the nth parameter, if available whenever the list of parameter changes */
 		if (proxyList isKindOf: Symbol) {
 			proxyList = model.getValue(proxyList);
 		};
@@ -440,22 +440,18 @@ Widget {
 			});
 		}{
 			this.sublistOf(proxyList, { | item |
-				[this, thisMethod.name, item, item.specs].postln;
-				if (item.specs.size < 2) { // only parse specs here if not already provided!
-					MergeSpecs.parseArguments(item.item);
-				};
-				item.specs; // the specs are Value instances to which widgets connect
+//				"this is sublistOf calling item specs and these are the specs".postln;
+				item !? { item.specs.postln; }
 			});
 			if (autoSelect.isNil) {
 				this.list({ | me |
-					[this, thisMethod.name, "my value, adapter, items, parameters:",
-					me.value, me.value.adapter, me.value.adapter.items,
-					me.value.adapter.items collect: { | v | v.adapter.parameter }].postln;
-					me.items collect: { | v | v.adapter.parameter }; });
-			}{
-				this.list({ | me |
-					if (autoSelect < me.items.size) { me.value.adapter.index_(nil, autoSelect); };
 					me.items collect: { | v | v.adapter.parameter };
+				});
+			}{
+ 				this.list({ | me |
+					if (autoSelect < me.items.size) {
+						me.value.adapter.index_(nil, autoSelect); };
+					me.items collect: { | v | v.adapter.parameter.name };
 				});
 			};
 			value.changed(\initProxyControls);	// Initialize proxyControls created before me
@@ -470,16 +466,12 @@ Widget {
 		}{
 			// Later my value inst var will be changed. So I keep the paramList in this closure:
 			paramList = value.adapter;
-//			["Printing Paramlist!!!", this, thisMethod.name, paramList].postln;
-//			paramList.inspect;
 			this.listItem({ | me | me.item !? { me.item.adapter.parameter } });
 			this.updateAction(\list, { | sender, list |
-//				["LIST", this, thisMethod.name, sender, list, paramList].postln;
-//				paramList.item !? { this.prSetControl(paramList.item); };
+				paramList.item !? { this.prSetControl(paramList.item); };
 			});
 			this.updateAction(\index, { | sender, list |
-//				["INDEX", this, thisMethod.name, sender, list, paramList].postln;
-//				paramList.item !? { this.prSetControl(paramList.item); };
+				paramList.item !? { this.prSetControl(paramList.item); };
 			});
 		}
 	}
