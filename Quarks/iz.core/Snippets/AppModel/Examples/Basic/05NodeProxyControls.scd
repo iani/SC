@@ -32,9 +32,22 @@ AppModel().window({ | window, app |
 		// list of control parameters of selected button: 
 		app.listView(\proxyControls).proxyControlList(\proxies).view,
 		// Following views set the parameter selected above:
-//		app.knob(\proxyControls).proxyControl.view,
-//		app.slider(\proxyControls).proxyControl.view.orientation_(\horizontal),
-//		app.numberBox(\proxyControls).proxyControl.view,
+		app.knob(\proxyControls).proxyControl.view,
+		app.slider(\proxyControls).proxyControl.view.orientation_(\horizontal),
+		app.numberBox(\proxyControls).proxyControl.view,
+	);
+	// create some node proxies in this Document's proxy space for testing: 
+	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
+	// select the first proxy:
+	app.getValue(\proxies).index_(nil, 0);
+});
+
+//:Basic proxy list
+a = AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\proxies) // list of proxies
+		.proxyList(Document.prepareProxySpace(Document.current)).view, 
 	);
 	// create some node proxies in this Document's proxy space for testing: 
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };

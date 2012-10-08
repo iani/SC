@@ -86,9 +86,9 @@ SoundFileGui : AppModel {
 	listButtonRow {
 		^HLayout(
 			StaticText().string_("Lists:").font_(font),
-			this.button(\bufferLists).notifyAction(\append).view.states_([["append"]]).font_(font),
-			this.button(\bufferLists).notifyAction(\insert).view.states_([["insert"]]).font_(font),
-			this.button(\bufferLists).notifyAction(\rename).view.states_([["rename"]]).font_(font),
+			this.button(\bufferLists).changedAction(\append).view.states_([["append"]]).font_(font),
+			this.button(\bufferLists).changedAction(\insert).view.states_([["insert"]]).font_(font),
+			this.button(\bufferLists).changedAction(\rename).view.states_([["rename"]]).font_(font),
 			this.button(\bufferLists).action_({ | me | me.value.adapter.delete })
 				.view.states_([["delete"]]).font_(font),
 			Button().action_({ 
@@ -107,7 +107,10 @@ SoundFileGui : AppModel {
 			me.value.adapter.item.name = me.view.string;
 			me.value.updateListeners;
 		})
-		.append({ this.makeList })
+		.action_({ | me |
+			me.value.adapter.item.name = me.view.string;
+			me.value.updateListeners;
+		})
 		.appendOn({ this.makeList })
 		.insertOn({ this.makeList }).view.font_(font)
 	}
@@ -122,13 +125,13 @@ SoundFileGui : AppModel {
 	fileButtonRow {
 		^HLayout(
 			StaticText().string_("Sound Files:").font_(font),
-			this.button(\files).notifyAction(\readNew).view.states_([["read new"]]).font_(font),
-			this.button(\files).notifyAction(\readDefaults)
+			this.button(\files).changedAction(\readNew).view.states_([["read new"]]).font_(font),
+			this.button(\files).changedAction(\readDefaults)
 			.view.states_([["read defaults"]]).font_(font),
-			this.button(\files).notifyAction(\loadSelected)
+			this.button(\files).changedAction(\loadSelected)
 			.view.states_([["load selected"]]).font_(font),
-			this.button(\files).notifyAction(\loadAll).view.states_([["load all"]]).font_(font),
-			this.button(\files).notifyAction(\delete).view.states_([["delete"]]).font_(font),
+			this.button(\files).changedAction(\loadAll).view.states_([["load all"]]).font_(font),
+			this.button(\files).changedAction(\delete).view.states_([["delete"]]).font_(font),
 		)
 	}
 
@@ -167,7 +170,7 @@ SoundFileGui : AppModel {
 	bufferListHeader {
 		^HLayout(
 			StaticText().string_("Loaded buffers:").font_(font),
-			this.button(\loadedBuffers).notifyAction(\free).view.states_([["free"]]).font_(font),
+			this.button(\loadedBuffers).changedAction(\free).view.states_([["free"]]).font_(font),
 		)
 	}
 
@@ -246,7 +249,7 @@ SoundFileGui : AppModel {
 				}
 			})
 			.view.font_(font), s: 1],
-			this.button(\files).notifyAction(\play).view.states_([["play"]]).font_(font),
+			this.button(\files).changedAction(\play).view.states_([["play"]]).font_(font),
 			this.button(\soundFileView)
 			.action_({ | me |
 				var sfv, selection, firstFrame, lastFrame;

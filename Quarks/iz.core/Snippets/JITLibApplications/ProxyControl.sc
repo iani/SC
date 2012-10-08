@@ -15,6 +15,7 @@ ProxyControl : NumberAdapter {
 		this.parameter = paramSpec[0];
 		spec = paramSpec[1];
 		value = spec map: standardizedValue;
+		proxy = container;
 	}
 
 	standardizedValue_ { | changer, mappedNumber |

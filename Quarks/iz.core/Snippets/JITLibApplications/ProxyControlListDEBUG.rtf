@@ -26,6 +26,15 @@
 \});\
 \
 \
+\cf2 //: AFTER THE FIX: \cf3 \
+\
+\cf0 WIDGET: 'proxies' performing 'index'. Will NOT call the getListAction\
+sublistOf method of Value Class DOES CALL!: getListFunction, for 'index'\
+List[ a Value, a Value, a Value ]\
+WIDGET: 'proxyControls' : performing 'list'. WILL NOW CALL getListAction:...\
+WIDGET: 'proxyControls' performing 'index'. Will NOT call the getListAction\
+\cf3 \
+\
 \
 \
 \cf2 //: PREVIOUS DEBUG EFFORTS - WHICH FOUND A DIFFERENCE IN THE ORDER DEFAULT get list action appears\cf3 \
@@ -198,11 +207,14 @@ an \cf4 AppModel\cf3 \
 \
 === \cf4 Just\cf3  a plain list with sublist: \
 \
-\cf0 \
 \
-[ a Widget, updateAction, ADDING NOTIFIER!, list, -1684471419, message, list ]\
-[ a Widget, updateAction, ADDING NOTIFIER!, list, -1684471419, message, index ]\
-[ a Widget, updateAction, ADDING NOTIFIER!, sublist, 112231282, message, list ]\
-[ a Widget, updateAction, ADDING NOTIFIER!, sublist, 112231282, message, index ]\
-\cf3 \
+\
+[ a \cf4 Widget\cf3 , updateAction, \cf4 ADDING\cf3  \cf4 NOTIFIER\cf3 !, list, -1684471419, message, list ]\
+[ a \cf4 Widget\cf3 , updateAction, \cf4 ADDING\cf3  \cf4 NOTIFIER\cf3 !, list, -1684471419, message, index ]\
+[ a \cf4 Widget\cf3 , updateAction, \cf4 ADDING\cf3  \cf4 NOTIFIER\cf3 !, sublist, 112231282, message, list ]\
+[ a \cf4 Widget\cf3 , updateAction, \cf4 ADDING\cf3  \cf4 NOTIFIER\cf3 !, sublist, 112231282, message, index ]\
+\
+\
+\
+\
 }

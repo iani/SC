@@ -67,40 +67,28 @@ ProxyItem : NamedItem {
 		source = argSnippet.interpret;
 		if (source.isValidProxyCode) {
 			item.source = source;
-			this.specs = this.parseArguments(argSnippet);
+			this.parseSnippetArguments(argSnippet);
 			if (addToSourceHistory) { this.addSnippet(argSnippet); };
 			if (item.rate === \audio and: { start } and: { item.isMonitoring.not }) {
-				item.play;
+				item.play; 
 			};
 		}{
 			postf("snippet: %\n", argSnippet);
 		}
-//		^item;
 	}
 
-	parseArguments { | argSnippet |
-/*
-		var proxyArgs, paramNames, paramValues;
+	parseSnippetArguments { | argSnippet |
 		var snippetHeader, snippetKeys, snippetVals;
-		var finalSpecs;
-		if (item.isNil) { ^this.nilSpecs };
 		snippetHeader = argSnippet.findRegexp("^//[^[]*([^\n]*)");
 		if (snippetHeader.size > 0) {
 			#snippetKeys, snippetVals = (snippetHeader[1][1].interpret ?? { [] }).clump(2).flop;
 		};
-		
-		
-		if (rate === \audio) {
-			finalSpecs = extraSpecs ++ mergedSpecs
-		}{
-			finalSpecs = this.class.nilSpecs ++ mergedSpecs
-		};
-		cachedSpecs[proxy] = finalSpecs;
-		^finalSpecs;
-*/	}
+		this.inspect;
+//		snippetVals = 
+		// NOT CoMPLETED!!!!
+	}
 
 	nilSpecs { ^['-', nil] }
-
 
 	checkEvalPlay {
 		/* If NodeProxy has no source yet, eval first snippet to give it source before playing */

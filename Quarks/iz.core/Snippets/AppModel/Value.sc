@@ -46,15 +46,12 @@ Value {
 	sublistOf { | superList, getListFunction |
 		this.adapter = ListAdapter();
 		 // vary this to get different parts of the item
-		getListFunction ?? { getListFunction = { | sublist |
-			"****default**** sublist func SETS NEW LIST FOR THE SUBLIST!".postln; sublist }; };
+		getListFunction ?? { getListFunction = { | sublist | sublist }; };
 		if (superList isKindOf: Symbol) { superList = model.getValue(superList); };
 		this.addNotifier(superList, \list, {
-			"sublistOf method of Value Class DOES CALL!: getListFunction, for 'list'".postln;
 			this.adapter.items_(this, getListFunction.(superList.adapter.item, this));
 		});
 		this.addNotifier(superList, \index, {
-			"sublistOf method of Value Class DOES CALL!: getListFunction, for 'index'".postln;
 			this.adapter.items_(this, getListFunction.(superList.adapter.item, this));
 		});
 	}
@@ -157,7 +154,6 @@ Widget {
 		// Add an action to be done when receiving the specified message from my value-adapter.
 		// Pass the sender to the action, to avoid updating self if this is a problem.
 		// Also make myself available to the action function.
-		[this, thisMethod.name, "ADDING NOTIFIER!", name, this.hash, "message", message].postln;
 		this.addNotifier(value, message, { | sender | action.(sender, this) });
 	}
 	
@@ -266,20 +262,13 @@ Widget {
 	// ======== List views: ListView, PopUpMenu =======
 	list { | getListAction |
 		value.adapter ?? { value.adapter = ListAdapter(value) };
-		getListAction = getListAction ?? { { 
-
-			postf("WIDGET: '%' DEFAULT getlist action from Widget:list, for 'list' GETS CURRENT LIST ITEMS\n", name);
-			
-			
-			value.adapter.items collect: _.asString } };
+		getListAction = getListAction ?? { { value.adapter.items collect: _.asString } };
 		view.action = { value.adapter.index_(this, view.value) };
 		this.updateAction(\list, { // | sender |
-			postf("WIDGET: '%' : performing 'list'. WILL NOW CALL getListAction:...\n", name);
 			view.items = getListAction.(this);
 			view.value = value.adapter.index;
 		});
 		this.updateAction(\index, { // | sender |
-			postf("WIDGET: '%' performing 'index'. Will NOT call the getListAction\n", name);
 			/* if (sender !== this) { */
 			view.value = value.adapter.index
 			// }
@@ -387,6 +376,7 @@ Widget {
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
 		this.updater(proxySpace, \list, { this.items_(proxySpace.proxies) });
 		value.changed(\initProxyControls);	// Initialize proxyWatchers etc. created before me
+		[this, thisMethod.name, this.index, this.item, this.items].postln;
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
@@ -440,8 +430,7 @@ Widget {
 			});
 		}{
 			this.sublistOf(proxyList, { | item |
-//				"this is sublistOf calling item specs and these are the specs".postln;
-				item !? { item.specs.postln; }
+				item !? { item.specs }
 			});
 			if (autoSelect.isNil) {
 				this.list({ | me |

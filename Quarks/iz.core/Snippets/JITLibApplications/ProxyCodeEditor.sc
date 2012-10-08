@@ -113,8 +113,7 @@ ProxyCodeEditor : AppModel {
 					editor = this.getValue(\editor);
 					snippet = editor.getString;
 					if (me.item.item.isNil or: { me.item.item.source.isNil }) {
-						this.evalSnippet(snippet, start: true, addToSourceHistory: false
-						);
+						me.item.evalSnippet(snippet, start: true, addToSourceHistory: false);
 					}{
 						me.item.play;
 					};
@@ -128,7 +127,7 @@ ProxyCodeEditor : AppModel {
 				this.button(\editor).action_({ | widget |
 					var snippet;
 					snippet = widget.value.getString;
-					this.evalSnippet(snippet, start: false, addToSourceHistory: false);
+					this.proxyItem.evalSnippet(snippet, start: false, addToSourceHistory: false);
 					// eval button must re-send current string to editor
 					widget.value.changed(\restore, snippet); // to restore from history update
 				}).view.states_([["eval"]]).font_(font),

@@ -89,7 +89,7 @@ ScriptListGui : AppModel {
 				[this.snippetViews, s: 5],	
 			);
 			// open current file when re-opening
-			files.item !? { files.notify(\index, files); };
+			files.item !? { files.changed(\index, files); };
 			this.windowClosed(w, { this.saveLists });
 			ShutDown add: { this.saveLists };
 		})
@@ -111,7 +111,7 @@ ScriptListGui : AppModel {
 			this.makeNameButton(
 				"Edit name, press 'return' key to rename selected list:",
 				{ this.getValue(\scriptLists).item.name ++ "_" }, \scriptLists,
-				{ | list, string | list.item.name = string; list.notify(\list) }, "rename"
+				{ | list, string | list.item.name = string; list.changed(\list) }, "rename"
 			),
 			this.button(\scriptLists).action_({ | me | me.value.adapter.delete })
 				.view.states_([["delete"]]).font_(font),
@@ -125,11 +125,11 @@ ScriptListGui : AppModel {
 
 	makeNameButton { | label, namePrefix, valueSelector, action, buttonString |
 			^this.button(\nameList).toggleShow.resetOn.addAction({ | me | 
-				me.value.notify(\changeTo, [
+				me.value.changed(\changeTo, 
 					label,
 					namePrefix.value ++ Date.getDate.stamp,
 					{ | namer | action.(this.getValue(valueSelector), namer.view.string) }
-				])
+				)
 			})
 			.view.states_([[buttonString], ["cancel", Color.red, Color.black]]).font_(font);
 	}
@@ -151,7 +151,7 @@ ScriptListGui : AppModel {
 			this.makeNameButton(
 				"Edit name, press 'return' key to rename selected list:",
 				{ this.getValue(\scripts).item.name ++ "_" }, \scripts,
-				{ | list, string | list.item.name = string; list.notify(\list) }, "rename"
+				{ | list, string | list.item.name = string; list.changed(\list) }, "rename"
 			),
 			this.button(\scripts).changedAction(\delete).view.states_([["delete"]]).font_(font),
 			this.button(\scripts)
@@ -223,7 +223,7 @@ ScriptListGui : AppModel {
 			proxyDoc = argProxyDoc;
 			if (proxyDoc.notNil) {
 				me.addNotifier(proxyDoc.proxySpace, \list, {
-					me.value.notify(\proxies, [proxyDoc.proxyItems[1..]]);
+					me.value.changed(\proxies, proxyDoc.proxyItems[1..]);
 				});
 				proxyDoc.proxyItems[1..];
 			}{ [] };
@@ -245,7 +245,7 @@ ScriptListGui : AppModel {
 						me.value.adapter.append(me, this.defaultSnippet(proxyItem))
 					};
 					snippetViews.index = me.view.value;
-					if (me.view.value == 0) { me.value.notify(\replace); }
+					if (me.view.value == 0) { me.value.changed(\replace); }
 				};
 			})
 			.view.font_(font).states_([["edit", nil, Color.yellow], ["save", Color.red]]),
@@ -299,7 +299,7 @@ ScriptListGui : AppModel {
 				.action_({ | me |
 					this.makeProxy(me.view.string);	// make proxy
 					me.show(false);				// hide myself + my static text label
-					me.value.notify(\reset);		// reset button to state "new proxy"
+					me.value.changed(\reset);		// reset button to state "new proxy"
 					me.last;
 				})
 				.showOn(show: false).view.font_(font).string_("out"), s: 3],
