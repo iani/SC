@@ -120,7 +120,7 @@ Notification {
 	// Utilities 
 	addNotifierOneShot { | notifier, message, action | 
 		Notification(notifier, message, this, { | ... args | 
-			action.(args); 
+			action.(*args); 
 			args.last.remove; 
 		}); 
 	} 
