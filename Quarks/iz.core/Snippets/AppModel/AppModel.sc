@@ -102,6 +102,67 @@ AppModel {
 		^Widget(this, name, view ?? { TextField() }).listItem(getItemFunc);
 	}
 
+	// GUI for editing names of items, creating new items and deleting items.
+	// Consists of a HLayout with a StaticText, TextField, and a Cancel button.
+	// Visibility of these items is toggled by receiving updates from itemEditMenu
+	// The items contents and actions can change to apply the same views work with any number
+	// of different lists. So many different lists can be edited by one single itemEditor gui,
+	// The connection of a new list to the editor GUI is done with method itemEditMenu. 
+	// UNDER DEVELOPMENT
+	itemEditor { | name = \editor |
+		var itemEditMenu; // the menu currently editing: used tby he button action
+		^HLayout( // TODO: Add functionality!
+		// TODO: MUST USE showOn to change visibility. Using func complicates matters unreasonably
+		// itemFunc is used only as action for the textField
+			this.staticText(name) // string changes according to list name + action type
+			.updateActionArray(\changeTo, { | f, label, n, m, t, me | me.view.string = label; })
+			.showOn(\show, false).view,
+			// TODO: The textField's getItemFunc, delete, and rename funcs
+			// must be customizable, and able to access different lists
+			this.textField(name).showOn(\show, false)
+			// string changes according to item from list
+			// and action changes according to action type + list
+			.updateActionArray(\changeTo, { | f, l, name, m, t, me | me.view.string = name; })
+			.view,
+			this.button(name).showOn(\show, false)
+			.updateActionArray(\changeTo, { | f, l, n, argMenu | itemEditMenu = argMenu; })
+			.view.action_({ itemEditMenu.view.valueAction = 0; }).states_([["Cancel"]]),
+		);
+	}
+
+	// Make menu for editing the items of a list
+	// The menu actions send notifications to an itemEditor item (see method above).
+	// The itemEditor changes its display and actions to work with the required list. 
+	itemEditMenu { | name = \list, newItemFunc, renameItemFunc, deleteItemFunc, editor = \editor |
+		var menu, menuItems, cancelFunc;
+		menu = this.popUpMenu(name);
+		editor = this.getValue(editor);
+		menuItems = ["Edit menu for " ++ name, "New", "Rename", "Delete"];
+		menu.updateAction(\list, { menuItems });
+		menu.updateAction(\index, { menuItems });
+		// TODO: Create func + name getting defaults!
+		newItemFunc = { | me |
+			me.view.visible = true;
+		};
+		renameItemFunc = { | me | me.view.visible = true };
+		deleteItemFunc = { | me | me.view.visible = true };
+		menu.action = { | me |
+			editor.changed(\show, [false][me.view.value] ? true);
+			editor.changed(\changeTo,
+				*([
+				[cancelFunc, "", "asdf".scramble, menu],
+				[newItemFunc, "Edit, then type 'Return' to create new item:", "asdf".scramble,
+					menu],
+				[renameItemFunc, "Edit, then type 'Return' to change the name of this item:",
+					"asdf".scramble, menu],
+				[deleteItemFunc, "Type 'Return' to delete this item:", "asdf".scramble, menu],
+				][me.view.value])
+			);
+		};
+		menu.view.items = menuItems;
+		^menu;
+	}
+
 	radioButtons { | name, items, selectFunc, unselectFunc, onState, offState |
 		// returns array of Button Views (not Widgets)
 		this.getValue(name).adapter = ListAdapter(nil, items);

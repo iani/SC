@@ -288,7 +288,7 @@ Widget {
 
 	listItem { | getItemFunc | // display currently selected item from a list.
 		value.adapter ?? { value.adapter = ListAdapter() };
-		getItemFunc = getItemFunc ?? { { this.item.asString } };
+		getItemFunc = getItemFunc ?? { { this.item.asString } }; // TODO: remove defer?
 		this.updateAction(\list, { { view.string = getItemFunc.(this) }.defer(0.2) });
 		this.updateAction(\index, { { view.string = getItemFunc.(this) }.defer(0.2) });
 		this.replace;		// default action is replace item with your content
@@ -369,7 +369,7 @@ Widget {
 	lastItem { view.action = { value.adapter.last } }
 	previousItem { view.action = { value.adapter.previous } }
 	nextItem { view.action = { value.adapter.next } }
-	
+
 	// NodeProxy stuff
 	
 	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
@@ -487,7 +487,7 @@ Widget {
 
 	// Hiding views
 	showOn { | message = \show, show = true |
-		// send this to make my view toggle its visibility when notified message (true/false)
+		// send this to make my view toggle its visibility when notified message + true/false
 		this.updateAction(message, { | showP, me | me.view.visible = showP });
 		view.visible = show;
 	}
