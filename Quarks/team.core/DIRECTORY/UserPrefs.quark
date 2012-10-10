@@ -1,0 +1,14 @@
+(
+	\name: "UserPrefs",
+	\path: "mc/UserPrefs",
+	\summary: "",
+	\helpdoc: "",
+	\author: "Martin Carle",
+	\version: 1.0,
+	\organization: "Humboldt Universität zu Berlin",
+	\country: "Greece",
+	\since: "2011",
+	\url: "---",
+	\dependencies: []
+)
+

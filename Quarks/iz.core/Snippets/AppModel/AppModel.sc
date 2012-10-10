@@ -165,7 +165,7 @@ AppModel {
 				[newItemFunc, "Edit, then type 'return' to create new item:", 
 					"asdf".scramble,
 					menu],
-				[renameItemFunc, "Edit, then type 'return' to change the name of this item:",
+				[renameItemFunc, "Edit, then type 'return' to change this item:",
 					"asdf".scramble, 
 					menu],
 				[deleteItemFunc, "Type 'return' to delete this item:", 
