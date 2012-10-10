@@ -104,33 +104,36 @@ Notification {
 		Notification.remove(notifier, message, this); 
 	} 
 
-	addListener { | listener, message, action | 
-		Notification(this, message, listener, action); 
-	} 
+//	addListener { | listener, message, action | 
+//		Notification(this, message, listener, action); 
+//	} 
 
-	removeListener { | listener, message | 
-		Notification.remove(this, message, listener); 
-	} 
+//	removeListener { | listener, message | 
+//		Notification.remove(this, message, listener); 
+//	} 
 
-	objectClosed { 
+//	objectClosed { 
+//		Notification.removeNotifiersOf(this);
+//		Notification.removeListenersOf(this);
+//	}
+	
+	release {
 		Notification.removeNotifiersOf(this);
 		Notification.removeListenersOf(this);
-//mc add:		
 		this.releaseDependants;
-	} 
+	}
 
 	// Utilities 
 	addNotifierOneShot { | notifier, message, action | 
 		Notification(notifier, message, this, { | ... args | 
-//mc change:			
 			action.(*args); //action.(args); 
 			args.last.remove; 
 		}); 
 	} 
 
-	addListenerOneShot { | listener, message, action | 
-		listener.addNotifierOneShot(this, message, action); 
-	} 
+//	addListenerOneShot { | listener, message, action | 
+//		listener.addNotifierOneShot(this, message, action); 
+//	} 
 
 	addNotifierAction { | notifier, message, action | 
 		var notification; 
@@ -142,7 +145,7 @@ Notification {
 		} 
 	} 
 
-	addListenerAction { | listener, message, action | 
-		listener.addNotifierAction(this, message, action); 
-	} 
+//	addListenerAction { | listener, message, action | 
+//		listener.addNotifierAction(this, message, action); 
+//	} 
 }
