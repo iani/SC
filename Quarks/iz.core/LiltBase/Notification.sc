@@ -114,13 +114,16 @@ Notification {
 
 	objectClosed { 
 		Notification.removeNotifiersOf(this);
-		Notification.removeListenersOf(this); 
+		Notification.removeListenersOf(this);
+//mc add:		
+		this.releaseDependants;
 	} 
 
 	// Utilities 
 	addNotifierOneShot { | notifier, message, action | 
 		Notification(notifier, message, this, { | ... args | 
-			action.(args); 
+//mc change:			
+			action.(*args); //action.(args); 
 			args.last.remove; 
 		}); 
 	} 
