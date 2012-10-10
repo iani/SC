@@ -116,12 +116,18 @@ Notification {
 //		Notification.removeNotifiersOf(this);
 //		Notification.removeListenersOf(this);
 //	}
-	
-	release {
+
+	releaseNotifications {
 		Notification.removeNotifiersOf(this);
 		Notification.removeListenersOf(this);
-		this.releaseDependants;
 	}
+
+	release {
+		this.releaseNotifications;
+		this.releaseDependants
+	}
+	
+	
 
 	// Utilities 
 	addNotifierOneShot { | notifier, message, action | 
