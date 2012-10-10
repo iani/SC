@@ -112,9 +112,9 @@ AppModel {
 	itemEditor { | name = \editor |
 		var itemEditMenu; // the menu currently editing: used tby he button action
 		^HLayout( // TODO: Add functionality!
-		// TODO: MUST USE showOn to change visibility. Using func complicates matters unreasonably
 		// itemFunc is used only as action for the textField
 			this.staticText(name) // string changes according to list name + action type
+			.updateAction(\text, {})
 			.updateActionArray(\changeTo, { | f, label, n, m, t, me | me.view.string = label; })
 			.showOn(\show, false).view,
 			// TODO: The textField's getItemFunc, delete, and rename funcs
@@ -122,10 +122,17 @@ AppModel {
 			this.textField(name).showOn(\show, false)
 			// string changes according to item from list
 			// and action changes according to action type + list
-			.updateActionArray(\changeTo, { | f, l, name, m, t, me | me.view.string = name; })
+			.updateActionArray(\changeTo, { | func, l, name, m, t, me |
+				me.action = func;
+				me.view.string = name;
+			})
 			.view,
 			this.button(name).showOn(\show, false)
-			.updateActionArray(\changeTo, { | f, l, n, argMenu | itemEditMenu = argMenu; })
+			.updateActionArray(\changeTo, { | f, l, n, argMenu |
+				// Other menus should reset here!: 
+				itemEditMenu.value.changed(\editAction, argMenu);
+				itemEditMenu = argMenu;
+			})
 			.view.action_({ itemEditMenu.view.valueAction = 0; }).states_([["Cancel"]]),
 		);
 	}
@@ -137,25 +144,33 @@ AppModel {
 		var menu, menuItems, cancelFunc;
 		menu = this.popUpMenu(name);
 		editor = this.getValue(editor);
-		menuItems = ["Edit menu for " ++ name, "New", "Rename", "Delete"];
+		menuItems = [format("Edit menu for '%'", name), 
+			format("New '%' item", name),
+			format("Rename '%' item", name),
+			format("Delete '%' item", name),
+		];
 		menu.updateAction(\list, { menuItems });
 		menu.updateAction(\index, { menuItems });
-		// TODO: Create func + name getting defaults!
-		newItemFunc = { | me |
-			me.view.visible = true;
-		};
-		renameItemFunc = { | me | me.view.visible = true };
-		deleteItemFunc = { | me | me.view.visible = true };
+		menu.updateActionArray(\editAction, { | sender, notification, me |
+			if (sender !== me) { me.view.value = 0 };
+		});
+		newItemFunc = newItemFunc ?? {{ | me | menu append: me.view.string; }};
+		renameItemFunc = renameItemFunc ?? {{ | me | menu.item = me.view.string }};
+		deleteItemFunc = deleteItemFunc ?? {{ menu.delete }};
 		menu.action = { | me |
 			editor.changed(\show, [false][me.view.value] ? true);
 			editor.changed(\changeTo,
 				*([
-				[cancelFunc, "", "asdf".scramble, menu],
-				[newItemFunc, "Edit, then type 'Return' to create new item:", "asdf".scramble,
+				[cancelFunc, "", "", menu],
+				[newItemFunc, "Edit, then type 'return' to create new item:", 
+					"asdf".scramble,
 					menu],
-				[renameItemFunc, "Edit, then type 'Return' to change the name of this item:",
-					"asdf".scramble, menu],
-				[deleteItemFunc, "Type 'Return' to delete this item:", "asdf".scramble, menu],
+				[renameItemFunc, "Edit, then type 'return' to change the name of this item:",
+					"asdf".scramble, 
+					menu],
+				[deleteItemFunc, "Type 'return' to delete this item:", 
+					"asdf".scramble, 
+					menu],
 				][me.view.value])
 			);
 		};
