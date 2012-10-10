@@ -55,7 +55,8 @@ Resource {
 		var reallyRemoved;
 		reallyRemoved = objects.removeEmptyAtPath(key);
 		if (reallyRemoved.notNil) {
-			this.notify(this.removedMessage, this);
+				//this.notify(this.removedMessage, this);
+			this.changed(this.removedMessage, this)
 		};
 		// remove all notification connections added with Object:addNotifier, addListener :
 		this.objectClosed;
