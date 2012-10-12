@@ -1,5 +1,9 @@
 /* 
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Moved to team.core/iani/ Thu 11 October 2012  8:40 AM EEST
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 Enable adding message-specific calls using the changed/update mechanism of Object. 
 
 Usage: 

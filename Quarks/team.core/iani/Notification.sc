@@ -78,6 +78,14 @@ Notification {
 		all.removeEmptyAt(notifier, listener, message); 
 	} 
 
+	*removeMessage { | message, listener |
+		all leafDo: { | path, notification |
+			if (notification.message === message and: { notification.listener === listener }) {
+				notification.remove;
+			}
+		}		
+	}
+
 	*removeListenersOf { | notifier | 
 		all.leafDoFrom(notifier, { | path, notification | 
 			notification.notifier.removeDependant(notification); 
@@ -104,42 +112,29 @@ Notification {
 		Notification.remove(notifier, message, this); 
 	} 
 
-//	addListener { | listener, message, action | 
-//		Notification(this, message, listener, action); 
-//	} 
+	// First remove any previous notifier that sends me this message, then add notifier, message
+	replaceNotifier { | notifier, message, action |
+		this removeMessage: message;
+		this.addNotifier(notifier, message, action);
+	} 
 
-//	removeListener { | listener, message | 
-//		Notification.remove(this, message, listener); 
-//	} 
+	// remove any notifiers that send me message
+	removeMessage { | message |
+		Notification.removeMessage(message, this);
+	}
 
-//	objectClosed { 
-//		Notification.removeNotifiersOf(this);
-//		Notification.removeListenersOf(this);
-//	}
-
-	releaseNotifications {
+	objectClosed { 
 		Notification.removeNotifiersOf(this);
 		Notification.removeListenersOf(this);
-	}
+		this.releaseDependants;
+	}	
 
-	release {
-		this.releaseNotifications;
-		this.releaseDependants
-	}
-	
-	
-
-	// Utilities 
 	addNotifierOneShot { | notifier, message, action | 
 		Notification(notifier, message, this, { | ... args | 
 			action.(*args); //action.(args); 
 			args.last.remove; 
 		}); 
 	} 
-
-//	addListenerOneShot { | listener, message, action | 
-//		listener.addNotifierOneShot(this, message, action); 
-//	} 
 
 	addNotifierAction { | notifier, message, action | 
 		var notification; 
@@ -150,8 +145,4 @@ Notification {
 			notification.action = notification.action addFunc: action; 
 		} 
 	} 
-
-//	addListenerAction { | listener, message, action | 
-//		listener.addNotifierAction(this, message, action); 
-//	} 
 }

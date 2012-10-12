@@ -29,9 +29,9 @@ AppModel {
 	}
 
 	// removing connections and inputs
-	objectClosed { // not used yet?
-		super.objectClosed;
-		values do: _.objectClosed;
+	release { // not used yet?
+		super.release;
+		values do: _.release;
 	}
 
 	// enabling and disabling MIDI and OSC input
@@ -108,71 +108,45 @@ AppModel {
 	// The items contents and actions can change to apply the same views work with any number
 	// of different lists. So many different lists can be edited by one single itemEditor gui,
 	// The connection of a new list to the editor GUI is done with method itemEditMenu. 
-	// UNDER DEVELOPMENT
-	itemEditor { | name = \editor |
-		var itemEditMenu; // the menu currently editing: used tby he button action
-		^HLayout( // TODO: Add functionality!
-		// itemFunc is used only as action for the textField
-			this.staticText(name) // string changes according to list name + action type
-			.updateAction(\text, {})
-			.updateActionArray(\changeTo, { | f, label, n, m, t, me | me.view.string = label; })
-			.showOn(\show, false).view,
-			// TODO: The textField's getItemFunc, delete, and rename funcs
-			// must be customizable, and able to access different lists
-			this.textField(name).showOn(\show, false)
-			// string changes according to item from list
-			// and action changes according to action type + list
-			.updateActionArray(\changeTo, { | func, l, name, m, t, me |
-				me.action = func;
-				me.view.string = name;
-			})
-			.view,
-			this.button(name).showOn(\show, false)
-			.updateActionArray(\changeTo, { | f, l, n, argMenu |
-				// Other menus should reset here!: 
-				itemEditMenu.value.changed(\editAction, argMenu);
-				itemEditMenu = argMenu;
-			})
-			.view.action_({ itemEditMenu.view.valueAction = 0; }).states_([["Cancel"]]),
-		);
-	}
+	itemEditor { | name = \editor | ^ListItemEditor(this, name).gui; }
 
 	// Make menu for editing the items of a list
 	// The menu actions send notifications to an itemEditor item (see method above).
 	// The itemEditor changes its display and actions to work with the required list. 
-	itemEditMenu { | name = \list, newItemFunc, renameItemFunc, deleteItemFunc, editor = \editor |
-		var menu, menuItems, cancelFunc;
+	itemEditMenu { | name = \list, getFunc, newFunc, renameFunc, deleteFunc, editor = \editor |
+		var menu, menuItems;
 		menu = this.popUpMenu(name);
 		editor = this.getValue(editor);
-		menuItems = [format("Edit menu for '%'", name), 
-			format("New '%' item", name),
-			format("Rename '%' item", name),
-			format("Delete '%' item", name),
+		getFunc = getFunc ?? {{ | me | me.item.asString }};
+		newFunc = newFunc ?? {{ | me, string | me.value.append(string) }};
+		renameFunc = renameFunc ?? {{ | me, string | me.value.replace(string, me.value.index) }};
+		deleteFunc = deleteFunc ?? {{ | me | me.value.adapter.delete(me) }};
+		menuItems = [format("Edit '%':", name), 
+			format("New % item", name),
+			format("Rename % item", name),
+			format("Delete % item", name),
 		];
 		menu.updateAction(\list, { menuItems });
 		menu.updateAction(\index, { menuItems });
-		menu.updateActionArray(\editAction, { | sender, notification, me |
-			if (sender !== me) { me.view.value = 0 };
+		menu.updater(editor, \itemName, { | me, sender, stringRef |
+			if (menu === sender) { stringRef.value = getFunc.(menu, editor) };
 		});
-		newItemFunc = newItemFunc ?? {{ | me | menu append: me.view.string; }};
-		renameItemFunc = renameItemFunc ?? {{ | me | menu.item = me.view.string }};
-		deleteItemFunc = deleteItemFunc ?? {{ menu.delete }};
+		menu.updater(editor, \append, { | me, sender, stringRef |
+			if (me === sender) { newFunc.(me, stringRef) };
+		});
+		menu.updater(editor, \rename, { | me, sender, stringRef |
+			if (me === sender) { renameFunc.(me, stringRef) };
+		});
+		menu.updater(editor, \delete, { | me, sender |
+			if (me === sender) { deleteFunc.(me) };
+		});
+		menu.addNotifier(editor, \cancel, { menu.view.value = 0 });
+		menu.updater(editor, \menu, { | me, activeMenu |
+			if (me !== activeMenu) { me.view.value = 0 }
+		});
 		menu.action = { | me |
-			editor.changed(\show, [false][me.view.value] ? true);
-			editor.changed(\changeTo,
-				*([
-				[cancelFunc, "", "", menu],
-				[newItemFunc, "Edit, then type 'return' to create new item:", 
-					"asdf".scramble,
-					menu],
-				[renameItemFunc, "Edit, then type 'return' to change this item:",
-					"asdf".scramble, 
-					menu],
-				[deleteItemFunc, "Type 'return' to delete this item:", 
-					"asdf".scramble, 
-					menu],
-				][me.view.value])
-			);
+			editor.changed(\menu, me);	// reset selection of any other dependent menus
+			editor.adapter.perform([\cancel, \append, \rename, \delete][me.view.value], me)
 		};
 		menu.view.items = menuItems;
 		^menu;
@@ -191,7 +165,7 @@ AppModel {
 			if (me.value.index == index) {
 				me.view.value = 0;
 				selectFunc.(me, sender);	// do this with the newly selected item
-			} { me.view.value = 1 };
+			}{ me.view.value = 1 };
 		};
 		onState ?? { onState = [index, nil, Color.yellow] };
 		offState ?? { offState = [index] };

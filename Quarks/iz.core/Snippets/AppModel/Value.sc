@@ -40,7 +40,7 @@ Value {
 	index { ^adapter.index }
 	append { | item | adapter.append(this, item) }
 	insert { | item, index | adapter.insert(this, item, index) }
-	replace { | item, index | adapter.append(this, item, index) }
+	replace { | item, index | adapter.replace(this, item, index) }
 
 	// make me get my list from the item of another list
 	sublistOf { | superList, getListFunction |
@@ -305,6 +305,7 @@ Widget {
 		itemCreationFunc = itemCreationFunc ?? { { view.string } };
 		view.action = { value.adapter.replace(this, itemCreationFunc.(this)); }
 	}
+
 	replaceOn { | itemCreationFunc, message = \replace |
 		// upon receiving message, replace current item in list with item you created
 		itemCreationFunc = itemCreationFunc ?? { { view.string } };
