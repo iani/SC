@@ -121,7 +121,7 @@ AppModel {
 		newFunc = newFunc ?? {{ | me, string | me.value.append(string) }};
 		renameFunc = renameFunc ?? {{ | me, string | me.value.replace(string, me.value.index) }};
 		deleteFunc = deleteFunc ?? {{ | me | me.value.adapter.delete(me) }};
-		menuItems = [format("Edit '%':", name), 
+		menuItems = [format("Edit %...", name), 
 			format("New % item", name),
 			format("Rename % item", name),
 			format("Delete % item", name),
@@ -140,15 +140,25 @@ AppModel {
 		menu.updater(editor, \delete, { | me, sender |
 			if (me === sender) { deleteFunc.(me) };
 		});
-		menu.addNotifier(editor, \cancel, { menu.view.value = 0 });
+		menu.addNotifier(editor, \cancel, {
+			menu.view.stringColor = Color.black;
+			menu.view.background = Color.white;
+			menu.view.value = 0;
+		});
 		menu.updater(editor, \menu, { | me, activeMenu |
-			if (me !== activeMenu) { me.view.value = 0 }
+			if (me !== activeMenu) {
+				me.view.stringColor = Color.black;
+				me.view.background = Color.white;
+				me.view.value = 0;
+			}
 		});
 		menu.action = { | me |
 			editor.changed(\menu, me);	// reset selection of any other dependent menus
+			me.view.stringColor = [Color.white, Color.blue, Color.green, Color.red][me.view.value];
+			me.view.background = [Color.black, Color.white, Color.black, Color.white][me.view.value];
 			editor.adapter.perform([\cancel, \append, \rename, \delete][me.view.value], me)
 		};
-		menu.view.items = menuItems;
+		menu.view.items_(menuItems);
 		^menu;
 	}
 
