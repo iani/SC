@@ -15,7 +15,6 @@ Dock {
 	*initClass { StartUp add: this }
 	
 	*doOnStartUp {
-
 		shortcutDocMenuItems = Array.newClear(10);
 		shortcutDocs = Array.newClear(10);
 		shortcutDocPaths = Archive.global at: \shortCutDocs;

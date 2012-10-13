@@ -41,7 +41,9 @@ Panes {
 
 	*doOnStartUp {
 		this.loadPrefs; //mc
-		this.updatePrefs; // iz (TODO: sort ouf how updatePrefs and loadPrefs work together)
+		//this.updatePrefs; // iz (TODO: sort ouf how updatePrefs and loadPrefs work together
+//mc: nice, but please not at startup because it overwrites deliberately set prefs (like mine)-:
+//proposed solution: make 'updatePrefs' an entry at the Utils menu (with or without keyboard shortcut)
 		this.addMenu;
 		Code.addMenu;
 		Dock.addMenu;
@@ -280,7 +282,7 @@ Panes {
 		}{ 	newMultiPaneAreaWidth = Window.screenBounds.width };
 		if (newMultiPaneAreaWidth != multiPaneAreaWidth) {
 			multiPaneAreaWidth = newMultiPaneAreaWidth;
-//			this.rearrangeAllDocs;
+			//this.rearrangeAllDocs;
 			Dock.positionDocListWindowLeftFrom(multiPaneAreaWidth);
 		} 
 	}

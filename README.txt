@@ -65,6 +65,7 @@ Choose iz.local from the Quarks menu.  Recommended Quarks to try out are:
 - ServerGui (Alternative, more compact GUI for the Servers, by Sergio Luque)
 - Chains (Alternative score-writing class for scheduling execution of functions with patterns)
 
+
 New Application Framework: AppModel 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -82,7 +83,7 @@ A second version of the above is given in classes AppModel2, Value, Widget, Numb
 NotificationCenter additions: Flexible messaging with cleanup "objectClosed" 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shotening and clarifying the code required to use NotificationCenter.
+Simplify the connection of objects for sending messages to each other via NotificationCenter. Automate the creation of mutual NotificationCenter registrations to messages, and their removal when an object receives the message objectClosed. This makes it easier to establish messaging between objects in the manner of the Observer pattern exemplified by classes Model and SimpleController, while shortening and clarifying the code required to use NotificationCenter.
 
 The advantage gained is that it is no longer needed to check whether an object stored in a variable is nil in order to decide whether to send it a message. One can create messaging interconnections between objects without storing one in a variable of the other, and one can safely send a message to an object before it is created or after it is no longer a valid receiver of that message.  Notification connections can be removed by method objectClosed, which can be called when a view or other dependent object closes.
 
