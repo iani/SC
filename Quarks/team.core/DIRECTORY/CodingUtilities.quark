@@ -1,7 +1,7 @@
 (
-	\name: "Notification",
-	\path: "iani",
-	\summary: "Alternative to NotificationCenter, compatible and merged to changed/update of Object",
+	\name: "CodingUtilities",
+	\path: "iani/CodingUtilities",
+	\summary: "CodingUtilities",
 	\helpdoc: "",
 	\author: "Iannis Zannis",
 	\version: 1.0,

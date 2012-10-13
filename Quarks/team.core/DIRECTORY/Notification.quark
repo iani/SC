@@ -1,0 +1,14 @@
+(
+	\name: "Notification",
+	\path: "iani/Notification",
+	\summary: "Alternative to NotificationCenter, compatible and merged to changed/update of Object",
+	\helpdoc: "",
+	\author: "Iannis Zannis",
+	\version: 1.0,
+	\organization: "Ionian University",
+	\country: "Greece",
+	\since: "2011",
+	\url: "---",
+	\dependencies: []
+)
+

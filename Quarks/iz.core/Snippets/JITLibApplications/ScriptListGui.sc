@@ -51,7 +51,12 @@ ScriptListGui : AppModel {
 	*initClass {
 		StartUp add: {
 			CocoaMenuItem.add(["Scripts"], { this.new });
-			font = Font.default.size_(10);
+			if (GUI.current == CocoaGUI) { font = SCFont.monospace(10).postln } { //mc
+				
+				GUI.current.class.postln;
+				
+				font = Font.default.size_(10);
+			}; //mc
 		};
 	}
 
