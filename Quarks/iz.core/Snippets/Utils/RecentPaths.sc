@@ -21,11 +21,11 @@ RecentPaths {
 	var <objectID, <>numHistoryItems = 20, <paths;
 
 	*open { | objectID, action |
-		^this.new(objectID).open(action);
+		^this.new(objectID.asSymbol).open(action);
 	}
 
 	*save { | objectID, action |
-		^this.new(objectID).save(action);
+		^this.new(objectID.asSymbol).save(action);
 	}
 
 	*new { | objectID, numHistoryItems = 20 |

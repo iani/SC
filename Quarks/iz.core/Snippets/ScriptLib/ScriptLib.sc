@@ -42,7 +42,7 @@ ScriptLib {
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
 
 	*open {
-		RecentPaths.open(this, { | path |
+		RecentPaths.open(this.asSymbol, { | path |
 			var instance;
 			path = path.asSymbol;
 			instance = all[path];
@@ -62,7 +62,7 @@ ScriptLib {
 
 	path { ^all findKeyForValue: this }
 
-	saveDialog { RecentPaths.save(this.class, { | path | this saveToPath: path }); }
+	saveDialog { RecentPaths.save(this.class.asSymbol, { | path | this saveToPath: path }); }
 
 	saveToPath { | path |
 		this.path = path;
