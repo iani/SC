@@ -31,10 +31,13 @@ RepQuarks : Quarks {
 		if (menu.isNil) {
 			menu = SCMenuGroup(nil, menuName, 10);
 		};
-		SCMenuItem(menu, "quarks").action = { Quarks.gui };
-		SCMenuItem(menu, "sc3-plugins").action = {
-			Quarks(localPath: (Platform.userAppSupportDir +/+ "sc3-plugins")).gui
-		};
+		SCMenuItem(menu, "quarks").action = { RepQuarks.gui }; //mc 
+									// (tricky -> see diff of Quarks.sc in SC3.4 and SC3.5 !!!)
+									
+//mc: switched off again, since new 'sc3-plugins-3.5.2' are not organised in Quarks anymore :-(
+//		SCMenuItem(menu, "sc3plugins").action = {
+//			RepQuarks(localPath: (Platform.userAppSupportDir +/+ "SC3plugins")).gui //mc
+//		};
 	}
 
 	*addToMenu { | itemName, path |
@@ -139,11 +142,20 @@ RepQuarks : Quarks {
 		^local.quarks select: { | q | this.installPath(q).pathMatch.notEmpty }
 	}
 
+/////////////
+//mc: installPath now kills subdirs of a quark definition!
+// -> wouldn't it be better to further allow DELIBERATE subdirs ?!?
+// for example see 'team.core' where subgroupings by authors seem helpful, 
+// especially if there are many collaborators
+
 	// IZ: user extension dir + local quark containing dir
 	installDir { ^Platform.userExtensionDir +/+ local.path.basename }
 	
 	// IZ: user extension dir + local quark containing dir + quark name
 	installPath { | q | ^this.installDir +/+ q.name; }
+
+//////////////
+
 	
 	// a gui for Quarks. 2007 by LFSaw.de
 	// Mod of window height to fit all quarks list by IZ 201108
@@ -153,10 +165,20 @@ RepQuarks : Quarks {
 		var	quarks;
 		var pageStart = 0, fillPage;
 
+//mc		
+// if((Main.version.split($.)[1].asInt > 4))
+if( ("sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4").not) || (GUI.id != \cocoa))
+{	
+		//^this.class.superclass.gui 
+		if( GUI.id === \qt ) { ^QuarksViewQt(this) } { ^QuarksView(this) }
+}{
+		//this.logln("this is ReQuarks GUI");	
+
 		// note, this doesn't actually contact svn
 		// it only reads the DIRECTORY entries you've already checked out
-//		postf("RepQuarks gui - repos: %\n", repos.postln.quarks);
-//		postf("RepQuarks gui - local: %\n", local.postln.quarks);
+		//postf("RepQuarks gui - repos: %\n", repos.postln.quarks);
+		//postf("RepQuarks gui - local: %\n", local.postln.quarks);
+
 		quarks = this.repos.quarks.copy
 			.sort({ |a, b| a.name < b.name });
 		
@@ -272,14 +294,26 @@ RepQuarks : Quarks {
 		GUI.staticText.new( window, 492 @ 1 ).background_( Color.grey );		window.view.decorator.nextLine;
 
 		flowLayout.margin_( 0 @0 ).gap_( 0@0 );
-		scrollview = GUI.scrollView.new(window, 500 @ (height - 165))
-			.resize_( 5 )
-			.autohidesScrollers_(true);
+
+//mc hack to prevent ScrollView hang on OSX 10.7.4 !!!	
+if( (GUI.current == \CocoaGUI.asClass) && (Main.version.split($.)[1].asInt < 5) 
+			&& "sw_vers -productVersion".unixCmdGetStdOut.contains("10.7.4") ) 
+		{
+			scrollview = GUI.compositeView.new(window, 500 @ (height - 165)) //mc compositeView
+				.resize_( 5 )
+				//.autohidesScrollers_(true) //mc off
+			;
+		}{ 
+			scrollview = GUI.scrollView.new(window, 500 @ (height - 165))				.resize_( 5 )
+				.autohidesScrollers_(true)
+			;
+		};
 		scrollview.decorator = FlowLayout( Rect( 0, 0, 500, quarks.size * 25 + 20 ));
 
 		window.front;
 		fillPage.(pageStart);
 		^window;
+}
 	}
 	
 	install { | name, includeDependencies = true, checkoutIfNeeded = true |

@@ -1,10 +1,12 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf320
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf470
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
 {\colortbl;\red255\green255\blue255;\red0\green34\blue218;\red0\green19\blue254;\red0\green18\blue233;
-\red83\green83\blue83;\red0\green37\blue228;}
+\red83\green83\blue83;\red255\green39\blue18;\red243\green235\blue0;\red102\green177\blue50;\red0\green37\blue228;
+}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+\vieww10800\viewh8400\viewkind0
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
 \f0\b\fs24 \cf0 RepQuarks is a code management mechanism for SuperCollider based on Quarks. 
@@ -51,9 +53,9 @@ Alternatively, if you want to use the rest of the quarks belonging to the librar
 \
 \pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural
 \ls1\ilvl0\cf0 {\listtext	1.	}Define an empty subclass of RepQuarks and puts its definition file at the top level of the folder containing the RepQuarks. The name of the subclass may be anything any valid unique class name. \
-{\listtext	2.	}Place an alias of the definition file in the Extensions folder of your 
+{\listtext	2.	}Place an alias of the definition file \cb6 in a subfolder\cb1  in the Extensions folder of your 
 \f1 Platform.userAppSupportDir. 
-\f0 The name of the alias should end in .sc. \
+\f0 \cb7 The name of the alias should end in .sc. \cb8  Why ???\cb1 \
 {\listtext	3.	}Recompile SuperCollider. A new menu entry for the new RepQuarks group is created in the Quarks menu. \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 \cf0 \
@@ -74,7 +76,7 @@ Templates showing the structure of the 4 different kinds of setup possible with 
 \
 \pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural
 \ls2\ilvl0\cf0 {\listtext	\'95	}Place your quarks are placed in one project folder. Each quark is a folder containing the classes and optionally the help files of the quark.\
-{\listtext	\'95	}Add a single folder named DIRECTORY, which contains one file for each quark. The format of the quark-definition-files in DIRECTORY is described in the help file for {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Quarks/Quark.html"}}{\fldrslt \cf6 Quark}}. \
+{\listtext	\'95	}Add a single folder named DIRECTORY, which contains one file for each quark. The format of the quark-definition-files in DIRECTORY is described in the help file for {\field{\*\fldinst{HYPERLINK "file:///Applications/SuperCollider/Help/Extending%20and%20Customizing%20SC/Quarks/Quark.html"}}{\fldrslt \cf9 Quark}}. \
 {\listtext	\'95	}Link to your quarks folder to the compile path of SuperCollider following the RepQuarks subclass mechanism described at the beginning of this document. \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 \cf0 \
