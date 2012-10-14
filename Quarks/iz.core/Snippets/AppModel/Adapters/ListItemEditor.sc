@@ -6,7 +6,7 @@ Simple gui for editing items of lists
 
 ListItemEditor {
 	var <model, <name = \editor, <>container;
-	var <label, <textField, <deleteButton, <cancelButton;
+	var <label, <textField, <deleteButton, <exitButton;
 
 	*new { | model, name |
 		^this.newCopyArgs(model, name).init;
@@ -14,23 +14,32 @@ ListItemEditor {
 
 	init {
 		model.getValue(name).adapter = this;
-	}
-
-	gui {
 		label = model.staticText(name).updateAction(\text, {});
 		textField = model.textField(name);
 		deleteButton = model.button(name);
-		cancelButton = model.button(name);
+		exitButton = model.button(name);
+		exitButton.view.action_({ this.exit }).states_([["Exit"]]);
+		this.hide;
+	}
+
+	// default gui. Other gui methods, if defined, may be called directly.
+	gui { | font, labelStretch = 2, textStretch = 3, deleteStretch = 3, exitStretch = 1 |
+		^this.hLayout(font, labelStretch, textStretch, deleteStretch, exitStretch)
+	}
+
+	// return HLayout with views. Other methods may be added for different layouts.
+	hLayout { | font, labelStretch = 2, textStretch = 3, deleteStretch = 3, exitStretch = 1 |
+		font = font ?? { Font.default };
 		^HLayout(
-			label.view.visible = false,
-			textField.view.visible = false,
-			deleteButton.view.visible = false,
-			cancelButton.view.action_({ this.cancel }).states_([["Cancel"]]).visible = false
+			[label.view.font_(font), s: labelStretch],
+			[textField.view.font_(font), s: textStretch],
+			[deleteButton.view.font_(font), s: deleteStretch],
+			[exitButton.view.font_(font), s: exitStretch]
 		);
 	}
 
-	cancel {
-		container.changed(\cancel);
+	exit {
+		container.changed(\exit);
 		this.hide;
 	}
 	
@@ -39,7 +48,7 @@ ListItemEditor {
 		label.view.string = "Edit, press 'return' to create item:";
 		textField.view.string = this getName: list;
 		textField.action = { | me | container.changed(\append, list, me.view.string) };
-		this.show(\label, \textField, \cancelButton);
+		this.show(\label, \textField, \exitButton);
 	}
 
 	getName { | list |
@@ -53,7 +62,7 @@ ListItemEditor {
 		label.view.string = "Edit, press 'return' to rename item:";
 		textField.view.string = this getName: list;
 		textField.action = { | me | container.changed(\rename, list, me.view.string) };
-		this.show(\label, \textField, \cancelButton);
+		this.show(\label, \textField, \exitButton);
 		
 	}
 	
@@ -62,7 +71,7 @@ ListItemEditor {
 		label.view.string = "Delete item:";
 		deleteButton.view.states_([[this getName: list]])
 			.action_({ container.changed(\delete, list); });
-		this.show(\label, \deleteButton, \cancelButton);
+		this.show(\label, \deleteButton, \exitButton);
 	}
 
 	setList { | listWidget |
@@ -83,7 +92,7 @@ ListItemEditor {
 	}
 
 	show { | ... visibleViews |
-		[\label, \textField, \deleteButton, \cancelButton] do: { | viewName |
+		[\label, \textField, \deleteButton, \exitButton] do: { | viewName |
 			if (visibleViews includes: viewName) {
 				this.perform(viewName).view.visible = true;
 			}{
@@ -93,7 +102,7 @@ ListItemEditor {
 	}
 	
 	hide {
-		[label, textField, deleteButton, cancelButton] do: { | w | w.view.visible = false };
+		[label, textField, deleteButton, exitButton] do: { | w | w.view.visible = false };
 	}
 	
 	updateMessage { ^\value }

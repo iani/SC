@@ -42,18 +42,20 @@ ScriptLibGui : AppModel {
 	}
 
 	gui {
+		var a;
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
-			window.bounds = Rect(200, 200, 1000, 700);
+			window.bounds = Rect(200, 200, 800, 700);
 			window.layout = VLayout(
 				this.topMenuRow,
+				this.itemEditor.hLayout(font),
 				HLayout(
-					this.folderNameList,
-					this.fileNameList,
-					this.snippetNameList,
+					this.listView('Folders').dict(scriptLib.lib).view.font = font,
+					this.listView('Files').branchOf('Folders').view.font = font,
+					this.listView('Snippets').branchOf('Files').view.font = font,
 				),
 				this.snippetButtonRow,
-				this.snippetList,
+				this.snippetCodeList,
 			);
 			this.windowClosed(window, {
 				scriptLib.save;
@@ -70,44 +72,35 @@ ScriptLibGui : AppModel {
 				this.mainMenuAction(me.value);
 				me.value = 0
 			}),
-			this.popUpMenu(\folders, { ["Folders:", "New", "Rename", "Delete"] })
+			this.itemEditMenu('Folders')
 			.view.font_(font),
-			this.popUpMenu(\files, { ["Files:", "New", "Rename", "Delete"] })
+			this.itemEditMenu('Files')
 			.view.font_(font),
-			this.popUpMenu(\snippets, { ["Snippets:", "New", "Rename", "Delete"] })
+			this.itemEditMenu('Snippets')
 			.view.font_(font),
-
-/*
-			Button().states_([["Import"]]).action_({
-				Dialog.openPanel({ | path | scriptLib import: path });
-			}),
-			Button().states_([["Export"]]).action_({
-				Dialog.savePanel({ | path | scriptLib export: path });
-			}),
-			Button().states_([["Save"]]).action_({ scriptLib.save }),
-			Button().states_([["Save as"]]).action_({ scriptLib.saveDialog; }),
-*/
 		);
 	}
 
-	mainMenuAction { | item = 0 |
-		item.postln;
+	mainMenuAction { | actionIndex = 0 |
+		[nil,	// MainMenu
+		{}, 		// New
+		{},		// Open
+		{},		// Save
+		{},		// Save as
+		{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
+		{},		// Export
+		][actionIndex].value;
 	}
 
-	folderNameList {
-		^nil
-	}
-	fileNameList {
-		^nil
-	}
-	snippetNameList {
-		^nil
-	}
 	snippetButtonRow {
 		^nil
 	}
-	snippetList {
-		^nil
+	snippetCodeList {
+		^this.listView('Snippets', { | me |
+			var snippets;
+			snippets = me.value.adapter.dict.atPath(me.value.adapter.path);
+			if (snippets.isNil) { [] } { snippets.asSortedArray.flop[1] };
+		}).view.font_(Font("Monaco", 10));
 	}
 }
 

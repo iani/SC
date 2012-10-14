@@ -29,9 +29,9 @@ AppModel {
 	}
 
 	// removing connections and inputs
-	release { // not used yet?
-		super.release;
-		values do: _.release;
+	objectClosed { // not used yet?
+		super.objectClosed;
+		values do: _.objectClosed;
 	}
 
 	// enabling and disabling MIDI and OSC input
@@ -103,12 +103,12 @@ AppModel {
 	}
 
 	// GUI for editing names of items, creating new items and deleting items.
-	// Consists of a HLayout with a StaticText, TextField, and a Cancel button.
+	// Consists of a HLayout with a StaticText, TextField, and an Exit button.
 	// Visibility of these items is toggled by receiving updates from itemEditMenu
 	// The items contents and actions can change to apply the same views work with any number
 	// of different lists. So many different lists can be edited by one single itemEditor gui,
 	// The connection of a new list to the editor GUI is done with method itemEditMenu. 
-	itemEditor { | name = \editor | ^ListItemEditor(this, name).gui; }
+	itemEditor { | name = \editor | ^ListItemEditor(this, name); }
 
 	// Make menu for editing the items of a list
 	// The menu actions send notifications to an itemEditor item (see method above).
@@ -140,7 +140,7 @@ AppModel {
 		menu.updater(editor, \delete, { | me, sender |
 			if (me === sender) { deleteFunc.(me) };
 		});
-		menu.addNotifier(editor, \cancel, {
+		menu.addNotifier(editor, \exit, {
 			menu.view.stringColor = Color.black;
 			menu.view.background = Color.white;
 			menu.view.value = 0;
@@ -156,7 +156,7 @@ AppModel {
 			editor.changed(\menu, me);	// reset selection of any other dependent menus
 			me.view.stringColor = [Color.white, Color.blue, Color.green, Color.red][me.view.value];
 			me.view.background = [Color.black, Color.white, Color.black, Color.white][me.view.value];
-			editor.adapter.perform([\cancel, \append, \rename, \delete][me.view.value], me)
+			editor.adapter.perform([\exit, \append, \rename, \delete][me.view.value], me)
 		};
 		menu.view.items_(menuItems);
 		^menu;

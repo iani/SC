@@ -80,33 +80,59 @@ ScriptLib {
 
 	import { | path |
 		PathName(PathName(PathName(path).parentPath).parentPath).folders do: this.importFolder(_);
+		lib.dictionary.keys.asArray.sort.postln;
+		lib.changed(\dict);
 	}
 
-	importFolder { | pathName |
-		(pathName.fullPath ++ "*.scd").pathMatch do: { | scriptPath |
-			this importSnippets: scriptPath;
+	importFolder { | folderPath |
+		var folderName;
+		folderName = this.makeUniqueName(nil, folderPath.folderName.postln);
+		[this, thisMethod.name, folderName].postln;
+		(folderPath.fullPath ++ "*.scd").pathMatch do: { | filePath |
+			this.importSnippets(folderName, filePath);
 		};
 	}
 
-	importSnippets { | scriptPath |
-		var pName, folders;
-		pName = PathName(scriptPath);
-		[pName.folderName, pName.fileNameWithoutExtension.asSymbol].postln;
-	}
-
-	makeUniqueSnippetName { | folder, file, snippet, index |
-		var name;
-		name = format("%%", snippet, index ? "").asSymbol;
-		if (lib.at(folder, file, name).isNil) {
-			^name;
+	makeUniqueName { | path, name, index |
+		var newName;
+		newName = format("%%", name, index ? "").asSymbol;
+		if (lib.atPath(path.asArray.copy add: newName).isNil) {
+			^newName;
 		}{
 			if (index.isNil) { index = 0 } { index = index + 1 };
-			^this.makeUniqueSnippetPath(folder, file, snippet, index);
+			^this.makeUniqueName(path, name, index);
 		}
+	}
+
+	importSnippets { | folderName, filePath |
+		var fileName, file, string, positions;
+		fileName = this.makeUniqueName(folderName, PathName(filePath).fileNameWithoutExtension);
+		file = File(filePath, "r");
+		string = file.readAllString;
+		file.close;
+		positions = string.findRegexp("^//:").flop.first;
+		positions.collect({ | pos, i | 
+			string[pos .. (positions[i + 1] ?? { string.size }) - 1]
+		}) do: this.addSnippet(folderName, fileName, _);
+	}
+
+	addSnippet { | folderName, fileName, snippet |
+		var snippetName;
+		snippetName = this.makeUniqueName([folderName, fileName], this.getSnippetName(snippet));
+		lib.put(folderName, fileName, snippetName, snippet);
+//		this.changed(\newSnippet, folderName, fileName, snippetName, snippet);
+	}
+
+	getSnippetName { | snippet |
+		^(snippet.findRegexp("//:([A-Za-z\\-_][A-Za-z0-9\\-_]*)").flop[1] ?? { [nil, "_"] })[1];
 	}
 
 	export { | path |
 		path.postln;
+	}
+	
+	folders { 
+		
 	}
 }
 
