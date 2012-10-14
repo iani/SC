@@ -117,7 +117,7 @@ AppModel {
 		var menu, menuItems;
 		menu = this.popUpMenu(name);
 		editor = this.getValue(editor);
-		getFunc = getFunc ?? {{ | me | me.item.asString }};
+		getFunc = getFunc ?? {{ | me | if (me.item.isNil) { nil } { me.item.asString }}};
 		newFunc = newFunc ?? {{ | me, string | me.value.append(string) }};
 		renameFunc = renameFunc ?? {{ | me, string | me.value.replace(string, me.value.index) }};
 		deleteFunc = deleteFunc ?? {{ | me | me.value.adapter.delete(me) }};

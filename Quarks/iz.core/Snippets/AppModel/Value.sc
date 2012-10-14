@@ -56,14 +56,14 @@ Value {
 		});
 	}
 	// === Dictionary utilities ===
-	dict { | dict |
-		this.adapter = MultiLevelIdentityDictionaryAdapter(this, dict);
+	dict { | dict, itemCreationFunc |
+		this.adapter = MultiLevelIdentityDictionaryAdapter(this, dict, itemCreationFunc);
 		this.replaceNotifier(dict, \dict, { adapter.getItems });
 	}
 
-	branchOf { | superBranch |
+	branchOf { | superBranch, itemCreationFunc |
 		superBranch = model.getValue(superBranch);
-		this.adapter = MultiLevelIdentityDictionaryAdapter(this);
+		this.adapter = MultiLevelIdentityDictionaryAdapter(this, nil, itemCreationFunc);
 		if (superBranch.adapter.isKindOf(MultiLevelIdentityDictionaryAdapter)) {
 			this.adapter.getBranch(superBranch);
 		};

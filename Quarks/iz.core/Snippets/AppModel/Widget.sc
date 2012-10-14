@@ -283,12 +283,12 @@ Widget {
 	nextItem { view.action = { value.adapter.next } }
 
 	// MultiLevelIdentityDictionary
-	dict { | dict |
-		value dict: dict;
+	dict { | dict, itemCreationFunc |
+		value.dict(dict, itemCreationFunc);
 	}
 
-	branchOf { | superBranch |
-		value branchOf: superBranch;
+	branchOf { | superBranch, itemCreationFunc |
+		value.branchOf(superBranch, itemCreationFunc);
 	}
 
 	// NodeProxy stuff

@@ -26,8 +26,6 @@ Menus:
 - Files
 - Snippets
 
-
-
 */
 
 
@@ -52,7 +50,10 @@ ScriptLibGui : AppModel {
 				HLayout(
 					this.listView('Folders').dict(scriptLib.lib).view.font = font,
 					this.listView('Files').branchOf('Folders').view.font = font,
-					this.listView('Snippets').branchOf('Files').view.font = font,
+					this.listView('Snippets').branchOf('Files', { | adapter, name |
+						format("//:%\n{ WhiteNoise.ar(0.1) }", name)
+					})
+						.view.font = font,
 				),
 				this.snippetButtonRow,
 				this.snippetCodeList,
@@ -84,11 +85,11 @@ ScriptLibGui : AppModel {
 	mainMenuAction { | actionIndex = 0 |
 		[nil,	// MainMenu
 		{}, 		// New
-		{},		// Open
-		{},		// Save
-		{},		// Save as
+		{ scriptLib.class.open; },		// Open
+		{ scriptLib.save; },			// Save
+		{ scriptLib.saveDialog },		// Save as
 		{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
-		{},		// Export
+		{ Dialog.savePanel({ | path | scriptLib.export(path) }) }, // Export
 		][actionIndex].value;
 	}
 

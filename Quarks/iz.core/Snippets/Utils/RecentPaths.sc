@@ -49,9 +49,10 @@ RecentPaths {
 			window.bounds = window.bounds.left_(250).width_(800);
 			window.name = format("Select path for: %", objectID);
 			window.layout = VLayout(
-				Button().states_([["Browse ... "]]).action_({
+				Button().states_([["Click to select new path ... "]]).action_({
 					this.openPanel(action, window);
 				}),
+				StaticText().string_("... or select a path from the recent paths below:"),
 				app.listView(\paths).items_(paths).view,
 				HLayout(
 					app.button(\paths).action_({ | me |
@@ -63,7 +64,7 @@ RecentPaths {
 			)
 		})
 	}
-	
+
 	openPanel { | action, window |
 		Dialog.openPanel({ | path |
 			var preexisting;

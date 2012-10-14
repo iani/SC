@@ -54,7 +54,7 @@ ListItemEditor {
 	getName { | list |
 		var itemName;
 		container.changed(\itemName, list, itemName = `"");
-		^itemName.value;
+		^itemName.value ?? { list.name.asString };
 	}
 
 	rename { | list |

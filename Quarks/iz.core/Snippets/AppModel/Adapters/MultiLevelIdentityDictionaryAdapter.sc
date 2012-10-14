@@ -8,17 +8,22 @@ See Value:dict, Value:branchOf, Widget:dict, Widget:branchOf.
 
 MultiLevelIdentityDictionaryAdapter : ListAdapter {
 	var <dict, <>path;
-	var <>newItemFunc;
+	var <itemCreationFunc;
 
-	*new { | container, dict | 
-		^super.new(container, dict)
+	*new { | container, dict, itemCreationFunc | 
+		^super.new(container, dict).itemCreationFunc = itemCreationFunc;
 	}
 
 	init { | argContainer, argDict |
 		container = argContainer;
-		argDict !? { this.dict = argDict; };
-		newItemFunc = newItemFunc ?? {{ IdentityDictionary() }};
+		this.dict = argDict ?? { MultiLevelIdentityDictionary() };
 	}
+
+	itemCreationFunc_ { | argItemCreationFunc |
+		itemCreationFunc = argItemCreationFunc ?? { this.defaultItemCreationFunc };
+	}
+
+	defaultItemCreationFunc { ^{ IdentityDictionary() } }
 
 	dict_ { | argDict |
 		dict = argDict;
@@ -30,8 +35,10 @@ MultiLevelIdentityDictionaryAdapter : ListAdapter {
 	}
 
 	getBranch { | superBranch |
+		// Get items from your superBranch. Called when superBranch notifies \list or \index.
+		// Get dict every time, so be always synchronized with superBranch.
 		superBranch = superBranch.adapter;
-		dict = superBranch.dict; // only at init time: get the dict
+		dict = superBranch.dict;
 		path = superBranch.path.copy add: superBranch.item;
 		this.getItems;
 	}
@@ -49,7 +56,8 @@ MultiLevelIdentityDictionaryAdapter : ListAdapter {
 	
 	append { | widget, name |
 		name = dict.makeUniqueName(path, name.asSymbol);
-		dict.putAtPath(path.copy add: name, newItemFunc.(this));
+		dict.putAtPath(path.copy add: name, itemCreationFunc.(this, name));
+		item = name;
 		this.getItems;
 	}
 	

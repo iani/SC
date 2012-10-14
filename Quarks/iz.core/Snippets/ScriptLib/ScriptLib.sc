@@ -67,6 +67,7 @@ ScriptLib {
 	saveToPath { | path |
 		this.path = path;
 		this writeArchive: path.asString;
+		format("% saved to:\n%\n", this.class, path).postln;
 	}
 
 	path_ { | path |
@@ -87,7 +88,6 @@ ScriptLib {
 	importFolder { | folderPath |
 		var folderName;
 		folderName = this.makeUniqueName(nil, folderPath.folderName.postln);
-		[this, thisMethod.name, folderName].postln;
 		(folderPath.fullPath ++ "*.scd").pathMatch do: { | filePath |
 			this.importSnippets(folderName, filePath);
 		};
@@ -120,7 +120,6 @@ ScriptLib {
 		var snippetName;
 		snippetName = this.makeUniqueName([folderName, fileName], this.getSnippetName(snippet));
 		lib.put(folderName, fileName, snippetName, snippet);
-//		this.changed(\newSnippet, folderName, fileName, snippetName, snippet);
 	}
 
 	getSnippetName { | snippet |
@@ -128,7 +127,31 @@ ScriptLib {
 	}
 
 	export { | path |
+		var fileName, file, snippet;
 		path.postln;
+		{
+			format("mkdir %", path.asCompileString).postln.unixCmd;
+			0.2.wait;
+			lib.dictionary.keys do: { | folderName |
+				format("mkdir %", (path +/+ folderName.asString).asCompileString).postln.unixCmd;
+				0.2.wait;
+				lib.at(folderName).keys do: { | fileName |
+					file = File(path +/+ folderName +/+ fileName ++ ".scd", "w");
+					fileName.postln;
+					lib.at(folderName, fileName).keys.asArray.sort do: { | snippetName |
+						file.putString(snippet = lib.at(folderName, fileName, snippetName));
+						if (snippet.last !== Char.nl) {
+							file.putString("\n");
+						};
+						0.01.wait;
+					};
+					file.close;
+					0.1.wait;
+				};
+			};
+			"EXPORT DONE".postln;
+			
+		}.fork(AppClock);
 	}
 	
 	folders { 
