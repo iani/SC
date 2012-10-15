@@ -121,7 +121,7 @@ AppModel {
 		newFunc = newFunc ?? {{ | me, string | me.value.append(string) }};
 		renameFunc = renameFunc ?? {{ | me, string | me.value.replace(string, me.value.index) }};
 		deleteFunc = deleteFunc ?? {{ | me | me.value.adapter.delete(me) }};
-		menuItems = [format("Edit %...", name), 
+		menuItems = [format("Edit % list", name), 
 			format("New % item", name),
 			format("Rename % item", name),
 			format("Delete % item", name),

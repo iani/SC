@@ -4,6 +4,13 @@ Basic example of connecting proxies to views.
 
 ~out1.source = { | freq = 440, rate = 1 | LFTri.ar(freq, 0, 0.1) };
 
+ProxySpace.push;
+
+currentEnvironment.proxies;
+
+
+~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 */
 
 //:A proxy selector list and a button for starting / stopping the selected proxy

@@ -6,8 +6,7 @@ The history is stored in the default archive (Platform.userAppSupportDir +/+ "ar
 
 The objectID is used to identify the object that is using the path history, keeping the id immutable between compile sessions. The simplest case is to use the Class itself as ID and let RecentPaths turn the class name into a symbol which server as objectID. 
 
-See also: Prefs. 
-
+See also: Prefs.
 
 RecentPaths.open(\test, { | tehPath | tehPath.postln; });
 
@@ -52,7 +51,7 @@ RecentPaths {
 				Button().states_([["Click to select new path ... "]]).action_({
 					this.openPanel(action, window);
 				}),
-				StaticText().string_("... or select a path from the recent paths below:"),
+				StaticText().string_("... or choose a path from the recent paths below:"),
 				app.listView(\paths).items_(paths).view,
 				HLayout(
 					app.button(\paths).action_({ | me |

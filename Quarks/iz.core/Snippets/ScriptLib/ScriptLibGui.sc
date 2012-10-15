@@ -30,7 +30,7 @@ Menus:
 
 
 ScriptLibGui : AppModel {
-	classvar <>font;
+	classvar <>font, <windowShift = 0;
 	var <scriptLib;
 
 	*initClass {
@@ -40,17 +40,19 @@ ScriptLibGui : AppModel {
 	}
 
 	gui {
-		var a;
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
-			window.bounds = Rect(200, 200, 800, 700);
+			window.bounds = Rect(
+				windowShift + 200, 
+				windowShift.neg + 100, 800, 700);
+			windowShift = windowShift + 20 % 200;
 			window.layout = VLayout(
 				this.topMenuRow,
 				this.itemEditor.hLayout(font),
 				HLayout(
-					this.listView('Folders').dict(scriptLib.lib).view.font = font,
-					this.listView('Files').branchOf('Folders').view.font = font,
-					this.listView('Snippets').branchOf('Files', { | adapter, name |
+					this.listView('Folder').dict(scriptLib.lib).view.font = font,
+					this.listView('File').branchOf('Folder').view.font = font,
+					this.listView('Snippet').branchOf('File', { | adapter, name |
 						format("//:%\n{ WhiteNoise.ar(0.1) }", name)
 					})
 						.view.font = font,
@@ -73,11 +75,11 @@ ScriptLibGui : AppModel {
 				this.mainMenuAction(me.value);
 				me.value = 0
 			}),
-			this.itemEditMenu('Folders')
+			this.itemEditMenu('Folder')
 			.view.font_(font),
-			this.itemEditMenu('Files')
+			this.itemEditMenu('File')
 			.view.font_(font),
-			this.itemEditMenu('Snippets')
+			this.itemEditMenu('Snippet')
 			.view.font_(font),
 		);
 	}
@@ -97,7 +99,7 @@ ScriptLibGui : AppModel {
 		^nil
 	}
 	snippetCodeList {
-		^this.listView('Snippets', { | me |
+		^this.listView('Snippet', { | me |
 			var snippets;
 			snippets = me.value.adapter.dict.atPath(me.value.adapter.path);
 			if (snippets.isNil) { [] } { snippets.asSortedArray.flop[1] };

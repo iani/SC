@@ -54,15 +54,21 @@ MultiLevelIdentityDictionaryAdapter : ListAdapter {
 		this.getItems;
 	}
 	
-	append { | widget, name |
+	append { | widget, name | // TODO: Remove widget arg
 		name = dict.makeUniqueName(path, name.asSymbol);
 		dict.putAtPath(path.copy add: name, itemCreationFunc.(this, name));
 		item = name;
 		this.getItems;
 	}
 	
-	replace {
-		
+	replace { | widget, name | // TODO: Remove widget arg
+		var branch;
+		name = dict.makeUniqueName(path, name.asSymbol);
+		branch = dict.atPath(path ++ [item]);
+		dict.putAtPath(path ++ [name], branch);
+		dict.putAtPath(path ++ [item], nil);
+		item = name;
+		this.getItems;
 	}
 
 

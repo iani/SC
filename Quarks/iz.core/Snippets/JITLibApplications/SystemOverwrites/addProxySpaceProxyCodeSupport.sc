@@ -21,6 +21,21 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 }
 
 + ProxySpace {
+	
+	*defaultProxy {
+		^this.default.at(\default);
+	}
+
+	*default {
+		var default;
+		default = Library.at('ProxySpaces', \default);
+		default ?? {
+			default = ProxySpace();
+			Library.put('ProxySpaces', \default, default);
+		};
+		^default;
+	}
+	
 	removeNeutral {
 		envir.copy.keysValuesDo { arg key, val; if(val.isNeutral) { envir.removeAt(key) } };
 		this.changed(\removeNeutral, this);

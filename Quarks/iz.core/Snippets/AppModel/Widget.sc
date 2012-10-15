@@ -295,9 +295,11 @@ Widget {
 	
 	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
-		this.updater(proxySpace, \list, { this.items_(proxySpace.proxies) });
+		this.updater(proxySpace, \list, {
+			this.items_(proxySpace.proxies);
+			[this, thisMethod.name, this.value.adapter, this.item].postln;
+		});
 		value.changed(\initProxyControls);	// Initialize proxyWatchers etc. created before me
-		[this, thisMethod.name, this.index, this.item, this.items].postln;
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
@@ -312,7 +314,20 @@ Widget {
 				this.proxyWatcher(playAction, stopAction);
 			});
 		}{
-			playAction ?? { playAction = { this.checkProxy(value.adapter.item.item.play); } };
+			playAction ?? { playAction = {
+//				view.value.postln;
+//				value.adapter.postln;
+//				value.adapter.items.postln;
+//				value.adapter.item.postln;
+				// lazy initialization: 
+				value.adapter.item ?? { value.adapter.index_(this, 0) };
+				// TODO: checkProxy should take adapter item as argument
+				// and check if it is nil before trying to play.
+				// the play message should be sent from checkProxy, 
+				// with argument func, and func would act on the proxy 
+				// doing play, stop or other stuff.
+				this.checkProxy(value.adapter.item.item.play);
+			} };
 			stopAction ?? { stopAction = { value.adapter.item.item.stop } };
 			view.action = { [stopAction, playAction][view.value].(this) };
 			this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });

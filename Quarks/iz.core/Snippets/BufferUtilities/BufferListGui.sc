@@ -54,9 +54,9 @@ BufferListGui : AppModel {
 			w.layout = VLayout(
 				HLayout(
 					StaticText().string_("Lists:"),
-					app.button(\bufferLists).notifyAction(\append).view.states_([["append"]]),
-					app.button(\bufferLists).notifyAction(\insert).view.states_([["insert"]]),
-					app.button(\bufferLists).notifyAction(\rename).view.states_([["rename"]]),
+					app.button(\bufferLists).changedAction(\append).view.states_([["append"]]),
+					app.button(\bufferLists).changedAction(\insert).view.states_([["insert"]]),
+					app.button(\bufferLists).changedAction(\rename).view.states_([["rename"]]),
 					app.button(\bufferLists).action_({ | me | me.value.adapter.delete })
 						.view.states_([["delete"]]),
 					Button().action_({ 
@@ -76,15 +76,15 @@ BufferListGui : AppModel {
 				app.listView(\bufferLists, { | me | me.value.adapter.items collect: _.name }).view,
 				HLayout(
 					StaticText().string_("Buffers:"),
-					app.button(\buffers).notifyAction(\readNew).view.states_([["read new"]]),
-					app.button(\buffers).notifyAction(\readDefaults)
+					app.button(\buffers).changedAction(\readNew).view.states_([["read new"]]),
+					app.button(\buffers).changedAction(\readDefaults)
 					.view.states_([["read defaults"]]),
-					app.button(\buffers).notifyAction(\loadSelected)
+					app.button(\buffers).changedAction(\loadSelected)
 					.view.states_([["load selected"]]),
-					app.button(\buffers).notifyAction(\loadAll).view.states_([["load all"]]),
-					app.button(\buffers).notifyAction(\play).view.states_([["play"]]),
-					app.button(\buffers).notifyAction(\delete).view.states_([["delete"]]),
-					app.button(\buffers).notifyAction(\free).view.states_([["free"]]),
+					app.button(\buffers).changedAction(\loadAll).view.states_([["load all"]]),
+					app.button(\buffers).changedAction(\play).view.states_([["play"]]),
+					app.button(\buffers).changedAction(\delete).view.states_([["delete"]]),
+					app.button(\buffers).changedAction(\free).view.states_([["free"]]),
 				),
 				app.listView(\buffers, { | me | me.value.adapter.items collect: _.name })
 					.updateAction(\readNew, { | me |
@@ -108,8 +108,8 @@ BufferListGui : AppModel {
 					.view,
 				HLayout(
 					StaticText().string_("Loaded buffers:"),
-					app.button(\loadedBuffers).notifyAction(\free).view.states_([["free"]]),
-					app.button(\loadedBuffers).notifyAction(\play).view
+					app.button(\loadedBuffers).changedAction(\free).view.states_([["free"]]),
+					app.button(\loadedBuffers).changedAction(\play).view
 						.states_([["run code with buffer:"]])
 				),
 				HLayout(

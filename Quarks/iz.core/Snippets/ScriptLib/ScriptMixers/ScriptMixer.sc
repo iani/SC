@@ -2,8 +2,8 @@
 
 */
 
-ProxyCodeMixer : AppModel {
-	var <doc, <>numStrips = 8, <numPresets = 8, <proxyCode, <proxySpace, <proxyList, <strips;
+ScriptMixer : AppModel {
+	var <>numStrips = 8, <numPresets = 8, <proxySpace, <strips, <proxyList;
 	var <stripWidth = 80;
 	var <>font;
 	var <valueCache;	// fast access to values for storing and restoring presets
@@ -13,19 +13,11 @@ ProxyCodeMixer : AppModel {
 		MIDISpecs.put(this, this.uc33eSpecs);
 	}
 
-	*new { | doc, numStrips = 8, numPresets = 8 | ^super.new(doc, numStrips, numPresets).init; }
+	*new { | numStrips = 8, numPresets = 8 | ^super.new(numStrips, numPresets).init; }
 
 	init {
 		font = Font.default.size_(9);
-		/* PATCH: if proxySpace is provided, then use it and ignore doc */
-		if (doc isKindOf: ProxySpace) {
-			proxySpace = doc;
-		}{
-			doc = doc ?? { Document.current };
-			proxyCode = ProxyCode(doc);
-			proxySpace = doc.envir;
-		};
-		proxyList = proxySpace.proxies;
+		proxySpace = ProxySpace.default;
 		this.makeStrips;
 		this.makeWindow;
 		this.initPresets;
@@ -34,7 +26,7 @@ ProxyCodeMixer : AppModel {
 	}
 
 	makeStrips {
-		strips = { | index | ProxyCodeStrip(this, index) } ! numStrips;
+		strips = { | index | ScriptMixerStrip(this, index) } ! numStrips;
 	}
 
 	reloadProxies { proxyList.changed(\list, proxyList); }
@@ -43,7 +35,7 @@ ProxyCodeMixer : AppModel {
 		var winWidth;
 		winWidth = stripWidth * numStrips;
 		this.window({ | w, app |
-			w	.name_("Proxy Code Mixer : " ++ doc.name)
+			w	.name_("Proxy Script Mixer")
 				.bounds_(Rect(Window.screenBounds.width - winWidth, 0, winWidth, 250))
 				.layout = HLayout(
 					VLayout(
@@ -68,7 +60,7 @@ ProxyCodeMixer : AppModel {
 		this.windowToFront(window, { this.enable; });
 		this.windowEndFront(window, { this.disable; });
 		window.addNotifier(this, \colorEnabled, {
-			if (window.isClosed.not) { window.view.background = Color(*[0.7, 0.8, 0.9] /* .scramble */); }
+			if (window.isClosed.not) { window.view.background = Color(*[0.7, 0.8, 0.9]) }
 		});
 		window.addNotifier(this, \colorDisabled, {
 			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.5); };
@@ -99,8 +91,7 @@ ProxyCodeMixer : AppModel {
 	getPreset { | preset | preset.array = valueCache collect: _.item; }
 
 	setPreset { | preset |
-//		valueCache do: { | v, i | v.item_(nil, preset[i]) };
-//		{ this.changed(\autoSetProxy); }.defer(0.5); // TODO: use layered views instead of presets
+		valueCache do: { | v, i | v.item_(nil, preset[i]) };
 	}
 
 	// MIDI
