@@ -89,7 +89,6 @@ ListAdapter {
 		this.addNotifier(items, \list, { | changer | container.changed(\list, changer) });
 		index = items.indexOf(item) ? 0;
 		item = items[index];
-		[this, thisMethod.name, items, item, index].postln;
 		container !? {
 			container.changed(\list, changer);
 			if (item !== oldItem) { container.changed(\index, changer); };

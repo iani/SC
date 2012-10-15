@@ -4,6 +4,10 @@ A ListAdapter that gets its items from a MultiLeverIdentityDictionary.
 
 See Value:dict, Value:branchOf, Widget:dict, Widget:branchOf.
 
+ProxyCodeMixer();
+
+~out1 = { WhiteNoise.ar(0.1) };
+
 */
 
 MultiLevelIdentityDictionaryAdapter : ListAdapter {

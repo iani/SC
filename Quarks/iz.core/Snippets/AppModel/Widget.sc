@@ -315,10 +315,6 @@ Widget {
 			});
 		}{
 			playAction ?? { playAction = {
-//				view.value.postln;
-//				value.adapter.postln;
-//				value.adapter.items.postln;
-//				value.adapter.item.postln;
 				// lazy initialization: 
 				value.adapter.item ?? { value.adapter.index_(this, 0) };
 				// TODO: checkProxy should take adapter item as argument
