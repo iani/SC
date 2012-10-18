@@ -172,7 +172,7 @@ ProxyCodeEditor : AppModel {
 					knobmenu = format("knobmenu%", i).asSymbol;
 					slidermenu = format("slidermenu%", i).asSymbol;
 					VLayout(
-						this.popUpMenu(knobmenu).proxyControlList(\proxy, i * 2 + 2)
+						this.popUpMenu(knobmenu).proxyControlList(\proxy, i * 2 + 1)
 						.view.font_(font),
 						HLayout(
 							this.slider(slidermenu).proxyControl
@@ -183,7 +183,7 @@ ProxyCodeEditor : AppModel {
 								this.numberBox(slidermenu).proxyControl.view.font_(font),
 							)
 						),
-						this.popUpMenu(slidermenu).proxyControlList(\proxy, i * 2 + 1)
+						this.popUpMenu(slidermenu).proxyControlList(\proxy, i * 2)
 						.view.font_(font),
 					)
 

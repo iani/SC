@@ -12,6 +12,8 @@ RecentPaths.open(\test, { | tehPath | tehPath.postln; });
 
 Example using RecentPaths: ScriptLib;
 
+RecentPaths are not stored in the global archive but in a separate file, because they would be lost if the library is loaded without the RecentPaths class installed.  
+
 */
 
 RecentPaths {
@@ -29,20 +31,23 @@ RecentPaths {
 
 	*new { | objectID, numHistoryItems = 20 |
 		var instance;
-		all = Archive.global.at('RecentPaths');
-		all ?? {
-			all = IdentityDictionary();
-			Archive.global.put('RecentPaths', all);
-		};
+		all ?? { all = Object.readArchive(this.archiveFilePath); };
+		all ?? { all = IdentityDictionary(); };
 		instance = all[objectID];
 		instance ?? {
 			instance = this.newCopyArgs(objectID, numHistoryItems);
 			all[objectID] = instance;
-			Archive.write;
+			this.saveAll;
 		};
 		^instance;
 	}
-	
+
+	*saveAll {
+		all.writeArchive(this.archiveFilePath);
+	}
+
+	*archiveFilePath { ^Platform.userAppSupportDir +/+ "RecentPaths.sctxar" }
+
 	open { | action |
 		AppModel().window({ | window, app |
 			window.bounds = window.bounds.left_(250).width_(800);
@@ -78,7 +83,7 @@ RecentPaths {
 		paths.remove(paths detect: { | p | p == path });
 		paths add: path;
 		if (paths.size > numHistoryItems) { paths.pop };
-		Archive.write;		
+		this.class.saveAll;
 	}
 
 	save { | action |

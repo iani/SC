@@ -1,8 +1,16 @@
 /* IZ Thu 16 August 2012  6:28 PM EEST
 
+Uses its own ProxySpace. Pre-allocates 32 proxies named by keyboard key characters: 
+
+12345678
+qwertyui
+asdfghjk
+zxcvbnm,
+
 */
 
 ScriptMixer : AppModel {
+	classvar activeMixer;		// the current instance of active mixer
 	var <>numStrips = 8, <numPresets = 8, <proxySpace, <strips, <proxyList;
 	var <stripWidth = 80;
 	var <>font;
@@ -13,11 +21,18 @@ ScriptMixer : AppModel {
 		MIDISpecs.put(this, this.uc33eSpecs);
 	}
 
+	*activeMixer {
+		activeMixer ?? { activeMixer = this.new };
+		^activeMixer;
+	}
+
 	*new { | numStrips = 8, numPresets = 8 | ^super.new(numStrips, numPresets).init; }
 
 	init {
 		font = Font.default.size_(9);
-		proxySpace = ProxySpace.default;
+		proxySpace = ProxySpace();
+		// Initialize proxies
+		"12345678qwertyuiasdfghjkzxcvbnm," do: { | char | proxySpace.at(char.asSymbol) };
 		this.makeStrips;
 		this.makeWindow;
 		this.initPresets;
@@ -54,16 +69,17 @@ ScriptMixer : AppModel {
 
 	addWindowActions { | window |
 		this.windowClosed(window, {
+			this.makeInactive;
 			this.disable(window);
 			this.objectClosed;
 		});
-		this.windowToFront(window, { this.enable; });
+		this.windowToFront(window, { this.enable; this.makeActive; });
 		this.windowEndFront(window, { this.disable; });
 		window.addNotifier(this, \colorEnabled, {
 			if (window.isClosed.not) { window.view.background = Color(*[0.7, 0.8, 0.9]) }
 		});
 		window.addNotifier(this, \colorDisabled, {
-			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.5); };
+			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.05); };
 		});
 	}	
 
@@ -71,13 +87,19 @@ ScriptMixer : AppModel {
 		super.enable(true);
 		strips do: _.enable;
 		this.changed(\colorEnabled);
+//		activeMixer = this;
 	}
 
 	disable {
 		super.disable;
 		strips do: _.disable;
 		this.changed(\colorDisabled);
+//		if (activeMixer === this) { activeMixer = nil };
 	}
+
+	makeActive { activeMixer = this }
+	makeInactive { if (activeMixer === this) { activeMixer = nil }; }
+
 
 	// PRESETS
 

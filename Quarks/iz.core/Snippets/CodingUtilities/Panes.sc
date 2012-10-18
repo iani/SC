@@ -195,6 +195,7 @@ Panes {
 				tryout = Document.open(path);
 			};
 		};
+		tryout.name = tryoutName; // added for 3.5 cocoa. Report?
 		^tryout;
 	}
 

@@ -18,6 +18,9 @@ Prefs.getPathList(\test); // One can store preferences for Classes or Symbols
 
 Prefs.dialog(\test, [\path, nil, _.postln], [\x, 100, _.postln], [\y, 200, _.postln])
 
+TODO: Consider storing each prefs set in a separate archive, like UserPrefs by MC do. 
+This would protect all prefs by being 
+
 */
 
 Prefs : AppModel {
@@ -33,7 +36,7 @@ Prefs : AppModel {
 
 	*loadPrefsFromArchive {
 		if (File.exists(this.archiveFilePath)) {
-			allPrefs = Object.readArchive(this.archiveFilePath);
+			allPrefs = Object.readArchive(this.archiveFilePath) ?? { IdentityDictionary() };
 		}{
 			allPrefs = IdentityDictionary();
 			this.savePrefsToArchive;

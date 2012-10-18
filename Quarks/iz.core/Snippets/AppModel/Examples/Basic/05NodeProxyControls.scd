@@ -61,6 +61,22 @@ a = AppModel().window({ | window, app |
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
 
+//:Proxy list with autoselect
+a = AppModel().window({ | window, app |
+	window.layout = VLayout(
+		app.listView(\proxies) // list of proxies
+		.proxyList(Document.prepareProxySpace(Document.current), 2).view, 
+	);
+	// create some node proxies in this Document's proxy space for testing: 
+	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
+});
+
+//:Try this later
+~out3 = { | amp = 0.1 | WhiteNoise.ar(amp) };
+~out4 = { | amp = 0.1 | WhiteNoise.ar(amp) };
+~out5 = { | amp = 0.1 | WhiteNoise.ar(amp) };
+
 //:Testing the autoSelect parameter of proxyControlList
 a = AppModel().window({ | window, app |
 	window.layout = VLayout(
@@ -68,7 +84,7 @@ a = AppModel().window({ | window, app |
 		.proxyList(Document.prepareProxySpace(Document.current)).view, 
 		app.button(\proxies).proxyWatcher.view.states_([["start"], ["stop"]]), // start stop button
 		// list of control parameters of selected button: 
-		app.listView(\proxyControls).proxyControlList(\proxies, 3).view,
+		app.listView(\proxyControls).proxyControlList(\proxies, 2).view,
 		// Following views set the parameter selected above:
 		app.knob(\proxyControls).proxyControl.view,
 		app.numberBox(\proxyControls).proxyControl.view,

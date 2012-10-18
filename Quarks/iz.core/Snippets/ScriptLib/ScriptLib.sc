@@ -34,12 +34,16 @@ ScriptLib {
 
 	*initClass {
 		all = IdentityDictionary();
-		CocoaMenuItem.add(["New ScriptLib"], { this.new.gui });
+		CocoaMenuItem.add(["New ScriptLib"], { this.new.addDefaults.gui });
 		CocoaMenuItem.add(["Open ScriptLib"], { this.open });
 
 	}
 
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
+
+	addDefaults {
+		this.addSnippet("-DefaultFolder", "-Defaults", "//:-defaultsnippet\n{ WhiteNoise.ar(0.1) }");
+	}
 
 	*open {
 		RecentPaths.open(this.asSymbol, { | path |
@@ -116,10 +120,12 @@ ScriptLib {
 		}) do: this.addSnippet(folderName, fileName, _);
 	}
 
-	addSnippet { | folderName, fileName, snippet |
+	addSnippet { | folderName, fileName, snippet, uniqueName = true |
 		var snippetName;
-		snippetName = this.makeUniqueName([folderName, fileName], this.getSnippetName(snippet));
-		lib.put(folderName, fileName, snippetName, snippet);
+		snippetName = this.getSnippetName(snippet);
+		if (uniqueName) { snippetName = this.makeUniqueName([folderName, fileName], snippetName) };
+		lib.put(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol, snippet);
+		lib.changed(\dict);
 	}
 
 	getSnippetName { | snippet |

@@ -99,8 +99,8 @@ ProxyCodeMixer : AppModel {
 	getPreset { | preset | preset.array = valueCache collect: _.item; }
 
 	setPreset { | preset |
-//		valueCache do: { | v, i | v.item_(nil, preset[i]) };
-//		{ this.changed(\autoSetProxy); }.defer(0.5); // TODO: use layered views instead of presets
+		valueCache do: { | v, i | v.item_(nil, preset[i]) };
+		{ this.changed(\autoSetProxy); }.defer(0.5); // TODO: use layered views instead of presets
 	}
 
 	// MIDI

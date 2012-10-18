@@ -32,6 +32,7 @@ Menus:
 ScriptLibGui : AppModel {
 	classvar <>font, <windowShift = 0;
 	var <scriptLib;
+	var <snippetViews;
 
 	*initClass {
 		StartUp add: {
@@ -43,8 +44,8 @@ ScriptLibGui : AppModel {
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
 			window.bounds = Rect(
-				windowShift + 200, 
-				windowShift.neg + 100, 800, 700);
+				windowShift + 100, 
+				windowShift.neg + 50, 800, 800);
 			windowShift = windowShift + 20 % 200;
 			window.layout = VLayout(
 				this.topMenuRow,
@@ -58,7 +59,7 @@ ScriptLibGui : AppModel {
 						.view.font = font,
 				),
 				this.snippetButtonRow,
-				this.snippetCodeList,
+				[this.snippetCodeList, s: 3]
 			);
 			this.windowClosed(window, {
 				scriptLib.save;
@@ -85,8 +86,8 @@ ScriptLibGui : AppModel {
 	}
 
 	mainMenuAction { | actionIndex = 0 |
-		[nil,	// MainMenu
-		{}, 		// New
+		[nil,	// MainMenu item. Just header. No action.
+		{ scriptLib.new.addDefaults }, 		// New
 		{ scriptLib.class.open; },		// Open
 		{ scriptLib.save; },			// Save
 		{ scriptLib.saveDialog },		// Save as
@@ -96,14 +97,40 @@ ScriptLibGui : AppModel {
 	}
 
 	snippetButtonRow {
-		^nil
+		^HLayout(
+			Button().font_(font).states_([["show list"], ["show snippet"]]).action_({ | me |
+				snippetViews.index = me.value
+			}),
+			this.button('Snippet').action_({ | me |
+				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, false]));
+				me.getString.postln;
+				"=============== SNIPPET SAVED =============== ".postln;
+			}).view.font_(font).states_([["save snippet"]]),
+			this.button('Snippet').action_({ | me |
+				
+			})
+		)
 	}
+
+	saveSnippet {
+		snippetViews.index = 1;
+	}
+
+	showList {
+		snippetViews.index = 0;
+	}
+
 	snippetCodeList {
-		^this.listView('Snippet', { | me |
-			var snippets;
-			snippets = me.value.adapter.dict.atPath(me.value.adapter.path);
-			if (snippets.isNil) { [] } { snippets.asSortedArray.flop[1] };
-		}).view.font_(Font("Monaco", 10));
+		^snippetViews = StackLayout(
+			this.textView('Snippet').listItem({ | me |
+				me.value.adapter.dict.atPath(me.value.adapter.path ++ [me.item])
+			}).makeStringGetter.view.font_(Font("Monaco", 10)).tabWidth_(15),
+			this.listView('Snippet', { | me |
+				var snippets;
+				snippets = me.value.adapter.dict.atPath(me.value.adapter.path);
+				if (snippets.isNil) { [] } { snippets.asSortedArray.flop[1] };
+			}).view.font_(Font("Monaco", 10)).background_(Color(1, 1, 0.9)),
+		)
 	}
 }
 

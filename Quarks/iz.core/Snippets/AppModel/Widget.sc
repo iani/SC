@@ -73,11 +73,8 @@ Widget {
 	
 	addUpdateAction { | message, action |
 		// add action to be performed when receiving message from value.
-		// do not replace any previous action. 
-		NotificationCenter.registrations.put(value, message, this,
-			NotificationCenter.registrations.at(value, message, this) 
-				addFunc: { | ... args | action.(this, *args) } // important: provide access to self
-		);
+		// do not replace any previous action. Important: provide access to self
+		this.addNotifierAction(value, message, { | ... args | action.(this, *args) });
 	}
 	
 	updater { | notifier, message, action |
@@ -98,7 +95,8 @@ Widget {
 
 	addValueListener { | listener, message, action |
 		// make some other object perform an action whenever receiving a message from my Value
-		value.addListener(listener, message, { action.(value) })
+		listener.addNotifier(value, message, { action.(value) });
+//		value.addListener(listener, message, { action.(value) });
 	}
 
 	changedAction { | message | // set my view's action to make value send notification message with me
@@ -197,9 +195,7 @@ Widget {
 
 	listItem { | getItemFunc | // display currently selected item from a list.
 		value.adapter ?? { value.adapter = ListAdapter() };
-		getItemFunc = getItemFunc ?? { { this.item.asString } }; // TODO: remove defer?
-//		this.updateAction(\list, { { view.string = getItemFunc.(this) }.defer(0.2) });
-//		this.updateAction(\index, { { view.string = getItemFunc.(this) }.defer(0.2) });
+		getItemFunc = getItemFunc ?? { { this.item.asString } };
 		this.updateAction(\list, { view.string = getItemFunc.(this) });
 		this.updateAction(\index, { view.string = getItemFunc.(this) });
 		this.replace;		// default action is replace item with your content
@@ -293,12 +289,22 @@ Widget {
 
 	// NodeProxy stuff
 	
-	proxyList { | proxySpace | // Auto-updated list for choosing proxy from all proxies in proxySpace
+	// Auto-updated list for choosing proxy from all proxies in proxySpace
+	proxyList { | proxySpace, autoSelect |
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
-		this.updater(proxySpace, \list, {
-			this.items_(proxySpace.proxies);
-			[this, thisMethod.name, this.value.adapter, this.item].postln;
-		});
+		if (autoSelect.isNil) {
+			this.updater(proxySpace, \list, {
+				this.items_(proxySpace.proxies);
+			});
+		}{
+			this.updater(proxySpace, \list, {
+				this.items_(proxySpace.proxies);
+				if (this.items.size - 1 == autoSelect) {
+					value.index_(nil, autoSelect);
+				}; 
+			});
+			if (this.items.size - 1 >= autoSelect) { value.index_(nil, autoSelect); };
+		};
 		value.changed(\initProxyControls);	// Initialize proxyWatchers etc. created before me
 	}
 
@@ -369,10 +375,11 @@ Widget {
 					me.items collect: { | v | v.adapter.parameter };
 				});
 			}{
- 				this.list({ | me |
+				this.list({ | me |
 					if (autoSelect < me.items.size) {
-						me.value.adapter.index_(nil, autoSelect); };
-					me.items collect: { | v | v.adapter.parameter.name };
+						me.value.adapter.index_(nil, autoSelect);
+					};
+					me.items collect: { | v | v.adapter.parameter };
 				});
 			};
 			value.changed(\initProxyControls);	// Initialize proxyControls created before me

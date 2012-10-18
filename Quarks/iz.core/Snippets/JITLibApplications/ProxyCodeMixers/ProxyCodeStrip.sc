@@ -24,7 +24,7 @@ ProxyCodeStrip : AppModel {
 		presets = proxyCodeMixer.getValue(\presets);
 		^VLayout(
 			this.proxySelectMenu,
-			this.popUpMenu(\knob).proxyControlList(\proxy, 3).view.font_(font).fixedWidth_(40),
+			this.popUpMenu(\knob).proxyControlList(\proxy, 2).view.font_(font).fixedWidth_(68),
 			this.knob(\knob).proxyControl.view,
 			HLayout(
 				this.slider(\slider).proxyControl.view,
@@ -35,7 +35,7 @@ ProxyCodeStrip : AppModel {
 					this.startStopButton
 				)
 			),
-			this.popUpMenu(\slider).proxyControlList(\proxy, 1).view.font_(font),
+			this.popUpMenu(\slider).proxyControlList(\proxy, 0).view.font_(font),
 		)
 	}
 
@@ -53,18 +53,8 @@ ProxyCodeStrip : AppModel {
 	}
 
 	proxySelectMenu {
-		^this.popUpMenu(\proxy).proxyList(proxyCodeMixer.proxySpace)
-			.addUpdateAction(\list, { | me | this.autoSetProxy(me) })
-			.updater(proxyCodeMixer, \autoSetProxy, { | me | this.autoSetProxy(me) })
+		^this.popUpMenu(\proxy).proxyList(proxyCodeMixer.proxySpace, index)
 			.view.font_(font).background_(Color(0.7, 1, 0.8))
-	}
-
-	autoSetProxy { | proxyWidget |
-		var proxyIndex, proxies;
-		if (proxyWidget.index == 0) {
-			proxyIndex = presets.index * proxyCodeMixer.numStrips + index;
-			if (proxyWidget.items.size - 1 > proxyIndex) { proxyWidget.index = proxyIndex + 1; }
-		}
 	}
 	
 	// return my values to proxyCodeMixer for fast access to get and set presets

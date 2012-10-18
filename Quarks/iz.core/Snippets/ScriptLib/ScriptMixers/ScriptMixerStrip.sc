@@ -13,8 +13,8 @@ ScriptMixerStrip : AppModel {
 		^super.new.init(scriptMixer, index)
 	}
 	
-	init { | argScriptMixer, argIndex |
-		scriptMixer = argScriptMixer;
+	init { | argSriptMixer, argIndex |
+		scriptMixer = argSriptMixer;
 		index = argIndex;
 		font = font ?? { Font.default.size_(10); };
 		proxyOnColor = proxyOnColor ?? { Color.red; };
@@ -24,7 +24,7 @@ ScriptMixerStrip : AppModel {
 		presets = scriptMixer.getValue(\presets);
 		^VLayout(
 			this.proxySelectMenu,
-			this.popUpMenu(\knob).proxyControlList(\proxy, 3).view.font_(font).fixedWidth_(40),
+			this.popUpMenu(\knob).proxyControlList(\proxy, 2).view.font_(font).fixedWidth_(68),
 			this.knob(\knob).proxyControl.view,
 			HLayout(
 				this.slider(\slider).proxyControl.view,
@@ -35,8 +35,13 @@ ScriptMixerStrip : AppModel {
 					this.startStopButton
 				)
 			),
-			this.popUpMenu(\slider).proxyControlList(\proxy, 1).view.font_(font),
+			this.popUpMenu(\slider).proxyControlList(\proxy, 0).view.font_(font),
 		)
+	}
+
+	proxySelectMenu {
+		^this.popUpMenu(\proxy).proxyList(scriptMixer.proxySpace, index)
+			.view.font_(font).background_(Color(0.7, 1, 0.8))
 	}
 
 	editButton {
@@ -50,21 +55,6 @@ ScriptMixerStrip : AppModel {
 	startStopButton {
 		^this.button(\proxy).proxyWatcher({ | me | me.item.checkEvalPlay })
 			.view.states_([[">"], ["||", nil, proxyOnColor]]).font_(font)
-	}
-
-	proxySelectMenu {
-		^this.popUpMenu(\proxy).proxyList(scriptMixer.proxySpace)
-			.addUpdateAction(\list, { | me | this.autoSetProxy(me) })
-			.updater(scriptMixer, \autoSetProxy, { | me | this.autoSetProxy(me) })
-			.view.font_(font).background_(Color(0.7, 1, 0.8))
-	}
-
-	autoSetProxy { | proxyWidget |
-		var proxyIndex, proxies;
-		if (proxyWidget.index == 0) {
-			proxyIndex = presets.index * scriptMixer.numStrips + index;
-			if (proxyWidget.items.size - 1 > proxyIndex) { proxyWidget.index = proxyIndex + 1; }
-		}
 	}
 	
 	// return my values to scriptMixer for fast access to get and set presets

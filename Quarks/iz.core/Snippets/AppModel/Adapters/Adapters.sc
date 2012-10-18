@@ -129,7 +129,7 @@ ListAdapter {
 		this.index_(changer, index);
 		items.changed(\list, changer);
 	}
-	
+
 	previous { this.index_(this, index - 1 max: 0) }
 	next { this.index_(this, index + 1 min: (items.size - 1)) }
 	first { this.index_(this, 0); }

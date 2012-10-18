@@ -27,6 +27,7 @@ ProxyItem : NamedItem {
 		Class.initClassTree(Spec);
 		Class.initClassTree(ControlSpec);
 		extraSpecs = [[\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
+//		extraSpecs = [['-', nil], [\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
 //		cachedSpecs = IdentityDictionary.new;
 	}
 	
