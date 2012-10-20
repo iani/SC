@@ -7,9 +7,6 @@ See Value.org file for discussion.
 */
 
 Widget {
-	// NOTE: Model and name are not used in current functionality, but stored for 
-	// direct access in possible future applications. 
-	// In a "stricter" implementation, model and name variables could be ommitted. 
 	var <model;	// the AppModel2 that created me
 	var <name;	// the Symbol under which my Value instance is stored in the AppModel
 	var <value; 	// the Value instance that I interact with;
@@ -309,11 +306,32 @@ Widget {
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
-	a proxy space. The button should be created on the same Value item as the choosing widget.
+	a proxy space. 2 methods, both use ProxyItem rather than NodeProxy directly: 
+	
+	1. simpleProxyWatcher: standalone - not connected to a list of proxies. Proxies are assigned
+	by update messages. 
+	
+	2. proxyWatcher: connected to a list of proxies belonging to a proxySpace. For proxyWatcher, 
+	the button should be created on the same Value item as the choosing widget.
 	The choosing widget is created simply as a listView/popUpmenu on a ProxySpace's proxies. Eg:  
 		app.listView(\proxies).items_(proxySpace.proxies).view. 
 	Shortcut for listView for choosing proxies: proxyList. */
-	proxyWatcher { | playAction, stopAction |
+
+	// Note: Send an additional updater message to create connection for setting my proxy:
+	simpleProxyWatcher { | updater, playAction, stopAction |
+		this.updater(updater, \setProxy, { | me, proxyItem |
+			value.adapter = proxyItem;
+			this.startWatchingProxy(proxyItem);
+		});
+		value.adapter = ProxyItem();
+		playAction ?? { playAction = { this.checkProxy(value.adapter.item.play) } };
+		stopAction ?? { stopAction = { this.checkProxy(value.adapter.item.stop) } };
+		view.action = { [stopAction, playAction][view.value].(this) };
+		this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
+		this.startWatchingProxy(value.adapter);
+	}
+
+	proxyWatcher { | playAction, stopAction | // must connect to proxySpace proxy list
 		// Initialize myself only AFTER my proxyList has been created: 
 		if (value.adapter.isKindOf(ListAdapter).not) {
 			this.addNotifierOneShot(value, \initProxyControls, {
@@ -333,13 +351,13 @@ Widget {
 			stopAction ?? { stopAction = { value.adapter.item.item.stop } };
 			view.action = { [stopAction, playAction][view.value].(this) };
 			this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
-			this.updateAction(\list, { this.prStartWatchingProxy(value.adapter.item) });
-			this.updateAction(\index, { this.prStartWatchingProxy(value.adapter.item) });
-			this.prStartWatchingProxy(value.adapter.item);
+			this.updateAction(\list, { this.startWatchingProxy(value.adapter.item) });
+			this.updateAction(\index, { this.startWatchingProxy(value.adapter.item) });
+			this.startWatchingProxy(value.adapter.item);
 		}
 	}
-	
-	prStartWatchingProxy { | proxy |
+
+	startWatchingProxy { | proxy |
 		// used internally by proxyWatcher method to connect proxy and disconnect previous one
 		this.changed(\disconnectProxy);	// remove notifiers to self from previous proxy
 		if (proxy.isNil or: { (proxy = proxy.item).isNil } ) { view.value = 0; ^this };

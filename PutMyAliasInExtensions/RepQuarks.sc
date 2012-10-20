@@ -1,14 +1,14 @@
 /* MC / IZ 201109-10
-RepQuarks is a code management mechanism for SuperCollider based on Quarks. RepQuarks makes it possible to combine different quark projects which exist independently in different folders, without having to copy these in the global Quarks directory. This gives additional freedom in working with multiple projects while keeping their files separate, and is especially valuable for sharing code with other people independently from the global Quarks. 
+RepQuarks is a code management mechanism for SuperCollider based on Quarks. RepQuarks makes it possible to combine different quark projects which exist independently in different folders, without having to copy these in the global Quarks directory. This gives additional freedom in working with multiple projects while keeping their files separate, and is especially valuable for sharing code with other people independently from the global Quarks.
 
-Please see README_RepQuarks.rtfd for documentation. 
+Please see README_RepQuarks.rtfd for documentation.
 
-2DO: Implement automatic dependency resolution? Probably too expensive as one would have to scan for *all* class names? Some thoughts though: 
- 
-Before installing a Quark from a RepQuarks repository, look at all its class definitions by performing a grep for class definition code in the class definition files of the quark. Collect all declared superclasses in those class definitions. Find if those superclasses are already defined. If a superclass is not already defined, then find if it is defined in one of the known RepQuark repositories. If yes, find the Quark in that repository and install it. Print a message about the automatic dependency resolution (successful or not). 
+2DO: Implement automatic dependency resolution? Probably too expensive as one would have to scan for *all* class names? Some thoughts though:
+
+Before installing a Quark from a RepQuarks repository, look at all its class definitions by performing a grep for class definition code in the class definition files of the quark. Collect all declared superclasses in those class definitions. Find if those superclasses are already defined. If a superclass is not already defined, then find if it is defined in one of the known RepQuark repositories. If yes, find the Quark in that repository and install it. Print a message about the automatic dependency resolution (successful or not).
 
 To prepare this: Look at Quarks classvars: global, allInstances, known, repos, local.
-Examine which of these variables should be used to store the list of known/installed repquarks with their paths. These can be used to search all existing RepQuarks in order to resolve dependencies. 
+Examine which of these variables should be used to store the list of known/installed repquarks with their paths. These can be used to search all existing RepQuarks in order to resolve dependencies.
 
 */
 
@@ -16,6 +16,7 @@ RepQuarks : Quarks {
 	classvar <menu, <menuName = "Quarks";
 //	classvar <repQuarks;	// dict of all RepQuarks instances, i.e. groups of local repository quarks.
 
+/*
 	*initClass {
 		StartUp add: {
 //			repQuarks = IdentityDictionary.new;
@@ -25,7 +26,7 @@ RepQuarks : Quarks {
 			});
 		};
 	}
-
+*/
 	*makeMainQuarksMenu {
 		menu = CocoaMenuItem.topLevelItems detect: { | m | m.name == menuName };
 		if (menu.isNil) {
@@ -58,14 +59,14 @@ RepQuarks : Quarks {
 	}
 
 	*getQuarksDirectories { | path |
-		/* 	Find out which quark groups are contained in the folder given by the 
+		/* 	Find out which quark groups are contained in the folder given by the
 			quarkpath and create a menu for them.
-			Search in 4 ways: 
+			Search in 4 ways:
 			1. Look for a folder named Quarks. If found then if it contains
-			a DIRECTORY folder, read the quark definitions from the DIRECTORY folder. 
-			2. If no DIRECTORY folder was found in the Quarks folder, then search for 
-		   	DIRECTORY folders in each of the subdirectories of the Quarks folder. 
-		   	3. If none of the above, then, 
+			a DIRECTORY folder, read the quark definitions from the DIRECTORY folder.
+			2. If no DIRECTORY folder was found in the Quarks folder, then search for
+		   	DIRECTORY folders in each of the subdirectories of the Quarks folder.
+		   	3. If none of the above, then,
 			if the quarkpath folder contains a folder named DIRECTORY, then read the quarks
 			from DIRECTORY and add one single quark group named after the quarkpath folder.
 			4. Otherwise look at each subfolder in the quarkpath folder and add a quark group
@@ -93,27 +94,27 @@ RepQuarks : Quarks {
 	}
 
 	*isQuarkFolder { | path |
-		^(path +/+ "DIRECTORY").pathMatch.size > 0; 	
+		^(path +/+ "DIRECTORY").pathMatch.size > 0;
 	}
 
 	*getQuarkPath {
-		/* RepQuarks can be included in the compile path of SuperCollider by creating 
+		/* RepQuarks can be included in the compile path of SuperCollider by creating
 		a subclass of RepQuarks, putting it in the top level of your quarks folder, and then
 		putting an alias of the subclass file inside the Extensions folder of SuperCollider
-		(Platform.userExtensionDir;). 
-	
-		Otherwise, if you use a symlink (ln -s) to include your quark directory in the 
-		Extensions folder, then you should provide a class method quarkPath to define your 
-		custom path.  This may also be a class variable with getter: 
+		(Platform.userExtensionDir;).
+
+		Otherwise, if you use a symlink (ln -s) to include your quark directory in the
+		Extensions folder, then you should provide a class method quarkPath to define your
+		custom path.  This may also be a class variable with getter:
 			classvar <quarkPath = "/path/to/my/quark/folder... ";
-			
+
 		The getQuarkPath method first checks if the file of this subclass is in the Extensions folder.
-		If yes, it assumes that this is a symlink, and tries to get your custom quarkPath. 
-		If no, it uses the path of the file of this subclass to get your quarks. 
+		If yes, it assumes that this is a symlink, and tries to get your custom quarkPath.
+		If no, it uses the path of the file of this subclass to get your quarks.
 		This means that your quarks can be used independently of your quarkPath method,
-		as long as an *alias* (MacOS X) your RepQuarks subclass definition file is placed 
-		in the Extensions folder.  	
-		
+		as long as an *alias* (MacOS X) your RepQuarks subclass definition file is placed
+		in the Extensions folder.
+
 		 */
 		var path;
 		path = this.filenameSymbol.asString.dirname;
@@ -128,7 +129,7 @@ RepQuarks : Quarks {
 
 	*quarkPath {
 		/* This is the default quarks path. Subclasses may overwrite it.
-		It is only used if the subclass definition file of a quark folder is placed in 
+		It is only used if the subclass definition file of a quark folder is placed in
 		the Extensions folder, _not_ as an alias, but as a symlink.
 		*/
 		^PathName("~/Quarks/").fullPath;
@@ -141,10 +142,10 @@ RepQuarks : Quarks {
 
 	// IZ: user extension dir + local quark containing dir
 	installDir { ^Platform.userExtensionDir +/+ local.path.basename }
-	
+
 	// IZ: user extension dir + local quark containing dir + quark name
 	installPath { | q | ^this.installDir +/+ q.name; }
-	
+
 	// a gui for Quarks. 2007 by LFSaw.de
 	// Mod of window height to fit all quarks list by IZ 201108
 	gui {
@@ -159,7 +160,7 @@ RepQuarks : Quarks {
 //		postf("RepQuarks gui - local: %\n", local.postln.quarks);
 		quarks = this.repos.quarks.copy
 			.sort({ |a, b| a.name < b.name });
-		
+
 		fillPage = { | start |
 			scrollview.visible = false;
 			if (views.notNil) {
@@ -220,7 +221,7 @@ RepQuarks : Quarks {
 		// add open directory button (open is only implemented in OS X)
 		if (thisProcess.platform.name == \osx) {
 			GUI.button.new(
-				window, 
+				window,
 				Rect(15,15,150,20)
 			).states_([["open quark directory", Color.black, Color.gray(0.5)]]
 			).action = {
@@ -260,7 +261,7 @@ RepQuarks : Quarks {
 
 		window.view.decorator.nextLine;
 		explanation = GUI.staticText.new(window, Rect(20,15,500,20));
-		explanation.string = 
+		explanation.string =
 			"\"+\" -> installed, \"-\" -> not installed, \"*\" -> marked to install, \"x\" -> marked to uninstall";
 		explanation.font = Font("Helvetica-Bold", 12); // Fit QT Gui default
 		window.view.decorator.nextLine;
@@ -281,7 +282,7 @@ RepQuarks : Quarks {
 		fillPage.(pageStart);
 		^window;
 	}
-	
+
 	install { | name, includeDependencies = true, checkoutIfNeeded = true |
 		var q, deps, installed, dirname, quarksForDep;
 		// rewritten as instance method:
@@ -315,7 +316,7 @@ RepQuarks : Quarks {
 		// create /quarks/ directory if needed
 		if (this.repos.checkDir.not) { this.checkoutDirectory };
 
-		// Now ensure that the dependencies are installed 
+		// Now ensure that the dependencies are installed
 		// (if available given the current active reposses)
 		if (includeDependencies) {
 			q.dependencies(true).do({ |dep|
@@ -337,17 +338,17 @@ RepQuarks : Quarks {
 		};
 
 		// Ensure the correct folder-hierarchy exists first
-		
-		// IZ Adding enclosing dir for grouping: 
+
+		// IZ Adding enclosing dir for grouping:
 		// dirname = (Platform.userExtensionDir +/+ local.name +/+ q.path).dirname;
-		
+
 		if (File.exists(this.installDir).not) {
 			systemCmd("mkdir -p " + this.installDir.escapeChar($ ));
 		};
 
 		// install via symlink to Extensions/<quark-group-dir>/<quarks-dir>
-		systemCmd("ln -s " 
-			+ (local.path +/+ q.path).escapeChar($ ) 
+		systemCmd("ln -s "
+			+ (local.path +/+ q.path).escapeChar($ )
 			+ this.installPath(q).escapeChar($ ));
 		inform(q.name + "installed");
 	}

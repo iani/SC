@@ -8,11 +8,11 @@ ScriptMixerStrip : AppModel {
 	var <>scriptMixer, <>index;
 	var <>font, <>proxyOnColor;
 	var <presets;	// cache the presets value for faster access in autoSetProxy
-	
+
 	*new { | scriptMixer, index |
 		^super.new.init(scriptMixer, index)
 	}
-	
+
 	init { | argSriptMixer, argIndex |
 		scriptMixer = argSriptMixer;
 		index = argIndex;
@@ -24,7 +24,7 @@ ScriptMixerStrip : AppModel {
 		presets = scriptMixer.getValue(\presets);
 		^VLayout(
 			this.proxySelectMenu,
-			this.popUpMenu(\knob).proxyControlList(\proxy, 2).view.font_(font).fixedWidth_(68),
+			this.popUpMenu(\knob).proxyControlList(\proxy, 3).view.font_(font).fixedWidth_(68),
 			this.knob(\knob).proxyControl.view,
 			HLayout(
 				this.slider(\slider).proxyControl.view,
@@ -35,7 +35,7 @@ ScriptMixerStrip : AppModel {
 					this.startStopButton
 				)
 			),
-			this.popUpMenu(\slider).proxyControlList(\proxy, 0).view.font_(font),
+			this.popUpMenu(\slider).proxyControlList(\proxy, 1).view.font_(font),
 		)
 	}
 
@@ -51,14 +51,14 @@ ScriptMixerStrip : AppModel {
 		)
 		.view.states_([["ed"]]).font_(font)
 	}
-	
+
 	startStopButton {
 		^this.button(\proxy).proxyWatcher({ | me | me.item.checkEvalPlay })
 			.view.states_([[">"], ["||", nil, proxyOnColor]]).font_(font)
 	}
-	
+
 	// return my values to scriptMixer for fast access to get and set presets
 	valueCache { ^this.valueCacheNames collect: this.getValue(_) }
-	
+
 	valueCacheNames { ^[\proxy, \slider, \knob] }
 }

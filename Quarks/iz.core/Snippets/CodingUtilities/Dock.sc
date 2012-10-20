@@ -1,5 +1,5 @@
-/* 
-Dock.showDocListWindow: 
+/*
+Dock.showDocListWindow:
 	Provide an automatically updating list of currently open windows to choose from
 Dock.browseUserClasses:
 	Provide a list of Classes defined in the current Users' Extensions diractory
@@ -12,8 +12,8 @@ Dock {
 	classvar <shortcutDocPaths;
 	classvar <shortcutDocMenuItems;
 
-	*initClass { StartUp add: this }
-	
+//	*initClass { StartUp add: this }
+
 	*doOnStartUp {
 
 		shortcutDocMenuItems = Array.newClear(10);
@@ -28,8 +28,8 @@ Dock {
 
 	*makeDocShortcutMenuItem { | path, i |
 		if (path.isNil) { ^this };
-		shortcutDocMenuItems[i] = CocoaMenuItem.add([path.basename], { 
-			this showDoc: i 
+		shortcutDocMenuItems[i] = CocoaMenuItem.add([path.basename], {
+			this showDoc: i
 		}).setShortCut(i.asString);
 	}
 
@@ -42,7 +42,7 @@ Dock {
 			shortcutDocs[i] = Document open: docPath;
 		}
 	}
-	
+
 	*addDocShortcut { | doc, i |
 		if (shortcutDocMenuItems[i].notNil) { shortcutDocMenuItems[i].remove };
 		shortcutDocs[i] = doc;
@@ -54,12 +54,12 @@ Dock {
 
 
 	*menuItems {
-		^{ | i | 
+		^{ | i |
 			CocoaMenuItem.add(["Add Doc shortcut", i.asString], {
 				this.addDocShortcut(Document.current, i);
 			}).setShortCut(i.asString, true)
-		} ! 10 
-		addAll: 
+		} ! 10
+		addAll:
 		[
 			CocoaMenuItem.addToMenu("Utils", "show doc list window", ["\"", false, false], {
 				this.showDocListWindow;
@@ -73,17 +73,17 @@ Dock {
 			CocoaMenuItem.addToMenu("Utils", "open spectrograph", ["s", true, true], {
 				this.openFreqScope;
 			}),
-		]		
+		]
 	}
 
 	*openScope {
 		if (Server.default === Server.local) {
 			GUI.useID(\qt, { Server.default.scope; });
 		}{
-			Server.default.scope;			
+			Server.default.scope;
 		}
 	}
-	
+
 	*openFreqScope {
 		var guiID;
 		if (Server.default === Server.local) {
@@ -96,18 +96,18 @@ Dock {
 				GUI.fromID(guiID);
 			}.value;
 		}{
-			Server.default.freqscope;			
+			Server.default.freqscope;
 		}
 	}
 
 	*showDocListWindow { | multiPaneAreaWidth |
 		var listwin;
 		multiPaneAreaWidth = multiPaneAreaWidth ?? { Window.screenBounds.width };
-		listwin = ListWindow('Documents', 
-			Rect(multiPaneAreaWidth - width, 87, width, Window.screenBounds.height - 87),  
-			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d | 
+		listwin = ListWindow('Documents',
+			Rect(multiPaneAreaWidth - width, 87, width, Window.screenBounds.height - 87),
+			{ Document.allDocuments.sort({ | a, b | a.name < b.name }) collect: { | d |
 				d.name->{
-					d.front; 
+					d.front;
 					Document.current = d;
 				} };
 			},
@@ -126,7 +126,7 @@ Dock {
 			listwin.window.bounds = listwin.window.bounds.height = Window.screenBounds.height;
 		});
 	}
-	
+
 	*closeDocListWindow {
 		var window;
 		window = Window.allWindows.detect({ | w | w.name == "Documents" });
@@ -135,16 +135,16 @@ Dock {
 	*positionDocListWindowLeftFrom {|xPos|
 		var window;
 		window = Window.allWindows.detect({ | w | w.name == "Documents" });
-		if (window.notNil) { 
+		if (window.notNil) {
 			window.bounds = Rect((xPos - width).max(0), 87, width, Window.screenBounds.height - 87)
 		}
 	}
 
 	*placeDocWindow { | x = -160, y = 200 |
-		/* 	IZ 120308 Hack to send Document list window to the other computer monitor screen. Try: 
+		/* 	IZ 120308 Hack to send Document list window to the other computer monitor screen. Try:
 			Dock.placeDocWindow(-160, 200);
-			Note: Compare with Dock.positionDocListWindowLeftFrom which does not place the 
-			window entirely outside the current main monitor screen. 
+			Note: Compare with Dock.positionDocListWindowLeftFrom which does not place the
+			window entirely outside the current main monitor screen.
 		*/
 		var docwin;
 		docwin = Window.allWindows select: { | w | w.name == "Documents" };
@@ -159,15 +159,15 @@ Dock {
 		ListWindow(windowName, nil, {
 			Class.allClasses.select({ | c |
 				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
-				and: { "Meta*".matchRegexp(c.name.asString).not }
-			}).collect({ | c | 
-				c.name.asSymbol->{ 
-					{ 
+				and: { "Meta\*".matchRegexp(c.name.asString).not }
+			}).collect({ | c |
+				c.name.asSymbol->{
+					{
 						c.openCodeFile;
-						{ 
-							if (ListWindow.at(windowName).notNil) { 
+						{
+							if (ListWindow.at(windowName).notNil) {
 								ListWindow.at(windowName).close;
-							}; 
+							};
 						}.defer(0.5)
 					}.doOnceIn(0.75);
 				}

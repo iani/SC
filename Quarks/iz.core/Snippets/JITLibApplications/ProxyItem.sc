@@ -6,7 +6,7 @@ ProxyItem is the place to put snippet parsing code.
 */
 
 NamedItem {
-	var <>name, <>item;
+	var <>name = "-", <>item;
 	*new { | name, item | ^this.newCopyArgs(name, item) }
 
 	asString { ^name }
@@ -22,26 +22,31 @@ NamedItem {
 ProxyItem : NamedItem {
 	classvar <>extraSpecs;
 	var <history, <specs;
+	var <>container;	// also acts as adapter in Value. See Widget:simpleProxyWatcher
+	var <>nameWithSnippet; 	// "name:snippetName". Used for display by ScriptMixer
 
+	updateMessage { \proxy } // Value:updateListeners compatibility.
+	
 	*initClass {
 		Class.initClassTree(Spec);
 		Class.initClassTree(ControlSpec);
-		extraSpecs = [[\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
-//		extraSpecs = [['-', nil], [\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
+//		extraSpecs = [[\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
+		extraSpecs = [['-', nil], [\vol, ControlSpec(0, 2)], [\fadeTime, ControlSpec(0, 60)]];
 //		cachedSpecs = IdentityDictionary.new;
 	}
 	
-	*new { | name, item | ^this.newCopyArgs(name, item).init }
+	*new { | name = "-", item | ^this.newCopyArgs(name, item ?? { NodeProxy() }).init }
 	
 	init {
 		history = List.new;
 		specs = List.new;
 		this.addNotifier(item, \source, { this.getParamsFromProxy });
+		this.getParamsFromProxy;
 	}
 
 	getParamsFromProxy {
 		this.specs =
-			(if (item.rate === \audio) { extraSpecs } { [] })
+			(if (item.rate === \audio) { extraSpecs } { [['-', nil]] })
 			++ 
 			(item.getKeysValues collect: { | keyVal |
 				[keyVal[0], (keyVal[0].asSpec ?? { \bipolar.asSpec }).default_(keyVal[1])] 

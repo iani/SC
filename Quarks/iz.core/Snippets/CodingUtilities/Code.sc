@@ -1,5 +1,5 @@
-/* 
-Select and execute code in a doc by typing command keys. 
+/*
+Select and execute code in a doc by typing command keys.
 */
 
 Code {
@@ -13,19 +13,19 @@ Code {
 	var <snippetSeparator = ":";
 
 	*initClass {
-		StartUp add: { this.menuItems }
+		StartUp add: { /* this.menuItems */ }
 	}
 
 	*new { | doc |
-		^this.newCopyArgs(doc).init;	
+		^this.newCopyArgs(doc).init;
 	}
-	
+
 	*fork { | string, clock |
 		// compile a string into a function and then fork it as a routine
 		var func;
 		func = string.compile;
 		clock = clock ? AppClock;
-		if (autoBoot) { 
+		if (autoBoot) {
 			ServerPrep(Server.default).addRoutine({ func.fork(clock) });
 			if (Server.default.serverRunning.not) { Server.default.boot };
 		}{
@@ -39,11 +39,11 @@ Code {
 		if (string[52..61] == "// History") { snippetSeparator = " - " };
 		positions = string.findRegexp(format("^//%", snippetSeparator));
 		// if findRegexp returns an array of strings (which is not what we want), then
-		// repeat init. 
+		// repeat init.
 		/// This is a workaround for an erratic error (bug in findRegexp?)
 		if ((positions ? [])[0].isKindOf(String)) { this.init; };
 	}
-	
+
 	headers {
 		^string.findRegexp(format("^//%[^\n]*", snippetSeparator)).flop[1];
 	}
@@ -60,8 +60,8 @@ Code {
 				this.makeCodeOSC;
 			}),
 			/* IZ 20110810: J for next, K for previous: compatibility with de facto standard
-				for movement by keyboard in most software since before the mouse: 
-				vi, gmail, google labs, ebib, many other apps and games. See HJKL keys: 
+				for movement by keyboard in most software since before the mouse:
+				vi, gmail, google labs, ebib, many other apps and games. See HJKL keys:
 				http://en.wikipedia.org/wiki/HJKL_keys#HJKL_keys */
 			CocoaMenuItem.addToMenu("Code", "next snippet", ["J", false, false], {
 				this.selectNextSnippet;
@@ -72,8 +72,8 @@ Code {
 			CocoaMenuItem.addToMenu("Code", "fork current snippet (AppClock)", ["X", false, false],
 				{ this.forkCurrentSnippet(AppClock); }
 			),
-			CocoaMenuItem.addToMenu("Code", "fork current snippet (SystemClock)", 
-				["X", true, false], 
+			CocoaMenuItem.addToMenu("Code", "fork current snippet (SystemClock)",
+				["X", true, false],
 				{ this.forkCurrentSnippet(SystemClock); }
 			),
 			CocoaMenuItem.addToMenu("Code", "eval+post current snippet", ["V", false, false], {
@@ -129,11 +129,11 @@ Code {
 			window.layout = VLayout(
 				app.listView(\snippets)
 					.updateAction_({ | view, sender, adapter |
-						view.items = adapter.adapter.items collect: { | s | 
+						view.items = adapter.adapter.items collect: { | s |
 							s[3..80].replace("\n", "-")
 						}
 					}).items_(Code(doc).getAllSnippetStrings)
-					.view.keyDownAction_({ | view, char | 
+					.view.keyDownAction_({ | view, char |
 						if (char.ascii == 13) { // when return key is pressed: evaluate snippet
 							app.getAdapter(\snippets).adapter.item.interpret
 						};
@@ -154,11 +154,11 @@ Code {
 		AppModel().stickyWindow(doc, \snippetButtons, { | window, app |
 			window.name = doc.name ++ " : snippet buttons";
 			window.layout = VLayout(
-				*(headers collect: { | h, i | 
+				*(headers collect: { | h, i |
 					Button().states_([[h[3..]]])
 					.action_({ Code(doc).performCodeAt(i + 1, \fork, AppClock) })
 					.font_(font) })
-			)	
+			)
 		})
 
 	}
@@ -175,8 +175,8 @@ Code {
 				path = path[1]
 			};
 			OSCFunc({ "test".postln;
-				// error without defer. Why? 
-				{ Code(doc).performCodeAt(i + 1, \fork, AppClock) }.defer(0.0001); 
+				// error without defer. Why?
+				{ Code(doc).performCodeAt(i + 1, \fork, AppClock) }.defer(0.0001);
 			}, path)
 		});
 		"OSCFuncs generated with following paths:".postln;
@@ -247,7 +247,7 @@ Code {
 	}
 
 	*selectNextSnippet {
-		^this.new(Document.current).selectNextSnippet;	
+		^this.new(Document.current).selectNextSnippet;
 	}
 
 	*selectPreviousSnippet {
@@ -269,7 +269,7 @@ Code {
 		length = prevsnippetend - prevsnippetstart;
 		doc.selectRange(start, length);
 	}
-	
+
 	findSnippets {
 		var curpos;
 		var prevend, curend, nextend;

@@ -132,6 +132,11 @@ ScriptLib {
 		^(snippet.findRegexp("//:([A-Za-z\\-_][A-Za-z0-9\\-_]*)").flop[1] ?? { [nil, "_"] })[1];
 	}
 
+	deleteSnippet { | folderName, fileName, snippetName |
+		lib.removeAt(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol);
+		lib.changed(\dict);
+	}
+
 	export { | path |
 		var fileName, file, snippet;
 		path.postln;

@@ -104,27 +104,34 @@ ScriptLibGui : AppModel {
 			this.button('Snippet').action_({ | me |
 				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, false]));
 				me.getString.postln;
-				"=============== SNIPPET SAVED =============== ".postln;
+				"=============== SNIPPET SAVED ===============".postln;
 			}).view.font_(font).states_([["save snippet"]]),
 			this.button('Snippet').action_({ | me |
+				me.getString.interpret;
+			}).view.font_(font).states_([["eval"]]),
+			this.button('Snippet').action_({ | me |
 				
-			})
+			}).view.font_(font).states_([["play"], ["stop"]]),
+			this.button('Snippet').action_({ | me |
+				
+			}).view.font_(font).states_([["eval proxy source"]]),
+			this.button('Snippet').action_({ | me |
+				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, true]));
+			}).view.font_(font).states_([["new"]]),
+			this.button('Snippet').action_({ | me |
+				scriptLib.deleteSnippet(*(me.value.adapter.path ++ [me.item]));
+			}).view.font_(font).states_([["delete"]]),
+			this.button('Snippet').action_({ | me |
+				
+			}).view.font_(font).states_([["show buffers"], ["hide buffers"]]),
 		)
-	}
-
-	saveSnippet {
-		snippetViews.index = 1;
-	}
-
-	showList {
-		snippetViews.index = 0;
 	}
 
 	snippetCodeList {
 		^snippetViews = StackLayout(
 			this.textView('Snippet').listItem({ | me |
 				me.value.adapter.dict.atPath(me.value.adapter.path ++ [me.item])
-			}).makeStringGetter.view.font_(Font("Monaco", 10)).tabWidth_(15),
+			}).makeStringGetter.view.font_(Font("Monaco", 10)).tabWidth_(25),
 			this.listView('Snippet', { | me |
 				var snippets;
 				snippets = me.value.adapter.dict.atPath(me.value.adapter.path);

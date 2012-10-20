@@ -1,9 +1,9 @@
-/* 
-Arrange Document windows so that they fill the entire area of the currently available main monitor screen. Provide 2 arrangement schemes: 
+/*
+Arrange Document windows so that they fill the entire area of the currently available main monitor screen. Provide 2 arrangement schemes:
 
-1. post + tryout window + 1 window for editing 
+1. post + tryout window + 1 window for editing
 
-2. post + tryout window + as many windows as fit side by side horizontally to fill the screen, where each window is 640 pixels wide. 
+2. post + tryout window + as many windows as fit side by side horizontally to fill the screen, where each window is 640 pixels wide.
 
 
 */
@@ -12,7 +12,7 @@ Panes {
 	classvar <prefs, prefsFile = "PanesPrefs.scd";
 	classvar <>panePos, <>protoPanePos, <>listenerPos, <>tryoutPos;
 	classvar <currentPositionAction, <>defaultArrangementAction, <multiPaneAreaWidth;
-	classvar <>miniServerWindow = false; // if true, rightmost pane will leave space for 
+	classvar <>miniServerWindow = false; // if true, rightmost pane will leave space for
 	// Sergio Luque's modified Server:makeWindow at the bottom right part of the screen
 
 	*defaults {
@@ -23,21 +23,21 @@ Panes {
 			, defaultArrangementMethod: \arrangeMultiPanes, tryoutName: "tryout.scd"
 		)
 	}
-	
+
 	*updatePrefs { // iz 120304
-		// update preferences from Window.screenBounds to fit, 
+		// update preferences from Window.screenBounds to fit,
 		// when using a computer monitor with different screen dimensions than previously
 		multiPaneAreaWidth = Window.screenBounds.width;
 		prefs.multiPaneAreaWidth = multiPaneAreaWidth;
 		prefs.multiPaneHeight = Window.screenBounds.height - prefs.menuHeight;
 		this.savePrefs;
 	}
-	
+
 	*savePrefs { // iz 120304
 		UserPrefs.save(prefsFile, prefs);
 	}
-	
-	*initClass { StartUp.add(this); }
+
+	*initClass { /* StartUp.add(this); */ }
 
 	*doOnStartUp {
 		this.loadPrefs; //mc
@@ -47,7 +47,7 @@ Panes {
 		Dock.addMenu;
 		{ this.start; }.defer(2); // wait for MacOS X to reopen last session windows before starting
 	}
-	*loadPrefs{ 
+	*loadPrefs{
 		prefs = ().putAll(UserPrefs.load(prefsFile, this.defaults));
 		multiPaneAreaWidth = prefs.multiPaneAreaWidth;
 	}
@@ -56,7 +56,7 @@ Panes {
 	*activate {
 		this.addNotifier(Document, \docOpened, { | doc | this.docOpened(doc) });
 		Document.initAction = { | doc |
-			Document.changed(\docOpened, doc); 
+			Document.changed(\docOpened, doc);
 			doc.onClose = { | doc | Document.changed(\docClosed, doc) };
 		};
 		Document.allDocuments do: this.setDocActions(_);
@@ -71,7 +71,7 @@ Panes {
 			this.openTryoutWindow;
 			this.placeListener.bounds =  listenerPos; // override toggling
 		}.defer(0.5);
-		 
+
 	}
 
 	*placeListener {
@@ -114,32 +114,32 @@ Panes {
 		{
 			this.maximizeDocHeight(Document.current);
 		}),
-		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (multi-pane mode)", 
+		CocoaMenuItem.addToMenu("Utils", "toggle pane area width (multi-pane mode)",
 			["M", false, true], {	this.togglePaneAreaWidth;
 		}),
 		CocoaMenuItem.addToMenu("Utils", "rearrange all docs", ["R", false, false],
 		{	this.rearrangeAllDocs;
 		}),
-		
-//quick add, but very helpful...	
+
+//quick add, but very helpful...
 		CocoaMenuItem.addToMenu("Utils", "all GUIs front", ["g", true, false],
 		{	Window.allWindows.do{|w| w.front}
 		}),
-		
-//why is all the following in Panes? Could we not modularise Panes any further? 
-		CocoaMenuItem.addToMenu("Utils", "Boot/Quit default server", ["B", true, false], { 
+
+//why is all the following in Panes? Could we not modularise Panes any further?
+		CocoaMenuItem.addToMenu("Utils", "Boot/Quit default server", ["B", true, false], {
 			if (Server.default.serverRunning) { Server.default.quit } { Server.default.boot };
 		}),
-		
-		CocoaMenuItem.addToMenu("Utils", "Edit startup file", ["S", true, true], { 
+
+		CocoaMenuItem.addToMenu("Utils", "Edit startup file", ["S", true, true], {
 			Document.open(UserPath("startup.scd"))
 		}),
-		
-		CocoaMenuItem.addToMenu("Utils", "Open User Directory", ["o", true, true], { 
+
+		CocoaMenuItem.addToMenu("Utils", "Open User Directory", ["o", true, true], {
 			"open ~/Library/Application\\ Support/SuperCollider".unixCmd;
 		}),
-		
-		CocoaMenuItem.addToMenu("Utils", "Toggle OSC input posting", ["O", true, true], { 
+
+		CocoaMenuItem.addToMenu("Utils", "Toggle OSC input posting", ["O", true, true], {
 			if (thisProcess.recvOSCfunc.isNil) {
 				thisProcess.recvOSCfunc = { | time, addr, msg |
 					if (msg[0].asString.contains("status.reply").not) {			postf("time: % sender: % message: %\n", time, addr, msg)
@@ -151,16 +151,16 @@ Panes {
 				"OSC Posting is OFF".postln;
 			}
 		}),
-		
-		CocoaMenuItem.addToMenu("Utils", "Start OSC input test", ["I", true, true], { 
+
+		CocoaMenuItem.addToMenu("Utils", "Start OSC input test", ["I", true, true], {
 			{
 				var a;
 				a = NetAddr.localAddr;
 				loop { a.sendMsg(\test); 0.25.wait };
 			}.fork
 		}),
-		
-		CocoaMenuItem.addToMenu("Utils", "Open log file in orgmode", ["l", true, true], { 
+
+		CocoaMenuItem.addToMenu("Utils", "Open log file in orgmode", ["l", true, true], {
 			{
 				var logname;
 				logname = Platform.userAppSupportDir ++ "/sclog.org";
@@ -218,7 +218,7 @@ Panes {
 		tryoutPos = Rect(0, mPLH, multiPaneWidth, screenTop - mPLH);
 		panePos = Rect(multiPaneWidth, screenTop - multiPaneHeight, multiPaneWidth, multiPaneHeight);
 		protoPanePos = panePos.copy;
-		this changeArrangement: { | doc | 
+		this changeArrangement: { | doc |
 			this.placeDoc(doc);
 			this.nextPane;
 		};
@@ -229,13 +229,13 @@ Panes {
 	*changeArrangement { | arrangeFunc |
 		currentPositionAction = arrangeFunc;
 	}
-	
+
 	*rearrangeAllDocs {
 		this doRestoreTop: {
 			Document.allDocuments do: currentPositionAction.(_);
 		};
 	}
-	
+
 	*placeDoc { | doc |
 		if (doc.reallyIsListener) { ^doc.bounds = listenerPos; };
 		if (doc.name == prefs.tryoutName) { ^doc.bounds = tryoutPos };
@@ -254,7 +254,7 @@ Panes {
 			if (top >= 0) { panePos.top = top }{
 				left = panePos.left + multiPaneWidth;
 				if (left + this.multiPaneWidth > multiPaneAreaWidth) {
-					panePos = tryoutPos.copy;		
+					panePos = tryoutPos.copy;
 				}{
 					panePos.left = left;
 					panePos.top = screenTop - multiPaneHeight;
@@ -263,7 +263,7 @@ Panes {
 					panePos.width + panePos.left == Window.screenBounds.width
 				}) {
 					panePos.height_(panePos.height - 45).top_(45);
-				}				
+				}
 			}
 		};
 	}
@@ -272,7 +272,7 @@ Panes {
 		if (doc.reallyIsListener.not && (doc.name != prefs.tryoutName) && doc.bounds.left != 0) {
 			height = Window.screenBounds.height - prefs.menuHeight;
 			doc.bounds = doc.bounds.top_(height).height_(height)
-		}	
+		}
 	}
 	*togglePaneAreaWidth {
 		var newMultiPaneAreaWidth;
@@ -283,16 +283,16 @@ Panes {
 			multiPaneAreaWidth = newMultiPaneAreaWidth;
 //			this.rearrangeAllDocs;
 			Dock.positionDocListWindowLeftFrom(multiPaneAreaWidth);
-		} 
+		}
 	}
-	
+
 	*docOpened { | doc |
 // why does this post twice always???????????
 //		postf("Panes init doc actions docOpened: %\n", doc.name).postln;
 		this.setDocActions(doc);
 		currentPositionAction.(doc);
 	}
-	
+
 	*setDocActions { | doc |
 		doc.toFrontAction = {
 			var selectionStart, selectionSize;
@@ -302,6 +302,6 @@ Panes {
 		doc.mouseUpAction = { Document.changed(\docMouseUp, doc); };
 		doc.onClose = { Document.changed(\docClosed, doc); };
 	}
-	
+
 	*docNotifiers { ^[\docOpened, \docToFront, \docEndFront, \docMouseUp, \docClosed] }
 }

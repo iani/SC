@@ -1,4 +1,4 @@
-/* 
+/*
 IZ, 2011 08 17ff
 
 TODO: Maybe \list notifications should be issued by the proxy list in Library, and not by ProxySpace.
@@ -6,7 +6,7 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 */
 
 + LazyEnvir {
-	at { | key | // must be here. If in ProxySpace, then notifications do not work with super. 
+	at { | key | // must be here. If in ProxySpace, then notifications do not work with super.
 		var proxy, proxyItem, proxyList;
 		proxy = super.at(key);
 		if(proxy.isNil) {
@@ -17,11 +17,11 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 			this.changed(\list, this, proxyList); // proxies in order of creation
 		};
 		^proxy
-	}	
+	}
 }
 
 + ProxySpace {
-	
+
 	*defaultProxy {
 		^this.default.at(\default);
 	}
@@ -35,25 +35,25 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 		};
 		^default;
 	}
-	
+
 	removeNeutral {
 		envir.copy.keysValuesDo { arg key, val; if(val.isNeutral) { envir.removeAt(key) } };
 		this.changed(\removeNeutral, this);
 	}
-	
+
 	proxies {
 		var proxies;
 		proxies = Library.at('Proxies', this);
-		if (proxies.isNil) { 
-			proxies = List.new; // .add(ProxyItem('-', NodeProxy())); 
-//			proxies = List.new.add(ProxyItem('-', NodeProxy())); 
-//			proxies = List.new.add(ProxyItem('-', nil)); 
+		if (proxies.isNil) {
+			proxies = List.new; // .add(ProxyItem('-', NodeProxy()));
+//			proxies = List.new.add(ProxyItem('-', NodeProxy()));
+//			proxies = List.new.add(ProxyItem('-', nil));
 			Library.put('Proxies', this, proxies);
-			
+
 		};
 		^proxies;
 	}
-	
+
 	proxyItem { | proxy |
 		var proxies, item;
 		proxies = this.proxies;
@@ -61,7 +61,7 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 		if (item.isNil) { proxies.add(item = ProxyItem(this.findKeyForValue(proxy), proxy)) };
 		^item;
 	}
-	
+
 	parseSnippets { | string |
 		var positions, snippet;
 		positions = string.findRegexp("^//:").flop[0];
@@ -77,7 +77,7 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 
 	getProxyName { | argSnippet, argIndex = 0 |
 		^(argSnippet.findRegexp("^//:([a-z][a-zA-Z0-9_]+)")[1] ?? {
-			[0, format("out%", argIndex)] 
+			[0, format("out%", argIndex)]
 		})[1].asSymbol;
 	}
 
@@ -115,5 +115,5 @@ TODO: Maybe \list notifications should be issued by the proxy list in Library, a
 		this.removeAt(proxyItem.name);
 		proxyList.remove(proxyItem);
 		this.changed(\list, this, proxyList); // proxies in order of creation
-	}	
+	}
 }

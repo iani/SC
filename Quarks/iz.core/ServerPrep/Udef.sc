@@ -1,11 +1,11 @@
 
-/* 
+/*
 
 store synthdefs in a global pool and make them available to synths on any server by sending them to the server at boot time, before starting any synth.
 
-Does not store separate synthdef copies for different servers, just one global pool. 
+Does not store separate synthdef copies for different servers, just one global pool.
 
-SynthDefs created while the server is running are sent immediately. ServerReady ensures that they will be sent before starting any further instance of SynthResource. 
+SynthDefs created while the server is running are sent immediately. ServerReady ensures that they will be sent before starting any further instance of SynthResource.
 
 */
 
@@ -15,10 +15,10 @@ Udef {
 	classvar <>add2AllServers = true;	// if true, all Udefs are shared with all Servers
 	var <def, <name;
 	var <path; // enable opening the file that contains the Udef def, see SynthDefs quark
-	
+
 	*initClass {
 		all = MultiLevelIdentityDictionary.new;
-		StartUp add: this;
+//		StartUp add: this;
 	}
 
 	*doOnStartUp {
@@ -33,7 +33,7 @@ Udef {
 			CocoaMenuItem.addToMenu("Code", "Browse SynthDescs", ["f", true, true], {
 				SynthDescLib.global.browse;
 			}),
-		]	
+		]
 	}
 
 	*fromFunc { | func, rates, prependArgs, outClass=\Out, fadeTime, name, server |
@@ -62,7 +62,7 @@ Udef {
 		all.putAtPath([server, argDef.name.asSymbol], this);
 		ServerPrep(server).addDef(this);
 	}
-	
+
 	play { | args, target, addAction = \addToHead |
 		^name.play(args, target, addAction); // (name, args, target, addAction);
 	}
@@ -73,7 +73,7 @@ Udef {
 	openDefFile {
 		Document.open(path).front;
 	}
-	
+
 	*at { | server | ^this.onServer(server) }
 	*onServer { | server |
 		if (add2AllServers) {
@@ -83,17 +83,17 @@ Udef {
 		if (all.atPath(server).isNil) { ^[] };
 		^all.leaves(server);
 	}
-	
+
 	*named { | defname, server |
 		^all.at(server ? Server.default, defname);
 	}
-	
+
 	*browse { | server |
 		var listwin, deflist;
 		server = server ?? { Server.default };
 		deflist = this.onServer(server);
 		listwin = ListWindow('SynthDefs', nil, {
-			deflist.sort({ | a, b | a.name < b.name }) collect: { | d | 
+			deflist.sort({ | a, b | a.name < b.name }) collect: { | d |
 				d.name->{
 					Document.current.string_(
 						d.name.asString,
@@ -104,6 +104,6 @@ Udef {
 			};
 		});
 	}
-	
-	
+
+
 }
