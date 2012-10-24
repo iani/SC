@@ -1,25 +1,25 @@
 /* iz Mon 08 October 2012  4:48 PM EEST
 
-Code management + performance tool. 
+Code management + performance tool.
 
-Read/Display/Edit/Interact/Store code organized in files holding snippets of code. 
+Read/Display/Edit/Interact/Store code organized in files holding snippets of code.
 
 
-- New files and folders can be imported. 
+- New files and folders can be imported.
 - If importing a folder of folders, the folders of the top folder are added to the existing folder list
-- Names of items in the list are created from the name of the file or folder. 
-- If there is a conflict (the new file or folder imported has the same name as an existing element), 
-  then the name of the newly imported item is changed 
-  
+- Names of items in the list are created from the name of the file or folder.
+- If there is a conflict (the new file or folder imported has the same name as an existing element),
+  then the name of the newly imported item is changed
+
 - Saving is done in archive form. Load from archive is equally possible.
 
-- Both import from folder and export into folder of the whole tree or part of the tree is possible. 
+- Both import from folder and export into folder of the whole tree or part of the tree is possible.
 
-- The instance auto-saves its data every time that its window is closed or supercollider 
-  shuts down / re-compiles. 
+- The instance auto-saves its data every time that its window is closed or supercollider
+  shuts down / re-compiles.
   If no path is defined for saving the data, then a file save dialog opens.
 
-Menus: 
+Menus:
 
 - Main Menu
 - Folders
@@ -44,7 +44,7 @@ ScriptLibGui : AppModel {
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
 			window.bounds = Rect(
-				windowShift + 100, 
+				windowShift + 100,
 				windowShift.neg + 50, 800, 800);
 			windowShift = windowShift + 20 % 200;
 			window.layout = VLayout(
@@ -70,7 +70,7 @@ ScriptLibGui : AppModel {
 
 	topMenuRow {
 		^HLayout(
-			this.popUpMenu(\topMenu, 
+			this.popUpMenu(\topMenu,
 			{ ["Main Menu", "New", "Open", "Save", "Save as", "Import", "Export"] }
 			).view.font_(font).action_({ | me |
 				this.mainMenuAction(me.value);
@@ -110,10 +110,10 @@ ScriptLibGui : AppModel {
 				me.getString.interpret;
 			}).view.font_(font).states_([["eval"]]),
 			this.button('Snippet').action_({ | me |
-				
+				ScriptMixer.currentProxy.postln;
 			}).view.font_(font).states_([["play"], ["stop"]]),
 			this.button('Snippet').action_({ | me |
-				
+
 			}).view.font_(font).states_([["eval proxy source"]]),
 			this.button('Snippet').action_({ | me |
 				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, true]));
@@ -122,7 +122,7 @@ ScriptLibGui : AppModel {
 				scriptLib.deleteSnippet(*(me.value.adapter.path ++ [me.item]));
 			}).view.font_(font).states_([["delete"]]),
 			this.button('Snippet').action_({ | me |
-				
+
 			}).view.font_(font).states_([["show buffers"], ["hide buffers"]]),
 		)
 	}

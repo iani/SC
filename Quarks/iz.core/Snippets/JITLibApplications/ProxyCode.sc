@@ -23,7 +23,7 @@ ProxyCode {
 					// from the initial comment line of the snippet
 	var <snippet; 
 	var <index;
-
+/*
 	*initClass {
 		// since CmdPeriod stops routines, restart the historyTimer routine
 		StartUp add: {
@@ -31,7 +31,7 @@ ProxyCode {
 			CocoaMenuItem.add(["Load all Snippet Proxies"], { this.loadAll });
 		};
 	}
-
+*/
 	*startHistoryTimer {
 		if (historyTimer.notNil) { historyTimer.stop };
 		historyTimer = {

@@ -159,7 +159,7 @@ Dock {
 		ListWindow(windowName, nil, {
 			Class.allClasses.select({ | c |
 				"SuperCollider/Extensions/".matchRegexp(c.filenameSymbol.asString)
-				and: { "Meta\*".matchRegexp(c.name.asString).not }
+//				and: { "Meta\*".matchRegexp(c.name.asString).not }
 			}).collect({ | c |
 				c.name.asSymbol->{
 					{

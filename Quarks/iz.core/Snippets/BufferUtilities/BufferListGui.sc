@@ -13,7 +13,7 @@ BufferListGui : AppModel {
 	var <buffers; // Value holding current Buffers list;
 
 	*initClass {
-		StartUp add: { CocoaMenuItem.add(["Buffers"], { this.new }); };
+//		StartUp add: { CocoaMenuItem.add(["Buffers"], { this.new }); };
 	}
 
 	*new { | archivePath |

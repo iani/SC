@@ -12,10 +12,11 @@ Code {
 	var <nextsnippetstart, <nextsnippetend;
 	var <snippetSeparator = ":";
 
+/*
 	*initClass {
 		StartUp add: { this.menuItems }
 	}
-
+*/
 	*new { | doc |
 		^this.newCopyArgs(doc).init;	
 	}
@@ -47,7 +48,7 @@ Code {
 	headers {
 		^string.findRegexp(format("^//%[^\n]*", snippetSeparator)).flop[1];
 	}
-
+/*
 	*menuItems {
 		^[
 			CocoaMenuItem.addToMenu("Code", "snippet list view", [/*{*/ "}", false, false], {
@@ -116,7 +117,7 @@ Code {
 			}),
 		];
 	}
-
+*/
 	*showCodeListWindow {
 		var doc;
 		doc = Document.current;

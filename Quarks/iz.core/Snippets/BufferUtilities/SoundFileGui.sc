@@ -19,7 +19,7 @@ SoundFileGui : AppModel {
 
 	*initClass {
 		StartUp add: {
-			CocoaMenuItem.add(["Sound File Manager"], { this.new });
+//			CocoaMenuItem.add(["Sound File Manager"], { this.new });
 			font = Font.default.size_(10);
 		};
 	}

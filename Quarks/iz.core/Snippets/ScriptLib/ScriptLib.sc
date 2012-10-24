@@ -1,18 +1,18 @@
 /* iz Mon 08 October 2012  4:48 PM EEST
 
-Code management + performance tool. 
+Code management + performance tool.
 
-Read/Display/Edit/Interact/Store code organized in files holding snippets of code. 
+Read/Display/Edit/Interact/Store code organized in files holding snippets of code.
 
-- Folders containing folders with can be imported. 
+- Folders containing folders with can be imported.
 - If importing a folder of folders, the folders of the top folder are added to the existing folder list
-- Names of items in the list are created from the name of the file or folder. 
-- If there is a conflict (the new file or folder imported has the same name as an existing element), 
-  then the name of the newly imported item is changed 
-  
+- Names of items in the list are created from the name of the file or folder.
+- If there is a conflict (the new file or folder imported has the same name as an existing element),
+  then the name of the newly imported item is changed
+
 - Saving is done in archive form. Load from archive is equally possible.
 
-- Both import from folder and export into folder of the whole tree or part of the tree is possible. 
+- Both import from folder and export into folder of the whole tree or part of the tree is possible.
 
 
 Real paths must be stored by the ScriptLibApp (subclass of AppModel) - not the ScriptLib, because they should not be stored when archiving / exporting, because they do not make sense when importing to different systems:
@@ -34,9 +34,8 @@ ScriptLib {
 
 	*initClass {
 		all = IdentityDictionary();
-		CocoaMenuItem.add(["New ScriptLib"], { this.new.addDefaults.gui });
-		CocoaMenuItem.add(["Open ScriptLib"], { this.open });
-
+//		CocoaMenuItem.add(["New ScriptLib"], { this.new.addDefaults.gui });
+// 		CocoaMenuItem.add(["Open ScriptLib"], { this.open });
 	}
 
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
@@ -57,7 +56,7 @@ ScriptLib {
 			instance.gui;
 		})
 	}
-	
+
 	save {
 		var path;
 		path = this.path;
@@ -78,7 +77,7 @@ ScriptLib {
 		var previousPath;
 		previousPath = this.path;
 		previousPath ?? { all[previousPath] = nil };
-		all[path.asSymbol] = this;		
+		all[path.asSymbol] = this;
 	}
 
 	gui { ScriptLibGui(this).gui; }
@@ -115,7 +114,7 @@ ScriptLib {
 		string = file.readAllString;
 		file.close;
 		positions = string.findRegexp("^//:").flop.first;
-		positions.collect({ | pos, i | 
+		positions.collect({ | pos, i |
 			string[pos .. (positions[i + 1] ?? { string.size }) - 1]
 		}) do: this.addSnippet(folderName, fileName, _);
 	}
@@ -161,12 +160,12 @@ ScriptLib {
 				};
 			};
 			"EXPORT DONE".postln;
-			
+
 		}.fork(AppClock);
 	}
-	
-	folders { 
-		
+
+	folders {
+
 	}
 }
 

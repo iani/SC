@@ -1,6 +1,6 @@
 /* IZ Thu 16 August 2012  6:28 PM EEST
 
-Uses its own ProxySpace. Pre-allocates 32 proxies named by keyboard key characters: 
+Uses its own ProxySpace. Pre-allocates 32 proxies named by keyboard key characters:
 
 12345678
 qwertyui
@@ -27,6 +27,8 @@ ScriptMixer : AppModel {
 		MIDISpecs.put(this, this.uc33eSpecs);
 	}
 
+	*currentProxy { ^this.activeMixer.currentProxy }
+
 	*activeMixer {
 		activeMixer ?? { activeMixer = this.new };
 		^activeMixer;
@@ -40,7 +42,7 @@ ScriptMixer : AppModel {
 		// Initialize proxies
 		"12345678qwertyuiasdfghjkzxcvbnm," do: { | char | proxySpace.at(char.asSymbol) };
 		proxyItems = IdentityDictionary();
-		proxySpace.proxies do: { | p | proxyItems[p.name.asSymbol] = p; }; 
+		proxySpace.proxies do: { | p | proxyItems[p.name.asSymbol] = p; };
 		this selectProxyItem: $1;
 		this.makeStrips;
 		this.makeWindow;
@@ -53,7 +55,7 @@ ScriptMixer : AppModel {
 	selectProxyItem { | char | currentProxy = proxyItems[char.asSymbol] }
 
 	*evalSnippet { | snippetString, start = false |
-		
+
 	}
 
 	makeStrips {
@@ -71,7 +73,7 @@ ScriptMixer : AppModel {
 				.layout = HLayout(
 					VLayout(
 						*(this.radioButtons(
-							\presets, 
+							\presets,
 							{ "just a placeholder" } ! numPresets,
 							{ | me | this.setPreset(me.item); },
 							{ | me | this.getPreset(me.item); },
@@ -97,7 +99,7 @@ ScriptMixer : AppModel {
 		window.addNotifier(this, \colorDisabled, {
 			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.05); };
 		});
-	}	
+	}
 
 	enable {
 		super.enable(true);

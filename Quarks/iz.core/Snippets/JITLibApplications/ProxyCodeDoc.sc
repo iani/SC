@@ -24,7 +24,7 @@ ProxyCodeDoc {
 		// since CmdPeriod stops routines, restart the historyTimer routine
 		StartUp add: {
 			CmdPeriod add: { { this.startHistoryTimer }.defer(0.1) };
-			CocoaMenuItem.add(["Load all Snippet Proxies"], { this.loadAll });
+//			CocoaMenuItem.add(["Load all Snippet Proxies"], { this.loadAll });
 		};
 	}
 

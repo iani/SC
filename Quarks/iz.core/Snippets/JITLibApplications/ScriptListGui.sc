@@ -50,7 +50,7 @@ ScriptListGui : AppModel {
 
 	*initClass {
 		StartUp add: {
-			CocoaMenuItem.add(["Scripts"], { this.new });
+//			CocoaMenuItem.add(["Scripts"], { this.new });
 			font = Font.default.size_(10);
 		};
 	}
