@@ -1,10 +1,13 @@
-/* 
+/*
 
-Basic example of connecting proxies to views. 
+Basic example of connecting proxies to views.
 
 ~out1.source = { | freq = 440, rate = 1 | LFTri.ar(freq, 0, 0.1) };
 
 ProxySpace.push;
+
+
+
 
 currentEnvironment.proxies;
 
@@ -13,6 +16,25 @@ currentEnvironment.proxies;
 ~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 */
 
+//:Simple Proxy Watcher
+// To set the proxy
+(
+ProxySpace.push;
+AppModel().window({ | window, app |
+	window.layout = VLayout(
+		// Button for starting or stopping the selected proxy:
+		app.button(\proxy).simpleProxyWatcher(\test).view.states_([["start"], ["stop"]]),
+	);
+	// create some node proxies in this Document's proxy space for testing:
+	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
+	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
+});
+)
+//:setProxy message sets the proxy to watch.
+\test.changed(\setProxy, ~out1.proxyItem);
+
+~out1.play;
+
 //:A proxy selector list and a button for starting / stopping the selected proxy
 AppModel().window({ | window, app |
 	var proxySpace;
@@ -20,10 +42,10 @@ AppModel().window({ | window, app |
 	window.layout = VLayout(
 		// List of existing proxies. Other views can access the selected proxy from this view:
 		app.listView(\proxies).items_(proxySpace.proxies).view,
-		// Button for starting or stopping the selected proxy: 
+		// Button for starting or stopping the selected proxy:
 		app.button(\proxies).proxyWatcher.view.states_([["start"], ["stop"]]),
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
@@ -36,14 +58,14 @@ AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\proxies).items_(proxySpace.proxies).view, // list of proxies
 		app.button(\proxies).proxyWatcher.view.states_([["start"], ["stop"]]), // start stop button
-		// list of control parameters of selected button: 
+		// list of control parameters of selected button:
 		app.listView(\proxyControls).proxyControlList(\proxies).view,
 		// Following views set the parameter selected above:
 		app.knob(\proxyControls).proxyControl.view,
 		app.slider(\proxyControls).proxyControl.view.orientation_(\horizontal),
 		app.numberBox(\proxyControls).proxyControl.view,
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 	// select the first proxy:
@@ -54,9 +76,9 @@ AppModel().window({ | window, app |
 a = AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\proxies) // list of proxies
-		.proxyList(Document.prepareProxySpace(Document.current)).view, 
+		.proxyList(Document.prepareProxySpace(Document.current)).view,
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
@@ -65,9 +87,9 @@ a = AppModel().window({ | window, app |
 a = AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\proxies) // list of proxies
-		.proxyList(Document.prepareProxySpace(Document.current), 2).view, 
+		.proxyList(Document.prepareProxySpace(Document.current), 2).view,
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
@@ -81,15 +103,15 @@ a = AppModel().window({ | window, app |
 a = AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\proxies) // list of proxies
-		.proxyList(Document.prepareProxySpace(Document.current)).view, 
+		.proxyList(Document.prepareProxySpace(Document.current)).view,
 		app.button(\proxies).proxyWatcher.view.states_([["start"], ["stop"]]), // start stop button
-		// list of control parameters of selected button: 
+		// list of control parameters of selected button:
 		app.listView(\proxyControls).proxyControlList(\proxies, 2).view,
 		// Following views set the parameter selected above:
 		app.knob(\proxyControls).proxyControl.view,
 		app.numberBox(\proxyControls).proxyControl.view,
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
@@ -104,14 +126,14 @@ c.item.adapter.standardizedValue_(nil, 0.5);
 a = AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\proxies) // list of proxies
-		.proxyList(Document.prepareProxySpace(Document.current)).view, 
+		.proxyList(Document.prepareProxySpace(Document.current)).view,
 		app.button(\proxies).proxyWatcher(
 			{},	// this never gets triggerred on a button with one state only
 			{  | me | ProxyCodeEditor(nil, me.item.item); }
 		)
 		.view.states_([["testing"]]), // start stop button
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 });
@@ -128,7 +150,7 @@ a = AppModel().window({ | window, app |
 		.view,
 		app.listView(\specs).proxyControlList(\proxies).view,
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 	~out1.play;
@@ -145,7 +167,7 @@ a = AppModel().window({ | window, app |
 		app.listView(\specs).proxyControlList(\proxies).view,
 		app.knob(\specs).proxyControl.view,
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 	~out1.play;
@@ -170,7 +192,7 @@ a = AppModel().window({ | window, app |
 		app.listView(\knob).proxyControlList(\proxy).view,
 		app.knob(\knob).proxyControl.view,
 	);
-	// create some node proxies in this Document's proxy space for testing: 
+	// create some node proxies in this Document's proxy space for testing:
 	~out1 = { | freq = 400 | SinOsc.ar(freq, 0, 0.1) };
 	~out2 = { | amp = 0.1 | PinkNoise.ar(amp) };
 	~out1.play;
@@ -186,7 +208,7 @@ p = Event make: {
 
 
 //:
-p use: { 
+p use: {
 	~proxy[0].item_(nil, ~proxy[1]);
 	~knob[0].item_(nil, ~knob[1]);
 };

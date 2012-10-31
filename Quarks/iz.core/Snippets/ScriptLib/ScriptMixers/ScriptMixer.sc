@@ -14,20 +14,16 @@ ScriptMixer();
 */
 
 ScriptMixer : AppModel {
-	classvar activeMixer;		// the current instance of active mixer
+	classvar activeMixer;		// instance of mixer whose window is foremost
 	var <>numStrips = 8, <numPresets = 8, <proxySpace, <strips, <proxyList;
 	var <stripWidth = 80;
 	var <>font;
 	var <valueCache;	// fast access to values for storing and restoring presets
-	var <currentProxy; // default proxy for sending snippets
-	var <proxyItems;	// all proxyitems, stored by key for faster access
 
 	*initClass {
 		Class.initClassTree(MIDISpecs);
 		MIDISpecs.put(this, this.uc33eSpecs);
 	}
-
-	*currentProxy { ^this.activeMixer.currentProxy }
 
 	*activeMixer {
 		activeMixer ?? { activeMixer = this.new };
@@ -38,21 +34,13 @@ ScriptMixer : AppModel {
 
 	init {
 		font = Font.default.size_(9);
-		proxySpace = ProxySpace();
-		// Initialize proxies
-		"12345678qwertyuiasdfghjkzxcvbnm," do: { | char | proxySpace.at(char.asSymbol) };
-		proxyItems = IdentityDictionary();
-		proxySpace.proxies do: { | p | proxyItems[p.name.asSymbol] = p; };
-		this selectProxyItem: $1;
+		proxySpace = ProxyCentral.default.proxySpace;
 		this.makeStrips;
 		this.makeWindow;
 		this.initPresets;
 		this.reloadProxies;
 		this.initMIDI;
 	}
-
-	*selectProxyItem { | char | this.activeMixer.selectProxyItem(char); }
-	selectProxyItem { | char | currentProxy = proxyItems[char.asSymbol] }
 
 	*evalSnippet { | snippetString, start = false |
 

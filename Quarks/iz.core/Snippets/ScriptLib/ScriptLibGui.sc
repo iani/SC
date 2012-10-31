@@ -1,9 +1,6 @@
 /* iz Mon 08 October 2012  4:48 PM EEST
-
 Code management + performance tool.
-
 Read/Display/Edit/Interact/Store code organized in files holding snippets of code.
-
 
 - New files and folders can be imported.
 - If importing a folder of folders, the folders of the top folder are added to the existing folder list
@@ -21,13 +18,12 @@ Read/Display/Edit/Interact/Store code organized in files holding snippets of cod
 
 Menus:
 
-- Main Menu
+- File Menu
 - Folders
 - Files
 - Snippets
 
 */
-
 
 ScriptLibGui : AppModel {
 	classvar <>font, <windowShift = 0;
@@ -44,8 +40,8 @@ ScriptLibGui : AppModel {
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
 			window.bounds = Rect(
-				windowShift + 100,
-				windowShift.neg + 50, 800, 800);
+				windowShift + 500,
+				windowShift.neg + 350, 800, 500);
 			windowShift = windowShift + 20 % 200;
 			window.layout = VLayout(
 				this.topMenuRow,
@@ -71,7 +67,7 @@ ScriptLibGui : AppModel {
 	topMenuRow {
 		^HLayout(
 			this.popUpMenu(\topMenu,
-			{ ["Main Menu", "New", "Open", "Save", "Save as", "Import", "Export"] }
+			{ ["File Menu", "New", "Open", "Save", "Save as", "Import", "Export"] }
 			).view.font_(font).action_({ | me |
 				this.mainMenuAction(me.value);
 				me.value = 0
@@ -105,16 +101,23 @@ ScriptLibGui : AppModel {
 				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, false]));
 				me.getString.postln;
 				"=============== SNIPPET SAVED ===============".postln;
+				// Following can be removed when SC3.6 stops crashing at recompile with ScriptLibGui open.
+				scriptLib.save;
 			}).view.font_(font).states_([["save snippet"]]),
 			this.button('Snippet').action_({ | me |
-				me.getString.interpret;
+				me.getString.interpret.postln;
 			}).view.font_(font).states_([["eval"]]),
-			this.button('Snippet').action_({ | me |
-				ScriptMixer.currentProxy.postln;
-			}).view.font_(font).states_([["play"], ["stop"]]),
+			this.button('Proxy')
+			.simpleProxyWatcher(ProxyCentral.default, { | me |
+				me.checkProxy(
+					me.value.adapter.checkEvalPlay(this.getValue('Snippet').getString)
+				)
+			})
+			.do({ | me | me.adapter_(ProxyCentral.default.currentProxy) })
+			.view.font_(font).states_([["play", nil, Color.green], ["stop", nil, Color.red]]),
 			this.button('Snippet').action_({ | me |
 
-			}).view.font_(font).states_([["eval proxy source"]]),
+			}).view.font_(font).states_([["set proxy source"]]),
 			this.button('Snippet').action_({ | me |
 				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, true]));
 			}).view.font_(font).states_([["new"]]),
@@ -124,6 +127,7 @@ ScriptLibGui : AppModel {
 			this.button('Snippet').action_({ | me |
 
 			}).view.font_(font).states_([["show buffers"], ["hide buffers"]]),
+			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font);
 		)
 	}
 

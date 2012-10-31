@@ -27,13 +27,20 @@ var layout = HLayout().spacing_(1).margins_([1, 1, 1, 1]);
 
 // TODO: Rewrite without AppModel
 ActionStrip {
-	var <window, <layout;
-	*new { | width = 1000, closeButton = false |
-		var window, layout;
+	var <width, <closeButton, <window, <layout;
+	*new { | width = 1000, closeButton = true |
+		^super.newCopyArgs(width, closeButton).makeWindow;
+	}
+
+	makeWindow {
 		window = Window(border: false);
 		layout = HLayout().margins_([1, 1, 1, 1]).spacing_(1);
 		window.bounds_(Rect(0, 0, width, 25)).layout_(layout).front;
-		^this.newCopyArgs(window, layout);
+		if (closeButton) {
+			layout add: Button()
+			.states_([["x", nil, Color.red]]).action_({ window.close }).font_(Font.default.size_(10))
+				.fixedWidth_(30)
+		}
 	}
 
 	addItems { | ... itemSpecs |

@@ -1,14 +1,15 @@
 /* IZ 2012 07 29
 
 
-Make ProxyCode command-shift-w only perform <proxy>.source = <interpreted snippet object> when the object returned by the interpreted snippet code is one of the supported NodeProxy sources as listed in the help for NodeProxy, with one modification: NodeProxy is not accepted as source for NodeProxy, to prevent such node-proxy clones from being generated accidentally. 
+Make ProxyCode command-shift-w only perform <proxy>.source = <interpreted snippet object> when the object returned by the interpreted snippet code is one of the supported NodeProxy sources as listed in the help for NodeProxy, with one modification: NodeProxy is not accepted as source for NodeProxy, to prevent such node-proxy clones from being generated accidentally.
 
 */
 
 + Object  { isValidProxyCode { ^false } }
 + NodeProxy {
 	isValidProxyCode { ^false } // !!! if you really want this, enter it using shift-return
-} 
+	proxyItem { ^currentEnvironment.proxies detect: { | p | p.item === this } }
+}
 + Function { isValidProxyCode { ^true } }
 + SimpleNumber { isValidProxyCode { ^true } }
 + Bus { isValidProxyCode { ^true } }
@@ -17,7 +18,7 @@ Make ProxyCode command-shift-w only perform <proxy>.source = <interpreted snippe
 + Pattern { isValidProxyCode { ^true } }
 + Stream { isValidProxyCode { ^true } }
 + Nil  { isValidProxyCode { ^true } }
-+ Pdef { isValidProxyCode { ^true } } 
++ Pdef { isValidProxyCode { ^true } }
 + EventPatternProxy { isValidProxyCode { ^true } }
 + Task { isValidProxyCode { ^true } }
 + Tdef { isValidProxyCode { ^true } }

@@ -34,8 +34,6 @@ ScriptLib {
 
 	*initClass {
 		all = IdentityDictionary();
-//		CocoaMenuItem.add(["New ScriptLib"], { this.new.addDefaults.gui });
-// 		CocoaMenuItem.add(["Open ScriptLib"], { this.open });
 	}
 
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
@@ -54,6 +52,8 @@ ScriptLib {
 				all[path] = instance;
 			};
 			instance.gui;
+		},{
+			this.new.addDefaults.gui;
 		})
 	}
 

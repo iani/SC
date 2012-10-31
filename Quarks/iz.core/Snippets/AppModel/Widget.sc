@@ -1,8 +1,8 @@
 /* IZ Fri 31 August 2012  2:57 AM EEST
 
-Redo of Adapter idea from scratch, with radical simplification of principle 
+Redo of Adapter idea from scratch, with radical simplification of principle
 
-See Value.org file for discussion. 
+See Value.org file for discussion.
 
 */
 
@@ -39,10 +39,10 @@ Widget {
 	}
 
 	action_ { | action |
-		// set my view's action. Pass myself for access to my value etc. 
+		// set my view's action. Pass myself for access to my value etc.
 		view.action = { action.(this) };
 	}
-	
+
 	/* Set my Value. Remove notification connections from any previous value, and prepare
 	   the new value to discnnect if replaced by another one later. Used by prSetControl method.
 	   The message notification setup on value must be done separately useing updateAction. */
@@ -52,34 +52,34 @@ Widget {
 		value.addNotifierOneShot(this, \disconnect, {
 			messages do: { | m | this.removeNotifier(value, m); }
 		});
-	}  
+	}
 	// set my Value's adapter
 	adapter_ { | adapter | value.adapter = adapter; }
-	
+
 	updateAction { | message, action | // Add a response to a message from my value
 		// Add an action to be done when receiving the specified message from my value-adapter.
 		// Pass the sender to the action, to avoid updating self if this is a problem.
 		// Also make myself available to the action function.
 		this.addNotifier(value, message, { | sender | action.(sender, this) });
 	}
-	
+
 	updateActionArray { | message, action |
 		// Like updateAction, but for passing multiple arguments
 		this.addNotifier(value, message, { | ... args | action.(*(args add: this)) });
 	}
-	
+
 	addUpdateAction { | message, action |
 		// add action to be performed when receiving message from value.
 		// do not replace any previous action. Important: provide access to self
 		this.addNotifierAction(value, message, { | ... args | action.(this, *args) });
 	}
-	
+
 	updater { | notifier, message, action |
-		// add notifier to self. Provides self as argument to function 
+		// add notifier to self. Provides self as argument to function
 		this.addNotifier(notifier, message, { | ... args | action.(this, *args) })
 	}
 
-	// Access to views of values, for actions that require them: 
+	// Access to views of values, for actions that require them:
 	viewGetter { | name = \view | // name a widget's view for access by getView
 		this.updateAction(name, { | ref  | ref.value = view });
 	}
@@ -121,7 +121,7 @@ Widget {
 	}
 
 	// String value views
-	text {	// For TextField, StaticText 
+	text {	// For TextField, StaticText
 		value.adapter ?? { value.adapter = TextAdapter(value) };
 		view.action = { value.adapter.string_(this, view.string) };
 		this.updateAction(\text, { | sender |
@@ -129,7 +129,7 @@ Widget {
 		});
 	}
 
-	textView { | message = \updateText | // for TextView. 
+	textView { | message = \updateText | // for TextView.
 		// Adds updateAction to update text to adapter via button
 		this.text;
 		this.updateAction(message, { | sender |
@@ -148,21 +148,21 @@ Widget {
 		this.updateAction(message, { | stringRef | stringRef.value = view.string; });
 	}
 
-	getString { | message = \getString | 
+	getString { | message = \getString |
 		// Use getString to get the string of a TextView prepared with makeStringGetter
 		^value.getString(message);
 	}
-	
+
 	// ======== Shortcuts (suggested by NC at demo in Leeds ==========
 	string_ { | string | value.adapter.string_(this, string); }
 	string { ^value.adapter.string }
 	// TODO: rename value variable and methods of SpecAdapter ????
-	// Name issues: number? magnitude? 
+	// Name issues: number? magnitude?
 	number_ { | number | value.adapter.value_(this, number); }
 	number { ^value.adapter.value }
 	standardizedNumber_ { | number | value.adapter.standardizedValue_(this, number); }
 	standardizedNumber { ^value.adapter.standardizedValue } // again: naming issues. See value above
-	
+
 	// ======== List views: ListView, PopUpMenu =======
 	list { | getListAction |
 		value.adapter ?? { value.adapter = ListAdapter(value) };
@@ -196,7 +196,7 @@ Widget {
 		this.updateAction(\list, { view.string = getItemFunc.(this) });
 		this.updateAction(\index, { view.string = getItemFunc.(this) });
 		this.replace;		// default action is replace item with your content
-	}	
+	}
 
 	sublistOf { | valueName, getListFunction | // make me get my list from the item of another list
 		value.sublistOf(valueName, getListFunction);
@@ -223,7 +223,7 @@ Widget {
 		view.action = { value.adapter.append(this, itemCreationFunc.(this)); };
 	}
 
-	appendOn { | itemCreationFunc, message = \append | // 
+	appendOn { | itemCreationFunc, message = \append | //
 		// upon receiving message, append in list the item you created
 		itemCreationFunc = itemCreationFunc ?? { { view.string } };
 		this.updateAction(message, {
@@ -263,12 +263,12 @@ Widget {
 		});
 	}
 
-	listSize { // NumberBox displaying number of elements in list (list size). 
+	listSize { // NumberBox displaying number of elements in list (list size).
 		value.adapter ?? { value.adapter = ListAdapter() };
 		view.enabled = false;
 		this.updateAction(\list, { view.value = value.adapter.size })
 	}
-	
+
 	// Navigating to different items in list
 	firstItem { view.action = { value.adapter.first } }
 	lastItem { view.action = { value.adapter.last } }
@@ -285,7 +285,7 @@ Widget {
 	}
 
 	// NodeProxy stuff
-	
+
 	// Auto-updated list for choosing proxy from all proxies in proxySpace
 	proxyList { | proxySpace, autoSelect |
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
@@ -298,7 +298,7 @@ Widget {
 				this.items_(proxySpace.proxies);
 				if (this.items.size - 1 == autoSelect) {
 					value.index_(nil, autoSelect);
-				}; 
+				};
 			});
 			if (this.items.size - 1 >= autoSelect) { value.index_(nil, autoSelect); };
 		};
@@ -306,15 +306,15 @@ Widget {
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
-	a proxy space. 2 methods, both use ProxyItem rather than NodeProxy directly: 
-	
+	a proxy space. 2 methods, both use ProxyItem rather than NodeProxy directly:
+
 	1. simpleProxyWatcher: standalone - not connected to a list of proxies. Proxies are assigned
-	by update messages. 
-	
-	2. proxyWatcher: connected to a list of proxies belonging to a proxySpace. For proxyWatcher, 
+	by update messages.
+
+	2. proxyWatcher: connected to a list of proxies belonging to a proxySpace. For proxyWatcher,
 	the button should be created on the same Value item as the choosing widget.
-	The choosing widget is created simply as a listView/popUpmenu on a ProxySpace's proxies. Eg:  
-		app.listView(\proxies).items_(proxySpace.proxies).view. 
+	The choosing widget is created simply as a listView/popUpmenu on a ProxySpace's proxies. Eg:
+		app.listView(\proxies).items_(proxySpace.proxies).view.
 	Shortcut for listView for choosing proxies: proxyList. */
 
 	// Note: Send an additional updater message to create connection for setting my proxy:
@@ -332,19 +332,19 @@ Widget {
 	}
 
 	proxyWatcher { | playAction, stopAction | // must connect to proxySpace proxy list
-		// Initialize myself only AFTER my proxyList has been created: 
+		// Initialize myself only AFTER my proxyList has been created:
 		if (value.adapter.isKindOf(ListAdapter).not) {
 			this.addNotifierOneShot(value, \initProxyControls, {
 				this.proxyWatcher(playAction, stopAction);
 			});
 		}{
 			playAction ?? { playAction = {
-				// lazy initialization: 
+				// lazy initialization:
 				value.adapter.item ?? { value.adapter.index_(this, 0) };
 				// TODO: checkProxy should take adapter item as argument
 				// and check if it is nil before trying to play.
-				// the play message should be sent from checkProxy, 
-				// with argument func, and func would act on the proxy 
+				// the play message should be sent from checkProxy,
+				// with argument func, and func would act on the proxy
 				// doing play, stop or other stuff.
 				this.checkProxy(value.adapter.item.item.play);
 			} };
@@ -374,12 +374,12 @@ Widget {
 		if (proxy.notNil and: { proxy.isMonitoring }) { view.value = 1 } { view.value = 0 };
 		^proxy; // for further use if in another expression.
 	}
-	
+
 	proxyControlList { | proxyList, autoSelect |
 		if (proxyList isKindOf: Symbol) {
 			proxyList = model.getValue(proxyList);
 		};
-		// Initialize myself only AFTER my proxyList has been created: 
+		// Initialize myself only AFTER my proxyList has been created:
 		if (proxyList.value.adapter.isNil) {
 			this.addNotifierOneShot(proxyList.value, \initProxyControls, {
 				this.proxyControlList(proxyList, autoSelect);
@@ -399,14 +399,17 @@ Widget {
 					};
 					me.items collect: { | v | v.adapter.parameter };
 				});
+				{ if (autoSelect < this.items.size) {
+					this.value.adapter.index_(nil, autoSelect);
+				}}.defer(0.2); // hack. How can we initialize better?
 			};
 			value.changed(\initProxyControls);	// Initialize proxyControls created before me
 		}
 	}
 
 	proxyControl {
-		var paramList;	// The list of the proxyControlList from which parameters are chosen. 
-		// Initialize myself only AFTER my proxyControlList has been created: 
+		var paramList;	// The list of the proxyControlList from which parameters are chosen.
+		// Initialize myself only AFTER my proxyControlList has been created:
 		if (value.adapter isKindOf: NumberAdapter) {
 			this.addNotifierOneShot(value, \initProxyControls, { this.proxyControl });
 		}{
@@ -465,8 +468,8 @@ Widget {
 	addAction { | action | view.addAction({ action.(this) }); }
 
 	resetOn { | message = \reset, resetValue = 0 |
-		// make a button (or other view accepting numeric value) reset to 
-		// provided default value when receiving a given message. 
+		// make a button (or other view accepting numeric value) reset to
+		// provided default value when receiving a given message.
 		this.updateAction(message, { | sender, me | me.view.value = resetValue; })
 	}
 
