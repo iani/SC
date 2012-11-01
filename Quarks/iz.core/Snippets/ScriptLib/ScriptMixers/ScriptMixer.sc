@@ -1,6 +1,6 @@
 /* IZ Thu 16 August 2012  6:28 PM EEST
 
-Uses its own ProxySpace. Pre-allocates 32 proxies named by keyboard key characters:
+Uses default ProxySpace from ProxyCentral.
 
 12345678
 qwertyui
@@ -37,7 +37,7 @@ ScriptMixer : AppModel {
 		proxySpace = ProxyCentral.default.proxySpace;
 		this.makeStrips;
 		this.makeWindow;
-		this.initPresets;
+//		this.initPresets;
 		this.reloadProxies;
 		this.initMIDI;
 	}
@@ -59,7 +59,7 @@ ScriptMixer : AppModel {
 			w	.name_("Proxy Script Mixer")
 				.bounds_(Rect(Window.screenBounds.width - winWidth, 0, winWidth, 250))
 				.layout = HLayout(
-					VLayout(
+/*					VLayout(
 						*(this.radioButtons(
 							\presets,
 							{ "just a placeholder" } ! numPresets,
@@ -67,7 +67,8 @@ ScriptMixer : AppModel {
 							{ | me | this.getPreset(me.item); },
 						) collect: _.font_(font))
 					),
-					*(strips collect: _.gui)
+*/
+				*(strips collect: _.gui)
 				);
 			this.addWindowActions(w);
 		});
@@ -108,7 +109,7 @@ ScriptMixer : AppModel {
 
 
 	// PRESETS
-
+/*
 	initPresets {
 		var protoPreset;
 		valueCache = strips.collect(_.valueCache).flat;
@@ -121,7 +122,7 @@ ScriptMixer : AppModel {
 	setPreset { | preset |
 		valueCache do: { | v, i | v.item_(nil, preset[i]) };
 	}
-
+*/
 	// MIDI
 
 	initMIDI {

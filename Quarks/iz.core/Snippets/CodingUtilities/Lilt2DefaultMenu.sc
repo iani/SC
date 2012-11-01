@@ -13,7 +13,8 @@ Lilt2DefaultMenu {
 		if (menu.isNil) {
 			menu = ActionStrip().addItems(
 				"Scripts", { ScriptLib.open },
-				"Sound Files", { SoundFileGui() },
+				"Mixer", { ScriptMixer() },
+				"Scripts", { ScriptLib.open },
 				"Quarks", { "not yet implemented".postln }
 			);
 			menu.window.onClose = { menu = nil };
