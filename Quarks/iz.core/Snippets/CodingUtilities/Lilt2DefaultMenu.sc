@@ -14,7 +14,7 @@ Lilt2DefaultMenu {
 			menu = ActionStrip().addItems(
 				"Scripts", { ScriptLib.open },
 				"Mixer", { ScriptMixer() },
-				"Scripts", { ScriptLib.open },
+				"Sound Files", { SoundFileGui() },
 				"Quarks", { "not yet implemented".postln }
 			);
 			menu.window.onClose = { menu = nil };
