@@ -394,6 +394,7 @@ Widget {
 				});
 			}{
 				this.list({ | me |
+					[this, thisMethod.name, me.items].postln;
 					if (autoSelect < me.items.size) {
 						me.value.adapter.index_(nil, autoSelect);
 					};

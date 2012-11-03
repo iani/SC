@@ -1,8 +1,8 @@
 /* IZ Tue 04 September 2012 10:18 PM BST
 
-Fourth version of ProxyCodeEditor, doing away with direct Document coupling. 
+Fourth version of ProxyCodeEditor, doing away with direct Document coupling.
 
-Edit Code of a proxy from snippets. Provide history of edited versions, and navigation amongst history and amongst different proxies. 
+Edit Code of a proxy from snippets. Provide history of edited versions, and navigation amongst history and amongst different proxies.
 
 */
 
@@ -21,7 +21,7 @@ ProxyCodeEditor : AppModel {
 		MIDISpecs.put(this, this.uc33eSpecs);
 		all = List.new;
 	}
-	
+
 	*new { | proxySpace, proxyItem, rect |
 		var new;
 		new = all detect: { | ed | ed.proxyItem === proxyItem };
@@ -36,7 +36,7 @@ ProxyCodeEditor : AppModel {
 		all add: this;
 		font = Font.default.size_(10);
 		this.makeWindow(rect);
-		this.proxyItem = proxyItem; 
+		this.proxyItem = proxyItem;
 		this addMIDI: this.midiSpecs;
 		buffers = IdentityDictionary.new;
 	}
@@ -50,7 +50,7 @@ ProxyCodeEditor : AppModel {
 
 	addWindowActions { | window, bounds |
 		window.bounds = bounds;
-		window.addNotifier(this, \windowToFront, { 
+		window.addNotifier(this, \windowToFront, {
 			window.front;
 			window.toFrontAction.value;
 		});
@@ -74,7 +74,7 @@ ProxyCodeEditor : AppModel {
 		window.addNotifier(this, \colorDisabled, {
 			if (window.isClosed.not) { window.view.background = Color(0.8, 0.8, 0.8, 0.5); };
 		});
-	}	
+	}
 
 	enable { | window |
 		super.enable(true);
@@ -149,9 +149,9 @@ ProxyCodeEditor : AppModel {
 				this.button(\resizeWindow)
 					.action_({ | me | this.changed(\toggleWindowSize, me.view.value) })
 					.view.font_(font).states_([["maximize"], ["minimize"]]),
-			), 
+			),
 			s:1],
-			// Buffer menus: 
+			// Buffer menus:
 			[HLayout(
 				*({ | i |
 					var valName;
@@ -159,12 +159,12 @@ ProxyCodeEditor : AppModel {
 					this.popUpMenu(valName)
 					.updater(BufferItem, \bufferList, { | me, names | me.items_(['-'] ++ names); })
 					.do({ | me |
-						me.items = ['-'] ++ Library.at['Buffers'].keys.asArray.sort 
+						me.items = ['-'] ++ Library.at['Buffers'].keys.asArray.sort
 					})
-					.addValueListener(this, \index, { | val | 
+					.addValueListener(this, \index, { | val |
 						this.updateBuffers(valName, val.adapter.item) })
 					.view.font_(font).fixedWidth_(82)
-				} ! 8), 
+				} ! 8),
 			), s: 1],
 			[HLayout(
 				*({ | i |
@@ -172,7 +172,7 @@ ProxyCodeEditor : AppModel {
 					knobmenu = format("knobmenu%", i).asSymbol;
 					slidermenu = format("slidermenu%", i).asSymbol;
 					VLayout(
-						this.popUpMenu(knobmenu).proxyControlList(\proxy, i * 2 + 1)
+						this.popUpMenu(knobmenu).proxyControlList(\proxy, i * 2 + 2)
 						.view.font_(font),
 						HLayout(
 							this.slider(slidermenu).proxyControl
@@ -183,13 +183,13 @@ ProxyCodeEditor : AppModel {
 								this.numberBox(slidermenu).proxyControl.view.font_(font),
 							)
 						),
-						this.popUpMenu(slidermenu).proxyControlList(\proxy, i * 2)
+						this.popUpMenu(slidermenu).proxyControlList(\proxy, i * 2 + 1)
 						.view.font_(font),
 					)
 
 				} ! 8)
 			), s:2]
-			
+
 		);
 	}
 
@@ -204,7 +204,7 @@ ProxyCodeEditor : AppModel {
 		this.proxyItem = myProxyItem;
 		if (myProxyItem.history.size == 0) { addToSourceHistory = true };
 		myProxyItem.evalSnippet(snippet, start: start, addToSourceHistory: addToSourceHistory);
-	}					
+	}
 
 	proxyItem_ { | proxyItem | this.getValue(\proxy).item_(this, proxyItem); }
 	proxyName { ^this.proxyItem.name }
@@ -224,7 +224,7 @@ ProxyCodeEditor : AppModel {
 		if (lines[0][0] !== $/) { lines = ["//:"] ++ lines; };
 		if (lines[1][..2] == "var") { lines[1] = varString; } { lines = lines.insert(1, varString); };
 		lines remove: nil; // if no buffers chosen, then remove var declaration line
-		editor.adapter.replace(this, 
+		editor.adapter.replace(this,
 			lines[1..].inject(lines[0], { | code, line | code prCat: "\n" ++ line })
 		);
 	}
