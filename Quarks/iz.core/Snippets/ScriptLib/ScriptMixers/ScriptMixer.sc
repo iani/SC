@@ -16,7 +16,7 @@ ScriptMixer();
 ScriptMixer : AppModel {
 	classvar activeMixer;		// instance of mixer whose window is foremost
 	var <>numStrips = 8, <numPresets = 8, <proxySpace, <strips, <proxyList;
-	var <stripWidth = 80;
+	var <stripWidth = 82, mWidth = 75, nWidth = 50;
 	var <>font;
 	var <valueCache;	// fast access to values for storing and restoring presets
 
@@ -35,41 +35,45 @@ ScriptMixer : AppModel {
 	init {
 		font = Font.default.size_(9);
 		proxySpace = ProxyCentral.default.proxySpace;
-		this.makeStrips;
 		this.makeWindow;
-//		this.initPresets;
-		this.reloadProxies;
 		this.initMIDI;
 	}
 
-	*evalSnippet { | snippetString, start = false |
-
-	}
-
-	makeStrips {
-		strips = { | index | ScriptMixerStrip(this, index) } ! numStrips;
-	}
-
-	reloadProxies { proxyList.changed(\list, proxyList); }
-
 	makeWindow {
-		var winWidth;
-		winWidth = stripWidth * numStrips;
-		this.window({ | w, app |
-			w	.name_("Proxy Script Mixer")
-				.bounds_(Rect(Window.screenBounds.width - winWidth, 0, winWidth, 250))
-				.layout = HLayout(
-/*					VLayout(
-						*(this.radioButtons(
-							\presets,
-							{ "just a placeholder" } ! numPresets,
-							{ | me | this.setPreset(me.item); },
-							{ | me | this.getPreset(me.item); },
-						) collect: _.font_(font))
-					),
-*/
-				*(strips collect: _.gui)
-				);
+		this.window({ | w, a |
+			var tabbedView, winWidth;
+			winWidth = stripWidth * numStrips;
+			font = Font.default.size_(10);
+			w.name_("Proxy Script Mixer")
+			.bounds_(Rect(Window.screenBounds.width - winWidth, 0, winWidth, 250));
+			tabbedView = TabbedView(w, labels: ["1-8", "q-i", "a-k", "z-,"]);
+			tabbedView.views do: { | view, viewNum |
+				viewNum = viewNum * 8;
+				view.layout = HLayout(
+					*({ | i | VLayout(
+						i = i + viewNum;
+						a.popUpMenu(format("proxy%", i).asSymbol).proxyList(ProxyCentral.default.proxySpace, i)
+						.view.fixedWidth_(mWidth).font_(font).background_(Color(0.9, 1, 0.9)),
+						a.popUpMenu(format("knob%", i).asSymbol).proxyControlList(format("proxy%", i).asSymbol, 3)
+						.view.fixedWidth_(mWidth).font_(font),
+						a.knob(format("knob%", i).asSymbol).proxyControl.view,
+						HLayout(
+							a.slider(format("slider%", i).asSymbol).proxyControl.view.orientation_(\vertical),
+							VLayout(
+								a.numberBox(format("knob%", i).asSymbol).proxyControl.view.font_(font).fixedWidth_(nWidth),
+								a.numberBox(format("slider%", i).asSymbol).proxyControl.view.font_(font).fixedWidth_(nWidth),
+								a.button(format("proxy%", i).asSymbol)
+								.action_({ "TOODO".postln; })
+								.view.states_([["ed"]]).font_(font).fixedWidth_(nWidth),
+								a.button(format("proxy%", i).asSymbol).proxyWatcher
+								.view.states_([[">"], ["||", nil, Color.red]]).font_(font).fixedWidth_(nWidth),
+							),
+						),
+						a.popUpMenu(format("slider%", i).asSymbol).proxyControlList(format("proxy%", i).asSymbol, 1)
+						.view.fixedWidth_(mWidth).font_(font),
+					) } ! 8)
+				)
+			};
 			this.addWindowActions(w);
 		});
 	}
@@ -92,37 +96,20 @@ ScriptMixer : AppModel {
 
 	enable {
 		super.enable(true);
-		strips do: _.enable;
+//		strips do: _.enable;
 		this.changed(\colorEnabled);
 //		activeMixer = this;
 	}
 
 	disable {
 		super.disable;
-		strips do: _.disable;
+//		strips do: _.disable;
 		this.changed(\colorDisabled);
 //		if (activeMixer === this) { activeMixer = nil };
 	}
 
 	makeActive { activeMixer = this }
 	makeInactive { if (activeMixer === this) { activeMixer = nil }; }
-
-
-	// PRESETS
-/*
-	initPresets {
-		var protoPreset;
-		valueCache = strips.collect(_.valueCache).flat;
-		protoPreset = valueCache collect: _.item;
-		this.getValue(\presets).items_(nil, { List.newUsing(protoPreset) } ! numPresets);
-	}
-
-	getPreset { | preset | preset.array = valueCache collect: _.item; }
-
-	setPreset { | preset |
-		valueCache do: { | v, i | v.item_(nil, preset[i]) };
-	}
-*/
 	// MIDI
 
 	initMIDI {
@@ -131,9 +118,9 @@ ScriptMixer : AppModel {
 		knob = specs[\knob];
 		slider = specs[\slider];
 		// _mean_ shortcut creating midi specs by setting the channel number for each strip:
-		8.min(numStrips) do: { | i |
-			strips[i].addMIDI([slider: slider.put(3, i), knob: knob.put(3, i)]);
-		}
+//		8.min(numStrips) do: { | i |
+	//		strips[i].addMIDI([slider: slider.put(3, i), knob: knob.put(3, i)]);
+		// }
 	}
 
 	*uc33eSpecs { // these specs are for M-Audio U-Control UC-33e, 1st program setting

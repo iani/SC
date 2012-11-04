@@ -106,12 +106,9 @@ ScriptLibGui : AppModel {
 				this.getValue(\Proxy).item.evalSnippet(me.getString, start: false, addToSourceHistory: false);
 			}).view.font_(font).states_([["set proxy source"]]),
 			this.popUpMenu('Proxy').proxyList(ProxyCentral.default.proxySpace).view.fixedWidth_(30).font_(font),
-			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font),
-			Button().font_(font).states_([["list"], ["edit"]]).action_({ | me |
-				snippetViews.index = me.value
-			}),
 			this.button('Snippet').action_({ | me |
-				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, false]));
+				[me.value.adapter.path, me.value.item].postln;
+				scriptLib.addSnippetNamed(*(me.value.adapter.path ++ [me.value.item, me.getString]));
 				me.getString.postln;
 				"=============== SNIPPET SAVED ===============".postln;
 				// Following can be removed when SC3.6 stops crashing at recompile with ScriptLibGui open.
@@ -123,6 +120,10 @@ ScriptLibGui : AppModel {
 			this.button('Snippet').action_({ | me |
 				scriptLib.deleteSnippet(*(me.value.adapter.path ++ [me.item]));
 			}).view.font_(font).states_([["delete"]]),
+			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font),
+			Button().font_(font).states_([["list"], ["edit"]]).action_({ | me |
+				snippetViews.index = me.value
+			}),
 			this.button('Snippet').action_({ | me |
 
 			}).view.font_(font).states_([["show buffers"], ["hide buffers"]]),

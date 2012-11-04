@@ -123,12 +123,16 @@ ScriptLib {
 		var snippetName;
 		snippetName = this.getSnippetName(snippet);
 		if (uniqueName) { snippetName = this.makeUniqueName([folderName, fileName], snippetName) };
-		lib.put(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol, snippet);
-		lib.changed(\dict);
+		this.addSnippetNamed(folderName, fileName, snippetName, snippet);
 	}
 
 	getSnippetName { | snippet |
 		^(snippet.findRegexp("//:([A-Z0-9a-z\\-_][A-Za-z0-9\\-_]*)").flop[1] ?? { [nil, "_"] })[1];
+	}
+
+	addSnippetNamed { | folderName, fileName, snippetName, snippet |
+		lib.put(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol, snippet);
+		lib.changed(\dict);
 	}
 
 	deleteSnippet { | folderName, fileName, snippetName |
@@ -164,7 +168,7 @@ ScriptLib {
 		}.fork(AppClock);
 	}
 
-	folders {
+	folders { // TODO?
 
 	}
 }
