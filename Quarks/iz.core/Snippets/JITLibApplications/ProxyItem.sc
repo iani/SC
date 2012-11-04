@@ -35,13 +35,23 @@ ProxyItem : NamedItem {
 //		cachedSpecs = IdentityDictionary.new;
 	}
 
-	*new { | name = "-", item | ^this.newCopyArgs(name, item ?? { NodeProxy() }).init }
+	*new { | name = "-", proxy | ^this.newCopyArgs(name).init(proxy) }
 
-	init {
+	init { | proxy |
+		item = proxy ?? { NodeProxy() };
 		history = List.new;
-		specs = List.new;
 		this.addNotifier(item, \source, { this.getParamsFromProxy });
+		this.resetSpecs;
+	}
+
+	resetSpecs {
+		specs = List.new;
 		this.getParamsFromProxy;
+	}
+
+	reset {
+		item.clear;
+		this.resetSpecs;
 	}
 
 	getParamsFromProxy {
@@ -99,7 +109,7 @@ ProxyItem : NamedItem {
 	checkEvalPlay { | snippet |
 		/* If NodeProxy has no source yet, get a source from snippet */
 		if (item.source.isNil) {
-			this.evalSnippet(snippet ?? { history.first ?? { "{ WhiteNoise.ar(0.1) }" } },
+			this.evalSnippet(snippet ?? { history.first ?? { "" } },
 				start: true, addToSourceHistory: (history.size == 0)
 			);
 		}{

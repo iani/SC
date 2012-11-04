@@ -16,9 +16,9 @@ ProxyCentral {
 
 	*reset { if (default.notNil) { default.reset } }
 
-	reset {
-		proxyItems do: _.clear;
-	}
+	reset { proxyItems do: _.reset; }
+
+	*currentProxy { ^this.default.currentProxy }
 
 	*default {
 		default ?? { default = this.new };

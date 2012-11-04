@@ -296,11 +296,12 @@ Widget {
 		}{
 			this.updater(proxySpace, \list, {
 				this.items_(proxySpace.proxies);
+				[this, thisMethod.name, "checking autoselect: num items is", this.items.size, "autoSelect is:", autoSelect].postln;
 				if (this.items.size - 1 == autoSelect) {
 					value.index_(nil, autoSelect);
 				};
 			});
-			if (this.items.size - 1 >= autoSelect) { value.index_(nil, autoSelect); };
+			if (this.items.size > autoSelect) { value.index_(nil, autoSelect); };
 		};
 		value.changed(\initProxyControls);	// Initialize proxyWatchers etc. created before me
 	}
@@ -331,6 +332,7 @@ Widget {
 		this.startWatchingProxy(value.adapter);
 	}
 
+	// play/stop button for proxies
 	proxyWatcher { | playAction, stopAction | // must connect to proxySpace proxy list
 		// Initialize myself only AFTER my proxyList has been created:
 		if (value.adapter.isKindOf(ListAdapter).not) {
@@ -395,7 +397,6 @@ Widget {
 				});
 			}{
 				this.list({ | me |
-					[this, thisMethod.name, me.items].postln;
 					if (autoSelect < me.items.size) {
 						me.value.adapter.index_(nil, autoSelect);
 					};
