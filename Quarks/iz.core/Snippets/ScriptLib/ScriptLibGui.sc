@@ -94,7 +94,20 @@ ScriptLibGui : AppModel {
 
 	snippetButtonRow {
 		^HLayout(
-			Button().font_(font).states_([["show list"], ["show snippet"]]).action_({ | me |
+			this.button('Snippet').action_({ | me |
+				me.getString.interpret.postln;
+			}).view.font_(font).states_([["run", Color.red]]),
+			this.button('Proxy')
+			.proxyWatcher({ | me |
+				me.checkProxy(me.value.adapter.item.checkEvalPlay(this.getValue('Snippet').getString))
+			})
+			.view.font_(font).states_([[">", nil, Color.green], ["||", nil, Color.red]]).fixedWidth_(30),
+			this.button('Snippet').action_({ | me |
+				this.getValue(\Proxy).item.evalSnippet(me.getString, start: false, addToSourceHistory: false);
+			}).view.font_(font).states_([["set proxy source"]]),
+			this.popUpMenu('Proxy').proxyList(ProxyCentral.default.proxySpace).view.fixedWidth_(30).font_(font),
+			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font),
+			Button().font_(font).states_([["list"], ["edit"]]).action_({ | me |
 				snippetViews.index = me.value
 			}),
 			this.button('Snippet').action_({ | me |
@@ -103,21 +116,7 @@ ScriptLibGui : AppModel {
 				"=============== SNIPPET SAVED ===============".postln;
 				// Following can be removed when SC3.6 stops crashing at recompile with ScriptLibGui open.
 				scriptLib.save;
-			}).view.font_(font).states_([["save snippet"]]),
-			this.button('Snippet').action_({ | me |
-				me.getString.interpret.postln;
-			}).view.font_(font).states_([["eval"]]),
-			this.button('Proxy')
-			.simpleProxyWatcher(ProxyCentral.default, { | me |
-				me.checkProxy(
-					me.value.adapter.checkEvalPlay(this.getValue('Snippet').getString)
-				)
-			})
-			.do({ | me | me.adapter_(ProxyCentral.default.currentProxy) })
-			.view.font_(font).states_([["play", nil, Color.green], ["stop", nil, Color.red]]),
-			this.button('Snippet').action_({ | me |
-
-			}).view.font_(font).states_([["set proxy source"]]),
+			}).view.font_(font).states_([["save"]]),
 			this.button('Snippet').action_({ | me |
 				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, true]));
 			}).view.font_(font).states_([["new"]]),
@@ -127,7 +126,6 @@ ScriptLibGui : AppModel {
 			this.button('Snippet').action_({ | me |
 
 			}).view.font_(font).states_([["show buffers"], ["hide buffers"]]),
-			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font);
 		)
 	}
 

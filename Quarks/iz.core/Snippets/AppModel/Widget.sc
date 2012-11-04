@@ -375,6 +375,7 @@ Widget {
 		^proxy; // for further use if in another expression.
 	}
 
+	// PopUpMenu or ListView selecting a parameter of a Proxy(Item) to control with proxyControl
 	proxyControlList { | proxyList, autoSelect |
 		if (proxyList isKindOf: Symbol) {
 			proxyList = model.getValue(proxyList);
@@ -400,15 +401,15 @@ Widget {
 					};
 					me.items collect: { | v | v.adapter.parameter };
 				});
-				{ if (autoSelect < this.items.size) {
-					this.value.adapter.index_(nil, autoSelect);
-				}}.defer(0.2); // hack. How can we initialize better?
+//				{ if (autoSelect < this.items.size) {
+//					this.value.adapter.index_(nil, autoSelect);
+//				}}.defer(0.2); // hack. How can we initialize better?
 			};
 			value.changed(\initProxyControls);	// Initialize proxyControls created before me
 		}
 	}
 
-	proxyControl {
+	proxyControl { // Knob or Slider controlling parameter of a Proxy(Item)
 		var paramList;	// The list of the proxyControlList from which parameters are chosen.
 		// Initialize myself only AFTER my proxyControlList has been created:
 		if (value.adapter isKindOf: NumberAdapter) {

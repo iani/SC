@@ -10,6 +10,16 @@ ProxyCentral {
 
 	var <proxySpace, <proxyItems, currentProxy;
 
+	*initClass {
+		StartUp.add({ ServerBoot.add({ this.reset }) });
+	}
+
+	*reset { if (default.notNil) { default.reset } }
+
+	reset {
+		proxyItems do: _.clear;
+	}
+
 	*default {
 		default ?? { default = this.new };
 		^default;
@@ -19,6 +29,10 @@ ProxyCentral {
 
 	init {
 		proxySpace = ProxySpace();
+		this.initProxies;
+	}
+
+	initProxies {
 		// Initialize proxies
 		"12345678qwertyuiasdfghjkzxcvbnm," do: { | char | proxySpace.at(char.asSymbol) };
 		proxyItems = IdentityDictionary();

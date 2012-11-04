@@ -128,7 +128,7 @@ ScriptLib {
 	}
 
 	getSnippetName { | snippet |
-		^(snippet.findRegexp("//:([A-Za-z\\-_][A-Za-z0-9\\-_]*)").flop[1] ?? { [nil, "_"] })[1];
+		^(snippet.findRegexp("//:([A-Z0-9a-z\\-_][A-Za-z0-9\\-_]*)").flop[1] ?? { [nil, "_"] })[1];
 	}
 
 	deleteSnippet { | folderName, fileName, snippetName |
