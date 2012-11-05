@@ -92,8 +92,8 @@ ScriptLibGui : AppModel {
 
 	mainMenuAction { | actionIndex = 0 |
 		[nil,	// MainMenu item. Just header. No action.
-		{ scriptLib.new.addDefaults }, 		// New
-		{ scriptLib.class.open; },		// Open
+		{ ScriptLib.new.addDefaults.gui }, 		// New
+		{ ScriptLib.open; },		// Open
 		{ scriptLib.save; },			// Save
 		{ scriptLib.saveDialog },		// Save as
 		{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
