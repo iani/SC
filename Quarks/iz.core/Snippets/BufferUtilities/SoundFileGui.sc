@@ -1,11 +1,11 @@
 /* IZ Sun 23 September 2012  3:53 PM EEST
 
 Manage lists of sound file paths, saving these in user app support dir.
-Selectively load files into buffers. 
-Display sound file contents in SoundFileView. 
-Add functionality for analysis and manipulation. 
+Selectively load files into buffers.
+Display sound file contents in SoundFileView.
+Add functionality for analysis and manipulation.
 
-Based on BufferListGui, but with compact list views to allow space for sound file display and other functionality. 
+Based on BufferListGui, but with compact list views to allow space for sound file display and other functionality.
 
 */
 
@@ -53,7 +53,7 @@ SoundFileGui : AppModel {
 		(Platform.resourceDir +/+ "sounds/*").pathMatch do: { | path |
 			this.addBuffer(bufferList, BufferItem(path));
 		};
-		bufferList.container.updateListeners;	
+		bufferList.container.updateListeners;
 	}
 
 	addBuffer { | bufferList, buffer | if (bufferList.includes(buffer).not) { bufferList add: buffer } }
@@ -74,7 +74,7 @@ SoundFileGui : AppModel {
 //				).setMinColumnWidth(0, 200),
 				// Here will follow the functionality items
 //				[nil, s: 5],
-				
+
 			);
 			// load current file when re-opening
 			files.item !? { files.notify(\index, files); };
@@ -91,7 +91,7 @@ SoundFileGui : AppModel {
 			this.button(\bufferLists).changedAction(\rename).view.states_([["rename"]]).font_(font),
 			this.button(\bufferLists).action_({ | me | me.value.adapter.delete })
 				.view.states_([["delete"]]).font_(font),
-			Button().action_({ 
+			Button().action_({
 				this.init(archivePath);
 				this.updateListeners;
 			}).states_([["revert"]]).font_(font),
@@ -103,7 +103,7 @@ SoundFileGui : AppModel {
 		^this.listItem(\bufferLists, TextField(), { | me |
 			me.value.adapter.item !? { me.value.adapter.item.name; }
 		})
-		.updateAction(\rename, { | sender, me | 
+		.updateAction(\rename, { | sender, me |
 			me.value.adapter.item.name = me.view.string;
 			me.value.updateListeners;
 		})
@@ -176,7 +176,7 @@ SoundFileGui : AppModel {
 
 	loadedBuffersList {
 		^this.listView(\loadedBuffers).updater(BufferItem, \bufferList, { | me, names |
-			me.value.adapter.items_(nil, names);
+			me.value.adapter.items_(nil, names)
 		})
 		.items_(Library.at['Buffers'].keys.asArray.sort)
 		.updateAction(\free, { | me |
@@ -188,7 +188,7 @@ SoundFileGui : AppModel {
 	bufferActionList {
 		^this.listView(\bufferActions).items_(["--"]).view.font_(font)
 	}
-	
+
 	soundFileDisplay {
 		^this.soundFileView(\soundFileView)
 		.viewGetter(\sfView)	// provide view to other widgets for extra actions
@@ -196,7 +196,7 @@ SoundFileGui : AppModel {
 			list.item !? { me.value.adapter.soundFile_(list.item.name); }
 		}).view.timeCursorOn_(true);
 	}
-	
+
 	soundFileItemsRow1 {
 		^HLayout(
 			[StaticText().string_("num frames:").font_(font), s: 2],
@@ -213,7 +213,7 @@ SoundFileGui : AppModel {
 			.view.font_(font), s: 1],
 			StaticText().string_("duration:").font_(font),
 			[this.numberBox(\soundFileView)
-			.updateAction(\read, { | sf, me | 
+			.updateAction(\read, { | sf, me |
 				sf.soundFile !? { me.view.value = sf.soundFile.duration }
 			})
 			.view.font_(font), s: 1],
@@ -225,16 +225,16 @@ SoundFileGui : AppModel {
 			.view.font_(font),
 			StaticText().string_("time:").font_(font),
 			[this.numberBox(\soundFileView)
-			.updateAction(\sfViewAction, { | sfv, me | 
-				sfv.view.soundfile !? { 
-					me.view.value = sfv.view.timeCursorPosition / sfv.view.soundfile.sampleRate; 
+			.updateAction(\sfViewAction, { | sfv, me |
+				sfv.view.soundfile !? {
+					me.view.value = sfv.view.timeCursorPosition / sfv.view.soundfile.sampleRate;
 				}
 			})
 			.view.font_(font), s: 1],
 			[StaticText().string_("selected frames:").font_(font), s: 2],
 			this.numberBox(\soundFileView)
 			.updateAction(\sfViewAction, { | sfv, me |
-				sfv.view.soundfile !? { 
+				sfv.view.soundfile !? {
 					me.view.value = sfv.view.selectionSize(sfv.view.currentSelection);
 				}
 			})
@@ -243,9 +243,9 @@ SoundFileGui : AppModel {
 			[this.numberBox(\soundFileView)
 			.updateAction(\sfViewAction, { | sfv, me |
 				sfv.view.soundfile !? {
-					me.view.value = 
-						sfv.view.selectionSize(sfv.view.currentSelection) / 
-						sfv.view.soundfile.sampleRate; 
+					me.view.value =
+						sfv.view.selectionSize(sfv.view.currentSelection) /
+						sfv.view.soundfile.sampleRate;
 				}
 			})
 			.view.font_(font), s: 1],
@@ -267,7 +267,7 @@ SoundFileGui : AppModel {
 			.view.states_([["play sel"]]).font_(font),
 		)
 	}
-	
+
 	saveLists {
 		this.getValue(\bufferLists).adapter.items.writeArchive(archivePath);
 		postf("Buffer lists saved to: \n%\n", archivePath);

@@ -1,16 +1,16 @@
 /* IZ Wed 29 August 2012 12:57 PM EEST
 
-BufferItems are accessible by the name of the file from which they were loaded, without extension, as a symbol, sending it message 'b'. 
+BufferItems are accessible by the name of the file from which they were loaded, without extension, as a symbol, sending it message 'b'.
 
 Once a BufferItem is loaded, it will reload when the default server reboots.
 
-// To access or play a loaded buffer item: 
+// To access or play a loaded buffer item:
 
 \SinedPink.b; // accesses the buffer
 
 \SinedPink.b.play // accesses and plays the buffer
 
-BufferItems can be added, loaded, deleted, free'd through the BufferListGui. 
+BufferItems can be added, loaded, deleted, free'd through the BufferListGui.
 
 BufferListGui();
 
@@ -20,9 +20,9 @@ BufferItem : NamedItem {
 	// name -> path. item -> Buffer
 	// Buffer allocated only and always when server boots or is booted.
 	classvar loadingBuffers; // Load buffers only one at a time. See method load.
-	classvar <>all;	// IdentityDictionary with one buffer per symbol. 
+	classvar <>all;	// IdentityDictionary with one buffer per symbol.
 					// prevent creating duplicate buffers with same path.
-	
+
 	var <>nameSymbol;
 	*initClass {
 		loadingBuffers = IdentityDictionary.new;
@@ -78,7 +78,7 @@ BufferItem : NamedItem {
 			extraAction.(buffer);
 			loadingBuffers[this] = nil;
 			loadingBuffers.detect(true).value;
-		})	
+		})
 	}
 
 	serverQuit { item = nil; }
@@ -89,7 +89,7 @@ BufferItem : NamedItem {
 	}
 
 	postInfo { postf("% : % \n", this.minSec, nameSymbol) }
-	
+
 	minSec {
 		var seconds;
 		item ?? { ^"?? min, ?? sec" };
@@ -111,11 +111,11 @@ BufferItem : NamedItem {
 	*updateLists {
 		var buffers;
 		(buffers = Library.at('Buffers')) !? {
-			{ this.changed(\bufferList, [Library.at('Buffers').keys.asArray.sort]); }.defer;
+			{ this.changed(\bufferList, Library.at('Buffers').keys.asArray.sort); }.defer;
 		}
 	}
 
-	storeInLibrary { 
+	storeInLibrary {
 		Library.put('Buffers', this.nameSymbol, this);
 		this.updateLists;
 	}

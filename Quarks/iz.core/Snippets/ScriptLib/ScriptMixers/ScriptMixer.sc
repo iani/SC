@@ -2,13 +2,6 @@
 
 Uses default ProxySpace from ProxyCentral.
 
-12345678
-qwertyui
-asdfghjk
-zxcvbnm,
-
-ScriptMixer.activeMixer;
-
 ScriptMixer();
 
 */
