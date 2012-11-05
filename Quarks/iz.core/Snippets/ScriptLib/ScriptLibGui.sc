@@ -134,8 +134,11 @@ ScriptLibGui : AppModel {
 			}).view.font_(font).states_([["delete"]]),
 			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font),
 			this.button('Snippet').action_({ | me |
-
-			}).view.font_(font).states_([["show buffers"], ["hide buffers"]]),
+				ProxyCodeEditor(ProxyCentral.default.proxySpace, ProxyCentral.currentProxy);
+			}).view.font_(font).states_([["proxy editor"]]),
+			this.button('Snippet').action_({ | me |
+				SoundFileGui();
+			}).view.font_(font).states_([["samples"]]),
 		)
 	}
 

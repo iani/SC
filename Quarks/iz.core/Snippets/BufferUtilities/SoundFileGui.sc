@@ -9,7 +9,6 @@ Based on BufferListGui, but with compact list views to allow space for sound fil
 
 */
 
-
 SoundFileGui : AppModel {
 
 	classvar <>font;
