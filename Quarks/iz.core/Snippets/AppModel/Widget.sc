@@ -355,6 +355,7 @@ Widget {
 			this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
 			this.updateAction(\list, { this.startWatchingProxy(value.adapter.item) });
 			this.updateAction(\index, { this.startWatchingProxy(value.adapter.item) });
+			this.updateAction(\toggle, { view.valueAction_(view.value + 1 % 2) });
 			this.startWatchingProxy(value.adapter.item);
 		}
 	}

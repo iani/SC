@@ -94,6 +94,9 @@ ScriptLibGui : AppModel {
 
 	snippetButtonRow {
 		^HLayout(
+			Button().font_(font).states_([["list"], ["edit"]]).action_({ | me |
+				snippetViews.index = me.value
+			}),
 			this.button('Snippet').action_({ | me |
 				me.getString.interpret.postln;
 			}).view.font_(font).states_([["run", Color.red]]),
@@ -105,9 +108,9 @@ ScriptLibGui : AppModel {
 			this.button('Snippet').action_({ | me |
 				this.getValue(\Proxy).item.evalSnippet(me.getString, start: false, addToSourceHistory: false);
 			}).view.font_(font).states_([["set proxy source"]]),
-			this.popUpMenu('Proxy').proxyList(ProxyCentral.default.proxySpace).view.fixedWidth_(30).font_(font),
+			this.popUpMenu('Proxy').proxyList(ProxyCentral.default.proxySpace)
+			.view.fixedWidth_(30).font_(font).background_(Color.yellow),
 			this.button('Snippet').action_({ | me |
-				[me.value.adapter.path, me.value.item].postln;
 				scriptLib.addSnippetNamed(*(me.value.adapter.path ++ [me.value.item, me.getString]));
 				me.getString.postln;
 				"=============== SNIPPET SAVED ===============".postln;
@@ -121,9 +124,6 @@ ScriptLibGui : AppModel {
 				scriptLib.deleteSnippet(*(me.value.adapter.path ++ [me.item]));
 			}).view.font_(font).states_([["delete"]]),
 			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font),
-			Button().font_(font).states_([["list"], ["edit"]]).action_({ | me |
-				snippetViews.index = me.value
-			}),
 			this.button('Snippet').action_({ | me |
 
 			}).view.font_(font).states_([["show buffers"], ["hide buffers"]]),
@@ -135,12 +135,45 @@ ScriptLibGui : AppModel {
 			this.textView('Snippet').listItem({ | me |
 				me.value.adapter.dict.atPath(me.value.adapter.path ++ [me.item])
 			}).makeStringGetter.view.font_(Font("Monaco", 10)).tabWidth_(25),
-			this.listView('Snippet', { | me |
-				var snippets;
-				snippets = me.value.adapter.dict.atPath(me.value.adapter.path);
-				if (snippets.isNil) { [] } { snippets.asSortedArray.flop[1] };
-			}).view.font_(Font("Monaco", 10)).background_(Color(1, 1, 0.9)),
+			this.snippetListView
 		)
+	}
+
+	snippetListView {
+		var listView, proxyIndex, colors;
+		colors = [Color(0.95, 0.95, 0.96), Color(1, 1, 0.99)].dup(30).flat;
+		listView = this.listView('Snippet', { | me |
+			var snippets;
+			snippets = me.value.adapter.dict.atPath(me.value.adapter.path);
+			// Must do this here, because resetting the items of the list also resets the colors:
+			{ me.view.colors = colors }.defer(0.03);
+			if (snippets.isNil) { [] } { snippets.asSortedArray.flop[1] };
+		}).view.font_(Font("Monaco", 10));
+		listView.keyDownAction = { | view, char, mod, ascii |
+			switch (ascii,
+				13, { this.evalSnippet(mod) }, // return key,
+				32, { this.toggleProxy }, // space key
+				{
+					proxyIndex = "12345678qwertyuiasdfghjkzxcvbnm," indexOf: char;
+					proxyIndex !? { this.getValue('Proxy').index_(nil, proxyIndex) }
+				}
+			);
+		};
+		^listView;
+	}
+
+	evalSnippet { | mod = 0 |
+		if (mod == 0) {
+			this.getValue(\Proxy).item.evalSnippet(
+				this.getValue('Snippet').getString, start: false, addToSourceHistory: false
+			);
+		}{
+			this.getValue('Snippet').getString.postln.interpret;
+		}
+	}
+
+	toggleProxy {
+		this.getValue('Proxy').changed(\toggle);
 	}
 }
 
