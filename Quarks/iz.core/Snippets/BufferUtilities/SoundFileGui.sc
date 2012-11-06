@@ -7,6 +7,8 @@ Add functionality for analysis and manipulation.
 
 Based on BufferListGui, but with compact list views to allow space for sound file display and other functionality.
 
+TODO: Handle loading and saving of lists through separate BufferList class. Needed to handle buffer lists independently from the gui, in other parts of the system.
+
 */
 
 SoundFileGui : AppModel {
@@ -76,7 +78,7 @@ SoundFileGui : AppModel {
 
 			);
 			// load current file when re-opening
-			files.item !? { files.notify(\index, files); };
+			files.item !? { files.changed(\index, files); };
 			this.windowClosed(w, { this.saveLists });
 			ShutDown add: { this.saveLists };
 		})

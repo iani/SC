@@ -14,6 +14,8 @@ Example using RecentPaths: ScriptLib;
 
 RecentPaths are not stored in the global archive but in a separate file, because they would be lost if the library is loaded without the RecentPaths class installed.
 
+TODO: Add delete button.
+
 */
 
 RecentPaths {

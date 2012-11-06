@@ -26,6 +26,11 @@ Menus:
 - Files
 - Snippets
 
+TODO:
+- Scripts button in Lilt2DefaultMenu should open last opened ScriptLib instead of selection menu
+- Open menu (RecentPaths) should have delete button.
+
+
 */
 
 ScriptLibGui : AppModel {
@@ -85,7 +90,7 @@ ScriptLibGui : AppModel {
 				me.value = 0
 			}),
 			this.popUpMenu(\topMenu,
-			{ ["Server", "Boot", "Quit All", "Sound Files", "Mixer"] }
+			{ ["Server", "Boot", "Quit All", "Load Sound Files", "Edit Sound Files", "Mixer", "Scope", "Freqscope", "Scope + Freqscope"] }
 			).view.font_(font).action_({ | me |
 				this.serverMenuAction(me.value);
 				me.value = 0
@@ -114,8 +119,16 @@ ScriptLibGui : AppModel {
 		[nil,	// MainMenu item. Just header. No action.
 			{ Server.default.boot },
 			{ Server.killAll; },
+			{ "not implemented".postln; },
 			{ SoundFileGui(); },
 			{ ScriptMixer() },
+			{ Server.default.scope.window.bounds = Rect(0, 360, 200, 200); },
+			{ Server.default.freqscope },
+			{
+				Server.default.scope.window.bounds = Rect(0, 360, 200, 200);
+				Server.default.freqscope;
+			},
+
 		][actionIndex].value;
 	}
 
