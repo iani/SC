@@ -32,6 +32,7 @@ ScriptLibGui : AppModel {
 	classvar <>font, <windowShift = 0;
 	var <scriptLib;
 	var <snippetViews;
+	var <buffers;		// Dictionary of buffers selected by menus, inserted in code as variables
 
 	*initClass {
 		StartUp add: {
@@ -40,6 +41,7 @@ ScriptLibGui : AppModel {
 	}
 
 	gui {
+		buffers = IdentityDictionary();
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
 			window.bounds = Rect(
@@ -64,6 +66,7 @@ ScriptLibGui : AppModel {
 					}),
 				),
 				this.snippetButtonRow,
+				this.bufferRow,
 				[this.snippetCodeList, s: 3]
 			);
 			this.windowClosed(window, {
@@ -79,6 +82,12 @@ ScriptLibGui : AppModel {
 			{ ["File Menu", "New", "Open", "Save", "Save as", "Import", "Export"] }
 			).view.font_(font).action_({ | me |
 				this.mainMenuAction(me.value);
+				me.value = 0
+			}),
+			this.popUpMenu(\topMenu,
+			{ ["Server", "Boot", "Quit All", "Sound Files", "Mixer"] }
+			).view.font_(font).action_({ | me |
+				this.serverMenuAction(me.value);
 				me.value = 0
 			}),
 			this.itemEditMenu('Folder')
@@ -98,6 +107,15 @@ ScriptLibGui : AppModel {
 		{ scriptLib.saveDialog },		// Save as
 		{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
 		{ Dialog.savePanel({ | path | scriptLib.export(path) }) }, // Export
+		][actionIndex].value;
+	}
+
+	serverMenuAction { | actionIndex = 0 |
+		[nil,	// MainMenu item. Just header. No action.
+			{ Server.default.boot },
+			{ Server.killAll; },
+			{ SoundFileGui(); },
+			{ ScriptMixer() },
 		][actionIndex].value;
 	}
 
@@ -133,13 +151,52 @@ ScriptLibGui : AppModel {
 				scriptLib.deleteSnippet(*(me.value.adapter.path ++ [me.item]));
 			}).view.font_(font).states_([["delete"]]),
 			Button().states_([["mixer"]]).action_({ ScriptMixer.activeMixer }).font_(font),
-			this.button('Snippet').action_({ | me |
-				ProxyCodeEditor(ProxyCentral.default.proxySpace, ProxyCentral.currentProxy);
-			}).view.font_(font).states_([["proxy editor"]]),
-			this.button('Snippet').action_({ | me |
-				SoundFileGui();
-			}).view.font_(font).states_([["samples"]]),
+//			this.button('Snippet').action_({ | me |
+//				ProxyCodeEditor(ProxyCentral.default.proxySpace, this.getValue('Proxy').adapter.postln);
+//			}).view.font_(font).states_([["proxy editor"]]),
+			Button().action_({ SoundFileGui(); }).font_(font).states_([["samples"]]),
+			Button().font_(font).states_([["set buffers"]]).action_({ this.updateBuffers })
 		)
+	}
+
+	bufferRow { // Buffer menus:
+		^[HLayout(
+			*({ | i |
+				var valName;
+				valName = format("b%", i).asSymbol;
+				this.popUpMenu(valName)
+				.updater(BufferItem, \bufferList, { | me, names | me.items_(['-'] ++ names); })
+				.do({ | me |
+					me.items = ['-'] ++ Library.at['Buffers'].keys.asArray.sort
+				})
+				.addValueListener(this, \index, { | val |
+					this.update1buffer(valName, val.adapter.item) })
+				.view.font_(font) //.fixedWidth_(82)
+			} ! 8)
+		), s: 1]
+	}
+
+	update1buffer { | valName, bufName | // insert variable declaration for chosen buffers to code
+		buffers[valName] = if (bufName === '-') { nil } { bufName };
+		this.updateBuffers;
+	}
+
+	updateBuffers {
+		var bufStrings, varString, editor, source, lines;
+		bufStrings = buffers.keys.asArray.sort collect: { | bname |
+			format("% = '%'.b", bname, buffers[bname]);
+		};
+		varString = bufStrings[1..].inject(bufStrings[0], { | vars, s | vars prCat: ", " ++ s });
+		if (varString.notNil) { varString = "var " ++ varString ++ ";" };
+		editor = this.getValue('Snippet');
+		source = editor.getString;
+		lines = source.split($\n);
+		if (lines[0][0] !== $/) { lines = ["//:"] ++ lines; };
+		if (lines[1][..2] == "var") { lines[1] = varString; } { lines = lines.insert(1, varString); };
+		lines remove: nil; // if no buffers chosen, then remove var declaration line
+		scriptLib.addSnippetNamed(*(editor.adapter.path ++ [editor.item,
+			lines[1..].inject(lines[0], { | code, line | code prCat: "\n" ++ line })
+		]));
 	}
 
 	snippetCodeList {

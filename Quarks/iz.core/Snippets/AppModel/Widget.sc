@@ -129,7 +129,7 @@ Widget {
 		});
 	}
 
-	textView { | message = \updateText | // for TextView.
+	textView { | message = \updateText | // for TextView
 		// Adds updateAction to update text to adapter via button
 		this.text;
 		this.updateAction(message, { | sender |

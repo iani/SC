@@ -39,7 +39,7 @@ ScriptMixer : AppModel {
 			font = Font.default.size_(10);
 			w.name_("Proxy Script Mixer")
 			.bounds_(Rect(Window.screenBounds.width - winWidth, 0, winWidth, 250));
-			tabbedView = TabbedView(w, labels: ["1-8", "q-i", "a-k", "z-,"]);
+			tabbedView = TabbedViewL(w, labels: ["1-8", "q-i", "a-k", "z-,"]);
 			tabbedView.views do: { | view, viewNum |
 				viewNum = viewNum * 8;
 				view.layout = HLayout(
