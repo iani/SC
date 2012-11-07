@@ -30,7 +30,6 @@ TODO:
 - Scripts button in Lilt2DefaultMenu should open last opened ScriptLib instead of selection menu
 - Open menu (RecentPaths) should have delete button.
 
-
 */
 
 ScriptLibGui : AppModel {
@@ -79,18 +78,20 @@ ScriptLibGui : AppModel {
 				this.objectClosed;
 			})
 		});
+		scriptLib.loadConfig;
 	}
 
 	topMenuRow {
 		^HLayout(
 			this.popUpMenu(\topMenu,
-			{ ["File Menu", "New", "Open", "Save", "Save as", "Import", "Export"] }
+			{ ["File Menu", "New", "Open", "Save", "Save as", "Make this Lib Default", "Import", "Export", "Reload Config"] }
 			).view.font_(font).action_({ | me |
 				this.mainMenuAction(me.value);
 				me.value = 0
 			}),
 			this.popUpMenu(\topMenu,
-			{ ["Server", "Boot", "Quit All", "Load Sound Files", "Edit Sound Files", "Mixer", "Scope", "Freqscope", "Scope + Freqscope"] }
+			{ ["Server Menu", "Boot", "Quit All", "Add loaded buffers to config", "Edit Sound Files",
+					"Mixer", "Scope", "Freqscope", "Scope + Freqscope"] }
 			).view.font_(font).action_({ | me |
 				this.serverMenuAction(me.value);
 				me.value = 0
@@ -106,12 +107,14 @@ ScriptLibGui : AppModel {
 
 	mainMenuAction { | actionIndex = 0 |
 		[nil,	// MainMenu item. Just header. No action.
-		{ ScriptLib.new.addDefaults.gui }, 		// New
-		{ ScriptLib.open; },		// Open
-		{ scriptLib.save; },			// Save
-		{ scriptLib.saveDialog },		// Save as
-		{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
-		{ Dialog.savePanel({ | path | scriptLib.export(path) }) }, // Export
+			{ ScriptLib.new.addDefaults.gui }, 		// New
+			{ ScriptLib.open; },		// Open
+			{ scriptLib.save; },			// Save
+			{ scriptLib.saveDialog },		// Save as
+			{ RecentPaths(scriptLib.class.asSymbol).default = ScriptLib.all.findKeyForValue(scriptLib).asString; },
+			{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
+			{ Dialog.savePanel({ | path | scriptLib.export(path) }) }, // Export
+			{ scriptLib.loadConfig; }, // Reload Config
 		][actionIndex].value;
 	}
 
@@ -119,7 +122,7 @@ ScriptLibGui : AppModel {
 		[nil,	// MainMenu item. Just header. No action.
 			{ Server.default.boot },
 			{ Server.killAll; },
-			{ "not implemented".postln; },
+			{ scriptLib.addLoadedBuffersToConfig },
 			{ SoundFileGui(); },
 			{ ScriptMixer() },
 			{ Server.default.scope.window.bounds = Rect(0, 360, 200, 200); },

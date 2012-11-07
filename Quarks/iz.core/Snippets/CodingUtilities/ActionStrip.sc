@@ -57,7 +57,8 @@ ActionStrip {
 				me.value = 0;
 			});
 		}{
-			view = Button().states_([[name.value.asString]]).action_({ | me | spec.(me) });
+			if (name isKindOf: String) { name = [[name]] };
+			view = Button().states_(name.(this)).action_({ | me | spec.(me) });
 		};
 		^view.font_(Font.default.size_(10))
 	}

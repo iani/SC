@@ -8,7 +8,7 @@ The objectID is used to identify the object that is using the path history, keep
 
 See also: Prefs.
 
-RecentPaths.open(\test, { | tehPath | tehPath.postln; });
+RecentPaths.open(\test, { | thePath | thePath.postln; });
 
 Example using RecentPaths: ScriptLib;
 
@@ -21,7 +21,7 @@ TODO: Add delete button.
 RecentPaths {
 	classvar <all;
 
-	var <objectID, <>numHistoryItems = 20, <paths;
+	var <objectID, <>numHistoryItems = 20, <paths, <default;
 
 	*open { | objectID, openAction, createAction |
 		^this.new(objectID.asSymbol).open(openAction, createAction);
@@ -42,6 +42,12 @@ RecentPaths {
 			this.saveAll;
 		};
 		^instance;
+	}
+
+	default_ { | argDefault |
+		default = argDefault;
+		postf("Setting default path for: %\nPath is: %\n", objectID, argDefault);
+		this.class.saveAll;
 	}
 
 	*saveAll {

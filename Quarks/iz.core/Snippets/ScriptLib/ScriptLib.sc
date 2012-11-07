@@ -20,7 +20,7 @@ Real paths must be stored by the ScriptLibApp (subclass of AppModel) - not the S
 	var <archive_path;	// path of the top folder or the file from which the library
 	var <folder_path;	// NOT! Multiple data can be imported to same instance from many paths
 
-a = ScriptLib();
+a = ScriptLib().gui;
 
 a.gui;
 
@@ -42,19 +42,43 @@ ScriptLib {
 		this.addSnippet("-DefaultFolder", "-Defaults", "//:-defaultsnippet\n{ WhiteNoise.ar(0.1) }");
 	}
 
+	loadConfig {
+		// load all scripts in Folder "Config"
+		lib.leafDoFrom('Config', { | path, script | script.interpret });
+	}
+
+	addLoadedBuffersToConfig {
+		Library.at('Buffers') do: { | b |
+			this.addSnippetNamed('Config', 'Buffers', b.nameSymbol,
+				format("//:%\nBufferItem(%).load", b.nameSymbol, b.name.asCompileString)
+			);
+		};
+	}
+
+	*openDefault {
+		var defaultPath;
+		defaultPath = RecentPaths(this.asSymbol).default;
+		if (defaultPath.isNil) {
+			this.open;
+		}{
+			this.loadFromArchive(defaultPath).gui;
+		}
+	}
+
 	*open {
 		RecentPaths.open(this.asSymbol, { | path |
-			var instance;
-			path = path.asSymbol;
-			instance = all[path];
-			instance ?? {
-				instance = Object readArchive: path.asString;
-				all[path] = instance;
-			};
-			instance.gui;
-		},{
+			this.loadFromArchive(path).gui;
+			},{
 			this.new.addDefaults.gui;
 		})
+	}
+
+	*loadFromArchive { | path |
+		var instance;
+		path = path.asSymbol;
+		instance = all[path] ?? { Object readArchive: path.asString; };
+		all[path] = instance;
+		^instance;
 	}
 
 	save {

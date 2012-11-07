@@ -60,7 +60,10 @@ BufferItem : NamedItem {
 	}
 
 	load { | extraAction | // mechanism for loading next buffer after this one is loaded
-		item !? { ^this };
+		item !? {
+			postf("Buffer '%' already loaded. Skipping.\n", nameSymbol);
+			^this
+		};
 		if (Server.default.serverRunning) {
 			loadingBuffers[this] = { this.prLoad(extraAction); };
 			if (loadingBuffers.size == 1) { this.prLoad(extraAction); }
@@ -81,7 +84,11 @@ BufferItem : NamedItem {
 		})
 	}
 
-	serverQuit { item = nil; }
+	serverQuit {
+		// Restore the buffer if the server has not really quit:
+		item.updateInfo({ | buffer | item = buffer });
+		item = nil;
+	}
 
 	play {
 		item !? { ^item.play };

@@ -1,8 +1,5 @@
 /* iz Thu 25 October 2012 11:53 AM EEST
-
 Default action strip for Lilt2 = mini menu + button strip substitute for menu, for 3.6ide.
-
-
 */
 
 Lilt2DefaultMenu {
@@ -12,10 +9,14 @@ Lilt2DefaultMenu {
 	*makeMenu {
 		if (menu.isNil) {
 			menu = ActionStrip().addItems(
-				"Scripts", { ScriptLib.open },
+				"Scripts", { ScriptLib.openDefault },
 				"Mixer", { ScriptMixer() },
 				"Sound Files", { SoundFileGui() },
-				"Quarks", { "not yet implemented".postln }
+				"Quarks", { "not yet implemented".postln },
+				[["Post OSC"], ["Stop posting OSC"]], { | view | OSCFunc.trace([false, true][view.value]) },
+				"Quit Server", { Server.default.quit },
+				"Reboot Server", { Server.default.reboot },
+				"Stop sounds+routines", { thisProcess.stop },
 			);
 			menu.window.onClose = { menu = nil };
 		}{
