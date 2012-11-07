@@ -54,7 +54,8 @@ Blobs {
 	}
 
 	alive { | ... blobIdArray |
-		blobs do: _.checkIfAlive(blobIdArray);
+		// Iterate over array. Do not iterate over dict while modifying it: It would skip entries
+		blobs.values.asArray do: _.checkIfAlive(blobIdArray);
 	}
 
 	fseq { } // catch this message but do nothing
@@ -112,21 +113,42 @@ BlobWatcher {
 	}
 
 	free {
+		myBlobs.copy do: _.changed(\blobEnded);
 		this.objectClosed;
-//		myBlobs = nil;
 	}
 
 	addBlob { | blob |
+		var blobLife;
 		myBlobs = myBlobs add: blob;
-		startFunc.(blob, this);
-		this.addNotifier(blob, \blobMoved, { this.blobMoved(blob, this) });
-		this.addNotifier(blob, \blobEnded, { this.blobEnded(blob, this) });
+		blobLife = BlobLife(blob, startFunc, moveFunc, endFunc);
+		this.addNotifier(blob, \blobMoved, { blobLife.move });
+		this.addNotifier(blob, \blobEnded, {
+			myBlobs remove: blob;
+			this.removeNotifier(blob, \blobMoved);
+			this.removeNotifier(blob, \blobEnded);
+			blobLife.end;
+		});
+	}
+}
+
+BlobLife {
+	var <blob, <>startFunc, <>moveFunc, <>endFunc, <state;
+
+	*new { | blob, startFunc, moveFunc, endFunc |
+		^this.newCopyArgs(blob, startFunc, moveFunc, endFunc).init;
 	}
 
-	blobMoved { | blob | moveFunc.(blob) }
+	init { state = startFunc.(blob, this) }
+	move {  moveFunc.(this) }
+	end { endFunc.(this); }
 
-	blobEnded { | blob |
-		endFunc.(blob);
-		myBlobs remove: blob;
-	}
+	// access to blob data and to state (synth or other process or data):
+	set { | ... args | state.set(*args); }
+	free { state.free; }
+	x_pos { ^blob.x_pos }
+	y_pos { ^blob.y_pos }
+	x_vel { ^blob.x_vel }
+	y_vel { ^blob.y_vel }
+	height { ^blob.height }
+	width { ^blob.width }
 }
