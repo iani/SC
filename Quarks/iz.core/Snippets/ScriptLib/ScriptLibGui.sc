@@ -50,7 +50,7 @@ ScriptLibGui : AppModel {
 			window.name = scriptLib.path ? "ScriptLib";
 			window.bounds = Rect(
 				windowShift + 500,
-				windowShift.neg + 350, 800, 500);
+				windowShift.neg + 350, 800, 700);
 			windowShift = windowShift + 20 % 200;
 			window.layout = VLayout(
 				this.topMenuRow,
@@ -84,7 +84,8 @@ ScriptLibGui : AppModel {
 	topMenuRow {
 		^HLayout(
 			this.popUpMenu(\topMenu,
-			{ ["File Menu", "New", "Open", "Save", "Save as", "Make this Lib Default", "Import", "Export", "Reload Config"] }
+			{ ["File Menu", "New", "Open", "Save", "Save as", "Make this Lib Default",
+					"Import", "Export", "Reload Config"] }
 			).view.font_(font).action_({ | me |
 				this.mainMenuAction(me.value);
 				me.value = 0
@@ -141,6 +142,10 @@ ScriptLibGui : AppModel {
 				snippetViews.index = me.value
 			}),
 			this.button('Snippet').action_({ | me |
+				"EXPERIMENTAL - for development use only".postln;
+				[{ this.getScript.stop}, { this.getScript.start}][me.view.value].value;
+			}).view.font_(font).states_([["script>", nil, Color.green], ["script||", nil, Color.red]]),
+			this.button('Snippet').action_({ | me |
 				me.getString.interpret.postln;
 			}).view.font_(font).states_([["run", Color.red]]),
 			this.button('Proxy')
@@ -171,8 +176,27 @@ ScriptLibGui : AppModel {
 //				ProxyCodeEditor(ProxyCentral.default.proxySpace, this.getValue('Proxy').adapter.postln);
 //			}).view.font_(font).states_([["proxy editor"]]),
 			Button().action_({ SoundFileGui(); }).font_(font).states_([["samples"]]),
-			Button().font_(font).states_([["set buffers"]]).action_({ this.updateBuffers })
+			Button().font_(font).states_([["set buffers"]]).action_({ this.updateBuffers }),
 		)
+	}
+
+		// Experimental: Adding Script class
+	getSnippet { // return the string of the current snippet / script
+		var snippetVal;
+		snippetVal = this.getValue('Snippet');
+		^snippetVal.adapter.dict.atPath(snippetVal.adapter.path ++ [snippetVal.item]);
+	}
+
+	getScript {
+		var snippetVal, path, name, snippet, script;
+		snippetVal = this.getValue('Snippet');
+		path = snippetVal.adapter.path ++ [name = snippetVal.item];
+		snippet = snippetVal.getString;
+		path = ['Scripts', scriptLib] ++ path;
+		script = Library.at(*path);
+		script ?? { Library.put(*(path ++ [script = Script(name)])); };
+		script.string = snippet;
+		^script;
 	}
 
 	bufferRow { // Buffer menus:
@@ -219,7 +243,7 @@ ScriptLibGui : AppModel {
 		^snippetViews = StackLayout(
 			this.textView('Snippet').listItem({ | me |
 				me.value.adapter.dict.atPath(me.value.adapter.path ++ [me.item])
-			}).makeStringGetter.view.font_(Font("Monaco", 10)).tabWidth_(25),
+			}).makeStringGetter.view.font_(Font("Monaco", 9)).tabWidth_(25),
 			this.snippetListView
 		)
 	}
@@ -233,7 +257,7 @@ ScriptLibGui : AppModel {
 			// Must do this here, because resetting the items of the list also resets the colors:
 			{ me.view.colors = colors }.defer(0.03);
 			if (snippets.isNil) { [] } { snippets.asSortedArray.flop[1] };
-		}).view.font_(Font("Monaco", 10));
+		}).view.font_(Font("Monaco", 9));
 		listView.keyDownAction = { | view, char, mod, ascii |
 			switch (ascii,
 				13, { this.evalSnippet(mod) }, // return key,

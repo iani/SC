@@ -148,7 +148,7 @@ SoundFileGui : AppModel {
 			})
 			.updateAction(\readDefaults, { | me | this.readDefaults(me.value.adapter) })
 			.updateAction(\loadAll, { | me |
-				me.value.adapter.items do: _.load;
+				me.value.adapter.items do: _.loadIfNeeded;
 			})
 			.updateAction(\loadSelected, { | me |
 				me.value.adapter.item !? { me.value.adapter.item.load }

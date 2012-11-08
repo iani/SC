@@ -22,7 +22,6 @@ BufferItem : NamedItem {
 	classvar loadingBuffers; // Load buffers only one at a time. See method load.
 	classvar <>all;	// IdentityDictionary with one buffer per symbol.
 					// prevent creating duplicate buffers with same path.
-
 	var <>nameSymbol;
 	*initClass {
 		loadingBuffers = IdentityDictionary.new;
@@ -30,11 +29,11 @@ BufferItem : NamedItem {
 		StartUp add: {
 			Library.put('Buffers', IdentityDictionary.new);
 			ServerBoot.add({
-				Library.at('Buffers') do: _.load;
+				Library.at('Buffers') do: _.loadIfNeeded;
 			}, Server.default);
-			ServerQuit.add({
-				Library.at('Buffers') do: _.serverQuit;
-			}, Server.default);
+//			ServerQuit.add({
+//				Library.at('Buffers') do: _.serverQuit;
+//			}, Server.default);
 		}
 	}
 
@@ -59,11 +58,22 @@ BufferItem : NamedItem {
 		}
 	}
 
+
+	loadIfNeeded {
+		if (item.isNil) {
+			this.load;
+		}{
+			item.updateInfo({ | buffer |
+				if (buffer.numChannels == 0) {
+					this.load;
+				}{
+					postf("Buffer '%' already loaded. Skipping.\n", nameSymbol);
+				}
+			});
+		}
+	}
+
 	load { | extraAction | // mechanism for loading next buffer after this one is loaded
-		item !? {
-			postf("Buffer '%' already loaded. Skipping.\n", nameSymbol);
-			^this
-		};
 		if (Server.default.serverRunning) {
 			loadingBuffers[this] = { this.prLoad(extraAction); };
 			if (loadingBuffers.size == 1) { this.prLoad(extraAction); }
@@ -84,11 +94,13 @@ BufferItem : NamedItem {
 		})
 	}
 
+/*
 	serverQuit {
 		// Restore the buffer if the server has not really quit:
 		item.updateInfo({ | buffer | item = buffer });
 		item = nil;
 	}
+*/
 
 	play {
 		item !? { ^item.play };
