@@ -49,8 +49,8 @@ ScriptLibGui : AppModel {
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
 			window.bounds = Rect(
-				windowShift + 500,
-				windowShift.neg + 350, 800, 700);
+				windowShift.neg + 700,
+				windowShift.neg + 280, 700, 580);
 			windowShift = windowShift + 20 % 200;
 			window.layout = VLayout(
 				this.topMenuRow,
@@ -76,7 +76,8 @@ ScriptLibGui : AppModel {
 			this.windowClosed(window, {
 				scriptLib.save;
 				this.objectClosed;
-			})
+			});
+			this.windowToFront(window, { ScriptLib.current = scriptLib; });
 		});
 		scriptLib.loadConfig;
 	}
@@ -147,7 +148,7 @@ ScriptLibGui : AppModel {
 			}).view.font_(font).states_([["script>", nil, Color.green], ["script||", nil, Color.red]]),
 			this.button('Snippet').action_({ | me |
 				me.getString.interpret.postln;
-			}).view.font_(font).states_([["run", Color.red]]),
+			}).view.font_(font).states_([["eval", Color.red]]),
 			this.button('Proxy')
 			.proxyWatcher({ | me |
 				me.checkProxy(me.value.adapter.item.checkEvalPlay(this.getValue('Snippet').getString))
@@ -200,6 +201,8 @@ ScriptLibGui : AppModel {
 	}
 
 	bufferRow { // Buffer menus:
+		var menuFont;
+		menuFont = font.copy.size_(9);
 		^[HLayout(
 			*({ | i |
 				var valName;
@@ -211,7 +214,7 @@ ScriptLibGui : AppModel {
 				})
 				.addValueListener(this, \index, { | val |
 					this.update1buffer(valName, val.adapter.item) })
-				.view.font_(font) //.fixedWidth_(82)
+				.view.font_(menuFont) //.fixedWidth_(82)
 			} ! 8)
 		), s: 1]
 	}

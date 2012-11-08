@@ -61,12 +61,13 @@ SoundFileGui : AppModel {
 
 	makeWindow { | argArchivePath |
 		this.stickyWindow(this.class, \bufferListGui, { | w, app |
+			w.name = "Sound Files";
 			w.bounds = Rect(400, 400, 1040, 650);
 			w.layout = VLayout(
 				HLayout(
-					VLayout(this.listButtonRow, this.selectedListDisplay, this.listListDisplay),
-					[VLayout(this.fileButtonRow, this.fileListDisplay), s: 2],
-					[this.bufferDisplay, s: 1],
+					[VLayout(this.listButtonRow, this.selectedListDisplay, this.listListDisplay), s: 1],
+					[VLayout(this.fileButtonRow, this.fileListDisplay), s: 4],
+					[this.bufferDisplay, s: 2],
 				),
 				this.soundFileItemsRow1,
 				this.soundFileDisplay,
@@ -81,22 +82,16 @@ SoundFileGui : AppModel {
 			files.item !? { files.changed(\index, files); };
 			this.windowClosed(w, { this.saveLists });
 			ShutDown add: { this.saveLists };
-		})
+		});
+		Library.changed(\selectedLib); // update buffer list from ScriptLib
 	}
 
 	listButtonRow {
 		^HLayout(
 			StaticText().string_("Lists:").font_(font),
-			this.button(\bufferLists).changedAction(\append).view.states_([["append"]]).font_(font),
+			this.button(\bufferLists).changedAction(\append).view.states_([["add"]]).font_(font),
 			this.button(\bufferLists).changedAction(\insert).view.states_([["insert"]]).font_(font),
 			this.button(\bufferLists).changedAction(\rename).view.states_([["rename"]]).font_(font),
-			this.button(\bufferLists).action_({ | me | me.value.adapter.delete })
-				.view.states_([["delete"]]).font_(font),
-			Button().action_({
-				this.init(archivePath);
-				this.updateListeners;
-			}).states_([["revert"]]).font_(font),
-			Button().action_({ this.saveLists }).states_([["save"]]).font_(font),
 		)
 	}
 
@@ -125,6 +120,13 @@ SoundFileGui : AppModel {
 
 	fileButtonRow {
 		^HLayout(
+			this.button(\bufferLists).action_({ | me | me.value.adapter.delete })
+				.view.states_([["delete"]]).font_(font),
+			Button().action_({
+				this.init(archivePath);
+				this.updateListeners;
+			}).states_([["revert"]]).font_(font),
+			Button().action_({ this.saveLists }).states_([["save"]]).font_(font),
 			StaticText().string_("Sound Files:").font_(font),
 			this.button(\files).changedAction(\readNew).view.states_([["read new"]]).font_(font),
 			this.button(\files).changedAction(\readDefaults)
@@ -163,8 +165,12 @@ SoundFileGui : AppModel {
 
 	bufferDisplay {
 		^GridLayout.rows(
-			[this.bufferListHeader, StaticText().string_("Buffer actions:").font_(font)],
-			[this.loadedBuffersList, this.bufferActionList]
+			[
+				Button().action_({ ScriptLib.current.gui; })
+				.font_(font).states_([["Current ScriptLib Sample Config:"]]),
+				this.bufferListHeader
+			],
+			[this.scriptLibList, this.loadedBuffersList],
 		)
 	}
 
@@ -186,8 +192,28 @@ SoundFileGui : AppModel {
 		.view.font_(font)
 	}
 
-	bufferActionList {
-		^this.listView(\bufferActions).items_(["--"]).view.font_(font)
+	scriptLibList {
+		^VLayout(
+			HLayout(
+				this.button(\files).action_({ | me |
+					var item;
+					item = me.item;
+					ScriptLib.current.addSoundFile(me.item);
+					item.postln;
+					item !? { me.item = item };
+				})
+				.view.font_(font).states_([["add"]]),
+				this.button(\scriptLibBuffers).action_({ | me |
+					ScriptLib.current.removeSoundFile(me.item);
+				})
+				.view.font_(font).states_([["remove"]]),
+			),
+			this.listView(\scriptLibBuffers)
+			.updater(Library, \selectedLib, { | me |
+				me.items = ScriptLib.current.buffers.keys.asArray.sort;
+			})
+			.view.font_(font)
+		);
 	}
 
 	soundFileDisplay {

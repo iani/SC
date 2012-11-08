@@ -22,14 +22,18 @@ BufferItem : NamedItem {
 	classvar loadingBuffers; // Load buffers only one at a time. See method load.
 	classvar <>all;	// IdentityDictionary with one buffer per symbol.
 					// prevent creating duplicate buffers with same path.
+	classvar <loadedBuffersPath = 'Buffers';
 	var <>nameSymbol;
+
+	*loadedBuffers { ^Library.at(loadedBuffersPath) }
+
 	*initClass {
 		loadingBuffers = IdentityDictionary.new;
 		all = IdentityDictionary.new;
 		StartUp add: {
-			Library.put('Buffers', IdentityDictionary.new);
+			Library.put(loadedBuffersPath, IdentityDictionary.new);
 			ServerBoot.add({
-				Library.at('Buffers') do: _.loadIfNeeded;
+				Library.at(loadedBuffersPath) do: _.loadIfNeeded;
 			}, Server.default);
 //			ServerQuit.add({
 //				Library.at('Buffers') do: _.serverQuit;
@@ -42,6 +46,11 @@ BufferItem : NamedItem {
 		nameSymbol = PathName(name).fileNameWithoutExtension.asSymbol;
 		(existing = all[nameSymbol]) !? { ^existing };
 		^super.new(name).nameSymbol_(nameSymbol).register;
+	}
+
+	*free { | bufferName |
+		var bufferItem;
+		(bufferItem = this.loadedBuffers[bufferName.asSymbol]) !? { bufferItem.free };
 	}
 
 	register { all[nameSymbol] = this }
@@ -117,11 +126,11 @@ BufferItem : NamedItem {
 
 	free {
 		var registeredItem;
-		registeredItem = Library.at('Buffers', nameSymbol);
+		registeredItem = Library.at(loadedBuffersPath, nameSymbol);
 		registeredItem !? { if (registeredItem !== this) { ^registeredItem.free }; };
 		item !? { item.free; };
 		item = nil;
-		Library.put('Buffers', this.nameSymbol, nil);
+		Library.put(loadedBuffersPath, this.nameSymbol, nil);
 		this.updateLists;
 	}
 
@@ -129,13 +138,13 @@ BufferItem : NamedItem {
 
 	*updateLists {
 		var buffers;
-		(buffers = Library.at('Buffers')) !? {
-			{ this.changed(\bufferList, Library.at('Buffers').keys.asArray.sort); }.defer;
+		(buffers = Library.at(loadedBuffersPath)) !? {
+			{ this.changed(\bufferList, Library.at(loadedBuffersPath).keys.asArray.sort); }.defer;
 		}
 	}
 
 	storeInLibrary {
-		Library.put('Buffers', this.nameSymbol, this);
+		Library.put(loadedBuffersPath, this.nameSymbol, this);
 		this.updateLists;
 	}
 
@@ -145,7 +154,7 @@ BufferItem : NamedItem {
 
 	*makeLoadBuffersString {
 		var buffers;
-		buffers = Library.at('Buffers').asArray;
+		buffers = Library.at(loadedBuffersPath).asArray;
 		if (buffers.size == 0) { ^"" };
 		^buffers.inject("\n// ====== BUFFERS ====== \n\n", { | str, b |
 			str ++ format("BufferItem(%).load;\n", b.name.asCompileString);

@@ -29,11 +29,28 @@ a.gui;
 
 ScriptLib {
 	classvar <all; // dict of currently open instances by path: Avoid opening the same path twice.
+	classvar <configPath = '---Config---';
 	var <lib;		// MultiLevelIdentityDictionary of folders, files and scripts by name
 		// lib has 4 levels: [folder name, file name, snippet name, snippet]
 
 	*initClass {
 		all = IdentityDictionary();
+	}
+
+	*current {
+		var current;
+		current = Library.at('selectedLib');
+		current ?? {
+			current = this.new;
+			this.current = current;
+		};
+		^current;
+	}
+
+
+	*current_ { | argLib |
+		Library.put('selectedLib', argLib = argLib ?? { this.new });
+		Library.changed('selectedLib', argLib);
 	}
 
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
@@ -43,16 +60,30 @@ ScriptLib {
 	}
 
 	loadConfig {
-		// load all scripts in Folder "Config"
-		lib.leafDoFrom('Config', { | path, script | script.interpret });
+		// load all scripts in Folder "---Config---"
+		lib.leafDoFrom(configPath, { | path, script | script.interpret });
 	}
 
-	addLoadedBuffersToConfig {
-		Library.at('Buffers') do: { | b |
-			this.addSnippetNamed('Config', 'Buffers', b.nameSymbol,
-				format("//:%\nBufferItem(%).load", b.nameSymbol, b.name.asCompileString)
-			);
-		};
+	// Sound files and buffers
+	buffers { ^lib.atPath(this.bufferConfigPath) ?? { IdentityDictionary() } }
+	bufferConfigPath { ^[configPath, 'Buffers'] }
+
+	addLoadedBuffersToConfig { Library.at('Buffers') do: this.addSoundFile(_); }
+
+	addSoundFile { | bufferItem |
+		if (bufferItem.isNil) { ^"Cannot add nil Buffer item".postln };
+		this.addSnippetNamed(*(this.bufferConfigPath ++ [bufferItem.nameSymbol,
+				format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
+			])
+		);
+		if (this.isCurrent) { bufferItem.loadIfNeeded };
+	}
+
+	isCurrent { ^this.class.current === this }
+	removeSoundFile { | scriptName |
+		if (scriptName.isNil) { ^"Cannot remove nil Buffer item".postln };
+		this.deleteSnippet(*(this.bufferConfigPath ++ [scriptName.asSymbol]));
+		if (this.isCurrent) { BufferItem.free(scriptName) };
 	}
 
 	*openDefault {
@@ -157,11 +188,13 @@ ScriptLib {
 	addSnippetNamed { | folderName, fileName, snippetName, snippet |
 		lib.put(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol, snippet);
 		lib.changed(\dict);
+		Library.changed(\selectedLib); // update SoundFileGui if open
 	}
 
 	deleteSnippet { | folderName, fileName, snippetName |
 		lib.removeAt(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol);
 		lib.changed(\dict);
+		Library.changed(\selectedLib); // update SoundFileGui if open
 	}
 
 	export { | path |
