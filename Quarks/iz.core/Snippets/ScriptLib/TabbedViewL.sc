@@ -1,7 +1,8 @@
 /******* by jostM Oct 09, 2012 version 1.29 *******/
 /** thanks to sciss for cross platform bug fixes **/
 
-/* This copy renamed for inclusion in Snippets lib */
+/* This copy made by iz and renamed adding "L", for inclusion in Snippets lib */
+/* Fri 09 November 2012  1:23 PM EET */
 
 TabbedViewL {
 	var labels,

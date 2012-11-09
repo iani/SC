@@ -1,0 +1,114 @@
+% Created 2012-11-09 Fri 14:11
+\documentclass[11pt, a4paper]{scrartcl}
+\usepackage{fontspec,xltxtra} 
+\setromanfont[Mapping=tex-text]{Times New Roman} 
+\setsansfont[Mapping=tex-text]{Arial} 
+\usepackage[backend=biber, natbib, authordate]{biblatex-chicago}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{soul}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\addbibresource{~/Dropbox/orgshared/references/bib/references.bib}
+\addbibresource{~/Dropbox/orgshared/references/bib/ari.bib}
+\addbibresource{~/Dropbox/orgshared/references/bib/iani.bib}
+\usepackage{hyperref}
+\tolerance=1000
+\sloppy
+
+\providecommand{\alert}[1]{\textbf{#1}}
+\begin{document}
+
+
+
+\title{README.org}
+\author{I Z}
+\date{2012-11-09 Fri}
+\maketitle
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+\vspace*{1cm}
+
+\begin{enumerate}
+\item Application programming framework for SuperCollider based on notifications between objects. Uses the Object:changed method together with own class Notification, which filters changed messages according to message symbol and permits easy attaching and removal of notified objects.
+\item Window for editing and organizing code in virtual files and folders, archiving collections of code snippets in files, and running them either as proxies or as scripts in their own environment, with start and stop.
+\item Proxy Mixer with auto-generated gui for setting proxies parameters
+\item Sound file list organizer, permitting viewing, listening, and loading of samples.
+\end{enumerate}
+
+\hrule
+
+\underline{Folders:}
+
+\section{AppModel}
+\label{sec-1}
+
+
+A framework for creating applications. Main classes:
+AppModel, Value, Widget
+\section{Εxperimental}
+\label{sec-2}
+
+
+Various utility classes and ideas, under development.
+\section{Guis}
+\label{sec-3}
+
+
+Guis for various purposes. Currently under development: 
+
+MapperGui: Edit mapping objects such as ControlSpecs. 
+\section{Help and Help Source}
+\label{sec-4}
+
+
+Self-explanatory. 
+\section{MenusAndPrefs}
+\label{sec-5}
+
+
+ActionStrip: Create a narrow window strip at bottom of screen with buttons and menus as a dock for accessing useful actions. 
+
+Lilt2DefaultMenu: Creates and ActionStrip for using the present library, with buttons for opening ScriptLibs, ScriptMixer, 
+\section{ProxyStuff}
+\label{sec-6}
+
+
+Classes for working with ProxySpace and NodeProxies in the AppModel/Value/Widget framework.
+\section{ScriptLib}
+\label{sec-7}
+
+
+Window for organizing code snippets in virtual folders and files. ScritpLib saves in sctxar (SuperCollider text archive) format, but can also export and import in normal folders and files. 
+
+Each snippet can be run as proxy or evaluated in its own environment. Menu for selecting the proxy that is used is provided. Proxies can be controlled during runtime using ScriptMixer. 
+
+Scripts placed in folder ``---Config---'' are run when the ScriptLib is loaded.  ScriptLib cooperates with SoundFileGui to permit easy addition and deletion of sound files to be loaded with a ScriptLib. 
+\section{SoundFileGui}
+\label{sec-8}
+
+
+A window for viewing and listening to sound files from disc, and for organizing 
+
+Main classes: BufferItem, SoundFileGui
+\section{SystemExtensions}
+\label{sec-9}
+
+
+Notification: Helper class for attaching ``changed/update'' notifications to actions by symbol and receiver, and for adding and removing notifiers of a receiver. 
+
+MultiLevelIdentityDictionary:makeUniqueName: Create a new unique name for adding a new branch to a MultiLevelIdentityDictionary, when a branch of that name already exists. 
+\section{SystemOverwrites}
+\label{sec-10}
+
+
+Main:run : Open Lilt2DefaultMenu action strip on run. 
+
+\end{document}

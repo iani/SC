@@ -155,9 +155,6 @@ SoundFileGui : AppModel {
 			.updateAction(\loadSelected, { | me |
 				me.value.adapter.item !? { me.value.adapter.item.load }
 			})
-			.updateAction(\play, { | me |
-				me.value.adapter.item !? { me.value.adapter.item.play }
-			})
 			.updateAction(\delete, { | me | me.value.adapter.delete(me); })
 			.updateAction(\free, { | me | me.value.adapter.item.free })
 			.view.font_(font)
@@ -167,7 +164,7 @@ SoundFileGui : AppModel {
 		^GridLayout.rows(
 			[
 				Button().action_({ ScriptLib.current.gui; })
-				.font_(font).states_([["Current ScriptLib Sample Config:"]]),
+				.font_(font).states_([["current lib buffer config:"]]),
 				this.bufferListHeader
 			],
 			[this.scriptLibList, this.loadedBuffersList],
@@ -284,7 +281,10 @@ SoundFileGui : AppModel {
 				}
 			})
 			.view.font_(font), s: 1],
-			this.button(\files).changedAction(\play).view.states_([["play"]]).font_(font),
+			this.button(\soundFileView).action_({ | me |
+				me.getView(\sfView).soundfile.cue((), playNow: true, closeWhenDone: true)
+			})
+			.view.states_([["play"]]).font_(font),
 			this.button(\soundFileView)
 			.action_({ | me |
 				var sfv, selection, firstFrame, lastFrame;

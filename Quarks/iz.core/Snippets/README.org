@@ -1,9 +1,6 @@
-                Motto: "Organize 10000 code snippets"
-                =====================================
-
-Author: IZ
-Date: Fri 09 November 2012 12:46 PM EET
-
+#+TITLE: Motto: "Organize 10000 code snippets"
+#+AUTHOR: IZ
+#+DATE: Fri 09 November 2012 12:46 PM EET
 
 1. Application programming framework for SuperCollider based on notifications between objects. Uses the Object:changed method together with own class Notification, which filters changed messages according to message symbol and permits easy attaching and removal of notified objects. 
 
@@ -13,61 +10,40 @@ Date: Fri 09 November 2012 12:46 PM EET
 
 4. Sound file list organizer, permitting viewing, listening, and loading of samples. 
 
-==========
+------------
 
 _Folders:_
 
-Table of Contents
-=================
-1 AppModel 
-2 Εxperimental 
-3 Guis 
-4 Help and Help Source 
-5 MenusAndPrefs 
-6 ProxyStuff 
-7 ScriptLib 
-8 SoundFileGui 
-9 SystemExtensions 
-10 SystemOverwrites 
-
-
-1 AppModel 
-~~~~~~~~~~~
+* AppModel
 
 A framework for creating applications. Main classes:
 AppModel, Value, Widget
 
-2 Εxperimental 
-~~~~~~~~~~~~~~~
+* Εxperimental
 
 Various utility classes and ideas, under development.
 
-3 Guis 
-~~~~~~~
+* Guis
 
 Guis for various purposes. Currently under development: 
 
 MapperGui: Edit mapping objects such as ControlSpecs. 
 
-4 Help and Help Source 
-~~~~~~~~~~~~~~~~~~~~~~~
+* Help and Help Source
 
 Self-explanatory. 
 
-5 MenusAndPrefs 
-~~~~~~~~~~~~~~~~
+* MenusAndPrefs
 
 ActionStrip: Create a narrow window strip at bottom of screen with buttons and menus as a dock for accessing useful actions. 
 
 Lilt2DefaultMenu: Creates and ActionStrip for using the present library, with buttons for opening ScriptLibs, ScriptMixer, 
 
-6 ProxyStuff 
-~~~~~~~~~~~~~
+* ProxyStuff
 
 Classes for working with ProxySpace and NodeProxies in the AppModel/Value/Widget framework.
 
-7 ScriptLib 
-~~~~~~~~~~~~
+* ScriptLib
 
 Window for organizing code snippets in virtual folders and files. ScritpLib saves in sctxar (SuperCollider text archive) format, but can also export and import in normal folders and files. 
 
@@ -75,21 +51,18 @@ Each snippet can be run as proxy or evaluated in its own environment. Menu for s
 
 Scripts placed in folder "---Config---" are run when the ScriptLib is loaded.  ScriptLib cooperates with SoundFileGui to permit easy addition and deletion of sound files to be loaded with a ScriptLib. 
 
-8 SoundFileGui 
-~~~~~~~~~~~~~~~
+* SoundFileGui
 
 A window for viewing and listening to sound files from disc, and for organizing 
 
 Main classes: BufferItem, SoundFileGui
 
-9 SystemExtensions 
-~~~~~~~~~~~~~~~~~~~
+* SystemExtensions 
 
 Notification: Helper class for attaching "changed/update" notifications to actions by symbol and receiver, and for adding and removing notifiers of a receiver. 
 
 MultiLevelIdentityDictionary:makeUniqueName: Create a new unique name for adding a new branch to a MultiLevelIdentityDictionary, when a branch of that name already exists. 
 
-10 SystemOverwrites 
-~~~~~~~~~~~~~~~~~~~~
+* SystemOverwrites
 
 Main:run : Open Lilt2DefaultMenu action strip on run. 
