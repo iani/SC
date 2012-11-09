@@ -11,12 +11,6 @@
 4. Sound file list organizer, permitting viewing, listening, and loading of samples. 
 
 
-\\
-------------
-\\
-\\
-_Folders:_
-
 * AppModel
 
 A framework for creating applications. 
