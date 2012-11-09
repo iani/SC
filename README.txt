@@ -13,7 +13,8 @@ Date: Fri 09 November 2012 12:46 PM EET
 
 4. Sound file list organizer, permitting viewing, listening, and loading of samples. 
 
-==========
+
+------------
 
 _Folders:_
 
@@ -78,9 +79,9 @@ Scripts placed in folder "---Config---" are run when the ScriptLib is loaded.  S
 8 SoundFileGui 
 ~~~~~~~~~~~~~~~
 
-A window for viewing and listening to sound files from disc, and for organizing 
+A window for viewing and listening to sound files from disc, and for organizing them in sound file lists. File lists are automatically saved on archive for the next session. Works together with ScriptLib to add or remove files as code snippets in a ScriptLib's auto-config folder. 
 
-Main classes: BufferItem, SoundFileGui
+Main classes: SoundFileGui, BufferItem
 
 9 SystemExtensions 
 ~~~~~~~~~~~~~~~~~~~
