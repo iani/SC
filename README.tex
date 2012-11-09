@@ -1,4 +1,4 @@
-% Created 2012-11-09 Fri 15:03
+% Created 2012-11-09 Fri 15:12
 \documentclass[11pt, a4paper]{scrartcl}
 \usepackage{fontspec,xltxtra} 
 \setromanfont[Mapping=tex-text]{Times New Roman} 
@@ -43,17 +43,21 @@
 \item Proxy Mixer with auto-generated gui for setting proxies parameters
 \item Sound file list organizer, permitting viewing, listening, and loading of samples.
 \end{enumerate}
-
+\\
 \hrule
-
+\\
+\\
 \underline{Folders:}
 
 \section{AppModel}
 \label{sec-1}
 
 
-A framework for creating applications. Main classes:
-AppModel, Value, Widget
+A framework for creating applications. 
+
+\begin{itemize}
+\item Main classes: \texttt{AppModel}, \texttt{Value}, \texttt{Widget}
+\end{itemize}
 \section{Εxperimental}
 \label{sec-2}
 
@@ -65,7 +69,9 @@ Various utility classes and ideas, under development.
 
 Guis for various purposes. Currently under development: 
 
-MapperGui: Edit mapping objects such as ControlSpecs. 
+\begin{itemize}
+\item \texttt{MapperGui}: Edit mapping objects such as ControlSpecs.
+\end{itemize}
 \section{Help and Help Source}
 \label{sec-4}
 
@@ -75,9 +81,10 @@ Self-explanatory.
 \label{sec-5}
 
 
-ActionStrip: Create a narrow window strip at bottom of screen with buttons and menus as a dock for accessing useful actions. 
-
-Lilt2DefaultMenu: Creates and ActionStrip for using the present library, with buttons for opening ScriptLibs, ScriptMixer, 
+\begin{itemize}
+\item \texttt{ActionStrip}: Create a narrow window strip at bottom of screen with buttons and menus as a dock for accessing useful actions.
+\item \texttt{Lilt2DefaultMenu}: Creates and ActionStrip for using the present library, with buttons for opening ScriptLibs, ScriptMixer,
+\end{itemize}
 \section{ProxyStuff}
 \label{sec-6}
 
@@ -91,25 +98,30 @@ Window for organizing code snippets in virtual folders and files. ScritpLib save
 
 Each snippet can be run as proxy or evaluated in its own environment. Menu for selecting the proxy that is used is provided. Proxies can be controlled during runtime using ScriptMixer. 
 
-Scripts placed in folder ``---Config---'' are run when the ScriptLib is loaded.  ScriptLib cooperates with SoundFileGui to permit easy addition and deletion of sound files to be loaded with a ScriptLib. 
+Scripts placed in folder \texttt{---Config---} are run when the ScriptLib is loaded.  ScriptLib cooperates with SoundFileGui to permit easy addition and deletion of sound files to be loaded with a ScriptLib. 
 \section{SoundFileGui}
 \label{sec-8}
 
 
 A window for viewing and listening to sound files from disc, and for organizing them in sound file lists. File lists are automatically saved on archive for the next session. Works together with ScriptLib to add or remove files as code snippets in a ScriptLib's auto-config folder. 
 
-Main classes: SoundFileGui, BufferItem
+\begin{itemize}
+\item Main classes: \texttt{SoundFileGui}, \texttt{BufferItem}
+\end{itemize}
 \section{SystemExtensions}
 \label{sec-9}
 
 
-Notification: Helper class for attaching ``changed/update'' notifications to actions by symbol and receiver, and for adding and removing notifiers of a receiver. 
-
-MultiLevelIdentityDictionary:makeUniqueName: Create a new unique name for adding a new branch to a MultiLevelIdentityDictionary, when a branch of that name already exists. 
+\begin{itemize}
+\item \texttt{Notification}: Helper class for attaching ``changed/update'' notifications to actions by symbol and receiver, and for adding and removing notifiers of a receiver.
+\item \texttt{MultiLevelIdentityDictionary:makeUniqueName}: Create a new unique name for adding a new branch to a MultiLevelIdentityDictionary, when a branch of that name already exists.
+\end{itemize}
 \section{SystemOverwrites}
 \label{sec-10}
 
 
-Main:run : Open Lilt2DefaultMenu action strip on run. 
+\begin{itemize}
+\item \texttt{Main:run}: Open Lilt2DefaultMenu action strip on run.
+\end{itemize}
 
 \end{document}
