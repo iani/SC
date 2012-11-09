@@ -9,7 +9,8 @@ Lilt2DefaultMenu {
 	*makeMenu {
 		if (menu.isNil) {
 			menu = ActionStrip().addItems(
-				"Scripts", { ScriptLib.openDefault },
+				"Open default lib", { ScriptLib.openDefault },
+				"Open lib ...", { ScriptLib.open },
 				"Mixer", { ScriptMixer() },
 				"Sound Files", { SoundFileGui() },
 				"Quarks", { "not yet implemented".postln },

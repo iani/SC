@@ -112,6 +112,20 @@ ScriptLib {
 		^instance;
 	}
 
+	revert {
+		var path;
+		(path = ScriptLib.all.findKeyForValue(this).asString) ?? {
+			^"This ScriptLib has not been saved yet. Cannot revert".postln;
+		};
+		lib = Object.readArchive(path).lib;
+		this.changed(\dict);
+	}
+
+/*
+	getPath {
+		^ScriptLib.all.findKeyForValue(this).asString;
+	}
+*/
 	save {
 		var path;
 		path = this.path;
@@ -120,12 +134,15 @@ ScriptLib {
 
 	path { ^all findKeyForValue: this }
 
-	saveDialog { RecentPaths.save(this.class.asSymbol, { | path | this saveToPath: path }); }
+	saveDialog {
+		RecentPaths.save(this.class.asSymbol, { | path | this saveToPath: path });
+	}
 
 	saveToPath { | path |
 		this.path = path;
 		this writeArchive: path.asString;
 		format("% saved to:\n%\n", this.class, path).postln;
+		this.changed(\path, path);
 	}
 
 	path_ { | path |

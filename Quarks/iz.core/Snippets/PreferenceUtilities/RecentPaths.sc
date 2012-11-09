@@ -37,12 +37,14 @@ RecentPaths {
 		all ?? { all = IdentityDictionary(); };
 		instance = all[objectID];
 		instance ?? {
-			instance = this.newCopyArgs(objectID, numHistoryItems);
+			instance = this.newCopyArgs(objectID, numHistoryItems).init;
 			all[objectID] = instance;
 			this.saveAll;
 		};
 		^instance;
 	}
+
+	init { paths = List.new; }
 
 	default_ { | argDefault |
 		default = argDefault;
@@ -95,7 +97,9 @@ RecentPaths {
 	}
 
 	addPath { | path |
-		paths = paths ?? { [] };
+		// retrospective correction of already saved instances from older version:
+		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); };
+//		paths = paths ?? { List() };
 		paths.remove(paths detect: { | p | p == path });
 		paths add: path;
 		if (paths.size > numHistoryItems) { paths.pop };

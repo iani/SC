@@ -25,6 +25,10 @@ BufferItem : NamedItem {
 	classvar <loadedBuffersPath = 'Buffers';
 	var <>nameSymbol;
 
+	*getBuffer { | bufferName |
+		^this.loadedBuffers[bufferName.asSymbol];
+	}
+
 	*loadedBuffers { ^Library.at(loadedBuffersPath) }
 
 	*initClass {
@@ -66,7 +70,6 @@ BufferItem : NamedItem {
 			^this;  // (;-)
 		}
 	}
-
 
 	loadIfNeeded {
 		if (item.isNil) {

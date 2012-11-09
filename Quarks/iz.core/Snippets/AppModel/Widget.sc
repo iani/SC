@@ -43,6 +43,10 @@ Widget {
 		view.action = { action.(this) };
 	}
 
+	// add action to existing action function
+	// Example: A button prepared with toggleShow adds additional functions to perform when clicked.
+	addAction { | action | view.addAction({ action.(this) }); }
+
 	/* Set my Value. Remove notification connections from any previous value, and prepare
 	   the new value to discnnect if replaced by another one later. Used by prSetControl method.
 	   The message notification setup on value must be done separately useing updateAction. */
@@ -92,7 +96,7 @@ Widget {
 
 	addValueListener { | listener, message, action |
 		// make some other object perform an action whenever receiving a message from my Value
-		listener.addNotifier(value, message, { action.(value) });
+		listener.addNotifier(value, message, { action.(value, listener) });
 //		value.addListener(listener, message, { action.(value) });
 	}
 
@@ -296,7 +300,6 @@ Widget {
 		}{
 			this.updater(proxySpace, \list, {
 				this.items_(proxySpace.proxies);
-				[this, thisMethod.name, "checking autoselect: num items is", this.items.size, "autoSelect is:", autoSelect].postln;
 				if (this.items.size - 1 == autoSelect) {
 					value.index_(nil, autoSelect);
 				};
@@ -466,10 +469,6 @@ Widget {
 		// other views must be connected with showOn method.
 		this.action_({ | me | me.value.changed(message, me.view.value == 1); })
 	}
-
-	// add action to existing action function
-	// Example: A button prepared with toggleShow adds additional functions to perform when clicked.
-	addAction { | action | view.addAction({ action.(this) }); }
 
 	resetOn { | message = \reset, resetValue = 0 |
 		// make a button (or other view accepting numeric value) reset to

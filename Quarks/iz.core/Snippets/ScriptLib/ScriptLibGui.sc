@@ -56,7 +56,10 @@ ScriptLibGui : AppModel {
 				this.topMenuRow,
 				this.itemEditor.hLayout(font),
 				HLayout(
-					this.listView('Folder').dict(scriptLib.lib).view.font = font,
+					this.listView('Folder')
+					.dict(scriptLib.lib)
+					.updater(scriptLib, \dict, { | me | me.value.dict(scriptLib.lib) })
+					.view.font = font,
 					this.listView('File').branchOf('Folder').view.font = font,
 					this.listView('Snippet').branchOf('File', { | adapter, name |
 						format("//:%\n{ WhiteNoise.ar(0.1) }", name)
@@ -78,6 +81,7 @@ ScriptLibGui : AppModel {
 				this.objectClosed;
 			});
 			this.windowToFront(window, { ScriptLib.current = scriptLib; });
+			this.addNotifier(scriptLib, \path, { | path | window.name = path });
 		});
 		scriptLib.loadConfig;
 	}
@@ -85,8 +89,8 @@ ScriptLibGui : AppModel {
 	topMenuRow {
 		^HLayout(
 			this.popUpMenu(\topMenu,
-			{ ["File Menu", "New", "Open", "Save", "Save as", "Make this Lib Default",
-					"Import", "Export", "Reload Config"] }
+				{ ["File Menu", "New", "Open", "Save", "Save as", "Revert (Reload)",
+					"Make this Lib Default", "Import", "Export", "Reload Config"] }
 			).view.font_(font).action_({ | me |
 				this.mainMenuAction(me.value);
 				me.value = 0
@@ -110,9 +114,10 @@ ScriptLibGui : AppModel {
 	mainMenuAction { | actionIndex = 0 |
 		[nil,	// MainMenu item. Just header. No action.
 			{ ScriptLib.new.addDefaults.gui }, 		// New
-			{ ScriptLib.open; },		// Open
-			{ scriptLib.save; },			// Save
-			{ scriptLib.saveDialog },		// Save as
+			{ ScriptLib.open; },      // Open
+			{ scriptLib.save; },      // Save
+			{ scriptLib.saveDialog }, // Save as
+			{ scriptLib.revert; },    // Revert
 			{ RecentPaths(scriptLib.class.asSymbol).default = ScriptLib.all.findKeyForValue(scriptLib).asString; },
 			{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
 			{ Dialog.savePanel({ | path | scriptLib.export(path) }) }, // Export

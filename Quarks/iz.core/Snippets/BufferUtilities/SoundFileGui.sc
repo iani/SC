@@ -189,6 +189,9 @@ SoundFileGui : AppModel {
 		.updateAction(\free, { | me |
 			Library.at('Buffers', me.value.adapter.item).free;
 		})
+		.addAction({ | me |
+				this.showLoadedBuffer(BufferItem.getBuffer(this.getValue(\loadedBuffers).item))
+		})
 		.view.font_(font)
 	}
 
@@ -196,11 +199,8 @@ SoundFileGui : AppModel {
 		^VLayout(
 			HLayout(
 				this.button(\files).action_({ | me |
-					var item;
-					item = me.item;
 					ScriptLib.current.addSoundFile(me.item);
-					item.postln;
-					item !? { me.item = item };
+					this.getValue(\scriptLibBuffers).item_(nil, me.item.nameSymbol);
 				})
 				.view.font_(font).states_([["add"]]),
 				this.button(\scriptLibBuffers).action_({ | me |
@@ -212,8 +212,15 @@ SoundFileGui : AppModel {
 			.updater(Library, \selectedLib, { | me |
 				me.items = ScriptLib.current.buffers.keys.asArray.sort;
 			})
+			.addAction({ | me |
+				this.showLoadedBuffer(BufferItem.getBuffer(this.getValue(\scriptLibBuffers).item))
+			})
 			.view.font_(font)
 		);
+	}
+
+	showLoadedBuffer { | bufferItem |
+		this.getValue(\soundFileView).adapter.soundFile = bufferItem.name.asString
 	}
 
 	soundFileDisplay {
@@ -221,7 +228,8 @@ SoundFileGui : AppModel {
 		.viewGetter(\sfView)	// provide view to other widgets for extra actions
 		.updater(files, \index, { | me, list |
 			list.item !? { me.value.adapter.soundFile_(list.item.name); }
-		}).view.timeCursorOn_(true);
+		})
+		.view.timeCursorOn_(true);
 	}
 
 	soundFileItemsRow1 {
