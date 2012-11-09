@@ -1,1 +1,0 @@
-[ "sounds/a11wlk01.wav", "/Users/iani/sounds/osmosis_sounds/seals_normalized/weddell1.aiff", "/Users/iani/sounds/111202rhythmanalysis/weddell9min.aiff", "/Users/iani/sounds/111202rhythmanalysis/swallows10minL.aiff", "/Users/iani/sounds/111202rhythmanalysis/weddellpock.aiff" ]

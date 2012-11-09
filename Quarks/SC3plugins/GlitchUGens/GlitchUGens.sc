@@ -1,2 +1,0 @@
-GlitchHPF : LPF {}
-GlitchRHPF : RLPF {}

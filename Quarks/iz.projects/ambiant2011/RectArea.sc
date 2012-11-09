@@ -1,9 +1,0 @@
-
-
-+ Rect {
-	
-	area {
-		^width * height;
-	}	
-	
-}
