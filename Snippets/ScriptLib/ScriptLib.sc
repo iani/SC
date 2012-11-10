@@ -55,6 +55,33 @@ ScriptLib {
 
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
 
+	*openDefault {
+		var recentPaths, defaultPath;
+		recentPaths = RecentPaths(this.asSymbol);
+		defaultPath = recentPaths.default;
+		if (defaultPath.isNil) {
+			this.open;
+		}{
+			recentPaths.addInstanceAtPath(defaultPath, this.loadFromArchive(defaultPath)).gui;
+		}
+	}
+
+	*open {
+		RecentPaths.open(this.asSymbol, { | path |
+			this.loadFromArchive(path).gui;
+			},{
+			this.new.addDefaults.gui;
+		})
+	}
+
+	*loadFromArchive { | path |
+		var instance;
+		path = path.asSymbol;
+		instance = all[path] ?? { Object readArchive: path.asString; };
+		all[path] = instance;
+		^instance;
+	}
+
 	addDefaults {
 		this.addSnippet("-DefaultFolder", "-Defaults", "//:-defaultsnippet\n{ WhiteNoise.ar(0.1) }");
 	}
@@ -84,32 +111,6 @@ ScriptLib {
 		if (scriptName.isNil) { ^"Cannot remove nil Buffer item".postln };
 		this.deleteSnippet(*(this.bufferConfigPath ++ [scriptName.asSymbol]));
 		if (this.isCurrent) { BufferItem.free(scriptName) };
-	}
-
-	*openDefault {
-		var defaultPath;
-		defaultPath = RecentPaths(this.asSymbol).default;
-		if (defaultPath.isNil) {
-			this.open;
-		}{
-			this.loadFromArchive(defaultPath).gui;
-		}
-	}
-
-	*open {
-		RecentPaths.open(this.asSymbol, { | path |
-			this.loadFromArchive(path).gui;
-			},{
-			this.new.addDefaults.gui;
-		})
-	}
-
-	*loadFromArchive { | path |
-		var instance;
-		path = path.asSymbol;
-		instance = all[path] ?? { Object readArchive: path.asString; };
-		all[path] = instance;
-		^instance;
 	}
 
 	revert {

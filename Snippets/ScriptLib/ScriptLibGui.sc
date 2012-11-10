@@ -79,6 +79,7 @@ ScriptLibGui : AppModel {
 			this.windowClosed(window, {
 				scriptLib.save;
 				this.objectClosed;
+				scriptLib.objectClosed; // removes from RecentPaths Library entry
 			});
 			this.windowToFront(window, { ScriptLib.current = scriptLib; });
 			this.addNotifier(scriptLib, \path, { | path | window.name = path });
@@ -130,7 +131,7 @@ ScriptLibGui : AppModel {
 			{ Server.default.boot },
 			{ Server.killAll; },
 			{ scriptLib.addLoadedBuffersToConfig },
-			{ SoundFileGui(); },
+			{ SoundFileGui().gui; },
 			{ ScriptMixer() },
 			{ Server.default.scope.window.bounds = Rect(0, 360, 200, 200); },
 			{ Server.default.freqscope },
@@ -181,7 +182,7 @@ ScriptLibGui : AppModel {
 //			this.button('Snippet').action_({ | me |
 //				ProxyCodeEditor(ProxyCentral.default.proxySpace, this.getValue('Proxy').adapter.postln);
 //			}).view.font_(font).states_([["proxy editor"]]),
-			Button().action_({ SoundFileGui(); }).font_(font).states_([["samples"]]),
+			Button().action_({ SoundFileGui().gui; }).font_(font).states_([["samples"]]),
 			Button().font_(font).states_([["set buffers"]]).action_({ this.updateBuffers }),
 		)
 	}
@@ -219,7 +220,7 @@ ScriptLibGui : AppModel {
 				})
 				.addValueListener(this, \index, { | val |
 					this.update1buffer(valName, val.adapter.item) })
-				.view.font_(menuFont) //.fixedWidth_(82)
+				.view.font_(menuFont).fixedWidth_(82)
 			} ! 8)
 		), s: 1]
 	}

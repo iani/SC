@@ -12,7 +12,7 @@ Lilt2DefaultMenu {
 				"Open default lib", { ScriptLib.openDefault },
 				"Open lib ...", { ScriptLib.open },
 				"Mixer", { ScriptMixer() },
-				"Sound Files", { SoundFileGui() },
+				"Sound Files", { SoundFileGui().makeWindow },
 				"Quarks", { "not yet implemented".postln },
 				[["Post OSC"], ["Stop posting OSC"]], { | view | OSCFunc.trace([false, true][view.value]) },
 				"Quit Server", { Server.default.quit },

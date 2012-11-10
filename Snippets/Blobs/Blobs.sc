@@ -23,12 +23,12 @@ Blobs {
 		StartUp add: { default = this.new; };
 	}
 
-	*new {
-		^super.new.init; // .enable;
+	*new { | port |
+		^super.new.init(port ?? { NetAddr.localAddr.port }); // .enable;
 	}
 
-	init {
-		oscFunc = OSCFunc({ | msg | this.performList(msg[1], msg[2..]); }, '/tuio/2Dcur').disable;
+	init { | port = 57120 |
+		oscFunc = OSCFunc({ | msg | this.performList(msg[1], msg[2..]); }, '/tuio/2Dcur', recvPort: port).disable;
 		blobs = IdentityDictionary();
 		blobClass = Blob;
 	}

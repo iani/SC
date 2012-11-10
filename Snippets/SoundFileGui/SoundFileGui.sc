@@ -25,22 +25,30 @@ SoundFileGui : AppModel {
 		};
 	}
 
-	*new { | archivePath |
-		^super.new.init(archivePath).makeWindow;
+	// still to do
+	*open {
+		RecentPaths.open(this.asSymbol, { | path |
+			this.new(path).gui;
+			},{ // still to do:
+//			this.new.addDefaults.gui;
+		})
 	}
 
-	init { | argArchivePath |
+	*new { | archivePath |
+		^super.new(archivePath ?? { Platform.userAppSupportDir +/+ "BufferLists.sctxar"; }).init;
+	}
+
+	init {
 		var bufferLists;
 		bufferLists = this.getValue(\bufferLists, ListAdapter());
-		bufferLists.items_(nil, this.loadBufferLists(argArchivePath));
+		bufferLists.items_(nil, this.loadBufferLists);
 		files = this.getValue(\files, ListAdapter());
 		files.items_(bufferLists.adapter.item);
 		files.sublistOf(bufferLists);
 	}
 
-	loadBufferLists { | argArchivePath |
+	loadBufferLists {
 		var bufferLists, defaultList;
-		archivePath = argArchivePath ?? { Platform.userAppSupportDir +/+ "BufferLists.sctxar"; };
 		bufferLists = Object.readArchive(archivePath);
 		bufferLists !? { bufferLists do: { | bl | bl do: _.rebuild; }};
 		^bufferLists ?? { [this.makeList] };
@@ -59,7 +67,9 @@ SoundFileGui : AppModel {
 
 	addBuffer { | bufferList, buffer | if (bufferList.includes(buffer).not) { bufferList add: buffer } }
 
-	makeWindow { | argArchivePath |
+	gui { this.makeWindow }
+
+	makeWindow {
 		this.stickyWindow(this.class, \bufferListGui, { | w, app |
 			w.name = "Sound Files";
 			w.bounds = Rect(400, 400, 1040, 650);

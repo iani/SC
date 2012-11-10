@@ -19,7 +19,9 @@ TODO: Add delete button.
 */
 
 RecentPaths {
-	classvar <all;
+	classvar <all; // all RecentPaths instances, by objectID
+	// root path at Library for instances stored by their paths:
+	classvar <libPath = 'RecentPathsLoadedInstances';
 
 	var <objectID, <>numHistoryItems = 20, <paths, <default;
 
@@ -65,20 +67,24 @@ RecentPaths {
 			window.bounds = window.bounds.left_(250).width_(800);
 			window.name = format("Select path for: %", objectID);
 			buttons = Array(3);
+			// Button for creating new instance, without selecting any path
 			createAction !? {
 				buttons add: Button().states_([["Create new"]])
-				.action_({ createAction.(this); window.close; });
+				.action_({ this.createAction.(this); window.close; });
 			};
+			// Button for loading an instance from path selected by user via open panel dialog
 			buttons add: Button().states_([["Open from disc ... "]]).action_({
 				this.openPanel(openAction, window);
 			});
 			buttons add: StaticText().string_("... or select from list below:");
 			window.layout = VLayout(
 				HLayout(*buttons),
+				// List of recent paths.
 				app.listView(\paths).items_(paths).view,
 				HLayout(
+					// Button for loading instance from path selected from recent paths list
 					app.button(\paths).action_({ | me |
-						openAction.(me.item);
+						this.selectExistingOrOpen(me.item, openAction);
 						window.close;
 					}).view.states_([["Accept"]]),
 					app.button(\paths).action_({ window.close }).view.states_([["Cancel"]]),
@@ -87,23 +93,35 @@ RecentPaths {
 		})
 	}
 
-	openPanel { | action, window |
-		Dialog.openPanel({ | path |
-			var preexisting;
-			this addPath: path;
-			action.(path);
-			window.close;
-		})
+	selectExistingOrOpen { | path, openAction |
+		var existing;
+		existing = this.getInstanceAtPath(path);
+		if (existing.notNil) { ^existing };
+		this.addInstanceAtPath(path, openAction.(path));
 	}
 
-	addPath { | path |
+	getInstanceAtPath { | path |
+		^Library.at(libPath, path.asSymbol);
+	}
+
+	addInstanceAtPath { | path, instance |
 		// retrospective correction of already saved instances from older version:
+		[this, thisMethod.name, instance].postln;
 		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); };
-//		paths = paths ?? { List() };
 		paths.remove(paths detect: { | p | p == path });
 		paths add: path;
 		if (paths.size > numHistoryItems) { paths.pop };
+		Library.put(libPath, path.asSymbol, instance);
+		this.addNotifier(instance, \objectClosed, { Library.put(libPath, path.asSymbol, nil); [instance, "closed"].postln; });
 		this.class.saveAll;
+		^instance;
+	}
+
+	openPanel { | action, window |
+		Dialog.openPanel({ | path |
+			this.selectExistingOrOpen(path, action);
+			window.close;
+		})
 	}
 
 	save { | action |
