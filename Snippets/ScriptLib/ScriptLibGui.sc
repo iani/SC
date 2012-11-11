@@ -117,7 +117,8 @@ ScriptLibGui : AppModel {
 			{ ScriptLib.new.addDefaults.gui }, 		// New
 			{ ScriptLib.open; },      // Open
 			{ scriptLib.save; },      // Save
-			{ scriptLib.saveDialog }, // Save as
+			// Save as ...
+			{ RecentPaths.savePanel(scriptLib.class.asSymbol, { | path | scriptLib saveToPath: path }, this); },
 			{ scriptLib.revert; },    // Revert
 			{ RecentPaths(scriptLib.class.asSymbol).default = ScriptLib.all.findKeyForValue(scriptLib).asString; },
 			{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import

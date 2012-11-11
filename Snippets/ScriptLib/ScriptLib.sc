@@ -28,14 +28,15 @@ a.gui;
 */
 
 ScriptLib {
-	classvar <all; // dict of currently open instances by path: Avoid opening the same path twice.
+//	classvar <all; // dict of currently open instances by path: Avoid opening the same path twice.
 	classvar <configPath = '---Config---';
+	classvar <pathID = 'ScriptLib';   // for saving and retrieving paths with RecentPaths
 	var <lib;		// MultiLevelIdentityDictionary of folders, files and scripts by name
 		// lib has 4 levels: [folder name, file name, snippet name, snippet]
 
-	*initClass {
-		all = IdentityDictionary();
-	}
+//	*initClass {
+	//	all = IdentityDictionary();
+//	}
 
 	*current {
 		var current;
@@ -47,7 +48,6 @@ ScriptLib {
 		^current;
 	}
 
-
 	*current_ { | argLib |
 		Library.put('selectedLib', argLib = argLib ?? { this.new });
 		Library.changed('selectedLib', argLib);
@@ -56,14 +56,10 @@ ScriptLib {
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
 
 	*openDefault {
-		var recentPaths, defaultPath;
+		var recentPaths, path;
 		recentPaths = RecentPaths(this.asSymbol);
-		defaultPath = recentPaths.default;
-		if (defaultPath.isNil) {
-			this.open;
-		}{
-			recentPaths.addInstanceAtPath(defaultPath, this.loadFromArchive(defaultPath)).gui;
-		}
+		path = recentPaths.default;
+		if (path.isNil) { this.open; } { this.loadFromArchive(path).gui; }
 	}
 
 	*open {
@@ -75,12 +71,10 @@ ScriptLib {
 	}
 
 	*loadFromArchive { | path |
-		var instance;
-		path = path.asSymbol;
-		instance = all[path] ?? { Object readArchive: path.asString; };
-		all[path] = instance;
-		^instance;
+		^RecentPaths(pathID).selectExistingOrOpen(path, { Object readArchive: path.asString });
 	}
+
+	path { ^RecentPaths.getPathFor(pathID, this) }
 
 	addDefaults {
 		this.addSnippet("-DefaultFolder", "-Defaults", "//:-defaultsnippet\n{ WhiteNoise.ar(0.1) }");
@@ -122,35 +116,16 @@ ScriptLib {
 		this.changed(\dict);
 	}
 
-/*
-	getPath {
-		^ScriptLib.all.findKeyForValue(this).asString;
-	}
-*/
 	save {
-		var path;
-		path = this.path;
-		if (path.isNil) { this.saveDialog } { this saveToPath: path };
+		RecentPaths.save(pathID, { | path | this writeArchive: path.asString }, this);
 	}
 
-	path { ^all findKeyForValue: this }
-
-	saveDialog {
-		RecentPaths.save(this.class.asSymbol, { | path | this saveToPath: path });
+	savePanel {
+		RecentPaths.savePanel(pathID, { | path | this saveToPath: path }, this);
 	}
 
 	saveToPath { | path |
-		this.path = path;
-		this writeArchive: path.asString;
-		format("% saved to:\n%\n", this.class, path).postln;
-		this.changed(\path, path);
-	}
-
-	path_ { | path |
-		var previousPath;
-		previousPath = this.path;
-		previousPath ?? { all[previousPath] = nil };
-		all[path.asSymbol] = this;
+		RecentPaths.saveToPath(pathID, { this writeArchive: path.asString }, this, path );
 	}
 
 	gui { ScriptLibGui(this).gui; }
@@ -166,7 +141,7 @@ ScriptLib {
 		folderName = this.makeUniqueName(nil, folderPath.folderName.postln);
 		(folderPath.fullPath ++ "*.scd").pathMatch do: { | filePath |
 			this.importSnippets(folderName, filePath);
-		};
+	 	};
 	}
 
 	makeUniqueName { | path, name, index |

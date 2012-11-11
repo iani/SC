@@ -314,7 +314,6 @@ SoundFileGui : AppModel {
 	}
 
 	saveLists {
-
 		this.getValue(\bufferLists).adapter.items.writeArchive(archivePath);
 		postf("Buffer lists saved to: \n%\n", archivePath);
 	}

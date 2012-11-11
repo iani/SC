@@ -21,20 +21,14 @@ TODO: Add delete button.
 RecentPaths {
 	classvar <all; // all RecentPaths instances, by objectID
 	// root path at Library for instances stored by their paths:
-	classvar <libPath = 'RecentPathsLoadedInstances';
+	classvar <libPath = 'InstancePaths';
 
 	var <objectID, <>numHistoryItems = 20, <paths, <default;
 
-	*open { | objectID, openAction, createAction |
-		^this.new(objectID.asSymbol).open(openAction, createAction);
-	}
-
-	*save { | objectID, action |
-		^this.new(objectID.asSymbol).save(action);
-	}
-
+	// Find or create an instance holding the recent paths for objectID
 	*new { | objectID, numHistoryItems = 20 |
 		var instance;
+		objectID = objectID.asSymbol;
 		all ?? { all = Object.readArchive(this.archiveFilePath); };
 		all ?? { all = IdentityDictionary(); };
 		instance = all[objectID];
@@ -46,6 +40,62 @@ RecentPaths {
 		^instance;
 	}
 
+	*saveAll { all.writeArchive(this.archiveFilePath);  /* "Recent paths saved".postln; */ }
+	*archiveFilePath { ^Platform.userAppSupportDir +/+ "RecentPaths.sctxar" }
+
+	//
+	*open { | objectID, openAction, createAction |
+		^this.new(objectID).open(openAction, createAction);
+	}
+
+	*save { | objectID, action, object |
+		var path;
+		path = this.getPathFor(objectID, object);
+		if (path.isNil) {
+			this.savePanel(objectID, action, object)
+		}{
+			this.saveToPath(objectID, action, object, path)
+		}
+	}
+
+	*getPathFor { | objectID, object |
+		var dict;
+		dict = Library.at(libPath, objectID);
+		if (dict.isNil) { ^nil } { ^dict.findKeyForValue(object); };
+	}
+
+	*savePanel { | objectID, action, object |
+		^this.new(objectID.asSymbol).savePanel(action, object);
+	}
+
+	savePanel { | action, object |
+		Dialog.savePanel({ | path | this.saveToPath(action, object, path); });
+	}
+
+	*saveToPath { | objectID, action, object, path |
+		this.new(objectID).saveToPath(action, object, path)
+	}
+
+	saveToPath { | action, object, path |
+		action.(path);
+		this.addInstanceAtPath(path, object);
+	}
+
+	addInstanceAtPath { | path, instance |
+		// retrospective correction of already saved instances from older version:
+//		[this, thisMethod.name, instance].postln;
+		instance.changed(\path, path);
+		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); };
+		paths.remove(paths detect: { | p | p == path });
+		paths add: path;
+		if (paths.size > numHistoryItems) { paths.pop };
+		path = path.asSymbol;
+		Library.put(libPath, objectID, path, instance);
+		this.addNotifier(instance, \objectClosed, { Library.put(libPath, path, nil); postf("% closed\n", instance); });
+		this.class.saveAll;
+		^instance;
+	}
+
 	init { paths = List.new; }
 
 	default_ { | argDefault |
@@ -53,12 +103,6 @@ RecentPaths {
 		postf("Setting default path for: %\nPath is: %\n", objectID, argDefault);
 		this.class.saveAll;
 	}
-
-	*saveAll {
-		all.writeArchive(this.archiveFilePath);
-	}
-
-	*archiveFilePath { ^Platform.userAppSupportDir +/+ "RecentPaths.sctxar" }
 
 	open { | openAction, createAction |
 		var buttons;
@@ -97,24 +141,11 @@ RecentPaths {
 		var existing;
 		existing = this.getInstanceAtPath(path);
 		if (existing.notNil) { ^existing };
-		this.addInstanceAtPath(path, openAction.(path));
+		^this.addInstanceAtPath(path, openAction.(path));
 	}
 
 	getInstanceAtPath { | path |
 		^Library.at(libPath, path.asSymbol);
-	}
-
-	addInstanceAtPath { | path, instance |
-		// retrospective correction of already saved instances from older version:
-		[this, thisMethod.name, instance].postln;
-		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); };
-		paths.remove(paths detect: { | p | p == path });
-		paths add: path;
-		if (paths.size > numHistoryItems) { paths.pop };
-		Library.put(libPath, path.asSymbol, instance);
-		this.addNotifier(instance, \objectClosed, { Library.put(libPath, path.asSymbol, nil); [instance, "closed"].postln; });
-		this.class.saveAll;
-		^instance;
 	}
 
 	openPanel { | action, window |
@@ -122,12 +153,5 @@ RecentPaths {
 			this.selectExistingOrOpen(path, action);
 			window.close;
 		})
-	}
-
-	save { | action |
-		Dialog.savePanel({ | path |
-			action.(path);
-			this addPath: path;
-		});
 	}
 }
