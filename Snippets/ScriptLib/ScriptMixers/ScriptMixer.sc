@@ -56,7 +56,7 @@ ScriptMixer : AppModel {
 								a.numberBox(format("knob%", i).asSymbol).proxyControl.view.font_(font).fixedWidth_(nWidth),
 								a.numberBox(format("slider%", i).asSymbol).proxyControl.view.font_(font).fixedWidth_(nWidth),
 								a.button(format("proxy%", i).asSymbol)
-								.action_({ "TOODO".postln; })
+								.action_({ ProxyCodeEditor(ProxyCentral.default.proxySpace, ProxyCentral.currentProxy); })
 								.view.states_([["ed"]]).font_(font).fixedWidth_(nWidth),
 								a.button(format("proxy%", i).asSymbol).proxyWatcher
 								.view.states_([[">"], ["||", nil, Color.red]]).font_(font).fixedWidth_(nWidth),
