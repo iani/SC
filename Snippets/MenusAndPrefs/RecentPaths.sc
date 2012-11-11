@@ -70,7 +70,7 @@ RecentPaths {
 			// Button for creating new instance, without selecting any path
 			createAction !? {
 				buttons add: Button().states_([["Create new"]])
-				.action_({ this.createAction.(this); window.close; });
+				.action_({ createAction.(this); window.close; });
 			};
 			// Button for loading an instance from path selected by user via open panel dialog
 			buttons add: Button().states_([["Open from disc ... "]]).action_({
