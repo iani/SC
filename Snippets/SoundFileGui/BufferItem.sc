@@ -19,7 +19,7 @@ BufferListGui();
 BufferItem : NamedItem {
 	// name -> path. item -> Buffer
 	// Buffer allocated only and always when server boots or is booted.
-	classvar loadingBuffers; // Load buffers only one at a time. See method load.
+	classvar loadingBuffers; // Used to load buffers only one at a time. See method load.
 	classvar <>all;	// IdentityDictionary with one buffer per symbol.
 					// prevent creating duplicate buffers with same path.
 	classvar <loadedBuffersPath = 'Buffers';
@@ -51,6 +51,8 @@ BufferItem : NamedItem {
 		(existing = all[nameSymbol]) !? { ^existing };
 		^super.new(name).nameSymbol_(nameSymbol).register;
 	}
+
+	*named { | name | ^all[name.asSymbol] }
 
 	*free { | bufferName |
 		var bufferItem;

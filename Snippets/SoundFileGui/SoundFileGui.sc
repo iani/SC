@@ -206,14 +206,25 @@ SoundFileGui : AppModel {
 		^VLayout(
 			HLayout(
 				this.button(\files).action_({ | me |
-					ScriptLib.current.addSoundFile(me.item);
+					ScriptLib.current.addBuffer(me.item);
 					this.getValue(\scriptLibBuffers).item_(nil, me.item.nameSymbol);
 				})
-				.view.font_(font).states_([["add"]]),
+				.view.font_(font).states_([["+"]]),
+				this.button(\files).action_({ | me |
+					me.items do: { | item |
+					ScriptLib.current.addBuffer(item);
+					};
+//					this.getValue(\scriptLibBuffers).item_(nil, me.item.nameSymbol);
+				})
+				.view.font_(font).states_([["+*"]]),
 				this.button(\scriptLibBuffers).action_({ | me |
 					ScriptLib.current.removeSoundFile(me.item);
 				})
-				.view.font_(font).states_([["remove"]]),
+				.view.font_(font).states_([["-"]]),
+				this.button(\scriptLibBuffers).action_({ | me |
+					me.items do: { | item | ScriptLib.current.removeSoundFile(item); }
+				})
+				.view.font_(font).states_([["-*"]]),
 			),
 			this.listView(\scriptLibBuffers)
 			.updater(Library, \selectedLib, { | me |

@@ -4,33 +4,35 @@ Experimental
 */
 
 Script {
-	var <>name, <>string;
+	var <>name, <scriptLib, <>string;
 	var <>envir;
 
 
-	*new { | name, string |
-		^this.newCopyArgs(name, string).init;
+	*new { | name, scriptLib, string |
+		^this.newCopyArgs(name, scriptLib, string).init;
 	}
 
 	init {
-		envir = ();
+		envir = (script: this, scriptLib: scriptLib);
 	}
 
 	start {
-		[name, thisMethod.name].postln;
+		postf("Starting : %\n", name);
+		string.postln;
 		envir[\source] = envir use: { string.compile.valueEnvir(envir); };
 	}
 
 	stop {
 		var stopFunc;
-		[name, thisMethod.name].postln;
+		postf("Stopping : %\n", name);
 		if ((stopFunc = envir[\stop]).isNil) {
-			envir[\source].postln;
-			envir[\source].free;
+			envir[\source].free.stop; // effective kludge: free synths, stop routines + patterns
 		}{
 			envir use: { stopFunc.valueEnvir(envir); };
 		}
 	}
 }
 
+
+// Task and Routine support:
 

@@ -28,15 +28,10 @@ a.gui;
 */
 
 ScriptLib {
-//	classvar <all; // dict of currently open instances by path: Avoid opening the same path twice.
-	classvar <configPath = '---Config---';
+	classvar <configPath = '---Config---'; // scripts in this folder are loaded when this lib opens
 	classvar <pathID = 'ScriptLib';   // for saving and retrieving paths with RecentPaths
 	var <lib;		// MultiLevelIdentityDictionary of folders, files and scripts by name
-		// lib has 4 levels: [folder name, file name, snippet name, snippet]
-
-//	*initClass {
-	//	all = IdentityDictionary();
-//	}
+	// lib has 4 levels: [folder name, file name, snippet name, snippet]
 
 	*current {
 		var current;
@@ -83,15 +78,37 @@ ScriptLib {
 	loadConfig {
 		// load all scripts in Folder "---Config---"
 		lib.leafDoFrom(configPath, { | path, script | script.interpret });
+		// Load buffers in auto-load file:
+		lib.at('---Config---', 'Buffers-Autoload').values do: { | script | script.interpret.loadIfNeeded; };
+
+		// Currently not used:
+		// scripts that access other scripts must wait for load to finish:
+//		this.changed(\loadedConfig);
 	}
+
+	// Currently not used:
+	// scripts that access other scripts must wait for load to finish:
+//	doWhenLoaded { | action |
+//		this.addNotifierAction(this, \loadedConfig, action.(this));
+//	}
 
 	// Sound files and buffers
 	buffers { ^lib.atPath(this.bufferConfigPath) ?? { IdentityDictionary() } }
-	bufferConfigPath { ^[configPath, 'Buffers'] }
+	bufferConfigPath { ^[configPath, 'Buffers-Autoload'] }
+	soundFileConfigPath { ^[configPath, 'SoundFiles'] }
 
-	addLoadedBuffersToConfig { Library.at('Buffers') do: this.addSoundFile(_); }
+	addLoadedBuffersToConfig { Library.at('Buffers') do: this.addBuffer(_); }
 
 	addSoundFile { | bufferItem |
+		if (bufferItem.isNil) { ^"Cannot add nil Buffer item".postln };
+		this.addSnippetNamed(*(this.soundFileConfigPath ++ [bufferItem.nameSymbol,
+				format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
+			])
+		);
+//		if (this.isCurrent) { bufferItem.loadIfNeeded };
+	}
+
+	addBuffer { | bufferItem |
 		if (bufferItem.isNil) { ^"Cannot add nil Buffer item".postln };
 		this.addSnippetNamed(*(this.bufferConfigPath ++ [bufferItem.nameSymbol,
 				format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
@@ -175,7 +192,13 @@ ScriptLib {
 	}
 
 	getSnippetName { | snippet |
-		^(snippet.findRegexp("//:([A-Z0-9a-z\\-_][A-Za-z0-9\\-_]*)").flop[1] ?? { [nil, "_"] })[1];
+		^(snippet.findRegexp(this.snippetNameRegexp).flop[1] ?? { [nil, "_"] })[1];
+	}
+
+	snippetNameRegexp { ^"\\A//:([A-Z0-9a-z\\-_][A-Za-z0-9\\-_]*)" }
+
+	replaceSnippetName { | snippet, newName |
+		^"//:" ++ newName ++ snippet[(snippet.findRegexp(this.snippetNameRegexp) ?? { [[0, ""]] })[0][1].size..];
 	}
 
 	addSnippetNamed { | folderName, fileName, snippetName, snippet |
@@ -218,6 +241,17 @@ ScriptLib {
 		}.fork(AppClock);
 	}
 
+	// ============ UNDER DEVELOPMENT: ============
+
+	 // evaluate a snippet and return the result
+	getSnippetValue { | path | ^this.getSnippet(path).interpret; }
+
+	getSnippet { | path | ^lib.atPath(path) }
+
+	// evaluate all snippets under path and collect the results in dictionary
+	collectValues { | path |
+
+	}
 	folders { // TODO?
 
 	}

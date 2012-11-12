@@ -15,39 +15,42 @@ Env.perc(
 
 Blobs {
 
-	classvar <>default;
+	classvar <>all;
 
-	var <oscFunc, <blobs, <>blobClass;
+	var <oscFunc, <blobs;
 
 	*initClass {
-		StartUp add: { default = this.new; };
+		StartUp add: { all = IdentityDictionary(); };
 	}
 
 	*new { | port |
-		^super.new.init(port ?? { NetAddr.localAddr.port }); // .enable;
+		var instance;
+		port ?? { port = NetAddr.localAddr.port; };
+		instance = all[port];
+		instance !? { ^instance };
+		instance = super.new.init(port);
+		all[port] = instance;
+		^instance;
 	}
 
 	init { | port = 57120 |
 		oscFunc = OSCFunc({ | msg | this.performList(msg[1], msg[2..]); }, '/tuio/2Dcur', recvPort: port).disable;
 		blobs = IdentityDictionary();
-		blobClass = Blob;
 	}
 
-	*disable { default.disable }
-	*enable { | blobClass | default enable: blobClass }
+	*enable { | port | this.new(port).enable }
+	*disable { | port | this.new(port).disable }
 
-	enable { | argBlobClass |
-		argBlobClass !? { blobClass = argBlobClass };
-		oscFunc.enable;
-	}
+	*default { ^this.new(NetAddr.localAddr.port) }
 
+	enable { oscFunc.enable; }
 	disable { oscFunc.disable; }
 
 	set { | id ... args |
 		var blob;
 		blob = blobs[id];
 		if (blob.isNil) {
-			blobClass.new(this, id, args)
+			Blob(this, id, args)
 		}{
 			blob.moved(args);
 		}
@@ -60,7 +63,6 @@ Blobs {
 	}
 
 	fseq { } // catch this message but do nothing
-
 }
 
 Blob {
@@ -102,8 +104,9 @@ BlobWatcher {
 	var <blobs, <>startFunc, <>moveFunc, <>endFunc, <>mapper;
 //	var <myBlobs;
 
-	*new { | startFunc, moveFunc, endFunc, mapper, blobs |
-		^this.newCopyArgs(blobs ?? { Blobs.default },
+	*new { | startFunc, moveFunc, endFunc, mapper, port = 3001 |
+		^this.newCopyArgs(
+			Blobs(port),
 			startFunc ?? {{ | ... args | postf("started: %\n", args) }},
 			moveFunc ?? {{ | ... args | postf("moved: %\n", args) }},
 			endFunc ?? {{ | ... args | postf("ended: %\n", args) }},

@@ -45,6 +45,7 @@ ScriptLibGui : AppModel {
 	}
 
 	gui {
+		ScriptLib.current = scriptLib;
 		buffers = IdentityDictionary();
 		this.stickyWindow(scriptLib, windowInitFunc: { | window |
 			window.name = scriptLib.path ? "ScriptLib";
@@ -107,7 +108,13 @@ ScriptLibGui : AppModel {
 			.view.font_(font),
 			this.itemEditMenu('File')
 			.view.font_(font),
-			this.itemEditMenu('Snippet')
+			this.itemEditMenu('Snippet', renameFunc: { | me, string |
+				var path, snippet;
+				me.value.replace(string, me.value.index);
+				path = [me.value.adapter.path, me.value.item].flat;
+				snippet = scriptLib.getSnippet(path);
+				scriptLib.addSnippetNamed(*(path add: scriptLib.replaceSnippetName(snippet, me.item.asString)));
+			})
 			.view.font_(font),
 		);
 	}
@@ -120,7 +127,7 @@ ScriptLibGui : AppModel {
 			// Save as ...
 			{ RecentPaths.savePanel(scriptLib.class.asSymbol, { | path | scriptLib saveToPath: path }, this); },
 			{ scriptLib.revert; },    // Revert
-			{ RecentPaths(scriptLib.class.asSymbol).default = ScriptLib.all.findKeyForValue(scriptLib).asString; },
+			{ RecentPaths(scriptLib.class.asSymbol).default = scriptLib.path.asString; },
 			{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
 			{ Dialog.savePanel({ | path | scriptLib.export(path) }) }, // Export
 			{ scriptLib.loadConfig; }, // Reload Config
@@ -150,9 +157,8 @@ ScriptLibGui : AppModel {
 				snippetViews.index = me.value
 			}),
 			this.button('Snippet').action_({ | me |
-				"EXPERIMENTAL - for development use only".postln;
-				[{ this.getScript.stop}, { this.getScript.start}][me.view.value].value;
-			}).view.font_(font).states_([["script>", nil, Color.green], ["script||", nil, Color.red]]),
+				[{ this.getScript.stop }, { this.getScript.start }][me.view.value].value;
+			}).view.font_(font).states_([["script>", nil, Color(0.75, 0.75, 1)], ["script||", nil, Color.red]]),
 			this.button('Snippet').action_({ | me |
 				me.getString.interpret.postln;
 			}).view.font_(font).states_([["eval", Color.red]]),
@@ -160,7 +166,7 @@ ScriptLibGui : AppModel {
 			.proxyWatcher({ | me |
 				me.checkProxy(me.value.adapter.item.checkEvalPlay(this.getValue('Snippet').getString))
 			})
-			.view.font_(font).states_([[">", nil, Color.green], ["||", nil, Color.red]]).fixedWidth_(30),
+			.view.font_(font).states_([["proxy>", nil, Color.green], ["proxy||", nil, Color.red]]), //.fixedWidth_(30),
 			this.button('Snippet').action_({ | me |
 				this.getValue(\Proxy).item.evalSnippet(me.getString, start: false, addToSourceHistory: false);
 			}).view.font_(font).states_([["set proxy source"]]),
@@ -202,8 +208,8 @@ ScriptLibGui : AppModel {
 		snippet = snippetVal.getString;
 		path = ['Scripts', scriptLib] ++ path;
 		script = Library.at(*path);
-		script ?? { Library.put(*(path ++ [script = Script(name)])); };
-		script.string = snippet;
+		script ?? { Library.put(*(path ++ [script = Script(name, scriptLib)])); };
+		script.string = snippet; // update string if script already exists.
 		^script;
 	}
 
@@ -307,6 +313,4 @@ ScriptLibGui : AppModel {
 		this.getValue('Proxy').changed(\toggle);
 	}
 }
-
-
 

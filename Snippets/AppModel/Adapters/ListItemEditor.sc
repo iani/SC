@@ -42,7 +42,7 @@ ListItemEditor {
 		container.changed(\exit);
 		this.hide;
 	}
-	
+
 	append { | list |
 		this setList: list;
 		label.view.string = "Edit, press 'return' to create item:";
@@ -63,9 +63,9 @@ ListItemEditor {
 		textField.view.string = this getName: list;
 		textField.action = { | me | container.changed(\rename, list, me.view.string) };
 		this.show(\label, \textField, \exitButton);
-		
+
 	}
-	
+
 	delete { | list |
 		this setList: list;
 		label.view.string = "Delete item:";
@@ -100,10 +100,10 @@ ListItemEditor {
 			}
 		};
 	}
-	
+
 	hide {
 		[label, textField, deleteButton, exitButton] do: { | w | w.view.visible = false };
 	}
-	
+
 	updateMessage { ^\value }
 }
