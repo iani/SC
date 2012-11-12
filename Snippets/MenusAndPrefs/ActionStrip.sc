@@ -38,7 +38,8 @@ ActionStrip {
 		window.bounds_(Rect(0, 0, width, 25)).layout_(layout).front;
 		if (closeButton) {
 			layout add: Button()
-			.states_([["x", nil, Color.red]]).action_({ window.close }).font_(Font.default.size_(10))
+			.states_([["x", nil, 
+				Color.red]]).action_({ window.close }).font_(Font.default.size_(10))
 				.fixedWidth_(30)
 		}
 	}

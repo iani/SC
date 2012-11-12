@@ -4,7 +4,14 @@ Default action strip for Lilt2 = mini menu + button strip substitute for menu, f
 
 Lilt2DefaultMenu {
 	classvar <menu;
-	*initClass { StartUp add: { this.makeMenu } }
+	*initClass { StartUp add: {
+			{	// compatibility with 3.5
+				GUI.qt;
+				QtGUI.style = \CDE;
+				this.makeMenu;
+			}.defer(0.5);
+	
+	} }
 
 	*makeMenu {
 		if (menu.isNil) {

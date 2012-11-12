@@ -21,7 +21,11 @@ SoundFileGui : AppModel {
 	*initClass {
 		StartUp add: {
 //			CocoaMenuItem.add(["Sound File Manager"], { this.new });
-			font = Font.default.size_(10);
+			{	// compatibility with 3.5
+				GUI.qt;
+				QtGUI.style = \CDE;
+				font = Font.default.size_(10);
+			}.defer(0.5);
 		};
 	}
 
