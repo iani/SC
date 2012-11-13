@@ -58,6 +58,10 @@ RecentPaths {
 		}
 	}
 
+	getPathFor { | object |
+		^this.class.getPathFor(objectID, object)
+	}
+
 	*getPathFor { | objectID, object |
 		var dict;
 		dict = Library.at(libPath, objectID);
@@ -82,14 +86,16 @@ RecentPaths {
 	}
 
 	addInstanceAtPath { | path, instance |
-		// retrospective correction of already saved instances from older version:
-//		[this, thisMethod.name, instance].postln;
+		var previousPath;
 		instance.changed(\path, path);
-		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); };
+		// retrospective correction of already saved instances from older version:
+		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); }; // safe!
 		paths.remove(paths detect: { | p | p == path });
 		paths add: path;
 		if (paths.size > numHistoryItems) { paths.pop };
 		path = path.asSymbol;
+		previousPath = this.getPathFor(instance);
+		previousPath !? { Library.put(libPath, objectID, previousPath, nil); };
 		Library.put(libPath, objectID, path, instance);
 		this.addNotifier(instance, \objectClosed, { Library.put(libPath, path, nil); postf("% closed\n", instance); });
 		this.class.saveAll;

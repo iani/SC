@@ -1,0 +1,56 @@
+var o, p;
+o = [
+	ScriptLib.prNew,  MultiLevelIdentityDictionary.prNew,  IdentityDictionary.prNew,  Array.prNew(32),  
+	IdentityDictionary.prNew,  Array.prNew(32),  IdentityDictionary.prNew,  Array.prNew(32),  
+	"//:-About This ScriptLib
+/* 
+This ScriptLib contains notes towards documenting the ScriptLib class and how it works. 
+*/
+"
+];
+p = [
+	// ScriptLib
+	0, [ lib: o[1] ],  
+	// MultiLevelIdentityDictionary
+	1, [ dictionary: o[2] ],  
+	// IdentityDictionary
+	2, [ array: o[3],  size: 1,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	3, [ nil,  nil,  nil,  nil,  
+		'-00General Info',  o[4],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// IdentityDictionary
+	4, [ array: o[5],  size: 1,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	5, [ nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  '-About',  o[6],  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// IdentityDictionary
+	6, [ array: o[7],  size: 1,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	7, [ nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		'-About This ScriptLib',  o[8],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ]
+];
+prUnarchive(o,p);

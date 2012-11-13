@@ -21,10 +21,7 @@ Real paths must be stored by the ScriptLibApp (subclass of AppModel) - not the S
 	var <folder_path;	// NOT! Multiple data can be imported to same instance from many paths
 
 a = ScriptLib().gui;
-
 a.gui;
-
-
 */
 
 ScriptLib {
@@ -76,11 +73,13 @@ ScriptLib {
 	}
 
 	loadConfig {
+		var autoLoadBuffers;
 		// load all scripts in Folder "---Config---"
 		lib.leafDoFrom(configPath, { | path, script | script.interpret });
 		// Load buffers in auto-load file:
-		lib.at('---Config---', 'Buffers-Autoload').values do: { | script | script.interpret.loadIfNeeded; };
-
+		(autoLoadBuffers = lib.at('---Config---', 'Buffers-Autoload')) !? {
+			autoLoadBuffers.values do: { | script | script.interpret.loadIfNeeded; };
+		};
 		// Currently not used:
 		// scripts that access other scripts must wait for load to finish:
 //		this.changed(\loadedConfig);

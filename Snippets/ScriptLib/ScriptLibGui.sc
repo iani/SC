@@ -129,9 +129,9 @@ ScriptLibGui : AppModel {
 			{ ScriptLib.open; },      // Open
 			{ scriptLib.save; },      // Save
 			// Save as ...
-			{ RecentPaths.savePanel(scriptLib.class.asSymbol, { | path | scriptLib saveToPath: path }, this); },
+			{ RecentPaths.savePanel(ScriptLib.pathID, { | path | scriptLib saveToPath: path }, scriptLib); },
 			{ scriptLib.revert; },    // Revert
-			{ RecentPaths(scriptLib.class.asSymbol).default = scriptLib.path.asString; },
+			{ RecentPaths(ScriptLib.pathID).default = scriptLib.path.asString; },
 			{ Dialog.openPanel({ | path | scriptLib.import(path) }) }, // Import
 			{ Dialog.savePanel({ | path | scriptLib.export(path) }) }, // Export
 			{ scriptLib.loadConfig; }, // Reload Config

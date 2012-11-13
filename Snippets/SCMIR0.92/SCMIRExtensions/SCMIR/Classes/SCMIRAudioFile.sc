@@ -1,7 +1,6 @@
 //one song in a collection, one movement in a symphony, one continuous audio file      
   
-SCMIRAudioFile {      
-	  
+SCMIRAudioFile {
 	var <valid;       
 	var <sourcepath, <sourcedir, <basename, <analysispath;    
 	var <analysisfilename;      
@@ -12,42 +11,30 @@ SCMIRAudioFile {
 	var <numbeats, <beatdata, <tempi, <tempo; //, <featuresforbeats;       
      var <numonsets, <onsetdata;
      var <segmenttimes, <numsegments, <featuresbysegments;  
-     
      var <loadstart,<loadframes;  
-       
-	//var normgroups;       
 	  
 	*new {|filename, featureinfo, normtype=0, start=0, dur=0|      
-		  
 		if (filename.isNil,{"Meta_SCMIRAudioFile:new no filename provided".postln; ^nil});       
-		  
 		^super.new.initSCMIRAudioFile(filename, featureinfo, normtype, start, dur);       
-		  
 	}    
 	  
 	//also loads from ZArchive file (usually already containing analyzed feature data)  
-	*newFromZ {|filename|
-		  
+	*newFromZ { | filename |
 		if (filename.isNil,{"Meta_SCMIRAudioFile:newFromZ no filename provided".postln; ^nil});       
-		  
 		//.initSCMIRAudioFile(filename) NO NEED, load should set everything required  
 		^super.new.load(filename);       
-		  
 	}     
-	
-	
+
 	//copy settings of an existing file, for use with DTW comparison methods
 	//assumes feature extraction already took place in original
 	//doesn't copy everything, no segments, beats etc
-	*newFromRange {|other,starttime=0.0,end|
-		
+	*newFromRange { | other, starttime = 0.0, end |
 		if (other.isNil,{"Meta_SCMIRAudioFile:newFromRange no other file provided".postln; ^nil});       
 		if (other.featuredata.isNil,{"Meta_SCMIRAudioFile:newFromRange other file provided but no feature data".postln; ^nil});       
-		
 		^super.new.initSCMIRAudioFileFromOther(other,starttime,end);
 	}
 	
-	initSCMIRAudioFileFromOther {|other,starttime=0.0,end|
+	initSCMIRAudioFileFromOther { | other, starttime = 0.0, end |
 		var framestart, frameend; 
 		var top = other.numframes-1; 
 		var timeperhop= SCMIR.hoptime;
@@ -74,24 +61,17 @@ SCMIRAudioFile {
 		duration = (frameend-framestart)*timeperhop;      
 		
 		numframes = frameend-framestart+1; 
-		
-	
 		numfeatures = other.numfeatures; 
 			  
-		featuredata = other.featuredata.copyRange(framestart*numfeatures,(frameend+1)*numfeatures-1); 		
-	}  
-	  
+		featuredata = other.featuredata.copyRange(framestart*numfeatures,(frameend+1)*numfeatures-1); 	}
 	
 	initSCMIRAudioFile {|filename, fi, normtype=0, start=0, dur=0|      
 		var loadtemp;   
 		  
-		//if (filename.pathMatch.isEmpty,{}); //existence check	     
 		//check for MP3, create temp .wav file if necessary 
 		if((PathName(filename).extension) =="mp3") {
-		
 			//have to convert whole thing
 			filename = this.resolveMP3(filename);
-			
 		};
 		  
 		//not multi-thread safe     
@@ -121,65 +101,39 @@ SCMIRAudioFile {
 				
 				};  
 			  
-			duration=  loadframes/SCMIR.soundfile.sampleRate; //SCMIR.soundfile.numFrames/SCMIR.soundfile.sampleRate;      
-			numChannels = SCMIR.soundfile.numChannels;     
-			  
-			sourcepath = filename;      
-			
-			sourcedir = sourcepath.dirname;   
-			
+			duration=  loadframes / SCMIR.soundfile.sampleRate; 
+			numChannels = SCMIR.soundfile.numChannels;
+			sourcepath = filename;
+			sourcedir = sourcepath.dirname;
 			if(SCMIR.tempdir.isNil,{     
 				analysispath = sourcepath.dirname ++ "/";      
-				},{     
+				},{
 				analysispath = SCMIR.tempdir; 	     
 			});
-
-			basename = sourcepath.basename;     
-			  
-			basename= basename.copyRange(0,basename.findBackwards(".")-1);     
-			  
-			},{     
-			  
-			"SCMIRAudioFile: soundfile failed to load, wrong path?".postln;		     
-		});      
-		  
-		  
-		SCMIR.soundfile.close;	       
-		  
-		this.setFeatureInfo(fi,normtype); 
-		
-	
-		    
-	}      
-	  
+			basename = sourcepath.basename;
+			basename= basename.copyRange(0,basename.findBackwards(".")-1)
+			},{
+			"SCMIRAudioFile: soundfile failed to load, wrong path?".postln;
+		});
+		SCMIR.soundfile.close;
+		this.setFeatureInfo(fi,normtype);
+	}
+ 
 	//no safety, expert use only 
-	setFeatureData {|newfeaturedata, numf, featureinformation, renormalize=true| 
-		
+	setFeatureData { | newfeaturedata, numf, featureinformation, renormalize = true | 
 		featuredata = newfeaturedata; 
-		
 		numfeatures = numf; 
-		
 		numframes = featuredata.size.div(numf); 
-		
 		featureinfo = featureinformation; 
-		
 		if(renormalize) {
-			
 			featuredata = this.normalize(featuredata,false,false); 
-	
 		}
-		
-		
 	}
 	
 	renormalize {|useglobalnormalization=false|
-		
 		featuredata = this.normalize(featuredata,false,useglobalnormalization);   
 	}
-	
-	
-		  
-	  
+
 	//warning: will invalidate current feature data 
 	//can also be used for resetting    
 	setFeatureInfo { | fi, normtype = 0 |
@@ -204,7 +158,7 @@ SCMIRAudioFile {
 		
 		//impose feature defaults for MFCC?  
 		//put anything not in a SequenceableCollection, in one  
-		featureinfo= featureinfo.collect{|val| 
+		featureinfo= featureinfo collect: { | val | 
 			var val2; 
 			
 			 val2 = if(val.isKindOf(SequenceableCollection)){val}{[val]};
@@ -233,11 +187,8 @@ SCMIRAudioFile {
 			if((val2[0]==\SpectralEntropy) && (val2.size==1),{val2 = [SpectralEntropy,1] });
 			
 			if((val2[0]==\PolyPitch) && (val2.size==1),{val2 = [PolyPitch,4] }); 
-			 
-			 
-			 
 			 val2
-			  };   
+		};   
 		  				
 		//featureinfo.postln;  
 		  
@@ -245,42 +196,30 @@ SCMIRAudioFile {
 		numframes = 0;   
 		//nummfcc = 0;     
 		//numchroma = 0;     
-		
-		  
-		featureinfo.do{|featuregroup|      
-			  
-			//featuregroup.postln;	    
-			     
+	  
+		featureinfo do: { | featuregroup |
+			//featuregroup.postln;
 			//use Symbol rather than class name in case Tartini not installed in system   
-			switch(featuregroup[0].asSymbol,    
-			\MFCC,{    
-			
+			switch (featuregroup[0].asSymbol,    
+			\MFCC, {
 				//assumes featuregroup[1] exists!!!!!!!!!!!!!!
 				//nummfcc= featuregroup[2];    
-				numfeatures = numfeatures + featuregroup[1]; //nummfcc;     
-		
+				numfeatures = numfeatures + featuregroup[1]; //nummfcc;
 			},    
-			\Chromagram,{    
-				  
+			\Chromagram, {
 				//numchroma= featuregroup[2];    
 				numfeatures = numfeatures +  featuregroup[1]; //numchroma;     
-			}, 
-			\SpectralEntropy,{    
-				   
+			},
+			\SpectralEntropy, {	   
 				numfeatures = numfeatures +  featuregroup[1];     
 			},
-			\Tartini,{    
-				  
+			\Tartini, {
 				numfeatures = numfeatures +  2;     
 			}, 
 			\PolyPitch, {
-				
 				numfeatures = numfeatures +  ((2*featuregroup[1])+1); 
-				
 			}, 
-			{ 
-				numfeatures = numfeatures +  1;  
-			}    
+			{ numfeatures = numfeatures +  1; }   
 			);
 		};     
 	}  
@@ -402,7 +341,7 @@ SCMIRAudioFile {
 	}
 	  
 	//must be called within a fork? How to enforce, test that?       
-	extractFeatures {|normalize=true, useglobalnormalization=false| //|writefeaturefile= false|   
+	extractFeatures { | normalize = true, useglobalnormalization = false | //|writefeaturefile= false|   
 		  
 //		var fftsizetimbre = 1024;    
 //		var fftsizepitch = 4096; //for chromagram, pitch detection  
@@ -482,7 +421,7 @@ SCMIRAudioFile {
 		//allow for 10 beats per second, else unreasonable, 2 floats per beat= [beat time, curr tempo estimate]        
 		//windows per second * length . numfeatures is number of channels in buffer?      
 		//initial delay in FFT implementation is hopsize itself.      
-		buffersize= ((44100*duration)/featurehop).asInteger; //+1 for safety not needed unless rounding error on exact match      
+		buffersize = ((44100 * duration) / featurehop).asInteger; //+1 for safety not needed unless rounding error on exact match      
 		  
 		score = [      
 		
@@ -528,7 +467,7 @@ SCMIRAudioFile {
 		  
 		//[\numframes,numframes].postln;  
 		  
-		temp = file.getInt32LE;  
+		temp = file.getInt32LE;
 		if (numfeatures!= temp) {  
 			"extract features: mismatch of expectations in number of features ".postln;  
 			[numfeatures, temp].postln;   
@@ -565,11 +504,8 @@ SCMIRAudioFile {
 		("rm "++ (analysisfilename.asUnixPath)).systemCmd;
 		"Feature extraction complete".postln;
 		this.changed(\extractionDone, this);
-	}    
-	 
-	 
-	
-	
+	}
+
 	resolveFeatureNumbers {
 		
 		var accum = 0; 
@@ -596,40 +532,28 @@ SCMIRAudioFile {
 			\Tartini,{
 				numberlinked = 2; 
 			}
-			); 	
-		
-			accum  = accum + numberlinked; 
-			
+			);
+			accum  = accum + numberlinked;
 			[index, numberlinked]
-		
 		};
-		
-		
 		^featurecounts; 
 	}
-	
-	  
-	  
-	//for archiving features detected   
-	  
+
+	//for archiving features detected	  
 	save { |filename| 
 		//Archive- ascii  
 		//ZArchive - binary, better for this data  
 		var a;   
-		var instancevars;   
-		  
-		filename  = filename??{sourcepath++basename++".scmirZ"};   
-		  
+		var instancevars;
+		filename  = filename??{sourcepath++basename++".scmirZ"};
 		a = SCMIRZArchive.write(filename);  //analysisfilename
 		  
 		//future proofing, works as long as all have getters  
-		instancevars = SCMIRAudioFile.instVarNames;   
-		  
-		instancevars.do{|iname|  
-			  
+		instancevars = SCMIRAudioFile.instVarNames;
+		instancevars.do{ | iname |
 			a.writeItem(this.perform(iname)); 	  
-		};  
-		  
+		};
+
 		//  
 		//		 a.writeItem(valid);   
 		//		 a.writeItem(sourcepath);   
@@ -680,13 +604,6 @@ SCMIRAudioFile {
 		  
 		a = SCMIRZArchive.read(filename);  
 		  
-		//future proofing, works as long as all have setters; but that is more of an access issue  
-		//	instancevars = SCMIRAudioFile.instVarNames;   
-		//		  
-		//		instancevars.do{|iname|  
-			//			this.perform((iname++$_).asSymbol, a.readItem); 	  
-		//		};  
-		  
 		valid = a.readItem;   
 		sourcepath = a.readItem;   
 		sourcedir = a.readItem; 
@@ -719,40 +636,20 @@ SCMIRAudioFile {
 		  
 		loadstart= a.readItem;
 		loadframes= a.readItem;  
-		  
-		  
 		a.close;  
-		  
 	}  
-	  
-	  
-	  
-	
-		
-	
-	
-	
+
 	exportARFF {|filename|
-	
 		var file; 
 		var last = numfeatures-1;
-		
 		filename = filename ?? {sourcepath++basename++"features.arff"};
-		
 		file = File(filename,"w"); 
-		
 		file.write("@RELATION SCMIR\n");
-		
 		numfeatures.do{|i|
-			
 			file.write("@ATTRIBUTE"+i+"NUMERIC\n");
-		
 		};
-		
 		file.write("@DATA\n");
-		
 		numframes.do{|i|
-			
 			var outputstring; 
 			var pos = i*numfeatures; 
 			var array; 
@@ -772,33 +669,21 @@ SCMIRAudioFile {
 			file.write(outputstring);
 		
 		};
-		
 		file.close; 
-	}  
-	
-	
-	
+	}
 	//feature data exported with instances attached to a given class
 	exportARFFInstances {|file,category|
-	
 		var last = numfeatures-1;
-		
 		if (file.isNil) {
-				
 			"exportARFFInstance: no ARFF file provided".postln; ^nil;       
-		  
 		};
-			
 		numframes.do{|i|
-			
 			var outputstring; 
 			var pos = i*numfeatures; 
 			var array; 
-			
 			array = featuredata[pos..(pos+last)]; 
 			outputstring = ""; 
 			array.do{|val,j| 
-					
 					if (j<last) {
 						outputstring = outputstring++val++",";
 					} {
@@ -806,15 +691,9 @@ SCMIRAudioFile {
 					};
 					
 				}; 
-			
 			file.write(outputstring);
-		
 		};
-		
 	}  
-	
-	  
-	  
 }      
   
   
