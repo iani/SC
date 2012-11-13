@@ -117,14 +117,39 @@ ProxyItem : NamedItem {
 		}
 		^item;
 	}
+	toggle { if (this.isMonitoring) { this.stop } { this.play } }
+	isMonitoring { ^item.isMonitoring }
 	play { item.play }
 	stop { item.stop }
-	isMonitoring { ^item.isMonitoring }
 	delete { | proxySpace |
 		// TODO: Should ProxyItem store its ProxySpace?
 		if (item.notNil) { item.clear; };
 		proxySpace removeProxyItem: this;
 
+	}
+
+	fadeTo { | targetVol = 1 |
+		var curVol;
+		curVol = item.vol;
+		if (targetVol < curVol) {
+			{
+				while { targetVol < curVol }{
+					curVol = curVol - 0.01;
+					item.vol = curVol;
+					0.03.wait;
+				};
+				item.vol = targetVol;
+			}.fork;
+		}{
+			{
+				while { targetVol > curVol }{
+					curVol = curVol + 0.01;
+					item.vol = curVol;
+					0.03.wait;
+				};
+				item.vol = targetVol;
+			}.fork;
+		};
 	}
 
 	makeHistoryString {

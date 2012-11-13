@@ -71,7 +71,7 @@ ScriptLibGui : AppModel {
 					})
 					.view.font_(font).keyDownAction_({ | view, char, mod, ascii |
 						switch (ascii,
-							27, { this.proxySelectWindow },
+							27, { this.proxyListWindow },
 							13, { this.evalSnippet(mod) }, // return key,
 							32, { this.toggleProxy }, // space key
 						);
@@ -170,17 +170,18 @@ ScriptLibGui : AppModel {
 			.proxyWatcher({ | me |
 				me.checkProxy(me.value.adapter.item.checkEvalPlay(this.getValue('Snippet').getString))
 			})
-			.view.font_(font).states_([["proxy>", nil, Color.green], ["proxy||", nil, Color.red]]), //.fixedWidth_(30),
+			.view.font_(font).states_([["proxy>", nil, Color.green], ["proxy||", nil, Color.red]]),
+			//.fixedWidth_(30),
 			this.button('Snippet').action_({ | me |
 				this.getValue(\Proxy).item.evalSnippet(me.getString, start: false, addToSourceHistory: false);
 			}).view.font_(font).states_([["set proxy source"]]),
-			this.popUpMenu('Proxy').proxyList(ProxyCentral.default.proxySpace)
+			this.popUpMenu('Proxy').proxyList(this.proxySpace)
 			.view.fixedWidth_(30).font_(font).background_(Color.yellow),
 			this.button('Snippet').action_({ | me |
 				scriptLib.addSnippetNamed(*(me.value.adapter.path ++ [me.value.item, me.getString]));
 				me.getString.postln;
 				"=============== SNIPPET SAVED ===============".postln;
-				// Following can be removed when SC3.6 stops crashing at recompile with ScriptLibGui open.
+				// NOTE: SC3.6 crashes at recompile with ScriptLibGui open: (? cause ?)
 				scriptLib.save;
 			}).view.font_(font).states_([["save"]]),
 			this.button('Snippet').action_({ | me |
@@ -197,6 +198,8 @@ ScriptLibGui : AppModel {
 			Button().font_(font).states_([["set buffers"]]).action_({ this.updateBuffers }),
 		)
 	}
+
+	proxySpace { ^scriptLib.proxySpace }
 
 		// Experimental: Adding Script class
 	getSnippet { // return the string of the current snippet / script
@@ -291,8 +294,10 @@ ScriptLibGui : AppModel {
 		^listView;
 	}
 
-	proxySelectWindow {
-		var w;
+	proxyListWindow {
+		// TODO: 1. Rewrite this as ProxyList class. 2. Add colors to show state of proxy
+		// TODO: 3. Add space key to toggle proxy on-off, and other keys
+/*		var w;
 		w = Window(bounds: Rect(400, 100, 100, 600)).front;
 		w.layout = VLayout(ListView(w)
 			.items_(Array.new.addAll("12345678qwertyuiasdfghjkzxcvbnm,"))
@@ -301,6 +306,8 @@ ScriptLibGui : AppModel {
 			})
 			.action_({ | me | this.getValue('Proxy').index_(nil, me.value) })
 		)
+*/
+		ProxyList(this).makeWindow;
 	}
 
 	evalSnippet { | mod = 0 |

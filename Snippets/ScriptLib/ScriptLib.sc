@@ -51,7 +51,7 @@ ScriptLib {
 		var recentPaths, path;
 		recentPaths = RecentPaths(this.asSymbol);
 		path = recentPaths.default;
-		if (path.isNil) { this.open; } { this.loadFromArchive(path).gui; }
+		if (path.isNil) { ^this.open; } { ^this.loadFromArchive(path).gui; }
 	}
 
 	*open {
@@ -67,6 +67,8 @@ ScriptLib {
 	}
 
 	path { ^RecentPaths.getPathFor(pathID, this) }
+
+	proxySpace { ^ProxyCentral.default.proxySpace } // may change at some later point
 
 	addDefaults {
 		this.addSnippet("-DefaultFolder", "-Defaults", "//:-defaultsnippet\n{ WhiteNoise.ar(0.1) }");
@@ -144,7 +146,7 @@ ScriptLib {
 		RecentPaths.saveToPath(pathID, { this writeArchive: path.asString }, this, path );
 	}
 
-	gui { ScriptLibGui(this).gui; }
+	gui { ^ScriptLibGui(this).gui; }
 
 	import { | path |
 		PathName(PathName(PathName(path).parentPath).parentPath).folders do: this.importFolder(_);

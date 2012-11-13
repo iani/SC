@@ -292,6 +292,7 @@ Widget {
 
 	// Auto-updated list for choosing proxy from all proxies in proxySpace
 	proxyList { | proxySpace, autoSelect |
+		this.value.adapter = ProxyListAdapter();
 		this.items_((proxySpace ?? { Document.prepareProxySpace }).proxies);
 		if (autoSelect.isNil) {
 			this.updater(proxySpace, \list, {
@@ -306,7 +307,8 @@ Widget {
 			});
 			if (this.items.size > autoSelect) { value.index_(nil, autoSelect); };
 		};
-		value.changed(\initProxyControls);	// Initialize proxyWatchers etc. created before me
+		// Initialize proxyWatchers etc. created before me
+		value.changed(\initProxyControls);
 	}
 
 	/* Make a button act as play/stop switch for any proxy chosen by another widget from
@@ -336,13 +338,17 @@ Widget {
 	}
 
 	// play/stop button for proxies
-	proxyWatcher { | playAction, stopAction | // must connect to proxySpace proxy list
+	// must share value with value that is inited with proxyList method
+	// (or otherwise connect to proxySpace?)
+	proxyWatcher { | playAction, stopAction, startedAction, stoppedAction |
 		// Initialize myself only AFTER my proxyList has been created:
-		if (value.adapter.isKindOf(ListAdapter).not) {
+		if (value.adapter.isKindOf(ProxyListAdapter).not) {
 			this.addNotifierOneShot(value, \initProxyControls, {
-				this.proxyWatcher(playAction, stopAction);
+				this.proxyWatcher(playAction, stopAction, startedAction, stoppedAction);
 			});
 		}{
+			startedAction = startedAction ?? {{ view.value = 1 }};
+			stoppedAction = stoppedAction ?? {{ view.value = 0 }};
 			playAction ?? { playAction = {
 				// lazy initialization:
 				value.adapter.item ?? { value.adapter.index_(this, 0) };
@@ -351,33 +357,45 @@ Widget {
 				// the play message should be sent from checkProxy,
 				// with argument func, and func would act on the proxy
 				// doing play, stop or other stuff.
-				this.checkProxy(value.adapter.item.item.play);
+				this.checkProxy(value.adapter.item.item.play, startedAction, stoppedAction);
 			} };
 			stopAction ?? { stopAction = { value.adapter.item.item.stop } };
 			view.action = { [stopAction, playAction][view.value].(this) };
 			this.addNotifier(CmdPeriod, \cmdPeriod, { view.value = 0 });
-			this.updateAction(\list, { this.startWatchingProxy(value.adapter.item) });
-			this.updateAction(\index, { this.startWatchingProxy(value.adapter.item) });
+			this.updateAction(\list, {
+				this.startWatchingProxy(value.adapter.item, startedAction, stoppedAction)
+			});
+			this.updateAction(\index, {
+				this.startWatchingProxy(value.adapter.item, startedAction, stoppedAction)
+			});
 			this.updateAction(\toggle, { view.valueAction_(view.value + 1 % 2) });
-			this.startWatchingProxy(value.adapter.item);
+			this.startWatchingProxy(value.adapter.item, startedAction, stoppedAction);
 		}
 	}
 
-	startWatchingProxy { | proxy |
+	startWatchingProxy { | proxy, startedAction, stoppedAction |
 		// used internally by proxyWatcher method to connect proxy and disconnect previous one
 		this.changed(\disconnectProxy);	// remove notifiers to self from previous proxy
-		if (proxy.isNil or: { (proxy = proxy.item).isNil } ) { view.value = 0; ^this };
-		this.addNotifier(proxy, \play, { view.value = 1 });
-		this.addNotifier(proxy, \stop, { view.value = 0 });
+		if (proxy.isNil or: { (proxy = proxy.item).isNil } ) {
+			stoppedAction.(this);
+			^this
+		};
+		this.addNotifier(proxy, \play, { startedAction.(this) });
+		this.addNotifier(proxy, \stop, { stoppedAction.(this) });
 		proxy.addNotifierOneShot(this, \disconnectProxy, { // prepare this proxy for removal
 			this.removeNotifier(proxy, \play);
 			this.removeNotifier(proxy, \stop);
 		});
-		this.checkProxy(proxy);
+		this.checkProxy(proxy, startedAction, stoppedAction);
 	}
 
-	checkProxy { | proxy | // check if proxy is monitoring and update button state
-		if (proxy.notNil and: { proxy.isMonitoring }) { view.value = 1 } { view.value = 0 };
+	// check if proxy is monitoring and update button state
+	checkProxy { | proxy, startedAction, stoppedAction |
+		if (proxy.notNil and: { proxy.isMonitoring }) {
+			startedAction.(this)
+		} {
+			stoppedAction.(this)
+		};
 		^proxy; // for further use if in another expression.
 	}
 
