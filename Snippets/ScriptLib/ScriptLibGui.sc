@@ -295,21 +295,7 @@ ScriptLibGui : AppModel {
 		^listView;
 	}
 
-	proxyListWindow {
-		// TODO: 1. Rewrite this as ProxyList class. 2. Add colors to show state of proxy
-		// TODO: 3. Add space key to toggle proxy on-off, and other keys
-/*		var w;
-		w = Window(bounds: Rect(400, 100, 100, 600)).front;
-		w.layout = VLayout(ListView(w)
-			.items_(Array.new.addAll("12345678qwertyuiasdfghjkzxcvbnm,"))
-			.keyDownAction_({ | me, char, mod, ascii |
-				if (ascii == 13) { w.close }
-			})
-			.action_({ | me | this.getValue('Proxy').index_(nil, me.value) })
-		)
-*/
-		ProxyList(this).makeWindow;
-	}
+	proxyListWindow { ProxyList(this).makeWindow; }
 
 	evalSnippet { | mod = 0 |
 		if (mod == 0) {

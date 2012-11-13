@@ -3,7 +3,6 @@ Window with list of proxies from ProxyCentral.
 See ScriptLibGui:proxyListWindow
 */
 
-// !!!!!!!!!!!!!!!! UNDER DEVELOPMENT!
 ProxyList : AppModel {
 	var <owner; // a ScriptLibGui (or other app model?). Make only one window per owner
 
@@ -29,13 +28,15 @@ ProxyList : AppModel {
 						widget.view.keyDownAction_({ | me, char, mod, ascii, key |
 							var proxy;
 							proxy = widget.items[widget.view.value];
+//							[ascii, char].postln;
 							switch (ascii,
 								32, { proxy.toggle }, // space
 								27, { w.close },  // escape
-								60, { proxy.item.vol = proxy.item.vol - 0.02 max: 0 }, // <
-								62, { proxy.item.vol = proxy.item.vol + 0.02 },  // >
-								46, { proxy fadeTo: 1 },  // .
-								47, { proxy fadeTo: 0 }  // /
+								60, { proxy.vol = proxy.vol - 0.02 max: 0 }, // <
+								62, { proxy.vol = proxy.vol + 0.02 },  // >
+								8804, { proxy fadeTo: 0 },  // alt , ("<")
+								8805, { proxy fadeTo: 1 },  // alt . (">")
+								46, { proxy.stopFade }   // .
 							);
 						});
 						this.colorProxyList(widget.view, widget.items);

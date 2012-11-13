@@ -128,29 +128,42 @@ ProxyItem : NamedItem {
 
 	}
 
+	vol { ^item.vol }
+
+	vol_ { | argVol |
+		if (item.isMonitoring) {
+			item.vol = argVol;
+			item.changed(\vol, argVol);
+		}
+	}
+
 	fadeTo { | targetVol = 1 |
-		var curVol;
+		var curVol, fadeRoutine;
 		curVol = item.vol;
+		this.changed(\stopFade); // stop any previous fade routine
+		this.addNotifierOneShot(this, \stopFade, { fadeRoutine.stop });
 		if (targetVol < curVol) {
-			{
-				while { targetVol < curVol }{
+			fadeRoutine = {
+				while { targetVol < curVol and: { item.isMonitoring } }{
 					curVol = curVol - 0.01;
 					item.vol = curVol;
 					0.03.wait;
 				};
-				item.vol = targetVol;
+				if (item.isMonitoring) { item.vol = targetVol; };
 			}.fork;
 		}{
-			{
-				while { targetVol > curVol }{
+			fadeRoutine = {
+				while { targetVol > curVol and: { item.isMonitoring } }{
 					curVol = curVol + 0.01;
 					item.vol = curVol;
 					0.03.wait;
 				};
-				item.vol = targetVol;
+				if (item.isMonitoring) { item.vol = targetVol; };
 			}.fork;
 		};
 	}
+
+	stopFade { this.changed(\stopFade) }
 
 	makeHistoryString {
 		var docString;
