@@ -43,7 +43,22 @@ This ScriptLib contains notes towards documenting the ScriptLib class and how it
 */
 ",  IdentityDictionary.prNew,  Array.prNew(32),  IdentityDictionary.prNew,  
 	Array.prNew(32),  IdentityDictionary.prNew,  Array.prNew(32),  IdentityDictionary.prNew,  
-	Array.prNew(32),  IdentityDictionary.prNew,  Array.prNew(32),  "//:-About This ScriptLib
+	Array.prNew(32),  "//:-01_Routine
+/* 
+Press \"script>\" to run this script, then script|| to stop it
+*/
+
+{ loop { 100.rand.postln; 0.1.wait } }.fork;
+",  IdentityDictionary.prNew,  Array.prNew(32),  
+	"//:01WhiteNoise
+{ WhiteNoise.ar(0.1) }",  "//:01Pbind
+/* 
+Press \"proxy>\" to start this script as proxy, and \"proxy||\" to stop it
+*/
+
+Pbind(\\degree, Pwhite(-10, 10, inf), \\dur, 0.1);",  IdentityDictionary.prNew,  Array.prNew(32),  
+	IdentityDictionary.prNew,  Array.prNew(32),  IdentityDictionary.prNew,  Array.prNew(32),  
+	"//:-About This ScriptLib
 /* 
 This ScriptLib contains notes towards documenting the ScriptLib class and how it works. 
 */
@@ -55,7 +70,7 @@ p = [
 	// MultiLevelIdentityDictionary
 	1, [ dictionary: o[2] ],  
 	// IdentityDictionary
-	2, [ array: o[3],  size: 3,  
+	2, [ array: o[3],  size: 4,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
@@ -64,8 +79,8 @@ p = [
 		'-02Programming Interface',  o[23],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		nil,  nil,  nil,  nil,  
-		nil,  nil,  '-00Intro',  o[25],  
+		'-03Examples',  o[25],  nil,  nil,  
+		nil,  nil,  '-00Intro',  o[34],  
 		nil,  nil,  nil,  nil ],  
 	// IdentityDictionary
 	4, [ array: o[5],  size: 5,  
@@ -164,34 +179,73 @@ p = [
 		know: false ],  
 	// Array
 	26, [ nil,  nil,  nil,  nil,  
-		'-How To Use This ScriptLib',  o[27],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		nil,  nil,  '-About',  o[29],  
 		nil,  nil,  nil,  nil,  
+		nil,  nil,  '02Non-Proxy Scripts',  o[27],  
+		nil,  nil,  '01Proxies',  o[30],  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil ],  
 	// IdentityDictionary
-	27, [ array: o[28],  size: 0,  
+	27, [ array: o[28],  size: 1,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
 	28, [ nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
+		nil,  nil,  '-01_Routine',  o[29],  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// IdentityDictionary
+	30, [ array: o[31],  size: 2,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	31, [ nil,  nil,  '01WhiteNoise',  o[32],  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  '01Pbind',  o[33] ],  
+	// IdentityDictionary
+	34, [ array: o[35],  size: 2,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	35, [ nil,  nil,  nil,  nil,  
+		'-How To Use This ScriptLib',  o[36],  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  '-About',  o[38],  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil ],  
+	// IdentityDictionary
+	36, [ array: o[37],  size: 0,  
+		proto: nil,  parent: nil,  
+		know: false ],  
+	// Array
+	37, [ nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
+		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil ],  
 	// IdentityDictionary
-	29, [ array: o[30],  size: 1,  
+	38, [ array: o[39],  size: 1,  
 		proto: nil,  parent: nil,  
 		know: false ],  
 	// Array
-	30, [ nil,  nil,  nil,  nil,  
+	39, [ nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
-		'-About This ScriptLib',  o[31],  nil,  nil,  
+		'-About This ScriptLib',  o[40],  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  
 		nil,  nil,  nil,  nil,  

@@ -48,14 +48,14 @@ ScriptLib {
 	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
 
 	*openDefault {
-		var recentPaths, path;
-		recentPaths = RecentPaths(this.asSymbol);
-		path = recentPaths.default;
-		if (path.isNil) { ^this.open; } { ^this.loadFromArchive(path).gui; }
+		RecentPaths.openDefault(pathID,
+			{ | path | this.loadFromArchive(path).gui },
+			{ this.new.addDefaults.gui }
+		)
 	}
 
 	*open {
-		RecentPaths.open(this.asSymbol, { | path |
+		RecentPaths.openDialog(pathID, { | path |
 			this.loadFromArchive(path).gui;
 			},{
 			this.new.addDefaults.gui;
@@ -63,7 +63,7 @@ ScriptLib {
 	}
 
 	*loadFromArchive { | path |
-		^RecentPaths(pathID).selectExistingOrOpen(path, { Object readArchive: path.asString });
+		^Object readArchive: path.asString;
 	}
 
 	path { ^RecentPaths.getPathFor(pathID, this) }
@@ -146,7 +146,7 @@ ScriptLib {
 		RecentPaths.saveToPath(pathID, { this writeArchive: path.asString }, this, path );
 	}
 
-	gui { ^ScriptLibGui(this).gui; }
+	gui { ScriptLibGui(this).gui; }
 
 	import { | path |
 		PathName(PathName(PathName(path).parentPath).parentPath).folders do: this.importFolder(_);

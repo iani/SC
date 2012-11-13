@@ -88,6 +88,7 @@ ScriptLibGui : AppModel {
 			});
 			this.windowToFront(window, { ScriptLib.current = scriptLib; });
 			this.addNotifier(scriptLib, \path, { | path | window.name = path });
+			this.addNotifier(scriptLib, \opened, { window.front });
 		});
 		scriptLib.loadConfig;
 	}

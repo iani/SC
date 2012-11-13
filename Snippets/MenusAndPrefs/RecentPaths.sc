@@ -20,7 +20,7 @@ TODO: Add delete button.
 
 RecentPaths {
 	classvar <all; // all RecentPaths instances, by objectID
-	// root path at Library for instances stored by their paths:
+	// root path at Library for objects stored by their paths:
 	classvar <libPath = 'InstancePaths';
 
 	var <objectID, <>numHistoryItems = 20, <paths, <default;
@@ -40,12 +40,75 @@ RecentPaths {
 		^instance;
 	}
 
+	*allObjects { ^Library.at(this.libPath) }
+
 	*saveAll { all.writeArchive(this.archiveFilePath);  /* "Recent paths saved".postln; */ }
 	*archiveFilePath { ^Platform.userAppSupportDir +/+ "RecentPaths.sctxar" }
 
-	//
-	*open { | objectID, openAction, createAction |
-		^this.new(objectID).open(openAction, createAction);
+	*openDefault { | objectID, openAction, createAction |
+		var recentPaths, path, instance;
+		recentPaths = this.new(objectID.asSymbol);
+		path = recentPaths.default;
+		if (path.isNil) {
+			recentPaths.openDialog(openAction, createAction);
+		}{
+			recentPaths.selectExistingOrOpen(path, openAction);
+		}
+	}
+
+	selectExistingOrOpen { | path, openAction |
+		var existing;
+		existing = this.getInstanceAtPath(path);
+		if (existing.notNil) { ^this.opened(existing) };
+		^this.addInstanceAtPath(path, this.opened(openAction.(path)));
+	}
+
+	opened { | instance |
+		instance.changed(\opened, instance);
+		^instance;
+	}
+
+	getInstanceAtPath { | path |
+		^Library.at(libPath, objectID, path.asSymbol);
+	}
+
+	addInstanceAtPath { | path, instance |
+		var previousPath, pathSymbol, pathString;
+		pathSymbol = path.asSymbol;
+		pathString = path.asString;
+		instance.changed(\path, path);
+		// retrospective correction of already saved instances from older version:
+		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); }; // safe!
+		paths.remove(paths detect: { | p | p == pathString });
+		paths add: pathString;
+		if (paths.size > numHistoryItems) { paths.pop };
+		previousPath = this.getPathFor(instance);
+		previousPath !? { this.deleteAtPath(pathSymbol); };
+		this.addAtPath(pathSymbol, instance);
+		this.addNotifier(instance, \objectClosed, {
+			this.deleteAtPath(pathSymbol); postf("% closed\n", instance);
+		});
+		this.class.saveAll;
+		^instance;
+	}
+
+	addAtPath { | path, object |
+		Library.put(libPath, objectID, path.asSymbol, object);
+	}
+	deleteAtPath { | path |
+		Library.put(libPath, objectID, path.asSymbol, nil);
+	}
+
+	*getInstanceAtPath { | objectID, path |
+		^this.new(objectID.asSymbol).getInstanceAtPath(path.asSymbol)
+	}
+
+	*defaultPathFor { | objectID |
+		^this.new(objectID.asSymbol).default;
+	}
+
+	*openDialog { | objectID, openAction, createAction |
+		^this.new(objectID).openDialog(openAction, createAction);
 	}
 
 	*save { | objectID, action, object |
@@ -85,23 +148,6 @@ RecentPaths {
 		this.addInstanceAtPath(path, object);
 	}
 
-	addInstanceAtPath { | path, instance |
-		var previousPath;
-		instance.changed(\path, path);
-		// retrospective correction of already saved instances from older version:
-		if (paths.isKindOf(List).not) { paths = List.newUsing(paths); }; // safe!
-		paths.remove(paths detect: { | p | p == path });
-		paths add: path;
-		if (paths.size > numHistoryItems) { paths.pop };
-		path = path.asSymbol;
-		previousPath = this.getPathFor(instance);
-		previousPath !? { Library.put(libPath, objectID, previousPath, nil); };
-		Library.put(libPath, objectID, path, instance);
-		this.addNotifier(instance, \objectClosed, { Library.put(libPath, path, nil); postf("% closed\n", instance); });
-		this.class.saveAll;
-		^instance;
-	}
-
 	init { paths = List.new; }
 
 	default_ { | argDefault |
@@ -110,7 +156,7 @@ RecentPaths {
 		this.class.saveAll;
 	}
 
-	open { | openAction, createAction |
+	openDialog { | openAction, createAction |
 		var buttons;
 		buttons add: StaticText().string_("... or choose a path from the recent paths below:");
 		AppModel().window({ | window, app |
@@ -120,7 +166,7 @@ RecentPaths {
 			// Button for creating new instance, without selecting any path
 			createAction !? {
 				buttons add: Button().states_([["Create new"]])
-				.action_({ createAction.(this); window.close; });
+				.action_({ this.opened(createAction.(this)); window.close; });
 			};
 			// Button for loading an instance from path selected by user via open panel dialog
 			buttons add: Button().states_([["Open from disc ... "]]).action_({
@@ -141,17 +187,6 @@ RecentPaths {
 				)
 			)
 		})
-	}
-
-	selectExistingOrOpen { | path, openAction |
-		var existing;
-		existing = this.getInstanceAtPath(path);
-		if (existing.notNil) { ^existing };
-		^this.addInstanceAtPath(path, openAction.(path));
-	}
-
-	getInstanceAtPath { | path |
-		^Library.at(libPath, path.asSymbol);
 	}
 
 	openPanel { | action, window |

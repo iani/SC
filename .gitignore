@@ -1,5 +1,8 @@
 ################
 
+# Ignore SCMIR because of incompatibility to SC3.6 ide
+SCMIR0.92
+
 # Ignore MacOS folder listing: 
 .DS_Store
 
