@@ -37,7 +37,10 @@ ScriptLibGui : AppModel {
 	var <scriptLib;
 	var <snippetViews;
 	var <buffers;		// Dictionary of buffers selected by menus, inserted in code as variables
-
+	var <snippetUpdated = false; // auto-save script when edited
+	var <currentSnippetPath;   // cache current snippet path for auto-save
+	var <currentSnippet;       // cache current snippet for auto-save
+	var <snippetUpdateSetupDone = false; // avoid setting up snippet update at every keystroke
 	*initClass {
 		StartUp add: {
 			{	// compatibility with 3.5
@@ -179,11 +182,11 @@ ScriptLibGui : AppModel {
 			this.popUpMenu('Proxy').proxyList(this.proxySpace)
 			.view.fixedWidth_(30).font_(font).background_(Color.yellow),
 			this.button('Snippet').action_({ | me |
-				scriptLib.addSnippetNamed(*(me.value.adapter.path ++ [me.value.item, me.getString]));
+//				scriptLib.addSnippetNamed(*(me.value.adapter.path ++ [me.value.item, me.getString]));
+				this.updateSnippetFromEditor;
 				me.getString.postln;
-				"=============== SNIPPET SAVED ===============".postln;
-				// NOTE: SC3.6 crashes at recompile with ScriptLibGui open: (? cause ?)
 				scriptLib.save;
+				"=============== SNIPPET SAVED ===============".postln;
 			}).view.font_(font).states_([["save"]]),
 			this.button('Snippet').action_({ | me |
 				scriptLib.addSnippet(*(me.value.adapter.path ++ [me.getString, true]));
@@ -203,10 +206,12 @@ ScriptLibGui : AppModel {
 	proxySpace { ^scriptLib.proxySpace }
 
 		// Experimental: Adding Script class
-	getSnippet { // return the string of the current snippet / script
-		var snippetVal;
-		snippetVal = this.getValue('Snippet');
-		^snippetVal.adapter.dict.atPath(snippetVal.adapter.path ++ [snippetVal.item]);
+	getSnippet { // return the most recent version of the current snippet, from the editor (!)
+		^this.getValue('Snippet').getString; // return contents of current snippet editor pane.
+		// this returns the stored, not the currently edited text:
+//		var snippetVal;
+//		snippetVal = this.getValue('Snippet');
+//		^snippetVal.adapter.dict.atPath(snippetVal.adapter.path ++ [snippetVal.item]);
 	}
 
 	getScript {
@@ -267,9 +272,38 @@ ScriptLibGui : AppModel {
 		^snippetViews = StackLayout(
 			this.textView('Snippet').listItem({ | me |
 				me.value.adapter.dict.atPath(me.value.adapter.path ++ [me.item])
-			}).makeStringGetter.view.font_(Font("Monaco", 9)).tabWidth_(25),
+			}).makeStringGetter.view.font_(Font("Monaco", 9)).tabWidth_(25)
+			.keyDownAction_({ | me, char, mod, ascii, key |
+				{ currentSnippet = me.string; }.defer(0.05); // catch last key typed
+				this.setupSnippetUpdate;
+				me.defaultKeyDownAction(me, char, mod, ascii, key)
+			}),
 			this.snippetListView
 		)
+	}
+
+	setupSnippetUpdate {
+		var snippet;
+		if (snippetUpdateSetupDone) { ^this };
+		snippet = this.getValue('Snippet');
+		currentSnippetPath = snippet.adapter.path ++ [snippet.item];
+		this.addNotifierOneShot(snippet, \list, { snippet.changed(\updateNow) });
+		this.addNotifierOneShot(snippet, \index, { snippet.changed(\updateNow) });
+		this.addNotifierOneShot(snippet, \updateNow, { this.updateSnippetFromEditor });
+		snippetUpdateSetupDone = true;
+	}
+
+	// Save a snippet edited by the user.
+	// Called before saving lib, to save the last changes edited by the user
+	// Also call automatically when:
+	// - the current snippet has been edited and a different snippet has been chosen
+
+	updateSnippetFromEditor {
+		postf("saving user's edits for snippet: % : % : % \n", *currentSnippetPath);
+		{   // skip process to let notifier be removed
+			scriptLib.addSnippetNamed(*(currentSnippetPath ++ [currentSnippet]));
+		}.defer(0.1);
+		snippetUpdateSetupDone = false;
 	}
 
 	snippetListView {
