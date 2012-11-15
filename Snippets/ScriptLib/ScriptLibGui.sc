@@ -303,6 +303,10 @@ ScriptLibGui : AppModel {
 	// - the current snippet has been edited and a different snippet has been chosen
 
 	updateSnippetFromEditor {
+		currentSnippetPath ?? {
+			snippetUpdateSetupNeeded = true;
+			^this;
+		};
 		postf("saving user's edits for snippet: % : % : % \n", *currentSnippetPath);
 		{   // skip to let notifier be removed
 			scriptLib.addSnippetNamed(*(currentSnippetPath ++ [currentSnippet]));

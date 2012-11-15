@@ -98,14 +98,22 @@ BufferItem : NamedItem {
 	}
 
 	prLoad { | extraAction | // called from loadingBuffers when previous buffer is loaded
-		Buffer.read(Server.default, name, action: { | buffer |
+		var action;
+		action = { | buffer |
 			item = buffer;
+			buffer.sampleRate = buffer.sampleRate ? 44100;
 			this.postInfo;
 			this.storeInLibrary;
 			extraAction.(buffer);
 			loadingBuffers[this] = nil;
 			loadingBuffers.detect(true).value;
-		})
+		};
+		if (File.exists(name)) {
+			Buffer.read(Server.default, name, action: action)
+		}{
+			postf("File not found: %\nAllocating empty buffer\n", name);
+			Buffer.alloc(Server.default, 4096, 1, action)
+		}
 	}
 
 /*
