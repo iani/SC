@@ -23,6 +23,8 @@ Blobs {
 		StartUp add: { all = IdentityDictionary(); };
 	}
 
+	*default { ^this.new(NetAddr.localAddr.port) }
+
 	*new { | port |
 		var instance;
 		port ?? { port = NetAddr.localAddr.port; };
@@ -34,17 +36,26 @@ Blobs {
 	}
 
 	init { | port = 57120 |
-		oscFunc = OSCFunc({ | msg | this.performList(msg[1], msg[2..]); }, '/tuio/2Dcur', recvPort: port).disable;
+		oscFunc = OSCFunc({ | msg | this.performList(msg[1], msg[2..]); }, '/tuio/2Dcur',
+			recvPort: port).disable;
 		blobs = IdentityDictionary();
 	}
 
-	*enable { | port | this.new(port).enable }
+	*free { | port | this.new(port).free }
+	free {
+		this.disable;
+		this.freeWatchers;
+	}
+
 	*disable { | port | this.new(port).disable }
-
-	*default { ^this.new(NetAddr.localAddr.port) }
-
-	enable { oscFunc.enable; }
 	disable { oscFunc.disable; }
+
+	*enable { | port | this.new(port).enable }
+	enable { oscFunc.enable; }
+
+	enableWatchers { this.changed(\enableWatchers) }
+	disableWatchers { this.changed(\disableWatchers) }
+	freeWatchers { this.changed(\freeWatchers) }
 
 	set { | id ... args |
 		var blob;
@@ -102,7 +113,6 @@ Blob {
 
 BlobWatcher {
 	var <blobs, <>startFunc, <>moveFunc, <>endFunc, <>mapper;
-//	var <myBlobs;
 
 	*new { | startFunc, moveFunc, endFunc, mapper, port = 3001 |
 		^this.newCopyArgs(
@@ -116,21 +126,32 @@ BlobWatcher {
 
 	init {
 		this.addNotifier(blobs, \blobStarted, { | blob | this.addBlob(blob); });
+		this.addNotifier(blobs, \enableWatchers, { this.enable });
+		this.addNotifier(blobs, \disableWatchers, { this.disable });
+		this.addNotifier(blobs, \freeWatchers, { this.free });
+	}
+
+	enable {
+		blobs.enable;
+		this.init;
+	}
+
+	disable {
+		this.removeNotifier(blobs, \blobStarted);
+		this.changed(\watcherEnded);
 	}
 
 	free {
-		this.changed(\watcherEnded);
+		this.disable;
 		this.objectClosed;
 	}
 
 	addBlob { | blob |
 		var blobLife;
-//		myBlobs = myBlobs add: blob;
 		blobLife = BlobLife(blob, this, startFunc, moveFunc, endFunc);
 		this.addNotifier(blob, \blobMoved, { blobLife.move });
 		this.addNotifier(blob, \blobEnded, { blobLife.end });
 		blobLife.addNotifier(this, \watcherEnded, {
-//			myBlobs remove: blob;
 			blobLife.end;
 		});
 	}
@@ -151,12 +172,14 @@ BlobLife {
 		^this.newCopyArgs(blob, watcher, startFunc, moveFunc, endFunc).init;
 	}
 
-	init { state = startFunc.(blob, this) }
+	init { state = startFunc.(this) }
 	move {  moveFunc.(this) }
 	end {
 		endFunc.(this);
 		this.objectClosed;
 	}
+
+	blobs { ^watcher.blobs.blobs }
 
 	// access to blob data and to state (synth or other process or data):
 	set { | ... args | state.set(*args); }
@@ -171,7 +194,11 @@ BlobLife {
 }
 
 BlobMapper {
-	var <>x_pos_map, <y_pos_map, <x_vel_map, <y_vel_map, <m_accel_map, <height_map, <width_map;
+	var <>x_pos_map, <>y_pos_map, <>x_vel_map, <>y_vel_map, <>m_accel_map, <>height_map, <>width_map;
+
+	*new { | x_pos_map, y_pos_map, x_vel_map, y_vel_map, m_accel_map, height_map, width_map |
+		^this.newCopyArgs(x_pos_map, y_pos_map, x_vel_map, y_vel_map, m_accel_map, height_map, width_map)
+	}
 
 	x_pos { | blob | ^x_pos_map.map(blob.x_pos) }
 	y_pos { | blob | ^y_pos_map.map(blob.y_pos) }

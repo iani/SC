@@ -40,7 +40,7 @@ ScriptLibGui : AppModel {
 	var <snippetUpdated = false; // auto-save script when edited
 	var <currentSnippetPath;   // cache current snippet path for auto-save
 	var <currentSnippet;       // cache current snippet for auto-save
-	var <snippetUpdateSetupDone = false; // avoid setting up snippet update at every keystroke
+	var <snippetUpdateSetupNeeded = true; // avoid setting up snippet update at every keystroke
 	*initClass {
 		StartUp add: {
 			{	// compatibility with 3.5
@@ -85,9 +85,13 @@ ScriptLibGui : AppModel {
 				[this.snippetCodeList, s: 3]
 			);
 			this.windowClosed(window, {
-				scriptLib.save;
-				this.objectClosed;
-				scriptLib.objectClosed; // removes from RecentPaths Library entry
+				{
+					this.updateSnippetFromEditor;
+					0.5.wait;
+					scriptLib.save;
+					this.objectClosed;
+					scriptLib.objectClosed; // removes from RecentPaths Library entry
+				}.fork(AppClock)
 			});
 			this.windowToFront(window, { ScriptLib.current = scriptLib; });
 			this.addNotifier(scriptLib, \path, { | path | window.name = path });
@@ -272,10 +276,11 @@ ScriptLibGui : AppModel {
 		^snippetViews = StackLayout(
 			this.textView('Snippet').listItem({ | me |
 				me.value.adapter.dict.atPath(me.value.adapter.path ++ [me.item])
-			}).makeStringGetter.view.font_(Font("Monaco", 9)).tabWidth_(25)
+			})
+			.makeStringGetter.view.font_(Font("Monaco", 9)).tabWidth_(25)
 			.keyDownAction_({ | me, char, mod, ascii, key |
 				{ currentSnippet = me.string; }.defer(0.05); // catch last key typed
-				this.setupSnippetUpdate;
+				if (this.snippetUpdateSetupNeeded) { this.setupSnippetUpdate };
 				me.defaultKeyDownAction(me, char, mod, ascii, key)
 			}),
 			this.snippetListView
@@ -284,13 +289,12 @@ ScriptLibGui : AppModel {
 
 	setupSnippetUpdate {
 		var snippet;
-		if (snippetUpdateSetupDone) { ^this };
 		snippet = this.getValue('Snippet');
 		currentSnippetPath = snippet.adapter.path ++ [snippet.item];
 		this.addNotifierOneShot(snippet, \list, { snippet.changed(\updateNow) });
 		this.addNotifierOneShot(snippet, \index, { snippet.changed(\updateNow) });
-		this.addNotifierOneShot(snippet, \updateNow, { this.updateSnippetFromEditor });
-		snippetUpdateSetupDone = true;
+		this.addNotifierOneShot(snippet, \updateNow, { this.updateSnippetFromEditor; });
+		snippetUpdateSetupNeeded = false;
 	}
 
 	// Save a snippet edited by the user.
@@ -300,10 +304,10 @@ ScriptLibGui : AppModel {
 
 	updateSnippetFromEditor {
 		postf("saving user's edits for snippet: % : % : % \n", *currentSnippetPath);
-		{   // skip process to let notifier be removed
+		{   // skip to let notifier be removed
 			scriptLib.addSnippetNamed(*(currentSnippetPath ++ [currentSnippet]));
 		}.defer(0.1);
-		snippetUpdateSetupDone = false;
+		snippetUpdateSetupNeeded = true;
 	}
 
 	snippetListView {
