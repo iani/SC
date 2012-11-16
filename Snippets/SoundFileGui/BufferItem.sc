@@ -73,13 +73,13 @@ BufferItem : NamedItem {
 		}
 	}
 
-	loadIfNeeded {
+	loadIfNeeded { | fileNotFoundAction |
 		if (item.isNil) {
-			this.load;
+			this.load(nil, fileNotFoundAction);
 		}{
 			item.updateInfo({ | buffer |
 				if (buffer.numChannels == 0) {
-					this.load;
+					this.load(nil, fileNotFoundAction);
 				}{
 					postf("Buffer '%' already loaded. Skipping.\n", nameSymbol);
 				}
@@ -87,17 +87,18 @@ BufferItem : NamedItem {
 		}
 	}
 
-	load { | extraAction | // mechanism for loading next buffer after this one is loaded
+	load { | extraAction, fileNotFoundAction | // mechanism for loading next buffer after this one is loaded
 		if (Server.default.serverRunning) {
-			loadingBuffers[this] = { this.prLoad(extraAction); };
-			if (loadingBuffers.size == 1) { this.prLoad(extraAction); }
+			loadingBuffers[this] = { this.prLoad(extraAction, fileNotFoundAction); };
+			if (loadingBuffers.size == 1) { this.prLoad(extraAction, fileNotFoundAction); }
 		}{
 			this.storeInLibrary;
 			if (Server.default.serverBooting.not) { Server.default.boot };
 		};
 	}
 
-	prLoad { | extraAction | // called from loadingBuffers when previous buffer is loaded
+	prLoad { | extraAction, fileNotFoundAction |
+		// called from loadingBuffers when previous buffer is loaded
 		var action;
 		action = { | buffer |
 			item = buffer;
@@ -112,7 +113,8 @@ BufferItem : NamedItem {
 			Buffer.read(Server.default, name, action: action)
 		}{
 			postf("File not found: %\nAllocating empty buffer\n", name);
-			Buffer.alloc(Server.default, 4096, 1, action)
+			Buffer.alloc(Server.default, 4096, 1, action);
+			fileNotFoundAction.(this);
 		}
 	}
 

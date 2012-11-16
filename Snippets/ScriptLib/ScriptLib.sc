@@ -77,14 +77,34 @@ ScriptLib {
 	loadConfig {
 		var autoLoadBuffers;
 		// load all scripts in Folder "---Config---"
+			// TODO: use this.interpretScriptSavingErrors instead:
 		lib.leafDoFrom(configPath, { | path, script | script.interpret });
 		// Load buffers in auto-load file:
 		(autoLoadBuffers = lib.at('---Config---', 'Buffers-Autoload')) !? {
-			autoLoadBuffers.values do: { | script | script.interpret.loadIfNeeded; };
+			// TODO: use this.interpretScriptSavingErrors instead
+			// TODO: use fileNotFoundAction to move or copy buffers whose files are not found
+			// to a different path.
+			autoLoadBuffers.values do: { | script |
+				script.interpret.loadIfNeeded({ | bufferItem |
+					// this.addBufferNotFoundScript(bufferItem);
+				});
+			};
 		};
 		// Currently not used:
 		// scripts that access other scripts must wait for load to finish:
 //		this.changed(\loadedConfig);
+	}
+
+
+	interpretScriptSavingErrors { | path | // TODO
+		var script, result;
+		script = this.getScript(path);
+		result = script.compile;
+		if (result.isNil) {
+			this.saveScriptInDebugPath(path, script);
+		}{
+			result.value; // interpret script
+		}
 	}
 
 	// Currently not used:
@@ -242,17 +262,23 @@ ScriptLib {
 		}.fork(AppClock);
 	}
 
-	// ============ UNDER DEVELOPMENT: ============
-
 	 // evaluate a snippet and return the result
 	getSnippetValue { | path | ^this.getSnippet(path).interpret; }
 
 	getSnippet { | path | ^lib.atPath(path) }
 
+	// ============ UNDER DEVELOPMENT / TODO ============
+
+	importLib { | lib ... paths |
+		// merge scripts from lib at paths to this lib
+		// e
+	}
+
 	// evaluate all snippets under path and collect the results in dictionary
 	collectValues { | path |
 
 	}
+
 	folders { // TODO?
 
 	}
