@@ -117,6 +117,11 @@ ScriptLibGui : AppModel {
 				me.value = 0
 			}),
 			this.itemEditMenu('Folder')
+			/* // key down action must be addressed to widget to include it in function.
+			.keyDownAction_({ | me, char, mod, ascii, key |
+			     switch (ascii,
+			        return, {
+			*/
 			.view.font_(font),
 			this.itemEditMenu('File')
 			.view.font_(font),

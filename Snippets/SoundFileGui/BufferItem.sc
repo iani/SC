@@ -112,8 +112,9 @@ BufferItem : NamedItem {
 		if (File.exists(name)) {
 			Buffer.read(Server.default, name, action: action)
 		}{
-			postf("File not found: %\nAllocating empty buffer\n", name);
+			postf("BufferItem: File not found!\n%\nAllocating empty buffer\n", name);
 			Buffer.alloc(Server.default, 4096, 1, action);
+			[this, thisMethod.name, "fileNotFoundAction is:", fileNotFoundAction].postln;
 			fileNotFoundAction.(this);
 		}
 	}

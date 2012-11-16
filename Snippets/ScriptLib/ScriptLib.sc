@@ -75,36 +75,57 @@ ScriptLib {
 	}
 
 	loadConfig {
-		var autoLoadBuffers;
+		var autoLoadBuffers, autoLoadPath, bufferDebugPath;
 		// load all scripts in Folder "---Config---"
-			// TODO: use this.interpretScriptSavingErrors instead:
-		lib.leafDoFrom(configPath, { | path, script | script.interpret });
-		// Load buffers in auto-load file:
-		(autoLoadBuffers = lib.at('---Config---', 'Buffers-Autoload')) !? {
-			// TODO: use this.interpretScriptSavingErrors instead
-			// TODO: use fileNotFoundAction to move or copy buffers whose files are not found
-			// to a different path.
-			autoLoadBuffers.values do: { | script |
-				script.interpret.loadIfNeeded({ | bufferItem |
+		lib.leafDoFrom(configPath, { | path, script | this.interpretScriptSavingErrors(path, script) });
+			// Load buffers in auto-load file:
+		autoLoadPath = [configPath, 'Buffers-Autoload'];
+		bufferDebugPath = [configPath ++ "-DEBUG", 'Buffers-Files-Not-Found', nil];
+		(autoLoadBuffers = lib.at(*autoLoadPath)) !? {
+			autoLoadPath = autoLoadPath add: nil;
+			autoLoadBuffers.keysValuesDo({ | key, script |
+				this.interpretScriptSavingErrors(autoLoadPath.put(2, key), script).loadIfNeeded({ | bufferItem |
+					{
+						"Moving buffer to debug folder".postln;
+						autoLoadPath.postln;
+						bufferDebugPath.put(2, key).postln;
+						this.deleteSnippet(*autoLoadPath);
+						this.addSnippetAtPath(bufferDebugPath.put(2, key), script);
+					}.defer
 					// this.addBufferNotFoundScript(bufferItem);
 				});
-			};
+			});
 		};
 		// Currently not used:
 		// scripts that access other scripts must wait for load to finish:
 //		this.changed(\loadedConfig);
 	}
 
-
-	interpretScriptSavingErrors { | path | // TODO
-		var script, result;
-		script = this.getScript(path);
+	interpretScriptSavingErrors { | path, script | // TODO
+		var result;
 		result = script.compile;
 		if (result.isNil) {
 			this.saveScriptInDebugPath(path, script);
+			^nil;
 		}{
-			result.value; // interpret script
+			^result.value; // interpret script
 		}
+	}
+
+	saveScriptInDebugPath { | path, script |
+		("Saving script in debug path:").postln;
+		postf("\n%\n\n", path);
+		this.addSnippetAtPath(path.copy.put(2, path[2] ++ "_debug"), "/*\n\n" ++ script ++ "\n\n*/");
+	}
+
+	addSnippetAtPath { | path, snippet |
+		this.addSnippetNamed(path[0], path[1], path[2], snippet);
+	}
+
+	addSnippetNamed { | folderName, fileName, snippetName, snippet |
+		lib.put(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol, snippet);
+		lib.changed(\dict);
+		Library.changed(\selectedLib); // update SoundFileGui if open
 	}
 
 	// Currently not used:
@@ -220,12 +241,6 @@ ScriptLib {
 
 	replaceSnippetName { | snippet, newName |
 		^"//:" ++ newName ++ snippet[(snippet.findRegexp(this.snippetNameRegexp) ?? { [[0, ""]] })[0][1].size..];
-	}
-
-	addSnippetNamed { | folderName, fileName, snippetName, snippet |
-		lib.put(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol, snippet);
-		lib.changed(\dict);
-		Library.changed(\selectedLib); // update SoundFileGui if open
 	}
 
 	deleteSnippet { | folderName, fileName, snippetName |
