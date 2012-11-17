@@ -88,6 +88,10 @@ BufferItem : NamedItem {
 	}
 
 	load { | extraAction, fileNotFoundAction | // mechanism for loading next buffer after this one is loaded
+		if (File.exists(name.asString).not) {
+			postf("Cannot load BufferItem. File not found!\n%\n", name);
+			^this
+		};
 		if (Server.default.serverRunning) {
 			loadingBuffers[this] = { this.prLoad(extraAction, fileNotFoundAction); };
 			if (loadingBuffers.size == 1) { this.prLoad(extraAction, fileNotFoundAction); }
