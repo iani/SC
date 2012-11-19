@@ -67,18 +67,31 @@ ScriptLibGui : AppModel {
 					this.listView('Folder')
 					.dict(scriptLib.lib)
 					.updater(scriptLib, \dict, { | me | me.value.dict(scriptLib.lib) })
-					.view.font = font,
+/*					.keyDownAction_({ | me, char, mod, ascii, key |
+						[char, mod, ascii, key].postln;
+						key.postln;
+						switch (ascii,
+							32, {  }, // space
+							27, {  },  // escape
+							60, {  }, // <
+							62, {  },  // >
+							8804, {  },  // alt , ("<")
+							8805, {  },  // alt . (">")
+							46, {  }   // .
+						);
+					})
+*/					.view.font = font,
 					this.listView('File').branchOf('Folder').view.font = font,
 					this.listView('Snippet').branchOf('File', { | adapter, name |
 						format("//:%\n{ WhiteNoise.ar(0.1) }", name)
-					})
-					.view.font_(font).keyDownAction_({ | view, char, mod, ascii |
+					}).keyDownAction_({ | view, char, mod, ascii |
 						switch (ascii,
 							27, { this.proxyListWindow },
 							13, { this.evalSnippet(mod) }, // return key,
 							32, { this.toggleProxy }, // space key
 						);
-					}),
+					})
+					.view.font_(font),
 				),
 				this.snippetButtonRow,
 				this.bufferRow,
@@ -117,11 +130,6 @@ ScriptLibGui : AppModel {
 				me.value = 0
 			}),
 			this.itemEditMenu('Folder')
-			/* // key down action must be addressed to widget to include it in function.
-			.keyDownAction_({ | me, char, mod, ascii, key |
-			     switch (ascii,
-			        return, {
-			*/
 			.view.font_(font),
 			this.itemEditMenu('File')
 			.view.font_(font),

@@ -43,6 +43,12 @@ Widget {
 		view.action = { action.(this) };
 	}
 
+	keyDownAction_ { | func |
+		view.keyDownAction_({ | view, char, modifiers, unicode, keycode |
+			func.(this, char, modifiers, unicode, keycode)
+		});
+	}
+
 	// add action to existing action function
 	// Example: A button prepared with toggleShow adds additional functions to perform when clicked.
 	addAction { | action | view.addAction({ action.(this) }); }

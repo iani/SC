@@ -69,6 +69,9 @@ Blobs {
 
 	alive { | ... blobIdArray |
 		// Iterate over array. Do not iterate over dict while modifying it: It would skip entries
+		var blobArray;
+		blobArray = blobs.values.asArray;
+		this.changed(\alive, blobArray);   // BlobRects check who is within their rect
 		blobs.values.asArray do: _.checkIfAlive(blobIdArray);
 //		[blobs.values.collect(_.id).sort, blobIdArray.sort].postln;
 	}
@@ -79,6 +82,7 @@ Blobs {
 Blob {
 	var <blobs, <id, <data;
 	var <x_pos, <y_pos, <x_vel, <y_vel, <m_accel, <height, <width;
+	var <pos;
 
 
 	*new { | blobs, id, data |
@@ -92,7 +96,9 @@ Blob {
 	}
 
 	setData {
-		#x_pos, y_pos, x_vel, y_vel, m_accel, height, width = data;
+		// changing order of vars to reflect how CommunityCoreVision tansmits x and y pos
+		#y_pos, x_pos, y_vel, x_vel, m_accel, width, height = data;
+		pos = x_pos@y_pos;
 	}
 
 	moved { | argData |
@@ -127,8 +133,8 @@ BlobWatcher {
 	init {
 		this.addNotifier(blobs, \blobStarted, { | blob | this.addBlob(blob); });
 		this.addNotifier(blobs, \enableWatchers, { this.enable });
-		this.addNotifier(blobs, \disableWatchers, { this.disable });
-		this.addNotifier(blobs, \freeWatchers, { this.free });
+		this.addNotifier(blobs, \disableWatchers, { "disableWatchers received".postln; this.disable });
+		this.addNotifier(blobs, \freeWatchers, {  "freeWatchers received".postln; this.free });
 	}
 
 	enable {

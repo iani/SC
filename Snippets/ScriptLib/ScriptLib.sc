@@ -14,12 +14,6 @@ Read/Display/Edit/Interact/Store code organized in files holding snippets of cod
 
 - Both import from folder and export into folder of the whole tree or part of the tree is possible.
 
-
-Real paths must be stored by the ScriptLibApp (subclass of AppModel) - not the ScriptLib, because they should not be stored when archiving / exporting, because they do not make sense when importing to different systems:
-
-	var <archive_path;	// path of the top folder or the file from which the library
-	var <folder_path;	// NOT! Multiple data can be imported to same instance from many paths
-
 a = ScriptLib().gui;
 a.gui;
 */
@@ -28,6 +22,7 @@ ScriptLib {
 	classvar <configPath = '---Config---'; // scripts in this folder are loaded when this lib opens
 	classvar <pathID = 'ScriptLib';   // for saving and retrieving paths with RecentPaths
 	var <lib;		// MultiLevelIdentityDictionary of folders, files and scripts by name
+	var <soundFilePath;
 	// lib has 4 levels: [folder name, file name, snippet name, snippet]
 
 	*current {
@@ -45,7 +40,11 @@ ScriptLib {
 		Library.changed('selectedLib', argLib);
 	}
 
-	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()); }
+	isCurrent { ^this.class.current === this }
+
+	*new { ^this.newCopyArgs(MultiLevelIdentityDictionary()).init; }
+
+	init { soundFilePath = ['SoundFiles', this] }
 
 	*openDefault {
 		RecentPaths.openDefault(pathID,
@@ -101,6 +100,12 @@ ScriptLib {
 //		this.changed(\loadedConfig);
 	}
 
+	// Currently not used:
+	// scripts that access other scripts must wait for load to finish:
+//	doWhenLoaded { | action |
+//		this.addNotifierAction(this, \loadedConfig, action.(this));
+//	}
+
 	interpretScriptSavingErrors { | path, script | // TODO
 		var result;
 		result = script.compile;
@@ -126,44 +131,6 @@ ScriptLib {
 		lib.put(folderName.asSymbol, fileName.asSymbol, snippetName.asSymbol, snippet);
 		lib.changed(\dict);
 		Library.changed(\selectedLib); // update SoundFileGui if open
-	}
-
-	// Currently not used:
-	// scripts that access other scripts must wait for load to finish:
-//	doWhenLoaded { | action |
-//		this.addNotifierAction(this, \loadedConfig, action.(this));
-//	}
-
-	// Sound files and buffers
-	buffers { ^lib.atPath(this.bufferConfigPath) ?? { IdentityDictionary() } }
-	bufferConfigPath { ^[configPath, 'Buffers-Autoload'] }
-	soundFileConfigPath { ^[configPath, 'SoundFiles'] }
-
-	addLoadedBuffersToConfig { Library.at('Buffers') do: this.addBuffer(_); }
-
-	addSoundFile { | bufferItem |
-		if (bufferItem.isNil) { ^"Cannot add nil Buffer item".postln };
-		this.addSnippetNamed(*(this.soundFileConfigPath ++ [bufferItem.nameSymbol,
-				format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
-			])
-		);
-//		if (this.isCurrent) { bufferItem.loadIfNeeded };
-	}
-
-	addBuffer { | bufferItem |
-		if (bufferItem.isNil) { ^"Cannot add nil Buffer item".postln };
-		this.addSnippetNamed(*(this.bufferConfigPath ++ [bufferItem.nameSymbol,
-				format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
-			])
-		);
-		if (this.isCurrent) { bufferItem.loadIfNeeded };
-	}
-
-	isCurrent { ^this.class.current === this }
-	removeSoundFile { | scriptName |
-		if (scriptName.isNil) { ^"Cannot remove nil Buffer item".postln };
-		this.deleteSnippet(*(this.bufferConfigPath ++ [scriptName.asSymbol]));
-		if (this.isCurrent) { BufferItem.free(scriptName) };
 	}
 
 	revert {
@@ -284,6 +251,60 @@ ScriptLib {
 
 	// ============ UNDER DEVELOPMENT / TODO ============
 
+	// Sound files and buffers
+
+	// new version of addSoundFile - to replace the old one below
+	addSoundFile2 { | category, path |
+		var bufferItem;
+		bufferItem = BufferItem(path); // TODO: must change the way buffer item creates instances!!!
+		Library.put(this.soundFilePath ++ [category, path, bufferItem]);
+		this.addSnippetNamed('SoundFiles', category, bufferItem.nameSymbol, this.makeBufferItemScript(bufferItem));
+		this.changed(\soundFile, category, path);
+		^bufferItem;
+	}
+
+	makeBufferItemScript { | bufferItem |
+		format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
+	}
+
+	removeSoundFile2 { | category, bufferItem |
+		Library.put(this.soundFilePath ++ [category, bufferItem.name, nil]);
+		this.deleteSnippet('SoundFiles', category, bufferItem.nameSymbol);
+		this.changed(\soundFile, category, bufferItem.name);
+	}
+
+	// older version - still working, but under review
+	buffers { ^lib.atPath(this.bufferConfigPath) ?? { IdentityDictionary() } }
+	bufferConfigPath { ^[configPath, 'Buffers-Autoload'] }
+	soundFileConfigPath { ^[configPath, 'SoundFiles'] }
+
+	addLoadedBuffersToConfig { Library.at('Buffers') do: this.addBuffer(_); }
+
+	addSoundFile { | bufferItem |
+		if (bufferItem.isNil) { ^"Cannot add nil Buffer item".postln };
+		this.addSnippetNamed(*(this.soundFileConfigPath ++ [bufferItem.nameSymbol,
+				format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
+			])
+		);
+//		if (this.isCurrent) { bufferItem.loadIfNeeded };
+	}
+
+	addBuffer { | bufferItem |
+		if (bufferItem.isNil) { ^"Cannot add nil Buffer item".postln };
+		this.addSnippetNamed(*(this.bufferConfigPath ++ [bufferItem.nameSymbol,
+				format("//:%\nBufferItem(\n%\n).loadIfNeeded", bufferItem.nameSymbol, bufferItem.name.asCompileString)
+			])
+		);
+		if (this.isCurrent) { bufferItem.loadIfNeeded };
+	}
+
+	removeSoundFile { | scriptName |
+		if (scriptName.isNil) { ^"Cannot remove nil Buffer item".postln };
+		this.deleteSnippet(*(this.bufferConfigPath ++ [scriptName.asSymbol]));
+		if (this.isCurrent) { BufferItem.free(scriptName) };
+	}
+
+	// copying, deleting, importing, exporting branches
 	importLib { | lib ... paths |
 		// merge scripts from lib at paths to this lib
 		// e
