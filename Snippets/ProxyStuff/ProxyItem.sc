@@ -94,14 +94,25 @@ ProxyItem : NamedItem {
 	}
 
 	parseSnippetArguments { | argSnippet |
-		var snippetHeader, snippetKeys, snippetVals;
-		snippetHeader = argSnippet.findRegexp("^//[^[]*([^\n]*)");
+		var snippetHeader, snippetKeys, snippetVals, specs, specKeys, specIndex;
+		snippetHeader = argSnippet.findRegexp("\\A//:[^[\n]*(\\[[^\n]*)");
 		if (snippetHeader.size > 0) {
 			#snippetKeys, snippetVals = (snippetHeader[1][1].interpret ?? { [] }).clump(2).flop;
 		};
-//		this.inspect;
-//		snippetVals =
-		// NOT CoMPLETED!!!!
+		specs = (if (item.rate === \audio) { extraSpecs } { [['-', nil]] }) ++
+		(item.getKeysValues collect: { | keyVal |
+			[keyVal[0], (keyVal[0].asSpec ?? { \bipolar.asSpec }).default_(keyVal[1])]
+		});
+		specKeys = specs.flop[0];
+		snippetKeys do: { | key, index |
+			specIndex = specKeys indexOf: key;
+			if (specIndex.notNil) {
+				specs[specIndex][1] = snippetVals[index].asSpec;
+			}{
+				specs = specs add: [key, snippetVals[index].asSpec];
+			};
+		};
+		this.specs = specs;
 	}
 
 	nilSpecs { ^['-', nil] }

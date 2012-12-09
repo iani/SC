@@ -52,9 +52,9 @@ BlobRect {
 		if (blobsInRect.size > 0) {
 			blobCenter = blobArray.collect(_.pos).sum / blobArray.size;
 			if (state.isNil) {
-				state = startAction.(blobCenter, blobArray, this);
+				state = startAction.(blobCenter, this, blobArray);
 			}{
-				moveAction.(blobCenter, blobArray, this);
+				moveAction.(blobCenter, this, blobArray);
 			}
 		}{
 			this.stopIfActive;
@@ -77,3 +77,28 @@ BlobRect {
 
 	free { this.disable; }
 }
+
+BlobRectArray {
+	var <port, <blobRects;
+	*new { | port = 57120 ... rectSpecs |
+		^this.newCopyArgs(port).init(rectSpecs);
+	}
+
+	init { | rectSpecs |
+		blobRects = rectSpecs collect: this.makeRect(_);
+	}
+
+	makeRect { | spec |
+		^BlobRect(port, *spec);
+	}
+
+	enable { blobRects do: _.enable }
+
+	disable { blobRects do: _.disable }
+	free { this.disable; }
+
+	fork { | func |
+		{ func.(this) }.fork;
+	}
+}
+
