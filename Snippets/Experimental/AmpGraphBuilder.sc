@@ -14,8 +14,5 @@ AmpGraphBuilder : GraphBuilder {
 		var startVal = (dt <= 0);
 		^EnvGen.kr(Env.new([startVal, 1, 0], #[1, 1], \lin, 1), gate, 1, 0.0, dt, 2) * vol;
 	}
-
-
-
 }
 

@@ -59,6 +59,8 @@ Blobs {
 
 	set { | id ... args |
 		var blob;
+		// Ignore data if x == 0 and y == 0, because this is a ccv glitch:
+		if (args[0] == 0 and: { args[1] == 0 }) { ^this };
 		blob = blobs[id];
 		if (blob.isNil) {
 			Blob(this, id, args)
@@ -71,8 +73,8 @@ Blobs {
 		// Iterate over array. Do not iterate over dict while modifying it: It would skip entries
 		var blobArray;
 		blobArray = blobs.values.asArray;
-		this.changed(\alive, blobArray);   // BlobRects check who is within their rect
 		blobs.values.asArray do: _.checkIfAlive(blobIdArray);
+		this.changed(\alive, blobArray);   // BlobRects check who is within their rect
 //		[blobs.values.collect(_.id).sort, blobIdArray.sort].postln;
 	}
 
@@ -83,6 +85,7 @@ Blob {
 	var <blobs, <id, <data;
 	var <x_pos, <y_pos, <x_vel, <y_vel, <m_accel, <height, <width;
 	var <pos;
+	var <posTrail, <dataTrail;
 
 
 	*new { | blobs, id, data |
@@ -99,6 +102,8 @@ Blob {
 		// changing order of vars to reflect how CommunityCoreVision tansmits x and y pos
 		#y_pos, x_pos, y_vel, x_vel, m_accel, width, height = data;
 		pos = x_pos@y_pos;
+		posTrail = posTrail add: pos;
+		dataTrail = dataTrail add: data;
 	}
 
 	moved { | argData |

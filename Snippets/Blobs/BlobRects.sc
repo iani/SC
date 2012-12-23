@@ -1,6 +1,6 @@
 /* iz Mon 19 November 2012 10:33 AM EET
 
-Start a single process when one of the blobs is within a rectangle, and stops that process when no blobs are within a rectangle.
+Start a single process when one of the blobs is within a rectangle, and stop that process when no blobs are within a rectangle.
 
 */
 
@@ -38,9 +38,9 @@ BlobRects {
 
 BlobRect {
 	var <>rects;  // the rects instance that gives me the blobs
-	var <>rect; // when a first blob appears within this rectanble, state is set
+	var <>rect; // when a first blob appears within this rectangle, state is set
 	var <>startAction, <>moveAction, <>stopAction;
-	var <>state; // synth or other process. Stopped when no blobs are within  rect
+	var <>state; // synth or other process. Stopped when no blobs are within rect
 	var <blobsInRect, <blobCenter;
 
 	*new { | port, rect, startAction, moveAction, stopAction |

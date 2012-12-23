@@ -10,7 +10,7 @@ Lilt2DefaultMenu {
 				QtGUI.style = \CDE;
 				this.makeMenu;
 			}.defer(0.5);
-	
+
 	} }
 
 	*makeMenu {
@@ -20,11 +20,15 @@ Lilt2DefaultMenu {
 				"Open lib ...", { ScriptLib.open },
 				"Mixer", { ScriptMixer() },
 				"Sound Files", { SoundFileGui().makeWindow },
-				"Quarks", { "not yet implemented".postln },
+				"Quarks", { Quarks.gui },
 				[["Post OSC"], ["Stop posting OSC"]], { | view | OSCFunc.trace([false, true][view.value]) },
 				"Quit Server", { Server.default.quit },
 				"Reboot Server", { Server.default.reboot },
 				"Stop sounds+routines", { thisProcess.stop },
+				"Scope", {
+					Server.default.scope.window.bounds_(Rect(0, 400, 258, 250));
+//					FreqScope();
+				},
 			);
 			menu.window.onClose = { menu = nil };
 		}{
