@@ -168,12 +168,25 @@ EXPERIMENTAL
 
 	gVerb {}
 
-	// BUFFERS
+	// FFT / PV ...
 
-	playBuf {}
+}
+
+
+
+// BUFFERS
++ Buffer {
+	playBuf { | rate = 1, trigger = 1, startPos = 0, loop = 0, doneAction = 0,
+		rateName = \rate, triggerName = \trigger, startPosName = \startPos, loopName = \loop |
+		^PlayBuf.ar(numChannels, bufnum, rateName.kr(rate) * BufRateScale.kr(bufnum),
+			triggerName.kr(trigger), startPosName.kr(startPos), loopName.kr(loop), doneAction)
+	}
 
 	grainBuf {}
 
-	// FFT / PV ...
-
+	// Play buffer segment defined by start and end (times?)
+	bufSeg { | start, end, rate = 1,
+		startName = \start, endName = \end, rateName = \rate |
+// { BufRd.ar(1, b.bufnum, Phasor.ar(0, BufRateScale.kr(b.bufnum), 0, BufFrames.kr(b.bufnum))) }.play;
+	}
 }

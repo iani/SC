@@ -1,0 +1,186 @@
+#+TITLE: Sound Features
+
+* About this GIT branch "soundfeatures"
+
+This branch contains work on an interface for analysing sound files, storing the obtained features in files, retrieving the analysis files, and using them for synthesis. 
+
+* Usage scenario: Segmenting audio files by onsets
+
+The main first objective is to support the division of one or more sound files into segments, so as to be able to play selectively a segment of a file instead of the whole file. The segments should be "perceptually coherent", meaning that they contain sound objects that are perceived as belonging together. What constitutes an entire object or a group of objects that belong together depends on the deliberately predefined level of grouping. For example, in a file containing speech the level of grouping may be that of phonemes, words, phrases, sentences or paragraphs. In this case, depending on the selected level of grouping, a segment will hold a complete phoneme, word, phrase or sentence, but it should not start or end arbitrarily in the middle of a phoneme, word, phrase or sentence. 
+
+Starting with a sound file sf, the goals are: 
+
+1. Find appropriate positions in sf that correspond to boundaries (beginnings / ends) of segments according to user-selected criteria. 
+2. Allow the user to define and name segments by specifying the beginning and end of each segment, and then to use these segments for synthesis in a piece. 
+
+* Kinds of data involved
+
+The following kinds of data are involved in the analysis and selection process: 
+
+1. Feature data, which are the direct output of FFT based analysis algorithms, and are stored by the SCMIR program (Nick Collins) on files of type .scmirZ. 
+2. Onset data are an array of positions in the file which demarcate the beginnings of sound events, or separate perceptually distinct events. They are computed by SCMIR on the basis of previously extracted feature data. 
+3. User-defined file segments, where each segment holds the onsets for the start and end of a sound file segment to be used in playback.
+4. Other data (for later stages of this work here): Other extracted feature data (statistic means of significant features per section or per entire file etc.). These may include tags marking sets of onsets or sets of segments, as outlined in the data description section below.
+5. Metadata holding details about the source of the analysis data: 
+   - Path of the source file
+   - Parameters of the analysis process applied
+   - Path of the primary analysis file
+   - Other data: Length of file, number of channels, duration, sampling rate, etc. 
+
+* User Interface Requirements: Preliminary Study
+
+To use segments of sound files in a piece one needs to:
+
+1. Analyse the sound files and store the onset data. 
+2. Define and name segments in each file, for later use in pieces.
+3. Insert the names of the desired segments in the code of the piece. 
+
+Each of these steps is described in more detail below. 
+
+** Step 1: Analysis of the sound files
+
+This step takes a set of one or more sound files as input and produces a set of analysis files containing both the primary feature data and the onset data. 
+ 
+1. Select a set of audio files (via one or more file-selection-dialogs). 
+2. Select a folder to put the analysis data.
+3. Press "GO". 
+
+All selected files are analysed. The analysis data are saved in the selected folder. 
+
+Note: The current version of the present software analyses the sound files using the analysis configuration parameters given in an introductory example for onset detection in the SCMIR help files. Later an interface may be added to configure these parameters. 
+
+** Step 2: Define and name segments to work with
+
+Segments are chosen interactively by clicking on separating lines indicating beginning and end of a segment. Each segment must be named by the user. Default names are provided by the system, e.g: "swallows_1", "swallows_2" etc. 
+
+Note: The segments defined by the user are saved in the same file as the onset data for the same sound file. Segments for a group of analysis files residing in a folder can be later loaded at once for use in step 3 (Specify segments for use in a piece). 
+
+** Step 3: Specify segments by name to use in a piece
+
+*** 3.1. Loading sound files and their segments
+
+Given the onsets and segments for a group of files have been defined (in a previous work session), one starts by loading the segments of a group of files from a folder. 
+
+*** 3.2. Selecting a segment from a file/segment list
+
+A double list view can then be opened for selecting in the first view a sound file and then in the second view a segment from that sound file. 
+
+*** 3.3. Inserting a segment as code for use in a piece
+
+Once a segment is selected, code is generated for using it in a piece, and the code is copied in the background to the MacOS clipboard (using terminal command pbcopy). The user can then paste the generated code at any position in the code of a piece using the usual MacOS keyboard command (Command-V).  
+
+The format of the code generated is: 
+
+#+BEGIN_EXAMPLE
+   FileSeg('filename', 'segmentname');
+#+END_EXAMPLE
+
+A file segment can then be played by by sending it the message playFunc (for a Function) or playDef (for a SynthDef). For example: 
+
+#+BEGIN_EXAMPLE
+   FileSeg('filename', 'segmentname').playFunc({ | buf, start, end | PlayBuf.ar(....) });
+#+END_EXAMPLE
+
+ (Note: about the arguments buf, start, end, see Note 1 below.)
+
+or: 
+
+#+BEGIN_EXAMPLE
+   FileSeg('filename', 'segmentname').playDef('defname' ... additional args); 
+#+END_EXAMPLE
+
+Alternatively, its buffer and start and end positions can be obtained by message getParams. For example: 
+
+#+BEGIN_EXAMPLE
+   var buf, start, end;
+   #buf start, end = FileSeg('filename', 'segmentname').getParams;
+
+   Synth('playbuf', [\buf, buf, \start, start, \end, end]);
+#+END_EXAMPLE
+
+Note 1: The arguments buf, start, end may be provided implicitly by using a UGen shortcut method added to this library, possibly Buffer:playSeg. 
+
+Note 2: The method of copying code to the pasteboard will also be substituted for inserting buffer names in snippet code, instead of the currently used buffer menu scheme. 
+
+* Data Structures: First Draft
+
+Preliminaries: 
+
+For each analysed sound file there are two files produced: 
+1. The primary analysis file, called here feature data (fdf). This is produced by SCMIR as a result of the feature extraction process, and is of type .scmirZ.
+   (.scmirZ is a special type of binary for numerical data private to the SCMIR package).  
+2. The file holding the onset data, the user-defined tags and segments and the meta-data. This is called "udf" for "user data file".  These data are saved in SuperCollider text archive format (sctxar). 
+
+Since one may want to use the primary feature data for further statistics of features at a later stage, the present approach keeps these 2 files (fdf, udf) in the same folder, together with the secondary analysis data (onsets, tags, metadata). For example, if one analyses a file called "swallows.aiff", then two files are produced and stored in the same folder: 
+1. FDF: swallows.scmirZ
+2. UDF: swallows.sctxar
+
+** Object structure of the user data
+
+Each user data file (UDF) contains the following data items: 
+
+Data group 1: Basic data
+
+1. Onset data (series of points segmenting the sound file)
+2. Segment tags (set of named file segments, each marking the beginning and end of a segment, and accessible by its tag (a Symbol).
+
+Data group 2: Additional data
+
+3. Onset groups (set of tags, each marking a group of onsets)
+4. Segment groups (set of tags, each marking a group of segments)
+5. Metadata: Path of sound file, duration, number of channels etc. 
+
+The structure of the data items is as follows: 
+
+*** Onset Data
+
+The data defining a series of onsets (mark-points) dividing the sound into segments. 
+
+*** Segment data
+
+Dictonary of tags (symbols) associated to sound file segment  instances (FileSeg).
+Basic instance variables of FileSeg are: 'start' and 'end', holding the start and end of the segment in seconds. 
+
+*** Tag data (Optional, to be considered)
+
+Dictonary of tags (symbols) associated to Onset instances.
+This is an optional feature and will not be implemented at first. 
+
+*** (Also optional, for later:) Onset group tags, Segment group tags
+
+Onset Tags and Segment tags which apply to a group (set) of Onsets or Segments, instead of a single Onset or Segment. 
+
+*** Metadata
+
+The metadata are stored in an object of class SCMIRMetaData, which contains the following instance variables: 
+
+- Path of the sound file analysed
+- Path of the primary feature data file resulting from the analysis
+- Timestamp of the analysis
+- Parameters of the analysis (array of specification parameters provided to SCMIR to perform the analysis). 
+- Size of file in frames
+- Durartion of sound
+- Sampling rate
+- Number of channels
+
+* Draft of data and file / folder structures
+
+- Start with a list "L" of files that are to be analysed.
+- At the beginning list L is empty.
+- Sound files are added to this list incrementally, one by one or in batches (groups)
+- Sound files in a list can reside in different folders (the sound files to be analysed do not have to be in the same folder). 
+- The analysis data of list l are collected in a single "top folder" referred to here as "FF" (Feature Folder). 
+- The FF contains analysis data for a list of sound files.
+- For each sound file SF in the list, two files are stored in FF:
+  1. A file of type .scmirZ, containing the feature data from SCMIR analysis, for later reference
+  2. A file of type .sctxar, containing the onsets as well as tags and metadata.
+- The feature data and onset data files are named after the name of the feature data that it contains. For example: 
+
+Given a sound file "swallows1.aiff", that belongs to a list L with an analysis top folder TF, an analysis folder SFF is created inside the top folder TF. The name of the SFF is "swallows1". Inside the folder "swallows1", several files can be added, where each folder is named after the feature whose data it contains. So the structure of the top folder TF will be: 
+
+| Top folder:                                   | FF                |
+| File with the feature data:                   | swallows1.scrmirZ |
+| File containing the onsets, tags and metadata | swallows1.sctxar  |
+
+
+
