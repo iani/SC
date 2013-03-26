@@ -8,7 +8,7 @@ The objectID is used to identify the object that is using the path history, keep
 
 See also: Prefs.
 
-RecentPaths.open(\test, { | thePath | thePath.postln; });
+RecentPaths(\test).openDialog({ | thePath | ["opening", thePath].postln; }, { | thePath | ["creating", thePath].postln; });
 
 Example using RecentPaths: ScriptLib;
 
@@ -59,6 +59,7 @@ RecentPaths {
 	selectExistingOrOpen { | path, openAction |
 		var existing;
 		existing = this.getInstanceAtPath(path);
+//		[thisMethod.name, "existing is", existing].postln;
 		if (existing.notNil) { ^this.opened(existing) };
 		^this.addInstanceAtPath(path, this.opened(openAction.(path)));
 	}
@@ -180,6 +181,7 @@ RecentPaths {
 				HLayout(
 					// Button for loading instance from path selected from recent paths list
 					app.button(\paths).action_({ | me |
+//						["select existing or open with item", me.item].postln;
 						this.selectExistingOrOpen(me.item, openAction);
 						window.close;
 					}).view.states_([["Accept"]]),
