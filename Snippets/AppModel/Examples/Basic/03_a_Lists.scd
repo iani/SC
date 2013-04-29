@@ -1,6 +1,7 @@
 /* IZ Sat 01 September 2012  1:05 AM EEST */
 
 //:PopUpMenu, ListView accessing the same list
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.popUpMenu(\list).items_(["alpha", "beta", "gamma"]).view,
@@ -9,10 +10,11 @@ AppModel().window({ | window, app |
 		app.textField(\list).listItem.view
 	)
 })
-
-// === List items: Widgets accessing the currently selected item of a list: 
+)
+// === List items: Widgets accessing the currently selected item of a list:
 
 //:1. Text field for editing the item of a list. Default mode is replace contents.
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
@@ -20,8 +22,9 @@ AppModel().window({ | window, app |
 		app.textField(\list).listItem.view
 	)
 })
-
+)
 //:2. Appending the contents of Text field to the list
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
@@ -29,8 +32,9 @@ AppModel().window({ | window, app |
 		app.textField(\list).listItem.append.view
 	)
 })
-
+)
 //:3. Inserting the contents of a Text field at current position in list
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
@@ -38,8 +42,9 @@ AppModel().window({ | window, app |
 		app.textField(\list).listItem.insert.view
 	)
 })
-
-//:4. Replace, append, insert combined in one window: 
+)
+//:4. Replace, append, insert combined in one window:
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\list).items_(["alpha", "beta", "gamma"]).view,
@@ -57,8 +62,9 @@ AppModel().window({ | window, app |
 		)
 	)
 })
-
+)
 //:Indexing the same list independently from different views
+(
 var list;
 list = List.newUsing(["a", "b", "c"]);
 AppModel().window({ | window, app |
@@ -73,18 +79,20 @@ AppModel().window({ | window, app |
 		)
 	)
 });
-
+)
 //   Sublists: Lists accessing the lists inside a nested list
 
 //:Basic sublist
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\list).items_([["alpha", 1], ["beta", 2], ["gamma", 3, 4, 5]]).view,
 		app.listView(\sublist).sublistOf(\list).view,
 	)
 })
-
+)
 //:more sublists
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.popUpMenu(\list).items_([["alpha", 1], ["beta", 2], ["gamma", 3, 4, 5]]).view,
@@ -94,16 +102,18 @@ AppModel().window({ | window, app |
 		app.textField(\sublist).listItem.view
 	)
 })
+)
 
-//:NamedLists: Lists of Lists with names. 
+//:NamedLists: Lists of Lists with names.
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.popUpMenu(\list, { | me | me.value.adapter.items collect: _.name}).items_([
 			NamedList("alpha", [1, "more", "items"]),
-			NamedList("beta", ["even", "more", "items", "added"]), 
+			NamedList("beta", ["even", "more", "items", "added"]),
 			NamedList("gamma", ["to", "choose", "from", "et", "cetera"])
 		]).view,
-		app.listView(\list, { | me | 
+		app.listView(\list, { | me |
 			me.value.adapter.items collect: { | i | format("% : % elements", i.name, i.size) };
 		}).view,
 		app.listView(\sublist).sublistOf(\list).view,
@@ -111,16 +121,14 @@ AppModel().window({ | window, app |
 		app.textField(\sublist).listItem.view
 	)
 })
-
+)
 //:Multiple choice lists (!!!!!!!!!!!! UNDER DEVELOPMENT !!!!!!!!!!!!!)
 /* Note: No documentation or source code hints  are available about accessing the selected items in
-a QListView with \multi or \extended selection modes. */ 
+a QListView with \multi or \extended selection modes. */
+(
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		v = app.multiListView(\list).view.items_(["alpha", "beta", "gamma", "delta", "epsilon"]),
 	)
 })
-
-//:
-v
-
+)

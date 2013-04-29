@@ -1,6 +1,5 @@
 /* IZ Fri 31 August 2012 10:08 PM EEST
-
-Redo of AppModel, with radically redone classes for values and views: Value and Widget classes.
+Redo of AppModel, with new classes for values and views: Value and Widget classes.
 */
 
 AppModel {
