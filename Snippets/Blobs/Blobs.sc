@@ -104,7 +104,6 @@ Blob {
 		pos = x_pos@y_pos;
 		posTrail = posTrail add: pos;
 		dataTrail = dataTrail add: data;
-		["this is Blob:setData, xpos, ypos etc", y_pos, x_pos, y_vel, x_vel, m_accel, width, height].postln;
 	}
 
 	moved { | argData |
