@@ -1,0 +1,15 @@
+#+TITLE: EventModel: Connecting an Environment
+#+AUTHOR: IZ
+#+DATE: <2013-06-28 Fri>
+#+OPTIONS: toc:nil 
+
+* EventModel 
+
+A subclass of Event which broadcasts update messages whenever one of its values changes. 
+
+EventModel also has methods for creating gui widgets that write on its values. 
+
+* REQUIRES: Notification Class
+
+Notification Class definition is found in: 
+ : Snippets/SystemExtensions/Notification.sc

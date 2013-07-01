@@ -3,7 +3,7 @@ FIrst tests with AppModel2.
 */
 
 //:Numeric values: NumberBox, Knob, Slider
-// All three views share the same value. 
+// All three views share the same value.
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.numberBox(\number).view,
@@ -14,15 +14,15 @@ AppModel().window({ | window, app |
 
 //:Specs are declared as second argument of a knob or slider widget
 //
-//The spec is given in either knob or slider widget. 
+//The spec is given in either knob or slider widget.
 //The order of creation of widgets and specs does not matter.
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.numberBox(\number).view,
 		app.knob(\number, \freq).view,
-		app.slider(\number).view.orientation_(\horizontal)
-		app.knob(\number, [0.).view,
-		app.slider(\number).view.orientation_(\horizontal)
+		app.slider(\number).view.orientation_(\horizontal),
+		app.knob(\number).view,
+		app.slider(\number).view.orientation_(\horizontal),
 		app.numberBox(\number).view,
 	)
 })
@@ -35,7 +35,7 @@ AppModel().window({ | window, app |
 		app.numberBox(\number).view,
 		app.knob(\number, \freq).view,
 		app.button(\number).action_({ | widget |
-			widget.value.adapter.value_(widget, 20 rrand: 20000) 
+			widget.value.adapter.value_(widget, 20 rrand: 20000)
 		}).view.states_([["random number between 20 and 20000"]]),
 		app.button(\number).action_({ | widget |
 			// standardizedValue refers to values in the "standard" range between 0 and 1.
@@ -50,7 +50,7 @@ object and message. That is the easiest way to set a buttons state from elsewher
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.button(\number).action_({ | widget |
-			postf("my view's value is: %\n", widget.view.value); 
+			postf("my view's value is: %\n", widget.view.value);
 		})
 		// Make the button widget listen to app updates on message \set_your_value:
 		.updater(app, \set_your_value, { | me, newValue | me.view.valueAction = newValue })
@@ -65,7 +65,7 @@ AppModel().window({ | window, app |
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.staticText(\text).view,
-		app.textField(\text).do({ | widget | 
+		app.textField(\text).do({ | widget |
 			widget.value.adapter.string_(widget, "Edit my TextField + press return to update");
 		}).view,
 	)
@@ -75,7 +75,7 @@ AppModel().window({ | window, app |
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.staticText(\text).view,
-		app.textView(\text).do({ | widget | 
+		app.textView(\text).do({ | widget |
 			widget.value.adapter.string_(widget, "Edit my TextView + press button to update");
 		}).view,
 		app.button(\text).getText.view.states_([["press me to update edited text"]]),
@@ -86,14 +86,14 @@ AppModel().window({ | window, app |
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.staticText(\text).view,
-		app.textView(\text).do({ | widget | 
+		app.textView(\text).do({ | widget |
 			widget.value.adapter.string_(widget, "Edit my TextView + press button to update");
 		}).view,
 		app.button(\text).getText.view.states_([["press me to update edited text"]]),
 		HLayout(
 			[StaticText().string_("Size of string in TextView:"), s: 4],
-			app.numberBox(\text).updateAction(\text, { | what, me | 
-				me.view.value = me.value.adapter.string.size; 
+			app.numberBox(\text).updateAction(\text, { | what, me |
+				me.view.value = me.value.adapter.string.size;
 			}).view
 		)
 	)
@@ -118,15 +118,15 @@ AppModel().window({ | window, app |
 	)
 })
 
-//:NamedLists: Lists of Lists with names. 
+//:NamedLists: Lists of Lists with names.
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.popUpMenu(\list, { | me | me.value.adapter.items collect: _.name}).items_([
 			NamedList("alpha", [1, "more", "items"]),
-			NamedList("beta", ["even", "more", "items", "added"]), 
+			NamedList("beta", ["even", "more", "items", "added"]),
 			NamedList("gamma", ["to", "choose", "from", "et", "cetera"])
 		]).view,
-		app.listView(\list, { | me | 
+		app.listView(\list, { | me |
 			me.value.adapter.items collect: { | i | format("% : % elements", i.name, i.size) };
 		}).view,
 		app.listView(\sublist).sublistOf(\list).view,
@@ -205,7 +205,7 @@ AppModel().window({ | window, app |
 //:One list view obtains its items from sublists contained in another item
 AppModel().window({ | window, app |
 	window.layout = VLayout(
-		app.listView(\list, { | me | me.value.adapter collect: { | l | 
+		app.listView(\list, { | me | me.value.adapter collect: { | l |
 				format("a list of size: %", l.size)
 			}
 		}).items_([["alpha", "beta", "gamma"], ["delta", "epsilon"]])
@@ -217,8 +217,8 @@ AppModel().window({ | window, app |
 });
 
 //:Creating list items by interpreting code from a text field
-// Note: The created elements only replace the elements on the list. 
-// Pre-existing Synths are not replaced. NodeProxies can be used for that. 
+// Note: The created elements only replace the elements on the list.
+// Pre-existing Synths are not replaced. NodeProxies can be used for that.
 AppModel().window({ | window, app |
 	window.layout = VLayout(
 		app.listView(\list).do({ | me | me.value.adapter.items_(me, ["a", "b", "c"]) })
@@ -254,7 +254,7 @@ AppModel().window({ | window, app |
 		app.popUpMenu(\list).items_(["alpha", "beta", "gamma"]).view,
 		app.listView(\list).view,
 		app.textField(\list).listItem.view,
-		app.button(\other).action_({ 
+		app.button(\other).action_({
 			app.getValue(\list).adapter.replace(app, "testing testing testing")
 		}).view.states_([["test change item"]]);
 	)
